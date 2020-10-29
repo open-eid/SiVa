@@ -70,7 +70,7 @@ public class DocumentValidationIT extends SiVaRestTests {
                 .body("signatures[0].errors.content", Matchers.hasItems("Manifest file has an entry for file <document_3.xml> with mimetype <application/octet-stream> but the signature file for signature S0 does not have an entry for this file"))
                 .body("signatures[0].errors.content", Matchers.hasItems("Manifest file has an entry for file <document_3.xml> with mimetype <application/octet-stream> but the signature file for signature S1 does not have an entry for this file"))
                 .body("signatures[0].errors.content", Matchers.hasItems("Container contains a file named <document_3.xml> which is not found in the signature file"))
-                .body("signatures[0].warnings.content", Matchers.hasItems("The signature/seal is not a valid AdES!"))
+                .body("signatures[0].warnings.content", Matchers.hasItems("The signature/seal is not a valid AdES digital signature!"))
                 .body("signatures[0].warnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml"))
                 .body("signatures[1].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[1].subIndication", Matchers.is("HASH_FAILURE"))
@@ -78,7 +78,7 @@ public class DocumentValidationIT extends SiVaRestTests {
                 .body("signatures[1].errors.content", Matchers.hasItems("Manifest file has an entry for file <document_3.xml> with mimetype <application/octet-stream> but the signature file for signature S0 does not have an entry for this file"))
                 .body("signatures[1].errors.content", Matchers.hasItems("Manifest file has an entry for file <document_3.xml> with mimetype <application/octet-stream> but the signature file for signature S1 does not have an entry for this file"))
                 .body("signatures[1].errors.content", Matchers.hasItems("Container contains a file named <document_3.xml> which is not found in the signature file"))
-                .body("signatures[1].warnings.content", Matchers.hasItems("The signature/seal is not a valid AdES!"))
+                .body("signatures[1].warnings.content", Matchers.hasItems("The signature/seal is not a valid AdES digital signature!"))
                 .body("signatures[1].warnings.content", Matchers.hasItems("Signature PUDOV,VADIM,39101013724 has unsigned files: document_3.xml"));
 
     }
@@ -108,7 +108,7 @@ public class DocumentValidationIT extends SiVaRestTests {
                 .body("signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
                 .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
                 .body("signatures[0].errors.content", Matchers.hasItems("Manifest file has an entry for file <document_3.xml> with mimetype <application/octet-stream> but the signature file for signature S0 does not have an entry for this file"))
-                .body("signatures[0].warnings.content", Matchers.hasItems("The signature/seal is not a valid AdES!"))
+                .body("signatures[0].warnings.content", Matchers.hasItems("The signature/seal is not a valid AdES digital signature!"))
                 .body("signatures[0].warnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml"))
                 .body("signatures[1].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[1].errors.content", Matchers.hasItems("Manifest file has an entry for file <document_3.xml> with mimetype <application/octet-stream> but the signature file for signature S0 does not have an entry for this file"));
@@ -177,7 +177,7 @@ public class DocumentValidationIT extends SiVaRestTests {
                 .body("signatures[0].errors.content", Matchers.hasItems("Manifest file has an entry for file <unsigned.txt> with mimetype <application/octet-stream> but the signature file for signature S1 does not have an entry for this file"))
                 .body("signatures[0].errors.content", Matchers.hasItems("Container contains a file named <document_2.docx> which is not found in the signature file"))
                 .body("signatures[0].errors.content", Matchers.hasItems("Container contains a file named <unsigned.txt> which is not found in the signature file"))
-                .body("signatures[0].warnings.content", Matchers.hasItems("The signature/seal is not a valid AdES!"))
+                .body("signatures[0].warnings.content", Matchers.hasItems("The signature/seal is not a valid AdES digital signature!"))
                 .body("signatures[0].warnings.content", Matchers.hasItems("Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml, unsigned.txt"))
                 .body("signatures[1].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[1].subIndication", Matchers.is("HASH_FAILURE"));

@@ -103,8 +103,8 @@
         <project.encoding>UTF-8</project.encoding>
         <language.level>11</language.level>
         <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss'Z'</maven.build.timestamp.format>
-        <dss.version>5.5.d4j.1</dss.version>
-        <bouncycastle.version>1.62</bouncycastle.version>
+        <dss.version>5.7.d4j.1</dss.version>
+        <bouncycastle.version>1.65</bouncycastle.version>
         <spring.boot.version>2.2.9.RELEASE</spring.boot.version>
         <powermock.version>2.0.4</powermock.version>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>

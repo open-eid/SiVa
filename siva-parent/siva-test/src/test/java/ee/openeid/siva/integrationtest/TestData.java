@@ -58,6 +58,7 @@ public class TestData {
     public static final String SIGNATURE_LEVEL_NOT_ADES_QC_QSCD = "NOT_ADES_QC_QSCD";
     public static final String SIGNATURE_LEVEL_INDETERMINATE_QESIG = "INDETERMINATE_QESIG";
     public static final String SIGNATURE_LEVEL_NOT_ADES = "NOT_ADES";
+    public static final String SIGNATURE_LEVEL_NA = "NA";
 
     public static final String VALID_INDICATION_VALUE_PASSED = "PASSED";
     public static final String VALID_INDICATION_VALUE_FAILED = "FAILED";
@@ -152,6 +153,10 @@ public class TestData {
     public static final String VALID_VALIDATION_PROCESS_NAMEID_53 = "QUAL_UNIQUE_CERT";
     public static final String VALID_VALIDATION_PROCESS_NAMEID_54 = "ATCCM";
     public static final String VALID_VALIDATION_PROCESS_NAMEID_55 = "ARCCM";
+    public static final String VALID_VALIDATION_PROCESS_NAMEID_56 = "BBB_XCV_IRDC";
+    public static final String VALID_VALIDATION_PROCESS_NAMEID_57 = "BBB_XCV_IARDPFC";
+
+
 
 
     public static final String VALID_VALIDATION_PROCESS_VALUE_1 = "Is the trusted list fresh ?";
@@ -169,15 +174,15 @@ public class TestData {
     public static final String VALID_VALIDATION_PROCESS_VALUE_13 = "Is the certificate's digest value valid?";
     public static final String VALID_VALIDATION_PROCESS_VALUE_14 = "Are the issuer distinguished name and the serial number equal?";
     public static final String VALID_VALIDATION_PROCESS_VALUE_15 = "Is the signature policy known?";
-    public static final String VALID_VALIDATION_PROCESS_VALUE_16 = "Is the reference data object found?";
+    public static final String VALID_VALIDATION_PROCESS_VALUE_16 = "Has the reference data object been found?";
     public static final String VALID_VALIDATION_PROCESS_VALUE_17 = "Is the reference data object intact?";
     public static final String VALID_VALIDATION_PROCESS_VALUE_18 = "Is the signature intact?";
-    public static final String VALID_VALIDATION_PROCESS_VALUE_19 = "Is signed qualifying property: 'signing-time' present?";
+    public static final String VALID_VALIDATION_PROCESS_VALUE_19 = "Is the signed qualifying property: 'signing-time' present?";
     public static final String VALID_VALIDATION_PROCESS_VALUE_20 = "Are signature cryptographic constraints met?";
-    public static final String VALID_VALIDATION_PROCESS_VALUE_21 = "Can the certificate chain be built till the trust anchor?";
-    public static final String VALID_VALIDATION_PROCESS_VALUE_22 = "Is the expected trust service type identifier present ?";
+    public static final String VALID_VALIDATION_PROCESS_VALUE_21 = "Can the certificate chain be built till a trust anchor?";
+    public static final String VALID_VALIDATION_PROCESS_VALUE_22 = "Has a trust service with an expected type identifier been found?";
     public static final String VALID_VALIDATION_PROCESS_VALUE_23 = "Is the expected trust service status present ?";
-    public static final String VALID_VALIDATION_PROCESS_VALUE_24 = "Is the certificate validation concluant ?";
+    public static final String VALID_VALIDATION_PROCESS_VALUE_24 = "Is the certificate validation conclusive?";
     public static final String VALID_VALIDATION_PROCESS_VALUE_25 = "The certificate validation is not concluant!";
     public static final String VALID_VALIDATION_PROCESS_VALUE_26 = "Is the certificate's signature intact?";
     public static final String VALID_VALIDATION_PROCESS_VALUE_27 = "Is message imprint verification conclusive?";
@@ -203,11 +208,16 @@ public class TestData {
     public static final String VALID_VALIDATION_PROCESS_VALUE_47 = "Is the trusted list acceptable?";
     public static final String VALID_VALIDATION_PROCESS_VALUE_48 = "Is the result of the timestamps validation process conclusive?";
     public static final String VALID_VALIDATION_PROCESS_VALUE_49 = "Is the result of the revocation data validation process acceptable?";
-    public static final String VALID_VALIDATION_PROCESS_VALUE_50 = "Are timestamps in the right order?";
-    public static final String VALID_VALIDATION_PROCESS_VALUE_51 = "Is the signing-time plus the timestamp delay after the best-signature-time?";
+    public static final String VALID_VALIDATION_PROCESS_VALUE_50 = "Are the timestamps in the right order?";
+    public static final String VALID_VALIDATION_PROCESS_VALUE_51 = "Is the signing-time plus the timestamp delay after best-signature-time?";
     public static final String VALID_VALIDATION_PROCESS_VALUE_52 = "Is the certificate unique ?";
     public static final String VALID_VALIDATION_PROCESS_VALUE_53 = "Are timestamp cryptographic constraints met?";
     public static final String VALID_VALIDATION_PROCESS_VALUE_54 = "Are revocation cryptographic constraints met?";
+    public static final String VALID_VALIDATION_PROCESS_VALUE_55 = "Is timestamp's signature intact?";
+    public static final String VALID_VALIDATION_PROCESS_VALUE_56 = "Is revocation's signature intact?";
+    public static final String VALID_VALIDATION_PROCESS_VALUE_57 = "Is the revocation data consistent?";
+    public static final String VALID_VALIDATION_PROCESS_VALUE_58 = "Is an acceptable revocation data present for the certificate?";
+
 
     public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_1 = "The result of the Basic validation process is not conclusive!";
     public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_2 = "The expected format is not found!";
@@ -223,9 +233,10 @@ public class TestData {
     public static final String CERTIFICATE_DO_NOT_MATCH_TRUST_SERVICE = "The trusted certificate doesn't match the trust service";
     public static final String PAST_SIG_VALIDATION_NOT_CONCLUSIVE = "The past signature validation is not conclusive!";
     public static final String SIG_CREATED_WITH_EXP_CERT = "Signature has been created with expired certificate";
-    public static final String CERT_PATH_NOT_TRUSTED = "The certificate path is not trusted!";
+    public static final String CERT_PATH_NOT_TRUSTED = "Unable to build a certificate chain until a trusted list!";
     public static final String REVOCATION_NOT_FRESH = "The revocation information is not considered as 'fresh'.";
-    public static final String ALL_FILES_NOT_SIGNED = "All files are not signed!";
+    public static final String ALL_FILES_NOT_SIGNED = "Not all files are signed!";
+    public static final String NOT_EXPECTED_KEY_USAGE = "The signer's certificate does not have an expected key-usage!";
 
 
     public static final String VALID_VALIDATION_PROCESS_ERROR_NAMEID_1 = "ADEST_ROBVPIIC_ANS";
@@ -237,6 +248,7 @@ public class TestData {
     public static final String VALID_VALIDATION_PROCESS_ERROR_NAMEID_7 = "BBB_XCV_IRDPFC_ANS";
     public static final String VALID_VALIDATION_PROCESS_ERROR_NAMEID_8 = "BBB_CV_ISI_ANS";
     public static final String VALID_VALIDATION_PROCESS_ERROR_NAMEID_9 = "ADEST_ROTVPIIC_ANS";
+    public static final String VALID_VALIDATION_PROCESS_ERROR_NAMEID_10 = "BBB_CV_IRDOI_ANS";
 
 
     public static final String VALID_VALIDATION_PROCESS_STATUS_1 = "NOT_OK";

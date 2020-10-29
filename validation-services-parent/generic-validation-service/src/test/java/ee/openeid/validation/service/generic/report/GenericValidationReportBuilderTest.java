@@ -72,8 +72,8 @@ public class GenericValidationReportBuilderTest {
     @Test
     public void totalFailedIndicationReportBuild() {
         eu.europa.esig.dss.validation.reports.Reports dssReports = getDssReports("");
-        dssReports.getSimpleReportJaxb().getSignature().get(0).setIndication(Indication.TOTAL_FAILED);
-        dssReports.getSimpleReportJaxb().getSignature().get(0).getErrors().add("Something is wrong");
+        dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).setIndication(Indication.TOTAL_FAILED);
+        dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).getErrors().add("Something is wrong");
 
         ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
         Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
@@ -85,7 +85,7 @@ public class GenericValidationReportBuilderTest {
     @Test
     public void indeterminateIndicationReportBuild() {
         eu.europa.esig.dss.validation.reports.Reports dssReports = getDssReports("");
-        dssReports.getSimpleReportJaxb().getSignature().get(0).setIndication(Indication.INDETERMINATE);
+        dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).setIndication(Indication.INDETERMINATE);
         ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
         Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
         Assert.assertEquals(Integer.valueOf(0), reports.getSimpleReport().getValidationConclusion().getValidSignaturesCount());
@@ -217,13 +217,7 @@ public class GenericValidationReportBuilderTest {
     public void timeAssertionMessageImprintIsEmptyOnTimestampParseError() {
         XmlDiagnosticData diagnosticData = getDiagnosticDataJaxb("");
 
-        XmlDigestMatcher xmlDigestMatcher = new XmlDigestMatcher();
-        xmlDigestMatcher.setDigestValue(new byte[0]);
-        xmlDigestMatcher.setDataFound(true);
-        xmlDigestMatcher.setDataIntact(true);
-
         XmlTimestamp xmlTimestamp = new XmlTimestamp();
-        xmlTimestamp.setDigestMatcher(xmlDigestMatcher);
         xmlTimestamp.setType(TimestampType.SIGNATURE_TIMESTAMP);
 
         XmlFoundTimestamp xmlFoundTimestamp = new XmlFoundTimestamp();
@@ -301,7 +295,7 @@ public class GenericValidationReportBuilderTest {
     private XmlDiagnosticData getDiagnosticDataJaxb(String policyId) {
         XmlDiagnosticData diagnosticData = new XmlDiagnosticData();
         XmlContainerInfo xmlContainerInfo = new XmlContainerInfo();
-        xmlContainerInfo.setContainerType("ASIC-E");
+        xmlContainerInfo.setContainerType(ASiCContainerType.ASiC_E);
         diagnosticData.setContainerInfo(xmlContainerInfo);
         XmlSignature xmlSignature = new XmlSignature();
         XmlSignatureScope xmlSignatureScope = new XmlSignatureScope();
@@ -358,7 +352,7 @@ public class GenericValidationReportBuilderTest {
         xmlSignature.setId("SIG-id");
         xmlSignature.setIndication(Indication.TOTAL_PASSED);
         xmlSignature.setSignatureFormat(SignatureLevel.XAdES_BASELINE_LT);
-        simpleReport.getSignature().add(xmlSignature);
+        simpleReport.getSignatureOrTimestamp().add(xmlSignature);
         return simpleReport;
     }
 }

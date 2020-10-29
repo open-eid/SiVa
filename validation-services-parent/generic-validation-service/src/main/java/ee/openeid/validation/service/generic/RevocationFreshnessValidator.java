@@ -7,15 +7,21 @@ import eu.europa.esig.dss.diagnostic.CertificateWrapper;
 import eu.europa.esig.dss.diagnostic.DiagnosticData;
 import eu.europa.esig.dss.diagnostic.SignatureWrapper;
 import eu.europa.esig.dss.diagnostic.TimestampWrapper;
+import eu.europa.esig.dss.model.identifier.EncapsulatedRevocationTokenIdentifier;
 import eu.europa.esig.dss.model.x509.CertificateToken;
-import eu.europa.esig.dss.spi.x509.revocation.ocsp.OCSPResponseBinary;
+import eu.europa.esig.dss.spi.DSSRevocationUtils;
 import eu.europa.esig.dss.validation.AdvancedSignature;
 import eu.europa.esig.dss.validation.reports.Reports;
 import lombok.SneakyThrows;
 import org.bouncycastle.cert.ocsp.BasicOCSPResp;
 
+import java.io.IOException;
 import java.time.Duration;
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class RevocationFreshnessValidator {
@@ -73,14 +79,16 @@ public class RevocationFreshnessValidator {
             return null;
         }
 
-        Optional<CRLBinary> crlBinary = advancedSignature.get().getCRLSource().getCRLBinaryList().stream()
+        Optional<EncapsulatedRevocationTokenIdentifier> tokenIdentifier = advancedSignature.get().getCRLSource()
+                .getAllRevocationBinaries()
+                .stream()
                 .findFirst();
 
         Optional<CertificateToken> certificateToken = advancedSignature.get().getCertificates().stream()
                 .filter(certificate -> certificate.getDSSIdAsString().equals(certificateId))
                 .findFirst();
-        if (crlBinary.isPresent() && certificateToken.isPresent()) {
-            return buildCRLValidity(crlBinary.get(), certificateToken.get());
+        if (tokenIdentifier.isPresent() && certificateToken.isPresent() && tokenIdentifier.get() instanceof CRLBinary) {
+            return buildCRLValidity((CRLBinary) tokenIdentifier.get(), certificateToken.get());
         }
         return null;
     }
@@ -94,8 +102,14 @@ public class RevocationFreshnessValidator {
         Optional<List<BasicOCSPResp>> basicOCSPResps = signatures.stream()
                 .filter(signature -> signature.getId().equals(signatureId) && signature.getOCSPSource() != null)
                 .findFirst()
-                .map(signature -> signature.getOCSPSource().getOCSPResponsesList().stream()
-                        .map(OCSPResponseBinary::getBasicOCSPResp)
+                .map(signature -> signature.getOCSPSource().getAllRevocationBinaries().stream()
+                        .map(o -> {
+                            try {
+                                return DSSRevocationUtils.loadOCSPFromBinaries(o.getBinaries());
+                            } catch (IOException e) {
+                                throw new IllegalArgumentException("Invalid ocsp binary");
+                            }
+                        })
                         .collect(Collectors.toList()));
 
         return basicOCSPResps.flatMap(

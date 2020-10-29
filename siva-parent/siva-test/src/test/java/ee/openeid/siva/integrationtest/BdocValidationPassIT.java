@@ -235,6 +235,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
      * File: EE_SER-AEX-B-LTA-V-24.asice
      */
     @Test
+    @Ignore("DD4J-615")
     public void bdocBaselineLtaProfileValidSignature() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("EE_SER-AEX-B-LTA-V-24.asice", null, null))

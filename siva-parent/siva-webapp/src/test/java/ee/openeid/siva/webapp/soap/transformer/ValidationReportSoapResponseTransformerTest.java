@@ -16,16 +16,26 @@
 
 package ee.openeid.siva.webapp.soap.transformer;
 
+import ee.openeid.siva.validation.document.report.DetailedReport;
+import ee.openeid.siva.validation.document.report.DiagnosticReport;
 import ee.openeid.siva.validation.document.report.SignatureProductionPlace;
+import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.SignerRole;
-import ee.openeid.siva.validation.document.report.*;
+import ee.openeid.siva.validation.document.report.SimpleReport;
+import ee.openeid.siva.validation.document.report.SubjectDistinguishedName;
+import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
+import ee.openeid.siva.validation.document.report.ValidatedDocument;
 import ee.openeid.siva.webapp.soap.response.DiagnosticData;
 import ee.openeid.siva.webapp.soap.response.ValidationConclusion;
 import ee.openeid.siva.webapp.soap.response.ValidationReport;
 import eu.europa.esig.dss.detailedreport.jaxb.XmlTLAnalysis;
 import eu.europa.esig.dss.diagnostic.jaxb.*;
-import eu.europa.esig.dss.enumerations.*;
-import eu.europa.esig.dss.validation.diagnostic.Certificate;
+import eu.europa.esig.dss.enumerations.ASiCContainerType;
+import eu.europa.esig.dss.enumerations.DigestAlgorithm;
+import eu.europa.esig.dss.enumerations.DigestMatcherType;
+import eu.europa.esig.dss.enumerations.EncryptionAlgorithm;
+import eu.europa.esig.dss.enumerations.MaskGenerationFunction;
+import eu.europa.esig.dss.enumerations.TimestampLocation;
 import eu.europa.esig.dss.validation.diagnostic.*;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -35,7 +45,11 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.*;
@@ -159,7 +173,6 @@ public class ValidationReportSoapResponseTransformerTest {
         assertEquals(dssDiagnosticData.getDocumentName(), soapDiagnosticData.getDocumentName());
         assertDateEquals(dssDiagnosticData.getValidationDate(), soapDiagnosticData.getValidationDate());
         assertContainerInfo(dssDiagnosticData.getContainerInfo(), soapDiagnosticData.getContainerInfo());
-        assertTrustedList(dssDiagnosticData.getListOfTrustedLists(), soapDiagnosticData.getListOfTrustedLists());
 
         for (int i = 0; i < dssDiagnosticData.getTrustedLists().size(); i++) {
             assertTrustedList(dssDiagnosticData.getTrustedLists().get(i), soapDiagnosticData.getTrustedLists().getTrustedList().get(i));
@@ -231,9 +244,11 @@ public class ValidationReportSoapResponseTransformerTest {
         assertEquals(dssSignature.getSignatureProductionPlace().getStateOrProvince(), signature.getSignatureProductionPlace().getStateOrProvince());
         assertEquals(dssSignature.isCounterSignature(), signature.isCounterSignature());
         assertEquals(dssSignature.getSignerRole().size(), signature.getSignerRole().size());
-        assertEquals(dssSignature.getCommitmentTypeIndication(), signature.getCommitmentTypeIndication().getIndication());
 
-        assertDateEquals(dssSignature.getDateTime(), signature.getDateTime());
+        for (int i = 0; i < dssSignature.getCommitmentTypeIndications().size(); i++) {
+            assertCommitmentTypeIndication(dssSignature.getCommitmentTypeIndications().get(i), signature.getCommitmentTypeIndications().getCommitmentTypeIndication().get(i));
+        }
+        assertDateEquals(dssSignature.getClaimedSigningTime(), signature.getClaimedSigningTime());
 
         for (int i = 0; i < dssSignature.getCertificateChain().size(); i++) {
             assertCertificateChainItem(dssSignature.getCertificateChain().get(i), signature.getCertificateChain().getChainItem().get(i));
@@ -247,6 +262,12 @@ public class ValidationReportSoapResponseTransformerTest {
         assertSigningCertificate(dssSignature.getSigningCertificate(), signature.getSigningCertificate());
     }
 
+    private void assertCommitmentTypeIndication(XmlCommitmentTypeIndication dssCommitmentIndication, CommitmentTypeIndication commitmentTypeIndication) {
+        assertEquals(dssCommitmentIndication.getIdentifier(), commitmentTypeIndication.getIdentifier());
+        assertEquals(dssCommitmentIndication.getDocumentationReferences(), commitmentTypeIndication.getDocumentationReferences().getDocumentationReference());
+        assertEquals(dssCommitmentIndication.getDescription(), commitmentTypeIndication.getDescription());
+    }
+
     private void assertTimestamp(XmlTimestamp dssXmlTimestamp, FoundTimestamp foundTimestamp) {
         Timestamp timestamp = foundTimestamp.getTimestamp();
         assertEquals(dssXmlTimestamp.getId(), timestamp.getId());
@@ -258,7 +279,9 @@ public class ValidationReportSoapResponseTransformerTest {
             assertEquals(dssXmlTimestamp.getCertificateChain().get(i).getCertificate().getSources().size(), timestamp.getCertificateChain().getChainItem().get(0).getCertificate().getSources().getSource().size());
         }
 
-        assertDigestMatcher(dssXmlTimestamp.getDigestMatcher(), timestamp.getDigestMatcher());
+        for (int i = 0; i < dssXmlTimestamp.getDigestMatchers().size(); i++) {
+            assertDigestMatcher(dssXmlTimestamp.getDigestMatchers().get(i), timestamp.getDigestMatchers().get(i));
+        }
         assertBasicSignature(dssXmlTimestamp.getBasicSignature(), timestamp.getBasicSignature());
         assertSigningCertificate(dssXmlTimestamp.getSigningCertificate(), timestamp.getSigningCertificate());
     }
@@ -287,10 +310,6 @@ public class ValidationReportSoapResponseTransformerTest {
 
     private void assertSigningCertificate(XmlSigningCertificate dssSigningCertificate, SigningCertificate signingCertificate) {
         assertEquals(dssSigningCertificate.getCertificate().getId(), signingCertificate.getCertificate().getId());
-        assertEquals(dssSigningCertificate.isIssuerSerialMatch(), signingCertificate.isIssuerSerialMatch());
-        assertEquals(dssSigningCertificate.isDigestValuePresent(), signingCertificate.isDigestValuePresent());
-        assertEquals(dssSigningCertificate.isAttributePresent(), signingCertificate.isAttributePresent());
-        assertEquals(dssSigningCertificate.isDigestValueMatch(), signingCertificate.isDigestValueMatch());
     }
 
     private void assertUserCertificate(XmlCertificate dssXmlCertificate, Certificate certificate) {
@@ -459,7 +478,6 @@ public class ValidationReportSoapResponseTransformerTest {
         diagnosticData.setValidationDate(new Date());
         diagnosticData.setContainerInfo(createMockedContainerInfo());
         XmlTrustedList mockedXmlTrustedList = createMockedXmlTrustedList();
-        diagnosticData.setListOfTrustedLists(mockedXmlTrustedList);
         diagnosticData.setTrustedLists(Collections.singletonList(mockedXmlTrustedList));
         diagnosticData.setUsedCertificates(Arrays.asList(createMockedXmlCertificate("1"), createMockedXmlCertificate("2")));
         diagnosticData.setSignatures(Arrays.asList(createMockedXmlSignature("1"), createMockedXmlSignature("2")));
@@ -481,7 +499,7 @@ public class ValidationReportSoapResponseTransformerTest {
 
     private XmlContainerInfo createMockedContainerInfo() {
         XmlContainerInfo containerInfo = new XmlContainerInfo();
-        containerInfo.setContainerType("CONTAINER_TYPE");
+        containerInfo.setContainerType(ASiCContainerType.ASiC_E);
         containerInfo.setMimeTypeContent("CONTAINER_MIME_TYPE");
         containerInfo.setMimeTypeFilePresent(false);
         containerInfo.setZipComment("ZIP_COMMENT");
@@ -568,9 +586,15 @@ public class ValidationReportSoapResponseTransformerTest {
         role1.setRole("role1");
         XmlSignerRole role2 = new XmlSignerRole();
         role1.setRole("role2");
+
+        XmlCommitmentTypeIndication commitmentTypeIndication = new XmlCommitmentTypeIndication();
+        commitmentTypeIndication.setIdentifier("11");
+        commitmentTypeIndication.setDescription("commitment desc");
+        commitmentTypeIndication.setDocumentationReferences(Arrays.asList("1", "2"));
         signature.getSignerRole().addAll(Arrays.asList(role1, role2));
-        signature.setCommitmentTypeIndication(Arrays.asList("1", "2"));
-        signature.setDateTime(new Date());
+        signature.setCommitmentTypeIndications(Collections.singletonList(commitmentTypeIndication));
+
+        signature.setClaimedSigningTime(new Date());
         signature.setFoundTimestamps(Arrays.asList(createMockedXmlTimestamp("1"), createMockedXmlTimestamp("2")));
         signature.setFoundTimestamps(Arrays.asList(createMockedXmlTimestamp("1"), createMockedXmlTimestamp("2")));
         return signature;
@@ -592,10 +616,6 @@ public class ValidationReportSoapResponseTransformerTest {
         XmlCertificate certificate = new XmlCertificate();
         certificate.setId("ID");
         xmlSigningCertificate.setCertificate(certificate);
-        xmlSigningCertificate.setIssuerSerialMatch(true);
-        xmlSigningCertificate.setDigestValuePresent(true);
-        xmlSigningCertificate.setAttributePresent(true);
-        xmlSigningCertificate.setDigestValueMatch(true);
         return xmlSigningCertificate;
     }
 
@@ -632,7 +652,7 @@ public class ValidationReportSoapResponseTransformerTest {
         digestMatcher.setType(DigestMatcherType.MANIFEST);
         digestMatcher.setDigestMethod(DigestAlgorithm.SHA256);
         digestMatcher.setDigestValue("value".getBytes());
-        timestamp.setDigestMatcher(digestMatcher);
+        timestamp.getDigestMatchers().add(digestMatcher);
 
         xmlFoundTimestamp.setTimestamp(timestamp);
         xmlFoundTimestamp.setLocation(TimestampLocation.XAdES);

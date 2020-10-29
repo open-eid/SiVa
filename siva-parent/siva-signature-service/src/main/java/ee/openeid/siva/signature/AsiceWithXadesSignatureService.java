@@ -39,7 +39,6 @@ import eu.europa.esig.dss.token.Pkcs11SignatureToken;
 import eu.europa.esig.dss.token.Pkcs12SignatureToken;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
@@ -54,11 +53,14 @@ public class AsiceWithXadesSignatureService implements SignatureService {
 
     private static final String CLASSPATH = "classpath:";
 
-    @Autowired
     private SignatureServiceConfigurationProperties properties;
 
-    @Autowired
     private TrustedListsCertificateSource trustedListSource;
+
+    public AsiceWithXadesSignatureService(SignatureServiceConfigurationProperties properties, TrustedListsCertificateSource trustedListSource) {
+        this.properties = properties;
+        this.trustedListSource = trustedListSource;
+    }
 
     @Override
     public byte[] getSignature(byte[] dataToSign, String dataName, String mimeTypeString) throws IOException {
@@ -83,7 +85,7 @@ public class AsiceWithXadesSignatureService implements SignatureService {
         CommonCertificateVerifier commonCertificateVerifier = new CommonCertificateVerifier();
         OCSPSource ocspSource = getOcspSource(properties.getOcspUrl());
         commonCertificateVerifier.setOcspSource(ocspSource);
-        commonCertificateVerifier.setTrustedCertSource(trustedListSource);
+        commonCertificateVerifier.setTrustedCertSources(trustedListSource);
 
         ASiCWithXAdESService service = new ASiCWithXAdESService(commonCertificateVerifier);
         TSPSource tspSource = getTspSource(properties.getTspUrl());
@@ -103,10 +105,6 @@ public class AsiceWithXadesSignatureService implements SignatureService {
 
     public SignatureServiceConfigurationProperties getProperties() {
         return properties;
-    }
-
-    public void setProperties(SignatureServiceConfigurationProperties signatureServiceConfigurationProperties) {
-        properties = signatureServiceConfigurationProperties;
     }
 
     private AbstractSignatureTokenConnection getSignatureToken(SignatureServiceConfigurationProperties configurationProperties) {

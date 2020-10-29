@@ -25,6 +25,7 @@ import org.junit.experimental.categories.Category;
 import org.springframework.http.HttpStatus;
 
 import static ee.openeid.siva.integrationtest.TestData.*;
+import static eu.europa.esig.dss.enumerations.SubIndication.CHAIN_CONSTRAINTS_FAILURE;
 
 @Category(IntegrationTest.class)
 public class AsiceValidationFailIT extends SiVaRestTests {
@@ -150,10 +151,10 @@ public class AsiceValidationFailIT extends SiVaRestTests {
 
         post(validationRequestFor("AsiceContainerNoSignature.asice"))
                 .then()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
-                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
-
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(0));
     }
 
     /**
@@ -200,9 +201,9 @@ public class AsiceValidationFailIT extends SiVaRestTests {
         post(validationRequestFor("EE_SER-AEX-B-LT-I-43.asice", VALID_SIGNATURE_POLICY_3,"Simple"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
-                .body("signatures[0].signatureLevel", Matchers.is(SIGNATURE_LEVEL_NOT_ADES))
-                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
-                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_SIG_CONSTRAINTS_FAILURE))
+                .body("signatures[0].signatureLevel", Matchers.is(SIGNATURE_LEVEL_NA))
+                .body("signatures[0].indication", Matchers.is(INDETERMINATE))
+                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_CHAIN_CONSTRAINTS_FAILURE))
                 .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("validSignaturesCount", Matchers.is(0));
@@ -227,10 +228,10 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
-                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
-                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_SIG_CONSTRAINTS_FAILURE))
+                .body("signatures[0].indication", Matchers.is(INDETERMINATE))
+                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_CHAIN_CONSTRAINTS_FAILURE))
                 .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE))
-                .body("signatures[0].warnings[0].content", Matchers.is(CERTIFICATE_DO_NOT_MATCH_TRUST_SERVICE))
+                .body("signatures[0].errors.content", Matchers.hasItems(NOT_EXPECTED_KEY_USAGE))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -253,7 +254,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
         post(validationRequestForDSS("TM-01_bdoc21-unknown-resp.bdoc", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
-                .body("signatures[0].indication", Matchers.is(INDETERMINATE))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
                 .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_NO_CERTIFICATE_CHAIN_FOUND))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2013-11-11T06:45:46Z")) //this may not be valid time to show
                 .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE))
@@ -318,7 +319,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(INDETERMINATE))
-                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_NO_POE))
+                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_REVOKED_NO_POE))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2014-11-07T11:43:06Z"))
                 .body("signatures[0].errors.content", Matchers.hasItems(PAST_SIG_VALIDATION_NOT_CONCLUSIVE))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
@@ -516,7 +517,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(INDETERMINATE))
-                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_NO_POE))
+                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_REVOKED_NO_POE))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2013-10-11T11:27:19Z"))
                 .body("signatures[0].errors.content", Matchers.hasItems(PAST_SIG_VALIDATION_NOT_CONCLUSIVE))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))

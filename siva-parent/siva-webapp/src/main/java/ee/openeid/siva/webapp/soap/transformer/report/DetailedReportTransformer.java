@@ -39,8 +39,7 @@ public class DetailedReportTransformer
     ee.openeid.siva.webapp.soap.response.DetailedReport transformReport(eu.europa.esig.dss.validation.detailed_report.DetailedReport dssDetailReport) {
         ee.openeid.siva.webapp.soap.response.DetailedReport detailedReport = new ee.openeid.siva.webapp.soap.response.DetailedReport();
         detailedReport.getTLAnalysis().addAll(dssDetailReport.getTLAnalysis());
-        detailedReport.getSignatures().addAll(dssDetailReport.getSignatures());
-        detailedReport.setCertificate(detailedReport.getCertificate());
+        detailedReport.getSignatureOrTimestampOrCertificate().addAll(dssDetailReport.getSignatureOrTimestampOrCertificate());
         detailedReport.getBasicBuildingBlocks().addAll(dssDetailReport.getBasicBuildingBlocks());
         return detailedReport;
     }

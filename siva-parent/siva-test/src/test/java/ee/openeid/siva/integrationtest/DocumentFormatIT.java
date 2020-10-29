@@ -61,7 +61,7 @@ public class DocumentFormatIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())
-                .body("signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
+                .body("signatures[0].warnings", Matchers.emptyOrNullString())
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1));
     }
@@ -114,7 +114,7 @@ public class DocumentFormatIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())
-                .body("signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
+                .body("signatures[0].warnings", Matchers.emptyOrNullString())
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1));
     }
@@ -166,7 +166,7 @@ public class DocumentFormatIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())
-                .body("signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
+                .body("signatures[0].warnings", Matchers.emptyOrNullString())
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1));
     }

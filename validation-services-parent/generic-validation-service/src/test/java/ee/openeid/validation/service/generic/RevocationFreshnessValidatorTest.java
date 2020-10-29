@@ -1,9 +1,11 @@
 package ee.openeid.validation.service.generic;
 
 import ee.openeid.validation.service.generic.helper.MockSignature;
+import eu.europa.esig.dss.crl.CRLBinary;
 import eu.europa.esig.dss.crl.CRLValidity;
 import eu.europa.esig.dss.diagnostic.jaxb.*;
 import eu.europa.esig.dss.enumerations.TimestampLocation;
+import eu.europa.esig.dss.model.identifier.EncapsulatedRevocationTokenIdentifier;
 import eu.europa.esig.dss.simplereport.jaxb.XmlSimpleReport;
 import eu.europa.esig.dss.spi.x509.revocation.crl.OfflineCRLSource;
 import eu.europa.esig.dss.spi.x509.revocation.ocsp.OfflineOCSPSource;
@@ -11,6 +13,7 @@ import eu.europa.esig.dss.validation.AdvancedSignature;
 import eu.europa.esig.dss.validation.reports.Reports;
 import org.bouncycastle.cms.CMSException;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -21,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 
@@ -149,7 +153,11 @@ public class RevocationFreshnessValidatorTest {
     }
 
     private CRLValidity getCrlValidity(Date thisUpdate, Date nextUpdate, List<AdvancedSignature> signatures) throws CMSException {
-        CRLValidity crlValidity = new CRLValidity(signatures.get(0).getCRLSource().getCRLBinaryList().iterator().next());
+        Optional<EncapsulatedRevocationTokenIdentifier> tokenIdentifier = signatures.get(0).getCRLSource()
+                .getAllRevocationBinaries()
+                .stream()
+                .findFirst();
+        CRLValidity crlValidity = new CRLValidity((CRLBinary) tokenIdentifier.get());
         crlValidity.setNextUpdate(nextUpdate);
         crlValidity.setThisUpdate(thisUpdate);
         return crlValidity;
@@ -204,7 +212,7 @@ public class RevocationFreshnessValidatorTest {
         eu.europa.esig.dss.simplereport.jaxb.XmlSimpleReport simpleReport = new eu.europa.esig.dss.simplereport.jaxb.XmlSimpleReport();
         eu.europa.esig.dss.simplereport.jaxb.XmlSignature xmlSignature = new eu.europa.esig.dss.simplereport.jaxb.XmlSignature();
         xmlSignature.setId(SIGNATURE_ID);
-        simpleReport.getSignature().add(xmlSignature);
+        simpleReport.getSignatureOrTimestamp().add(xmlSignature);
         return simpleReport;
     }
 }

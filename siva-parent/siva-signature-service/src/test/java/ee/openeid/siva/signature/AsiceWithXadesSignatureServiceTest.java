@@ -20,6 +20,7 @@ import ee.openeid.siva.signature.configuration.Pkcs12Properties;
 import ee.openeid.siva.signature.configuration.SignatureServiceConfigurationProperties;
 import ee.openeid.siva.signature.exception.SignatureServiceException;
 import eu.europa.esig.dss.model.DSSException;
+import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -38,7 +39,7 @@ public class AsiceWithXadesSignatureServiceTest {
 
     @Before
     public void setUp() {
-        asiceSignatureService = new AsiceWithXadesSignatureService();
+
         SignatureServiceConfigurationProperties properties = new SignatureServiceConfigurationProperties();
         properties.setSignatureLevel("XAdES_BASELINE_B");
         properties.setTspUrl("http://demo.sk.ee/tsa");
@@ -47,7 +48,8 @@ public class AsiceWithXadesSignatureServiceTest {
         pkcs12Properties.setPath("classpath:test.p12");
         pkcs12Properties.setPassword("password");
         properties.setPkcs12(pkcs12Properties);
-        asiceSignatureService.setProperties(properties);
+        TrustedListsCertificateSource trustedListsCertificateSource = new TrustedListsCertificateSource();
+        asiceSignatureService = new AsiceWithXadesSignatureService(properties, trustedListsCertificateSource);
     }
 
     @Test
@@ -55,7 +57,7 @@ public class AsiceWithXadesSignatureServiceTest {
         expectedException.expect(SignatureServiceException.class);
         expectedException.expectMessage("Signature configuration properties not set!");
 
-        asiceSignatureService.setProperties(null);
+        asiceSignatureService = new AsiceWithXadesSignatureService(null, new TrustedListsCertificateSource());
         asiceSignatureService.getSignature("Hello".getBytes(), "hello.txt", "application/text");
     }
 

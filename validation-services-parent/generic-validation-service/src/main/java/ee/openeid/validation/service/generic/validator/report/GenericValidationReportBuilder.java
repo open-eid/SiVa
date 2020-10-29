@@ -25,11 +25,22 @@ import ee.openeid.siva.validation.service.signature.policy.properties.Constraint
 import ee.openeid.siva.validation.util.CertUtil;
 import ee.openeid.siva.validation.util.SubjectDNParser;
 import eu.europa.esig.dss.diagnostic.CertificateWrapper;
+import eu.europa.esig.dss.diagnostic.RelatedRevocationWrapper;
 import eu.europa.esig.dss.diagnostic.SignatureWrapper;
 import eu.europa.esig.dss.diagnostic.TimestampWrapper;
-import eu.europa.esig.dss.diagnostic.jaxb.*;
-import eu.europa.esig.dss.enumerations.*;
-import eu.europa.esig.dss.model.Digest;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlDigestMatcher;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlRevocation;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlSignature;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlSignatureScope;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlSignerRole;
+import eu.europa.esig.dss.enumerations.ASiCContainerType;
+import eu.europa.esig.dss.enumerations.DigestAlgorithm;
+import eu.europa.esig.dss.enumerations.EncryptionAlgorithm;
+import eu.europa.esig.dss.enumerations.Indication;
+import eu.europa.esig.dss.enumerations.MaskGenerationFunction;
+import eu.europa.esig.dss.enumerations.SignatureAlgorithm;
+import eu.europa.esig.dss.enumerations.SubIndication;
+import eu.europa.esig.dss.enumerations.TimestampType;
 import eu.europa.esig.dss.model.x509.CertificateToken;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.validation.AdvancedSignature;
@@ -49,7 +60,13 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.security.cert.X509Certificate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.*;
@@ -100,15 +117,14 @@ public class GenericValidationReportBuilder {
     private void collectUsedCertificates() {
         usedCertificates = dssReports.getDiagnosticDataJaxb().getUsedCertificates().stream()
                 .map(usedCertificate -> {
-                    XmlDigestAlgoAndValue digestAlgoAndValue = usedCertificate.getDigestAlgoAndValue();
-                    Digest digest = new Digest(digestAlgoAndValue.getDigestMethod(), digestAlgoAndValue.getDigestValue());
-                    CertificateToken certSource = trustedListsCertificateSource.getCertificateTokenByDigest(digest);
-                    if (certSource != null) {
-                        return certSource;
+                    Optional<CertificateToken> certificateToken = trustedListsCertificateSource.getCertificates().stream()
+                            .filter(c -> c.getDSSIdAsString().equals(usedCertificate.getId()))
+                            .findFirst();
+                    if (certificateToken.isPresent()) {
+                        return certificateToken.get();
                     }
-
                     for (AdvancedSignature advancedSignature : signatures) {
-                        Optional<CertificateToken> optionalCertSource = advancedSignature.getCertificateListWithinSignatureAndTimestamps().stream()
+                        Optional<CertificateToken> optionalCertSource = advancedSignature.getCertificates().stream()
                                 .filter(signature -> signature.getDSSIdAsString().equals(usedCertificate.getId())).findFirst();
                         if (optionalCertSource.isPresent()) {
                             return optionalCertSource.get();
@@ -124,7 +140,10 @@ public class GenericValidationReportBuilder {
         ValidationConclusion validationConclusion = new ValidationConclusion();
         validationConclusion.setPolicy(createReportPolicy(validationPolicy));
         validationConclusion.setValidationTime(getValidationTime());
-        validationConclusion.setSignatureForm(getContainerType());
+        ASiCContainerType containerType = getContainerType();
+        if (containerType != null) {
+            validationConclusion.setSignatureForm(containerType.toString());
+        }
         validationConclusion.setValidationWarnings(Collections.emptyList());
         validationConclusion.setSignatures(buildSignatureValidationDataList());
         validationConclusion.setSignaturesCount(validationConclusion.getSignatures().size());
@@ -142,7 +161,7 @@ public class GenericValidationReportBuilder {
                 .collect(Collectors.toList());
     }
 
-    private String getContainerType() {
+    private ASiCContainerType getContainerType() {
         if (dssReports.getDiagnosticData().getContainerInfo() != null)
             return dssReports.getDiagnosticData().getContainerInfo().getContainerType();
         return null;
@@ -229,11 +248,11 @@ public class GenericValidationReportBuilder {
     }
 
     private Certificate getRevocationCertificate(SignatureWrapper signatureWrapper) {
-        List<XmlRelatedRevocation> relatedRevocations = signatureWrapper.getRelatedRevocations();
+        List<RelatedRevocationWrapper> relatedRevocations = signatureWrapper.foundRevocations().getRelatedRevocationData();
         if (CollectionUtils.isNotEmpty(relatedRevocations)) {
-            XmlRelatedRevocation lastRevocation = relatedRevocations.get(0);
-            if (lastRevocation.getRevocation().getSigningCertificate() != null) {
-                String revocationId = lastRevocation.getRevocation().getSigningCertificate().getCertificate().getId();
+            RelatedRevocationWrapper lastRevocation = relatedRevocations.get(0);
+            if (lastRevocation.getSigningCertificate() != null) {
+                String revocationId = lastRevocation.getSigningCertificate().getId();
                 return getCertificate(revocationId, CertificateType.REVOCATION);
             }
         }
@@ -262,8 +281,8 @@ public class GenericValidationReportBuilder {
         Optional<CertificateToken> issuerCert = usedCertificates.stream()
                 .filter(certificateToken -> certificateToken != null
                         && !certificateToken.isSelfSigned()
-                        && certificateToken.getSubjectX500Principal() != null
-                        && certificateToken.getSubjectX500Principal().equals(x509Certificate.getIssuerX500Principal()))
+                        && certificateToken.getSubject().getPrincipal() != null
+                        && certificateToken.getSubject().getPrincipal().equals(x509Certificate.getIssuerX500Principal()))
                 .findFirst();
         if (issuerCert.isPresent()) {
             Certificate certificate = new Certificate();
@@ -344,8 +363,9 @@ public class GenericValidationReportBuilder {
 
     private Date getBestSignatureTime(String signatureFormat, String signatureId) {
         if (signatureFormat.equals(LT_TM_XAdES_SIGNATURE_FORMAT)) {
-            List<XmlRelatedRevocation> revocations = dssReports.getDiagnosticData().getSignatureById(signatureId).getRelatedRevocations();
-            return revocations.isEmpty() ? null : revocations.get(0).getRevocation().getProductionDate();
+            SignatureWrapper signatureWrapper = dssReports.getDiagnosticData().getSignatureById(signatureId);
+            List<RelatedRevocationWrapper> revocations = signatureWrapper.foundRevocations().getRelatedRevocationData();
+            return revocations.isEmpty() ? null : revocations.get(0).getProductionDate();
         } else {
             TimestampWrapper timestamp = getBestTimestamp(signatureId);
             return timestamp == null ? null : timestamp.getProductionTime();
@@ -365,14 +385,14 @@ public class GenericValidationReportBuilder {
     }
 
     private String parseTimeAssertionMessageImprintFromOcspNonce(String signatureId) {
-        List<XmlRelatedRevocation> revocations = dssReports.getDiagnosticData().getSignatureById(signatureId).getRelatedRevocations();
-
-        if (revocations.isEmpty()) {
+        Optional<XmlSignature> signature = dssReports.getDiagnosticDataJaxb().getSignatures().stream()
+                .filter(s -> s.getId().equals(signatureId))
+                .findFirst();
+        if (signature.isEmpty()) {
             return "";
         }
-
         try {
-            return parseTimeAssertionMessageImprint(revocations.get(0).getRevocation());
+            return parseTimeAssertionMessageImprint(signature.get().getFoundRevocations().getRelatedRevocations().get(0).getRevocation());
         } catch (Exception e) {
             LOGGER.warn("Unable to parse time assertion message imprint from OCSP nonce: ", e);
             return ""; //parse errors due to corrupted OCSP data should be present in validation errors already

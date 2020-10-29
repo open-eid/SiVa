@@ -19,6 +19,7 @@ package ee.openeid.siva.integrationtest;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.hamcrest.Matchers;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -187,6 +188,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      * File: EE_SER-AEX-B-LTA-V-24.asice
      */
     @Test
+    @Ignore("DD4J-615")
     public void asiceBaselineLtaProfileValidSignature() {
         post(validationRequestFor("EE_SER-AEX-B-LTA-V-24.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -323,6 +325,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      * File: ASICE_TS_LTA_content_as_sce.sce
      */
     @Test
+    @Ignore("DD4J-615")
     public void asiceWithSceFileExtensionShouldPass() {
         post(validationRequestFor("ASICE_TS_LTA_content_as_sce.sce"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -386,8 +389,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
-                .body("signatures[0].warnings[0].content", Matchers.is(CERTIFICATE_DO_NOT_MATCH_TRUST_SERVICE))
-                .body("signatures[0].warnings[1].content", Matchers.is(ALL_FILES_NOT_SIGNED))
+                .body("signatures[0].warnings[0].content", Matchers.is(ALL_FILES_NOT_SIGNED))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("validSignaturesCount", Matchers.is(1));
 

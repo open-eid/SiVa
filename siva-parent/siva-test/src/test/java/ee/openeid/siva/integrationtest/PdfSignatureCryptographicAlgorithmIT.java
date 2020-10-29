@@ -90,7 +90,7 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())
-                .body("signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
+                .body("signatures[0].warnings", Matchers.emptyOrNullString())
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
 
@@ -189,7 +189,7 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
         post(validationRequestFor("hellopades-lt-sha256-rsa1023.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("signatures[0].subIndication", Matchers.is("NO_POE"))
+                .body("signatures[0].subIndication", Matchers.is("CRYPTO_CONSTRAINTS_FAILURE_NO_POE"))
                 .body("signatures[0].errors.content", Matchers.hasItem("The past signature validation is not conclusive!"));
     }
 

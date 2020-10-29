@@ -60,7 +60,6 @@ public class PDFWithNoSignaturesTest extends PDFValidationServiceTest {
         assertTrue(diagnosticData.getSignatures().isEmpty());
         assertTrue(diagnosticData.getUsedCertificates().isEmpty());
         assertTrue(diagnosticData.getTrustedLists().isEmpty());
-        assertNull(diagnosticData.getListOfTrustedLists());
     }
 
     @Test

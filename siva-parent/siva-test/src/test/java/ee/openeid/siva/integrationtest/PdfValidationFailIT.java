@@ -59,8 +59,7 @@ public class PdfValidationFailIT extends SiVaRestTests {
                 .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].errors.content", Matchers.hasItem("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("signatures[0].warnings.content[0]", Matchers.is("The trusted certificate doesn't match the trust service"))
-                .body("signatures[0].warnings.content[1]", Matchers.is("The signature/seal is not a valid AdES!"))
+                .body("signatures[0].warnings.content[0]", Matchers.is("The signature/seal is not a valid AdES digital signature!"))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -87,11 +86,10 @@ public class PdfValidationFailIT extends SiVaRestTests {
                 .body("signatures[0].signatureLevel", Matchers.is("INDETERMINATE_QESIG"))
                 .body("signatures[0].signedBy", Matchers.is("NURM,AARE,38211015222"))
                 .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("signatures[0].subIndication", Matchers.is("NO_POE"))
+                .body("signatures[0].subIndication", Matchers.is("REVOKED_NO_POE"))
                 .body("signatures[0].errors[0].content", Matchers.is("The past signature validation is not conclusive!"))
                 .body("signatures[0].claimedSigningTime", Matchers.is("2016-06-29T08:38:31Z"))
-                .body("signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
-                .body("signatures[0].warnings[1].content", Matchers.is("The signature/seal is an INDETERMINATE AdES!"))
+                .body("signatures[0].warnings[0].content", Matchers.is("The signature/seal is an INDETERMINATE AdES digital signature!"))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -115,13 +113,14 @@ public class PdfValidationFailIT extends SiVaRestTests {
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.emptyOrNullString())
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
-                .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
+                .body("signatures[0].signatureLevel", Matchers.is("INDETERMINATE_QESIG"))
                 .body("signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
                 .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("36706020210"))
                 .body("signatures[0].subjectDistinguishedName.commonName", Matchers.is("SINIVEE,VEIKO,36706020210"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is("SIG_CONSTRAINTS_FAILURE"))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("signatures[0].subIndication", Matchers.is("CHAIN_CONSTRAINTS_FAILURE"))
                 .body("signatures[0].errors[0].content", Matchers.is("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].errors[1].content", Matchers.is("The signer's certificate does not have an expected key-usage!"))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1));
     }

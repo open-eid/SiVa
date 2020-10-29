@@ -30,6 +30,7 @@ import ee.openeid.tsl.configuration.AlwaysFailingCRLSource;
 import ee.openeid.tsl.configuration.AlwaysFailingOCSPSource;
 import ee.openeid.validation.service.generic.validator.report.GenericValidationReportBuilder;
 import ee.openeid.validation.service.generic.validator.report.ReportBuilderData;
+import eu.europa.esig.dss.enumerations.TokenExtractionStategy;
 import eu.europa.esig.dss.model.DSSDocument;
 import eu.europa.esig.dss.model.DSSException;
 import eu.europa.esig.dss.model.InMemoryDocument;
@@ -121,14 +122,13 @@ public class GenericValidationService implements ValidationService {
     protected SignedDocumentValidator createValidatorFromDocument(final ValidationDocument validationDocument) {
         final DSSDocument dssDocument = createDssDocument(validationDocument);
         SignedDocumentValidator validator = SignedDocumentValidator.fromDocument(dssDocument);
-
-        CommonCertificateVerifier certificateVerifier = new CommonCertificateVerifier(trustedListsCertificateSource,
+        CommonCertificateVerifier certificateVerifier = new CommonCertificateVerifier(Collections.singletonList(trustedListsCertificateSource),
                 new AlwaysFailingCRLSource(), new AlwaysFailingOCSPSource(), new CommonsDataLoader());
-        certificateVerifier.setIncludeCertificateRevocationValues(true);
         LOGGER.info("Certificate pool size: {}", getCertificatePoolSize(certificateVerifier));
         validator.setCertificateVerifier(certificateVerifier);
         validator.setValidationLevel(VALIDATION_LEVEL);
 
+        validator.setTokenExtractionStategy(TokenExtractionStategy.EXTRACT_TIMESTAMPS_AND_REVOCATION_DATA);
         return validator;
     }
 
@@ -144,7 +144,7 @@ public class GenericValidationService implements ValidationService {
     }
 
     private int getCertificatePoolSize(CommonCertificateVerifier certificateVerifier) {
-        return certificateVerifier.getTrustedCertSource().getCertificatePool().getNumberOfCertificates();
+        return certificateVerifier.getTrustedCertSources().getNumberOfCertificates();
     }
 
     protected RuntimeException constructMalformedDocumentException(Exception cause) {

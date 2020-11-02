@@ -45,6 +45,7 @@ import eu.europa.esig.dss.model.x509.CertificateToken;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.validation.AdvancedSignature;
 import eu.europa.esig.dss.validation.executor.ValidationLevel;
+import eu.europa.esig.dss.validation.timestamp.TimestampToken;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -124,8 +125,13 @@ public class GenericValidationReportBuilder {
                         return certificateToken.get();
                     }
                     for (AdvancedSignature advancedSignature : signatures) {
-                        Optional<CertificateToken> optionalCertSource = advancedSignature.getCertificates().stream()
-                                .filter(signature -> signature.getDSSIdAsString().equals(usedCertificate.getId())).findFirst();
+                        List<CertificateToken> certificates = new ArrayList<>(advancedSignature.getCertificates());
+                        for (TimestampToken timestampToken : advancedSignature.getAllTimestamps()) {
+                            certificates.addAll(timestampToken.getCertificates());
+                        }
+                        Optional<CertificateToken> optionalCertSource = certificates.stream()
+                                .filter(cert -> cert.getDSSIdAsString().equals(usedCertificate.getId())).findFirst();
+
                         if (optionalCertSource.isPresent()) {
                             return optionalCertSource.get();
                         }

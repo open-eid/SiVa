@@ -255,8 +255,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
-                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_NO_CERTIFICATE_CHAIN_FOUND))
-                .body("signatures[0].info.bestSignatureTime", Matchers.is("2013-11-11T06:45:46Z")) //this may not be valid time to show
+                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_FORMAT_FAILURE))
                 .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE))
                 .body("signatures[0].certificates.size()", Matchers.is(1))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("SINIVEE,VEIKO,36706020210"))
@@ -543,7 +542,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
         post(validationRequestFor("TM-16_unknown.4.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
-                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].indication", Matchers.is(INDETERMINATE))
                 .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("validSignaturesCount", Matchers.is(0));

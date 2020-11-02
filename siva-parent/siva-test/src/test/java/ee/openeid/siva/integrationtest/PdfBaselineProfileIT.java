@@ -269,12 +269,12 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      public void documentMessageDigestAttributeValueDoesNotMatchCalculatedValue() {
         post(validationRequestFor("hellopades-lt1-lt2-wrongDigestValue.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
-                .body("signatures[1].signatureFormat", Matchers.is("PAdES_BASELINE_LTA"))
+                .body("signatures[1].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("signatures[1].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
                 .body("signatures[1].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[1].subIndication", Matchers.is("HASH_FAILURE"))
                 .body("signatures[1].errors[0].content", Matchers.is("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validSignaturesCount", Matchers.is(0))
+                .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(2));
     }
 
@@ -296,7 +296,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt1-lt2-Serial.pdf"));
         post(validationRequestWithValidKeys(encodedString, "hellopades-lt1-lt2-Serial.pdf", "POLv3"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
-                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LTA"))
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())

@@ -19,7 +19,6 @@ package ee.openeid.validation.service.timemark.report;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.*;
-import ee.openeid.siva.validation.document.report.SignatureProductionPlace;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.siva.validation.util.CertUtil;
@@ -27,14 +26,24 @@ import eu.europa.esig.dss.enumerations.SignatureQualification;
 import eu.europa.esig.dss.enumerations.SubIndication;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
-import org.digidoc4j.*;
+import org.digidoc4j.Container;
+import org.digidoc4j.DataFile;
+import org.digidoc4j.Signature;
+import org.digidoc4j.SignatureProfile;
+import org.digidoc4j.ValidationResult;
+import org.digidoc4j.X509Cert;
 import org.digidoc4j.exceptions.DigiDoc4JException;
 import org.digidoc4j.impl.asic.asice.AsicESignature;
 import org.digidoc4j.impl.ddoc.DDocContainer;
 import org.slf4j.LoggerFactory;
 
 import java.security.cert.X509Certificate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -226,17 +235,33 @@ public abstract class TimemarkContainerValidationReportBuilder {
     private Info getInfo(Signature signature) {
         Info info = new Info();
         info.setBestSignatureTime(getBestSignatureTime(signature));
+        if (signature instanceof AsicESignature) {
+            info.setTimestampCreationTime(getTimestampTime(signature));
+        }
+        info.setOcspResponseCreationTime(getOcspTime(signature));
         info.setTimeAssertionMessageImprint(getTimeAssertionMessageImprint(signature));
         info.setSignerRole(getSignerRole(signature));
         info.setSignatureProductionPlace(getSignatureProductionPlace(signature));
         return info;
     }
 
+    private String getOcspTime(Signature signature) {
+        return formatTime(signature.getOCSPResponseCreationTime());
+    }
+
+    private String getTimestampTime(Signature signature) {
+        return formatTime(signature.getTimeStampCreationTime());
+
+    }
+
     private String getBestSignatureTime(Signature signature) {
-        Date trustedTime = signature.getTrustedSigningTime();
-        return trustedTime != null
-                ? ReportBuilderUtils.getDateFormatterWithGMTZone().format(trustedTime)
-                : "";
+        return formatTime(signature.getTrustedSigningTime());
+    }
+
+    private String formatTime(Date date) {
+        return date != null
+                ? ReportBuilderUtils.getDateFormatterWithGMTZone().format(date)
+                : null;
     }
 
     private String getTimeAssertionMessageImprint(Signature signature) {

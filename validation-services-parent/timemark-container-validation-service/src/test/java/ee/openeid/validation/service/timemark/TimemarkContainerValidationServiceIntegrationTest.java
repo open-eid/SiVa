@@ -392,6 +392,25 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     @Test
+    public void timestampAndRevocationTimeExistsInLT(){
+        Reports reports = timemarkContainerValidationService.validateDocument(buildValidationDocument("LT_without_nonce.bdoc"));
+        SignatureValidationData signatureValidationData = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0);
+        Assert.assertEquals("2020-06-04T11:34:54Z", signatureValidationData.getInfo().getOcspResponseCreationTime());
+        Assert.assertEquals("2020-06-04T11:34:53Z", signatureValidationData.getInfo().getTimestampCreationTime());
+    }
+
+    @Test
+    public void timestampTimeMissingLT_TM(){
+        Reports reports = timemarkContainerValidationService.validateDocument(buildValidationDocument("bdoc_tm_valid_2_signatures.bdoc"));
+        SignatureValidationData signatureValidationData = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0);
+        Assert.assertEquals("2020-05-21T14:07:01Z", signatureValidationData.getInfo().getOcspResponseCreationTime());
+        Assert.assertNull(signatureValidationData.getInfo().getTimestampCreationTime());
+        SignatureValidationData signatureValidationData2 = reports.getSimpleReport().getValidationConclusion().getSignatures().get(1);
+        Assert.assertEquals("2020-05-28T10:59:14Z", signatureValidationData2.getInfo().getOcspResponseCreationTime());
+        Assert.assertNull(signatureValidationData2.getInfo().getTimestampCreationTime());
+    }
+
+    @Test
     public void certificatePresentLT_TM() throws Exception {
         Reports reports = timemarkContainerValidationService.validateDocument(buildValidationDocument(BDOC_TEST_FILE_ALL_SIGNED));
         SignatureValidationData signatureValidationData = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0);

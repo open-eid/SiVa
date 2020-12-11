@@ -38,6 +38,7 @@ import eu.europa.esig.dss.enumerations.DigestAlgorithm;
 import eu.europa.esig.dss.enumerations.EncryptionAlgorithm;
 import eu.europa.esig.dss.enumerations.Indication;
 import eu.europa.esig.dss.enumerations.MaskGenerationFunction;
+import eu.europa.esig.dss.enumerations.RevocationType;
 import eu.europa.esig.dss.enumerations.SignatureAlgorithm;
 import eu.europa.esig.dss.enumerations.SubIndication;
 import eu.europa.esig.dss.enumerations.TimestampType;
@@ -307,9 +308,9 @@ public class GenericValidationReportBuilder {
     }
 
     private String getSignatureId(String signatureId) {
-        String DAIdentifier = dssReports.getDiagnosticData().getSignatureById(signatureId).getDAIdentifier();
-        if (StringUtils.isNotBlank(DAIdentifier)) {
-            return DAIdentifier;
+        String daIdentifier = dssReports.getDiagnosticData().getSignatureById(signatureId).getDAIdentifier();
+        if (StringUtils.isNotBlank(daIdentifier)) {
+            return daIdentifier;
         }
         return signatureId;
     }
@@ -358,30 +359,49 @@ public class GenericValidationReportBuilder {
     }
 
     private Info parseSignatureInfo(String signatureFormat, String signatureId) {
-        Date bestSignatureTime = getBestSignatureTime(signatureFormat, signatureId);
         Info info = new Info();
-        info.setBestSignatureTime(bestSignatureTime == null ? "" : ReportBuilderUtils.getDateFormatterWithGMTZone().format(bestSignatureTime));
+        info.setBestSignatureTime(getBestSignatureTime(signatureFormat, signatureId));
+        info.setTimestampCreationTime(getTimestampTime(signatureId));
+        info.setOcspResponseCreationTime(getOcspResponseTime(signatureId));
         info.setTimeAssertionMessageImprint(parseTimeAssertionMessageImprint(signatureFormat, signatureId));
         info.setSignerRole(parseSignerRole(signatureId));
         info.setSignatureProductionPlace(parseSignatureProductionPlace(signatureId));
         return info;
     }
 
-    private Date getBestSignatureTime(String signatureFormat, String signatureId) {
+    private String formatDate(Date date) {
+        return date == null ? null : ReportBuilderUtils.getDateFormatterWithGMTZone().format(date);
+    }
+
+    private String getOcspResponseTime(String signatureId) {
+        SignatureWrapper signatureWrapper = dssReports.getDiagnosticData().getSignatureById(signatureId);
+        List<RelatedRevocationWrapper> revocations = signatureWrapper.foundRevocations().getRelatedRevocationData();
+        if (revocations.isEmpty()) {
+            return null;
+        }
+        RelatedRevocationWrapper revocationWrapper = revocations.get(0);
+        return revocationWrapper.getRevocationType() == RevocationType.CRL ? null : formatDate(revocationWrapper.getProductionDate());
+    }
+
+    private String getTimestampTime(String signatureId) {
+        TimestampWrapper timestamp = getBestTimestamp(signatureId);
+        return timestamp == null ? null : formatDate(timestamp.getProductionTime());
+    }
+
+    private String getBestSignatureTime(String signatureFormat, String signatureId) {
         if (signatureFormat.equals(LT_TM_XAdES_SIGNATURE_FORMAT)) {
-            SignatureWrapper signatureWrapper = dssReports.getDiagnosticData().getSignatureById(signatureId);
-            List<RelatedRevocationWrapper> revocations = signatureWrapper.foundRevocations().getRelatedRevocationData();
-            return revocations.isEmpty() ? null : revocations.get(0).getProductionDate();
+            return getOcspResponseTime(signatureId);
         } else {
-            TimestampWrapper timestamp = getBestTimestamp(signatureId);
-            return timestamp == null ? null : timestamp.getProductionTime();
+            return getTimestampTime(signatureId);
         }
     }
 
     private TimestampWrapper getBestTimestamp(String signatureId) {
+
+
         List<TimestampWrapper> timestamps = dssReports.getDiagnosticData().getSignatureById(signatureId)
                 .getTimestampListByType(TimestampType.SIGNATURE_TIMESTAMP);
-        return timestamps.isEmpty() ? null : timestamps.get(0);
+        return timestamps.isEmpty() ? null : Collections.min(timestamps, Comparator.comparing(TimestampWrapper::getProductionTime));
     }
 
     private String parseTimeAssertionMessageImprint(String signatureFormat, String signatureId) {

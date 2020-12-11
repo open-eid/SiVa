@@ -40,6 +40,7 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
 
     private static final String PDF_WITH_ONE_VALID_SIGNATURE = "hellopades-pades-lt-sha256-sign.pdf";
     private static final String PDF_SIGNED_WITH_UNQUALIFIED_CERTIFICATE = "hellopades-lt1-lt2-parallel3.pdf";
+    private static final String PDF_WITH_CRL = "PadesProfileLtWithCrl.pdf";
 
     @Test
     public void validatingWithValidPdfShouldReturnValidationReportPojo() throws Exception {
@@ -106,7 +107,14 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
     public void validationResultForPdfShouldContainNull() throws Exception {
         SimpleReport report = validateAndAssertReports(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE)).getSimpleReport();
-        assertEquals(null, report.getValidationConclusion().getSignatureForm());
+        assertNull(report.getValidationConclusion().getSignatureForm());
+    }
+
+    @Test
+    public void containerWithCrlOcspIsNull(){
+        SimpleReport report = validateAndAssertReports(
+                buildValidationDocument(PDF_WITH_CRL)).getSimpleReport();
+        assertNull(report.getValidationConclusion().getSignatures().get(0).getInfo().getOcspResponseCreationTime());
     }
 
     @Test

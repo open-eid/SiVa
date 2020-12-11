@@ -17,13 +17,24 @@
 package ee.openeid.validation.service.generic.report;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
-import ee.openeid.siva.validation.document.report.*;
+import ee.openeid.siva.validation.document.report.Reports;
+import ee.openeid.siva.validation.document.report.SignatureProductionPlace;
+import ee.openeid.siva.validation.document.report.SignerRole;
+import ee.openeid.siva.validation.document.report.SubjectDistinguishedName;
+import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.validation.service.generic.validator.report.GenericValidationReportBuilder;
 import ee.openeid.validation.service.generic.validator.report.ReportBuilderData;
 import eu.europa.esig.dss.diagnostic.jaxb.*;
-import eu.europa.esig.dss.enumerations.*;
+import eu.europa.esig.dss.enumerations.ASiCContainerType;
+import eu.europa.esig.dss.enumerations.DigestAlgorithm;
+import eu.europa.esig.dss.enumerations.EncryptionAlgorithm;
+import eu.europa.esig.dss.enumerations.EndorsementType;
+import eu.europa.esig.dss.enumerations.Indication;
+import eu.europa.esig.dss.enumerations.MaskGenerationFunction;
+import eu.europa.esig.dss.enumerations.SignatureLevel;
+import eu.europa.esig.dss.enumerations.TimestampType;
 import eu.europa.esig.dss.model.FileDocument;
 import eu.europa.esig.dss.pades.validation.PDFDocumentValidator;
 import eu.europa.esig.dss.simplereport.jaxb.XmlSimpleReport;
@@ -36,7 +47,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 
@@ -258,7 +274,55 @@ public class GenericValidationReportBuilderTest {
         Assert.assertEquals("", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getTimeAssertionMessageImprint());
     }
 
-    private ReportBuilderData getReportBuilderData(eu.europa.esig.dss.validation.reports.Reports reports){
+    @Test
+    public void populatesTimestampCreationTime() {
+        XmlDiagnosticData diagnosticData = getDiagnosticDataJaxb("");
+
+        eu.europa.esig.dss.validation.reports.Reports dssReports = new eu.europa.esig.dss.validation.reports.Reports(diagnosticData, null, getSimpleReport(), null);
+        ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
+        Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
+
+        Assert.assertEquals("2018-02-11T00:00:00Z",
+                reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getTimestampCreationTime());
+    }
+
+    @Test
+    public void timestampCreationTimeIsEmpty() {
+        XmlDiagnosticData diagnosticData = getDiagnosticDataJaxb("");
+
+        diagnosticData.getSignatures().get(0).setFoundTimestamps(new ArrayList<>());
+        eu.europa.esig.dss.validation.reports.Reports dssReports = new eu.europa.esig.dss.validation.reports.Reports(diagnosticData, null, getSimpleReport(), null);
+
+        ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
+        Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
+        Assert.assertNull(reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getTimestampCreationTime());
+    }
+
+    @Test
+    public void populatesOcspResponseCreationTime(){
+        XmlDiagnosticData diagnosticData = getDiagnosticDataJaxb("");
+
+        eu.europa.esig.dss.validation.reports.Reports dssReports = new eu.europa.esig.dss.validation.reports.Reports(diagnosticData, null, getSimpleReport(), null);
+        ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
+        Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
+
+        Assert.assertEquals("2018-02-16T00:00:00Z",
+                reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getOcspResponseCreationTime());
+    }
+
+    @Test
+    public void ocspResponseIsEmpty() {
+        XmlDiagnosticData diagnosticData = getDiagnosticDataJaxb("");
+
+        diagnosticData.getSignatures().get(0).setFoundRevocations(null);
+        eu.europa.esig.dss.validation.reports.Reports dssReports = new eu.europa.esig.dss.validation.reports.Reports(diagnosticData, null, getSimpleReport(), null);
+
+        ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
+        Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
+        Assert.assertNull(reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getOcspResponseCreationTime());
+    }
+
+    private ReportBuilderData getReportBuilderData(eu.europa.esig.dss.validation.reports.Reports reports) {
         return ReportBuilderData.builder()
                 .dssReports(reports)
                 .validationLevel(ValidationLevel.ARCHIVAL_DATA)
@@ -269,6 +333,7 @@ public class GenericValidationReportBuilderTest {
                 .signatures(getSignatures())
                 .build();
     }
+
     private ValidationDocument getValidationDocument() {
         ValidationDocument validationDocument = new ValidationDocument();
         validationDocument.setName("filename.bdoc");
@@ -302,11 +367,24 @@ public class GenericValidationReportBuilderTest {
         xmlSignature.setSignatureScopes(Collections.singletonList(xmlSignatureScope));
         xmlSignature.setId("SIG-id");
 
+        LocalDate timestampLocalDate = LocalDate.of(2018, Month.FEBRUARY, 11);
+        Date timestampDate = Date.from(timestampLocalDate.atStartOfDay(ZoneId.of("Zulu")).toInstant());
         XmlFoundTimestamp xmlFoundTimestamp = new XmlFoundTimestamp();
-        xmlFoundTimestamp.setTimestamp(new XmlTimestamp());
+        XmlTimestamp xmlTimestamp = new XmlTimestamp();
+        xmlTimestamp.setType(TimestampType.SIGNATURE_TIMESTAMP);
+        xmlTimestamp.setProductionTime(timestampDate);
+        xmlFoundTimestamp.setTimestamp(xmlTimestamp);
         xmlSignature.setFoundTimestamps(Collections.singletonList(xmlFoundTimestamp));
 
+
+        LocalDate revocationLocalDate = LocalDate.of(2018, Month.FEBRUARY, 16);
+        Date revocationDate = Date.from(revocationLocalDate.atStartOfDay(ZoneId.of("Zulu")).toInstant());
         XmlFoundRevocations xmlFoundRevocations = new XmlFoundRevocations();
+        XmlRelatedRevocation xmlRelatedRevocation = new XmlRelatedRevocation();
+        XmlRevocation xmlRevocation = new XmlRevocation();
+        xmlRevocation.setProductionDate(revocationDate);
+        xmlRelatedRevocation.setRevocation(xmlRevocation);
+        xmlFoundRevocations.getRelatedRevocations().add(xmlRelatedRevocation);
         xmlSignature.setFoundRevocations(xmlFoundRevocations);
 
         XmlPolicy xmlPolicy = new XmlPolicy();

@@ -80,13 +80,13 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
+            <version>2.12.0</version>
         </dependency>
         <dependency>
             <groupId>com.sun.xml.messaging.saaj</groupId>
             <artifactId>saaj-impl</artifactId>
             <version>1.5.1</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.santuario</groupId>
             <artifactId>xmlsec</artifactId>
@@ -94,7 +94,7 @@
         <dependency>
             <groupId>co.elastic.logging</groupId>
             <artifactId>logback-ecs-encoder</artifactId>
-            <version>0.4.0</version>
+            <version>0.5.2</version>
         </dependency>
         <!-- Testing -->
         <dependency>

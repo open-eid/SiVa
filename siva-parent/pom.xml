@@ -39,7 +39,7 @@
     </modules>
 
     <properties>
-        <cxf.version>3.2.14</cxf.version>
+        <cxf.version>3.4.1</cxf.version>
         <junit.version>4.12</junit.version>
         <mockito.version>2.23.4</mockito.version>
     </properties>
@@ -251,17 +251,17 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
-                <version>2.10.0</version>
+                <version>2.12.0</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>2.10.0</version>
+                <version>2.12.0</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
-                <version>2.10.0</version>
+                <version>2.12.0</version>
             </dependency>
             <dependency>
                 <groupId>org.json</groupId>

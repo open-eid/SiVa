@@ -179,7 +179,6 @@
                 <groupId>org.yaml</groupId>
                 <artifactId>snakeyaml</artifactId>
                 <version>1.27</version>
-                <scope>test</scope>
             </dependency>
 
             <!-- Webjars -->

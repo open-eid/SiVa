@@ -397,8 +397,6 @@ public class GenericValidationReportBuilder {
     }
 
     private TimestampWrapper getBestTimestamp(String signatureId) {
-
-
         List<TimestampWrapper> timestamps = dssReports.getDiagnosticData().getSignatureById(signatureId)
                 .getTimestampListByType(TimestampType.SIGNATURE_TIMESTAMP);
         return timestamps.isEmpty() ? null : Collections.min(timestamps, Comparator.comparing(TimestampWrapper::getProductionTime));
@@ -434,24 +432,12 @@ public class GenericValidationReportBuilder {
 
     private String parseTimeAssertionMessageImprintFromTimestamp(String signatureId) {
         TimestampWrapper timestamp = getBestTimestamp(signatureId);
-
-        if (timestamp == null || !timestamp.isMessageImprintDataFound() || !timestamp.isMessageImprintDataIntact()) {
-            return "";
-        }
-
         try {
-            return parseTimeAssertionMessageImprint(timestamp);
+            return ReportBuilderUtils.parseTimeAssertionMessageImprint(timestamp);
         } catch (Exception e) {
-            LOGGER.warn("Unable to parse time assertion message imprint from timestamop: ", e);
+            LOGGER.warn("Unable to parse time assertion message imprint from timestamp: ", e);
             return ""; //parse errors due to corrupted timestamp data should be present in validation errors already
         }
-    }
-
-    private String parseTimeAssertionMessageImprint(TimestampWrapper timestamp) throws IOException {
-        XmlDigestMatcher messageImprint = timestamp.getMessageImprint();
-        AlgorithmIdentifier algorithm = new DefaultDigestAlgorithmIdentifierFinder().find(messageImprint.getDigestMethod().getJavaName());
-        byte[] nonce = new MessageImprint(algorithm, messageImprint.getDigestValue()).getEncoded();
-        return StringUtils.defaultString(Base64.encodeBase64String(nonce));
     }
 
     private List<SignerRole> parseSignerRole(String signatureId) {

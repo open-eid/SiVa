@@ -383,12 +383,12 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     @Test
-    public void timeAssertionMessageImprintIsEmptyForMissingOcspData() {
+    public void timeAssertionMessageImprintIsNotEmptyForLT() {
         Reports reports = timemarkContainerValidationService.validateDocument(buildValidationDocument("LT_without_nonce.bdoc"));
 
         SignatureValidationData signatureValidationData = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0);
 
-        assertEquals("", signatureValidationData.getInfo().getTimeAssertionMessageImprint());
+        assertEquals("MDEwDQYJYIZIAWUDBAIBBQAEIE541TO5ZHHgKv60XxTXJX0Qg04pjs4uN8bELnDUDFp1", signatureValidationData.getInfo().getTimeAssertionMessageImprint());
     }
 
     @Test

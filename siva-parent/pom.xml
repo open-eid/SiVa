@@ -40,7 +40,7 @@
 
     <properties>
         <cxf.version>3.4.1</cxf.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <mockito.version>2.23.4</mockito.version>
     </properties>
 

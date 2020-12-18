@@ -101,6 +101,14 @@ public class PDFValidationServiceTest {
     }
 
     @Test
+    public void populatesSigningReason() {
+        SimpleReport report = validateAndAssertReports(buildValidationDocument(PDF_WITH_REASON_AND_LOCATION)).getSimpleReport();
+        String reason = report.getValidationConclusion().getSignatures().get(0)
+                .getInfo().getSigningReason();
+        assertEquals("Roll??", reason);
+    }
+
+    @Test
     public void populatesSignatureMethod() {
         SimpleReport report = validateAndAssertReports(buildValidationDocument(PDF_WITH_REASON_AND_LOCATION)).getSimpleReport();
         assertEquals("http://www.w3.org/2001/04/xmldsig-more#rsa-sha512",

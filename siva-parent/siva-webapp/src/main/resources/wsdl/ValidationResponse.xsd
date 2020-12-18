@@ -169,6 +169,7 @@
             <xs:element name="TimeAssertionMessageImprint" minOccurs="0" type="xs:string"/>
             <xs:element name="SignerRole" minOccurs="0" maxOccurs="unbounded" type="tns:SignerRole"/>
             <xs:element minOccurs="0" name="SignatureProductionPlace" type="tns:SignatureProductionPlace"/>
+            <xs:element minOccurs="0" name="SigningReason" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 

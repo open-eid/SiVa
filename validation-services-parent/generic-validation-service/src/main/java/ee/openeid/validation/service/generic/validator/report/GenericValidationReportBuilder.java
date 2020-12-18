@@ -366,6 +366,7 @@ public class GenericValidationReportBuilder {
         info.setTimeAssertionMessageImprint(parseTimeAssertionMessageImprint(signatureFormat, signatureId));
         info.setSignerRole(parseSignerRole(signatureId));
         info.setSignatureProductionPlace(parseSignatureProductionPlace(signatureId));
+        info.setSigningReason(parseReason(signatureId));
         return info;
     }
 
@@ -445,6 +446,10 @@ public class GenericValidationReportBuilder {
                 .filter(xmlSignerRole -> StringUtils.isNotEmpty(xmlSignerRole.getRole()))
                 .map(this::mapXmlSignerRole)
                 .collect(Collectors.toList());
+    }
+
+    private String parseReason(String signatureId){
+        return dssReports.getDiagnosticData().getSignatureById(signatureId).getReason();
     }
 
     private SignerRole mapXmlSignerRole(XmlSignerRole xmlSignerRole) {

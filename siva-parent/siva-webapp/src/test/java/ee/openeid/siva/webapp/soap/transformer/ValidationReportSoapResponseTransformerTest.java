@@ -162,6 +162,7 @@ public class ValidationReportSoapResponseTransformerTest {
         assertEquals(dssSignature.getInfo().getSignatureProductionPlace().getCity(), responseSignature.getInfo().getSignatureProductionPlace().getCity());
         assertEquals(dssSignature.getInfo().getSignatureProductionPlace().getPostalCode(), responseSignature.getInfo().getSignatureProductionPlace().getPostalCode());
         assertEquals(dssSignature.getInfo().getSignatureProductionPlace().getStateOrProvince(), responseSignature.getInfo().getSignatureProductionPlace().getStateOrProvince());
+        assertEquals(dssSignature.getInfo().getSigningReason(), responseSignature.getInfo().getSigningReason());
         assertEquals(dssSignature.getErrors().get(0).getContent(), responseSignature.getErrors().getError().get(0).getContent());
         assertEquals(dssSignature.getWarnings().get(0).getContent(), responseSignature.getWarnings().getWarning().get(0).getContent());
         assertEquals(dssSignature.getSignatureScopes().get(0).getContent(), responseSignature.getSignatureScopes().getSignatureScope().get(0).getContent());
@@ -446,6 +447,7 @@ public class ValidationReportSoapResponseTransformerTest {
         info.setTimestampCreationTime("2016-09-21T14:00:01Z");
         info.setOcspResponseCreationTime("2016-09-21T14:00:02Z");
         info.setTimeAssertionMessageImprint("messageImprint123");
+        info.setSigningReason("Important reason");
         SignerRole signerRole1 = new SignerRole();
         signerRole1.setClaimedRole("role1");
         info.setSignerRole(Collections.singletonList(signerRole1));

@@ -27,6 +27,7 @@ public class Info {
     private String ocspResponseCreationTime;
     private String timestampCreationTime;
     private String timeAssertionMessageImprint;
+    private String signingReason;
     private List<SignerRole> signerRole;
     private SignatureProductionPlace signatureProductionPlace;
 

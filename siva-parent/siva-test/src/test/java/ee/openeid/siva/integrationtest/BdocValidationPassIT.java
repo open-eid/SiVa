@@ -564,7 +564,37 @@ public class BdocValidationPassIT extends SiVaRestTests {
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2013-11-13T10:09:49Z"))
                 .body("signatures[0].warnings", Matchers.emptyOrNullString())
                 .body("validSignaturesCount", Matchers.is(1));
+    }
 
+    /**
+     * TestCaseID: Bdoc-ValidationPass-23
+     * <p>
+     * TestType: Automated
+     * <p>
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
+     * <p>
+     * Title: Bdoc with TEST of SK OCSP RESPONDER 2020
+     * <p>
+     * Expected Result: The document should pass
+     * <p>
+     * File: test_of_OCSP_responder_2020.bdoc
+     */
+
+    @Test
+    public void validSignatureTestOfOCSPResponder2020ForTimeMarkShoulPass() {
+        setTestFilesDirectory("bdoc/test/timemark/");
+        post(validationRequestFor("test_of_OCSP_responder_2020.bdoc"))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT_TM))
+                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[0].certificates.size()", Matchers.is(2))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("ŽAIKOVSKI,IGOR,37101010021"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIFvjCCA6agAwIBAgIQN7pWa1fk0oJaAwZD/BO7MjANBgkqhk"))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName",  Matchers.is("TEST of SK OCSP RESPONDER 2020"))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content",  Matchers.startsWith("MIIEzjCCA7agAwIBAgIQa7w4iGoiIOtfrn0fG/hc1zANBgkqhk"))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(1));
     }
 
     @Override

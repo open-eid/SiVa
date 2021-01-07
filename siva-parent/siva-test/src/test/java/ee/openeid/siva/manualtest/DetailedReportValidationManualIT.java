@@ -406,10 +406,14 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
                 .body("basicBuildingBlocks[3].sav.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_19))
                 .body("basicBuildingBlocks[3].sav.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
                 .body("basicBuildingBlocks[3].sav.constraint[1].name", notNullValue())
-                .body("basicBuildingBlocks[3].sav.constraint[1].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_20))
-                .body("basicBuildingBlocks[3].sav.constraint[1].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_20))
+                .body("basicBuildingBlocks[3].sav.constraint[1].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_59))
+                .body("basicBuildingBlocks[3].sav.constraint[1].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_59))
                 .body("basicBuildingBlocks[3].sav.constraint[1].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
-                .body("basicBuildingBlocks[3].sav.constraint[1].additionalInfo", notNullValue())
+                .body("basicBuildingBlocks[3].sav.constraint[2].name", notNullValue())
+                .body("basicBuildingBlocks[3].sav.constraint[2].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_20))
+                .body("basicBuildingBlocks[3].sav.constraint[2].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_20))
+                .body("basicBuildingBlocks[3].sav.constraint[2].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
+                .body("basicBuildingBlocks[3].sav.constraint[2].additionalInfo", notNullValue())
                 .body("basicBuildingBlocks[3].sav.conclusion.", notNullValue())
                 .body("basicBuildingBlocks[3].sav.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
                 .body("basicBuildingBlocks[3].xcv.constraint[0]", notNullValue())
@@ -461,8 +465,10 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
                 .body("signatureOrTimestampOrCertificate[0].validationProcessBasicSignature.constraint[0].id", equalTo("S-D2C322D4081AFF8711CC89FCB2D58DBECEA5F13CDF37A0138AF67FDC2930989C"))
                 .body("signatureOrTimestampOrCertificate[0].validationProcessBasicSignature.conclusion.indication", equalTo(VALID_INDICATION_VALUE_FAILED))
                 .body("signatureOrTimestampOrCertificate[0].validationProcessBasicSignature.conclusion.subIndication", equalTo(SUB_INDICATION_SIG_CRYPTO_FAILURE))
-                .body("signatureOrTimestampOrCertificate[0].validationProcessBasicSignature.conclusion.errors[0].value", equalTo(VALID_VALIDATION_PROCESS_ERROR_VALUE_9))
-                .body("signatureOrTimestampOrCertificate[0].validationProcessBasicSignature.conclusion.errors[0].nameId", equalTo(VALID_VALIDATION_PROCESS_ERROR_NAMEID_8))
+                .body("signatureOrTimestampOrCertificate[0].validationProcessBasicSignature.conclusion.errors[0].value", equalTo(VALID_VALIDATION_PROCESS_ERROR_VALUE_10))
+                .body("signatureOrTimestampOrCertificate[0].validationProcessBasicSignature.conclusion.errors[0].nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_32))
+                .body("signatureOrTimestampOrCertificate[0].validationProcessBasicSignature.conclusion.errors[1].value", equalTo(VALID_VALIDATION_PROCESS_ERROR_VALUE_9))
+                .body("signatureOrTimestampOrCertificate[0].validationProcessBasicSignature.conclusion.errors[1].nameId", equalTo(VALID_VALIDATION_PROCESS_ERROR_NAMEID_8))
                 .body("signatureOrTimestampOrCertificate[0].timestamp[0].validationProcessTimestamp.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_49))
                 .body("signatureOrTimestampOrCertificate[0].timestamp[0].validationProcessTimestamp.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_48))
                 .body("signatureOrTimestampOrCertificate[0].timestamp[0].validationProcessTimestamp.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_1))
@@ -482,8 +488,10 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
                 .body("signatureOrTimestampOrCertificate[0].validationProcessLongTermData.constraint[0].error.nameId", equalTo(VALID_VALIDATION_PROCESS_ERROR_NAMEID_3))
                 .body("signatureOrTimestampOrCertificate[0].validationProcessLongTermData.conclusion.indication", equalTo(VALID_INDICATION_VALUE_FAILED))
                 .body("signatureOrTimestampOrCertificate[0].validationProcessLongTermData.conclusion.subIndication", equalTo(SUB_INDICATION_SIG_CRYPTO_FAILURE))
-                .body("signatureOrTimestampOrCertificate[0].validationProcessLongTermData.conclusion.errors[0].nameId", equalTo(VALID_VALIDATION_PROCESS_ERROR_NAMEID_8))
-                .body("signatureOrTimestampOrCertificate[0].validationProcessLongTermData.conclusion.errors[0].value", equalTo(VALID_VALIDATION_PROCESS_ERROR_VALUE_9));
+                .body("signatureOrTimestampOrCertificate[0].validationProcessLongTermData.conclusion.errors[0].nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_32))
+                .body("signatureOrTimestampOrCertificate[0].validationProcessLongTermData.conclusion.errors[0].value", equalTo(VALID_VALIDATION_PROCESS_ERROR_VALUE_10))
+                .body("signatureOrTimestampOrCertificate[0].validationProcessLongTermData.conclusion.errors[1].nameId", equalTo(VALID_VALIDATION_PROCESS_ERROR_NAMEID_8))
+                .body("signatureOrTimestampOrCertificate[0].validationProcessLongTermData.conclusion.errors[1].value", equalTo(VALID_VALIDATION_PROCESS_ERROR_VALUE_9));
     }
 
     /**

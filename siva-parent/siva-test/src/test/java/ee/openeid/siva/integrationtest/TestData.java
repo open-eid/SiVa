@@ -155,6 +155,7 @@ public class TestData {
     public static final String VALID_VALIDATION_PROCESS_NAMEID_55 = "ARCCM";
     public static final String VALID_VALIDATION_PROCESS_NAMEID_56 = "BBB_XCV_IRDC";
     public static final String VALID_VALIDATION_PROCESS_NAMEID_57 = "BBB_XCV_IARDPFC";
+    public static final String VALID_VALIDATION_PROCESS_NAMEID_59 = "BBB_SAV_ISQPMDOSPP";
 
 
 
@@ -217,6 +218,7 @@ public class TestData {
     public static final String VALID_VALIDATION_PROCESS_VALUE_56 = "Is revocation's signature intact?";
     public static final String VALID_VALIDATION_PROCESS_VALUE_57 = "Is the revocation data consistent?";
     public static final String VALID_VALIDATION_PROCESS_VALUE_58 = "Is an acceptable revocation data present for the certificate?";
+    public static final String VALID_VALIDATION_PROCESS_VALUE_59 = "Is the signed qualifying property: 'message-digest' or 'SignedProperties' present?";
 
 
     public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_1 = "The result of the Basic validation process is not conclusive!";
@@ -228,6 +230,7 @@ public class TestData {
     public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_7 = "The certificate is not qualified!";
     public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_8 = "No revocation data for the certificate";
     public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_9 = "The signature is not intact!";
+    public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_10 = "The current time is not in the validity range of the signer's certificate.";
     public static final String TS_PROCESS_NOT_CONCLUSIVE = "The result of the timestamps validation process is not conclusive!";
     public static final String REFERENCE_DATA_NOT_INTACT = "The reference data object is not intact!";
     public static final String CERTIFICATE_DO_NOT_MATCH_TRUST_SERVICE = "The trusted certificate doesn't match the trust service";

@@ -55,11 +55,6 @@ public class DDOCContainerValidationReportBuilder extends TimemarkContainerValid
     }
 
     @Override
-    List<Warning> getExtraWarnings(Signature signature) {
-        return Collections.emptyList();
-    }
-
-    @Override
     List<ValidationWarning> getExtraValidationWarnings() {
         ValidationWarning timestampValidationWarning = new ValidationWarning();
         timestampValidationWarning.setContent(DDOC_TIMESTAMP_WARNING);

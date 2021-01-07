@@ -35,7 +35,7 @@
             <Id>application/vnd.etsi.asic-e+zip</Id>
         </AcceptableMimeTypeFileContent>
         <ManifestFilePresent Level="FAIL"/>
-        <AllFilesSigned Level="WARN"/>
+        <AllFilesSigned Level="FAIL"/>
     </ContainerConstraints>
     <SignatureConstraints>
         <AcceptablePolicies Level="FAIL">

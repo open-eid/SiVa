@@ -96,10 +96,9 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     public void vShouldHaveSignatureWarnings() throws Exception {
         SimpleReport validationResult = timemarkContainerValidationService.validateDocument(buildValidationDocument(BDOC_TEST_FILE_UNSIGNED)).getSimpleReport();
         List<Warning> signatureValidationData = validationResult.getValidationConclusion().getSignatures().get(0).getWarnings();
-        assertThat(signatureValidationData, hasSize(2));
+        assertThat(signatureValidationData, hasSize(1));
         assertThat(signatureValidationData, containsInAnyOrder(
-                hasProperty("content", is("The signature/seal is not a valid AdES digital signature!")),
-                hasProperty("content", is("Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml"))
+                hasProperty("content", is("The signature/seal is not a valid AdES digital signature!"))
         ));
     }
 

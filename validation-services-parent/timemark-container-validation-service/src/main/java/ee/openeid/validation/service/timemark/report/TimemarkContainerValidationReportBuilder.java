@@ -296,13 +296,11 @@ public abstract class TimemarkContainerValidationReportBuilder {
 
     private List<Warning> getWarnings(Signature signature) {
         ValidationResult signatureValidationResult = signatureValidationResults.get(signature.getUniqueId());
-        List<Warning> warnings = Stream.of(signatureValidationResult.getWarnings(), this.validationResult.getWarnings())
+        return Stream.of(signatureValidationResult.getWarnings(), this.validationResult.getWarnings())
                 .flatMap(Collection::stream)
                 .distinct()
                 .map(TimemarkContainerValidationReportBuilder::mapDigidoc4JWarning)
                 .collect(Collectors.toList());
-        warnings.addAll(getExtraWarnings(signature));
-        return warnings;
     }
 
     private List<Error> getErrors(Signature signature) {
@@ -346,8 +344,6 @@ public abstract class TimemarkContainerValidationReportBuilder {
     abstract String getSubIndication(Signature signature, Map<String, ValidationResult> signatureValidationResults);
 
     abstract String getSignatureLevel(Signature signature);
-
-    abstract List<Warning> getExtraWarnings(Signature signature);
 
     abstract List<ValidationWarning> getExtraValidationWarnings();
 

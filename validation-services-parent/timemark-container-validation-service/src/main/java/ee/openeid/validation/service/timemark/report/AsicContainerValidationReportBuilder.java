@@ -80,16 +80,6 @@ public class AsicContainerValidationReportBuilder extends TimemarkContainerValid
     }
 
     @Override
-    List<Warning> getExtraWarnings(Signature signature) {
-        List<String> dataFilenames = container.getDataFiles().stream().map(DataFile::getName).collect(Collectors.toList());
-        Warning warning = createValidationWarning(signature, getUnsignedFiles((AsicESignature) signature, dataFilenames));
-        if (warning == null) {
-            return Collections.emptyList();
-        }
-        return Collections.singletonList(warning);
-    }
-
-    @Override
     List<ValidationWarning> getExtraValidationWarnings() {
         return Collections.emptyList();
     }
@@ -130,27 +120,6 @@ public class AsicContainerValidationReportBuilder extends TimemarkContainerValid
             LOGGER.warn("datafile " + uri + " has unsupported encoding", e);
             return uri;
         }
-    }
-
-    private Warning createValidationWarning(Signature signature, List<String> unsignedFiles) {
-        if (unsignedFiles.isEmpty()) {
-            return null;
-        }
-        String signedBy = removeQuotes(signature.getSigningCertificate().getSubjectName(CN));
-        String commaSeparated = String.join(", ", unsignedFiles);
-        String content = String.format("Signature %s has unsigned files: %s", signedBy, commaSeparated);
-        return createWarning(content);
-    }
-
-    private List<String> getUnsignedFiles(AsicESignature bDocSignature, List<String> dataFilenames) {
-        List<String> uris = bDocSignature.getOrigin().getReferences()
-                .stream()
-                .map(reference -> decodeUriIfPossible(reference.getURI()))
-                .filter(dataFilenames::contains)
-                .collect(Collectors.toList());
-        return dataFilenames.stream()
-                .filter(df -> !uris.contains(df))
-                .collect(Collectors.toList());
     }
 
 }

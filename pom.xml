@@ -106,6 +106,7 @@
         <dss.version>5.7.d4j.1</dss.version>
         <bouncycastle.version>1.65</bouncycastle.version>
         <spring.boot.version>2.2.12.RELEASE</spring.boot.version>
+        <junit.version>4.13.1</junit.version>
         <powermock.version>2.0.4</powermock.version>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>

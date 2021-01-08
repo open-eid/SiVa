@@ -99,6 +99,16 @@
                 <artifactId>jackson-annotations</artifactId>
                 <version>2.12.0</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.santuario</groupId>
+                <artifactId>xmlsec</artifactId>
+                <version>2.1.4</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>2.6</version>
+            </dependency>
             <!-- Override vulnerable version-->
             <dependency>
                 <groupId>org.yaml</groupId>
@@ -128,11 +138,36 @@
                 <artifactId>lombok</artifactId>
                 <version>1.18.16</version>
             </dependency>
+            <!-- Test dependencies -->
+            <dependency>
+                <groupId>org.junit.vintage</groupId>
+                <artifactId>junit-vintage-engine</artifactId>
+                <version>${junit.jupiter.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
+                <version>${junit.jupiter.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.platform</groupId>
+                <artifactId>junit-platform-engine</artifactId>
+                <version>1.7.0</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.platform</groupId>
+                <artifactId>junit-platform-commons</artifactId>
+                <version>1.7.0</version>
+                <scope>test</scope>
+            </dependency>
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>${junit.version}</version>
                 <scope>test</scope>
+                <version>${junit.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.powermock</groupId>
@@ -143,16 +178,6 @@
                 <groupId>org.powermock</groupId>
                 <artifactId>powermock-api-mockito2</artifactId>
                 <version>${powermock.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.santuario</groupId>
-                <artifactId>xmlsec</artifactId>
-                <version>2.1.4</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>2.6</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

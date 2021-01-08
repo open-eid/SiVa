@@ -14,7 +14,8 @@
   ~ See the Licence for the specific language governing permissions and limitations under the Licence.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>siva</artifactId>
         <groupId>ee.openid.siva</groupId>
@@ -40,7 +41,6 @@
 
     <properties>
         <cxf.version>3.4.1</cxf.version>
-        <junit.jupiter.version>5.7.0</junit.jupiter.version>
         <mockito.version>2.23.4</mockito.version>
     </properties>
 
@@ -294,16 +294,34 @@
 
             <!-- Test dependencies -->
             <dependency>
+                <groupId>org.junit.vintage</groupId>
+                <artifactId>junit-vintage-engine</artifactId>
+                <version>${junit.jupiter.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-api</artifactId>
                 <version>${junit.jupiter.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
+                <groupId>org.junit.platform</groupId>
+                <artifactId>junit-platform-commons</artifactId>
+                <version>1.7.0</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.platform</groupId>
+                <artifactId>junit-platform-engine</artifactId>
+                <version>1.7.0</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>${junit.version}</version>
                 <scope>test</scope>
+                <version>${junit.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.powermock</groupId>

@@ -18,7 +18,7 @@ package ee.openeid.tsl;
 
 import ee.openeid.tsl.configuration.TSLLoaderConfigurationProperties;
 import eu.europa.esig.dss.model.DSSDocument;
-import eu.europa.esig.dss.model.FileDocument;
+import eu.europa.esig.dss.model.InMemoryDocument;
 import eu.europa.esig.dss.service.http.commons.CommonsDataLoader;
 import eu.europa.esig.dss.service.http.commons.FileCacheDataLoader;
 import eu.europa.esig.dss.spi.client.http.DSSFileLoader;
@@ -26,22 +26,21 @@ import eu.europa.esig.dss.spi.client.http.IgnoreDataLoader;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.spi.x509.KeyStoreCertificateSource;
 import eu.europa.esig.dss.tsl.function.EULOTLOtherTSLPointer;
+import eu.europa.esig.dss.tsl.function.EUTLOtherTSLPointer;
 import eu.europa.esig.dss.tsl.function.OfficialJournalSchemeInformationURI;
 import eu.europa.esig.dss.tsl.function.SchemeTerritoryOtherTSLPointer;
 import eu.europa.esig.dss.tsl.function.XMLOtherTSLPointer;
 import eu.europa.esig.dss.tsl.job.TLValidationJob;
 import eu.europa.esig.dss.tsl.source.LOTLSource;
 import org.apache.commons.collections4.CollectionUtils;
+import org.digidoc4j.utils.ResourceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 @Component("tslLoader")
@@ -87,14 +86,17 @@ public class TSLLoader {
         lotlSource.setCertificateSource(keyStoreCertificateSource);
         lotlSource.setSigningCertificatesAnnouncementPredicate(new OfficialJournalSchemeInformationURI(configurationProperties.getOjUrl()));
         lotlSource.setPivotSupport(false);
-        Set<String> trustedTerritories = new HashSet<>();
-        if (!configurationProperties.getTrustedTerritories().isEmpty()) {
-            CollectionUtils.addAll(trustedTerritories, configurationProperties.getTrustedTerritories());
-        }
         lotlSource.setLotlPredicate(new EULOTLOtherTSLPointer()
                 .and(new XMLOtherTSLPointer())
-                .and(new SchemeTerritoryOtherTSLPointer(trustedTerritories))
         );
+
+        if (!configurationProperties.getTrustedTerritories().isEmpty()) {
+            Set<String> trustedTerritories = new HashSet<>();
+            CollectionUtils.addAll(trustedTerritories, configurationProperties.getTrustedTerritories());
+            lotlSource.setTlPredicate(new SchemeTerritoryOtherTSLPointer(trustedTerritories).and(new EUTLOtherTSLPointer()
+                    .and(new XMLOtherTSLPointer()))
+            );
+        }
         return lotlSource;
     }
 
@@ -107,9 +109,7 @@ public class TSLLoader {
     private CommonsDataLoader createCommonsDataLoader() {
         CommonsDataLoader commonsDataLoader = new CommonsDataLoader();
         if (configurationProperties.getSslTruststorePath() != null) {
-            String documentPath = Objects.requireNonNull(getClass().getClassLoader()
-                    .getResource(configurationProperties.getSslTruststorePath())).getPath();
-            DSSDocument truststore = new FileDocument(documentPath);
+            DSSDocument truststore = new InMemoryDocument(ResourceUtils.getResource(configurationProperties.getSslTruststorePath()));
             commonsDataLoader.setSslTruststore(truststore);
         }
         commonsDataLoader.setSslTruststoreType(configurationProperties.getSslTruststoreType());

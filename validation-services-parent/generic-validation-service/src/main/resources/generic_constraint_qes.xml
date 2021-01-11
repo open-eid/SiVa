@@ -84,9 +84,9 @@
                         <Algo>ECDSA</Algo>
                     </AcceptableEncryptionAlgo>
                     <MiniPublicKeySize>
-                        <Algo Size="128">DSA</Algo>
+                        <Algo Size="224">DSA</Algo>
                         <Algo Size="1024">RSA</Algo>
-                        <Algo Size="192">ECDSA</Algo>
+                        <Algo Size="256">ECDSA</Algo>
                     </MiniPublicKeySize>
                     <AcceptableDigestAlgo>
                         <Algo>SHA1</Algo>
@@ -117,9 +117,9 @@
                         <Algo>ECDSA</Algo>
                     </AcceptableEncryptionAlgo>
                     <MiniPublicKeySize>
-                        <Algo Size="128">DSA</Algo>
+                        <Algo Size="224">DSA</Algo>
                         <Algo Size="1024">RSA</Algo>
-                        <Algo Size="192">ECDSA</Algo>
+                        <Algo Size="256">ECDSA</Algo>
                     </MiniPublicKeySize>
                     <AcceptableDigestAlgo>
                         <Algo>SHA1</Algo>
@@ -142,9 +142,9 @@
                     <Algo>ECDSA</Algo>
                 </AcceptableEncryptionAlgo>
                 <MiniPublicKeySize>
-                    <Algo Size="128">DSA</Algo>
+                    <Algo Size="224">DSA</Algo>
                     <Algo Size="1024">RSA</Algo>
-                    <Algo Size="192">ECDSA</Algo>
+                    <Algo Size="256">ECDSA</Algo>
                 </MiniPublicKeySize>
                 <AcceptableDigestAlgo>
                     <Algo>SHA1</Algo>
@@ -222,9 +222,9 @@
                         <Algo>ECDSA</Algo>
                     </AcceptableEncryptionAlgo>
                     <MiniPublicKeySize>
-                        <Algo Size="128">DSA</Algo>
+                        <Algo Size="224">DSA</Algo>
                         <Algo Size="1024">RSA</Algo>
-                        <Algo Size="192">ECDSA</Algo>
+                        <Algo Size="256">ECDSA</Algo>
                     </MiniPublicKeySize>
                     <AcceptableDigestAlgo>
                         <Algo>SHA1</Algo>
@@ -255,9 +255,9 @@
                         <Algo>ECDSA</Algo>
                     </AcceptableEncryptionAlgo>
                     <MiniPublicKeySize>
-                        <Algo Size="128">DSA</Algo>
+                        <Algo Size="224">DSA</Algo>
                         <Algo Size="1024">RSA</Algo>
-                        <Algo Size="192">ECDSA</Algo>
+                        <Algo Size="256">ECDSA</Algo>
                     </MiniPublicKeySize>
                     <AcceptableDigestAlgo>
                         <Algo>SHA1</Algo>
@@ -280,9 +280,9 @@
                     <Algo>ECDSA</Algo>
                 </AcceptableEncryptionAlgo>
                 <MiniPublicKeySize>
-                    <Algo Size="128">DSA</Algo>
+                    <Algo Size="224">DSA</Algo>
                     <Algo Size="1024">RSA</Algo>
-                    <Algo Size="192">ECDSA</Algo>
+                    <Algo Size="256">ECDSA</Algo>
                 </MiniPublicKeySize>
                 <AcceptableDigestAlgo>
                     <Algo>SHA1</Algo>
@@ -334,9 +334,9 @@
                         <Algo>ECDSA</Algo>
                     </AcceptableEncryptionAlgo>
                     <MiniPublicKeySize>
-                        <Algo Size="128">DSA</Algo>
+                        <Algo Size="224">DSA</Algo>
                         <Algo Size="1024">RSA</Algo>
-                        <Algo Size="192">ECDSA</Algo>
+                        <Algo Size="256">ECDSA</Algo>
                     </MiniPublicKeySize>
                     <AcceptableDigestAlgo>
                         <Algo>SHA1</Algo>
@@ -367,9 +367,9 @@
                         <Algo>ECDSA</Algo>
                     </AcceptableEncryptionAlgo>
                     <MiniPublicKeySize>
-                        <Algo Size="128">DSA</Algo>
+                        <Algo Size="224">DSA</Algo>
                         <Algo Size="1024">RSA</Algo>
-                        <Algo Size="192">ECDSA</Algo>
+                        <Algo Size="256">ECDSA</Algo>
                     </MiniPublicKeySize>
                     <AcceptableDigestAlgo>
                         <Algo>SHA1</Algo>
@@ -392,9 +392,9 @@
                     <Algo>ECDSA</Algo>
                 </AcceptableEncryptionAlgo>
                 <MiniPublicKeySize>
-                    <Algo Size="128">DSA</Algo>
+                    <Algo Size="224">DSA</Algo>
                     <Algo Size="1024">RSA</Algo>
-                    <Algo Size="192">ECDSA</Algo>
+                    <Algo Size="256">ECDSA</Algo>
                 </MiniPublicKeySize>
                 <AcceptableDigestAlgo>
                     <Algo>SHA1</Algo>

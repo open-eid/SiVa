@@ -367,31 +367,6 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      * <p>
      * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
      * <p>
-     * Title: Asice unsigned data files in the container
-     * <p>
-     * Expected Result: The document should pass the validation with warning
-     * <p>
-     * File: EE_SER-AEX-B-LT-V-34.asice
-     */
-    @Test
-    public void asiceUnsignedDataFiles() {
-        post(validationRequestFor("EE_SER-AEX-B-LT-V-34.asice"))
-                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
-                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
-                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
-                .body("signatures[0].warnings[0].content", Matchers.is(VALID_VALIDATION_PROCESS_VALUE_35))
-                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
-                .body("validSignaturesCount", Matchers.is(0));
-
-    }
-
-    /**
-     * TestCaseID: Asice-ValidationPass-13
-     * <p>
-     * TestType: Automated
-     * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
-     * <p>
      * Title: New Estonian ECC signature
      * <p>
      * Expected Result: The document should pass the validation
@@ -414,7 +389,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
     }
 
     /**
-     * TestCaseID: Asice-ValidationPass-14
+     * TestCaseID: Asice-ValidationPass-13
      * <p>
      * TestType: Automated
      * <p>

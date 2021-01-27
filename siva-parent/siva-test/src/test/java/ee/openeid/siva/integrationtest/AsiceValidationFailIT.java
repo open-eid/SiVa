@@ -358,7 +358,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * <p>
      * Title: Asice unsigned data files in the container
      * <p>
-     * Expected Result: The document should pass the validation with warning
+     * Expected Result: The document should fail the validation
      * <p>
      * File: EE_SER-AEX-B-LT-V-34.asice
      */

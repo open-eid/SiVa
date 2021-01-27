@@ -240,8 +240,6 @@ public class DocumentValidationIT extends SiVaRestTests {
                 .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
                 .body("validationWarnings", Matchers.hasSize(1))
                 .body("validationWarnings[0].content", Matchers.is(Constants.TEST_ENV_VALIDATION_WARNING));
-        ;
-
     }
 
     /**

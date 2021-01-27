@@ -23,17 +23,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import static ee.openeid.siva.integrationtest.TestData.ALL_FILES_NOT_SIGNED;
-import static ee.openeid.siva.integrationtest.TestData.CERTIFICATE_DO_NOT_MATCH_TRUST_SERVICE;
-import static ee.openeid.siva.integrationtest.TestData.SIGNATURE_FORMAT_XADES_LT;
-import static ee.openeid.siva.integrationtest.TestData.SIGNATURE_FORMAT_XADES_LTA;
-import static ee.openeid.siva.integrationtest.TestData.SIGNATURE_FORM_ASICE;
-import static ee.openeid.siva.integrationtest.TestData.SIGNATURE_LEVEL_QESIG;
-import static ee.openeid.siva.integrationtest.TestData.SIGNATURE_SCOPE_FULL;
-import static ee.openeid.siva.integrationtest.TestData.TOTAL_PASSED;
-import static ee.openeid.siva.integrationtest.TestData.VALIDATION_CONCLUSION_PREFIX;
-import static ee.openeid.siva.integrationtest.TestData.VALIDATION_LEVEL_ARCHIVAL_DATA;
-import static ee.openeid.siva.integrationtest.TestData.VALID_SIGNATURE_SCOPE_CONTENT_FULL;
+import static ee.openeid.siva.integrationtest.TestData.*;
 
 @Category(IntegrationTest.class)
 public class AsiceValidationPassIT extends SiVaRestTests {
@@ -388,10 +378,10 @@ public class AsiceValidationPassIT extends SiVaRestTests {
         post(validationRequestFor("EE_SER-AEX-B-LT-V-34.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
-                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
-                .body("signatures[0].warnings[0].content", Matchers.is(ALL_FILES_NOT_SIGNED))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].warnings[0].content", Matchers.is(VALID_VALIDATION_PROCESS_VALUE_35))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
-                .body("validSignaturesCount", Matchers.is(1));
+                .body("validSignaturesCount", Matchers.is(0));
 
     }
 

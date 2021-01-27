@@ -194,7 +194,7 @@ public class TestData {
     public static final String VALID_VALIDATION_PROCESS_VALUE_32 = "Certificate meta-data constraints: Is the signer's certificate qualified?";
     public static final String VALID_VALIDATION_PROCESS_VALUE_33 = "Is the revocation data present for the certificate?";
     public static final String VALID_VALIDATION_PROCESS_VALUE_34 = "Is the signature/seal an acceptable AdES (ETSI EN 319 102-1) ?";
-    public static final String VALID_VALIDATION_PROCESS_VALUE_35 = "The signature/seal is not a valid AdES!";
+    public static final String VALID_VALIDATION_PROCESS_VALUE_35 = "The signature/seal is not a valid AdES digital signature!";
     public static final String VALID_VALIDATION_PROCESS_VALUE_36 = "Is the certificate path trusted?";
     public static final String VALID_VALIDATION_PROCESS_VALUE_37 = "Are trust services consistent ?";
     public static final String VALID_VALIDATION_PROCESS_VALUE_38 = "Is the certificate consistent with the trusted list ?";

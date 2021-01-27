@@ -25,7 +25,6 @@ import org.junit.experimental.categories.Category;
 import org.springframework.http.HttpStatus;
 
 import static ee.openeid.siva.integrationtest.TestData.*;
-import static eu.europa.esig.dss.enumerations.SubIndication.CHAIN_CONSTRAINTS_FAILURE;
 
 @Category(IntegrationTest.class)
 public class AsiceValidationFailIT extends SiVaRestTests {
@@ -368,11 +367,10 @@ public class AsiceValidationFailIT extends SiVaRestTests {
         post(validationRequestFor("EE_SER-AEX-B-LT-V-34.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
-                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
-                .body("signatures[0].warnings.content", Matchers.hasItems(ALL_FILES_NOT_SIGNED))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].warnings.content", Matchers.hasItems(VALID_VALIDATION_PROCESS_VALUE_35))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
-                .body("validSignaturesCount", Matchers.is(1));
-
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**

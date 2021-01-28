@@ -937,7 +937,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
         ValidatableResponse response = post(validationRequestForDocumentReportType("PdfValidSingleSignature.pdf", REPORT_TYPE_DETAILED))
                 .then()
                 .body(SOAP_VALIDATION_CONCLUSION_PREFIX + ".ValidSignaturesCount", is("1"))
-                .body(SOAP_DETAILED_DATA_PREFIX + ".Signature.ValidationProcessBasicSignature.Conclusion.Indication", is(VALID_INDICATION_VALUE_PASSED));
+                .body(SOAP_DETAILED_DATA_PREFIX + ".Signature.ValidationProcessBasicSignature.Conclusion.Indication", is(INDETERMINATE));
 
         isDetailedReport(response);
     }

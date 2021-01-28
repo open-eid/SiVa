@@ -105,18 +105,19 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      *
      * Title: ECDSA224 algorithms (PAdES Baseline LT)
      *
-     * Expected Result: Document signed with ECDSA224 algorithm should pass
+     * Expected Result: Document signed with ECDSA224 algorithm should fail
      *
      * File: hellopades-lt-sha256-ec224.pdf
      */
     @Test
-    public void documentSignedWithSha256Ec224AlgoShouldPass() {
+    public void documentSignedWithSha256Ec224AlgoShouldFail() {
         post(validationRequestFor("hellopades-lt-sha256-ec224.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
-                .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("validSignaturesCount", Matchers.is(1))
+                .body("signatures[0].signatureLevel", Matchers.is("INDETERMINATE_QESIG"))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("signatures[0].errors.content", Matchers.hasItem("The public key size is too small!"))
+                .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1));
     }
 

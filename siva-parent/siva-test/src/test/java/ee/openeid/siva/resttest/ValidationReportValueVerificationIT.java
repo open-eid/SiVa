@@ -392,6 +392,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].info.timeAssertionMessageImprint", Matchers.is("MDEwDQYJYIZIAWUDBAIBBQAEIDqs93c5A/EZVW0YfLVkSS3NeO716K6Kb0Mcr/ewLCmA"))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2020-05-27T09:59:09Z"))
                 .body("signatures[0].info.signatureProductionPlace.countryName", Matchers.is("Narva"))
+                .body("signatures[0].info.signingReason", Matchers.is("Roll??"))
                 .body("signatures[0].info.ocspResponseCreationTime", Matchers.is("2020-05-27T09:59:10Z"))
                 .body("signatures[0].info.timestampCreationTime", Matchers.is("2020-05-27T09:59:09Z"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName", Matchers.is("TEST of SK OCSP RESPONDER 2011"))

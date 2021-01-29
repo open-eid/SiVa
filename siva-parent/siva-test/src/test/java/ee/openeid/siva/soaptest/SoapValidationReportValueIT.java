@@ -437,6 +437,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
                 .body("Signatures.Signature[0].ClaimedSigningTime", Matchers.is("2020-05-27T09:59:07Z"))
                 .body("Signatures.Signature[0].Info.BestSignatureTime", Matchers.is("2020-05-27T09:59:09Z"))
                 .body("Signatures.Signature[0].Info.SignatureProductionPlace.CountryName", Matchers.is("Narva"))
+                .body("Signatures.Signature[0].Info.SigningReason", Matchers.is("Roll??"))
                 .body("ValidatedDocument.Filename", Matchers.is("reason_and_location_Test.pdf"));
     }
 

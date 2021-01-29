@@ -764,6 +764,31 @@ public class BdocValidationFailIT extends SiVaRestTests {
 
     }
 
+    /**
+     * TestCaseID: Bdoc-ValidationFail-31
+     * <p>
+     * TestType: Automated
+     * <p>
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
+     * <p>
+     * Title: Bdoc signed properties element missing
+     * <p>
+     * Expected Result: The document should fail the validation
+     * <p>
+     * File: REF-03_bdoc21-TM-no-signedpropref.bdoc
+     */
+    @Test
+    public void bdocTimemarkSignedPropertiesMissing() {
+        setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
+        post(validationRequestFor("REF-03_bdoc21-TM-no-signedpropref.bdoc"))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].errors.content", Matchers.hasItem("SignedProperties Reference element is missing"))
+                .body("validSignaturesCount", Matchers.is(0));
+    }
+
     @Override
     protected String getTestFilesDirectory() {
         return testFilesDirectory;

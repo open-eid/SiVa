@@ -739,6 +739,31 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("validatedDocument.filename", Matchers.is(fileName));
     }
 
+    /**
+     * TestCaseID: Asice-ValidationFail-26
+     * <p>
+     * TestType: Automated
+     * <p>
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
+     * <p>
+     * Title: Bdoc signed properties element missing
+     * <p>
+     * Expected Result: The document should fail the validation
+     * <p>
+     * File: REF-03_bdoc21-TS-no-signedpropref.asice
+     */
+    @Test
+    public void bdocTimemarkSignedPropertiesMissing() {
+        setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
+        post(validationRequestFor("REF-03_bdoc21-TS-no-signedpropref.asice"))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("signatures[0].errors.content", Matchers.hasItem("The signed qualifying property: neither 'message-digest' nor 'SignedProperties' is present!"))
+                .body("validSignaturesCount", Matchers.is(0));
+    }
+
     @Override
     protected String getTestFilesDirectory() {
         return testFilesDirectory;

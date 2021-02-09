@@ -82,6 +82,14 @@
             <groupId>org.digidoc4j.dss</groupId>
             <artifactId>dss-diagnostic-jaxb</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.digidoc4j.dss</groupId>
+            <artifactId>dss-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.digidoc4j.dss</groupId>
+            <artifactId>dss-service</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

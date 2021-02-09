@@ -66,7 +66,6 @@ public class TSLLoader {
     private void initTslValidationJob() {
         tslValidationJob = tslValidationJobFactory.createValidationJob();
         tslValidationJob.setOnlineDataLoader(onlineLoader());
-        tslValidationJob.setOfflineDataLoader(offlineLoader());
         tslValidationJob.setTrustedListCertificateSource(trustedListSource);
         tslValidationJob.setListOfTrustedListSources(europeanLOTL());
     }

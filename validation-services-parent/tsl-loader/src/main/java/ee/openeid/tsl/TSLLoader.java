@@ -21,6 +21,8 @@ import eu.europa.esig.dss.model.DSSDocument;
 import eu.europa.esig.dss.model.InMemoryDocument;
 import eu.europa.esig.dss.service.http.commons.CommonsDataLoader;
 import eu.europa.esig.dss.service.http.commons.FileCacheDataLoader;
+import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
+import eu.europa.esig.dss.service.http.proxy.ProxyProperties;
 import eu.europa.esig.dss.spi.client.http.DSSFileLoader;
 import eu.europa.esig.dss.spi.client.http.IgnoreDataLoader;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
@@ -52,6 +54,8 @@ public class TSLLoader {
     private TSLLoaderConfigurationProperties configurationProperties;
     private TrustedListsCertificateSource trustedListSource;
     private KeyStoreCertificateSource keyStoreCertificateSource;
+    private ProxyConfig proxyConfig;
+
 
     @PostConstruct
     public void init() {
@@ -62,7 +66,6 @@ public class TSLLoader {
     private void initTslValidationJob() {
         tslValidationJob = tslValidationJobFactory.createValidationJob();
         tslValidationJob.setOnlineDataLoader(onlineLoader());
-        tslValidationJob.setOfflineDataLoader(offlineLoader());
         tslValidationJob.setTrustedListCertificateSource(trustedListSource);
         tslValidationJob.setListOfTrustedListSources(europeanLOTL());
     }
@@ -108,6 +111,7 @@ public class TSLLoader {
 
     private CommonsDataLoader createCommonsDataLoader() {
         CommonsDataLoader commonsDataLoader = new CommonsDataLoader();
+        commonsDataLoader.setProxyConfig(proxyConfig);
         if (configurationProperties.getSslTruststorePath() != null) {
             DSSDocument truststore = new InMemoryDocument(ResourceUtils.getResource(configurationProperties.getSslTruststorePath()));
             commonsDataLoader.setSslTruststore(truststore);
@@ -122,6 +126,11 @@ public class TSLLoader {
         offlineFileLoader.setCacheExpirationTime(Long.MAX_VALUE);
         offlineFileLoader.setDataLoader(new IgnoreDataLoader());
         return offlineFileLoader;
+    }
+
+    @Autowired
+    public void setProxyConfig (ProxyConfig proxyConfig){
+        this.proxyConfig = proxyConfig;
     }
 
     @Autowired
@@ -143,5 +152,6 @@ public class TSLLoader {
     public void setTrustedListsCertificateSource(TrustedListsCertificateSource trustedListSource) {
         this.trustedListSource = trustedListSource;
     }
+
 
 }

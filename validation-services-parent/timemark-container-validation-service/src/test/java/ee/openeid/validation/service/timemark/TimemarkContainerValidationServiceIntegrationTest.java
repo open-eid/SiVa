@@ -31,6 +31,7 @@ import ee.openeid.validation.service.timemark.configuration.TimemarkContainerVal
 import ee.openeid.validation.service.timemark.signature.policy.BDOCConfigurationService;
 import ee.openeid.validation.service.timemark.signature.policy.BDOCSignaturePolicyService;
 import eu.europa.esig.dss.model.x509.CertificateToken;
+import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
 import eu.europa.esig.dss.spi.tsl.ConditionForQualifiers;
 import eu.europa.esig.dss.spi.tsl.TrustProperties;
 import org.apache.commons.lang3.StringUtils;
@@ -69,7 +70,8 @@ import static org.junit.Assert.*;
         BDOCSignaturePolicyService.class,
         ConstraintLoadingSignaturePolicyService.class,
         BDOCConfigurationService.class,
-        ReportConfigurationProperties.class
+        ReportConfigurationProperties.class,
+        ProxyConfig.class
 })
 @ActiveProfiles("test")
 public class TimemarkContainerValidationServiceIntegrationTest {

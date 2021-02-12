@@ -36,6 +36,7 @@ import eu.europa.esig.dss.model.DSSException;
 import eu.europa.esig.dss.model.InMemoryDocument;
 import eu.europa.esig.dss.model.MimeType;
 import eu.europa.esig.dss.service.http.commons.CommonsDataLoader;
+import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.validation.AdvancedSignature;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
@@ -58,6 +59,7 @@ public class GenericValidationService implements ValidationService {
     private TrustedListsCertificateSource trustedListsCertificateSource;
     private ConstraintLoadingSignaturePolicyService signaturePolicyService;
     private ReportConfigurationProperties reportConfigurationProperties;
+    private ProxyConfig proxyConfig;
 
     @Override
     public Reports validateDocument(ValidationDocument validationDocument) throws DSSException {
@@ -122,8 +124,12 @@ public class GenericValidationService implements ValidationService {
     protected SignedDocumentValidator createValidatorFromDocument(final ValidationDocument validationDocument) {
         final DSSDocument dssDocument = createDssDocument(validationDocument);
         SignedDocumentValidator validator = SignedDocumentValidator.fromDocument(dssDocument);
+        CommonsDataLoader dataLoader = new CommonsDataLoader();
+        dataLoader.setProxyConfig(proxyConfig);
+
         CommonCertificateVerifier certificateVerifier = new CommonCertificateVerifier(Collections.singletonList(trustedListsCertificateSource),
-                new AlwaysFailingCRLSource(), new AlwaysFailingOCSPSource(), new CommonsDataLoader());
+                new AlwaysFailingCRLSource(), new AlwaysFailingOCSPSource(), dataLoader);
+
         LOGGER.info("Certificate pool size: {}", getCertificatePoolSize(certificateVerifier));
         validator.setCertificateVerifier(certificateVerifier);
         validator.setValidationLevel(VALIDATION_LEVEL);
@@ -154,6 +160,11 @@ public class GenericValidationService implements ValidationService {
     private void endExceptionally(Exception e) {
         LOGGER.error(e.getMessage(), e);
         LOGGER.info("WsValidateDocument: end with exception");
+    }
+
+    @Autowired
+    public void setProxyConfig(ProxyConfig proxyConfig){
+        this.proxyConfig = proxyConfig;
     }
 
     @Autowired

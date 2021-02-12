@@ -32,6 +32,7 @@ import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
 import ee.openeid.validation.service.timemark.configuration.TimemarkContainerValidationServiceConfiguration;
 import ee.openeid.validation.service.timemark.signature.policy.BDOCConfigurationService;
 import ee.openeid.validation.service.timemark.signature.policy.BDOCSignaturePolicyService;
+import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.util.encoders.Base64;
 import org.junit.Assert;
@@ -71,7 +72,8 @@ import static org.junit.Assert.*;
         BDOCSignaturePolicyService.class,
         ConstraintLoadingSignaturePolicyService.class,
         BDOCConfigurationService.class,
-        ReportConfigurationProperties.class
+        ReportConfigurationProperties.class,
+        ProxyConfig.class
 })
 @ActiveProfiles("test")
 public class DDOCServiceIntegrationTest {

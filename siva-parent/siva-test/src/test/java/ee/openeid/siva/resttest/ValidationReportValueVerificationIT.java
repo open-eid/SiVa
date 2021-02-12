@@ -358,6 +358,62 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
     }
 
     /**
+     * TestCaseID: Bdoc-ValidationReportVerification-9
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
+     *
+     * Title: Bdoc with LT_TM, LT & LTA signature - timeAssertionMessageImprints in mixed container are reported correctly
+     *
+     * Expected Result: timeAssertionMessageImprint values are present and meet the expected values.
+     *
+     * File: 3_signatures_TM_LT_LTA.bdoc
+     */
+    @Test
+    public void bdocMixedSignaturesContainerCorrectTimeAssertionMessageImprint() {
+        setTestFilesDirectory("bdoc/test/timemark/");
+        post(validationRequestFor("3_signatures_TM_LT_LTA.bdoc"))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("signatures[0].info.timeAssertionMessageImprint", Matchers.is("MDEwDQYJYIZIAWUDBAIBBQAEIGzgagluBCVuUgrnT6C5BmSAXBxuuxvlAN7epdGqHP0/"))
+                .body("signatures[1].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[1].info.timeAssertionMessageImprint", Matchers.is("MDEwDQYJYIZIAWUDBAIBBQAEIBcwYgTTCv5dabbTMJENwex0W1UHxP2OnhiwIcDE89RE"))
+                .body("signatures[2].signatureFormat", Matchers.is("XAdES_BASELINE_LTA"))
+                .body("signatures[2].info.timeAssertionMessageImprint", Matchers.is("MDEwDQYJYIZIAWUDBAIBBQAEIOcfB5FibacEVizcnKhNisrfXU1QyXFzrVGjCQQdntiB"));
+    }
+
+    /**
+     * TestCaseID: Bdoc-ValidationReportVerification-10
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
+     *
+     * Title: Asice with LT_TM, LT & LTA signature - timeAssertionMessageImprints in mixed container are reported correctly
+     *
+     * Expected Result: timeAssertionMessageImprint values are present and meet the expected values.
+     *
+     * File: 3_signatures_TM_LT_LTA.asice
+     */
+
+    @Test
+    public void asiceMixedSignaturesContainerCorrectTimeAssertionMessageImprint() {
+        setTestFilesDirectory("bdoc/test/timestamp/");
+        post(validationRequestFor("3_signatures_TM_LT_LTA.asice"))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("signatures[0].info.timeAssertionMessageImprint", Matchers.is("MDEwDQYJYIZIAWUDBAIBBQAEIGzgagluBCVuUgrnT6C5BmSAXBxuuxvlAN7epdGqHP0/"))
+                .body("signatures[1].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[1].info.timeAssertionMessageImprint", Matchers.is("MDEwDQYJYIZIAWUDBAIBBQAEIBcwYgTTCv5dabbTMJENwex0W1UHxP2OnhiwIcDE89RE"))
+                .body("signatures[2].signatureFormat", Matchers.is("XAdES_BASELINE_LTA"))
+                .body("signatures[2].info.timeAssertionMessageImprint", Matchers.is("MDEwDQYJYIZIAWUDBAIBBQAEIOcfB5FibacEVizcnKhNisrfXU1QyXFzrVGjCQQdntiB"));
+
+    }
+
+    /**
      * TestCaseID: Pdf-ValidationReportVerification-1
      *
      * TestType: Automated

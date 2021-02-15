@@ -234,7 +234,7 @@ public abstract class TimemarkContainerValidationReportBuilder {
     }
 
     private String getTimeAssertionMessageImprint(Signature signature) {
-        if (signature.getProfile() == SignatureProfile.LT) {
+        if (signature.getProfile() != SignatureProfile.LT_TM) {
             TimestampWrapper timestamp = getBestTimestampWrapper(signature);
             try {
                 return ReportBuilderUtils.parseTimeAssertionMessageImprint(timestamp);

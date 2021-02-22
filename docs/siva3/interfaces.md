@@ -374,8 +374,10 @@ Structure of validationConclusion block
         "id": "id-a9ce7f66cff1d17ddaab37c46a88f5f4",
         "indication": "TOTAL-PASSED",
         "info": {
+            "timestampCreationTime": "2020-05-21T13:56:48Z",
             "timeAssertionMessageImprint": "MDEwDQYJYIZIAWUDBAIBBQAEID3j1ceryQp4ZNP8iVfd50l/0JXvpry+XS+ajiAUA+Su",
-            "bestSignatureTime": "2020-05-21T13:56:48Z"
+            "bestSignatureTime": "2020-05-21T13:56:48Z",
+            "ocspResponseCreationTime": "2020-05-21T13:56:49Z"
         }
     }],
     "policy": {
@@ -453,6 +455,8 @@ Structure of validationConclusion block
               <ns3:ClaimedSigningTime>2020-05-21T13:56:52Z</ns3:ClaimedSigningTime>
               <ns3:Warnings/>
               <ns3:Info>
+                <ns3:OcspResponseCreationTime>2020-05-21T13:56:49Z</ns3:OcspResponseCreationTime>
+                <ns3:TimestampCreationTime>2020-05-21T13:56:48Z</ns3:TimestampCreationTime>
                 <ns3:BestSignatureTime>2020-05-21T13:56:48Z</ns3:BestSignatureTime>
                 <ns3:TimeAssertionMessageImprint>MDEwDQYJYIZIAWUDBAIBBQAEID3j1ceryQp4ZNP8iVfd50l/0JXvpry+XS+ajiAUA+Su</ns3:TimeAssertionMessageImprint>
               </ns3:Info>

@@ -757,10 +757,60 @@ public class AsiceValidationFailIT extends SiVaRestTests {
         setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
         post(validationRequestFor("REF-03_bdoc21-TS-no-signedpropref.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
-                .body("signatureForm", Matchers.is("ASiC-E"))
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
-                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
+                .body("signatures[0].indication", Matchers.is(INDETERMINATE))
                 .body("signatures[0].errors.content", Matchers.hasItem("The signed qualifying property: neither 'message-digest' nor 'SignedProperties' is present!"))
+                .body("validSignaturesCount", Matchers.is(0));
+    }
+
+    /**
+     * TestCaseID: Asice-ValidationFail-27
+     * <p>
+     * TestType: Automated
+     * <p>
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
+     * <p>
+     * Title: Asice LT signature signed with expired AIA OCSP certificate
+     * <p>
+     * Expected Result: The document should fail the validation
+     * <p>
+     * File: esteid2018signerAiaOcspLT.asice
+     */
+    @Test
+    public void asiceLtSignatureSignedWithExpiredAiaOCSP() {
+        setTestFilesDirectory("bdoc/test/timestamp/");
+        post(validationRequestFor("esteid2018signerAiaOcspLT.asice"))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
+                .body("signatures[0].indication", Matchers.is(INDETERMINATE))
+                .body("signatures[0].errors.content", Matchers.hasItem(VALID_VALIDATION_PROCESS_ERROR_VALUE_5))
+                .body("validSignaturesCount", Matchers.is(0));
+    }
+
+    /**
+     * TestCaseID: Asice-ValidationFail-28
+     * <p>
+     * TestType: Automated
+     * <p>
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
+     * <p>
+     * Title: Asice LTA signature signed with expired AIA OCSP certificate
+     * <p>
+     * Expected Result: The document should fail the validation
+     * <p>
+     * File: esteid2018signerAiaOcspLTA.asice
+     */
+    @Test
+    public void asiceLtaSignatureSignedWithExpiredAiaOCSP() {
+        setTestFilesDirectory("bdoc/test/timestamp/");
+        post(validationRequestFor("esteid2018signerAiaOcspLTA.asice"))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LTA))
+                .body("signatures[0].indication", Matchers.is(INDETERMINATE))
+                .body("signatures[0].errors.content", Matchers.hasItem(VALID_VALIDATION_PROCESS_ERROR_VALUE_5))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 

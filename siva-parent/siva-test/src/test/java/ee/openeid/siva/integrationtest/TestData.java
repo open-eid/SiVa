@@ -225,6 +225,7 @@ public class TestData {
     public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_2 = "The expected format is not found!";
     public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_3 = "The result of the Basic validation process is not acceptable to continue the process!";
     public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_4 = "The expected format is not found!";
+    public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_5 = "No acceptable revocation data for the certificate!";
     public static final String LTV_PROCESS_NOT_ACCEPTABLE = "The result of the LTV validation process is not acceptable to continue the process!";
     public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_6 = "The expected format is not found!";
     public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_7 = "The certificate is not qualified!";

@@ -20,6 +20,7 @@ import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -147,6 +148,7 @@ public class LargeFileIT extends SiVaRestTests{
      * File: zip-bomb-package-zip-1gb.bdoc
      */
     @Test
+    @Ignore("DD4J-275")
     public void bdocZipBombsAreNotAccepted() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("zip-bomb-package-zip-1gb.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "zip-bomb-package-zip-1gb.bdoc","POLv3"))

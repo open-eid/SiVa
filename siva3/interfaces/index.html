@@ -1,6 +1,4 @@
 
-
-
 <!doctype html>
 <html lang="en" class="no-js">
   <head>
@@ -10,23 +8,28 @@
       
       
       
+      
       <link rel="shortcut icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.2.3">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.2.8">
     
     
       
-        <title>4. INTERFACES - SiVa 3.3 - Signature Validation Service Documentation</title>
+        <title>4. INTERFACES - SiVa 3.4 - Signature Validation Service Documentation</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.6e35a1a6.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.cb6bc1d0.min.css">
       
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.39b8e14a.min.css">
+        
       
     
     
     
       
-        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
         <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
       
@@ -42,8 +45,15 @@
   </head>
   
   
-    <body dir="ltr">
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+      
   
+    
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
@@ -59,9 +69,11 @@
       
     </div>
     
-      <header class="md-header" data-md-component="header">
+      
+
+<header class="md-header" data-md-component="header">
   <nav class="md-header-nav md-grid" aria-label="Header">
-    <a href="../.." title="SiVa 3.3 - Signature Validation Service Documentation" class="md-header-nav__button md-logo" aria-label="SiVa 3.3 - Signature Validation Service Documentation">
+    <a href="../.." title="SiVa 3.4 - Signature Validation Service Documentation" class="md-header-nav__button md-logo" aria-label="SiVa 3.4 - Signature Validation Service Documentation">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
@@ -71,18 +83,20 @@
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
     </label>
     <div class="md-header-nav__title" data-md-component="header-title">
-      
-        <div class="md-header-nav__ellipsis">
-          <span class="md-header-nav__topic md-ellipsis">
-            SiVa 3.3 - Signature Validation Service Documentation
+      <div class="md-header-nav__ellipsis">
+        <div class="md-header-nav__topic">
+          <span class="md-ellipsis">
+            SiVa 3.4 - Signature Validation Service Documentation
           </span>
-          <span class="md-header-nav__topic md-ellipsis">
+        </div>
+        <div class="md-header-nav__topic">
+          <span class="md-ellipsis">
             
               4. INTERFACES
             
           </span>
         </div>
-      
+      </div>
     </div>
     
       <label class="md-header-nav__button md-icon" for="__search">
@@ -93,7 +107,7 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
       <label class="md-search__icon md-icon" for="__search">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
@@ -134,8 +148,6 @@
     
     <div class="md-container" data-md-component="container">
       
-        
-      
       
         
       
@@ -143,18 +155,24 @@
         <div class="md-main__inner md-grid">
           
             
-              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
-                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+                    
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="SiVa 3.3 - Signature Validation Service Documentation" class="md-nav__button md-logo" aria-label="SiVa 3.3 - Signature Validation Service Documentation">
+    <a href="../.." title="SiVa 3.4 - Signature Validation Service Documentation" class="md-nav__button md-logo" aria-label="SiVa 3.4 - Signature Validation Service Documentation">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
 
     </a>
-    SiVa 3.3 - Signature Validation Service Documentation
+    SiVa 3.4 - Signature Validation Service Documentation
   </label>
   
     <div class="md-nav__source">
@@ -176,102 +194,15 @@
       
       
 
-
-  <li class="md-nav__item">
-    <a href="../../version_info/" title="VERSION HISTORY" class="md-nav__link">
-      VERSION HISTORY
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-
-  <li class="md-nav__item">
-    <a href="../.." title="INTRODUCTION" class="md-nav__link">
-      INTRODUCTION
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-
-  <li class="md-nav__item">
-    <a href="../definitions/" title="1. DEFINITIONS" class="md-nav__link">
-      1. DEFINITIONS
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-
-  <li class="md-nav__item">
-    <a href="../overview/" title="2. BACKGROUND" class="md-nav__link">
-      2. BACKGROUND
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-
-  <li class="md-nav__item md-nav__item--nested">
-    
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
-    
-    <label class="md-nav__link" for="nav-5">
-      3. STRUCTURE & ACTIVITIES
-      <span class="md-nav__icon md-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
-      </span>
-    </label>
-    <nav class="md-nav" aria-label="3. STRUCTURE & ACTIVITIES" data-md-level="1">
-      <label class="md-nav__title" for="nav-5">
-        <span class="md-nav__icon md-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-        </span>
-        3. STRUCTURE & ACTIVITIES
-      </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../structure_and_activities/" title="3.1 Component model" class="md-nav__link">
-      3.1 Component model
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../use_cases/" title="3.2 Use cases" class="md-nav__link">
-      3.2 Use cases
-    </a>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../version_info/" class="md-nav__link">
+        VERSION HISTORY
+      </a>
+    </li>
+  
 
     
       
@@ -279,33 +210,131 @@
       
 
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        INTRODUCTION
+      </a>
+    </li>
+  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-    
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        4. INTERFACES
-        <span class="md-nav__icon md-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9h14V7H3v2m0 4h14v-2H3v2m0 4h14v-2H3v2m16 0h2v-2h-2v2m0-10v2h2V7h-2m0 6h2v-2h-2v2z"/></svg>
-        </span>
-      </label>
-    
-    <a href="./" title="4. INTERFACES" class="md-nav__link md-nav__link--active">
-      4. INTERFACES
-    </a>
     
       
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../definitions/" class="md-nav__link">
+        1. DEFINITIONS
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        2. BACKGROUND
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5" >
+      
+      <label class="md-nav__link" for="nav-5">
+        3. STRUCTURE & ACTIVITIES
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="3. STRUCTURE & ACTIVITIES" data-md-level="1">
+        <label class="md-nav__title" for="nav-5">
+          <span class="md-nav__icon md-icon"></span>
+          3. STRUCTURE & ACTIVITIES
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../structure_and_activities/" class="md-nav__link">
+        3.1 Component model
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../use_cases/" class="md-nav__link">
+        3.2 Use cases
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          4. INTERFACES
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        4. INTERFACES
+      </a>
+      
+        
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
   
     <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-      </span>
+      <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-scrollfix>
@@ -577,6 +606,26 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#changes-in-api-compared-to-v3-v330" class="md-nav__link">
+    Changes in API compared to V3 v3.3.0
+  </a>
+  
+    <nav class="md-nav" aria-label="Changes in API compared to V3 v3.3.0">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changes-in-response" class="md-nav__link">
+    Changes in response
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#changes-in-api-compared-to-v3-v320-non-breaking-additions-to-protocol" class="md-nav__link">
     Changes in API compared to V3 v3.2.0 (non breaking additions to protocol)
   </a>
@@ -585,7 +634,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#changes-in-response" class="md-nav__link">
+  <a href="#changes-in-response_1" class="md-nav__link">
     Changes in response
   </a>
   
@@ -612,7 +661,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#changes-in-response_1" class="md-nav__link">
+  <a href="#changes-in-response_2" class="md-nav__link">
     Changes in response
   </a>
   
@@ -626,842 +675,835 @@
     </ul>
   
 </nav>
-    
-  </li>
+      
+    </li>
+  
 
     
       
       
       
 
-
-  <li class="md-nav__item md-nav__item--nested">
+  
+  
+  
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
-    
-    <label class="md-nav__link" for="nav-7">
-      5. DEPLOYMENT
-      <span class="md-nav__icon md-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
-      </span>
-    </label>
-    <nav class="md-nav" aria-label="5. DEPLOYMENT" data-md-level="1">
-      <label class="md-nav__title" for="nav-7">
-        <span class="md-nav__icon md-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-        </span>
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7" >
+      
+      <label class="md-nav__link" for="nav-7">
         5. DEPLOYMENT
+        <span class="md-nav__icon md-icon"></span>
       </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
+      <nav class="md-nav" aria-label="5. DEPLOYMENT" data-md-level="1">
+        <label class="md-nav__title" for="nav-7">
+          <span class="md-nav__icon md-icon"></span>
+          5. DEPLOYMENT
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
           
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment/" class="md-nav__link">
+        5.1 Deployment model
+      </a>
+    </li>
+  
+
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment_guide/" class="md-nav__link">
+        5.2 Deployment guide
+      </a>
+    </li>
+  
 
-
-  <li class="md-nav__item">
-    <a href="../deployment/" title="5.1 Deployment model" class="md-nav__link">
-      5.1 Deployment model
-    </a>
-  </li>
-
-        
           
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../deployment_guide/" title="5.2 Deployment guide" class="md-nav__link">
-      5.2 Deployment guide
-    </a>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
+        </ul>
+      </nav>
+    </li>
+  
 
     
       
       
       
 
-
-  <li class="md-nav__item md-nav__item--nested">
+  
+  
+  
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8">
-    
-    <label class="md-nav__link" for="nav-8">
-      6. QUALITY ASSURANCE
-      <span class="md-nav__icon md-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
-      </span>
-    </label>
-    <nav class="md-nav" aria-label="6. QUALITY ASSURANCE" data-md-level="1">
-      <label class="md-nav__title" for="nav-8">
-        <span class="md-nav__icon md-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-        </span>
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8" >
+      
+      <label class="md-nav__link" for="nav-8">
         6. QUALITY ASSURANCE
+        <span class="md-nav__icon md-icon"></span>
       </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
+      <nav class="md-nav" aria-label="6. QUALITY ASSURANCE" data-md-level="1">
+        <label class="md-nav__title" for="nav-8">
+          <span class="md-nav__icon md-icon"></span>
+          6. QUALITY ASSURANCE
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
           
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../qa_strategy/" class="md-nav__link">
+        6.1 QA Strategy
+      </a>
+    </li>
+  
+
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../test_plan/" class="md-nav__link">
+        6.2 Test Plan
+      </a>
+    </li>
+  
 
-
-  <li class="md-nav__item">
-    <a href="../qa_strategy/" title="6.1 QA Strategy" class="md-nav__link">
-      6.1 QA Strategy
-    </a>
-  </li>
-
-        
           
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../test_plan/" title="6.2 Test Plan" class="md-nav__link">
-      6.2 Test Plan
-    </a>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
+        </ul>
+      </nav>
+    </li>
+  
 
     
       
       
       
 
-
-  <li class="md-nav__item">
-    <a href="../references/" title="7. REFERENCES" class="md-nav__link">
-      7. REFERENCES
-    </a>
-  </li>
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../references/" class="md-nav__link">
+        7. REFERENCES
+      </a>
+    </li>
+  
 
     
       
       
       
 
-
-  <li class="md-nav__item md-nav__item--nested">
+  
+  
+  
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-10" type="checkbox" id="nav-10">
-    
-    <label class="md-nav__link" for="nav-10">
-      8. APPENDICES
-      <span class="md-nav__icon md-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
-      </span>
-    </label>
-    <nav class="md-nav" aria-label="8. APPENDICES" data-md-level="1">
-      <label class="md-nav__title" for="nav-10">
-        <span class="md-nav__icon md-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-        </span>
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-10" type="checkbox" id="nav-10" >
+      
+      <label class="md-nav__link" for="nav-10">
         8. APPENDICES
+        <span class="md-nav__icon md-icon"></span>
       </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
+      <nav class="md-nav" aria-label="8. APPENDICES" data-md-level="1">
+        <label class="md-nav__title" for="nav-10">
+          <span class="md-nav__icon md-icon"></span>
+          8. APPENDICES
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
           
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix/validation_policy/" class="md-nav__link">
+        Appendix 1 - Validation Policy
+      </a>
+    </li>
+  
+
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix/test_cases/" class="md-nav__link">
+        Appendix 2 - Test Case Descriptions
+      </a>
+    </li>
+  
 
-
-  <li class="md-nav__item">
-    <a href="../appendix/validation_policy/" title="Appendix 1 - Validation Policy" class="md-nav__link">
-      Appendix 1 - Validation Policy
-    </a>
-  </li>
-
-        
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix/wsdl/" class="md-nav__link">
+        Appendix 3 - WSDL/XSD of SOAP Interface
+      </a>
+    </li>
+  
+
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix/known_issues/" class="md-nav__link">
+        Appendix 4 - Known Issues
+      </a>
+    </li>
+  
+
           
-
-
-  <li class="md-nav__item">
-    <a href="../appendix/test_cases/" title="Appendix 2 - Test Case Descriptions" class="md-nav__link">
-      Appendix 2 - Test Case Descriptions
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../appendix/wsdl/" title="Appendix 3 - WSDL/XSD of SOAP Interface" class="md-nav__link">
-      Appendix 3 - WSDL/XSD of SOAP Interface
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../appendix/known_issues/" title="Appendix 4 - Known Issues" class="md-nav__link">
-      Appendix 4 - Known Issues
-    </a>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
+        </ul>
+      </nav>
+    </li>
+  
 
     
       
       
       
 
-
-  <li class="md-nav__item md-nav__item--nested">
+  
+  
+  
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-11" type="checkbox" id="nav-11">
-    
-    <label class="md-nav__link" for="nav-11">
-      9. SIVA 2.0 (Deprecated)
-      <span class="md-nav__icon md-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
-      </span>
-    </label>
-    <nav class="md-nav" aria-label="9. SIVA 2.0 (Deprecated)" data-md-level="1">
-      <label class="md-nav__title" for="nav-11">
-        <span class="md-nav__icon md-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-        </span>
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-11" type="checkbox" id="nav-11" >
+      
+      <label class="md-nav__link" for="nav-11">
         9. SIVA 2.0 (Deprecated)
+        <span class="md-nav__icon md-icon"></span>
       </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
+      <nav class="md-nav" aria-label="9. SIVA 2.0 (Deprecated)" data-md-level="1">
+        <label class="md-nav__title" for="nav-11">
+          <span class="md-nav__icon md-icon"></span>
+          9. SIVA 2.0 (Deprecated)
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
           
           
-          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siva2/definitions/" class="md-nav__link">
+        9.1. DEFINITIONS
+      </a>
+    </li>
+  
 
-
-  <li class="md-nav__item">
-    <a href="../../siva2/definitions/" title="9.1. DEFINITIONS" class="md-nav__link">
-      9.1. DEFINITIONS
-    </a>
-  </li>
-
-        
           
-          
-          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siva2/overview/" class="md-nav__link">
+        9.2. BACKGROUND
+      </a>
+    </li>
+  
 
-
-  <li class="md-nav__item">
-    <a href="../../siva2/overview/" title="9.2. BACKGROUND" class="md-nav__link">
-      9.2. BACKGROUND
-    </a>
-  </li>
-
-        
           
-          
-          
-
-
-  <li class="md-nav__item md-nav__item--nested">
+            
+  
+  
+  
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-11-3" type="checkbox" id="nav-11-3">
-    
-    <label class="md-nav__link" for="nav-11-3">
-      9.3. STRUCTURE & ACTIVITIES
-      <span class="md-nav__icon md-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
-      </span>
-    </label>
-    <nav class="md-nav" aria-label="9.3. STRUCTURE & ACTIVITIES" data-md-level="2">
-      <label class="md-nav__title" for="nav-11-3">
-        <span class="md-nav__icon md-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-        </span>
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-11-3" type="checkbox" id="nav-11-3" >
+      
+      <label class="md-nav__link" for="nav-11-3">
         9.3. STRUCTURE & ACTIVITIES
+        <span class="md-nav__icon md-icon"></span>
       </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
+      <nav class="md-nav" aria-label="9.3. STRUCTURE & ACTIVITIES" data-md-level="2">
+        <label class="md-nav__title" for="nav-11-3">
+          <span class="md-nav__icon md-icon"></span>
+          9.3. STRUCTURE & ACTIVITIES
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
           
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siva2/structure_and_activities/" class="md-nav__link">
+        9.3.1 Component model
+      </a>
+    </li>
+  
+
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siva2/use_cases/" class="md-nav__link">
+        9.3.2 Use cases
+      </a>
+    </li>
+  
 
-
-  <li class="md-nav__item">
-    <a href="../../siva2/structure_and_activities/" title="9.3.1 Component model" class="md-nav__link">
-      9.3.1 Component model
-    </a>
-  </li>
-
-        
           
+        </ul>
+      </nav>
+    </li>
+  
+
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siva2/interfaces/" class="md-nav__link">
+        9.4. INTERFACES
+      </a>
+    </li>
+  
+
           
-
-
-  <li class="md-nav__item">
-    <a href="../../siva2/use_cases/" title="9.3.2 Use cases" class="md-nav__link">
-      9.3.2 Use cases
-    </a>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../siva2/interfaces/" title="9.4. INTERFACES" class="md-nav__link">
-      9.4. INTERFACES
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item md-nav__item--nested">
+            
+  
+  
+  
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-11-5" type="checkbox" id="nav-11-5">
-    
-    <label class="md-nav__link" for="nav-11-5">
-      9.5. DEPLOYMENT
-      <span class="md-nav__icon md-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
-      </span>
-    </label>
-    <nav class="md-nav" aria-label="9.5. DEPLOYMENT" data-md-level="2">
-      <label class="md-nav__title" for="nav-11-5">
-        <span class="md-nav__icon md-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-        </span>
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-11-5" type="checkbox" id="nav-11-5" >
+      
+      <label class="md-nav__link" for="nav-11-5">
         9.5. DEPLOYMENT
+        <span class="md-nav__icon md-icon"></span>
       </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
+      <nav class="md-nav" aria-label="9.5. DEPLOYMENT" data-md-level="2">
+        <label class="md-nav__title" for="nav-11-5">
+          <span class="md-nav__icon md-icon"></span>
+          9.5. DEPLOYMENT
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
           
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siva2/deployment/" class="md-nav__link">
+        9.5.1 Deployment model
+      </a>
+    </li>
+  
+
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siva2/systemintegrators_guide/" class="md-nav__link">
+        9.5.2 System integrator's guide
+      </a>
+    </li>
+  
 
-
-  <li class="md-nav__item">
-    <a href="../../siva2/deployment/" title="9.5.1 Deployment model" class="md-nav__link">
-      9.5.1 Deployment model
-    </a>
-  </li>
-
-        
           
+        </ul>
+      </nav>
+    </li>
+  
+
           
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../siva2/systemintegrators_guide/" title="9.5.2 System integrator's guide" class="md-nav__link">
-      9.5.2 System integrator's guide
-    </a>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item md-nav__item--nested">
+            
+  
+  
+  
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-11-6" type="checkbox" id="nav-11-6">
-    
-    <label class="md-nav__link" for="nav-11-6">
-      9.6. QUALITY ASSURANCE
-      <span class="md-nav__icon md-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
-      </span>
-    </label>
-    <nav class="md-nav" aria-label="9.6. QUALITY ASSURANCE" data-md-level="2">
-      <label class="md-nav__title" for="nav-11-6">
-        <span class="md-nav__icon md-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-        </span>
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-11-6" type="checkbox" id="nav-11-6" >
+      
+      <label class="md-nav__link" for="nav-11-6">
         9.6. QUALITY ASSURANCE
+        <span class="md-nav__icon md-icon"></span>
       </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
+      <nav class="md-nav" aria-label="9.6. QUALITY ASSURANCE" data-md-level="2">
+        <label class="md-nav__title" for="nav-11-6">
+          <span class="md-nav__icon md-icon"></span>
+          9.6. QUALITY ASSURANCE
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
           
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siva2/qa_strategy/" class="md-nav__link">
+        9.6.1 QA Strategy
+      </a>
+    </li>
+  
+
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siva2/test_plan/" class="md-nav__link">
+        9.6.2 Test Plan
+      </a>
+    </li>
+  
 
-
-  <li class="md-nav__item">
-    <a href="../../siva2/qa_strategy/" title="9.6.1 QA Strategy" class="md-nav__link">
-      9.6.1 QA Strategy
-    </a>
-  </li>
-
-        
           
+        </ul>
+      </nav>
+    </li>
+  
+
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siva2/references/" class="md-nav__link">
+        9.7. REFERENCES
+      </a>
+    </li>
+  
+
           
-
-
-  <li class="md-nav__item">
-    <a href="../../siva2/test_plan/" title="9.6.2 Test Plan" class="md-nav__link">
-      9.6.2 Test Plan
-    </a>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../siva2/references/" title="9.7. REFERENCES" class="md-nav__link">
-      9.7. REFERENCES
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item md-nav__item--nested">
+            
+  
+  
+  
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-11-8" type="checkbox" id="nav-11-8">
-    
-    <label class="md-nav__link" for="nav-11-8">
-      9.8. APPENDICES
-      <span class="md-nav__icon md-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
-      </span>
-    </label>
-    <nav class="md-nav" aria-label="9.8. APPENDICES" data-md-level="2">
-      <label class="md-nav__title" for="nav-11-8">
-        <span class="md-nav__icon md-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-        </span>
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-11-8" type="checkbox" id="nav-11-8" >
+      
+      <label class="md-nav__link" for="nav-11-8">
         9.8. APPENDICES
+        <span class="md-nav__icon md-icon"></span>
       </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
+      <nav class="md-nav" aria-label="9.8. APPENDICES" data-md-level="2">
+        <label class="md-nav__title" for="nav-11-8">
+          <span class="md-nav__icon md-icon"></span>
+          9.8. APPENDICES
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
           
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siva2/appendix/validation_policy/" class="md-nav__link">
+        Appendix 1 - Validation Policy
+      </a>
+    </li>
+  
+
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siva2/appendix/test_cases/" class="md-nav__link">
+        Appendix 2 - Test Case Descriptions
+      </a>
+    </li>
+  
 
-
-  <li class="md-nav__item">
-    <a href="../../siva2/appendix/validation_policy/" title="Appendix 1 - Validation Policy" class="md-nav__link">
-      Appendix 1 - Validation Policy
-    </a>
-  </li>
-
-        
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siva2/appendix/wsdl/" class="md-nav__link">
+        Appendix 3 - WSDL/XSD of SOAP Interface
+      </a>
+    </li>
+  
+
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siva2/appendix/known_issues/" class="md-nav__link">
+        Appendix 4 - Known Issues
+      </a>
+    </li>
+  
+
           
+        </ul>
+      </nav>
+    </li>
+  
 
-
-  <li class="md-nav__item">
-    <a href="../../siva2/appendix/test_cases/" title="Appendix 2 - Test Case Descriptions" class="md-nav__link">
-      Appendix 2 - Test Case Descriptions
-    </a>
-  </li>
-
-        
           
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../siva2/appendix/wsdl/" title="Appendix 3 - WSDL/XSD of SOAP Interface" class="md-nav__link">
-      Appendix 3 - WSDL/XSD of SOAP Interface
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../siva2/appendix/known_issues/" title="Appendix 4 - Known Issues" class="md-nav__link">
-      Appendix 4 - Known Issues
-    </a>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
+        </ul>
+      </nav>
+    </li>
+  
 
     
       
       
       
 
-
-  <li class="md-nav__item md-nav__item--nested">
+  
+  
+  
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-12" type="checkbox" id="nav-12">
-    
-    <label class="md-nav__link" for="nav-12">
-      10. SIVA 1.1 (Deprecated)
-      <span class="md-nav__icon md-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
-      </span>
-    </label>
-    <nav class="md-nav" aria-label="10. SIVA 1.1 (Deprecated)" data-md-level="1">
-      <label class="md-nav__title" for="nav-12">
-        <span class="md-nav__icon md-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-        </span>
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-12" type="checkbox" id="nav-12" >
+      
+      <label class="md-nav__link" for="nav-12">
         10. SIVA 1.1 (Deprecated)
+        <span class="md-nav__icon md-icon"></span>
       </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
+      <nav class="md-nav" aria-label="10. SIVA 1.1 (Deprecated)" data-md-level="1">
+        <label class="md-nav__title" for="nav-12">
+          <span class="md-nav__icon md-icon"></span>
+          10. SIVA 1.1 (Deprecated)
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
           
           
-          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siva/definitions/" class="md-nav__link">
+        10.1. DEFINITIONS
+      </a>
+    </li>
+  
 
-
-  <li class="md-nav__item">
-    <a href="../../siva/definitions/" title="10.1. DEFINITIONS" class="md-nav__link">
-      10.1. DEFINITIONS
-    </a>
-  </li>
-
-        
           
-          
-          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siva/overview/" class="md-nav__link">
+        10.2. BACKGROUND
+      </a>
+    </li>
+  
 
-
-  <li class="md-nav__item">
-    <a href="../../siva/overview/" title="10.2. BACKGROUND" class="md-nav__link">
-      10.2. BACKGROUND
-    </a>
-  </li>
-
-        
           
-          
-          
-
-
-  <li class="md-nav__item md-nav__item--nested">
+            
+  
+  
+  
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-12-3" type="checkbox" id="nav-12-3">
-    
-    <label class="md-nav__link" for="nav-12-3">
-      10.3. STRUCTURE & ACTIVITIES
-      <span class="md-nav__icon md-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
-      </span>
-    </label>
-    <nav class="md-nav" aria-label="10.3. STRUCTURE & ACTIVITIES" data-md-level="2">
-      <label class="md-nav__title" for="nav-12-3">
-        <span class="md-nav__icon md-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-        </span>
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-12-3" type="checkbox" id="nav-12-3" >
+      
+      <label class="md-nav__link" for="nav-12-3">
         10.3. STRUCTURE & ACTIVITIES
+        <span class="md-nav__icon md-icon"></span>
       </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
+      <nav class="md-nav" aria-label="10.3. STRUCTURE & ACTIVITIES" data-md-level="2">
+        <label class="md-nav__title" for="nav-12-3">
+          <span class="md-nav__icon md-icon"></span>
+          10.3. STRUCTURE & ACTIVITIES
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
           
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siva/v2/structure_and_activities/" class="md-nav__link">
+        10.3.1 Component model
+      </a>
+    </li>
+  
+
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siva/v2/use_cases/" class="md-nav__link">
+        10.3.2 Use cases
+      </a>
+    </li>
+  
 
-
-  <li class="md-nav__item">
-    <a href="../../siva/v2/structure_and_activities/" title="10.3.1 Component model" class="md-nav__link">
-      10.3.1 Component model
-    </a>
-  </li>
-
-        
           
+        </ul>
+      </nav>
+    </li>
+  
+
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siva/v2/interfaces/" class="md-nav__link">
+        10.4. INTERFACES
+      </a>
+    </li>
+  
+
           
-
-
-  <li class="md-nav__item">
-    <a href="../../siva/v2/use_cases/" title="10.3.2 Use cases" class="md-nav__link">
-      10.3.2 Use cases
-    </a>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../siva/v2/interfaces/" title="10.4. INTERFACES" class="md-nav__link">
-      10.4. INTERFACES
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item md-nav__item--nested">
+            
+  
+  
+  
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-12-5" type="checkbox" id="nav-12-5">
-    
-    <label class="md-nav__link" for="nav-12-5">
-      10.5. DEPLOYMENT
-      <span class="md-nav__icon md-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
-      </span>
-    </label>
-    <nav class="md-nav" aria-label="10.5. DEPLOYMENT" data-md-level="2">
-      <label class="md-nav__title" for="nav-12-5">
-        <span class="md-nav__icon md-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-        </span>
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-12-5" type="checkbox" id="nav-12-5" >
+      
+      <label class="md-nav__link" for="nav-12-5">
         10.5. DEPLOYMENT
+        <span class="md-nav__icon md-icon"></span>
       </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
+      <nav class="md-nav" aria-label="10.5. DEPLOYMENT" data-md-level="2">
+        <label class="md-nav__title" for="nav-12-5">
+          <span class="md-nav__icon md-icon"></span>
+          10.5. DEPLOYMENT
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
           
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siva/v2/deployment/" class="md-nav__link">
+        10.5.1 Deployment model
+      </a>
+    </li>
+  
+
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siva/v2/systemintegrators_guide/" class="md-nav__link">
+        10.5.2 System integrator's guide
+      </a>
+    </li>
+  
 
-
-  <li class="md-nav__item">
-    <a href="../../siva/v2/deployment/" title="10.5.1 Deployment model" class="md-nav__link">
-      10.5.1 Deployment model
-    </a>
-  </li>
-
-        
           
+        </ul>
+      </nav>
+    </li>
+  
+
           
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../siva/v2/systemintegrators_guide/" title="10.5.2 System integrator's guide" class="md-nav__link">
-      10.5.2 System integrator's guide
-    </a>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item md-nav__item--nested">
+            
+  
+  
+  
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-12-6" type="checkbox" id="nav-12-6">
-    
-    <label class="md-nav__link" for="nav-12-6">
-      10.6. QUALITY ASSURANCE
-      <span class="md-nav__icon md-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
-      </span>
-    </label>
-    <nav class="md-nav" aria-label="10.6. QUALITY ASSURANCE" data-md-level="2">
-      <label class="md-nav__title" for="nav-12-6">
-        <span class="md-nav__icon md-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-        </span>
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-12-6" type="checkbox" id="nav-12-6" >
+      
+      <label class="md-nav__link" for="nav-12-6">
         10.6. QUALITY ASSURANCE
+        <span class="md-nav__icon md-icon"></span>
       </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
+      <nav class="md-nav" aria-label="10.6. QUALITY ASSURANCE" data-md-level="2">
+        <label class="md-nav__title" for="nav-12-6">
+          <span class="md-nav__icon md-icon"></span>
+          10.6. QUALITY ASSURANCE
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
           
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siva/qa_strategy/" class="md-nav__link">
+        10.6.1 QA Strategy
+      </a>
+    </li>
+  
+
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siva/test_plan/" class="md-nav__link">
+        10.6.2 Test Plan
+      </a>
+    </li>
+  
 
-
-  <li class="md-nav__item">
-    <a href="../../siva/qa_strategy/" title="10.6.1 QA Strategy" class="md-nav__link">
-      10.6.1 QA Strategy
-    </a>
-  </li>
-
-        
           
+        </ul>
+      </nav>
+    </li>
+  
+
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siva/references/" class="md-nav__link">
+        10.7. REFERENCES
+      </a>
+    </li>
+  
+
           
-
-
-  <li class="md-nav__item">
-    <a href="../../siva/test_plan/" title="10.6.2 Test Plan" class="md-nav__link">
-      10.6.2 Test Plan
-    </a>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../siva/references/" title="10.7. REFERENCES" class="md-nav__link">
-      10.7. REFERENCES
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item md-nav__item--nested">
+            
+  
+  
+  
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-12-8" type="checkbox" id="nav-12-8">
-    
-    <label class="md-nav__link" for="nav-12-8">
-      10.8. APPENDICES
-      <span class="md-nav__icon md-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
-      </span>
-    </label>
-    <nav class="md-nav" aria-label="10.8. APPENDICES" data-md-level="2">
-      <label class="md-nav__title" for="nav-12-8">
-        <span class="md-nav__icon md-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-        </span>
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-12-8" type="checkbox" id="nav-12-8" >
+      
+      <label class="md-nav__link" for="nav-12-8">
         10.8. APPENDICES
+        <span class="md-nav__icon md-icon"></span>
       </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
+      <nav class="md-nav" aria-label="10.8. APPENDICES" data-md-level="2">
+        <label class="md-nav__title" for="nav-12-8">
+          <span class="md-nav__icon md-icon"></span>
+          10.8. APPENDICES
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
           
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siva/appendix/validation_policy/" class="md-nav__link">
+        Appendix 1 - Validation Policy
+      </a>
+    </li>
+  
+
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siva/appendix/test_cases/" class="md-nav__link">
+        Appendix 2 - Test Case Descriptions
+      </a>
+    </li>
+  
 
-
-  <li class="md-nav__item">
-    <a href="../../siva/appendix/validation_policy/" title="Appendix 1 - Validation Policy" class="md-nav__link">
-      Appendix 1 - Validation Policy
-    </a>
-  </li>
-
-        
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siva/appendix/wsdl/" class="md-nav__link">
+        Appendix 3 - WSDL of SOAP Interface
+      </a>
+    </li>
+  
+
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siva/appendix/known_issues/" class="md-nav__link">
+        Appendix 4 - Known Issues
+      </a>
+    </li>
+  
+
           
+        </ul>
+      </nav>
+    </li>
+  
 
-
-  <li class="md-nav__item">
-    <a href="../../siva/appendix/test_cases/" title="Appendix 2 - Test Case Descriptions" class="md-nav__link">
-      Appendix 2 - Test Case Descriptions
-    </a>
-  </li>
-
-        
           
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../siva/appendix/wsdl/" title="Appendix 3 - WSDL of SOAP Interface" class="md-nav__link">
-      Appendix 3 - WSDL of SOAP Interface
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../siva/appendix/known_issues/" title="Appendix 4 - Known Issues" class="md-nav__link">
-      Appendix 4 - Known Issues
-    </a>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
+        </ul>
+      </nav>
+    </li>
+  
 
     
   </ul>
@@ -1471,7 +1513,8 @@
               </div>
             
             
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
@@ -1480,9 +1523,7 @@
   
   
     <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-      </span>
+      <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-scrollfix>
@@ -1754,6 +1795,26 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#changes-in-api-compared-to-v3-v330" class="md-nav__link">
+    Changes in API compared to V3 v3.3.0
+  </a>
+  
+    <nav class="md-nav" aria-label="Changes in API compared to V3 v3.3.0">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changes-in-response" class="md-nav__link">
+    Changes in response
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#changes-in-api-compared-to-v3-v320-non-breaking-additions-to-protocol" class="md-nav__link">
     Changes in API compared to V3 v3.2.0 (non breaking additions to protocol)
   </a>
@@ -1762,7 +1823,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#changes-in-response" class="md-nav__link">
+  <a href="#changes-in-response_1" class="md-nav__link">
     Changes in response
   </a>
   
@@ -1789,7 +1850,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#changes-in-response_1" class="md-nav__link">
+  <a href="#changes-in-response_2" class="md-nav__link">
     Changes in response
   </a>
   
@@ -1817,9 +1878,6 @@
                   </a>
                 
                 
-                  
-                
-                
                   <h1>4. INTERFACES</h1>
                 
                 <!--# Interface description-->
@@ -1835,19 +1893,16 @@
 <p>In the following subsections, the SiVa validation request and response interfaces are described in detail. </p>
 <h2 id="validation-request-interface">Validation request interface</h2>
 <p><strong> REST JSON Endpoint </strong></p>
-<div class="codehilite"><pre><span></span><code><span class="err">POST https://&lt;server url&gt;/validate</span>
+<div class="codehilite"><pre><span></span><code>POST https://&lt;server url&gt;/validate
 </code></pre></div>
-
 
 <p><strong> SOAP Endpoint </strong></p>
-<div class="codehilite"><pre><span></span><code><span class="err">POST https://&lt;server url&gt;/soap/validationWebService/validateDocument</span>
+<div class="codehilite"><pre><span></span><code>POST https://&lt;server url&gt;/soap/validationWebService/validateDocument
 </code></pre></div>
-
 
 <p><strong> SOAP WSDL </strong></p>
-<div class="codehilite"><pre><span></span><code><span class="err">POST https://&lt;server url&gt;/soap/validationWebService/validateDocument?wsdl</span>
+<div class="codehilite"><pre><span></span><code>POST https://&lt;server url&gt;/soap/validationWebService/validateDocument?wsdl
 </code></pre></div>
-
 
 <h3 id="validation-request-parameters">Validation request parameters</h3>
 <p>Validation request parameters for JSON and SOAP interfaces are described in the table below. Data types of SOAP parameters are defined in the <a href="/siva/appendix/wsdl">SiVa WSDL document</a>.</p>
@@ -1906,7 +1961,6 @@
 <span class="p">}</span>
 </code></pre></div>
 
-
 <h3 id="sample-json-request-with-all-parameters">Sample JSON request with all parameters</h3>
 <div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;filename&quot;</span><span class="p">:</span><span class="s2">&quot;sample.asice&quot;</span><span class="p">,</span>
@@ -1916,7 +1970,6 @@
   <span class="nt">&quot;reportType&quot;</span><span class="p">:</span><span class="s2">&quot;Detailed&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
-
 
 <h3 id="sample-soap-request">Sample SOAP request</h3>
 <div class="codehilite"><pre><span></span><code><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
@@ -1935,23 +1988,19 @@
 <span class="nt">&lt;/soap:Envelope&gt;</span>
 </code></pre></div>
 
-
 <h2 id="validation-request-interface-for-hashcode">Validation request interface for hashcode</h2>
 <p>Hashcode XAdES validation is supported for <strong>REST JSON</strong> and <strong>SOAP</strong> interfaces.</p>
 <p><strong> REST JSON Endpoint </strong></p>
-<div class="codehilite"><pre><span></span><code><span class="err">POST https://&lt;server url&gt;/validateHashcode</span>
+<div class="codehilite"><pre><span></span><code>POST https://&lt;server url&gt;/validateHashcode
 </code></pre></div>
-
 
 <p><strong> SOAP Endpoint </strong></p>
-<div class="codehilite"><pre><span></span><code><span class="err">POST https://&lt;server url&gt;/soap/hashcodeValidationWebService</span>
+<div class="codehilite"><pre><span></span><code>POST https://&lt;server url&gt;/soap/hashcodeValidationWebService
 </code></pre></div>
-
 
 <p><strong> SOAP WSDL </strong></p>
-<div class="codehilite"><pre><span></span><code><span class="err">POST https://&lt;server url&gt;/soap/hashcodeValidationWebService?wsdl</span>
+<div class="codehilite"><pre><span></span><code>POST https://&lt;server url&gt;/soap/hashcodeValidationWebService?wsdl
 </code></pre></div>
-
 
 <h3 id="validation-request-parameters_1">Validation request parameters</h3>
 <p>Two different use cases are supported for the hashcode validation. 
@@ -2054,7 +2103,6 @@
 <span class="p">}</span>
 </code></pre></div>
 
-
 <h3 id="sample-json-request-with-all-parameters-datafile-hashcode-match-verification-done-on-siva-side">Sample JSON request with all parameters (datafile hashcode match verification done on SIVA side)</h3>
 <div class="codehilite"><pre><span></span><code><span class="p">{</span>
     <span class="nt">&quot;signatureFiles&quot;</span><span class="p">:</span> <span class="p">[</span>
@@ -2094,7 +2142,6 @@
 <span class="p">}</span>
 </code></pre></div>
 
-
 <h3 id="sample-soap-request-with-mandatory-parameters">Sample SOAP request with mandatory parameters</h3>
 <div class="codehilite"><pre><span></span><code><span class="nt">&lt;soapenv:Envelope</span> <span class="na">xmlns:soapenv=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span> <span class="na">xmlns:soap=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span><span class="nt">&gt;</span>
    <span class="nt">&lt;soapenv:Body&gt;</span>
@@ -2113,7 +2160,6 @@
    <span class="nt">&lt;/soapenv:Body&gt;</span>
 <span class="nt">&lt;/soapenv:Envelope&gt;</span>
 </code></pre></div>
-
 
 <h3 id="sample-soap-request-with-all-parameters-and-multiple-datafiles">Sample SOAP request with all parameters and multiple datafiles</h3>
 <div class="codehilite"><pre><span></span><code><span class="nt">&lt;soapenv:Envelope</span> <span class="na">xmlns:soapenv=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span> <span class="na">xmlns:soap=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span><span class="nt">&gt;</span>
@@ -2157,7 +2203,6 @@
    <span class="nt">&lt;/soapenv:Body&gt;</span>
 <span class="nt">&lt;/soapenv:Envelope&gt;</span>
 </code></pre></div>
-
 
 <h2 id="validation-response-interface">Validation response interface</h2>
 <p>The signature validation report (i.e. the validation response) for JSON and SOAP interfaces depends on what type of validation report was requested.  Data types of SOAP parameters are defined in the <a href="/siva3/appendix/wsdl">SiVa WSDL document</a>.</p>
@@ -2399,6 +2444,20 @@
 <td>Base64 encoded value of message imprint retrieved from time assertion. In case of LT_TM (TimeMark) signatures, OCSP nonce value is returned. In case of T, LT or LTA (TimeStamp) signatures, TimeStamp message imprint is returned.</td>
 </tr>
 <tr>
+<td>signatures[0].info. ocspResponseCreationTime</td>
+<td>Signatures.Info. OcspResponseCreationTime</td>
+<td>-</td>
+<td>Date</td>
+<td>Time value that is regarded as the original OCSP response creation time.</td>
+</tr>
+<tr>
+<td>signatures[0].info. timestampCreationTime</td>
+<td>Signatures.Info. TimestampCreationTime</td>
+<td>-</td>
+<td>Date</td>
+<td>Time value of the timestamp creation</td>
+</tr>
+<tr>
 <td>signatures[0].info. signerRole</td>
 <td>Signature.Info. SignerRole</td>
 <td>-</td>
@@ -2453,6 +2512,13 @@
 <td>-</td>
 <td>String</td>
 <td>Stated postal code.</td>
+</tr>
+<tr>
+<td>signatures[0].info. signingReason</td>
+<td>Signature.Info SigningReason</td>
+<td>-</td>
+<td>String</td>
+<td>Free text field for PAdES type signatures for stating the signing reason</td>
 </tr>
 <tr>
 <td>signatures[0]. signatureFormat</td>
@@ -2705,8 +2771,10 @@
         <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;id-a9ce7f66cff1d17ddaab37c46a88f5f4&quot;</span><span class="p">,</span>
         <span class="nt">&quot;indication&quot;</span><span class="p">:</span> <span class="s2">&quot;TOTAL-PASSED&quot;</span><span class="p">,</span>
         <span class="nt">&quot;info&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;timestampCreationTime&quot;</span><span class="p">:</span> <span class="s2">&quot;2020-05-21T13:56:48Z&quot;</span><span class="p">,</span>
             <span class="nt">&quot;timeAssertionMessageImprint&quot;</span><span class="p">:</span> <span class="s2">&quot;MDEwDQYJYIZIAWUDBAIBBQAEID3j1ceryQp4ZNP8iVfd50l/0JXvpry+XS+ajiAUA+Su&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;bestSignatureTime&quot;</span><span class="p">:</span> <span class="s2">&quot;2020-05-21T13:56:48Z&quot;</span>
+            <span class="nt">&quot;bestSignatureTime&quot;</span><span class="p">:</span> <span class="s2">&quot;2020-05-21T13:56:48Z&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;ocspResponseCreationTime&quot;</span><span class="p">:</span> <span class="s2">&quot;2020-05-21T13:56:49Z&quot;</span>
         <span class="p">}</span>
     <span class="p">}],</span>
     <span class="nt">&quot;policy&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -2717,7 +2785,6 @@
     <span class="nt">&quot;signatureForm&quot;</span><span class="p">:</span> <span class="s2">&quot;ASiC-E&quot;</span>
 <span class="p">}}}</span>
 </code></pre></div>
-
 
 <h4 id="sample-soap-response-simple-report-successful-scenario">Sample SOAP response Simple Report (successful scenario)</h4>
 <div class="codehilite"><pre><span></span><code><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
@@ -2783,6 +2850,8 @@
               <span class="nt">&lt;ns3:ClaimedSigningTime&gt;</span>2020-05-21T13:56:52Z<span class="nt">&lt;/ns3:ClaimedSigningTime&gt;</span>
               <span class="nt">&lt;ns3:Warnings/&gt;</span>
               <span class="nt">&lt;ns3:Info&gt;</span>
+                <span class="nt">&lt;ns3:OcspResponseCreationTime&gt;</span>2020-05-21T13:56:49Z<span class="nt">&lt;/ns3:OcspResponseCreationTime&gt;</span>
+                <span class="nt">&lt;ns3:TimestampCreationTime&gt;</span>2020-05-21T13:56:48Z<span class="nt">&lt;/ns3:TimestampCreationTime&gt;</span>
                 <span class="nt">&lt;ns3:BestSignatureTime&gt;</span>2020-05-21T13:56:48Z<span class="nt">&lt;/ns3:BestSignatureTime&gt;</span>
                 <span class="nt">&lt;ns3:TimeAssertionMessageImprint&gt;</span>MDEwDQYJYIZIAWUDBAIBBQAEID3j1ceryQp4ZNP8iVfd50l/0JXvpry+XS+ajiAUA+Su<span class="nt">&lt;/ns3:TimeAssertionMessageImprint&gt;</span>
               <span class="nt">&lt;/ns3:Info&gt;</span>
@@ -2796,7 +2865,6 @@
   <span class="nt">&lt;/soap:Body&gt;</span>
 <span class="nt">&lt;/soap:Envelope&gt;</span>
 </code></pre></div>
-
 
 <h3 id="validation-response-parameters-detailed-report-successful-scenario">Validation response parameters Detailed Report (successful scenario)</h3>
 <p>General structure of validation response.</p>
@@ -2885,7 +2953,6 @@
 <span class="p">}]}</span>
 </code></pre></div>
 
-
 <h3 id="sample-soap-response-error-situation">Sample SOAP response (error situation)</h3>
 <div class="codehilite"><pre><span></span><code><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
 <span class="nt">&lt;soap:Envelope</span> <span class="na">xmlns:soap=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span><span class="nt">&gt;</span>
@@ -2898,22 +2965,18 @@
 <span class="nt">&lt;/soap:Envelope&gt;</span>
 </code></pre></div>
 
-
 <h2 id="data-files-request-interface">Data files request interface</h2>
 <p><strong> REST JSON Endpoint </strong></p>
-<div class="codehilite"><pre><span></span><code><span class="err">POST https://&lt;server url&gt;/getDataFiles</span>
+<div class="codehilite"><pre><span></span><code>POST https://&lt;server url&gt;/getDataFiles
 </code></pre></div>
-
 
 <p><strong> SOAP Endpoint </strong></p>
-<div class="codehilite"><pre><span></span><code><span class="err">POST https://&lt;server url&gt;/soap/dataFilesWebService/getDocumentDataFiles</span>
+<div class="codehilite"><pre><span></span><code>POST https://&lt;server url&gt;/soap/dataFilesWebService/getDocumentDataFiles
 </code></pre></div>
-
 
 <p><strong> SOAP WSDL </strong></p>
-<div class="codehilite"><pre><span></span><code><span class="err">POST https://&lt;server url&gt;/soap/dataFilesWebService/getDocumentDataFiles?wsdl</span>
+<div class="codehilite"><pre><span></span><code>POST https://&lt;server url&gt;/soap/dataFilesWebService/getDocumentDataFiles?wsdl
 </code></pre></div>
-
 
 <h3 id="data-files-request-parameters">Data files request parameters</h3>
 <p>Data files request parameters for JSON and SOAP interfaces are described in the table below. Data types of SOAP parameters are defined in the <a href="/siva/appendix/wsdl">SiVa WSDL document</a>.</p>
@@ -2951,7 +3014,6 @@
 <span class="p">}</span>
 </code></pre></div>
 
-
 <h3 id="sample-soap-request_1">Sample SOAP request</h3>
 <div class="codehilite"><pre><span></span><code><span class="nt">&lt;soapenv:Envelope</span> <span class="na">xmlns:soapenv=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span> <span class="na">xmlns:soap=</span><span class="s">&quot;http://soap.webapp.siva.openeid.ee/&quot;</span><span class="nt">&gt;</span>
   <span class="nt">&lt;soapenv:Header/&gt;</span>
@@ -2965,7 +3027,6 @@
   <span class="nt">&lt;/soapenv:Body&gt;</span>
 <span class="nt">&lt;/soapenv:Envelope&gt;</span>
 </code></pre></div>
-
 
 <h2 id="data-files-response-interface">Data files response interface</h2>
 <h3 id="data-files-response-parameters-successful-scenario">Data files response parameters (successful scenario)</h3>
@@ -3036,7 +3097,6 @@ SiVa returns all data files as they are extracted by JDigiDoc library in an as i
 <span class="p">}</span>
 </code></pre></div>
 
-
 <h3 id="sample-soap-response-successful-scenario">Sample SOAP response (successful scenario)</h3>
 <div class="codehilite"><pre><span></span><code><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
 <span class="nt">&lt;soap:Envelope</span> <span class="na">xmlns:soap=</span><span class="s">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span><span class="nt">&gt;</span>
@@ -3057,7 +3117,6 @@ SiVa returns all data files as they are extracted by JDigiDoc library in an as i
 <span class="nt">&lt;/soap:Envelope&gt;</span>
 </code></pre></div>
 
-
 <h3 id="sample-json-response-error-situation_1">Sample JSON response (error situation)</h3>
 <p>In case of error (when datafiles are not returned) status code 400 is returned together with following message body:</p>
 <div class="codehilite"><pre><span></span><code><span class="p">{</span><span class="nt">&quot;requestErrors&quot;</span><span class="p">:</span> <span class="p">[{</span>
@@ -3065,7 +3124,6 @@ SiVa returns all data files as they are extracted by JDigiDoc library in an as i
     <span class="nt">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;documentType&quot;</span>
 <span class="p">}]}</span>
 </code></pre></div>
-
 
 <h3 id="sample-soap-response-error-situation_1">Sample SOAP response (error situation)</h3>
 <div class="codehilite"><pre><span></span><code><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
@@ -3079,15 +3137,13 @@ SiVa returns all data files as they are extracted by JDigiDoc library in an as i
 <span class="nt">&lt;/soap:Envelope&gt;</span>
 </code></pre></div>
 
-
 <h2 id="service-health-monitoring">Service health monitoring</h2>
 <p>SiVa webapps provide an interface for external monitoring tools (to periodically check the generic service health status).</p>
 <h3 id="the-request">The request</h3>
 <p>The monitoring endpoint is accessible via HTTP GET at <strong>/monitoring/health</strong> or <strong>/monitoring/health.json</strong> url.</p>
 <p>Sample request:</p>
-<div class="codehilite"><pre><span></span><code><span class="err">GET https://&lt;server url&gt;/monitoring/health</span>
+<div class="codehilite"><pre><span></span><code>GET https://&lt;server url&gt;/monitoring/health
 </code></pre></div>
-
 
 <h3 id="the-response">The response</h3>
 <p>As a response, a JSON object is returned with the following information:</p>
@@ -3144,7 +3200,7 @@ SiVa returns all data files as they are extracted by JDigiDoc library in an as i
         <span class="nt">&quot;health&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="nt">&quot;details&quot;</span><span class="p">:</span> <span class="p">{</span>
                <span class="nt">&quot;webappName&quot;</span><span class="p">:</span><span class="s2">&quot;siva-sample-application&quot;</span><span class="p">,</span>
-                <span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="s2">&quot;3.2.2&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="s2">&quot;3.3.0&quot;</span><span class="p">,</span>
                 <span class="nt">&quot;buildTime&quot;</span><span class="p">:</span><span class="s2">&quot;2016-10-21T15:56:21Z&quot;</span><span class="p">,</span>
                 <span class="nt">&quot;startTime&quot;</span><span class="p">:</span><span class="s2">&quot;2016-10-21T15:57:48Z&quot;</span><span class="p">,</span>
                 <span class="nt">&quot;currentTime&quot;</span><span class="p">:</span><span class="s2">&quot;2016-10-21T15:58:39Z&quot;</span>
@@ -3161,10 +3217,46 @@ SiVa returns all data files as they are extracted by JDigiDoc library in an as i
 <span class="p">}</span>
 </code></pre></div>
 
-
-<h2 id="changes-in-api-compared-to-v3-v320-non-breaking-additions-to-protocol">Changes in API compared to V3 v3.2.0 (non breaking additions to protocol)</h2>
+<h2 id="changes-in-api-compared-to-v3-v330">Changes in API compared to V3 v3.3.0</h2>
 <p>Changes are described using notation from REST endpoint.</p>
 <h3 id="changes-in-response">Changes in response</h3>
+<table>
+<thead>
+<tr>
+<th>Report</th>
+<th>Parameter</th>
+<th>Change</th>
+<th>Link</th>
+<th>Comment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>validationConclusion</td>
+<td>signatures[0].info.timestampCreationTime</td>
+<td>Parameter added</td>
+<td><a href="../interfaces/#validation-response-parameters-simple-report-successful-scenario">Link</a></td>
+<td>Date containing timestamp creation time added</td>
+</tr>
+<tr>
+<td>validationConclusion</td>
+<td>signatures[0].info.ocspResponseCreationTime</td>
+<td>Parameter added</td>
+<td><a href="../interfaces/#validation-response-parameters-simple-report-successful-scenario">Link</a></td>
+<td>Date containing OCSP response creation time added</td>
+</tr>
+<tr>
+<td>validationConclusion</td>
+<td>signatures[0].info.signingReason</td>
+<td>Parameter added</td>
+<td><a href="../interfaces/#validation-response-parameters-simple-report-successful-scenario">Link</a></td>
+<td>String containing signing reason for PAdES added</td>
+</tr>
+</tbody>
+</table>
+<h2 id="changes-in-api-compared-to-v3-v320-non-breaking-additions-to-protocol">Changes in API compared to V3 v3.2.0 (non breaking additions to protocol)</h2>
+<p>Changes are described using notation from REST endpoint.</p>
+<h3 id="changes-in-response_1">Changes in response</h3>
 <table>
 <thead>
 <tr>
@@ -3243,7 +3335,7 @@ SiVa returns all data files as they are extracted by JDigiDoc library in an as i
 </tr>
 </tbody>
 </table>
-<h3 id="changes-in-response_1">Changes in response</h3>
+<h3 id="changes-in-response_2">Changes in response</h3>
 <table>
 <thead>
 <tr>
@@ -3331,7 +3423,7 @@ SiVa returns all data files as they are extracted by JDigiDoc library in an as i
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
         
-          <a href="../use_cases/" title="3.2 Use cases" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../use_cases/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-footer-nav__button md-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
             </div>
@@ -3346,7 +3438,7 @@ SiVa returns all data files as they are extracted by JDigiDoc library in an as i
           </a>
         
         
-          <a href="../deployment/" title="5.1 Deployment model" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../deployment/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-footer-nav__title">
               <div class="md-ellipsis">
                 <span class="md-footer-nav__direction">
@@ -3379,15 +3471,15 @@ SiVa returns all data files as they are extracted by JDigiDoc library in an as i
       
     </div>
     
-      <script src="../../assets/javascripts/vendor.d710d30a.min.js"></script>
-      <script src="../../assets/javascripts/bundle.a45f732b.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      <script src="../../assets/javascripts/vendor.18f0862e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.994580cf.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
       
       <script>
         app = initialize({
           base: "../..",
           features: [],
           search: Object.assign({
-            worker: "../../assets/javascripts/worker/search.c03f0417.min.js"
+            worker: "../../assets/javascripts/worker/search.9c0e82ba.min.js"
           }, typeof search !== "undefined" && search)
         })
       </script>

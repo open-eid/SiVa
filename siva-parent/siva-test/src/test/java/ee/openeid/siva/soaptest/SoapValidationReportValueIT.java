@@ -130,7 +130,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
                 .body("Signatures.Signature[0].Info.SignatureProductionPlace.City", Matchers.is("City with spaces"))
                 .body("Signatures.Signature[0].Info.SignatureProductionPlace.PostalCode", Matchers.is("123456789"))
                 .body("Signatures.Signature[0].Errors", Matchers.emptyOrNullString())
-                .body("Signatures.Signature[0].Warnings.Warning[0].Content", Matchers.is("The trusted certificate doesn't match the trust service"))
+                .body("Signatures.Signature[0].Warnings.Warning[0].Content", Matchers.is("The trusted certificate does not match the trust service!"))
                 .body("SignatureForm", Matchers.is("ASiC-E"));
     }
 
@@ -213,6 +213,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      */
     @Test
+    @Ignore("DD4J-615")
     public void SoapBdocCorrectValuesArePresentInvalidLtSignatureAdesqc() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDocument("EE_SER-AEX-B-LTA-V-24.bdoc"))
@@ -421,7 +422,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
                 .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
                 .body("SignaturesCount", Matchers.is("1"))
                 .body("ValidSignaturesCount", Matchers.is("1"))
-                .body("Signatures.Signature[0].Id", Matchers.is("S-24C246774A122D4077DF298CF6F7DC9475AC0E272E0A7FFC2C1285DCC83F312C"))
+                .body("Signatures.Signature[0].Id", Matchers.is("S-1CA4D655909860192F80E6EA6D3FCC18C25A81E8902819C5E05B5C12D5BD6784"))
                 .body("Signatures.Signature[0].SignatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("Signatures.Signature[0].SignatureMethod", Matchers.is("http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"))
                 .body("Signatures.Signature[0].SignatureLevel", Matchers.is("QESIG"))
@@ -432,10 +433,11 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
                 .body("Signatures.Signature[0].Errors", Matchers.emptyOrNullString())
                 .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Name", Matchers.is("Partial PDF"))
                 .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Scope", Matchers.is("PARTIAL"))
-                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Content", Matchers.is("The document byte range: [0, 2226, 21172, 314]"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Content", Matchers.is("The document ByteRange : [0, 2226, 21172, 314]"))
                 .body("Signatures.Signature[0].ClaimedSigningTime", Matchers.is("2020-05-27T09:59:07Z"))
                 .body("Signatures.Signature[0].Info.BestSignatureTime", Matchers.is("2020-05-27T09:59:09Z"))
                 .body("Signatures.Signature[0].Info.SignatureProductionPlace.CountryName", Matchers.is("Narva"))
+                .body("Signatures.Signature[0].Info.SigningReason", Matchers.is("Roll??"))
                 .body("ValidatedDocument.Filename", Matchers.is("reason_and_location_Test.pdf"));
     }
 
@@ -697,7 +699,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
                 .body("Signatures.Signature[8].Info.SignerRole.ClaimedRole[1]", Matchers.is("Second role"))
                 .body("Signatures.Signature[8].Info.SignerRole.ClaimedRole[2]", Matchers.is("Third role"))
                 .body("Signatures.Signature[8].Errors", Matchers.emptyOrNullString())
-                .body("Signatures.Signature[8].Warnings.Warning[0].Content", Matchers.is("The trusted certificate doesn't match the trust service"));
+                .body("Signatures.Signature[8].Warnings.Warning[0].Content", Matchers.is("The trusted certificate does not match the trust service!"));
     }
 
     @Override

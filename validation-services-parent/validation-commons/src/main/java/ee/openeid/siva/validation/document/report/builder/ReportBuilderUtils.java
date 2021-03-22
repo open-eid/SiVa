@@ -20,10 +20,16 @@ import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 
+import eu.europa.esig.dss.diagnostic.TimestampWrapper;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlDigestMatcher;
 import eu.europa.esig.dss.enumerations.SignatureQualification;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.bouncycastle.asn1.tsp.MessageImprint;
+import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
+import org.bouncycastle.operator.DefaultDigestAlgorithmIdentifierFinder;
 
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
@@ -133,5 +139,15 @@ public final class ReportBuilderUtils {
     private static String getFormattedTimeValue(ZonedDateTime zonedDateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_FORMAT);
         return zonedDateTime.format(formatter);
+    }
+
+    public static String parseTimeAssertionMessageImprint(TimestampWrapper timestamp) throws IOException {
+        if (timestamp == null || !timestamp.isMessageImprintDataFound() || !timestamp.isMessageImprintDataIntact()) {
+            return "";
+        }
+        XmlDigestMatcher messageImprint = timestamp.getMessageImprint();
+        AlgorithmIdentifier algorithm = new DefaultDigestAlgorithmIdentifierFinder().find(messageImprint.getDigestMethod().getJavaName());
+        byte[] nonce = new MessageImprint(algorithm, messageImprint.getDigestValue()).getEncoded();
+        return StringUtils.defaultString(org.apache.tomcat.util.codec.binary.Base64.encodeBase64String(nonce));
     }
 }

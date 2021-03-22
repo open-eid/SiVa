@@ -16,6 +16,7 @@
 
 package ee.openeid.siva.signature.ocsp;
 
+import eu.europa.esig.dss.enumerations.DigestAlgorithm;
 import eu.europa.esig.dss.model.DSSException;
 import eu.europa.esig.dss.model.x509.CertificateToken;
 import eu.europa.esig.dss.spi.DSSRevocationUtils;
@@ -56,7 +57,7 @@ public class SkOcspSource implements OCSPSource {
             DSSException {
         try {
             LOGGER.debug("Building OCSP request");
-            final CertificateID certId = DSSRevocationUtils.getOCSPCertificateID(signCert, issuerCert);
+            final CertificateID certId = DSSRevocationUtils.getOCSPCertificateID(signCert, issuerCert, DigestAlgorithm.SHA1);
             final OCSPReqBuilder ocspReqBuilder = new OCSPReqBuilder();
             ocspReqBuilder.addRequest(certId);
             ocspReqBuilder.setRequestExtensions(new Extensions(nonceExtension));
@@ -100,7 +101,7 @@ public class SkOcspSource implements OCSPSource {
 
             Date bestUpdate = null;
             SingleResp bestSingleResp = null;
-            final CertificateID certId = DSSRevocationUtils.getOCSPCertificateID(certificateToken, issuerCertificateToken);
+            final CertificateID certId = DSSRevocationUtils.getOCSPCertificateID(certificateToken, issuerCertificateToken, DigestAlgorithm.SHA1);
             for (final SingleResp singleResp : basicOCSPResp.getResponses()) {
 
                 if (DSSRevocationUtils.matches(certId, singleResp)) {
@@ -114,13 +115,7 @@ public class SkOcspSource implements OCSPSource {
                 }
             }
             if (bestSingleResp != null) {
-
-                final OCSPToken ocspToken = new OCSPToken();
-                OCSPRespStatus status = OCSPRespStatus.fromInt(ocspResp.getStatus());
-                ocspToken.setResponseStatus(status);
-                ocspToken.setCertId(certId);
-                ocspToken.setAvailable(true);
-                ocspToken.setBasicOCSPResp(basicOCSPResp);
+                OCSPToken ocspToken = constructOCSPToken(basicOCSPResp, certificateToken, issuerCertificateToken);
                 return ocspToken;
             }
         } catch (OCSPException e) {
@@ -129,6 +124,13 @@ public class SkOcspSource implements OCSPSource {
             throw new DSSException(e);
         }
         return null;
+    }
+
+    private OCSPToken constructOCSPToken(BasicOCSPResp ocspResponse, CertificateToken subjectCert, CertificateToken issuerCert) {
+        SingleResp latestSingleResponse = DSSRevocationUtils.getLatestSingleResponse(ocspResponse, subjectCert, issuerCert);
+        OCSPToken token = new OCSPToken(ocspResponse, latestSingleResponse, subjectCert, issuerCert);
+        token.setSourceURL(url);
+        return token;
     }
 
     private void checkNonce(BasicOCSPResp basicOCSPResp, Extension expectedNonceExtension) {

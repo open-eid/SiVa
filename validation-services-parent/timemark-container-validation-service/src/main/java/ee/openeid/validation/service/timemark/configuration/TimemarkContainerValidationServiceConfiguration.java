@@ -42,7 +42,7 @@ public class TimemarkContainerValidationServiceConfiguration {
 
     @Autowired
     public TimemarkContainerValidationServiceConfiguration(TSLLoaderConfigurationProperties tslLoaderConfigurationProperties,
-            BDOCValidationServiceProperties bdocValidationServiceProperties) {
+                                                           BDOCValidationServiceProperties bdocValidationServiceProperties) {
         this.tslLoaderConfigurationProperties = tslLoaderConfigurationProperties;
         this.bdocValidationServiceProperties = bdocValidationServiceProperties;
     }
@@ -55,22 +55,27 @@ public class TimemarkContainerValidationServiceConfiguration {
     @Bean
     @Profile("test")
     public Configuration testDigiDoc4JConfiguration() {
-        Configuration configuration = new Configuration(Configuration.Mode.TEST);
-        configuration.setTrustedTerritories();
-        configuration.setSslTruststorePathFor(ExternalConnectionType.TSL, tslLoaderConfigurationProperties.getSslTruststorePath());
-        configuration.setSslTruststorePasswordFor(ExternalConnectionType.TSL, tslLoaderConfigurationProperties.getSslTruststorePassword());
-        configuration.setSslTruststoreTypeFor(ExternalConnectionType.TSL, tslLoaderConfigurationProperties.getSslTruststoreType());
-        configuration.setTslLocation(tslLoaderConfigurationProperties.getUrl());
+        Configuration configuration = createConfiguration(Configuration.Mode.TEST);
         configuration.loadConfiguration(getAdditionalConfigurationFilePath("/siva-digidoc4j-test.yaml"), true);
+        configuration.setTrustedTerritories();
         return configuration;
     }
 
     @Bean
     @Profile("!test")
     public Configuration prodDigiDoc4JConfiguration() {
-        org.digidoc4j.Configuration configuration = new org.digidoc4j.Configuration(Configuration.Mode.PROD);
-        configuration.setTslLocation(tslLoaderConfigurationProperties.getUrl());
+        Configuration configuration = createConfiguration(Configuration.Mode.PROD);
         configuration.loadConfiguration(getAdditionalConfigurationFilePath("/siva-digidoc4j.yaml"), true);
+        configuration.setTrustedTerritories(tslLoaderConfigurationProperties.getTrustedTerritories().toArray(String[]::new));
+        return configuration;
+    }
+
+    private Configuration createConfiguration(Configuration.Mode mode) {
+        Configuration configuration = new Configuration(mode);
+        configuration.setSslTruststorePathFor(ExternalConnectionType.TSL, tslLoaderConfigurationProperties.getSslTruststorePath());
+        configuration.setSslTruststorePasswordFor(ExternalConnectionType.TSL, tslLoaderConfigurationProperties.getSslTruststorePassword());
+        configuration.setSslTruststoreTypeFor(ExternalConnectionType.TSL, tslLoaderConfigurationProperties.getSslTruststoreType());
+        configuration.setTslLocation(tslLoaderConfigurationProperties.getUrl());
         return configuration;
     }
 

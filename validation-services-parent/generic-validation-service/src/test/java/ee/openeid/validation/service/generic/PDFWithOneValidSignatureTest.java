@@ -40,6 +40,7 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
 
     private static final String PDF_WITH_ONE_VALID_SIGNATURE = "hellopades-pades-lt-sha256-sign.pdf";
     private static final String PDF_SIGNED_WITH_UNQUALIFIED_CERTIFICATE = "hellopades-lt1-lt2-parallel3.pdf";
+    private static final String PDF_WITH_CRL = "PadesProfileLtWithCrl.pdf";
 
     @Test
     public void validatingWithValidPdfShouldReturnValidationReportPojo() throws Exception {
@@ -72,7 +73,7 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
         SimpleReport report = validateAndAssertReports(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE)).getSimpleReport();
         SignatureValidationData signature = report.getValidationConclusion().getSignatures().get(0);
-        assertEquals("S-202E914B96AC6CF210472EF75C9FA4D3C0D5D028FDBBEBE52CB18AA0D3DC1761", signature.getId());
+        assertEquals("S-50C07012D215F87BD0FC9F5BAE03B63C0BBDE3D0469003ABD5A43D79D7CAA991", signature.getId());
     }
 
     @Test
@@ -90,9 +91,9 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE)).getSimpleReport();
         SignatureScope scope = report.getValidationConclusion().getSignatures().get(0).getSignatureScopes().get(0);
 
-        assertEquals("The document byte range: [0, 14153, 52047, 491]", scope.getContent());
+        assertEquals("The document ByteRange : [0, 14153, 52047, 491]", scope.getContent());
         assertEquals("PARTIAL", scope.getScope());
-        assertEquals("PDF previous version #1", scope.getName());
+        assertEquals("Partial PDF", scope.getName());
     }
 
     @Test
@@ -106,7 +107,14 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
     public void validationResultForPdfShouldContainNull() throws Exception {
         SimpleReport report = validateAndAssertReports(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE)).getSimpleReport();
-        assertEquals(null, report.getValidationConclusion().getSignatureForm());
+        assertNull(report.getValidationConclusion().getSignatureForm());
+    }
+
+    @Test
+    public void containerWithCrlOcspIsNull(){
+        SimpleReport report = validateAndAssertReports(
+                buildValidationDocument(PDF_WITH_CRL)).getSimpleReport();
+        assertNull(report.getValidationConclusion().getSignatures().get(0).getInfo().getOcspResponseCreationTime());
     }
 
     @Test
@@ -146,23 +154,19 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
         assertEquals("1.2.840.113549.1.7.1", signature.getContentType());
 
         ZonedDateTime expectedDateTimeInUTC = ZonedDateTime.of(2015, 7, 9, 7, 0, 48, 0, ZoneId.of("UTC"));
-        assertEquals(expectedDateTimeInUTC.toInstant(), signature.getDateTime().toInstant());
+        assertEquals(expectedDateTimeInUTC.toInstant(), signature.getClaimedSigningTime().toInstant());
         assertTrue(signature.getStructuralValidation().isValid());
         assertTrue(signature.getBasicSignature().isSignatureIntact());
         assertTrue(signature.getBasicSignature().isSignatureValid());
-        assertTrue(signature.getSigningCertificate().isAttributePresent());
-        assertTrue(signature.getSigningCertificate().isDigestValuePresent());
-        assertTrue(signature.getSigningCertificate().isDigestValueMatch());
-        assertTrue(signature.getSigningCertificate().isIssuerSerialMatch());
 
         assertSame(4, diagnosticData.getUsedCertificates().size());
         assertSame(2, signature.getCertificateChain().size());
 
-        assertSame(1, diagnosticData.getTrustedLists().size());
-        assertEquals("EE", diagnosticData.getTrustedLists().get(0).getCountryCode());
+        assertSame(2, diagnosticData.getTrustedLists().size());
+        assertTrue(diagnosticData.getTrustedLists().stream().anyMatch(tl -> "EE".equals(tl.getCountryCode())));
 
-        assertNotNull(diagnosticData.getListOfTrustedLists());
-        assertEquals("EU", diagnosticData.getListOfTrustedLists().getCountryCode());
+        assertNotNull(diagnosticData.getTrustedLists());
+        assertTrue(diagnosticData.getTrustedLists().stream().anyMatch(tl -> "EU".equals(tl.getCountryCode())));
 
         assertSubjectDNPresent(reports.getDiagnosticReport().getValidationConclusion().getSignatures().get(0), "36706020210", "SINIVEE,VEIKO,36706020210");
         assertEquals("MDEwDQYJYIZIAWUDBAIBBQAEIEct8ZhE1SzctkbT9/REf9QKYKZgCXrI/dgbsyRPUsxM",

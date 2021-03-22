@@ -43,7 +43,6 @@ public class DiagnosticDataTransformer
         diagnosticData.setSignatures(dssDiagnosticData.getSignatures());
         diagnosticData.setUsedCertificates(dssDiagnosticData.getUsedCertificates());
         diagnosticData.setTrustedLists(dssDiagnosticData.getTrustedLists());
-        diagnosticData.setListOfTrustedLists(dssDiagnosticData.getListOfTrustedLists());
         return diagnosticData;
     }
 

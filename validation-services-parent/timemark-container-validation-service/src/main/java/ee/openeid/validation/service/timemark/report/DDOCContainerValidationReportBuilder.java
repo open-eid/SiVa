@@ -2,6 +2,8 @@ package ee.openeid.validation.service.timemark.report;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.SignatureScope;
+import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.document.report.ValidationWarning;
 import ee.openeid.siva.validation.document.report.Warning;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
@@ -16,6 +18,7 @@ import org.digidoc4j.impl.ddoc.DDocFacade;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class DDOCContainerValidationReportBuilder extends TimemarkContainerValidationReportBuilder {
@@ -27,8 +30,28 @@ public class DDOCContainerValidationReportBuilder extends TimemarkContainerValid
     }
 
     @Override
-    List<Warning> getExtraWarnings(Signature signature) {
-        return Collections.emptyList();
+    void processSignatureIndications(ValidationConclusion validationConclusion, String policyName) {
+        //Do nothing
+    }
+
+    @Override
+    SignatureValidationData.Indication getIndication(Signature signature, Map<String, ValidationResult> signatureValidationResults) {
+        ValidationResult signatureValidationResult = signatureValidationResults.get(signature.getUniqueId());
+        if (signatureValidationResult.isValid() && validationResult.getErrors().isEmpty()) {
+            return SignatureValidationData.Indication.TOTAL_PASSED;
+        } else {
+            return SignatureValidationData.Indication.TOTAL_FAILED;
+        }
+    }
+
+    @Override
+    String getSubIndication(Signature signature, Map<String, ValidationResult> signatureValidationResults) {
+        return "";
+    }
+
+    @Override
+    protected String getSignatureLevel(Signature signature) {
+        return null;
     }
 
     @Override

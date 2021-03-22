@@ -30,11 +30,13 @@ import ee.openeid.tsl.configuration.AlwaysFailingCRLSource;
 import ee.openeid.tsl.configuration.AlwaysFailingOCSPSource;
 import ee.openeid.validation.service.generic.validator.report.GenericValidationReportBuilder;
 import ee.openeid.validation.service.generic.validator.report.ReportBuilderData;
+import eu.europa.esig.dss.enumerations.TokenExtractionStategy;
 import eu.europa.esig.dss.model.DSSDocument;
 import eu.europa.esig.dss.model.DSSException;
 import eu.europa.esig.dss.model.InMemoryDocument;
 import eu.europa.esig.dss.model.MimeType;
 import eu.europa.esig.dss.service.http.commons.CommonsDataLoader;
+import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.validation.AdvancedSignature;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
@@ -57,6 +59,7 @@ public class GenericValidationService implements ValidationService {
     private TrustedListsCertificateSource trustedListsCertificateSource;
     private ConstraintLoadingSignaturePolicyService signaturePolicyService;
     private ReportConfigurationProperties reportConfigurationProperties;
+    private ProxyConfig proxyConfig;
 
     @Override
     public Reports validateDocument(ValidationDocument validationDocument) throws DSSException {
@@ -121,14 +124,17 @@ public class GenericValidationService implements ValidationService {
     protected SignedDocumentValidator createValidatorFromDocument(final ValidationDocument validationDocument) {
         final DSSDocument dssDocument = createDssDocument(validationDocument);
         SignedDocumentValidator validator = SignedDocumentValidator.fromDocument(dssDocument);
+        CommonsDataLoader dataLoader = new CommonsDataLoader();
+        dataLoader.setProxyConfig(proxyConfig);
 
-        CommonCertificateVerifier certificateVerifier = new CommonCertificateVerifier(trustedListsCertificateSource,
-                new AlwaysFailingCRLSource(), new AlwaysFailingOCSPSource(), new CommonsDataLoader());
-        certificateVerifier.setIncludeCertificateRevocationValues(true);
+        CommonCertificateVerifier certificateVerifier = new CommonCertificateVerifier(Collections.singletonList(trustedListsCertificateSource),
+                new AlwaysFailingCRLSource(), new AlwaysFailingOCSPSource(), dataLoader);
+
         LOGGER.info("Certificate pool size: {}", getCertificatePoolSize(certificateVerifier));
         validator.setCertificateVerifier(certificateVerifier);
         validator.setValidationLevel(VALIDATION_LEVEL);
 
+        validator.setTokenExtractionStategy(TokenExtractionStategy.EXTRACT_TIMESTAMPS_AND_REVOCATION_DATA);
         return validator;
     }
 
@@ -144,7 +150,7 @@ public class GenericValidationService implements ValidationService {
     }
 
     private int getCertificatePoolSize(CommonCertificateVerifier certificateVerifier) {
-        return certificateVerifier.getTrustedCertSource().getCertificatePool().getNumberOfCertificates();
+        return certificateVerifier.getTrustedCertSources().getNumberOfCertificates();
     }
 
     protected RuntimeException constructMalformedDocumentException(Exception cause) {
@@ -154,6 +160,11 @@ public class GenericValidationService implements ValidationService {
     private void endExceptionally(Exception e) {
         LOGGER.error(e.getMessage(), e);
         LOGGER.info("WsValidateDocument: end with exception");
+    }
+
+    @Autowired
+    public void setProxyConfig(ProxyConfig proxyConfig){
+        this.proxyConfig = proxyConfig;
     }
 
     @Autowired

@@ -31,8 +31,9 @@ import ee.openeid.validation.service.timemark.configuration.TimemarkContainerVal
 import ee.openeid.validation.service.timemark.signature.policy.BDOCConfigurationService;
 import ee.openeid.validation.service.timemark.signature.policy.BDOCSignaturePolicyService;
 import eu.europa.esig.dss.model.x509.CertificateToken;
-import eu.europa.esig.dss.spi.tsl.Condition;
-import eu.europa.esig.dss.spi.tsl.ServiceInfo;
+import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
+import eu.europa.esig.dss.spi.tsl.ConditionForQualifiers;
+import eu.europa.esig.dss.spi.tsl.TrustProperties;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.util.encoders.Base64;
 import org.digidoc4j.TSLCertificateSource;
@@ -53,8 +54,6 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import static ee.openeid.validation.service.timemark.BDOCTestUtils.*;
 import static org.hamcrest.Matchers.*;
@@ -71,7 +70,8 @@ import static org.junit.Assert.*;
         BDOCSignaturePolicyService.class,
         ConstraintLoadingSignaturePolicyService.class,
         BDOCConfigurationService.class,
-        ReportConfigurationProperties.class
+        ReportConfigurationProperties.class,
+        ProxyConfig.class
 })
 @ActiveProfiles("test")
 public class TimemarkContainerValidationServiceIntegrationTest {
@@ -98,10 +98,9 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     public void vShouldHaveSignatureWarnings() throws Exception {
         SimpleReport validationResult = timemarkContainerValidationService.validateDocument(buildValidationDocument(BDOC_TEST_FILE_UNSIGNED)).getSimpleReport();
         List<Warning> signatureValidationData = validationResult.getValidationConclusion().getSignatures().get(0).getWarnings();
-        assertThat(signatureValidationData, hasSize(2));
+        assertThat(signatureValidationData, hasSize(1));
         assertThat(signatureValidationData, containsInAnyOrder(
-                hasProperty("content", is("The signature/seal is not a valid AdES!")),
-                hasProperty("content", is("Signature SOLOVEI,JULIA,47711040261 has unsigned files: document_3.xml"))
+                hasProperty("content", is("The signature/seal is not a valid AdES digital signature!"))
         ));
     }
 
@@ -317,9 +316,9 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     @Ignore("fails because of DSS bug: https://esig-dss.atlassian.net/browse/DSS-915")
     public void whenQCWithQSCDQualifierIsNotSetThenSignatureLevelShouldBeAdesQCAndInvalidWithPOLv4() throws Exception {
         String policy = POL_V4;
-        ServiceInfo serviceInfo = getServiceInfoForService(TEST_OF_KLASS3_SK_2010, policy);
-        removeQcConditions(serviceInfo, QC_WITH_QSCD);
-        assertServiceHasQualifiers(serviceInfo, QC_STATEMENT, QC_FOR_ESIG);
+        TrustProperties trustProperties = getServiceInfoForService(TEST_OF_KLASS3_SK_2010, policy);
+        removeQcConditions(trustProperties, QC_WITH_QSCD);
+        assertServiceHasQualifiers(trustProperties, QC_STATEMENT, QC_FOR_ESIG);
         SignatureValidationData signature = validateWithPolicy(policy, BDOC_TEST_OF_KLASS3_CHAIN).getValidationConclusion().getSignatures().get(0);
         assertEquals("TOTAL-FAILED", signature.getIndication());
         assertEquals("AdESQC", signature.getSignatureLevel());
@@ -329,9 +328,9 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     @Ignore("fails because of DSS bug: https://esig-dss.atlassian.net/browse/DSS-915")
     public void whenQCWithQSCDQualifierIsNotSetThenSignatureLevelShouldBeAdesQCAndValidWithPOLv3() throws Exception {
         String policy = POL_V3;
-        ServiceInfo serviceInfo = getServiceInfoForService(TEST_OF_KLASS3_SK_2010, policy);
-        removeQcConditions(serviceInfo, QC_WITH_QSCD);
-        assertServiceHasQualifiers(serviceInfo, QC_STATEMENT, QC_FOR_ESIG);
+        TrustProperties trustProperties = getServiceInfoForService(TEST_OF_KLASS3_SK_2010, policy);
+        removeQcConditions(trustProperties, QC_WITH_QSCD);
+        assertServiceHasQualifiers(trustProperties, QC_STATEMENT, QC_FOR_ESIG);
         SignatureValidationData signature = validateWithPolicy(policy, BDOC_TEST_OF_KLASS3_CHAIN).getValidationConclusion().getSignatures().get(0);
         assertEquals("TOTAL-PASSED", signature.getIndication());
         assertEquals("AdESQC", signature.getSignatureLevel());
@@ -341,9 +340,9 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     @Ignore("Unknown reason")
     public void whenQCWithQSCDAndQCStatementQualifierIsNotSetThenSignatureLevelShouldBeAdesAndInvalidWithPOLv4() throws Exception {
         String policy = POL_V4;
-        ServiceInfo serviceInfo = getServiceInfoForService(TEST_OF_KLASS3_SK_2010, policy);
-        removeQcConditions(serviceInfo, QC_WITH_QSCD, QC_STATEMENT);
-        assertServiceHasQualifiers(serviceInfo, QC_FOR_ESIG);
+        TrustProperties trustProperties = getServiceInfoForService(TEST_OF_KLASS3_SK_2010, policy);
+        removeQcConditions(trustProperties, QC_WITH_QSCD, QC_STATEMENT);
+        assertServiceHasQualifiers(trustProperties, QC_FOR_ESIG);
         SignatureValidationData signature = validateWithPolicy(policy, BDOC_TEST_OF_KLASS3_CHAIN).getValidationConclusion().getSignatures().get(0);
         assertEquals("TOTAL-FAILED", signature.getIndication());
         assertEquals("AdES", signature.getSignatureLevel());
@@ -353,9 +352,9 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     @Test
     public void whenQCWithQSCDAndQCStatementQualifierIsNotSetThenSignatureLevelShouldBeAdesAndValidWithPOLv3() throws Exception {
         String policy = POL_V3;
-        ServiceInfo serviceInfo = getServiceInfoForService(TEST_OF_KLASS3_SK_2010, policy);
-        removeQcConditions(serviceInfo, QC_WITH_QSCD, QC_STATEMENT);
-        assertServiceHasQualifiers(serviceInfo, QC_FOR_ESIG);
+        TrustProperties trustProperties = getServiceInfoForService(TEST_OF_KLASS3_SK_2010, policy);
+        removeQcConditions(trustProperties, QC_WITH_QSCD, QC_STATEMENT);
+        assertServiceHasQualifiers(trustProperties, QC_FOR_ESIG);
         SignatureValidationData signature = validateWithPolicy(policy, BDOC_TEST_OF_KLASS3_CHAIN).getValidationConclusion().getSignatures().get(0);
         assertEquals("TOTAL-PASSED", signature.getIndication());
         assertEquals("ADESIG", signature.getSignatureLevel());
@@ -385,12 +384,31 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     @Test
-    public void timeAssertionMessageImprintIsEmptyForMissingOcspData() {
+    public void timeAssertionMessageImprintIsNotEmptyForLT() {
         Reports reports = timemarkContainerValidationService.validateDocument(buildValidationDocument("LT_without_nonce.bdoc"));
 
         SignatureValidationData signatureValidationData = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0);
 
-        assertEquals("", signatureValidationData.getInfo().getTimeAssertionMessageImprint());
+        assertEquals("MDEwDQYJYIZIAWUDBAIBBQAEIE541TO5ZHHgKv60XxTXJX0Qg04pjs4uN8bELnDUDFp1", signatureValidationData.getInfo().getTimeAssertionMessageImprint());
+    }
+
+    @Test
+    public void timestampAndRevocationTimeExistsInLT(){
+        Reports reports = timemarkContainerValidationService.validateDocument(buildValidationDocument("LT_without_nonce.bdoc"));
+        SignatureValidationData signatureValidationData = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0);
+        Assert.assertEquals("2020-06-04T11:34:54Z", signatureValidationData.getInfo().getOcspResponseCreationTime());
+        Assert.assertEquals("2020-06-04T11:34:53Z", signatureValidationData.getInfo().getTimestampCreationTime());
+    }
+
+    @Test
+    public void timestampTimeMissingLT_TM(){
+        Reports reports = timemarkContainerValidationService.validateDocument(buildValidationDocument("bdoc_tm_valid_2_signatures.bdoc"));
+        SignatureValidationData signatureValidationData = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0);
+        Assert.assertEquals("2020-05-21T14:07:01Z", signatureValidationData.getInfo().getOcspResponseCreationTime());
+        Assert.assertNull(signatureValidationData.getInfo().getTimestampCreationTime());
+        SignatureValidationData signatureValidationData2 = reports.getSimpleReport().getValidationConclusion().getSignatures().get(1);
+        Assert.assertEquals("2020-05-28T10:59:14Z", signatureValidationData2.getInfo().getOcspResponseCreationTime());
+        Assert.assertNull(signatureValidationData2.getInfo().getTimestampCreationTime());
     }
 
     @Test
@@ -445,41 +463,48 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     private void testWithAllQualifiersSet(String policy) throws Exception {
-        ServiceInfo serviceInfo = getServiceInfoForService(TEST_OF_KLASS3_SK_2010, policy);
-        assertServiceHasQualifiers(serviceInfo, QC_WITH_QSCD, QC_STATEMENT, QC_FOR_ESIG);
+        TrustProperties trustProperties = getServiceInfoForService(TEST_OF_KLASS3_SK_2010, policy);
+        assertServiceHasQualifiers(trustProperties, QC_WITH_QSCD, QC_STATEMENT, QC_FOR_ESIG);
         SignatureValidationData signature = validateWithPolicy(policy, BDOC_TEST_OF_KLASS3_CHAIN).getValidationConclusion().getSignatures().get(0);
         assertEquals("TOTAL-PASSED", signature.getIndication());
         assertEquals("QES", signature.getSignatureLevel());
     }
 
-    private ServiceInfo getServiceInfoForService(String serviceName, String policy) {
+    private TrustProperties getServiceInfoForService(String serviceName, String policy) {
         TSLCertificateSource tslCertificateSource = configurationService.loadPolicyConfiguration(policy).getConfiguration().getTSL();
-        return tslCertificateSource.getCertificatePool().getCertificateTokens()
+        return tslCertificateSource.getCertificates()
                 .stream()
-                .map(certificateToken -> getServiceInfo(tslCertificateSource, certificateToken))
+                .map(certificateToken -> getTrustProperties(tslCertificateSource, certificateToken))
                 .filter(si -> serviceMatchesServiceName(si, serviceName))
                 .findFirst().get();
     }
 
-    private void assertServiceHasQualifiers(ServiceInfo serviceInfo, String... qualifiers) {
-        Set<String> existingQualifiers = serviceInfo.getStatus().getLatest().getQualifiersAndConditions().keySet();
-        assertEquals(qualifiers.length, existingQualifiers.size());
-        Arrays.stream(qualifiers).forEach(qualifier -> assertTrue(existingQualifiers.contains(qualifier)));
+    private void assertServiceHasQualifiers(TrustProperties trustProperties, String... qualifiers) {
+        List<ConditionForQualifiers> qualifiersAndConditions = trustProperties.getTrustService().getLatest().getConditionsForQualifiers();
+        assertEquals(qualifiers.length, qualifiersAndConditions.size());
 
+        Arrays.stream(qualifiers)
+                .forEach(qualifier -> qualifiersAndConditions
+                        .forEach(q -> assertTrue(q.getQualifiers().contains(qualifier))));
     }
 
-    private ServiceInfo getServiceInfo(TSLCertificateSource tslCertificateSource, CertificateToken
+    private TrustProperties getTrustProperties(TSLCertificateSource tslCertificateSource, CertificateToken
             certificateToken) {
-        return (ServiceInfo) tslCertificateSource.getTrustServices(certificateToken).toArray()[0];
+        return (TrustProperties) tslCertificateSource.getTrustServices(certificateToken).toArray()[0];
     }
 
-    private boolean serviceMatchesServiceName(ServiceInfo serviceInfo, String serviceName) {
-        return StringUtils.contains(serviceInfo.getTspName(), serviceName);
+    private boolean serviceMatchesServiceName(TrustProperties trustProperties, String serviceName) {
+        return trustProperties.getTrustService().getLatest().getNames().containsKey(serviceName);
     }
 
-    private void removeQcConditions(ServiceInfo serviceInfo, String... qualifiers) {
-        Map<String, List<Condition>> qualifiersAndConditions = serviceInfo.getStatus().getLatest().getQualifiersAndConditions();
-        Arrays.stream(qualifiers).forEach(qualifiersAndConditions::remove);
+    private void removeQcConditions(TrustProperties trustProperties, String... qualifiers) {
+        List<ConditionForQualifiers> qualifiersAndConditions = trustProperties.getTrustService().getLatest().getConditionsForQualifiers();
+        Arrays.stream(qualifiers)
+                .forEach(qualifier -> qualifiersAndConditions
+                        .forEach(q -> q.getQualifiers().remove(qualifier)));
+
+
+        qualifiersAndConditions.stream().filter(i -> i.getQualifiers().contains(qualifiers)).forEach(qualifiersAndConditions::remove);
     }
 
     private SimpleReport validateWithPolicy(String policyName) throws Exception {

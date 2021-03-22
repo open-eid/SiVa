@@ -18,7 +18,9 @@ package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.apache.commons.codec.binary.Base64;
+import org.hamcrest.Matchers;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -131,6 +133,98 @@ public class LargeFileIT extends SiVaRestTests{
                 .body("validatedDocument.filename",equalTo("9MB_DDOC.ddoc"))
                 .body("validSignaturesCount", equalTo(1));
     }
+
+    /**
+     * TestCaseID: Bdoc-ZipBomb-1
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: Bdoc Zip container with Bomb file
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: zip-bomb-package-zip-1gb.bdoc
+     */
+    @Test
+    @Ignore("DD4J-275")
+    public void bdocZipBombsAreNotAccepted() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("zip-bomb-package-zip-1gb.bdoc"));
+        post(validationRequestWithValidKeys(encodedString, "zip-bomb-package-zip-1gb.bdoc","POLv3"))
+                .then()
+                .body("requestErrors[0].key", Matchers.is("document"))
+                .body("requestErrors[0].message", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
+    }
+
+    /**
+     * TestCaseID: Asice-ZipBomb-1
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: Asice Zip container with Bomb file
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: zip-bomb-package-zip-1gb.bdoc
+     */
+    @Test
+    public void asiceZipBombsAreNotAccepted() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("zip-bomb-package-zip-1gb.bdoc"));
+        post(validationRequestWithValidKeys(encodedString, "zip-bomb-package-zip-1gb.asice","POLv3"))
+                .then()
+                .body("requestErrors[0].key", Matchers.is("document"))
+                .body("requestErrors[0].message", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
+    }
+
+    /**
+     * TestCaseID: Asice-ZipBomb-2
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: Asice Zip container with Matryoshka Bomb file
+     *
+     * Expected Result: Expected Result: Validation report is returned
+     *
+     * File: zip-bomb-packages.asice
+     */
+    @Test
+    public void asiceZipBombsWithMatryoshkaAreAccepted() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("zip-bomb-packages.asice"));
+        post(validationRequestWithValidKeys(encodedString, "zip-bomb-packages.asice","POLv3"))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatures[0].signatureFormat",equalTo("XAdES_BASELINE_B"))
+                .body("validatedDocument.filename",equalTo("zip-bomb-packages.asice"))
+                .body("validSignaturesCount", equalTo(0));
+    }
+
+    /**
+     * TestCaseID: Bdoc-ZipBomb-2
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: Bdoc Zip container with Matryoshka Bomb file
+     *
+     * Expected Result: Expected Result: Validation report is returned
+     *
+     * File: zip-bomb-packages.asice
+     */
+    @Test
+    public void bdocZipBombsWithMatryoshkaAreAccepted() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("zip-bomb-packages.asice"));
+        post(validationRequestWithValidKeys(encodedString, "zip-bomb-packages.bdoc","POLv3"))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatures[0].signatureFormat",equalTo("XAdES_BASELINE_B_BES"))
+                .body("validatedDocument.filename",equalTo("zip-bomb-packages.bdoc"))
+                .body("validSignaturesCount", equalTo(0));
+    }
+
 
     @Override
     protected String getTestFilesDirectory() {

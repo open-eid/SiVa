@@ -80,6 +80,8 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].info.signatureProductionPlace.stateOrProvince", Matchers.is("Harju"))
                 .body("signatures[0].info.signatureProductionPlace.city", Matchers.is("Tallinn"))
                 .body("signatures[0].info.signatureProductionPlace.postalCode", Matchers.is("32323"))
+                .body("signatures[0].info.timestampCreationTime", Matchers.emptyOrNullString())
+                .body("signatures[0].info.ocspResponseCreationTime", Matchers.is("2020-05-29T08:19:27Z"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName", Matchers.is("TEST of SK OCSP RESPONDER 2011"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content", Matchers.startsWith("MIIEijCCA3KgAwIBAgIQaI8x6BnacYdNdNwlYnn/mzANBgkqhk"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName", Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
@@ -120,7 +122,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].signatureScopes[0].scope", Matchers.is("FULL"))
                 .body("signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
                 .body("signatures[0].claimedSigningTime", Matchers.is("2020-05-29T09:34:56Z"))
-                .body("signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
+                .body("signatures[0].warnings[0].content", Matchers.is("The trusted certificate does not match the trust service!"))
                 .body("signatures[0].info.timeAssertionMessageImprint", Matchers.is("MDEwDQYJYIZIAWUDBAIBBQAEIB00XgQZ74rCQz13RlPDKtFVtGiUX01R5rTbhkZZKv0M"))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2020-05-29T09:34:58Z"))
                 .body("signatures[0].info.signerRole[0].claimedRole", Matchers.is("First role"))
@@ -129,6 +131,8 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].info.signatureProductionPlace.stateOrProvince", Matchers.is("ÕÄLnül23#&()"))
                 .body("signatures[0].info.signatureProductionPlace.city", Matchers.is("City with spaces"))
                 .body("signatures[0].info.signatureProductionPlace.postalCode", Matchers.is("123456789"))
+                .body("signatures[0].info.ocspResponseCreationTime", Matchers.is("2020-05-29T09:35:00Z"))
+                .body("signatures[0].info.timestampCreationTime", Matchers.is("2020-05-29T09:34:58Z"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName", Matchers.is("TEST of SK OCSP RESPONDER 2011"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content", Matchers.startsWith("MIIEijCCA3KgAwIBAgIQaI8x6BnacYdNdNwlYnn/mzANBgkqhk"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName", Matchers.is("JÕEORG,JAAK-KRISTJAN,38001085718"))
@@ -177,6 +181,8 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].warnings", Matchers.emptyOrNullString())
                 .body("signatures[0].info.timeAssertionMessageImprint", Matchers.is("MDEwDQYJYIZIAWUDBAIBBQAEINHGGgGzXqzGfN2J6olA6VaXSeCG1PRBGrmG4wxQYf7A"))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2011-10-15T14:59:35Z"))
+                .body("signatures[0].info.timestampCreationTime", Matchers.emptyOrNullString())
+                .body("signatures[0].info.ocspResponseCreationTime", Matchers.is("2011-10-15T14:59:35Z"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName", Matchers.is("TEST of SK OCSP RESPONDER 2011"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content", Matchers.startsWith("MIIEijCCA3KgAwIBAgIQaI8x6BnacYdNdNwlYnn/mzANBgkqhk"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName", Matchers.is("SINIVEE,VEIKO,36706020210"))
@@ -217,12 +223,13 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].signatureScopes[0].scope", Matchers.is("FULL"))
                 .body("signatures[0].signatureScopes[0].content", Matchers.is("Full document"))
                 .body("signatures[0].claimedSigningTime", Matchers.is("2017-11-14T13:56:23Z"))
-                .body("signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
-                .body("signatures[0].warnings[1].content", Matchers.is("The private key is not on a QSCD at issuance time!"))
-                .body("signatures[0].warnings[2].content", Matchers.is("The private key is not on a QSCD at (best) signing time!"))
-                .body("signatures[0].warnings[3].content", Matchers.is("The signature/seal is not a valid AdES!"))
+                .body("signatures[0].warnings[0].content", Matchers.is("The private key does not reside in a QSCD at issuance time!"))
+                .body("signatures[0].warnings[1].content", Matchers.is("The private key does not reside in a QSCD at (best) signing time!"))
+                .body("signatures[0].warnings[2].content", Matchers.is("The signature/seal is not a valid AdES digital signature!"))
                 .body("signatures[0].info.timeAssertionMessageImprint", Matchers.emptyOrNullString())
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2017-11-14T13:56:34Z"))
+                .body("signatures[0].info.ocspResponseCreationTime", Matchers.is("2017-11-14T13:56:35Z"))
+                .body("signatures[0].info.timestampCreationTime", Matchers.is("2017-11-14T13:56:34Z"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName", Matchers.is("SK OCSP RESPONDER 2011"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content", Matchers.startsWith("MIIEvDCCA6SgAwIBAgIQcpyVmdruRVxNgzI3N/NZQTANBgkqhk"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName", Matchers.is("NURM,AARE,PNOEE-38211015222"))
@@ -269,6 +276,8 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].warnings", Matchers.emptyOrNullString())
                 .body("signatures[0].info.timeAssertionMessageImprint", Matchers.is("MDEwDQYJYIZIAWUDBAIBBQAEINiaR8aBDIPiXK/fiPb7fe3pWaBaEKzILvjnZVppopPy"))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2015-11-04T10:24:20Z"))
+                .body("signatures[0].info.timestampCreationTime", Matchers.emptyOrNullString())
+                .body("signatures[0].info.ocspResponseCreationTime", Matchers.is("2015-11-04T10:24:20Z"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName", Matchers.is("SK OCSP RESPONDER 2011"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content", Matchers.startsWith("MIIEvDCCA6SgAwIBAgIQcpyVmdruRVxNgzI3N/NZQTANBgkqhk"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName", Matchers.is("MICHAL,KRISTEN,37507120348"))
@@ -349,6 +358,62 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
     }
 
     /**
+     * TestCaseID: Bdoc-ValidationReportVerification-9
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
+     *
+     * Title: Bdoc with LT_TM, LT & LTA signature - timeAssertionMessageImprints in mixed container are reported correctly
+     *
+     * Expected Result: timeAssertionMessageImprint values are present and meet the expected values.
+     *
+     * File: 3_signatures_TM_LT_LTA.bdoc
+     */
+    @Test
+    public void bdocMixedSignaturesContainerCorrectTimeAssertionMessageImprint() {
+        setTestFilesDirectory("bdoc/test/timemark/");
+        post(validationRequestFor("3_signatures_TM_LT_LTA.bdoc"))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("signatures[0].info.timeAssertionMessageImprint", Matchers.is("MDEwDQYJYIZIAWUDBAIBBQAEIGzgagluBCVuUgrnT6C5BmSAXBxuuxvlAN7epdGqHP0/"))
+                .body("signatures[1].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[1].info.timeAssertionMessageImprint", Matchers.is("MDEwDQYJYIZIAWUDBAIBBQAEIBcwYgTTCv5dabbTMJENwex0W1UHxP2OnhiwIcDE89RE"))
+                .body("signatures[2].signatureFormat", Matchers.is("XAdES_BASELINE_LTA"))
+                .body("signatures[2].info.timeAssertionMessageImprint", Matchers.is("MDEwDQYJYIZIAWUDBAIBBQAEIOcfB5FibacEVizcnKhNisrfXU1QyXFzrVGjCQQdntiB"));
+    }
+
+    /**
+     * TestCaseID: Bdoc-ValidationReportVerification-10
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
+     *
+     * Title: Asice with LT_TM, LT & LTA signature - timeAssertionMessageImprints in mixed container are reported correctly
+     *
+     * Expected Result: timeAssertionMessageImprint values are present and meet the expected values.
+     *
+     * File: 3_signatures_TM_LT_LTA.asice
+     */
+
+    @Test
+    public void asiceMixedSignaturesContainerCorrectTimeAssertionMessageImprint() {
+        setTestFilesDirectory("bdoc/test/timestamp/");
+        post(validationRequestFor("3_signatures_TM_LT_LTA.asice"))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("signatures[0].info.timeAssertionMessageImprint", Matchers.is("MDEwDQYJYIZIAWUDBAIBBQAEIGzgagluBCVuUgrnT6C5BmSAXBxuuxvlAN7epdGqHP0/"))
+                .body("signatures[1].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
+                .body("signatures[1].info.timeAssertionMessageImprint", Matchers.is("MDEwDQYJYIZIAWUDBAIBBQAEIBcwYgTTCv5dabbTMJENwex0W1UHxP2OnhiwIcDE89RE"))
+                .body("signatures[2].signatureFormat", Matchers.is("XAdES_BASELINE_LTA"))
+                .body("signatures[2].info.timeAssertionMessageImprint", Matchers.is("MDEwDQYJYIZIAWUDBAIBBQAEIOcfB5FibacEVizcnKhNisrfXU1QyXFzrVGjCQQdntiB"));
+
+    }
+
+    /**
      * TestCaseID: Pdf-ValidationReportVerification-1
      *
      * TestType: Automated
@@ -367,7 +432,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
         post(validationRequestFor("reason_and_location_Test.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
-                .body("signatures[0].id", Matchers.is("S-24C246774A122D4077DF298CF6F7DC9475AC0E272E0A7FFC2C1285DCC83F312C"))
+                .body("signatures[0].id", Matchers.is("S-1CA4D655909860192F80E6EA6D3FCC18C25A81E8902819C5E05B5C12D5BD6784"))
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("signatures[0].signatureMethod", Matchers.is("http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
@@ -378,11 +443,14 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].errors", Matchers.emptyOrNullString())
                 .body("signatures[0].signatureScopes[0].name", Matchers.is("Partial PDF"))
                 .body("signatures[0].signatureScopes[0].scope", Matchers.is("PARTIAL"))
-                .body("signatures[0].signatureScopes[0].content", Matchers.is("The document byte range: [0, 2226, 21172, 314]"))
+                .body("signatures[0].signatureScopes[0].content", Matchers.is("The document ByteRange : [0, 2226, 21172, 314]"))
                 .body("signatures[0].claimedSigningTime", Matchers.is("2020-05-27T09:59:07Z"))
                 .body("signatures[0].info.timeAssertionMessageImprint", Matchers.is("MDEwDQYJYIZIAWUDBAIBBQAEIDqs93c5A/EZVW0YfLVkSS3NeO716K6Kb0Mcr/ewLCmA"))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2020-05-27T09:59:09Z"))
                 .body("signatures[0].info.signatureProductionPlace.countryName", Matchers.is("Narva"))
+                .body("signatures[0].info.signingReason", Matchers.is("Roll??"))
+                .body("signatures[0].info.ocspResponseCreationTime", Matchers.is("2020-05-27T09:59:10Z"))
+                .body("signatures[0].info.timestampCreationTime", Matchers.is("2020-05-27T09:59:09Z"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName", Matchers.is("TEST of SK OCSP RESPONDER 2011"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content", Matchers.startsWith("MIIEijCCA3KgAwIBAgIQaI8x6BnacYdNdNwlYnn/mzANBgkqhk"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName", Matchers.is("ŽÕRINÜWŠKY,MÄRÜ-LÖÖZ,11404176865"))
@@ -416,7 +484,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
         post(validationRequestFor("pades_lt_two_valid_sig.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
-                .body("signatures[1].id", Matchers.is("S-4E325FC1EC28358B6A2292007728F5B100657069464B81A5A3E719DA852B5B61"))
+                .body("signatures[1].id", Matchers.is("S-87966FE26A3FB0B27130B11EBF254A196E9C3319A56D25D479FFF2780C00494D"))
                 .body("signatures[1].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("signatures[1].signatureMethod", Matchers.is("http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"))
                 .body("signatures[1].signatureLevel", Matchers.is("QESIG"))
@@ -427,11 +495,13 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[1].errors", Matchers.emptyOrNullString())
                 .body("signatures[1].signatureScopes[0].name", Matchers.is("Partial PDF"))
                 .body("signatures[1].signatureScopes[0].scope", Matchers.is("PARTIAL"))
-                .body("signatures[1].signatureScopes[0].content", Matchers.is("The document byte range: [0, 134940, 153886, 24208]"))
+                .body("signatures[1].signatureScopes[0].content", Matchers.is("The document ByteRange : [0, 134940, 153886, 24208]"))
                 .body("signatures[1].claimedSigningTime", Matchers.is("2016-06-27T09:59:37Z"))
-                .body("signatures[1].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
+                .body("signatures[1].warnings", Matchers.emptyOrNullString())
                 .body("signatures[1].info.timeAssertionMessageImprint", Matchers.is("MDEwDQYJYIZIAWUDBAIBBQAEIOjVGatd9zXaIv/XQ9c81bTjZ4K14Ihcrhwv+sBhM26V"))
                 .body("signatures[1].info.bestSignatureTime", Matchers.is("2016-06-27T09:59:48Z"))
+                .body("signatures[1].info.ocspResponseCreationTime", Matchers.is("2016-06-27T09:59:49Z"))
+                .body("signatures[1].info.timestampCreationTime", Matchers.is("2016-06-27T09:59:48Z"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName", Matchers.is("TEST of SK OCSP RESPONDER 2011"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content", Matchers.startsWith("MIIEijCCA3KgAwIBAgIQaI8x6BnacYdNdNwlYnn/mzANBgkqhk"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName", Matchers.is("NURM,AARE,38211015222"))
@@ -465,7 +535,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
         post(validationRequestFor("hellopades-lt-b.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
-                .body("signatures[1].id", Matchers.is("S-664A6BD08A60EF4F3DBEE46F0B0FD880997772A13F00FED58698DD329EF25F54"))
+                .body("signatures[1].id", Matchers.is("S-8E37E9F25D08ECE70EA1D135CEFCFE8A713CB2AD39183D1591A4561A4809EB90"))
                 .body("signatures[1].signatureFormat", Matchers.is("PAdES_BASELINE_B"))
                 .body("signatures[1].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
                 .body("signatures[1].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
@@ -476,10 +546,11 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[1].signatureScopes[0].scope", Matchers.is("FULL"))
                 .body("signatures[1].signatureScopes[0].content", Matchers.is("Full document"))
                 .body("signatures[1].claimedSigningTime", Matchers.is("2015-08-23T05:10:15Z"))
-                .body("signatures[1].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
-                .body("signatures[1].warnings[1].content", Matchers.is("The signature/seal is not a valid AdES!"))
+                .body("signatures[1].warnings[0].content", Matchers.is("The signature/seal is not a valid AdES digital signature!"))
                 .body("signatures[1].info.timeAssertionMessageImprint", Matchers.emptyOrNullString())
                 .body("signatures[1].info.bestSignatureTime", Matchers.emptyOrNullString())
+                .body("signatures[1].info.timestampCreationTime", Matchers.emptyOrNullString())
+                .body("signatures[1].info.ocspResponseCreationTime", Matchers.is("2015-08-23T05:08:41Z"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName", Matchers.is("SK OCSP RESPONDER 2011"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content", Matchers.startsWith("MIIEvDCCA6SgAwIBAgIQcpyVmdruRVxNgzI3N/NZQTANBgkqhk"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName", Matchers.is("SINIVEE,VEIKO,36706020210"))
@@ -513,19 +584,21 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
         post(validationRequestFor("hellopades-lt-rsa1024-sha1-expired.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
-                .body("signatures[0].id", Matchers.is("S-9C94C6D367AA447A45CE12C6B4BA78EF6714642D1E8D8D01B69E2A1888D2454B"))
+                .body("signatures[0].id", Matchers.is("S-12BD46636D1B6AE7156E209D4AC465A61B13D0BBB9668E07690091D1E4BB8F3E"))
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_T"))
                 .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
                 .body("signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].errors.content", Matchers.hasItem("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("signatures[0].signatureScopes[0].name", Matchers.is("PDF previous version #1"))
+                .body("signatures[0].signatureScopes[0].name", Matchers.is("Partial PDF"))
                 .body("signatures[0].signatureScopes[0].scope", Matchers.is("PARTIAL"))
-                .body("signatures[0].signatureScopes[0].content", Matchers.is("The document byte range: [0, 14153, 52047, 491]"))
+                .body("signatures[0].signatureScopes[0].content", Matchers.is("The document ByteRange : [0, 14153, 52047, 491]"))
                 .body("signatures[0].claimedSigningTime", Matchers.is("2012-01-24T11:08:15Z"))
-                .body("signatures[0].warnings", Matchers.hasSize(2))
+                .body("signatures[0].warnings", Matchers.hasSize(1))
                 .body("signatures[0].info.timeAssertionMessageImprint", Matchers.is("MDEwDQYJYIZIAWUDBAIBBQAEIFx5F/YSDew7evstDVhsdXKaN1B3k/wDBgLOOs1YFdJr"))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2015-08-24T10:08:25Z"))
+                .body("signatures[0].info.timestampCreationTime", Matchers.is("2015-08-24T10:08:25Z"))
+                .body("signatures[0].info.ocspResponseCreationTime", Matchers.emptyOrNullString())
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName", Matchers.is("SINIVEE,VEIKO,36706020210"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content", Matchers.startsWith("MIID3DCCAsSgAwIBAgIER/idhzANBgkqhkiG9w0BAQUFADBbMQ"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.commonName", Matchers.is("ESTEID-SK 2007"))
@@ -598,6 +671,8 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].claimedSigningTime", Matchers.is("2012-10-03T07:46:31Z"))
                 .body("signatures[0].info.timeAssertionMessageImprint", Matchers.is("gUCY28PU17SPGDVisO/fc6BEO8E="))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2012-10-03T07:46:51Z"))
+                .body("signatures[0].info.timestampCreationTime", Matchers.emptyOrNullString())
+                .body("signatures[0].info.ocspResponseCreationTime", Matchers.is("2012-10-03T07:46:51Z"))
                 .body("signatures[0].warnings", Matchers.emptyOrNullString())
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName", Matchers.is("SK OCSP RESPONDER 2011"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content", Matchers.startsWith("MIIEvDCCA6SgAwIBAgIQcpyVmdruRVxNgzI3N/NZQTANBgkqhk"))
@@ -647,6 +722,8 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].info.signatureProductionPlace.stateOrProvince", Matchers.is("harju"))
                 .body("signatures[0].info.signatureProductionPlace.city", Matchers.is("tallinn"))
                 .body("signatures[0].info.signatureProductionPlace.postalCode", Matchers.is(" "))
+                .body("signatures[0].info.timestampCreationTime", Matchers.emptyOrNullString())
+                .body("signatures[0].info.ocspResponseCreationTime", Matchers.is("2009-06-01T10:42:25Z"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName", Matchers.is("ESTEID-SK 2007 OCSP RESPONDER"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content", Matchers.startsWith("MIIDnDCCAoSgAwIBAgIERZ0acjANBgkqhkiG9w0BAQUFADBbMQ"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName", Matchers.is("SOONSEIN,SIMMO,38508134916"))
@@ -688,6 +765,8 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].warnings[0].content", Matchers.is("Bad digest for DataFile: D0 alternate digest matches!"))
                 .body("signatures[0].info.timeAssertionMessageImprint", Matchers.is("f4HUThRsYgGtO+CRH5cHA7mN/48="))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2012-09-21T11:56:55Z"))
+                .body("signatures[0].info.timestampCreationTime", Matchers.emptyOrNullString())
+                .body("signatures[0].info.ocspResponseCreationTime", Matchers.is("2012-09-21T11:56:55Z"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName", Matchers.is("SK OCSP RESPONDER 2011"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content", Matchers.startsWith("MIIEvDCCA6SgAwIBAgIQcpyVmdruRVxNgzI3N/NZQTANBgkqhk"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName", Matchers.is("SINIVEE,VEIKO,36706020210"))
@@ -762,6 +841,8 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].info.signatureProductionPlace.stateOrProvince", Matchers.emptyOrNullString())
                 .body("signatures[0].info.signatureProductionPlace.city", Matchers.is("Tallinn"))
                 .body("signatures[0].info.signatureProductionPlace.postalCode", Matchers.emptyOrNullString())
+                .body("signatures[0].info.timestampCreationTime", Matchers.emptyOrNullString())
+                .body("signatures[0].info.ocspResponseCreationTime", Matchers.is("2002-10-07T11:10:47Z"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName", Matchers.is("ESTEID-SK OCSP RESPONDER"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content", Matchers.startsWith("MIIDuDCCAqCgAwIBAgIEPJilyDANBgkqhkiG9w0BAQUFADB8MR"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName", Matchers.is("ANSIP,ANDRUS,35610012722"))
@@ -808,6 +889,8 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].info.signatureProductionPlace.stateOrProvince", Matchers.is("harju"))
                 .body("signatures[0].info.signatureProductionPlace.city", Matchers.is("tallinn"))
                 .body("signatures[0].info.signatureProductionPlace.postalCode", Matchers.is(" "))
+                .body("signatures[0].info.timestampCreationTime", Matchers.emptyOrNullString())
+                .body("signatures[0].info.ocspResponseCreationTime", Matchers.is("2009-06-01T10:42:25Z"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName", Matchers.is("ESTEID-SK 2007 OCSP RESPONDER"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content", Matchers.startsWith("MIIDnDCCAoSgAwIBAgIERZ0acjANBgkqhkiG9w0BAQUFADBbMQ"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName", Matchers.is("SOONSEIN,SIMMO,38508134916"))
@@ -854,6 +937,8 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].info.signatureProductionPlace.stateOrProvince", Matchers.is("harju"))
                 .body("signatures[0].info.signatureProductionPlace.city", Matchers.is("otepää"))
                 .body("signatures[0].info.signatureProductionPlace.postalCode", Matchers.is(" "))
+                .body("signatures[0].info.timestampCreationTime", Matchers.emptyOrNullString())
+                .body("signatures[0].info.ocspResponseCreationTime", Matchers.is("2009-06-01T10:45:49Z"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName", Matchers.is("ESTEID-SK 2007 OCSP RESPONDER"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content", Matchers.startsWith("MIIDnDCCAoSgAwIBAgIERZ0acjANBgkqhkiG9w0BAQUFADBbMQ"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName", Matchers.is("SOONSEIN,SIMMO,38508134916"))
@@ -900,6 +985,8 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].info.signatureProductionPlace.stateOrProvince", Matchers.is("ei tea"))
                 .body("signatures[0].info.signatureProductionPlace.city", Matchers.is("tõrva"))
                 .body("signatures[0].info.signatureProductionPlace.postalCode", Matchers.is(" "))
+                .body("signatures[0].info.timestampCreationTime", Matchers.emptyOrNullString())
+                .body("signatures[0].info.ocspResponseCreationTime", Matchers.is("2009-06-01T10:46:42Z"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName", Matchers.is("ESTEID-SK 2007 OCSP RESPONDER"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content", Matchers.startsWith("MIIDnDCCAoSgAwIBAgIERZ0acjANBgkqhkiG9w0BAQUFADBbMQ"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName", Matchers.is("SOONSEIN,SIMMO,38508134916"))

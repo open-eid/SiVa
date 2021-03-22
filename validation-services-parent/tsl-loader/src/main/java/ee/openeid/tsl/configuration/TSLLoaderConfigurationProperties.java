@@ -29,7 +29,6 @@ public class TSLLoaderConfigurationProperties {
     private String url = "https://ec.europa.eu/tools/lotl/eu-lotl.xml";
     private String ojUrl = "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=uriserv:OJ.C_.2019.276.01.0001.01.ENG";
     private String lotlRootSchemeInfoUri = "https://ec.europa.eu/tools/lotl/eu-lotl-legalnotice.html";
-    private String code = "EU";
     private String schedulerCron = "0 0 3 * * ?";
     private List<String> trustedTerritories =   Arrays.asList("AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "EL", "HU", "HR", "IE", "IS", "IT", "LT", "LU", "LV", "LI", "MT", "NO", "NL", "PL", "PT", "RO", "SE", "SI", "SK", "UK");
     private String sslTruststorePath = "classpath:tsl-ssl-truststore.p12";

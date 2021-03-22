@@ -24,7 +24,10 @@ import java.util.List;
 public class Info {
 
     private String bestSignatureTime;
+    private String ocspResponseCreationTime;
+    private String timestampCreationTime;
     private String timeAssertionMessageImprint;
+    private String signingReason;
     private List<SignerRole> signerRole;
     private SignatureProductionPlace signatureProductionPlace;
 

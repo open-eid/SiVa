@@ -92,7 +92,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT_TM))
-                .body("signatures[0].indication", Matchers.is(INDETERMINATE))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
                 .body("signatures[1].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT_TM))
                 .body("signatures[1].indication", Matchers.is(TOTAL_FAILED))
                 .body("signatures[2].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT_TM))
@@ -204,10 +204,11 @@ public class BdocValidationFailIT extends SiVaRestTests {
         post(validationRequestForDD4j("EE_SER-AEX-B-LT-I-43.asice", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-E"))
-                .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is("SIG_CONSTRAINTS_FAILURE"))
-                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].signatureLevel", Matchers.is("NA"))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("signatures[0].subIndication", Matchers.is("CHAIN_CONSTRAINTS_FAILURE"))
+                .body("signatures[0].errors[0].content", Matchers.is("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].errors[1].content", Matchers.is("The signer's certificate does not have an expected key-usage!"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -230,9 +231,11 @@ public class BdocValidationFailIT extends SiVaRestTests {
         post(validationRequestForDD4j("EE_SER-AEX-B-LT-I-26.asice", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-E"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].subIndication", Matchers.is("SIG_CONSTRAINTS_FAILURE"))
-                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("signatures[0].subIndication", Matchers.is("CHAIN_CONSTRAINTS_FAILURE"))
+                .body("signatures[0].errors[0].content", Matchers.is("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].errors[1].content", Matchers.is("The signer's certificate does not have an expected key-usage!"))
+
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -256,8 +259,8 @@ public class BdocValidationFailIT extends SiVaRestTests {
         post(validationRequestWithValidKeys(encodedString, "TM-01_bdoc21-unknown-resp.bdoc", VALID_SIGNATURE_POLICY_3))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-E"))
-                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("signatures[0].subIndication", Matchers.is("NO_CERTIFICATE_CHAIN_FOUND"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].subIndication", Matchers.is("FORMAT_FAILURE"))
                 .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
                 .body("signatures[0].certificates.size()", Matchers.is(2))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("SINIVEE,VEIKO,36706020210"))
@@ -319,7 +322,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-E"))
                 .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("signatures[0].subIndication", Matchers.is("NO_POE"))
+                .body("signatures[0].subIndication", Matchers.is("REVOKED_NO_POE"))
                 .body("signatures[0].errors.content", Matchers.hasItems("The past signature validation is not conclusive!"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
@@ -477,7 +480,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .body("signatureForm", Matchers.is("ASiC-E"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2013-10-11T08:15:47Z"))
-                .body("signatures[0].errors[0].content", Matchers.is("The certificate path is not trusted!"))
+                .body("signatures[0].errors[0].content", Matchers.is("Unable to build a certificate chain until a trusted list!"))
                 .body("signatures[0].errors[1].content", Matchers.is("The result of the LTV validation process is not acceptable to continue the process!"))
                 .body("signatures[0].certificates.size()", Matchers.is(2))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("signer1"))
@@ -507,7 +510,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-E"))
                 .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("signatures[0].subIndication", Matchers.is("NO_POE"))
+                .body("signatures[0].subIndication", Matchers.is("REVOKED_NO_POE"))
                 .body("signatures[0].errors.content", Matchers.hasItems("The past signature validation is not conclusive!"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
@@ -531,7 +534,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
         post(validationRequestForDD4j("TM-16_unknown.4.asice", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-E"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
                 .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
@@ -705,7 +708,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
         post(validationRequestFor("23154_test1-old-sig-sigat-OK-prodat-NOK-1.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-E"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
 
                 .body("signatures[0].errors.content", Matchers.hasItem("Signature has been created with expired certificate"))
                 .body("validSignaturesCount", Matchers.is(0));
@@ -759,6 +762,31 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(0));
 
+    }
+
+    /**
+     * TestCaseID: Bdoc-ValidationFail-31
+     * <p>
+     * TestType: Automated
+     * <p>
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
+     * <p>
+     * Title: Bdoc signed properties element missing
+     * <p>
+     * Expected Result: The document should fail the validation
+     * <p>
+     * File: REF-03_bdoc21-TM-no-signedpropref.bdoc
+     */
+    @Test
+    public void bdocTimemarkSignedPropertiesMissing() {
+        setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
+        post(validationRequestFor("REF-03_bdoc21-TM-no-signedpropref.bdoc"))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].errors.content", Matchers.hasItem("SignedProperties Reference element is missing"))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     @Override

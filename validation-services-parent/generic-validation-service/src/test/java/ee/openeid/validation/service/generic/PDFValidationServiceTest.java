@@ -31,6 +31,7 @@ import ee.openeid.tsl.TSLValidationJobFactory;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
 import ee.openeid.validation.service.generic.configuration.GenericSignaturePolicyProperties;
 import ee.openeid.validation.service.generic.configuration.GenericValidationServiceConfiguration;
+import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import org.junit.Before;
 import org.junit.Rule;
@@ -101,6 +102,14 @@ public class PDFValidationServiceTest {
     }
 
     @Test
+    public void populatesSigningReason() {
+        SimpleReport report = validateAndAssertReports(buildValidationDocument(PDF_WITH_REASON_AND_LOCATION)).getSimpleReport();
+        String reason = report.getValidationConclusion().getSignatures().get(0)
+                .getInfo().getSigningReason();
+        assertEquals("Roll??", reason);
+    }
+
+    @Test
     public void populatesSignatureMethod() {
         SimpleReport report = validateAndAssertReports(buildValidationDocument(PDF_WITH_REASON_AND_LOCATION)).getSimpleReport();
         assertEquals("http://www.w3.org/2001/04/xmldsig-more#rsa-sha512",
@@ -162,9 +171,12 @@ public class PDFValidationServiceTest {
     })
     public static class TestConfiguration {
         @Bean
-        public TSLLoader tslLoader() {
-            return new TSLLoader();
+        ProxyConfig proxyConfig(){
+            return new ProxyConfig();
         }
+        @Bean
+        public TSLLoader tslLoader() {
+            return new TSLLoader();        }
         @Bean
         public TSLValidationJobFactory tslValidationJobFactory() {
             return new TSLValidationJobFactory();

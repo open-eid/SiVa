@@ -22,7 +22,7 @@
 
     <groupId>ee.openid.siva</groupId>
     <artifactId>siva</artifactId>
-    <version>3.3.0</version>
+    <version>3.4.0</version>
     <packaging>pom</packaging>
     <name>SiVa Digitally signed documents validation service</name>
     <url>https://github.com/open-eid/SiVa</url>
@@ -103,9 +103,11 @@
         <project.encoding>UTF-8</project.encoding>
         <language.level>11</language.level>
         <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss'Z'</maven.build.timestamp.format>
-        <dss.version>5.5.d4j.1</dss.version>
-        <bouncycastle.version>1.62</bouncycastle.version>
-        <spring.boot.version>2.2.9.RELEASE</spring.boot.version>
+        <dss.version>5.7.d4j.2</dss.version>
+        <bouncycastle.version>1.65</bouncycastle.version>
+        <spring.boot.version>2.2.12.RELEASE</spring.boot.version>
+        <junit.version>4.13.1</junit.version>
+        <junit.jupiter.version>5.7.0</junit.jupiter.version>
         <powermock.version>2.0.4</powermock.version>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
@@ -162,7 +164,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.5</version>
+                <version>0.8.6</version>
                 <configuration>
                     <excludes>
                         <exclude>**/*Application.*</exclude>
@@ -212,7 +214,7 @@
                     <plugin>
                         <groupId>org.owasp</groupId>
                         <artifactId>dependency-check-maven</artifactId>
-                        <version>5.2.2</version>
+                        <version>6.0.3</version>
                         <configuration>
                             <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
                             <failOnError>false</failOnError>

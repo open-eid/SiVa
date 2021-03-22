@@ -14,6 +14,7 @@ import ee.openeid.tsl.TSLValidationJobFactory;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
 import ee.openeid.validation.service.generic.configuration.GenericSignaturePolicyProperties;
 import ee.openeid.validation.service.generic.configuration.GenericValidationServiceConfiguration;
+import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.util.encoders.Base64;
@@ -134,6 +135,12 @@ public class ValidationServiceTest {
             GenericValidationServiceConfiguration.class
     })
     public static class TestConfiguration {
+
+        @Bean
+        public ProxyConfig proxyConfig() {
+            return new ProxyConfig();
+        }
+
         @Bean
         public TSLLoader tslLoader() {
             return new TSLLoader();

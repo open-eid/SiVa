@@ -64,7 +64,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
                 .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("signatures[0].warnings", Matchers.hasSize(2))
+                .body("signatures[0].warnings", Matchers.hasSize(1))
                 .body("signatures[0].certificates.size()", Matchers.is(1))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("SINIVEE,VEIKO,36706020210"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.commonName",  Matchers.is("ESTEID-SK 2011"))
@@ -94,7 +94,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
                 .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("signatures[0].warnings", Matchers.hasSize(2))
+                .body("signatures[0].warnings", Matchers.hasSize(1))
                 .body("signatures[0].certificates.size()", Matchers.is(2))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("JUHANSON,ALLAN,38608014910"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.commonName",  Matchers.is("ESTEID-SK 2015"))
@@ -125,7 +125,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())
-                .body("signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
+                .body("signatures[0].warnings", Matchers.emptyOrNullString())
                 .body("signatures[0].certificates.size()", Matchers.is(3))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("SINIVEE,VEIKO,36706020210"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.commonName",  Matchers.is("ESTEID-SK 2011"))
@@ -157,7 +157,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())
-                .body("signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
+                .body("signatures[0].warnings", Matchers.emptyOrNullString())
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -184,7 +184,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())
-                .body("signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
+                .body("signatures[0].warnings", Matchers.emptyOrNullString())
                 .body("signatures[0].certificates.size()", Matchers.is(4))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("JUHANSON,ALLAN,38608014910"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.commonName",  Matchers.is("ESTEID-SK 2015"))
@@ -217,7 +217,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())
-                .body("signatures[0].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
+                .body("signatures[0].warnings", Matchers.emptyOrNullString())
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -246,8 +246,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
                 .body("signatures[1].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
                 .body("signatures[1].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[1].errors[0].content", Matchers.is("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("signatures[1].warnings[0].content", Matchers.is("The trusted certificate doesn't match the trust service"))
-                .body("signatures[1].warnings[1].content", Matchers.is("The signature/seal is not a valid AdES!"))
+                .body("signatures[1].warnings[0].content", Matchers.is("The signature/seal is not a valid AdES digital signature!"))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(2));
 
@@ -270,12 +269,12 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      public void documentMessageDigestAttributeValueDoesNotMatchCalculatedValue() {
         post(validationRequestFor("hellopades-lt1-lt2-wrongDigestValue.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
-                .body("signatures[1].signatureFormat", Matchers.is("PAdES_BASELINE_LTA"))
+                .body("signatures[1].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("signatures[1].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
                 .body("signatures[1].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[1].subIndication", Matchers.is("HASH_FAILURE"))
                 .body("signatures[1].errors[0].content", Matchers.is("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("validSignaturesCount", Matchers.is(0))
+                .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(2));
     }
 
@@ -297,7 +296,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt1-lt2-Serial.pdf"));
         post(validationRequestWithValidKeys(encodedString, "hellopades-lt1-lt2-Serial.pdf", "POLv3"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
-                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LTA"))
+                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())

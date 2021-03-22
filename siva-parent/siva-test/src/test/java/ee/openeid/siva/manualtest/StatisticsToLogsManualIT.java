@@ -108,7 +108,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
       "sigCt": 1,
       "vSigCt": 0,
       "sigRslt": [
-         {"i":"TOTAL-FAILED", "si":"FORMAT_FAILURE", "cc":"EE", "sf" : "XAdES_BASELINE_LT_TM"}
+         {"i":"TOTAL-FAILED", "si":"FORMAT_FAILURE", "cc":"EE", "sf" : "XAdES_BASELINE_T"}
       ],
       "sigType" : "XAdES"
    }
@@ -380,8 +380,8 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
     "sigCt" : 2,
     "vSigCt" : 0,
     "sigRslt" : [
-       {"i" : "TOTAL-FAILED", "cc" : "EE", "sf" : "PAdES_BASELINE_LTA"},
-       {"i" : "TOTAL-FAILED", "si" : "HASH_FAILURE", "cc" : "EE", "sf" : "PAdES_BASELINE_LTA"}
+       {"i" : "TOTAL-FAILED", "cc" : "EE", "sf" : "PAdES_BASELINE_LT"},
+       {"i" : "TOTAL-FAILED", "si" : "HASH_FAILURE", "cc" : "EE", "sf" : "PAdES_BASELINE_LT"}
     ],
     "sigType" : "PAdES"
   }
@@ -420,7 +420,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
     "vSigCt" : 0,
     "sigRslt" : [
       {"i" : "TOTAL-FAILED", "si" : "FORMAT_FAILURE", "cc" : "BE", "sf" : "PAdES_BASELINE_B"},
-      {"i" : "TOTAL-FAILED", "si" : "FORMAT_FAILURE", "cc" : "BE", "sf" : "PAdES_BASELINE_B"}
+      {"i" : "TOTAL-FAILED", "si" : "FORMAT_FAILURE", "cc" : "IT", "sf" : "PAdES_BASELINE_B"}
     ],
     "sigType" : "PAdES"
   }

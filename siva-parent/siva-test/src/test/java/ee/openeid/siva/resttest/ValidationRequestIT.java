@@ -613,7 +613,7 @@ public class ValidationRequestIT extends SiVaRestTests {
         post(validationRequestFor("singleValidSignatureTS.asice", null, REPORT_TYPE_DETAILED ))
                 .then()
                 .body("validationReport.diagnosticData", emptyOrNullString())
-                .body("validationReport.validationProcess.signatures[0].validationSignatureQualification.signatureQualification", equalTo("QESIG"))
+                .body("validationReport.validationProcess.signatureOrTimestampOrCertificate[0].validationSignatureQualification.signatureQualification", equalTo("QESIG"))
                 .body(VALIDATION_CONCLUSION_PREFIX + "validSignaturesCount", equalTo(1));
     }
 

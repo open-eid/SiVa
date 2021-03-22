@@ -288,6 +288,8 @@ Structure of validationConclusion block
 | signatures[0].info | Signature.Info | - | Object | Object containing trusted signing time information and user added additional signing info. |
 | signatures[0].info. bestSignatureTime | Signature.Info. BestSignatureTime | + | Date | Time value that is regarded as trusted signing time, denoting the earliest time when it can be trusted by the validation application (because proven by some Proof-of-Existence present in the signature) that a signature has existed.<br>The source of the value depends on the signature profile (see also `SignatureFormat` parameter):<br>- Signature with time-mark (LT_TM level) - the producedAt value of the earliest valid time-mark (OCSP confirmation of the signer's certificate) in the signature.<br>- Signature with time-stamp (LT or LTA level) - the genTime value of the earliest valid signature time-stamp token in the signature. <br> - Signature with BES or EPES level - the value is empty, i.e. there is no trusted signing time value available. |
 | signatures[0].info. timeAssertionMessageImprint | Signature.Info. TimeAssertionMessageImprint | - | String | Base64 encoded value of message imprint retrieved from time assertion. In case of LT_TM (TimeMark) signatures, OCSP nonce value is returned. In case of T, LT or LTA (TimeStamp) signatures, TimeStamp message imprint is returned. |
+| signatures[0].info. ocspResponseCreationTime | Signatures.Info. OcspResponseCreationTime | - | Date | Time value that is regarded as the original OCSP response creation time. |
+| signatures[0].info. timestampCreationTime | Signatures.Info. TimestampCreationTime | - | Date | Time value of the timestamp creation |
 | signatures[0].info. signerRole | Signature.Info. SignerRole | - | Array | Array of roles attached to the signature. |
 | signatures[0].info. signerRole[0] | Signature.Info. SignerRole[0] | + | Object | Object containing claimed roles. |
 | signatures[0].info. signerRole[0]. claimedRole | Signature.Info. SignerRole[0].ClaimedRole | + | String | Role stated by signer on signing. |
@@ -296,6 +298,7 @@ Structure of validationConclusion block
 | signatures[0].info. signatureProductionPlace.stateOrProvince | Signature.Info. SignatureProductionPlace.StateOrProvince | - | String | Stated state or province. |
 | signatures[0].info. signatureProductionPlace.city | Signature.Info. SignatureProductionPlace.City | - | String | Stated city. |
 | signatures[0].info. signatureProductionPlace.postalCode | Signature.Info. SignatureProductionPlace.PostalCode | - | String | Stated postal code. |
+| signatures[0].info. signingReason | Signature.Info SigningReason | - | String | Free text field for PAdES type signatures for stating the signing reason |
 | signatures[0]. signatureFormat | Signature. SignatureFormat | + | String | Format and profile (according to Baseline Profile) of the signature. See [XAdES Baseline Profile](http://www.etsi.org/deliver/etsi_ts/103100_103199/103171/02.01.01_60/ts_103171v020101p.pdf), [CAdES Baseline Profile](http://www.etsi.org/deliver/etsi_ts/103100_103199/103173/02.02.01_60/ts_103173v020201p.pdf) and [PAdES Baseline Profile](http://www.etsi.org/deliver/etsi_ts/103100_103199/103172/02.02.02_60/ts_103172v020202p.pdf) for detailed description of the Baseline Profile levels. Levels that are accepted in SiVa validation policy are described in [SiVa signature validation policy](/siva/appendix/validation_policy) <br>**Possible values:**  <br> XAdES_BASELINE_B <br> XAdES_BASELINE_B_BES <br> XAdES_BASELINE_B_EPES <br> XAdES_BASELINE_T <br> XAdES_BASELINE_LT - long-term level XAdES signature where time-stamp is used as a assertion of trusted signing time<br> XAdES_BASELINE_LT_TM - long-term level XAdES signature where time-mark is used as a assertion of trusted signing time. Used in case of [BDOC](http://id.ee/public/bdoc-spec212-eng.pdf) signatures with time-mark profile and [DIGIDOC-XML](http://id.ee/public/DigiDoc_format_1.3.pdf) (DDOC) signatures.<br>  XAdES_BASELINE_LTA <br> CAdES_BASELINE_B <br> CAdES_BASELINE_T <br> CAdES_BASELINE_LT <br> CAdES_BASELINE_LTA<br> PAdES_BASELINE_B <br> PAdES_BASELINE_T <br> PAdES_BASELINE_LT <br> PAdES_BASELINE_LTA |
 | signatures[0]. signatureMethod | Signature. SignatureMethod | + | String | Signature method specification URI used in signature creation. |
 | signatures[0]. signatureLevel | Signature. SignatureLevel | - |String | Legal level of the signature, according to Regulation (EU) No 910/2014. <br> - **Possible values on positive validation result:**<br> QESIG <br> QESEAL <br> QES <br> ADESIG_QC <br> ADESEAL_QC <br> ADES_QC <br> ADESIG <br> ADESEAL <br> ADES <br> - **Possible values on indeterminate validation result:**<br> prefix INDETERMINATE is added to the level described in positive result. For example  INDETERMINATE_QESIG <br> - **Possible values on negative validation result:**<br>In addition to abovementioned<br> NOT_ADES_QC_QSCD <br> NOT_ADES_QC <br> NOT_ADES <br> NA <br> - In case of DIGIDOC-XML 1.0..1.3 formats, value is missing as the signature level is not checked by the JDigiDoc base library that is used for validation. However, the signatures can be indirectly regarded as QES level signatures, see also [SiVa Validation Policy](/siva3/appendix/validation_policy)<br> - In case of XROAD ASICE containers the value is missing as the asicverifier base library do not check the signature level.|
@@ -374,10 +377,10 @@ Structure of validationConclusion block
         "id": "id-a9ce7f66cff1d17ddaab37c46a88f5f4",
         "indication": "TOTAL-PASSED",
         "info": {
-	    "timestampCreationTime": "2020-05-21T13:56:48Z",
+            "timestampCreationTime": "2020-05-21T13:56:48Z",
             "timeAssertionMessageImprint": "MDEwDQYJYIZIAWUDBAIBBQAEID3j1ceryQp4ZNP8iVfd50l/0JXvpry+XS+ajiAUA+Su",
-            "bestSignatureTime": "2020-05-21T13:56:48Z"
-	    "ocspResponseCreationTime": "2020-05-21T13:56:49Z"
+            "bestSignatureTime": "2020-05-21T13:56:48Z",
+            "ocspResponseCreationTime": "2020-05-21T13:56:49Z"
         }
     }],
     "policy": {
@@ -455,8 +458,8 @@ Structure of validationConclusion block
               <ns3:ClaimedSigningTime>2020-05-21T13:56:52Z</ns3:ClaimedSigningTime>
               <ns3:Warnings/>
               <ns3:Info>
-		<ns3:OcspResponseCreationTime>2020-05-21T13:56:49Z</ns3:OcspResponseCreationTime>
-		<ns3:TimestampCreationTime>2020-05-21T13:56:48Z</ns3:TimestampCreationTime>
+                <ns3:OcspResponseCreationTime>2020-05-21T13:56:49Z</ns3:OcspResponseCreationTime>
+		        <ns3:TimestampCreationTime>2020-05-21T13:56:48Z</ns3:TimestampCreationTime>
                 <ns3:BestSignatureTime>2020-05-21T13:56:48Z</ns3:BestSignatureTime>
                 <ns3:TimeAssertionMessageImprint>MDEwDQYJYIZIAWUDBAIBBQAEID3j1ceryQp4ZNP8iVfd50l/0JXvpry+XS+ajiAUA+Su</ns3:TimeAssertionMessageImprint>
               </ns3:Info>
@@ -700,6 +703,18 @@ Sample response:
     }
 }
 ```
+## Changes in API compared to V3 v3.3.0 
+
+Changes are described using notation from REST endpoint.
+
+### Changes in response
+
+| Report | Parameter | Change | Link | Comment |
+|---------------|-----------|--------|------|---------|
+| validationConclusion | signatures[0].info.timestampCreationTime | Parameter added |  [Link](../interfaces/#validation-response-parameters-simple-report-successful-scenario) | Date containing timestamp creation time added |
+| validationConclusion | signatures[0].info.ocspResponseCreationTime | Parameter added |  [Link](../interfaces/#validation-response-parameters-simple-report-successful-scenario) | Date containing OCSP response creation time added |
+| validationConclusion | signatures[0].info.signingReason | Parameter added |  [Link](../interfaces/#validation-response-parameters-simple-report-successful-scenario) | String containing signing reason for PAdES added |
+
 ## Changes in API compared to V3 v3.2.0 (non breaking additions to protocol)
 
 Changes are described using notation from REST endpoint.

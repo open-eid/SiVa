@@ -19,22 +19,34 @@ package ee.openeid.validation.service.timemark.report;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.*;
-import ee.openeid.siva.validation.document.report.SignatureProductionPlace;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.siva.validation.util.CertUtil;
-import eu.europa.esig.dss.enumerations.SignatureQualification;
-import eu.europa.esig.dss.enumerations.SubIndication;
+import eu.europa.esig.dss.diagnostic.DiagnosticData;
+import eu.europa.esig.dss.diagnostic.SignatureWrapper;
+import eu.europa.esig.dss.diagnostic.TimestampWrapper;
+import eu.europa.esig.dss.enumerations.TimestampType;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
-import org.digidoc4j.*;
+import org.digidoc4j.Container;
+import org.digidoc4j.DataFile;
+import org.digidoc4j.Signature;
+import org.digidoc4j.SignatureProfile;
+import org.digidoc4j.ValidationResult;
+import org.digidoc4j.X509Cert;
 import org.digidoc4j.exceptions.DigiDoc4JException;
 import org.digidoc4j.impl.asic.asice.AsicESignature;
-import org.digidoc4j.impl.ddoc.DDocContainer;
 import org.slf4j.LoggerFactory;
 
 import java.security.cert.X509Certificate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -48,7 +60,7 @@ public abstract class TimemarkContainerValidationReportBuilder {
     protected static final String FULL_SIGNATURE_SCOPE = "FullSignatureScope";
     protected static final String FULL_DOCUMENT = "Digest of the document content";
     protected static final String XADES_FORMAT_PREFIX = "XAdES_BASELINE_";
-    private static final String REPORT_INDICATION_INDETERMINATE = "INDETERMINATE";
+    protected static final String REPORT_INDICATION_INDETERMINATE = "INDETERMINATE";
     protected static final String BDOC_SIGNATURE_FORM = "ASiC-E";
     protected static final String DDOC_SIGNATURE_FORM_PREFIX = "DIGIDOC_XML_";
     protected static final String DDOC_HASHCODE_SIGNATURE_FORM_SUFFIX = "_hashcode";
@@ -91,9 +103,8 @@ public abstract class TimemarkContainerValidationReportBuilder {
 
     public Reports build() {
         ValidationConclusion validationConclusion = getValidationConclusion();
-        if (!(container instanceof DDocContainer)) {
-            processSignatureIndications(validationConclusion, validationPolicy.getName());
-        }
+        processSignatureIndications(validationConclusion, validationPolicy.getName());
+
         SimpleReport simpleReport = new SimpleReport(validationConclusion);
         DetailedReport detailedReport = new DetailedReport(validationConclusion, null);
         DiagnosticReport diagnosticReport = new DiagnosticReport(validationConclusion, null);
@@ -166,8 +177,8 @@ public abstract class TimemarkContainerValidationReportBuilder {
         signatureValidationData.setClaimedSigningTime(ReportBuilderUtils.getDateFormatterWithGMTZone().format(signature.getClaimedSigningTime()));
         signatureValidationData.setWarnings(getWarnings(signature));
         signatureValidationData.setInfo(getInfo(signature));
-        signatureValidationData.setIndication(getIndication(signature));
-        signatureValidationData.setSubIndication(getSubIndication(signature));
+        signatureValidationData.setIndication(getIndication(signature, signatureValidationResults));
+        signatureValidationData.setSubIndication(getSubIndication(signature, signatureValidationResults));
         signatureValidationData.setCountryCode(getCountryCode(signature));
         signatureValidationData.setCertificates(getCertificateList(signature));
 
@@ -187,65 +198,66 @@ public abstract class TimemarkContainerValidationReportBuilder {
         return subjectName.replaceAll("^\"|\"$", "");
     }
 
-    private String getSignatureLevel(Signature signature) {
-        if (signature instanceof AsicESignature) {
-            SignatureQualification signatureLevel = getDssSimpleReport((AsicESignature) signature).getSignatureQualification(signature.getUniqueId());
-            return signatureLevel != null ? signatureLevel.name() : "";
-        }
-        return null;
-    }
-
-    private eu.europa.esig.dss.simplereport.SimpleReport getDssSimpleReport(AsicESignature bDocSignature) {
+    eu.europa.esig.dss.simplereport.SimpleReport getDssSimpleReport(AsicESignature bDocSignature) {
         return bDocSignature.getDssValidationReport().getReports().getSimpleReport();
-    }
-
-    private SignatureValidationData.Indication getIndication(Signature signature) {
-        ValidationResult signatureValidationResult = signatureValidationResults.get(signature.getUniqueId());
-        if (signatureValidationResult.isValid() && validationResult.getErrors().isEmpty()) {
-            return SignatureValidationData.Indication.TOTAL_PASSED;
-        } else if (signature instanceof AsicESignature
-                && REPORT_INDICATION_INDETERMINATE.equals(getDssSimpleReport((AsicESignature) signature).getIndication(signature.getUniqueId()).name())
-                && validationResult.getErrors().isEmpty()) {
-            return SignatureValidationData.Indication.INDETERMINATE;
-        } else {
-            return SignatureValidationData.Indication.TOTAL_FAILED;
-        }
-    }
-
-    private String getSubIndication(Signature signature) {
-        if (signature instanceof AsicESignature) {
-            if (getIndication(signature) == SignatureValidationData.Indication.TOTAL_PASSED) {
-                return "";
-            }
-            SubIndication subindication = getDssSimpleReport((AsicESignature) signature).getSubIndication(signature.getUniqueId());
-            return subindication != null ? subindication.name() : "";
-        }
-        return "";
     }
 
     private Info getInfo(Signature signature) {
         Info info = new Info();
         info.setBestSignatureTime(getBestSignatureTime(signature));
+        if (signature.getProfile() == SignatureProfile.LT) {
+            info.setTimestampCreationTime(getTimestampTime(signature));
+        }
+        info.setOcspResponseCreationTime(getOcspTime(signature));
         info.setTimeAssertionMessageImprint(getTimeAssertionMessageImprint(signature));
         info.setSignerRole(getSignerRole(signature));
         info.setSignatureProductionPlace(getSignatureProductionPlace(signature));
         return info;
     }
 
+    private String getOcspTime(Signature signature) {
+        return formatTime(signature.getOCSPResponseCreationTime());
+    }
+
+    private String getTimestampTime(Signature signature) {
+        return formatTime(signature.getTimeStampCreationTime());
+    }
+
     private String getBestSignatureTime(Signature signature) {
-        Date trustedTime = signature.getTrustedSigningTime();
-        return trustedTime != null
-                ? ReportBuilderUtils.getDateFormatterWithGMTZone().format(trustedTime)
-                : "";
+        return formatTime(signature.getTrustedSigningTime());
+    }
+
+    private String formatTime(Date date) {
+        return date != null
+                ? ReportBuilderUtils.getDateFormatterWithGMTZone().format(date)
+                : null;
     }
 
     private String getTimeAssertionMessageImprint(Signature signature) {
+        if (signature.getProfile() != SignatureProfile.LT_TM) {
+            TimestampWrapper timestamp = getBestTimestampWrapper(signature);
+            try {
+                return ReportBuilderUtils.parseTimeAssertionMessageImprint(timestamp);
+            } catch (Exception e) {
+                LOGGER.warn("Unable to parse time assertion message imprint from timestamp: ", e);
+                return ""; //parse errors due to corrupted timestamp data should be present in validation errors already
+            }
+        }
+
         try {
             return StringUtils.defaultString(Base64.encodeBase64String(signature.getOCSPNonce()));
         } catch (DigiDoc4JException e) {
             LOGGER.warn("Unable to parse time assertion message imprint from OCSP nonce: ", e);
             return ""; //parse errors due to corrupted OCSP data should be present in validation errors already
         }
+    }
+
+    private TimestampWrapper getBestTimestampWrapper(Signature signature) {
+        DiagnosticData diagnosticData = ((AsicESignature) signature).getDssValidationReport().getReports().getDiagnosticData();
+        SignatureWrapper signatureWrapper = diagnosticData.getSignatureById(signature.getUniqueId());
+        List<TimestampWrapper> timestamps = signatureWrapper.getTimestampListByType(TimestampType.SIGNATURE_TIMESTAMP);
+        return timestamps.isEmpty() ? null : Collections.min(timestamps, Comparator.comparing(TimestampWrapper::getProductionTime));
+
     }
 
     private List<SignerRole> getSignerRole(Signature signature) {
@@ -284,13 +296,11 @@ public abstract class TimemarkContainerValidationReportBuilder {
 
     private List<Warning> getWarnings(Signature signature) {
         ValidationResult signatureValidationResult = signatureValidationResults.get(signature.getUniqueId());
-        List<Warning> warnings = Stream.of(signatureValidationResult.getWarnings(), this.validationResult.getWarnings())
+        return Stream.of(signatureValidationResult.getWarnings(), this.validationResult.getWarnings())
                 .flatMap(Collection::stream)
                 .distinct()
                 .map(TimemarkContainerValidationReportBuilder::mapDigidoc4JWarning)
                 .collect(Collectors.toList());
-        warnings.addAll(getExtraWarnings(signature));
-        return warnings;
     }
 
     private List<Error> getErrors(Signature signature) {
@@ -327,7 +337,13 @@ public abstract class TimemarkContainerValidationReportBuilder {
         return certificate;
     }
 
-    abstract List<Warning> getExtraWarnings(Signature signature);
+    abstract void processSignatureIndications(ValidationConclusion validationConclusion, String policyName);
+
+    abstract SignatureValidationData.Indication getIndication(Signature signature, Map<String, ValidationResult> signatureValidationResults);
+
+    abstract String getSubIndication(Signature signature, Map<String, ValidationResult> signatureValidationResults);
+
+    abstract String getSignatureLevel(Signature signature);
 
     abstract List<ValidationWarning> getExtraValidationWarnings();
 

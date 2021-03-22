@@ -59,9 +59,9 @@
                         <Algo>ECDSA</Algo>
                     </AcceptableEncryptionAlgo>
                     <MiniPublicKeySize>
-                        <Algo Size="128">DSA</Algo>
+                        <Algo Size="224">DSA</Algo>
                         <Algo Size="1024">RSA</Algo>
-                        <Algo Size="192">ECDSA</Algo>
+                        <Algo Size="256">ECDSA</Algo>
                     </MiniPublicKeySize>
                     <AcceptableDigestAlgo>
                         <Algo>SHA1</Algo>
@@ -92,9 +92,9 @@
                         <Algo>ECDSA</Algo>
                     </AcceptableEncryptionAlgo>
                     <MiniPublicKeySize>
-                        <Algo Size="128">DSA</Algo>
+                        <Algo Size="224">DSA</Algo>
                         <Algo Size="1024">RSA</Algo>
-                        <Algo Size="192">ECDSA</Algo>
+                        <Algo Size="256">ECDSA</Algo>
                     </MiniPublicKeySize>
                     <AcceptableDigestAlgo>
                         <Algo>SHA1</Algo>
@@ -117,9 +117,9 @@
                     <Algo>ECDSA</Algo>
                 </AcceptableEncryptionAlgo>
                 <MiniPublicKeySize>
-                    <Algo Size="128">DSA</Algo>
+                    <Algo Size="224">DSA</Algo>
                     <Algo Size="1024">RSA</Algo>
-                    <Algo Size="192">ECDSA</Algo>
+                    <Algo Size="256">ECDSA</Algo>
                 </MiniPublicKeySize>
                 <AcceptableDigestAlgo>
                     <Algo>SHA1</Algo>
@@ -139,7 +139,7 @@
             <SigningCertificatePresent Level="FAIL"/>
             <CertDigestPresent Level="FAIL"/>
             <CertDigestMatch Level="FAIL"/>
-            <IssuerSerialMatch Level="FAIL"/>
+            <IssuerSerialMatch Level="WARN"/>
             <SigningTime Level="FAIL"/>
             <!--<ContentType Level="FAIL" value="1.2.840.113549.1.7.1" />
             <ContentHints Level="FAIL" value="*" />
@@ -159,7 +159,7 @@
     <Timestamp>
         <TimestampDelay Level="IGNORE" Unit="DAYS" Value="0"/>
         <RevocationTimeAgainstBestSignatureTime Level="FAIL"/>
-        <BestSignatureTimeBeforeIssuanceDateOfSigningCertificate Level="FAIL"/>
+        <BestSignatureTimeBeforeExpirationDateOfSigningCertificate Level="FAIL"/>
         <Coherence Level="FAIL"/>
         <BasicSignatureConstraints>
             <ReferenceDataExistence Level="FAIL"/>
@@ -196,8 +196,8 @@
                         <Algo>ECDSA</Algo>
                     </AcceptableEncryptionAlgo>
                     <MiniPublicKeySize>
+                        <Algo Size="224">DSA</Algo>
                         <Algo Size="1024">RSA</Algo>
-                        <Algo Size="128">DSA</Algo>
                         <Algo Size="256">ECDSA</Algo>
                     </MiniPublicKeySize>
                     <AcceptableDigestAlgo>
@@ -229,8 +229,8 @@
                         <Algo>ECDSA</Algo>
                     </AcceptableEncryptionAlgo>
                     <MiniPublicKeySize>
+                        <Algo Size="224">DSA</Algo>
                         <Algo Size="1024">RSA</Algo>
-                        <Algo Size="128">DSA</Algo>
                         <Algo Size="256">ECDSA</Algo>
                     </MiniPublicKeySize>
                     <AcceptableDigestAlgo>
@@ -254,9 +254,9 @@
                     <Algo>ECDSA</Algo>
                 </AcceptableEncryptionAlgo>
                 <MiniPublicKeySize>
-                    <Algo Size="128">DSA</Algo>
+                    <Algo Size="224">DSA</Algo>
                     <Algo Size="1024">RSA</Algo>
-                    <Algo Size="192">ECDSA</Algo>
+                    <Algo Size="256">ECDSA</Algo>
                 </MiniPublicKeySize>
                 <AcceptableDigestAlgo>
                     <Algo>SHA1</Algo>
@@ -275,6 +275,7 @@
     </Timestamp>
     <Revocation>
         <RevocationFreshness Level="IGNORE" Unit="DAYS" Value="0"/>
+        <UnknownStatus Level="FAIL" />
         <BasicSignatureConstraints>
             <ReferenceDataExistence Level="FAIL"/>
             <ReferenceDataIntact Level="FAIL"/>
@@ -307,8 +308,8 @@
                         <Algo>ECDSA</Algo>
                     </AcceptableEncryptionAlgo>
                     <MiniPublicKeySize>
+                        <Algo Size="224">DSA</Algo>
                         <Algo Size="1024">RSA</Algo>
-                        <Algo Size="128">DSA</Algo>
                         <Algo Size="256">ECDSA</Algo>
                     </MiniPublicKeySize>
                     <AcceptableDigestAlgo>
@@ -340,8 +341,8 @@
                         <Algo>ECDSA</Algo>
                     </AcceptableEncryptionAlgo>
                     <MiniPublicKeySize>
+                        <Algo Size="224">DSA</Algo>
                         <Algo Size="1024">RSA</Algo>
-                        <Algo Size="128">DSA</Algo>
                         <Algo Size="256">ECDSA</Algo>
                     </MiniPublicKeySize>
                     <AcceptableDigestAlgo>
@@ -365,9 +366,9 @@
                     <Algo>ECDSA</Algo>
                 </AcceptableEncryptionAlgo>
                 <MiniPublicKeySize>
-                    <Algo Size="128">DSA</Algo>
+                    <Algo Size="224">DSA</Algo>
                     <Algo Size="1024">RSA</Algo>
-                    <Algo Size="192">ECDSA</Algo>
+                    <Algo Size="256">ECDSA</Algo>
                 </MiniPublicKeySize>
                 <AcceptableDigestAlgo>
                     <Algo>SHA1</Algo>
@@ -392,6 +393,5 @@
         <TLNotExpired Level="FAIL"/>
         <TLWellSigned Level="WARN"/>
         <TLVersion Level="FAIL" value="5"/>
-        <TLConsistency Level="FAIL"/>
     </eIDAS>
 </ConstraintsParameters>

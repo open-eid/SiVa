@@ -150,10 +150,10 @@ public class AsiceValidationFailIT extends SiVaRestTests {
 
         post(validationRequestFor("AsiceContainerNoSignature.asice"))
                 .then()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("requestErrors[0].key", Matchers.is(DOCUMENT))
-                .body("requestErrors[0].message", Matchers.containsString(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
-
+                .body("validationReport.validationConclusion.signatureForm", Matchers.is("ASiC-E"))
+                .body("validationReport.validationConclusion.validationLevel", Matchers.is("ARCHIVAL_DATA"))
+                .body("validationReport.validationConclusion.validSignaturesCount", Matchers.is(0))
+                .body("validationReport.validationConclusion.signaturesCount", Matchers.is(0));
     }
 
     /**
@@ -200,9 +200,9 @@ public class AsiceValidationFailIT extends SiVaRestTests {
         post(validationRequestFor("EE_SER-AEX-B-LT-I-43.asice", VALID_SIGNATURE_POLICY_3,"Simple"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
-                .body("signatures[0].signatureLevel", Matchers.is(SIGNATURE_LEVEL_NOT_ADES))
-                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
-                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_SIG_CONSTRAINTS_FAILURE))
+                .body("signatures[0].signatureLevel", Matchers.is(SIGNATURE_LEVEL_NA))
+                .body("signatures[0].indication", Matchers.is(INDETERMINATE))
+                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_CHAIN_CONSTRAINTS_FAILURE))
                 .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("validSignaturesCount", Matchers.is(0));
@@ -227,10 +227,10 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
-                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
-                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_SIG_CONSTRAINTS_FAILURE))
+                .body("signatures[0].indication", Matchers.is(INDETERMINATE))
+                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_CHAIN_CONSTRAINTS_FAILURE))
                 .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE))
-                .body("signatures[0].warnings[0].content", Matchers.is(CERTIFICATE_DO_NOT_MATCH_TRUST_SERVICE))
+                .body("signatures[0].errors.content", Matchers.hasItems(NOT_EXPECTED_KEY_USAGE))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -253,9 +253,8 @@ public class AsiceValidationFailIT extends SiVaRestTests {
         post(validationRequestForDSS("TM-01_bdoc21-unknown-resp.bdoc", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
-                .body("signatures[0].indication", Matchers.is(INDETERMINATE))
-                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_NO_CERTIFICATE_CHAIN_FOUND))
-                .body("signatures[0].info.bestSignatureTime", Matchers.is("2013-11-11T06:45:46Z")) //this may not be valid time to show
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_FORMAT_FAILURE))
                 .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE))
                 .body("signatures[0].certificates.size()", Matchers.is(1))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("SINIVEE,VEIKO,36706020210"))
@@ -318,7 +317,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(INDETERMINATE))
-                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_NO_POE))
+                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_REVOKED_NO_POE))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2014-11-07T11:43:06Z"))
                 .body("signatures[0].errors.content", Matchers.hasItems(PAST_SIG_VALIDATION_NOT_CONCLUSIVE))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
@@ -359,7 +358,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * <p>
      * Title: Asice unsigned data files in the container
      * <p>
-     * Expected Result: The document should pass the validation with warning
+     * Expected Result: The document should fail the validation
      * <p>
      * File: EE_SER-AEX-B-LT-V-34.asice
      */
@@ -368,11 +367,10 @@ public class AsiceValidationFailIT extends SiVaRestTests {
         post(validationRequestFor("EE_SER-AEX-B-LT-V-34.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
-                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
-                .body("signatures[0].warnings.content", Matchers.hasItems(ALL_FILES_NOT_SIGNED))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].warnings.content", Matchers.hasItems(VALID_VALIDATION_PROCESS_VALUE_35))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
-                .body("validSignaturesCount", Matchers.is(1));
-
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     /**
@@ -516,7 +514,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(INDETERMINATE))
-                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_NO_POE))
+                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_REVOKED_NO_POE))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2013-10-11T11:27:19Z"))
                 .body("signatures[0].errors.content", Matchers.hasItems(PAST_SIG_VALIDATION_NOT_CONCLUSIVE))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
@@ -542,7 +540,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
         post(validationRequestFor("TM-16_unknown.4.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
-                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].indication", Matchers.is(INDETERMINATE))
                 .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("validSignaturesCount", Matchers.is(0));
@@ -708,6 +706,112 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1))
                 .body("validatedDocument.filename", Matchers.is(fileName));
+    }
+
+    /**
+     * TestCaseID: Asice-ValidationFail-25
+     * <p>
+     * TestType: Automated
+     * <p>
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
+     * <p>
+     * Title: BDoc with invalid signature, signed with expired certificate
+     * <p>
+     * Expected Result: The document should fail the validation
+     * <p>
+     * File: IB-5987_signed_with_expired_certificate.asice
+     */
+    @Test
+    public void asiceSignedWithExpiredCertificate() {
+        setTestFilesDirectory("bdoc/test/timestamp/");
+        String fileName = "IB-5987_signed_with_expired_certificate.asice";
+        post(validationRequestFor(fileName))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].signedBy", Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
+                .body("signatures[0].indication", Matchers.is(INDETERMINATE))
+                .body("signatures[0].claimedSigningTime", Matchers.is("2016-08-01T13:07:13Z"))
+                .body("signatures[0].errors.content", Matchers.hasItem(VALID_VALIDATION_PROCESS_ERROR_VALUE_10))
+                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validatedDocument.filename", Matchers.is(fileName));
+    }
+
+    /**
+     * TestCaseID: Asice-ValidationFail-26
+     * <p>
+     * TestType: Automated
+     * <p>
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
+     * <p>
+     * Title: Bdoc signed properties element missing
+     * <p>
+     * Expected Result: The document should fail the validation
+     * <p>
+     * File: REF-03_bdoc21-TS-no-signedpropref.asice
+     */
+    @Test
+    public void bdocTimemarkSignedPropertiesMissing() {
+        setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
+        post(validationRequestFor("REF-03_bdoc21-TS-no-signedpropref.asice"))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
+                .body("signatures[0].indication", Matchers.is(INDETERMINATE))
+                .body("signatures[0].errors.content", Matchers.hasItem("The signed qualifying property: neither 'message-digest' nor 'SignedProperties' is present!"))
+                .body("validSignaturesCount", Matchers.is(0));
+    }
+
+    /**
+     * TestCaseID: Asice-ValidationFail-27
+     * <p>
+     * TestType: Automated
+     * <p>
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
+     * <p>
+     * Title: Asice LT signature signed with expired AIA OCSP certificate
+     * <p>
+     * Expected Result: The document should fail the validation
+     * <p>
+     * File: esteid2018signerAiaOcspLT.asice
+     */
+    @Test
+    public void asiceLtSignatureSignedWithExpiredAiaOCSP() {
+        setTestFilesDirectory("bdoc/test/timestamp/");
+        post(validationRequestFor("esteid2018signerAiaOcspLT.asice"))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
+                .body("signatures[0].indication", Matchers.is(INDETERMINATE))
+                .body("signatures[0].errors.content", Matchers.hasItem(VALID_VALIDATION_PROCESS_ERROR_VALUE_5))
+                .body("validSignaturesCount", Matchers.is(0));
+    }
+
+    /**
+     * TestCaseID: Asice-ValidationFail-28
+     * <p>
+     * TestType: Automated
+     * <p>
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
+     * <p>
+     * Title: Asice LTA signature signed with expired AIA OCSP certificate
+     * <p>
+     * Expected Result: The document should fail the validation
+     * <p>
+     * File: esteid2018signerAiaOcspLTA.asice
+     */
+    @Test
+    public void asiceLtaSignatureSignedWithExpiredAiaOCSP() {
+        setTestFilesDirectory("bdoc/test/timestamp/");
+        post(validationRequestFor("esteid2018signerAiaOcspLTA.asice"))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LTA))
+                .body("signatures[0].indication", Matchers.is(INDETERMINATE))
+                .body("signatures[0].errors.content", Matchers.hasItem(VALID_VALIDATION_PROCESS_ERROR_VALUE_5))
+                .body("validSignaturesCount", Matchers.is(0));
     }
 
     @Override

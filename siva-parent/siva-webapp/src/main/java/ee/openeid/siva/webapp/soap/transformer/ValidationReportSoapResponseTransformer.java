@@ -59,8 +59,11 @@ public class ValidationReportSoapResponseTransformer {
         if (signatureInfo == null)
             return null;
         Info responseSignatureInfo = new Info();
+        responseSignatureInfo.setTimestampCreationTime(signatureInfo.getTimestampCreationTime());
+        responseSignatureInfo.setOcspResponseCreationTime(signatureInfo.getOcspResponseCreationTime());
         responseSignatureInfo.setBestSignatureTime(signatureInfo.getBestSignatureTime());
         responseSignatureInfo.setTimeAssertionMessageImprint(signatureInfo.getTimeAssertionMessageImprint());
+        responseSignatureInfo.setSigningReason(signatureInfo.getSigningReason());
 
         if (signatureInfo.getSignerRole() != null) {
             responseSignatureInfo.getSignerRole().addAll(toSoapSignerRole(signatureInfo.getSignerRole()));

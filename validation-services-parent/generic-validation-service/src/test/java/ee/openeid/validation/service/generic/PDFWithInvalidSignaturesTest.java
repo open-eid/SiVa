@@ -85,21 +85,17 @@ public class PDFWithInvalidSignaturesTest extends PDFValidationServiceTest {
         assertEquals("1.2.840.113549.1.7.1", signature.getContentType());
 
         ZonedDateTime expectedDateTimeInUTC = ZonedDateTime.of(2015, 7, 9, 6, 15, 51, 0, ZoneId.of("UTC"));
-        assertEquals(expectedDateTimeInUTC.toInstant(), signature.getDateTime().toInstant());
 
-        assertTrue(signature.getSigningCertificate().isAttributePresent());
-        assertTrue(signature.getSigningCertificate().isDigestValuePresent());
-        assertTrue(signature.getSigningCertificate().isDigestValueMatch());
-        assertTrue(signature.getSigningCertificate().isIssuerSerialMatch());
+        assertEquals(expectedDateTimeInUTC.toInstant(), signature.getClaimedSigningTime().toInstant());
 
         assertSame(2, diagnosticData.getUsedCertificates().size());
         assertSame(2, signature.getCertificateChain().size());
 
-        assertSame(1, diagnosticData.getTrustedLists().size());
-        assertEquals("EE", diagnosticData.getTrustedLists().get(0).getCountryCode());
+        assertSame(2, diagnosticData.getTrustedLists().size());
+        assertTrue(diagnosticData.getTrustedLists().stream().anyMatch(tl -> "EE".equals(tl.getCountryCode())));
 
-        assertNotNull(diagnosticData.getListOfTrustedLists());
-        assertEquals("EU", diagnosticData.getListOfTrustedLists().getCountryCode());
+        assertNotNull(diagnosticData.getTrustedLists());
+        assertTrue(diagnosticData.getTrustedLists().stream().anyMatch(tl -> "EU".equals(tl.getCountryCode())));
 
         assertSame(1, reports.getDiagnosticReport().getValidationConclusion().getSignatures().size());
 

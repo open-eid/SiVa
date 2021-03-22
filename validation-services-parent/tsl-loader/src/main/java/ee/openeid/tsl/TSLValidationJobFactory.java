@@ -16,13 +16,13 @@
 
 package ee.openeid.tsl;
 
-import eu.europa.esig.dss.tsl.service.TSLValidationJob;
+import eu.europa.esig.dss.tsl.job.TLValidationJob;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TSLValidationJobFactory {
 
-    public TSLValidationJob createValidationJob() {
-        return new TSLValidationJob();
+    public TLValidationJob createValidationJob() {
+        return new TLValidationJob();
     }
 }

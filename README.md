@@ -2,7 +2,7 @@
 
 # Signature Verification Service
 
-[![Build Status](https://travis-ci.org/open-eid/SiVa.svg?branch=develop)](https://travis-ci.org/open-eid/SiVa)
+[![Build Status](https://travis-ci.com/open-eid/SiVa.svg?branch=develop)](https://travis-ci.com/open-eid/SiVa)
 [![Coverage Status](https://coveralls.io/repos/github/open-eid/SiVa/badge.svg?branch=develop)](https://coveralls.io/github/open-eid/SiVa?branch=develop)
 [![GitHub license](https://img.shields.io/badge/license-EUPLv1.1-blue.svg)](https://raw.githubusercontent.com/open-eid/SiVa/develop/LICENSE.md)
 
@@ -53,13 +53,13 @@ project by issuing below commands:
 **First start SiVa REST and SOAP web service**
 
 ```bash
-./siva-parent/siva-webapp/target/siva-webapp-3.3.0.jar
+./siva-parent/siva-webapp/target/siva-webapp-3.4.0.jar
 ```
 
 **Second we need to start SiVa XRoad validation service**
 
 ```bash
-./validation-services-parent/xroad-validation-service/target/xroad-validation-service-3.3.0.jar
+./validation-services-parent/xroad-validation-service/target/xroad-validation-service-3.4.0.jar
 ```
 
 The SiVa webapp by default runs on port **8080** and XRoad validation service starts up on port **8081**.
@@ -68,7 +68,7 @@ Easiest way to test out validation is run SiVa demo application.
 **Start SiVa Demo Application**
 
 ```bash
-./siva-parent/siva-sample-application/target/siva-sample-application-3.3.0.jar
+./siva-parent/siva-sample-application/target/siva-sample-application-3.4.0.jar
 ```
 
 Now point Your browser to URL: <http://localhost:9000>
@@ -89,7 +89,7 @@ To build the WAR file use helper script with all the correct Maven parameters.
 Copy built WAR file into Tomcat `webapps` directory and start the servlet container.
 
 ```bash
-cp siva-parent/siva-webapp/target/siva-webapp-3.3.0.war apache-tomcat-7.0.70/webapps
+cp siva-parent/siva-webapp/target/siva-webapp-3.4.0.war apache-tomcat-7.0.70/webapps
 ./apache-tomcat-7.0.77/bin/catalina.sh run
 ```
 
@@ -135,7 +135,7 @@ tests, SiVa Web application has to be started before the tests are executed.
 To load trusted test certificates in addition to TSL, "test" spring profile should be activated at startup, for example:
 
 ```bash
-java -Dspring.profiles.active=test -jar siva-webapp-3.3.0.jar
+java -Dspring.profiles.active=test -jar siva-webapp-3.4.0.jar
 ```
 
 To run load tests after unit tests in non GUI mode:

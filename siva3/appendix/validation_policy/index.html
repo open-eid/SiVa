@@ -1631,8 +1631,8 @@
 </ul>
 <p>The following validation policy versions are supported in SiVa 2.0 and 3.0 service:</p>
 <ol>
-<li><a href="validation_policy/#POLv3"><strong>SiVA Signature Validation Policy - Version 3 (POLv3)</strong></a></li>
-<li><a href="validation_policy/#POLv4"><strong>SiVA Signature Validation Policy - Version 4 (POLv4)</strong></a></li>
+<li><a href="#POLv3"><strong>SiVA Signature Validation Policy - Version 3 (POLv3)</strong></a></li>
+<li><a href="#POLv4"><strong>SiVA Signature Validation Policy - Version 4 (POLv4)</strong></a></li>
 </ol>
 <p>The following validation policy versions are marked as obsolete in SiVa 2.0 service:</p>
 <ol>
@@ -1644,8 +1644,8 @@
 <li>The validation policy documents describe validation rules for all digital signature formats that are supported in SiVa.</li>
 <li>All rules described for electronic signatures also apply for electronic seals and digital stamps if not explicitly stated otherwise.</li>
 <li>The set of signature validation constraints that are used by the Service are a combination of constraints defined in the Service itself and constraints that are implicitly defined in base components of the service, including:<ul>
-<li>Validation rules defined by the standard or specification documents of the digital signature formats supported in SiVa (described in <a href="validation_policy/#common_format">Signature format constraints</a> section).</li>
-<li>Validation rules defined by base libraries used in SiVa that implement the supported digital signature formats, i.e. the validation constraints that are imposed by the source code implementation or configuration of the base libraries (described in <a href="validation_policy/#common_libraries">Base libraries' constraints</a> section).</li>
+<li>Validation rules defined by the standard or specification documents of the digital signature formats supported in SiVa (described in <a href="http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_format">Signature format constraints</a> section).</li>
+<li>Validation rules defined by base libraries used in SiVa that implement the supported digital signature formats, i.e. the validation constraints that are imposed by the source code implementation or configuration of the base libraries (described in <a href="#common_libraries">Base libraries' constraints</a> section).</li>
 </ul>
 </li>
 </ol>
@@ -1676,7 +1676,7 @@
 </li>
 </ul>
 </li>
-<li>Constraints defined in the <a href="validation_policy/#common_POLv3_POLv4">Common validation constraints (POLv3, POLv4)</a> section</li>
+<li>Constraints defined in the <a href="#common_POLv3_POLv4">Common validation constraints (POLv3, POLv4)</a> section</li>
 </ol>
 <h2 id="siva-signature-validation-policy-version-4-polv4">SiVA Signature Validation Policy - Version 4 (POLv4)</h2>
 <p><a name="POLv4"></a></p>
@@ -1702,12 +1702,12 @@
 </ul>
 </li>
 <li>The signer's certificate is not considered acceptable by the validation process if it is not possible to determine the certificate's QC and SSCD/QSCD compliance, with the following exception:<ul>
-<li>In case of DIGIDOC-XML 1.0...1.3 and the respective hashcode formats, it is assumed that the signer's certificate complies with QC and SSCD/QSCD requirements, if the certificate is issued by <a href="https://sk.ee/en/repository/certs/">SK</a> and if the nonRepudiation bit has been set in the certificate's Key Usage field. See also <a href="https://sk.ee/en/repository/profiles/">Certificate Profile</a> documents of certificates issued by SK, <a href="http://www.etsi.org/deliver/etsi_en/319400_319499/31941202/02.01.01_60/en_31941202v020101p.pdf">ETSI EN 319 412-2</a> and <a href="http://www.etsi.org/deliver/etsi_en/319400_319499/31941203/01.01.01_60/en_31941203v010101p.pdf">ETSI EN 319 412-3</a>.</li>
+<li>In case of DIGIDOC-XML 1.0...1.3 and the respective hashcode formats, it is assumed that the signer's certificate complies with QC and SSCD/QSCD requirements, if the certificate is issued by <a href="https://www.skidsolutions.eu/en/repository/certs/">SK</a> and if the nonRepudiation bit has been set in the certificate's Key Usage field. See also <a href="https://www.skidsolutions.eu/en/repository/profiles/">Certificate Profile</a> documents of certificates issued by SK, <a href="http://www.etsi.org/deliver/etsi_en/319400_319499/31941202/02.01.01_60/en_31941202v020101p.pdf">ETSI EN 319 412-2</a> and <a href="http://www.etsi.org/deliver/etsi_en/319400_319499/31941203/01.01.01_60/en_31941203v010101p.pdf">ETSI EN 319 412-3</a>.</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>Constraints defined in the <a href="validation_policy/#common_POLv3_POLv4">Common validation constraints (POLv3, POLv4)</a> section</li>
+<li>Constraints defined in the <a href="#common_POLv3_POLv4">Common validation constraints (POLv3, POLv4)</a> section</li>
 </ol>
 <h2 id="common-validation-constraints-polv3-polv4">Common validation constraints (POLv3, POLv4)</h2>
 <p><a name="common_POLv3_POLv4"></a></p>
@@ -1722,13 +1722,13 @@
 <li>
 <p>SiVa implicitly implements constraints that are specified in the specification documents of the signature formats supported by the Service:</p>
 <ul>
-<li><a href="http://id.ee/public/bdoc-spec212-eng.pdf">BDOC 2.1</a> ASiC-E/XAdES signatures</li>
-<li><a href="https://cyber.ee/uploads/2013/05/T-4-23-Profile-for-High-Performance-Digital-Signatures1.pdf">X-Road</a> ASiC-E/XAdES signatures</li>
+<li><a href="http://id.ee/wp-content/uploads/2020/06/bdoc-spec212-eng.pdf">BDOC 2.1</a> ASiC-E/XAdES signatures</li>
+<li><a href="https://cyber.ee/research/reports/T-4-23-Profile-for-High-Performance-Digital-Signatures.pdf">X-Road</a> ASiC-E/XAdES signatures</li>
 <li><a href="http://www.etsi.org/deliver/etsi_en/319100_319199/31914201/01.01.01_60/en_31914201v010101p.pdf">PAdES</a> signatures</li>
 <li><a href="http://www.etsi.org/deliver/etsi_en/319100_319199/31913201/01.01.01_60/en_31913201v010101p.pdf">XAdES</a> signatures</li>
 <li><a href="http://www.etsi.org/deliver/etsi_en/319100_319199/31912201/01.01.01_60/en_31912201v010101p.pdf">CAdES</a> signatures</li>
-<li><a href="http://id.ee/public/DigiDoc_format_1.3.pdf">DIGIDOC-XML</a>  1.0, 1.1, 1.2, 1.3 signatures</li>
-<li>DIGIDOC-XML 1.0, 1.1, 1.2 and 1.3 signatures in <a href="http://sertkeskus.github.io/dds-documentation/api/api_docs/#ddoc-format-and-hashcode">hashcode format</a></li>
+<li><a href="https://www.id.ee/wp-content/uploads/2020/08/digidoc_format_1.3.pdf">DIGIDOC-XML</a>  1.0, 1.1, 1.2, 1.3 signatures</li>
+<li>DIGIDOC-XML 1.0, 1.1, 1.2 and 1.3 signatures in <a href="https://open-eid.github.io/allkirjastamisteenus/dds-api/#hashcode">hashcode format</a></li>
 </ul>
 </li>
 </ol>
@@ -1859,7 +1859,7 @@
 <li>The signature must contain the certificate of the trust anchor and all certificates necessary for the signature validator to build a certification path up to the trust anchor. This applies to the signer’s certificate and the certificates of trust service providers that have issued the time-stamp token and revocation data that are incorporated in the signature.</li>
 <li>Trust Anchors are:<ul>
 <li>In case of XAdES/CAdES/PAdES formats: <a href="https://ec.europa.eu/tools/lotl/eu-lotl.xml">EU Member State Trusted Lists</a>.</li>
-<li>In case of DIGIDOC-XML 1.0...1.3 and respective hashcode formats: Estonian CA certificates issued by <a href="https://sk.ee/en/repository/certs/">SK</a>, defined in local configuration file.</li>
+<li>In case of DIGIDOC-XML 1.0...1.3 and respective hashcode formats: Estonian CA certificates issued by <a href="https://www.skidsolutions.eu/en/repository/certs/">SK</a>, defined in local configuration file.</li>
 <li>In case of X-Road ASiC-E signatures, SK issued KLASS3-SK 2010, and KLASS3-SK 2010 OCSP RESPONDER and SK TIMESTAMPING AUTHORITY certificates, defined in local configuration file.</li>
 </ul>
 </li>
@@ -1894,7 +1894,7 @@
 </li>
 </ol>
 <h3 id="bdoc-container-spceific-requirements">BDOC container spceific requirements</h3>
-<p>The BDOC container must conform with <a href="http://id.ee/public/bdoc-spec212-eng.pdf">BDOC 2.1</a> standard.
+<p>The BDOC container must conform with <a href="http://id.ee/wp-content/uploads/2020/06/bdoc-spec212-eng.pdf">BDOC 2.1</a> standard.
 1.  File extension
     * ".bdoc" file extension is supported during signature validation.
 2. Only one signature shall be stored in one signatures.xml file.

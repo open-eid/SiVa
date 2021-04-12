@@ -1343,7 +1343,7 @@ library is described in each of the validation service section.</p>
 <tbody>
 <tr>
 <td><strong>Web gateway service</strong></td>
-<td>Web gateway service is a single access point to the whole SiVa webapp application. Web service is implemented as a standard Spring Boot Web application module, that accepts valid JSON or SOAP requests (see the <a href="/siva/v2/interfaces.md">Interfaces section</a>) sent by the client systems. Web service module is responsible for basic request and response handling. This includes basic validation of incoming requests (existence of required fields, permitted values, etc) and unmarshaling the request to a Java object before passing it to the next component – the Proxy service. Response from the proxy service is marshalled and sent back to the client according to respective API.</td>
+<td>Web gateway service is a single access point to the whole SiVa webapp application. Web service is implemented as a standard Spring Boot Web application module, that accepts valid JSON or SOAP requests (see the <a href="../interfaces/">Interfaces section</a>) sent by the client systems. Web service module is responsible for basic request and response handling. This includes basic validation of incoming requests (existence of required fields, permitted values, etc) and unmarshaling the request to a Java object before passing it to the next component – the Proxy service. Response from the proxy service is marshalled and sent back to the client according to respective API.</td>
 </tr>
 <tr>
 <td><strong>Report signing service</strong></td>

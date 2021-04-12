@@ -92,7 +92,7 @@ http://open-eid.github.io/SiVa/siva/appendix/validation_policy/#POLv2
 1. SiVa implicitly implements constraints that are specified in the specification documents of the signature formats supported by the Service: 
 
 	* [BDOC 2.1](http://id.ee/wp-content/uploads/2020/06/bdoc-spec212-eng.pdf) ASiC-E/XAdES signatures
-	* [X-Road](https://cyber.ee/uploads/2013/05/T-4-23-Profile-for-High-Performance-Digital-Signatures1.pdf) ASiC-E/XAdES signatures 
+	* [X-Road](https://cyber.ee/research/reports/T-4-23-Profile-for-High-Performance-Digital-Signatures.pdf) ASiC-E/XAdES signatures 
 	* [PAdES](http://www.etsi.org/deliver/etsi_en/319100_319199/31914201/01.01.01_60/en_31914201v010101p.pdf) signatures
 	* [DIGIDOC-XML](https://www.id.ee/wp-content/uploads/2020/08/digidoc_format_1.3.pdf)  1.0, 1.1, 1.2, 1.3 signatures
 	* DIGIDOC-XML 1.0, 1.1, 1.2 and 1.3 signatures in [hashcode format](http://sertkeskus.github.io/dds-documentation/api/api_docs/#ddoc-format-and-hashcode) 

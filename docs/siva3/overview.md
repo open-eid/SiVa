@@ -3,7 +3,7 @@
 ## What is SiVa?
 
 SiVa (Signature Validation) web service provides JSON and SOAP based API web interface to validate digital signatures.
-Please take a look in [Validation Policy](appendix/validation_policy) section for supported formats and applied constraints.
+Please take a look in [Validation Policy](../appendix/validation_policy/) section for supported formats and applied constraints.
 
 SiVa uses following Java libraries and command line utilities:
 

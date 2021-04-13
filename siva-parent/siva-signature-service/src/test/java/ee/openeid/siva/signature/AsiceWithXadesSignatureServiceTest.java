@@ -45,8 +45,8 @@ public class AsiceWithXadesSignatureServiceTest {
         properties.setTspUrl("http://demo.sk.ee/tsa");
         properties.setOcspUrl("http://demo.sk.ee/ocsp");
         Pkcs12Properties pkcs12Properties = new Pkcs12Properties();
-        pkcs12Properties.setPath("classpath:test.p12");
-        pkcs12Properties.setPassword("password");
+        pkcs12Properties.setPath("classpath:sign_ESTEID2018.p12");
+        pkcs12Properties.setPassword("1234");
         properties.setPkcs12(pkcs12Properties);
         TrustedListsCertificateSource trustedListsCertificateSource = new TrustedListsCertificateSource();
         asiceSignatureService = new AsiceWithXadesSignatureService(properties, trustedListsCertificateSource);

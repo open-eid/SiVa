@@ -34,6 +34,7 @@ import eu.europa.esig.dss.tsl.function.SchemeTerritoryOtherTSLPointer;
 import eu.europa.esig.dss.tsl.function.XMLOtherTSLPointer;
 import eu.europa.esig.dss.tsl.job.TLValidationJob;
 import eu.europa.esig.dss.tsl.source.LOTLSource;
+import eu.europa.esig.dss.tsl.sync.ExpirationAndSignatureCheckStrategy;
 import org.apache.commons.collections4.CollectionUtils;
 import org.digidoc4j.utils.ResourceUtils;
 import org.slf4j.Logger;
@@ -68,6 +69,7 @@ public class TSLLoader {
         tslValidationJob.setOnlineDataLoader(onlineLoader());
         tslValidationJob.setTrustedListCertificateSource(trustedListSource);
         tslValidationJob.setListOfTrustedListSources(europeanLOTL());
+        tslValidationJob.setSynchronizationStrategy(new ExpirationAndSignatureCheckStrategy());
     }
 
     void loadTSL() {

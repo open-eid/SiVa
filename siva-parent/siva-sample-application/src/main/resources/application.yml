@@ -6,9 +6,10 @@ server:
     cookie:
       http-only: false
 spring:
-  http:
+  servlet:
     multipart:
-      max-file-size: "10Mb"
+      max-file-size: "10MB"
+      max-request-size: "15MB"
   cache:
     caffeine:
       spec: maximumSize=100,expireAfterAccess=20s

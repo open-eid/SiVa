@@ -80,6 +80,7 @@ public class DocumentFormatIT extends SiVaRestTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
+    @Ignore("SIVA-278")
     public void BdocDocumentShouldPass() {
         post(validationRequestFor("Valid_IDCard_MobID_signatures.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)

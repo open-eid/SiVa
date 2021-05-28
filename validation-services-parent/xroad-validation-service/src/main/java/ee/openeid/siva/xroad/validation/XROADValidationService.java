@@ -30,6 +30,11 @@ import ee.ria.xroad.common.SystemProperties;
 import ee.ria.xroad.common.asic.AsicContainer;
 import ee.ria.xroad.common.asic.AsicContainerVerifier;
 import ee.ria.xroad.common.conf.globalconf.GlobalConf;
+import eu.europa.esig.dss.asic.common.ASiCUtils;
+import eu.europa.esig.dss.model.DSSDocument;
+import eu.europa.esig.dss.model.DSSException;
+import eu.europa.esig.dss.model.InMemoryDocument;
+import eu.europa.esig.dss.spi.DSSUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +44,11 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 @Service
 public class XROADValidationService implements ValidationService {
@@ -52,10 +61,14 @@ public class XROADValidationService implements ValidationService {
     @Override
     public Reports validateDocument(ValidationDocument validationDocument) {
         ValidationPolicy policy = signaturePolicyService.getPolicy(validationDocument.getSignaturePolicy());
-        final InputStream inputStream = new ByteArrayInputStream(Base64.decodeBase64(validationDocument.getDataBase64Encoded()));
         AsicContainer container;
-        try {
-            container = AsicContainer.read(inputStream);
+        DSSDocument dssDocument = new InMemoryDocument(Base64.decodeBase64(validationDocument.getDataBase64Encoded()));
+        long containerSize = DSSUtils.getFileByteSize(dssDocument);
+        try (ZipInputStream zipStream = new ZipInputStream(dssDocument.openStream())) {
+            while (zipStream.getNextEntry() != null) {
+                secureCopy(zipStream, containerSize);
+            }
+            container = AsicContainer.read(dssDocument.openStream());
         } catch (Exception e) {
             LOGGER.error("Unable to create AsicContainer from validation document", e);
             throw new MalformedDocumentException(e);
@@ -71,6 +84,15 @@ public class XROADValidationService implements ValidationService {
             throw new ValidationServiceException(getClass().getSimpleName(), e);
         }
     }
+
+    private void secureCopy(ZipInputStream zipStream, long containerSize) {
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            ASiCUtils.secureCopy(zipStream, baos, containerSize);
+        } catch (DSSException | IOException e) {
+            throw new MalformedDocumentException(e);
+        }
+    }
+
 
     @PostConstruct
     void loadXroadConfigurationDirectory() {

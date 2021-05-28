@@ -6,6 +6,7 @@ import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilde
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.validation.service.generic.configuration.GenericSignaturePolicyProperties;
+import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import org.junit.Assert;
 import org.junit.Before;
@@ -35,6 +36,9 @@ public class AsiceSignatureTest {
     @Autowired
     private GenericSignaturePolicyProperties policySettings;
 
+    @Autowired
+    private ContainerValidatorFactory containerValidatorFactory;
+
     @Before
     public void setUp() {
         validationService = new GenericValidationService();
@@ -43,6 +47,8 @@ public class AsiceSignatureTest {
         signaturePolicyService = new ConstraintLoadingSignaturePolicyService(policySettings);
         validationService.setSignaturePolicyService(signaturePolicyService);
         validationService.setReportConfigurationProperties(new ReportConfigurationProperties(true));
+
+        validationService.setContainerValidatorFactory(containerValidatorFactory);
     }
 
     @Test

@@ -189,7 +189,7 @@ public class TimeStampTokenValidationService implements ValidationService {
 
             ZipEntry entry;
             while ((entry = zipStream.getNextEntry()) != null) {
-                try (ZipEntryInputStream zipEntryInputStream = new ZipEntryInputStream(zipStream)) {
+                try (ZipEntryInputStream zipEntryInputStream = new ZipEntryInputStream(zipStream, null)) {
                     documents.add(new InMemoryDocument(zipEntryInputStream, entry.getName()));
                 }
             }

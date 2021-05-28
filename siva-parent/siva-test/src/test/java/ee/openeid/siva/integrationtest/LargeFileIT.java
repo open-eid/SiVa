@@ -148,7 +148,6 @@ public class LargeFileIT extends SiVaRestTests{
      * File: zip-bomb-package-zip-1gb.bdoc
      */
     @Test
-    @Ignore("DD4J-275")
     public void bdocZipBombsAreNotAccepted() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("zip-bomb-package-zip-1gb.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "zip-bomb-package-zip-1gb.bdoc","POLv3"))
@@ -223,6 +222,51 @@ public class LargeFileIT extends SiVaRestTests{
                 .body("signatures[0].signatureFormat",equalTo("XAdES_BASELINE_B_BES"))
                 .body("validatedDocument.filename",equalTo("zip-bomb-packages.bdoc"))
                 .body("validSignaturesCount", equalTo(0));
+    }
+
+    /**
+     * TestCaseID: Asics-ZipBomb-1
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: Asics Zip container with Bomb file
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: zip-bomb-package-zip-1gb-asics.asics
+     */
+    @Test
+    public void asicsZipBombsAreNotAccepted() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("zip-bomb-package-zip-1gb-asics.asics"));
+        post(validationRequestWithValidKeys(encodedString, "zip-bomb-package-zip-1gb.asics","POLv3"))
+                .then()
+                .body("requestErrors[0].key", Matchers.is("document"))
+                .body("requestErrors[0].message", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
+    }
+
+    /**
+     * TestCaseID: xRoad-ZipBomb-1
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: xRoad Zip container with Bomb file
+     *
+     * Expected Result: The document should fail the validation
+     *
+     * File: zip-bomb-package-zip-1gb.bdoc
+     */
+
+    @Test
+    public void validatingSimpleXroadDocumentShouldReturnAReport() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("zip-bomb-package-zip-1gb.bdoc"));
+        post(validationRequestWithDocumentTypeValidKeys(encodedString, "zip-bomb-package-zip-1gb.asice", "xroad", VALID_SIGNATURE_POLICY_3))
+                .then()
+                .body("requestErrors[0].key", Matchers.is("document"))
+                .body("requestErrors[0].message", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
 

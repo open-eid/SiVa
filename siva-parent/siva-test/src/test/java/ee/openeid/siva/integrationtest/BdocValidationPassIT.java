@@ -597,6 +597,40 @@ public class BdocValidationPassIT extends SiVaRestTests {
                 .body("validSignaturesCount", Matchers.is(1));
     }
 
+    /**
+     * TestCaseID: Bdoc-ValidationPass-24
+     * <p>
+     * TestType: Automated
+     * <p>
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
+     * <p>
+     * Title: Bdoc with empty datafiles
+     * <p>
+     * Expected Result: The document should pass the validation but with warnings about empty datafiles
+     * <p>
+     * File: signed-container-with-empty-datafiles.bdoc
+     */
+    @Test
+    public void bdocWithEmptyDataFilesShouldPass() {
+        setTestFilesDirectory("bdoc/test/timemark/");
+        post(validationRequestFor("signed-container-with-empty-datafiles.bdoc"))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT_TM))
+                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[0].signatureScopes.size()", Matchers.is(5))
+                .body("signatures[0].signatureScopes[0].name", Matchers.is("data-file-1.txt"))
+                .body("signatures[0].signatureScopes[1].name", Matchers.is("empty-file-2.txt"))
+                .body("signatures[0].signatureScopes[2].name", Matchers.is("data-file-3.txt"))
+                .body("signatures[0].signatureScopes[3].name", Matchers.is("empty-file-4.txt"))
+                .body("signatures[0].signatureScopes[4].name", Matchers.is("data-file-5.txt"))
+                .body("signatures[0].warnings.size()", Matchers.is(2))
+                .body("signatures[0].warnings[0].content", Matchers.is("Data file 'empty-file-2.txt' is empty"))
+                .body("signatures[0].warnings[1].content", Matchers.is("Data file 'empty-file-4.txt' is empty"))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(1));
+    }
+
     @Override
     protected String getTestFilesDirectory() {
         return testFilesDirectory;

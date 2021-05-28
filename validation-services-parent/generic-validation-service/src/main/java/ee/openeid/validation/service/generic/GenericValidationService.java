@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Riigi Infosüsteemide Amet
+ * Copyright 2016 - 2021 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -28,6 +28,7 @@ import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyExceptio
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import ee.openeid.tsl.configuration.AlwaysFailingCRLSource;
 import ee.openeid.tsl.configuration.AlwaysFailingOCSPSource;
+import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
 import ee.openeid.validation.service.generic.validator.report.GenericValidationReportBuilder;
 import ee.openeid.validation.service.generic.validator.report.ReportBuilderData;
 import eu.europa.esig.dss.enumerations.TokenExtractionStategy;
@@ -60,6 +61,7 @@ public class GenericValidationService implements ValidationService {
     private ConstraintLoadingSignaturePolicyService signaturePolicyService;
     private ReportConfigurationProperties reportConfigurationProperties;
     private ProxyConfig proxyConfig;
+    private ContainerValidatorFactory containerValidatorFactory;
 
     @Override
     public Reports validateDocument(ValidationDocument validationDocument) throws DSSException {
@@ -81,9 +83,8 @@ public class GenericValidationService implements ValidationService {
             //Initialize once and use in different components to reduce response time for large PDF files validation.
             List<AdvancedSignature> signatures = validator.getSignatures();
 
-            RevocationFreshnessValidator revocationFreshnessValidator = new RevocationFreshnessValidator(reports, signatures);
-
-            revocationFreshnessValidator.validate();
+            new RevocationFreshnessValidator(reports, signatures).validate();
+            containerValidatorFactory.create(reports, validationDocument).validate();
 
             if (LOGGER.isInfoEnabled()) {
                 LOGGER.info(
@@ -181,5 +182,10 @@ public class GenericValidationService implements ValidationService {
     @Autowired
     public void setReportConfigurationProperties(ReportConfigurationProperties reportConfigurationProperties) {
         this.reportConfigurationProperties = reportConfigurationProperties;
+    }
+
+    @Autowired
+    public void setContainerValidatorFactory(ContainerValidatorFactory containerValidatorFactory) {
+        this.containerValidatorFactory = containerValidatorFactory;
     }
 }

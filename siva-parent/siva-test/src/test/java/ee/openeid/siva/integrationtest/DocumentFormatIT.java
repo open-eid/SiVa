@@ -80,7 +80,6 @@ public class DocumentFormatIT extends SiVaRestTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
-    @Ignore("SIVA-278")
     public void BdocDocumentShouldPass() {
         post(validationRequestFor("Valid_IDCard_MobID_signatures.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -88,7 +87,8 @@ public class DocumentFormatIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())
-                .body("signatures[0].warnings", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings", Matchers.hasSize(1))
+                .body("signatures[0].warnings[0].content", Matchers.is("Data file 'Proov (2).txt' is empty"))
                 .body("signaturesCount", Matchers.is(2))
                 .body("validSignaturesCount", Matchers.is(2));
     }

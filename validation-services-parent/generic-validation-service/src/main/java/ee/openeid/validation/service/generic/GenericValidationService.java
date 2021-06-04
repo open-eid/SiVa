@@ -83,7 +83,7 @@ public class GenericValidationService implements ValidationService {
             //Initialize once and use in different components to reduce response time for large PDF files validation.
             List<AdvancedSignature> signatures = validator.getSignatures();
 
-            new RevocationFreshnessValidator(reports, signatures).validate();
+            new RevocationFreshnessValidator(reports).validate();
             containerValidatorFactory.create(reports, validationDocument).validate();
 
             if (LOGGER.isInfoEnabled()) {

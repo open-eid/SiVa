@@ -789,6 +789,31 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
+    /**
+     * TestCaseID: Bdoc-ValidationFail-32
+     * <p>
+     * TestType: Automated
+     * <p>
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
+     * <p>
+     * Title: Bdoc OCSP certificate in both signature and OCSP token
+     * <p>
+     * Expected Result: The document should fail the validation
+     * <p>
+     * File: NoOcspCertificateAnywhere.bdoc
+     */
+    @Test
+    public void bdocTimemarkNoOcspCertificate() {
+        setTestFilesDirectory("bdoc/test/timemark/");
+        post(validationRequestFor("NoOcspCertificateAnywhere.bdoc"))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].errors.content", Matchers.hasItem("OCSP Responder does not meet TM requirements"))
+                .body("validSignaturesCount", Matchers.is(0));
+    }
+
     @Override
     protected String getTestFilesDirectory() {
         return testFilesDirectory;

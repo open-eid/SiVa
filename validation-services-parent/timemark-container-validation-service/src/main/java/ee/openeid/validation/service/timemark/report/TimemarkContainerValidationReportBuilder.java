@@ -34,6 +34,7 @@ import org.digidoc4j.Signature;
 import org.digidoc4j.SignatureProfile;
 import org.digidoc4j.ValidationResult;
 import org.digidoc4j.X509Cert;
+import org.digidoc4j.exceptions.CertificateNotFoundException;
 import org.digidoc4j.exceptions.DigiDoc4JException;
 import org.digidoc4j.impl.asic.asice.AsicESignature;
 import org.slf4j.LoggerFactory;
@@ -318,14 +319,25 @@ public abstract class TimemarkContainerValidationReportBuilder {
 
     protected List<Certificate> getCertificateList(Signature signature) {
         List<Certificate> certificateList = new ArrayList<>();
-        if (signature.getOCSPCertificate() != null) {
-            X509Certificate x509Certificate = signature.getOCSPCertificate().getX509Certificate();
+
+        X509Cert ocspCertificate;
+        try {
+            ocspCertificate = signature.getOCSPCertificate();
+        } catch (CertificateNotFoundException e) {
+            LOGGER.warn("Failed to acquire OCSP certificate from signature", e);
+            ocspCertificate = null;
+        }
+        if (ocspCertificate != null) {
+            X509Certificate x509Certificate = ocspCertificate.getX509Certificate();
             certificateList.add(getCertificate(x509Certificate, CertificateType.REVOCATION));
         }
-        if (signature.getSigningCertificate() != null) {
-            X509Certificate x509Certificate = signature.getSigningCertificate().getX509Certificate();
+
+        X509Cert signingCertificate = signature.getSigningCertificate();
+        if (signingCertificate != null) {
+            X509Certificate x509Certificate = signingCertificate.getX509Certificate();
             certificateList.add(getCertificate(x509Certificate, CertificateType.SIGNING));
         }
+
         return certificateList;
     }
 

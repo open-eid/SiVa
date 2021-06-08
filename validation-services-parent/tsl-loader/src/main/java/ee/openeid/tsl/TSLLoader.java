@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2016 - 2021 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -22,7 +22,6 @@ import eu.europa.esig.dss.model.InMemoryDocument;
 import eu.europa.esig.dss.service.http.commons.CommonsDataLoader;
 import eu.europa.esig.dss.service.http.commons.FileCacheDataLoader;
 import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
-import eu.europa.esig.dss.service.http.proxy.ProxyProperties;
 import eu.europa.esig.dss.spi.client.http.DSSFileLoader;
 import eu.europa.esig.dss.spi.client.http.IgnoreDataLoader;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
@@ -43,6 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.time.Duration;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -107,6 +107,10 @@ public class TSLLoader {
 
     public DSSFileLoader onlineLoader() {
         FileCacheDataLoader onlineFileLoader = new FileCacheDataLoader();
+        if (configurationProperties.getOnlineCacheExpirationTime() != null) {
+            Duration cacheExpirationTime = configurationProperties.getOnlineCacheExpirationTime();
+            onlineFileLoader.setCacheExpirationTime(cacheExpirationTime.toMillis());
+        }
         onlineFileLoader.setDataLoader(createCommonsDataLoader());
         return onlineFileLoader;
     }

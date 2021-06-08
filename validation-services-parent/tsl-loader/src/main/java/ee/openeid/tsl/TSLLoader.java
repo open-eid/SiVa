@@ -66,7 +66,11 @@ public class TSLLoader {
 
     private void initTslValidationJob() {
         tslValidationJob = tslValidationJobFactory.createValidationJob();
-        tslValidationJob.setOnlineDataLoader(onlineLoader());
+        if (configurationProperties.isLoadFromCache()) {
+            tslValidationJob.setOfflineDataLoader(offlineLoader());
+        } else {
+            tslValidationJob.setOnlineDataLoader(onlineLoader());
+        }
         tslValidationJob.setTrustedListCertificateSource(trustedListSource);
         tslValidationJob.setListOfTrustedListSources(europeanLOTL());
         tslValidationJob.setSynchronizationStrategy(new ExpirationAndSignatureCheckStrategy());

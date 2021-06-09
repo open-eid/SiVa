@@ -16,12 +16,9 @@
 
 package ee.openeid.validation.service.generic;
 
-import eu.europa.esig.dss.diagnostic.CertificateRevocationWrapper;
+import ee.openeid.validation.service.generic.validator.TokenUtils;
 import eu.europa.esig.dss.diagnostic.CertificateWrapper;
-import eu.europa.esig.dss.diagnostic.RevocationWrapper;
 import eu.europa.esig.dss.diagnostic.SignatureWrapper;
-import eu.europa.esig.dss.diagnostic.TokenProxy;
-import eu.europa.esig.dss.enumerations.CertificateStatus;
 import eu.europa.esig.dss.enumerations.RevocationType;
 import eu.europa.esig.dss.enumerations.TimestampType;
 import eu.europa.esig.dss.validation.reports.Reports;
@@ -97,8 +94,8 @@ public class RevocationFreshnessValidator {
     private static Date findEarliestValidSignatureTimestampProductionTime(SignatureWrapper signatureWrapper) {
         return signatureWrapper.getTimestampList().stream()
                 .filter(timestamp -> TimestampType.SIGNATURE_TIMESTAMP.equals(timestamp.getType()))
-                .filter(RevocationFreshnessValidator::isTokenSignatureIntactAndSignatureValidAndTrustedChain)
-                .filter(timestamp -> timestamp.isMessageImprintDataFound() && timestamp.isMessageImprintDataIntact())
+                .filter(TokenUtils::isTokenSignatureIntactAndSignatureValidAndTrustedChain)
+                .filter(TokenUtils::isTimestampTokenMessageImprintDataFoundAndMessageImprintDataIntact)
                 .flatMap(timestamp -> Optional.ofNullable(timestamp.getProductionTime()).stream())
                 .min(Comparator.naturalOrder())
                 .orElse(null);
@@ -107,8 +104,8 @@ public class RevocationFreshnessValidator {
     private static List<Date> findValidCRLNextUpdateDates(CertificateWrapper certificateWrapper) {
         return certificateWrapper.getCertificateRevocationData().stream()
                 .filter(revocation -> RevocationType.CRL.equals(revocation.getRevocationType()))
-                .filter(RevocationFreshnessValidator::isTokenSignatureIntactAndSignatureValidAndTrustedChain)
-                .filter(RevocationFreshnessValidator::isRevocationForCertificateAndCertificateStatusGood)
+                .filter(TokenUtils::isTokenSignatureIntactAndSignatureValidAndTrustedChain)
+                .filter(TokenUtils::isRevocationTokenForCertificateAndCertificateStatusGood)
                 .flatMap(crl -> Optional.ofNullable(crl.getNextUpdate()).stream())
                 .collect(Collectors.toList());
     }
@@ -116,25 +113,10 @@ public class RevocationFreshnessValidator {
     private static List<Date> findValidOCSPProducedAtDates(CertificateWrapper certificateWrapper) {
         return certificateWrapper.getCertificateRevocationData().stream()
                 .filter(revocation -> RevocationType.OCSP.equals(revocation.getRevocationType()))
-                .filter(RevocationFreshnessValidator::isTokenSignatureIntactAndSignatureValidAndTrustedChain)
-                .filter(RevocationFreshnessValidator::isRevocationForCertificateAndCertificateStatusGood)
+                .filter(TokenUtils::isTokenSignatureIntactAndSignatureValidAndTrustedChain)
+                .filter(TokenUtils::isRevocationTokenForCertificateAndCertificateStatusGood)
                 .flatMap(ocsp -> Optional.ofNullable(ocsp.getProductionDate()).stream())
                 .collect(Collectors.toList());
-    }
-
-    private static boolean isTokenSignatureIntactAndSignatureValidAndTrustedChain(TokenProxy token) {
-        return token.isSignatureIntact() && token.isSignatureValid() && (token.isTrustedChain() || Optional
-                .ofNullable(token.getSigningCertificate()).map(TokenProxy::isTrustedChain).orElse(false)
-        );
-    }
-
-    private static boolean isRevocationForCertificateAndCertificateStatusGood(RevocationWrapper revocation) {
-        if (revocation instanceof CertificateRevocationWrapper) {
-            CertificateRevocationWrapper certificateRevocation = (CertificateRevocationWrapper) revocation;
-            return (certificateRevocation.getStatus() == CertificateStatus.GOOD);
-        } else {
-            return false;
-        }
     }
 
     private static Date findEarliestTime(List<Date> dateList, Predicate<Date> datePredicate) {

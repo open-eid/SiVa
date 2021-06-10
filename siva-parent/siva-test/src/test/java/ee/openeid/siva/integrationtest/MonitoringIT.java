@@ -79,7 +79,7 @@ public class MonitoringIT extends SiVaRestTests {
      */
     @Test
     public void requestingWebAppMonitoringHeartbeatStatusShouldReturnProperStructure() {
-        getMonitoringHealth()
+        getMonitoringHeartbeat()
                 .then()
                 .body(matchesJsonSchemaInClasspath("MonitorHeartbeatSchema.json"))
                 .body("status", Matchers.is("UP"));

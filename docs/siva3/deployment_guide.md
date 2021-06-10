@@ -306,17 +306,18 @@ This information is sent to log feeds (at INFO level) which can be redirected to
 
 ## Monitoring
 
-SiVa webapps provide an endpoint for external monitoring tools to periodically check the generic service health status.
+SiVa webapps provide endpoints for external monitoring tools to periodically check the generic service health status.
+
+### Health Endpoint
 
 !!! note
-    Note that this endpoint is disabled by default.
-
+    Note that this endpoint is not exposed by default.
 
 The url for accessing JSON formatted health information with HTTP GET is `/monitoring/health` . See the [Interfaces section](/siva/v3/interfaces.md#service-health-monitoring) for response structure and details.
 
-* **Enabling and disabling the monitoring endpoint**
+* **Exposing the health monitoring endpoint**
 
-To enable the endpoint, use the following configuration parameter:
+To expose the endpoint, use the following configuration parameter:
 ```bash
 management.endpoints.web.exposure.include=health
 ```
@@ -327,6 +328,28 @@ The endpoint is implemented as a customized Spring boot [health endpoint](http:/
 
 Demo webapp and Siva webapp include additional information about the health of their dependent services.
 These links to dependent web services have been preconfigured. For example, the Demo webapp is preset to check whether the Siva webapp is accessible from the following url (parameter `siva.service.serviceHost` value)/monitoring/health and the Siva webapp verifies that the X-road validation service webapp is accessible by checking the default url (configured by parameter `siva.proxy.xroadUrl` value)/monitoring/health url.
+
+### Heartbeat endpoint
+
+!!! note
+    Note that this endpoint is not enabled nor exposed by default.
+
+!!! note
+    Note that this endpoint requires the health endpoint to be enabled and exposed in order to function.
+
+The url for accessing JSON formatted heartbeat information with HTTP GET is `/monitoring/heartbeat`. See the [Interfaces section](/siva/v3/interfaces.md#simplified-health-monitoring) for response structure and details.
+
+* **Enabling and exposing the heartbeat monitoring endpoint**
+
+To enable and expose the endpoint, use the following configuration parameters:
+```bash
+management.endpoints.web.exposure.include=health,heartbeat
+management.endpoint.heartbeat.enabled=true
+```
+
+* **Simplified service health indicator**
+
+The endpoint is implemented by polling the health information directly from the underlying health endpoint implementation, but exposing just the aggregated overall service status, hiding everything else.
 
 
 ## Validation Report Signature

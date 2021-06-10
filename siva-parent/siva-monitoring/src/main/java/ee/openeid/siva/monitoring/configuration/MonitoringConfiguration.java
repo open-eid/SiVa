@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2016 - 2021 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -13,9 +13,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the Licence for the specific language governing permissions and limitations under the Licence.
  */
+
 package ee.openeid.siva.monitoring.configuration;
 
+import ee.openeid.siva.monitoring.enpoint.HeartbeatEndpoint;
 import ee.openeid.siva.monitoring.indicator.ApplicationHealthIndicator;
+import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
+import org.springframework.boot.actuate.health.HealthEndpoint;
 import org.springframework.context.annotation.Bean;
 
 import javax.servlet.ServletContext;
@@ -28,6 +32,12 @@ public abstract class MonitoringConfiguration {
     @Bean
     public ApplicationHealthIndicator health(ServletContext context) {
         return new ApplicationHealthIndicator(context);
+    }
+
+    @Bean
+    @ConditionalOnAvailableEndpoint(endpoint = HeartbeatEndpoint.class)
+    public HeartbeatEndpoint heartbeatEndpoint(HealthEndpoint healthEndpoint) {
+        return new HeartbeatEndpoint(healthEndpoint);
     }
 
 }

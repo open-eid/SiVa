@@ -54,14 +54,35 @@ public class MonitoringIT extends SiVaRestTests {
      * File: not relevant
      */
     @Test
-    public void requestingWebAppMonitoringStatusShouldReturnProperStructure() {
-        getMonitoring()
+    public void requestingWebAppMonitoringHealthStatusShouldReturnProperStructure() {
+        getMonitoringHealth()
                 .then()
-                .body(matchesJsonSchemaInClasspath("MonitorStatusSchema.json"))
+                .body(matchesJsonSchemaInClasspath("MonitorHealthSchema.json"))
                 .body("status", Matchers.is("UP"))
                 .body("components.health.status", Matchers.is("UP"))
                 .body("components.link1.status", Matchers.is("UP"))
                 .body("components.link1.details.name", Matchers.is("xRoadService"));
+    }
+
+    /**
+     * TestCaseID: WebApp-Monitoring-2
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#simplified-health-monitoring
+     *
+     * Title: Heartbeat monitor response structure
+     *
+     * Expected Result: response matches the expected structure of JSON
+     *
+     * File: not relevant
+     */
+    @Test
+    public void requestingWebAppMonitoringHeartbeatStatusShouldReturnProperStructure() {
+        getMonitoringHeartbeat()
+                .then()
+                .body(matchesJsonSchemaInClasspath("MonitorHeartbeatSchema.json"))
+                .body("status", Matchers.is("UP"));
     }
 
     @Override

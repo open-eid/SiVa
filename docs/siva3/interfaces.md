@@ -703,6 +703,35 @@ Sample response:
     }
 }
 ```
+
+## Simplified health monitoring
+
+SiVa webapp provide a simple interface for external monitoring tools (to periodically check the generic service health status).
+
+### The request
+The simplified monitoring endpoint is accessible via HTTP GET at **/monitoring/heartbeat** url.
+
+Sample request:
+```
+GET https://<server url>/monitoring/heartbeat
+```
+
+### The response
+
+As a response, a JSON object is returned with the following information:
+
+| Field | Description |
+| ---------| --------------- |
+| status | General status of the webapp. <br/>Possible values: <ul><li>**DOWN** - when the webapp or any of its dependencies down.</li><li>**UP** - the default value. </li></ul> |
+
+Sample response:
+
+```json
+{
+    "status": "UP"
+}
+```
+
 ## Changes in API compared to V3 v3.3.0 
 
 Changes are described using notation from REST endpoint.

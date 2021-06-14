@@ -17,11 +17,13 @@
 package ee.openeid.siva.webapp.request.validation.validators;
 
 import ee.openeid.siva.webapp.request.validation.annotations.ValidSignatureFilename;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+@Slf4j
 public class ValidSignatureFilenameConstraintValidator implements ConstraintValidator<ValidSignatureFilename, String> {
 
     @Override
@@ -31,8 +33,17 @@ public class ValidSignatureFilenameConstraintValidator implements ConstraintVali
 
     @Override
     public boolean isValid(String filename, ConstraintValidatorContext constraintValidatorContext) {
-        String extension = FilenameUtils.getExtension(filename);
+        String extension = extractFilenameExtension(filename);
         return extension != null && extension.equalsIgnoreCase("xml");
+    }
+
+    private static String extractFilenameExtension(String filename) {
+        try {
+            return FilenameUtils.getExtension(filename);
+        } catch (IllegalArgumentException e) {
+            log.warn("Failed to extract signature filename extension: {}", e.getMessage());
+        }
+        return null;
     }
 
 }

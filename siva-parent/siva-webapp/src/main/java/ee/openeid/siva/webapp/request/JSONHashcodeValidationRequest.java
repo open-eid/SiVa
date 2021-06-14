@@ -19,9 +19,9 @@ package ee.openeid.siva.webapp.request;
 import ee.openeid.siva.webapp.request.validation.annotations.ValidReportType;
 import ee.openeid.siva.webapp.request.validation.annotations.ValidSignaturePolicy;
 import lombok.Data;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 

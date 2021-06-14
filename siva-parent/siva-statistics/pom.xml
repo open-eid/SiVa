@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2017 Riigi Infosüsteemide Amet
+  ~ Copyright 2016 - 2021 Riigi Infosüsteemi Amet
   ~
   ~ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
   ~ the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -39,7 +39,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>
-            <version>4.4</version>
+            <version>${commons.collections.version}</version>
         </dependency>
 
         <!-- Testing -->

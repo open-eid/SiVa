@@ -27,6 +27,8 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -61,7 +63,7 @@ public class RevocationFreshnessValidator {
             return; // No valid timestamp present for this signature
         }
 
-        Predicate<Date> timestampNotAfterPredicate = Predicate.not(timestampProductionTime::after);
+        Predicate<Date> timestampNotAfterPredicate = notAfterPredicateWithSamePrecision(timestampProductionTime);
 
         List<Date> validCrlNextUpdateDates = findValidCRLNextUpdateDates(signingCertificateWrapper);
         if (validCrlNextUpdateDates.stream().anyMatch(timestampNotAfterPredicate)) {
@@ -117,6 +119,25 @@ public class RevocationFreshnessValidator {
                 .filter(TokenUtils::isRevocationTokenForCertificateAndCertificateStatusGood)
                 .flatMap(ocsp -> Optional.ofNullable(ocsp.getProductionDate()).stream())
                 .collect(Collectors.toList());
+    }
+
+    private static Predicate<Date> notAfterPredicateWithSamePrecision(final Date referenceTime) {
+        return (timeToCompare) -> {
+            Instant referenceInstant = referenceTime.toInstant();
+            Instant instantToCompare = timeToCompare.toInstant();
+
+            boolean referenceInstantHighPrecision = referenceInstant.getNano() != 0L;
+            boolean instantToCompareHighPrecision = instantToCompare.getNano() != 0L;
+
+            if (referenceInstantHighPrecision && !instantToCompareHighPrecision) {
+                referenceInstant = referenceInstant.truncatedTo(ChronoUnit.SECONDS);
+            }
+            if (instantToCompareHighPrecision && !referenceInstantHighPrecision) {
+                instantToCompare = instantToCompare.truncatedTo(ChronoUnit.SECONDS);
+            }
+
+            return !referenceInstant.isAfter(instantToCompare);
+        };
     }
 
     private static Date findEarliestTime(List<Date> dateList, Predicate<Date> datePredicate) {

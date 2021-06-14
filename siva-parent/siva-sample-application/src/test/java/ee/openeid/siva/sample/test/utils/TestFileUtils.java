@@ -23,6 +23,7 @@ import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 public final class TestFileUtils {
     private static final long TIMESTAMP = System.currentTimeMillis() / 1000L;
@@ -32,7 +33,7 @@ public final class TestFileUtils {
 
     public static UploadedFile generateUploadFile(TemporaryFolder testingFolder, String filename, String fileContents) throws IOException {
         final File inputFile = testingFolder.newFile(filename);
-        FileUtils.writeStringToFile(inputFile, fileContents);
+        FileUtils.writeStringToFile(inputFile, fileContents, StandardCharsets.UTF_8);
 
         UploadedFile uploadedFile = new UploadedFile();
         uploadedFile.setFilename(inputFile.getName());

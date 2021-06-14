@@ -433,7 +433,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
 
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
         assertErrorResponse(response,
-                new RequestError(SIGNATURE_FILES, MAY_NOT_BE_EMPTY),
+                new RequestError(SIGNATURE_FILES, MUST_NOT_BE_EMPTY),
                 new RequestError(SIGNATURE_FILES, MUST_NOT_BE_NULL)
         );
     }
@@ -458,7 +458,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
 
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
         assertErrorResponse(response,
-                new RequestError(SIGNATURE_FILES, MAY_NOT_BE_EMPTY)
+                new RequestError(SIGNATURE_FILES, MUST_NOT_BE_EMPTY)
         );
     }
 
@@ -598,7 +598,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
         assertErrorResponse(response,
                 new RequestError(DATAFILES_FILENAME, INVALID_FILENAME),
-                new RequestError(DATAFILES_FILENAME, MAY_NOT_BE_EMPTY)
+                new RequestError(DATAFILES_FILENAME, MUST_NOT_BE_EMPTY)
         );
     }
 
@@ -623,7 +623,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
         assertErrorResponse(response,
                 new RequestError(DATAFILES_FILENAME, INVALID_FILENAME_SIZE),
-                new RequestError(DATAFILES_FILENAME, MAY_NOT_BE_EMPTY)
+                new RequestError(DATAFILES_FILENAME, MUST_NOT_BE_EMPTY)
         );
     }
 
@@ -717,7 +717,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
 
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
         assertErrorResponse(response,
-                new RequestError(DATAFILES_HASH, MAY_NOT_BE_EMPTY),
+                new RequestError(DATAFILES_HASH, MUST_NOT_BE_BLANK),
                 new RequestError(DATAFILES_HASH, INVALID_BASE_64)
         );
     }
@@ -742,7 +742,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
 
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
         assertErrorResponse(response,
-                new RequestError(DATAFILES_HASH, MAY_NOT_BE_EMPTY),
+                new RequestError(DATAFILES_HASH, MUST_NOT_BE_BLANK),
                 new RequestError(DATAFILES_HASH, INVALID_BASE_64),
                 new RequestError(DATAFILES_HASH, INVALID_HASH_SIZE)
         );

@@ -26,7 +26,7 @@ public class ValidSignatureFilenameTest extends AnnotationValidatorTestBase {
     private static final String INVALID_FILENAME = "Invalid filename";
     private static final String INVALID_SIZE = "size must be between 1 and 260";
     private static final String INVALID_FILENAME_EXTENSION = "Invalid filename extension. Only xml files accepted.";
-    private static final String MAY_NOT_BE_EMPTY = "may not be empty";
+    private static final String MUST_NOT_BE_BLANK = "must not be blank";
 
     @Test
     public void validFilename() {
@@ -38,9 +38,9 @@ public class ValidSignatureFilenameTest extends AnnotationValidatorTestBase {
 
     @Test
     public void invalidFilename() {
-        invalidSignatureFilename("", INVALID_SIZE, INVALID_FILENAME_EXTENSION, MAY_NOT_BE_EMPTY);
-        invalidSignatureFilename(" ", INVALID_FILENAME_EXTENSION, MAY_NOT_BE_EMPTY);
-        invalidSignatureFilename(null, INVALID_FILENAME, INVALID_FILENAME_EXTENSION, MAY_NOT_BE_EMPTY);
+        invalidSignatureFilename("", INVALID_SIZE, INVALID_FILENAME_EXTENSION, MUST_NOT_BE_BLANK);
+        invalidSignatureFilename(" ", INVALID_FILENAME_EXTENSION, MUST_NOT_BE_BLANK);
+        invalidSignatureFilename(null, INVALID_FILENAME, INVALID_FILENAME_EXTENSION, MUST_NOT_BE_BLANK);
         invalidSignatureFilename(StringUtils.repeat('a', 261), INVALID_FILENAME_EXTENSION, INVALID_SIZE);
 
         invalidSignatureFilename("%", INVALID_FILENAME_EXTENSION);

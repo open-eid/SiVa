@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2016 Riigi Infosüsteemide Amet
+  ~ Copyright 2016 - 2021 Riigi Infosüsteemi Amet
   ~
   ~ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
   ~ the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -97,18 +97,34 @@
 
     <properties>
         <coveralls.repo.token>NA</coveralls.repo.token>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.root>${basedir}</project.root>
         <project.encoding>UTF-8</project.encoding>
+
         <language.level>11</language.level>
+
         <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss'Z'</maven.build.timestamp.format>
+
+        <bouncycastle.version>1.68</bouncycastle.version>
         <dss.version>5.7.d4j.2</dss.version>
-        <bouncycastle.version>1.65</bouncycastle.version>
-        <spring.boot.version>2.2.12.RELEASE</spring.boot.version>
-        <junit.version>4.13.1</junit.version>
-        <junit.jupiter.version>5.7.0</junit.jupiter.version>
-        <powermock.version>2.0.4</powermock.version>
+        <commons.codec.version>1.15</commons.codec.version>
+        <commons.collections.version>4.4</commons.collections.version>
+        <commons.io.version>2.9.0</commons.io.version>
+        <jackson.version>2.12.3</jackson.version>
+        <junit.jupiter.version>5.7.2</junit.jupiter.version>
+        <junit.platform.version>1.7.2</junit.platform.version>
+        <junit.version>4.13.2</junit.version>
+        <json.version>20210307</json.version>
+        <logback.version>1.2.3</logback.version>
+        <lombok.version>1.18.20</lombok.version>
+        <mockito.version>3.11.0</mockito.version>
+        <powermock.version>2.0.9</powermock.version>
+        <snakeyaml.version>1.29</snakeyaml.version>
+        <spring.boot.version>2.3.12.RELEASE</spring.boot.version>
+        <xmlsec.version>2.1.6</xmlsec.version>
+
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
         <sonar.jacoco.reportPath>${project.basedir}/../../target/jacoco.exec</sonar.jacoco.reportPath>
@@ -120,7 +136,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.1.2</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -135,7 +151,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-pmd-plugin</artifactId>
-                <version>3.11.0</version>
+                <version>3.14.0</version>
             </plugin>
         </plugins>
     </reporting>
@@ -164,7 +180,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.6</version>
+                <version>0.8.7</version>
                 <configuration>
                     <excludes>
                         <exclude>**/*Application.*</exclude>
@@ -194,7 +210,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M4</version>
+                <version>3.0.0-M5</version>
                 <configuration>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                     <argLine>${argLine} -Dfile.encoding=UTF-8 -Xmx1024m</argLine>
@@ -214,7 +230,7 @@
                     <plugin>
                         <groupId>org.owasp</groupId>
                         <artifactId>dependency-check-maven</artifactId>
-                        <version>6.0.3</version>
+                        <version>6.2.2</version>
                         <configuration>
                             <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
                             <failOnError>false</failOnError>

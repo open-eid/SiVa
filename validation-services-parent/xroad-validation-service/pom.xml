@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2017 Riigi Infosüsteemide Amet
+  ~ Copyright 2016 - 2021 Riigi Infosüsteemi Amet
   ~
   ~ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
   ~ the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -75,23 +75,22 @@
         <dependency>
             <groupId>org.zeroturnaround</groupId>
             <artifactId>zt-zip</artifactId>
-            <version>1.13</version>
+            <version>1.14</version>
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>org.exist-db.thirdparty.xerces</groupId>
+            <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
             <version>2.12.1</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.12.0</version>
         </dependency>
         <dependency>
             <groupId>com.sun.xml.messaging.saaj</groupId>
             <artifactId>saaj-impl</artifactId>
-            <version>1.5.1</version>
+            <version>1.5.3</version>
         </dependency>
         <dependency>
             <groupId>org.apache.santuario</groupId>
@@ -312,7 +311,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>3.1.2</version>
                 <configuration>
                     <archive>
                         <manifestEntries>

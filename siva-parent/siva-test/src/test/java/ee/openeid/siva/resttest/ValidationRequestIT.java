@@ -100,8 +100,8 @@ public class ValidationRequestIT extends SiVaRestTests {
     public void validationRequestEmptyBody() {
         String response = post(new JSONObject().toString()).thenReturn().body().asString();
 
-        assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, MAY_NOT_BE_EMPTY) == 1);
-        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, MAY_NOT_BE_EMPTY) == 1);
+        assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, MUST_NOT_BE_EMPTY) == 1);
+        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, MUST_NOT_BE_BLANK) == 1);
         assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, INVALID_FILENAME) == 1);
         assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, INVALID_BASE_64) == 1);
     }
@@ -129,8 +129,8 @@ public class ValidationRequestIT extends SiVaRestTests {
 
         String json = post(jsonObject.toString()).thenReturn().body().asString();
 
-        assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(json, FILENAME, MAY_NOT_BE_EMPTY) == 1);
-        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(json, DOCUMENT, MAY_NOT_BE_EMPTY) == 1);
+        assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(json, FILENAME, MUST_NOT_BE_EMPTY) == 1);
+        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(json, DOCUMENT, MUST_NOT_BE_BLANK) == 1);
         assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(json, DOCUMENT, INVALID_BASE_64) == 1);
     }
 
@@ -182,9 +182,9 @@ public class ValidationRequestIT extends SiVaRestTests {
         String response = post(validationRequestForExtended("DOCUMENT", encodedString,
                 "FILENAME", "*.exe", SIGNATURE_POLICY, VALID_SIGNATURE_POLICY_3)).asString();
 
-        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, MAY_NOT_BE_EMPTY) == 1);
+        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, MUST_NOT_BE_BLANK) == 1);
         assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, INVALID_BASE_64) == 1);
-        assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, MAY_NOT_BE_EMPTY) == 1);
+        assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, MUST_NOT_BE_EMPTY) == 1);
         assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, INVALID_FILENAME) == 1);
     }
 
@@ -209,7 +209,7 @@ public class ValidationRequestIT extends SiVaRestTests {
 
         String json = post(jsonObject.toString()).thenReturn().body().asString();
 
-        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(json, DOCUMENT, MAY_NOT_BE_EMPTY) == 1);
+        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(json, DOCUMENT, MUST_NOT_BE_BLANK) == 1);
         assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(json, DOCUMENT, INVALID_BASE_64) == 1);
     }
 
@@ -237,7 +237,7 @@ public class ValidationRequestIT extends SiVaRestTests {
 
         String json = post(jsonObject.toString()).thenReturn().body().asString();
 
-        assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(json, FILENAME, MAY_NOT_BE_EMPTY) == 1);
+        assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(json, FILENAME, MUST_NOT_BE_EMPTY) == 1);
     }
 
     /**
@@ -669,9 +669,9 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .statusCode(HttpStatus.BAD_REQUEST.value())
 
                 .body("requestErrors[0].key", Matchers.is(FILENAME))
-                .body("requestErrors[0].message", Matchers.oneOf(INVALID_FILENAME_SIZE, MAY_NOT_BE_EMPTY))
+                .body("requestErrors[0].message", Matchers.oneOf(INVALID_FILENAME_SIZE, MUST_NOT_BE_EMPTY))
                 .body("requestErrors[1].key", Matchers.is(FILENAME))
-                .body("requestErrors[1].message", Matchers.oneOf(INVALID_FILENAME_SIZE, MAY_NOT_BE_EMPTY));
+                .body("requestErrors[1].message", Matchers.oneOf(INVALID_FILENAME_SIZE, MUST_NOT_BE_EMPTY));
 
 
     }

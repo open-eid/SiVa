@@ -260,6 +260,34 @@ public class RevocationFreshnessValidatorTest {
         Mockito.verifyNoInteractions(simpleReport);
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "2021-06-06T18:30:15.0Z", "2021-06-06T18:30:15.1Z", "2021-06-06T18:30:15.01Z", "2021-06-06T18:30:15.001Z", "2021-06-06T18:30:15.999Z"
+    })
+    public void testCrlWithNextUpdateInSameSecondAsHighPrecisionTimestampInSignatureFromDiagnosticDataShouldDoNothing(String timestampTime) {
+        SignatureWrapper signatureWrapperMock = Mockito.mock(SignatureWrapper.class);
+        CertificateWrapper certificateWrapperMock = Mockito.mock(CertificateWrapper.class);
+        Mockito.doReturn(certificateWrapperMock).when(signatureWrapperMock).getSigningCertificate();
+        TimestampWrapper timestampWrapperMock = createValidTimestampWrapperMock(Instant.parse(timestampTime));
+        Mockito.doReturn(List.of(timestampWrapperMock)).when(signatureWrapperMock).getTimestampList();
+        CertificateRevocationWrapper crlRevocationWrapperMock = createValidCrlCertificateRevocationWrapperMock(Instant.parse("2021-06-06T18:30:15Z"));
+        Mockito.doReturn(List.of(crlRevocationWrapperMock)).when(certificateWrapperMock).getCertificateRevocationData();
+        mockDiagnosticDataGetSignatures(signatureWrapperMock);
+
+        validator.validate();
+
+        assertDiagnosticDataGetSignaturesCalled();
+        Mockito.verifyNoMoreInteractions(validationReports);
+        Mockito.verify(signatureWrapperMock).getSigningCertificate();
+        Mockito.verify(signatureWrapperMock).getTimestampList();
+        Mockito.verifyNoMoreInteractions(signatureWrapperMock);
+        assertValidTimestampWrapperMockInteractions(timestampWrapperMock);
+        assertValidCrlCertificateRevocationWrapperMockInteractions(crlRevocationWrapperMock);
+        Mockito.verify(certificateWrapperMock).getCertificateRevocationData();
+        Mockito.verifyNoMoreInteractions(certificateWrapperMock);
+        Mockito.verifyNoInteractions(simpleReport);
+    }
+
     @Test
     public void testNoCrlNorOcspInSignatureFromDiagnosticDataShouldDoNothing() {
         SignatureWrapper signatureWrapperMock = Mockito.mock(SignatureWrapper.class);
@@ -292,6 +320,34 @@ public class RevocationFreshnessValidatorTest {
         TimestampWrapper timestampWrapperMock = createValidTimestampWrapperMock(Instant.parse("2021-06-06T18:30:15Z"));
         Mockito.doReturn(List.of(timestampWrapperMock)).when(signatureWrapperMock).getTimestampList();
         CertificateRevocationWrapper ocspRevocationWrapperMock = createValidOcspCertificateRevocationWrapperMock(Instant.parse(ocspProducedAt));
+        Mockito.doReturn(List.of(ocspRevocationWrapperMock)).when(certificateWrapperMock).getCertificateRevocationData();
+        mockDiagnosticDataGetSignatures(signatureWrapperMock);
+
+        validator.validate();
+
+        assertDiagnosticDataGetSignaturesCalled();
+        Mockito.verifyNoMoreInteractions(validationReports);
+        Mockito.verify(signatureWrapperMock).getSigningCertificate();
+        Mockito.verify(signatureWrapperMock).getTimestampList();
+        Mockito.verifyNoMoreInteractions(signatureWrapperMock);
+        assertValidTimestampWrapperMockInteractions(timestampWrapperMock);
+        assertValidOcspCertificateRevocationWrapperMockInteractions(ocspRevocationWrapperMock);
+        Mockito.verify(certificateWrapperMock, Mockito.times(2)).getCertificateRevocationData();
+        Mockito.verifyNoMoreInteractions(certificateWrapperMock);
+        Mockito.verifyNoInteractions(simpleReport);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "2021-06-06T18:30:15.0Z", "2021-06-06T18:30:15.1Z", "2021-06-06T18:30:15.01Z", "2021-06-06T18:30:15.001Z", "2021-06-06T18:30:15.999Z"
+    })
+    public void testOcspWithProducedAtInTheSameSecondAsHighPrecisionTimestampInSignatureFromDiagnosticDataShouldDoNothing(String timestampTime) {
+        SignatureWrapper signatureWrapperMock = Mockito.mock(SignatureWrapper.class);
+        CertificateWrapper certificateWrapperMock = Mockito.mock(CertificateWrapper.class);
+        Mockito.doReturn(certificateWrapperMock).when(signatureWrapperMock).getSigningCertificate();
+        TimestampWrapper timestampWrapperMock = createValidTimestampWrapperMock(Instant.parse(timestampTime));
+        Mockito.doReturn(List.of(timestampWrapperMock)).when(signatureWrapperMock).getTimestampList();
+        CertificateRevocationWrapper ocspRevocationWrapperMock = createValidOcspCertificateRevocationWrapperMock(Instant.parse("2021-06-06T18:30:15Z"));
         Mockito.doReturn(List.of(ocspRevocationWrapperMock)).when(certificateWrapperMock).getCertificateRevocationData();
         mockDiagnosticDataGetSignatures(signatureWrapperMock);
 

@@ -21,8 +21,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -50,31 +51,10 @@ public class ApplicationHealthIndicator implements HealthIndicator {
     private final String version;
 
     public ApplicationHealthIndicator(ManifestReader manifestReader) {
-        instanceStarted = ZonedDateTime.now();
+        instanceStarted = Instant.now().atZone(ZoneOffset.UTC);
         built = getInstanceBuilt(manifestReader);
         name = manifestReader.readFromManifest(MANIFEST_PARAM_APP_NAME);
         version = manifestReader.readFromManifest(MANIFEST_PARAM_APP_VERSION);
-    }
-
-    protected static ZonedDateTime convertUtcToLocal(final String buildTime) {
-        if (buildTime == null)
-            return null;
-
-        LocalDateTime date = null;
-        try {
-            date = LocalDateTime.parse(buildTime, DEFAULT_DATE_TIME_FORMATTER);
-        } catch (DateTimeParseException e) {
-            log.error("Could not parse the build time! ", e);
-            return null;
-        }
-        ZonedDateTime dateTime = date.atZone(ZoneId.of("UTC"));
-        return dateTime.withZoneSameInstant(ZoneId.systemDefault());
-    }
-
-    protected static String getFormattedTime(final ZonedDateTime zonedDateTime) {
-        if (zonedDateTime == null)
-            return null;
-        return zonedDateTime.format(DEFAULT_DATE_TIME_FORMATTER);
     }
 
     @Override
@@ -84,16 +64,32 @@ public class ApplicationHealthIndicator implements HealthIndicator {
                 .withDetail(RESPONSE_PARAM_VERSION, formatValue(version))
                 .withDetail(RESPONSE_PARAM_BUILD_TIME, formatValue(getFormattedTime(built)))
                 .withDetail(RESPONSE_PARAM_START_TIME, formatValue(getFormattedTime(instanceStarted)))
-                .withDetail(RESPONSE_PARAM_CURRENT_TIME, formatValue(getFormattedTime(ZonedDateTime.now())))
+                .withDetail(RESPONSE_PARAM_CURRENT_TIME, formatValue(getFormattedTime(Instant.now().atZone(ZoneOffset.UTC))))
                 .build();
     }
 
     private static ZonedDateTime getInstanceBuilt(ManifestReader manifestReader) {
         String buildTime = manifestReader.readFromManifest(MANIFEST_PARAM_APP_BUILD_TIME);
-        return convertUtcToLocal(buildTime);
+
+        if (buildTime == null) {
+            return null;
+        }
+
+        try {
+            return LocalDateTime.parse(buildTime, DEFAULT_DATE_TIME_FORMATTER).atZone(ZoneOffset.UTC);
+        } catch (DateTimeParseException e) {
+            log.error("Could not parse the build time! ", e);
+            return null;
+        }
     }
 
-    private static Object formatValue(final String value) {
+    private static String getFormattedTime(ZonedDateTime zonedDateTime) {
+        return (zonedDateTime != null)
+                ? zonedDateTime.format(DEFAULT_DATE_TIME_FORMATTER)
+                : null;
+    }
+
+    private static Object formatValue(String value) {
         return value == null ? NOT_AVAILABLE : value;
     }
 

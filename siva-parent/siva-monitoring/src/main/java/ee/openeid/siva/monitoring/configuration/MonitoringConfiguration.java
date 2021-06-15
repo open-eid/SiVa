@@ -17,7 +17,9 @@
 package ee.openeid.siva.monitoring.configuration;
 
 import ee.openeid.siva.monitoring.enpoint.HeartbeatEndpoint;
+import ee.openeid.siva.monitoring.enpoint.VersionEndpoint;
 import ee.openeid.siva.monitoring.indicator.ApplicationHealthIndicator;
+import ee.openeid.siva.monitoring.util.ManifestReader;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
 import org.springframework.boot.actuate.health.HealthEndpoint;
 import org.springframework.context.annotation.Bean;
@@ -30,14 +32,25 @@ public abstract class MonitoringConfiguration {
     public static final int DEFAULT_TIMEOUT = 10000;
 
     @Bean
-    public ApplicationHealthIndicator health(ServletContext context) {
-        return new ApplicationHealthIndicator(context);
+    public ManifestReader manifestReader(ServletContext servletContext) {
+        return new ManifestReader(servletContext);
+    }
+
+    @Bean
+    public ApplicationHealthIndicator health(ManifestReader manifestReader) {
+        return new ApplicationHealthIndicator(manifestReader);
     }
 
     @Bean
     @ConditionalOnAvailableEndpoint(endpoint = HeartbeatEndpoint.class)
     public HeartbeatEndpoint heartbeatEndpoint(HealthEndpoint healthEndpoint) {
         return new HeartbeatEndpoint(healthEndpoint);
+    }
+
+    @Bean
+    @ConditionalOnAvailableEndpoint(endpoint = VersionEndpoint.class)
+    public VersionEndpoint versionEndpoint(ManifestReader manifestReader) {
+        return new VersionEndpoint(manifestReader);
     }
 
 }

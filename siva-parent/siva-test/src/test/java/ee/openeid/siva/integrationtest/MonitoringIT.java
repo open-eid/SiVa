@@ -85,6 +85,26 @@ public class MonitoringIT extends SiVaRestTests {
                 .body("status", Matchers.is("UP"));
     }
 
+    /**
+     * TestCaseID: WebApp-Monitoring-3
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#version-information
+     *
+     * Title: Version monitor response structure
+     *
+     * Expected Result: response matches the expected structure of JSON
+     *
+     * File: not relevant
+     */
+    @Test
+    public void requestingWebAppMonitoringVersionInfoShouldReturnProperStructure() {
+        getMonitoringVersion()
+                .then()
+                .body(matchesJsonSchemaInClasspath("MonitorVersionSchema.json"));
+    }
+
     @Override
     protected String getTestFilesDirectory() {
         return testFilesDirectory;

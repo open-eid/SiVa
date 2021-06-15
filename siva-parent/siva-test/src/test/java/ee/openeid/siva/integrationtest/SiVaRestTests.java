@@ -51,6 +51,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
     private static final String DATA_FILES_ENDPOINT = "/getDataFiles";
     private static final String MONITORING_HEALTH_ENDPOINT = "/monitoring/health";
     private static final String MONITORING_HEARTBEAT_ENDPOINT = "/monitoring/heartbeat";
+    private static final String MONITORING_VERSION_ENDPOINT = "/monitoring/version";
 
     @Step("Post")
     protected Response post(String request) {
@@ -107,6 +108,14 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
                 .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset(StandardCharsets.UTF_8)))
                 .when()
                 .get(createUrl(MONITORING_HEARTBEAT_ENDPOINT));
+    }
+
+    @Step("Get Monitoring Version")
+    protected Response getMonitoringVersion() {
+        return given()
+                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset(StandardCharsets.UTF_8)))
+                .when()
+                .get(createUrl(MONITORING_VERSION_ENDPOINT));
     }
 
     protected String validationRequestFor(String file, String signaturePolicy, String reportType) {

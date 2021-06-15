@@ -706,7 +706,7 @@ Sample response:
 
 ## Simplified health monitoring
 
-SiVa webapp provide a simple interface for external monitoring tools (to periodically check the generic service health status).
+SiVa webapps provide a simple interface for external monitoring tools (to periodically check the generic service health status).
 
 ### The request
 The simplified monitoring endpoint is accessible via HTTP GET at **/monitoring/heartbeat** url.
@@ -729,6 +729,34 @@ Sample response:
 ```json
 {
     "status": "UP"
+}
+```
+
+## Version information
+
+SiVa webapps provide a simple interface for querying the application version information.
+
+### The request
+The version information endpoint is accessible via HTTP GET at **/monitoring/version** url.
+
+Sample request:
+```
+GET https://<server url>/monitoring/version
+```
+
+### The response
+
+As a response, a JSON object is returned with the following information:
+
+| Field | Description |
+| ---------| --------------- |
+| version | Version string of the webapp |
+
+Sample response:
+
+```json
+{
+    "version": "3.5.0"
 }
 ```
 

@@ -351,6 +351,21 @@ management.endpoint.heartbeat.enabled=true
 
 The endpoint is implemented by polling the health information directly from the underlying health endpoint implementation, but exposing just the aggregated overall service status, hiding everything else.
 
+### Version information endpoint
+
+!!! note
+    Note that this endpoint is not enabled nor exposed by default.
+
+The url for accessing JSON formatted version information with HTTP GET is `/monitoring/version`. See the [Interfaces section](/siva/v3/interfaces.md#version-information) for response structure and details.
+
+* **Enabling and exposing the version information endpoint**
+
+To enable and expose the endpoint, use the following configuration parameters:
+```bash
+management.endpoints.web.exposure.include=version
+management.endpoint.version.enabled=true
+```
+
 
 ## Validation Report Signature
 

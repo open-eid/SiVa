@@ -26,8 +26,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.Status;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.Instant;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.LinkedHashSet;
 import java.util.stream.Collectors;
@@ -50,9 +50,13 @@ public class ApplicationHealthIndicatorTest {
 
     @Test
     public void whenParametersMissingInManifestFile() {
+        Instant earliestStartTime = Instant.now().truncatedTo(ChronoUnit.SECONDS);
         ApplicationHealthIndicator applicationHealthIndicator = new ApplicationHealthIndicator(manifestReader);
+        Instant latestStartTime = Instant.now();
 
+        Instant earliestCurrentTime = Instant.now().truncatedTo(ChronoUnit.SECONDS);
         Health health = applicationHealthIndicator.health();
+        Instant latestCurrentTime = Instant.now();
 
         Assertions.assertEquals(health.getStatus(), Status.UP);
         Assertions.assertEquals(
@@ -66,7 +70,8 @@ public class ApplicationHealthIndicatorTest {
         Assertions.assertEquals(NOT_AVAILABLE, health.getDetails().get(ApplicationHealthIndicator.RESPONSE_PARAM_WEBAPP_NAME));
         Assertions.assertEquals(NOT_AVAILABLE, health.getDetails().get(ApplicationHealthIndicator.RESPONSE_PARAM_VERSION));
         Assertions.assertEquals(NOT_AVAILABLE, health.getDetails().get(ApplicationHealthIndicator.RESPONSE_PARAM_BUILD_TIME));
-        verifyCorrectStartAndServerTime(health);
+        verifyTime(health.getDetails().get(ApplicationHealthIndicator.RESPONSE_PARAM_START_TIME), earliestStartTime, latestStartTime);
+        verifyTime(health.getDetails().get(ApplicationHealthIndicator.RESPONSE_PARAM_CURRENT_TIME), earliestCurrentTime, latestCurrentTime);
     }
 
     @Test
@@ -74,14 +79,20 @@ public class ApplicationHealthIndicatorTest {
         Mockito.doReturn(TEST_WEBAPP).when(manifestReader).readFromManifest(MANIFEST_PARAM_APP_NAME);
         Mockito.doReturn(TEST_BUILD_TIME_IN_UTC).when(manifestReader).readFromManifest(MANIFEST_PARAM_APP_BUILD_TIME);
         Mockito.doReturn(TEST_VERSION).when(manifestReader).readFromManifest(MANIFEST_PARAM_APP_VERSION);
+        Instant earliestStartTime = Instant.now().truncatedTo(ChronoUnit.SECONDS);
         ApplicationHealthIndicator applicationHealthIndicator = new ApplicationHealthIndicator(manifestReader);
+        Instant latestStartTime = Instant.now();
 
+        Instant earliestCurrentTime = Instant.now().truncatedTo(ChronoUnit.SECONDS);
         Health health = applicationHealthIndicator.health();
+        Instant latestCurrentTime = Instant.now();
 
         Assertions.assertEquals(health.getStatus(), Status.UP);
         Assertions.assertEquals(TEST_WEBAPP, health.getDetails().get(ApplicationHealthIndicator.RESPONSE_PARAM_WEBAPP_NAME));
         Assertions.assertEquals(TEST_VERSION, health.getDetails().get(ApplicationHealthIndicator.RESPONSE_PARAM_VERSION));
-        Assertions.assertEquals(ApplicationHealthIndicator.getFormattedTime(ApplicationHealthIndicator.convertUtcToLocal(TEST_BUILD_TIME_IN_UTC)), health.getDetails().get(ApplicationHealthIndicator.RESPONSE_PARAM_BUILD_TIME));
+        Assertions.assertEquals(TEST_BUILD_TIME_IN_UTC, health.getDetails().get(ApplicationHealthIndicator.RESPONSE_PARAM_BUILD_TIME));
+        verifyTime(health.getDetails().get(ApplicationHealthIndicator.RESPONSE_PARAM_START_TIME), earliestStartTime, latestStartTime);
+        verifyTime(health.getDetails().get(ApplicationHealthIndicator.RESPONSE_PARAM_CURRENT_TIME), earliestCurrentTime, latestCurrentTime);
     }
 
     @Test
@@ -89,30 +100,32 @@ public class ApplicationHealthIndicatorTest {
         Mockito.doReturn(TEST_WEBAPP).when(manifestReader).readFromManifest(MANIFEST_PARAM_APP_NAME);
         Mockito.doReturn("ABCDEFG1234").when(manifestReader).readFromManifest(MANIFEST_PARAM_APP_BUILD_TIME);
         Mockito.doReturn(TEST_VERSION).when(manifestReader).readFromManifest(MANIFEST_PARAM_APP_VERSION);
+        Instant earliestStartTime = Instant.now().truncatedTo(ChronoUnit.SECONDS);
         ApplicationHealthIndicator applicationHealthIndicator = new ApplicationHealthIndicator(manifestReader);
+        Instant latestStartTime = Instant.now();
 
+        Instant earliestCurrentTime = Instant.now().truncatedTo(ChronoUnit.SECONDS);
         Health health = applicationHealthIndicator.health();
+        Instant latestCurrentTime = Instant.now();
 
         Assertions.assertEquals(health.getStatus(), Status.UP);
         Assertions.assertEquals(TEST_WEBAPP, health.getDetails().get(ApplicationHealthIndicator.RESPONSE_PARAM_WEBAPP_NAME));
         Assertions.assertEquals(TEST_VERSION, health.getDetails().get(ApplicationHealthIndicator.RESPONSE_PARAM_VERSION));
         Assertions.assertEquals(NOT_AVAILABLE, health.getDetails().get(ApplicationHealthIndicator.RESPONSE_PARAM_BUILD_TIME));
+        verifyTime(health.getDetails().get(ApplicationHealthIndicator.RESPONSE_PARAM_START_TIME), earliestStartTime, latestStartTime);
+        verifyTime(health.getDetails().get(ApplicationHealthIndicator.RESPONSE_PARAM_CURRENT_TIME), earliestCurrentTime, latestCurrentTime);
     }
 
-
-    private void verifyCorrectStartAndServerTime(Health health) {
-        LocalDateTime startTime = parseDate(String.valueOf(health.getDetails().get(ApplicationHealthIndicator.RESPONSE_PARAM_START_TIME)));
-        assertTimeDifferenceWithNowInSecondsIsLessThan(startTime, 10);
-        LocalDateTime currentTime = parseDate(String.valueOf(health.getDetails().get(ApplicationHealthIndicator.RESPONSE_PARAM_CURRENT_TIME)));
-        assertTimeDifferenceWithNowInSecondsIsLessThan(currentTime, 10);
-        Assertions.assertTrue(currentTime.compareTo(startTime) >= 0, "Current time must be equal or greater to start time!");
+    private static void verifyTime(Object time, Instant earliest, Instant latest) {
+        Assertions.assertNotNull(time);
+        Instant parsedTime = null;
+        try {
+            parsedTime = Instant.parse(time.toString());
+        } catch (DateTimeParseException e) {
+            Assertions.fail("Failed to parse time", e);
+        }
+        Assertions.assertFalse(parsedTime.isBefore(earliest), String.format("Time (%s) must not be before %s", parsedTime, earliest));
+        Assertions.assertFalse(parsedTime.isAfter(latest), String.format("Time (%s) must not be after %s", parsedTime, latest));
     }
 
-    private LocalDateTime parseDate(String dateTimeText) {
-        return LocalDateTime.parse(dateTimeText, DateTimeFormatter.ofPattern(ApplicationHealthIndicator.DEFAULT_DATE_TIME_FORMAT));
-    }
-
-    private void assertTimeDifferenceWithNowInSecondsIsLessThan(LocalDateTime startDate, int seconds) {
-        Assertions.assertTrue(startDate.until(LocalDateTime.now(), ChronoUnit.SECONDS) < seconds);
-    }
 }

@@ -156,9 +156,7 @@ public class TestData {
     public static final String VALID_VALIDATION_PROCESS_NAMEID_56 = "BBB_XCV_IRDC";
     public static final String VALID_VALIDATION_PROCESS_NAMEID_57 = "BBB_XCV_IARDPFC";
     public static final String VALID_VALIDATION_PROCESS_NAMEID_59 = "BBB_SAV_ISQPMDOSPP";
-
-
-
+    public static final String VALID_VALIDATION_PROCESS_NAMEID_60 = "BBB_SAV_ISSV";
 
     public static final String VALID_VALIDATION_PROCESS_VALUE_1 = "Is the trusted list fresh ?";
     public static final String VALID_VALIDATION_PROCESS_VALUE_2 = "Is the trusted list not expired ?";
@@ -219,6 +217,7 @@ public class TestData {
     public static final String VALID_VALIDATION_PROCESS_VALUE_57 = "Is the revocation data consistent?";
     public static final String VALID_VALIDATION_PROCESS_VALUE_58 = "Is an acceptable revocation data present for the certificate?";
     public static final String VALID_VALIDATION_PROCESS_VALUE_59 = "Is the signed qualifying property: 'message-digest' or 'SignedProperties' present?";
+    public static final String VALID_VALIDATION_PROCESS_VALUE_60 = "Is the structure of the signature valid?";
 
 
     public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_1 = "The result of the Basic validation process is not conclusive!";

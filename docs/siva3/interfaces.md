@@ -760,6 +760,18 @@ Sample response:
 }
 ```
 
+## Changes in API compared to V3 v3.4.0
+
+Changes are described using notation from REST endpoint.
+
+### New endpoints
+
+| Endpoint | HTTP Method | Link | Comment |
+|----------|-----------|------|---------|
+| /monitoring/heartbeat | GET |  [Link](../interfaces/#simplified-health-monitoring) | New monitoring endpoint |
+| /monitoring/version | GET |  [Link](../interfaces/#version-information) | New monitoring endpoint |
+
+
 ## Changes in API compared to V3 v3.3.0 
 
 Changes are described using notation from REST endpoint.

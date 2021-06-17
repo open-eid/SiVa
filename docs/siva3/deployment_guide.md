@@ -247,12 +247,7 @@ the command below.
 ```bash
 http POST http://localhost:8080/validate < bdocPass.json
 ```
-**Step 4**. Verify the output. The output of previous command should have similar data as below screenshot. Look for `signatureCount` and
-`validSignatureCount`, they **must** be equal.
-
-
-![HTTPIE output validation](../img/siva/siva3-output.png)
-
+**Step 4**. Verify the output. Look for `signatureCount` and `validSignatureCount`, they **must** be equal.
 
 ## Logging
 

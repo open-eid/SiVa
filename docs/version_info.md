@@ -12,4 +12,5 @@
 | 1.6 | 04.04.2019 | Aare Nurm | Finalizing the documentation for release |
 | 1.7 | 12.06.2020 | Aare Nurm, Priit Üksküla | SIVA 3.3 documentation additions |
 | 1.8 | 01.03.2021 | Markus Kivisalu | SIVA 3.4 documentation additions |
-| 1.8 | 12.04.2021 | Markus Kivisalu | Updated URL-s and reference links |
+| 1.9 | 12.04.2021 | Markus Kivisalu | Updated URL-s and reference links |
+| 1.10 | 16.06.2021 | Risto Seene, Markus Kivisalu | SIVA 3.5 documentation additions |

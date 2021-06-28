@@ -14,7 +14,7 @@
     
     
       
-        <title>5.2 Deployment guide - SiVa 3.4 - Signature Validation Service Documentation</title>
+        <title>5.2 Deployment guide - SiVa 3.5 - Signature Validation Service Documentation</title>
       
     
     
@@ -73,7 +73,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header-nav md-grid" aria-label="Header">
-    <a href="../.." title="SiVa 3.4 - Signature Validation Service Documentation" class="md-header-nav__button md-logo" aria-label="SiVa 3.4 - Signature Validation Service Documentation">
+    <a href="../.." title="SiVa 3.5 - Signature Validation Service Documentation" class="md-header-nav__button md-logo" aria-label="SiVa 3.5 - Signature Validation Service Documentation">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
@@ -86,7 +86,7 @@
       <div class="md-header-nav__ellipsis">
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
-            SiVa 3.4 - Signature Validation Service Documentation
+            SiVa 3.5 - Signature Validation Service Documentation
           </span>
         </div>
         <div class="md-header-nav__topic">
@@ -166,13 +166,13 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="SiVa 3.4 - Signature Validation Service Documentation" class="md-nav__button md-logo" aria-label="SiVa 3.4 - Signature Validation Service Documentation">
+    <a href="../.." title="SiVa 3.5 - Signature Validation Service Documentation" class="md-nav__button md-logo" aria-label="SiVa 3.5 - Signature Validation Service Documentation">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
 
     </a>
-    SiVa 3.4 - Signature Validation Service Documentation
+    SiVa 3.5 - Signature Validation Service Documentation
   </label>
   
     <div class="md-nav__source">
@@ -483,6 +483,33 @@
   <a href="#monitoring" class="md-nav__link">
     Monitoring
   </a>
+  
+    <nav class="md-nav" aria-label="Monitoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#health-endpoint" class="md-nav__link">
+    Health Endpoint
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#heartbeat-endpoint" class="md-nav__link">
+    Heartbeat endpoint
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#version-information-endpoint" class="md-nav__link">
+    Version information endpoint
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1421,6 +1448,33 @@
     Monitoring
   </a>
   
+    <nav class="md-nav" aria-label="Monitoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#health-endpoint" class="md-nav__link">
+    Health Endpoint
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#heartbeat-endpoint" class="md-nav__link">
+    Heartbeat endpoint
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#version-information-endpoint" class="md-nav__link">
+    Version information endpoint
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1671,9 +1725,7 @@ the command below.</p>
 <div class="codehilite"><pre><span></span><code>http POST http://localhost:8080/validate &lt; bdocPass.json
 </code></pre></div>
 
-<p><strong>Step 4</strong>. Verify the output. The output of previous command should have similar data as below screenshot. Look for <code>signatureCount</code> and
-<code>validSignatureCount</code>, they <strong>must</strong> be equal.</p>
-<p><img alt="HTTPIE output validation" src="../img/siva/siva3-output.png" /></p>
+<p><strong>Step 4</strong>. Verify the output. Look for <code>signatureCount</code> and <code>validSignatureCount</code>, they <strong>must</strong> be equal.</p>
 <h2 id="logging">Logging</h2>
 <p>By default, logging works on the INFO level and logs are directed to the system console only. Logging functionality is handled by the SLF4J logging facade and on top of the Logback framework. As a result, logging can be configured via the standard Logback configuration file through Spring boot. Additional logging appenders can be added. Consult <a href="http://logback.qos.ch/documentation.html">logback documentation</a> for more details on log file structure.</p>
 <p>For example, adding application.properties to classpath with the <strong>logging.config</strong> property</p>
@@ -1777,16 +1829,17 @@ the command below.</p>
 
 <p>This information is sent to log feeds (at INFO level) which can be redirected to files or to a syslog feed.</p>
 <h2 id="monitoring">Monitoring</h2>
-<p>SiVa webapps provide an endpoint for external monitoring tools to periodically check the generic service health status.</p>
+<p>SiVa webapps provide endpoints for external monitoring tools to periodically check the generic service health status.</p>
+<h3 id="health-endpoint">Health Endpoint</h3>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Note that this endpoint is disabled by default.</p>
+<p>Note that this endpoint is not exposed by default.</p>
 </div>
 <p>The url for accessing JSON formatted health information with HTTP GET is <code>/monitoring/health</code> . See the <a href="/siva/v3/interfaces.md#service-health-monitoring">Interfaces section</a> for response structure and details.</p>
 <ul>
-<li><strong>Enabling and disabling the monitoring endpoint</strong></li>
+<li><strong>Exposing the health monitoring endpoint</strong></li>
 </ul>
-<p>To enable the endpoint, use the following configuration parameter:</p>
+<p>To expose the endpoint, use the following configuration parameter:</p>
 <div class="codehilite"><pre><span></span><code>management.endpoints.web.exposure.include<span class="o">=</span>health
 </code></pre></div>
 
@@ -1796,6 +1849,42 @@ the command below.</p>
 <p>The endpoint is implemented as a customized Spring boot <a href="http://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html#production-ready-health">health endpoint</a>, which allows to add custom health indicators.</p>
 <p>Demo webapp and Siva webapp include additional information about the health of their dependent services.
 These links to dependent web services have been preconfigured. For example, the Demo webapp is preset to check whether the Siva webapp is accessible from the following url (parameter <code>siva.service.serviceHost</code> value)/monitoring/health and the Siva webapp verifies that the X-road validation service webapp is accessible by checking the default url (configured by parameter <code>siva.proxy.xroadUrl</code> value)/monitoring/health url.</p>
+<h3 id="heartbeat-endpoint">Heartbeat endpoint</h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Note that this endpoint is not enabled nor exposed by default.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Note that this endpoint requires the health endpoint to be enabled and exposed in order to function.</p>
+</div>
+<p>The url for accessing JSON formatted heartbeat information with HTTP GET is <code>/monitoring/heartbeat</code>. See the <a href="/siva/v3/interfaces.md#simplified-health-monitoring">Interfaces section</a> for response structure and details.</p>
+<ul>
+<li><strong>Enabling and exposing the heartbeat monitoring endpoint</strong></li>
+</ul>
+<p>To enable and expose the endpoint, use the following configuration parameters:</p>
+<div class="codehilite"><pre><span></span><code>management.endpoints.web.exposure.include<span class="o">=</span>health,heartbeat
+management.endpoint.heartbeat.enabled<span class="o">=</span><span class="nb">true</span>
+</code></pre></div>
+
+<ul>
+<li><strong>Simplified service health indicator</strong></li>
+</ul>
+<p>The endpoint is implemented by polling the health information directly from the underlying health endpoint implementation, but exposing just the aggregated overall service status, hiding everything else.</p>
+<h3 id="version-information-endpoint">Version information endpoint</h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Note that this endpoint is not enabled nor exposed by default.</p>
+</div>
+<p>The url for accessing JSON formatted version information with HTTP GET is <code>/monitoring/version</code>. See the <a href="/siva/v3/interfaces.md#version-information">Interfaces section</a> for response structure and details.</p>
+<ul>
+<li><strong>Enabling and exposing the version information endpoint</strong></li>
+</ul>
+<p>To enable and expose the endpoint, use the following configuration parameters:</p>
+<div class="codehilite"><pre><span></span><code>management.endpoints.web.exposure.include<span class="o">=</span>version
+management.endpoint.version.enabled<span class="o">=</span><span class="nb">true</span>
+</code></pre></div>
+
 <h2 id="validation-report-signature">Validation Report Signature</h2>
 <p>SiVa provides the ability to sign the validation report. The idea of supplementing the validation report with a validation report signature is to prove the authority's authenticity and integrity over the validation.</p>
 <div class="admonition note">
@@ -1907,6 +1996,10 @@ Default configuration parameters can be overridden by providing custom applicati
 <tr>
 <td><strong>siva.tsl.loader.loadFromCache</strong></td>
 <td>A boolean value that determines, whether the TSL disk cache is updated by downloading a new TSL in a predetermined interval<br/><br/>Note that the cache is by default stored in a system temporary folder (can be set with system property <code>java.io.tmpdir</code>) in a subdirectory named <code>dss_cache_tsl</code><ul><li>When set to <strong>false</strong> the cache is refreshed periodically by SiVa in a predetermined interval specified by <code>siva.tsl.loader.schedulerCron</code> using <code>siva.tsl.loader.url</code></li><li>When set to <strong>true</strong> the siva uses existing cache as it's TSL. No direct polling for updates are performed. </li><li>Default: <strong>false</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>siva.tsl.loader.onlineCacheExpirationTime</strong></td>
+<td>A string value in a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/Duration.html#parse(java.lang.CharSequence)">format based on ISO-8601 duration format PnDTnHnMn.nS</a> that determines the expiration time of TSL disk cache in case <code>siva.tsl.loader.loadFromCache</code> is set to <code>false</code>. The default is 1 hour.<br/><br/>Note that the expiration time only determines, for each cached file, the minimum time that must have been passed since their last update before that file is considered expired and is susceptible to an update. The actual update is performed periodically by SiVa (specified by <code>siva.tsl.loader.schedulerCron</code>) or when the application is (re)started. <ul><li>Default: <strong>PT1H</strong></li></ul></td>
 </tr>
 <tr>
 <td><strong>siva.tsl.loader.url</strong></td>

@@ -247,12 +247,7 @@ the command below.
 ```bash
 http POST http://localhost:8080/validate < bdocPass.json
 ```
-**Step 4**. Verify the output. The output of previous command should have similar data as below screenshot. Look for `signatureCount` and
-`validSignatureCount`, they **must** be equal.
-
-
-![HTTPIE output validation](../img/siva/siva3-output.png)
-
+**Step 4**. Verify the output. Look for `signatureCount` and `validSignatureCount`, they **must** be equal.
 
 ## Logging
 
@@ -306,17 +301,18 @@ This information is sent to log feeds (at INFO level) which can be redirected to
 
 ## Monitoring
 
-SiVa webapps provide an endpoint for external monitoring tools to periodically check the generic service health status.
+SiVa webapps provide endpoints for external monitoring tools to periodically check the generic service health status.
+
+### Health Endpoint
 
 !!! note
-    Note that this endpoint is disabled by default.
-
+    Note that this endpoint is not exposed by default.
 
 The url for accessing JSON formatted health information with HTTP GET is `/monitoring/health` . See the [Interfaces section](/siva/v3/interfaces.md#service-health-monitoring) for response structure and details.
 
-* **Enabling and disabling the monitoring endpoint**
+* **Exposing the health monitoring endpoint**
 
-To enable the endpoint, use the following configuration parameter:
+To expose the endpoint, use the following configuration parameter:
 ```bash
 management.endpoints.web.exposure.include=health
 ```
@@ -327,6 +323,43 @@ The endpoint is implemented as a customized Spring boot [health endpoint](http:/
 
 Demo webapp and Siva webapp include additional information about the health of their dependent services.
 These links to dependent web services have been preconfigured. For example, the Demo webapp is preset to check whether the Siva webapp is accessible from the following url (parameter `siva.service.serviceHost` value)/monitoring/health and the Siva webapp verifies that the X-road validation service webapp is accessible by checking the default url (configured by parameter `siva.proxy.xroadUrl` value)/monitoring/health url.
+
+### Heartbeat endpoint
+
+!!! note
+    Note that this endpoint is not enabled nor exposed by default.
+
+!!! note
+    Note that this endpoint requires the health endpoint to be enabled and exposed in order to function.
+
+The url for accessing JSON formatted heartbeat information with HTTP GET is `/monitoring/heartbeat`. See the [Interfaces section](/siva/v3/interfaces.md#simplified-health-monitoring) for response structure and details.
+
+* **Enabling and exposing the heartbeat monitoring endpoint**
+
+To enable and expose the endpoint, use the following configuration parameters:
+```bash
+management.endpoints.web.exposure.include=health,heartbeat
+management.endpoint.heartbeat.enabled=true
+```
+
+* **Simplified service health indicator**
+
+The endpoint is implemented by polling the health information directly from the underlying health endpoint implementation, but exposing just the aggregated overall service status, hiding everything else.
+
+### Version information endpoint
+
+!!! note
+    Note that this endpoint is not enabled nor exposed by default.
+
+The url for accessing JSON formatted version information with HTTP GET is `/monitoring/version`. See the [Interfaces section](/siva/v3/interfaces.md#version-information) for response structure and details.
+
+* **Enabling and exposing the version information endpoint**
+
+To enable and expose the endpoint, use the following configuration parameters:
+```bash
+management.endpoints.web.exposure.include=version
+management.endpoint.version.enabled=true
+```
 
 
 ## Validation Report Signature
@@ -408,6 +441,7 @@ See the reference list of all common [application properties](http://docs.spring
 | Property | Description |
 | -------- | ----------- |
 | **siva.tsl.loader.loadFromCache** | A boolean value that determines, whether the TSL disk cache is updated by downloading a new TSL in a predetermined interval<br/><br/>Note that the cache is by default stored in a system temporary folder (can be set with system property `java.io.tmpdir`) in a subdirectory named `dss_cache_tsl`<ul><li>When set to **false** the cache is refreshed periodically by SiVa in a predetermined interval specified by `siva.tsl.loader.schedulerCron` using `siva.tsl.loader.url`</li><li>When set to **true** the siva uses existing cache as it's TSL. No direct polling for updates are performed. </li><li>Default: **false**</li></ul> |
+| **siva.tsl.loader.onlineCacheExpirationTime** | A string value in a [format based on ISO-8601 duration format PnDTnHnMn.nS](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/Duration.html#parse(java.lang.CharSequence)) that determines the expiration time of TSL disk cache in case `siva.tsl.loader.loadFromCache` is set to `false`. The default is 1 hour.<br/><br/>Note that the expiration time only determines, for each cached file, the minimum time that must have been passed since their last update before that file is considered expired and is susceptible to an update. The actual update is performed periodically by SiVa (specified by `siva.tsl.loader.schedulerCron`) or when the application is (re)started. <ul><li>Default: **PT1H**</li></ul> |
 | **siva.tsl.loader.url** | A url value that points to the external TSL <ul><li>Default: **https://ec.europa.eu/tools/lotl/eu-lotl.xml**</li></ul> |
 | **siva.tsl.loader.ojUrl** | A url value that points to the legal act in Official Journal of the European Union <ul><li>Default: **https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=uriserv:OJ.C_.2019.276.01.0001.01.ENG**</li></ul> |
 | **siva.tsl.loader.lotlRootSchemeInfoUri** | A url value that points to the European Unions' disclaimer regarding LOTL <ul><li>Default: **https://ec.europa.eu/tools/lotl/eu-lotl-legalnotice.html**</li></ul> |

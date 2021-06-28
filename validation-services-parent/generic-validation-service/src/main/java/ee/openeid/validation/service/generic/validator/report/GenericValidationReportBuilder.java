@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Riigi Infosüsteemide Amet
+ * Copyright 2016 - 2021 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -18,12 +18,27 @@ package ee.openeid.validation.service.generic.validator.report;
 
 import ee.openeid.siva.validation.document.Datafile;
 import ee.openeid.siva.validation.document.ValidationDocument;
+import ee.openeid.siva.validation.document.report.Certificate;
+import ee.openeid.siva.validation.document.report.CertificateType;
+import ee.openeid.siva.validation.document.report.DetailedReport;
+import ee.openeid.siva.validation.document.report.DiagnosticReport;
 import ee.openeid.siva.validation.document.report.Error;
-import ee.openeid.siva.validation.document.report.*;
+import ee.openeid.siva.validation.document.report.Info;
+import ee.openeid.siva.validation.document.report.Reports;
+import ee.openeid.siva.validation.document.report.SignatureProductionPlace;
+import ee.openeid.siva.validation.document.report.SignatureScope;
+import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.document.report.SignerRole;
+import ee.openeid.siva.validation.document.report.SimpleReport;
+import ee.openeid.siva.validation.document.report.SubjectDistinguishedName;
+import ee.openeid.siva.validation.document.report.ValidationConclusion;
+import ee.openeid.siva.validation.document.report.Warning;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import ee.openeid.siva.validation.util.CertUtil;
 import ee.openeid.siva.validation.util.SubjectDNParser;
+import ee.openeid.validation.service.generic.validator.TokenUtils;
+import eu.europa.esig.dss.diagnostic.CertificateRevocationWrapper;
 import eu.europa.esig.dss.diagnostic.CertificateWrapper;
 import eu.europa.esig.dss.diagnostic.RelatedRevocationWrapper;
 import eu.europa.esig.dss.diagnostic.SignatureWrapper;
@@ -65,9 +80,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.*;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.FORMAT_NOT_FOUND;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.getValidationTime;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.processSignatureIndications;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.valueNotKnown;
 
 public class GenericValidationReportBuilder {
 
@@ -220,9 +241,9 @@ public class GenericValidationReportBuilder {
     private Certificate getArchiveTimestampCertificate(SignatureWrapper signatureWrapper) {
         List<TimestampWrapper> archiveTimestamps = signatureWrapper.getTimestampListByType(TimestampType.ARCHIVE_TIMESTAMP);
         if (CollectionUtils.isNotEmpty(archiveTimestamps)) {
-            TimestampWrapper lastTimestamp = getLastTimestamp(archiveTimestamps);
-            if (lastTimestamp.getSigningCertificate() != null) {
-                String archiveTimestampCertId = lastTimestamp.getSigningCertificate().getId();
+            TimestampWrapper latestBestFittingTimestamp = getLatestBestFittingTimestamp(archiveTimestamps);
+            if (latestBestFittingTimestamp.getSigningCertificate() != null) {
+                String archiveTimestampCertId = latestBestFittingTimestamp.getSigningCertificate().getId();
                 return getCertificate(archiveTimestampCertId, CertificateType.ARCHIVE_TIMESTAMP);
             }
         }
@@ -232,9 +253,9 @@ public class GenericValidationReportBuilder {
     private Certificate getSignatureTimestampCertificate(SignatureWrapper signatureWrapper) {
         List<TimestampWrapper> signatureTimestamps = signatureWrapper.getTimestampListByType(TimestampType.SIGNATURE_TIMESTAMP);
         if (CollectionUtils.isNotEmpty(signatureTimestamps)) {
-            TimestampWrapper firstTimestamp = signatureTimestamps.get(0);
-            if (firstTimestamp.getSigningCertificate() != null) {
-                String timestampCertId = firstTimestamp.getSigningCertificate().getId();
+            TimestampWrapper earliestBestFittingTimestamp = getEarliestBestFittingTimestamp(signatureTimestamps);
+            if (earliestBestFittingTimestamp.getSigningCertificate() != null) {
+                String timestampCertId = earliestBestFittingTimestamp.getSigningCertificate().getId();
                 return getCertificate(timestampCertId, CertificateType.SIGNATURE_TIMESTAMP);
             }
         }
@@ -251,19 +272,43 @@ public class GenericValidationReportBuilder {
     }
 
     private Certificate getRevocationCertificate(SignatureWrapper signatureWrapper) {
-        List<RelatedRevocationWrapper> relatedRevocations = signatureWrapper.foundRevocations().getRelatedRevocationData();
-        if (CollectionUtils.isNotEmpty(relatedRevocations)) {
-            RelatedRevocationWrapper lastRevocation = relatedRevocations.get(0);
-            if (lastRevocation.getSigningCertificate() != null) {
-                String revocationId = lastRevocation.getSigningCertificate().getId();
+        List<CertificateRevocationWrapper> certificateRevocations = Optional
+                .ofNullable(signatureWrapper.getSigningCertificate())
+                .map(CertificateWrapper::getCertificateRevocationData)
+                .orElse(null);
+
+        if (CollectionUtils.isNotEmpty(certificateRevocations)) {
+            CertificateRevocationWrapper bestFittingRevocation = getBestFittingRevocation(certificateRevocations);
+            if (bestFittingRevocation.getSigningCertificate() != null) {
+                String revocationId = bestFittingRevocation.getSigningCertificate().getId();
                 return getCertificate(revocationId, CertificateType.REVOCATION);
             }
         }
         return null;
     }
 
-    private TimestampWrapper getLastTimestamp(List<TimestampWrapper> timestamps) {
-        return Collections.max(timestamps, Comparator.comparing(TimestampWrapper::getProductionTime));
+    public static TimestampWrapper getEarliestBestFittingTimestamp(List<TimestampWrapper> timestamps) {
+        // Find the earliest timestamp, but prefer valid timestamps over invalid ones
+        return Collections.min(timestamps, Comparator
+                .comparing(TokenUtils::isTimestampTokenValid).reversed()
+                .thenComparing(TimestampWrapper::getProductionTime)
+        );
+    }
+
+    protected static TimestampWrapper getLatestBestFittingTimestamp(List<TimestampWrapper> timestamps) {
+        // Find the latest timestamp, but prefer valid timestamps over invalid ones
+        return Collections.max(timestamps, Comparator
+                .comparing(TokenUtils::isTimestampTokenValid)
+                .thenComparing(TimestampWrapper::getProductionTime)
+        );
+    }
+
+    protected static CertificateRevocationWrapper getBestFittingRevocation(List<CertificateRevocationWrapper> revocations) {
+        // Currently just return any revocation, but prefer firstly valid revocations and then the ones with GOOD certificate status
+        return Collections.max(revocations, Comparator
+                .comparing((Function<CertificateRevocationWrapper, Boolean>) TokenUtils::isTokenSignatureIntactAndSignatureValidAndTrustedChain)
+                .thenComparing(TokenUtils::isRevocationTokenForCertificateAndCertificateStatusGood)
+        );
     }
 
     private Certificate getCertificate(String certificateId, CertificateType type) {

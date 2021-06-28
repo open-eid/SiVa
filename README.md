@@ -53,13 +53,13 @@ project by issuing below commands:
 **First start SiVa REST and SOAP web service**
 
 ```bash
-./siva-parent/siva-webapp/target/siva-webapp-3.4.1.jar
+./siva-parent/siva-webapp/target/siva-webapp-3.5.0.jar
 ```
 
 **Second we need to start SiVa XRoad validation service**
 
 ```bash
-./validation-services-parent/xroad-validation-service/target/xroad-validation-service-3.4.1.jar
+./validation-services-parent/xroad-validation-service/target/xroad-validation-service-3.5.0.jar
 ```
 
 The SiVa webapp by default runs on port **8080** and XRoad validation service starts up on port **8081**.
@@ -68,7 +68,7 @@ Easiest way to test out validation is run SiVa demo application.
 **Start SiVa Demo Application**
 
 ```bash
-./siva-parent/siva-sample-application/target/siva-sample-application-3.4.1.jar
+./siva-parent/siva-sample-application/target/siva-sample-application-3.5.0.jar
 ```
 
 Now point Your browser to URL: <http://localhost:9000>
@@ -89,13 +89,14 @@ To build the WAR file use helper script with all the correct Maven parameters.
 Copy built WAR file into Tomcat `webapps` directory and start the servlet container.
 
 ```bash
-cp siva-parent/siva-webapp/target/siva-webapp-3.4.1.war apache-tomcat-7.0.70/webapps
+cp siva-parent/siva-webapp/target/siva-webapp-3.5.0.war apache-tomcat-7.0.70/webapps
 ./apache-tomcat-7.0.77/bin/catalina.sh run
 ```
 
-> **IMPORTANT** siva-webapp on startup creates `etc` directory where it copies the TSL validaiton certificates
-> `siva-keystore.jks`. Default location for this directory is application root or `$CATALINA_HOME`. To change
-> this default behavior you should set environment variable `DSS_DATA_FOLDER`
+> **IMPORTANT** siva-webapp on startup creates `etc` directory where it copies the TSL validation certificates
+> `siva-keystore.jks` (or `test-siva-keystore.jks` if `test` profile is used). Default location for this directory
+> is application root or `$CATALINA_HOME`. To change this default behavior you should set environment variable
+> `DSS_DATA_FOLDER`
 
 ### How-to set WAR deployed SiVa `application.properties`
 
@@ -135,7 +136,7 @@ tests, SiVa Web application has to be started before the tests are executed.
 To load trusted test certificates in addition to TSL, "test" spring profile should be activated at startup, for example:
 
 ```bash
-java -Dspring.profiles.active=test -jar siva-webapp-3.4.1.jar
+java -Dspring.profiles.active=test -jar siva-webapp-3.5.0.jar
 ```
 
 To run load tests after unit tests in non GUI mode:

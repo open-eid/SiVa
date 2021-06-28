@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Riigi Infosüsteemide Amet
+ * Copyright 2016 - 2021 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -31,6 +31,7 @@ import ee.openeid.tsl.TSLValidationJobFactory;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
 import ee.openeid.validation.service.generic.configuration.GenericSignaturePolicyProperties;
 import ee.openeid.validation.service.generic.configuration.GenericValidationServiceConfiguration;
+import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
 import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import org.junit.Before;
@@ -61,11 +62,11 @@ public class PDFValidationServiceTest {
 
     private ConstraintLoadingSignaturePolicyService signaturePolicyService;
     @Autowired
-    private
-    TrustedListsCertificateSource trustedListsCertificateSource;
+    private TrustedListsCertificateSource trustedListsCertificateSource;
     @Autowired
-    private
-    GenericSignaturePolicyProperties policySettings;
+    private GenericSignaturePolicyProperties policySettings;
+    @Autowired
+    private ContainerValidatorFactory containerValidatorFactory;
 
     @Before
     public void setUp() {
@@ -75,6 +76,8 @@ public class PDFValidationServiceTest {
         signaturePolicyService = new ConstraintLoadingSignaturePolicyService(policySettings);
         validationService.setSignaturePolicyService(signaturePolicyService);
         validationService.setReportConfigurationProperties(new ReportConfigurationProperties(true));
+
+        validationService.setContainerValidatorFactory(containerValidatorFactory);
     }
 
     @Test

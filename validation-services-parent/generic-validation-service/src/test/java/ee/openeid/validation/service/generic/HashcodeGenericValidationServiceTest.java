@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Riigi Infosüsteemide Amet
+ * Copyright 2019 - 2021 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -23,6 +23,7 @@ import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.siva.validation.util.CertUtil;
 import ee.openeid.validation.service.generic.configuration.GenericSignaturePolicyProperties;
+import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import org.bouncycastle.util.encoders.Base64;
 import org.junit.Assert;
@@ -57,11 +58,11 @@ public class HashcodeGenericValidationServiceTest {
     private HashcodeGenericValidationService validationService;
     private ConstraintLoadingSignaturePolicyService signaturePolicyService;
     @Autowired
-    private
-    TrustedListsCertificateSource trustedListsCertificateSource;
+    private TrustedListsCertificateSource trustedListsCertificateSource;
     @Autowired
-    private
-    GenericSignaturePolicyProperties policySettings;
+    private GenericSignaturePolicyProperties policySettings;
+    @Autowired
+    private ContainerValidatorFactory containerValidatorFactory;
 
     @Before
     public void setUp() {
@@ -71,6 +72,8 @@ public class HashcodeGenericValidationServiceTest {
         signaturePolicyService = new ConstraintLoadingSignaturePolicyService(policySettings);
         validationService.setSignaturePolicyService(signaturePolicyService);
         validationService.setReportConfigurationProperties(new ReportConfigurationProperties(true));
+
+        validationService.setContainerValidatorFactory(containerValidatorFactory);
     }
 
     @Test

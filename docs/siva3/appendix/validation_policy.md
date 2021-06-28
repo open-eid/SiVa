@@ -14,8 +14,8 @@ Different policy versions may be used by the service in the following conditions
 
 The following validation policy versions are supported in SiVa 2.0 and 3.0 service:
 
-1. [**SiVA Signature Validation Policy - Version 3 (POLv3)**](validation_policy/#POLv3)
-2. [**SiVA Signature Validation Policy - Version 4 (POLv4)**](validation_policy/#POLv4)
+1. [**SiVA Signature Validation Policy - Version 3 (POLv3)**](#POLv3)
+2. [**SiVA Signature Validation Policy - Version 4 (POLv4)**](#POLv4)
 
 The following validation policy versions are marked as obsolete in SiVa 2.0 service:
 
@@ -27,8 +27,8 @@ The following validation policy versions are marked as obsolete in SiVa 2.0 serv
 1. The validation policy documents describe validation rules for all digital signature formats that are supported in SiVa.
 * All rules described for electronic signatures also apply for electronic seals and digital stamps if not explicitly stated otherwise.
 * The set of signature validation constraints that are used by the Service are a combination of constraints defined in the Service itself and constraints that are implicitly defined in base components of the service, including:
-    * Validation rules defined by the standard or specification documents of the digital signature formats supported in SiVa (described in [Signature format constraints](validation_policy/#common_format) section).
-    * Validation rules defined by base libraries used in SiVa that implement the supported digital signature formats, i.e. the validation constraints that are imposed by the source code implementation or configuration of the base libraries (described in [Base libraries' constraints](validation_policy/#common_libraries) section).
+    * Validation rules defined by the standard or specification documents of the digital signature formats supported in SiVa (described in [Signature format constraints](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_format) section).
+    * Validation rules defined by base libraries used in SiVa that implement the supported digital signature formats, i.e. the validation constraints that are imposed by the source code implementation or configuration of the base libraries (described in [Base libraries' constraints](#common_libraries) section).
 
 !!! note
 	When no specific validation rule is set in the present document, the requirements and rules from the abovementioned implicit sources for validation requirements shall apply in their entirety. When specific requirements and rules are set in the present validation policy document, they shall prevail over the corresponding requirements set in the implicit resources.
@@ -54,7 +54,7 @@ http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv3
 	* SSCD/QSCD (Secure/Qualified Signature Creation Device) requirement
 		* Signer certificate may or may not comply with SSCD/QSCD criteria. 
 		* The signer's certificate is considered acceptable by the validation process even if it is not possible to determine the certificate's SSCD/QSCD compliance.
-* Constraints defined in the [Common validation constraints (POLv3, POLv4)](validation_policy/#common_POLv3_POLv4) section
+* Constraints defined in the [Common validation constraints (POLv3, POLv4)](#common_POLv3_POLv4) section
 
 
 ## SiVA Signature Validation Policy - Version 4 (POLv4)
@@ -81,8 +81,8 @@ http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
 		* If it is not possible to determine the signature type, it must comply with SSCD/QSCD criteria.
 		* If Trusted Lists are used during signature validation then the also signer certificate’s SSCD/QSCD qualification information in the Trusted List is taken into account. 
 	* The signer's certificate is not considered acceptable by the validation process if it is not possible to determine the certificate's QC and SSCD/QSCD compliance, with the following exception:
-		* In case of DIGIDOC-XML 1.0...1.3 and the respective hashcode formats, it is assumed that the signer's certificate complies with QC and SSCD/QSCD requirements, if the certificate is issued by [SK](https://sk.ee/en/repository/certs/) and if the nonRepudiation bit has been set in the certificate's Key Usage field. See also [Certificate Profile](https://sk.ee/en/repository/profiles/) documents of certificates issued by SK, [ETSI EN 319 412-2](http://www.etsi.org/deliver/etsi_en/319400_319499/31941202/02.01.01_60/en_31941202v020101p.pdf) and [ETSI EN 319 412-3](http://www.etsi.org/deliver/etsi_en/319400_319499/31941203/01.01.01_60/en_31941203v010101p.pdf).
-* Constraints defined in the [Common validation constraints (POLv3, POLv4)](validation_policy/#common_POLv3_POLv4) section
+		* In case of DIGIDOC-XML 1.0...1.3 and the respective hashcode formats, it is assumed that the signer's certificate complies with QC and SSCD/QSCD requirements, if the certificate is issued by [SK](https://www.skidsolutions.eu/en/repository/certs/) and if the nonRepudiation bit has been set in the certificate's Key Usage field. See also [Certificate Profile](https://www.skidsolutions.eu/en/repository/profiles/) documents of certificates issued by SK, [ETSI EN 319 412-2](http://www.etsi.org/deliver/etsi_en/319400_319499/31941202/02.01.01_60/en_31941202v020101p.pdf) and [ETSI EN 319 412-3](http://www.etsi.org/deliver/etsi_en/319400_319499/31941203/01.01.01_60/en_31941203v010101p.pdf).
+* Constraints defined in the [Common validation constraints (POLv3, POLv4)](#common_POLv3_POLv4) section
 
 
 ## Common validation constraints (POLv3, POLv4)
@@ -99,12 +99,12 @@ http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
 1. SiVa implicitly implements constraints that are specified in the specification documents of the signature formats supported by the Service:
 
 	* [BDOC 2.1](http://id.ee/wp-content/uploads/2020/06/bdoc-spec212-eng.pdf) ASiC-E/XAdES signatures
-	* [X-Road](https://cyber.ee/uploads/2013/05/T-4-23-Profile-for-High-Performance-Digital-Signatures1.pdf) ASiC-E/XAdES signatures
+	* [X-Road](https://cyber.ee/research/reports/T-4-23-Profile-for-High-Performance-Digital-Signatures.pdf) ASiC-E/XAdES signatures
 	* [PAdES](http://www.etsi.org/deliver/etsi_en/319100_319199/31914201/01.01.01_60/en_31914201v010101p.pdf) signatures
 	* [XAdES](http://www.etsi.org/deliver/etsi_en/319100_319199/31913201/01.01.01_60/en_31913201v010101p.pdf) signatures
 	* [CAdES](http://www.etsi.org/deliver/etsi_en/319100_319199/31912201/01.01.01_60/en_31912201v010101p.pdf) signatures
 	* [DIGIDOC-XML](https://www.id.ee/wp-content/uploads/2020/08/digidoc_format_1.3.pdf)  1.0, 1.1, 1.2, 1.3 signatures
-	* DIGIDOC-XML 1.0, 1.1, 1.2 and 1.3 signatures in [hashcode format](http://sertkeskus.github.io/dds-documentation/api/api_docs/#ddoc-format-and-hashcode)
+	* DIGIDOC-XML 1.0, 1.1, 1.2 and 1.3 signatures in [hashcode format](https://open-eid.github.io/allkirjastamisteenus/dds-api/#hashcode)
 
 ### Base libraries' constraints
 <a name="common_libraries"></a>
@@ -156,7 +156,7 @@ Legend:
 1. The signature must contain the certificate of the trust anchor and all certificates necessary for the signature validator to build a certification path up to the trust anchor. This applies to the signer’s certificate and the certificates of trust service providers that have issued the time-stamp token and revocation data that are incorporated in the signature.
 2. Trust Anchors are:
 	* In case of XAdES/CAdES/PAdES formats: [EU Member State Trusted Lists](https://ec.europa.eu/tools/lotl/eu-lotl.xml).
-	* In case of DIGIDOC-XML 1.0...1.3 and respective hashcode formats: Estonian CA certificates issued by [SK](https://sk.ee/en/repository/certs/), defined in local configuration file.
+	* In case of DIGIDOC-XML 1.0...1.3 and respective hashcode formats: Estonian CA certificates issued by [SK](https://www.skidsolutions.eu/en/repository/certs/), defined in local configuration file.
 	* In case of X-Road ASiC-E signatures, SK issued KLASS3-SK 2010, and KLASS3-SK 2010 OCSP RESPONDER and SK TIMESTAMPING AUTHORITY certificates, defined in local configuration file.
 
 

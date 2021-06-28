@@ -13,10 +13,19 @@ management:
   endpoints:
     web:
       exposure:
-        include: health
+        include:
+          - health
+          - heartbeat
+          - version
       base-path: /monitoring
   endpoint:
     health:
       show-details: "ALWAYS"
+    heartbeat:
+      enabled: true
+      cache:
+        time-to-live: 10s
+    version:
+      enabled: true
 
 

@@ -63,7 +63,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
     public void testGetDataFileRequestEmptyInputs() {
         String json = postForDataFiles(dataFilesRequestInvalidValues("", "")).asString();
         assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(json, FILENAME, INVALID_DATA_FILE_FILENAME) == 1);
-        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(json, DOCUMENT, MAY_NOT_BE_EMPTY) == 1);
+        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(json, DOCUMENT, MUST_NOT_BE_BLANK) == 1);
         assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(json, DOCUMENT, INVALID_BASE_64) == 1);
     }
 
@@ -84,7 +84,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
     public void testGetDataFileRequestEmptyInputsEmptyBody() {
         String response = postForDataFiles(new JSONObject().toString()).thenReturn().body().asString();
         assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, INVALID_DATA_FILE_FILENAME) == 1);
-        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, MAY_NOT_BE_EMPTY) == 1);
+        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, MUST_NOT_BE_BLANK) == 1);
         assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, INVALID_BASE_64) == 1);
     }
 
@@ -174,7 +174,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
         JSONObject jsonObject = new JSONObject(dataFilesRequest("valid_XML1_3.ddoc"));
         jsonObject.remove("document");
         String response = postForDataFiles(jsonObject.toString()).asString();
-        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, MAY_NOT_BE_EMPTY) == 1);
+        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, MUST_NOT_BE_BLANK) == 1);
         assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, INVALID_BASE_64) == 1);
     }
 

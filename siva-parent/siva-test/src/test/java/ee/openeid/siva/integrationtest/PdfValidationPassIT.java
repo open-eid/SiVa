@@ -151,23 +151,25 @@ public class PdfValidationPassIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
      *
-     * Title: The PDF-file has OCSP almost 24h before TS
+     * Title: The CRL nextUpdate time is after timestamp time
      *
-     * Expected Result: Warning should be returned but validation should pass
+     * Expected Result: Validation should pass
      *
-     * File: hellopades-lt-sha256-rsa2048-ocsp-before-ts.pdf
+     * File: pades-lt-CRL-taken-days-later.pdf
      */
     @Test
-    public void ocspAlmost24hBeforeTsShouldPassWithWarning() {
+    public void crlTakenDaysAfterTsShouldPass() {
         setTestFilesDirectory("pdf/signature_revocation_value_test_files/");
-        post(validationRequestFor("hellopades-lt-sha256-rsa2048-ocsp-before-ts.pdf"))
+        post(validationRequestFor("pades-lt-CRL-taken-days-later.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.emptyOrNullString())
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.notNullValue())
+                .body("signatures[0].subjectDistinguishedName.commonName", Matchers.notNullValue())
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }

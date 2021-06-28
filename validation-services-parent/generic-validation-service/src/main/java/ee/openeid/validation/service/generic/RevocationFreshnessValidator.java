@@ -1,157 +1,158 @@
+/*
+ * Copyright 2020 - 2021 Riigi Infosüsteemi Amet
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
+ * the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and limitations under the Licence.
+ */
+
 package ee.openeid.validation.service.generic;
 
-import eu.europa.esig.dss.crl.CRLBinary;
-import eu.europa.esig.dss.crl.CRLUtils;
-import eu.europa.esig.dss.crl.CRLValidity;
+import ee.openeid.validation.service.generic.validator.TokenUtils;
 import eu.europa.esig.dss.diagnostic.CertificateWrapper;
-import eu.europa.esig.dss.diagnostic.DiagnosticData;
 import eu.europa.esig.dss.diagnostic.SignatureWrapper;
-import eu.europa.esig.dss.diagnostic.TimestampWrapper;
-import eu.europa.esig.dss.model.identifier.EncapsulatedRevocationTokenIdentifier;
-import eu.europa.esig.dss.model.x509.CertificateToken;
-import eu.europa.esig.dss.spi.DSSRevocationUtils;
-import eu.europa.esig.dss.validation.AdvancedSignature;
+import eu.europa.esig.dss.enumerations.RevocationType;
+import eu.europa.esig.dss.enumerations.TimestampType;
 import eu.europa.esig.dss.validation.reports.Reports;
-import lombok.SneakyThrows;
-import org.bouncycastle.cert.ocsp.BasicOCSPResp;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 
-import java.io.IOException;
 import java.time.Duration;
-import java.util.Collections;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 public class RevocationFreshnessValidator {
 
-    private static final Duration REVOCATION_FRESHNESS_FIFTEEN_MINUTES_DIFFERENCE = Duration.ofMinutes(15);
-    private static final Duration REVOCATION_FRESHNESS_DAY_DIFFERENCE = Duration.ofDays(1);
+    private static final Duration REVOCATION_FRESHNESS_OK_LIMIT = Duration.ofMinutes(15);
+    private static final Duration REVOCATION_FRESHNESS_WARNING_LIMIT = Duration.ofHours(24);
 
     private static final String REVOCATION_FRESHNESS_FAULT = "The revocation information is not considered as 'fresh'.";
+    private static final String TIMESTAMP_OCSP_ORDER_FAULT = "OCSP response production time is before timestamp time";
 
+    @NonNull
     private final Reports reports;
-    private final List<AdvancedSignature> signatures;
-
-    public RevocationFreshnessValidator(Reports reports, List<AdvancedSignature> signatures) {
-        this.reports = reports;
-        this.signatures = signatures;
-    }
 
     public void validate() {
-        DiagnosticData diagnosticData = reports.getDiagnosticData();
-        for (CertificateWrapper certificateWrapper : diagnosticData.getUsedCertificates()) {
-            for (SignatureWrapper signatureWrapper : diagnosticData.getSignatures()) {
-
-                if (signatureWrapper.getSigningCertificate() == null) {
-                    return;
-                }
-                validate(certificateWrapper, signatureWrapper);
-            }
-        }
+        reports.getDiagnosticData().getSignatures().forEach(this::validate);
     }
 
-    private void validate(CertificateWrapper certificateWrapper, SignatureWrapper signatureWrapper) {
-        if (!certificateWrapper.getId().equals(signatureWrapper.getSigningCertificate().getId())
-                || signatureWrapper.getTimestampList().isEmpty()) {
-            return;
+    private void validate(SignatureWrapper signatureWrapper) {
+        CertificateWrapper signingCertificateWrapper = signatureWrapper.getSigningCertificate();
+        if (signingCertificateWrapper == null) {
+            return; // No signing certificate present in signature
         }
-        CRLValidity crlValidity = findCRLValidity(signatureWrapper.getId(), certificateWrapper.getId());
-        Date ocspProducedAt = findOcspProducedAt(signatureWrapper.getId());
 
-        if (ocspProducedAt == null && crlValidity == null) {
-            return;
-        }
-        Date timestampProductionTime = getFirstTimestampProductionTime(signatureWrapper.getTimestampList());
+        Date timestampProductionTime = findEarliestValidSignatureTimestampProductionTime(signatureWrapper);
         if (timestampProductionTime == null) {
-            return;
+            return; // No valid timestamp present for this signature
         }
 
-        invokeRevocationFreshnessCheckIfNeeded(signatureWrapper.getId(), ocspProducedAt, crlValidity, timestampProductionTime);
-    }
+        Predicate<Date> timestampNotAfterPredicate = notAfterPredicateWithSamePrecision(timestampProductionTime);
 
-    private CRLValidity findCRLValidity(String signatureId, String certificateId) {
-        Optional<AdvancedSignature> advancedSignature = signatures.stream()
-                .filter(signature -> signature.getId().equals(signatureId))
-                .findFirst();
-        if (advancedSignature.isEmpty() || advancedSignature.get().getCRLSource() == null) {
-            return null;
+        List<Date> validCrlNextUpdateDates = findValidCRLNextUpdateDates(signingCertificateWrapper);
+        if (validCrlNextUpdateDates.stream().anyMatch(timestampNotAfterPredicate)) {
+            return; // At least one CRL is present, for which timestamp production time is not after CRL next update time
         }
 
-        Optional<EncapsulatedRevocationTokenIdentifier> tokenIdentifier = advancedSignature.get().getCRLSource()
-                .getAllRevocationBinaries()
-                .stream()
-                .findFirst();
-
-        Optional<CertificateToken> certificateToken = advancedSignature.get().getCertificates().stream()
-                .filter(certificate -> certificate.getDSSIdAsString().equals(certificateId))
-                .findFirst();
-        if (tokenIdentifier.isPresent() && certificateToken.isPresent() && tokenIdentifier.get() instanceof CRLBinary) {
-            return buildCRLValidity((CRLBinary) tokenIdentifier.get(), certificateToken.get());
+        List<Date> validOcspProducedAtDates = findValidOCSPProducedAtDates(signingCertificateWrapper);
+        if (CollectionUtils.isEmpty(validCrlNextUpdateDates) && CollectionUtils.isEmpty(validOcspProducedAtDates)) {
+            return; // No valid CRL-s nor OCSP responses present for this signature, no more checks to do
         }
-        return null;
+
+        Date earliestPostTimestampOcspProducedAtDate = findEarliestTime(validOcspProducedAtDates, timestampNotAfterPredicate);
+        if (earliestPostTimestampOcspProducedAtDate != null) {
+            Duration timestampOcspDifference = Duration.between(timestampProductionTime.toInstant(), earliestPostTimestampOcspProducedAtDate.toInstant());
+            if (timestampOcspDifference.compareTo(REVOCATION_FRESHNESS_OK_LIMIT) <= 0) {
+                return; // OCSP is not taken later than the OK limit after timestamp
+            } else if (timestampOcspDifference.compareTo(REVOCATION_FRESHNESS_WARNING_LIMIT) <= 0) {
+                addSignatureWarning(signatureWrapper.getId(), REVOCATION_FRESHNESS_FAULT);
+                return; // OCSP is not taken later than the WARNING limit after timestamp
+            }
+        } else if (CollectionUtils.isNotEmpty(validOcspProducedAtDates)) {
+            addSignatureError(signatureWrapper.getId(), TIMESTAMP_OCSP_ORDER_FAULT);
+            return; // There are valid OCSP responses, but all of them are taken before the timestamp
+        }
+
+        // Every other case is considered as revocation freshness error
+        addSignatureError(signatureWrapper.getId(), REVOCATION_FRESHNESS_FAULT);
     }
 
-    @SneakyThrows
-    protected CRLValidity buildCRLValidity(CRLBinary crlBinary, CertificateToken certificateToken) {
-        return CRLUtils.buildCRLValidity(crlBinary, certificateToken);
-    }
-
-    private Date findOcspProducedAt(String signatureId) {
-        Optional<List<BasicOCSPResp>> basicOCSPResps = signatures.stream()
-                .filter(signature -> signature.getId().equals(signatureId) && signature.getOCSPSource() != null)
-                .findFirst()
-                .map(signature -> signature.getOCSPSource().getAllRevocationBinaries().stream()
-                        .map(o -> {
-                            try {
-                                return DSSRevocationUtils.loadOCSPFromBinaries(o.getBinaries());
-                            } catch (IOException e) {
-                                throw new IllegalArgumentException("Invalid ocsp binary");
-                            }
-                        })
-                        .collect(Collectors.toList()));
-
-        return basicOCSPResps.flatMap(
-                ocspResps -> ocspResps.stream()
-                        .map(BasicOCSPResp::getProducedAt)
-                        .sorted()
-                        .findFirst())
+    private static Date findEarliestValidSignatureTimestampProductionTime(SignatureWrapper signatureWrapper) {
+        return signatureWrapper.getTimestampList().stream()
+                .filter(timestamp -> TimestampType.SIGNATURE_TIMESTAMP.equals(timestamp.getType()))
+                .filter(TokenUtils::isTokenSignatureIntactAndSignatureValidAndTrustedChain)
+                .filter(TokenUtils::isTimestampTokenMessageImprintDataFoundAndMessageImprintDataIntact)
+                .flatMap(timestamp -> Optional.ofNullable(timestamp.getProductionTime()).stream())
+                .min(Comparator.naturalOrder())
                 .orElse(null);
     }
 
-    private Date getFirstTimestampProductionTime(List<TimestampWrapper> timestamps) {
-        TimestampWrapper timestampWrapper = Collections.min(timestamps, Comparator.comparing(TimestampWrapper::getProductionTime));
-        if (timestampWrapper.getProductionTime() != null)
-            return timestampWrapper.getProductionTime();
-        return null;
+    private static List<Date> findValidCRLNextUpdateDates(CertificateWrapper certificateWrapper) {
+        return certificateWrapper.getCertificateRevocationData().stream()
+                .filter(revocation -> RevocationType.CRL.equals(revocation.getRevocationType()))
+                .filter(TokenUtils::isTokenSignatureIntactAndSignatureValidAndTrustedChain)
+                .filter(TokenUtils::isRevocationTokenForCertificateAndCertificateStatusGood)
+                .flatMap(crl -> Optional.ofNullable(crl.getNextUpdate()).stream())
+                .collect(Collectors.toList());
     }
 
-    private void invokeRevocationFreshnessCheckIfNeeded(String signatureId, Date ocspProducedAt, CRLValidity crlValidity, Date timeStampProductionTime) {
-        boolean revocationFreshnessCheckInvokeError = isRevocationFreshnessCheckInvalid(ocspProducedAt, crlValidity, timeStampProductionTime);
-        if (revocationFreshnessCheckInvokeError) {
-            reports.getSimpleReport().getErrors(signatureId).add(REVOCATION_FRESHNESS_FAULT);
-        } else {
-            if (ocspProducedAt == null) {
-                return;
+    private static List<Date> findValidOCSPProducedAtDates(CertificateWrapper certificateWrapper) {
+        return certificateWrapper.getCertificateRevocationData().stream()
+                .filter(revocation -> RevocationType.OCSP.equals(revocation.getRevocationType()))
+                .filter(TokenUtils::isTokenSignatureIntactAndSignatureValidAndTrustedChain)
+                .filter(TokenUtils::isRevocationTokenForCertificateAndCertificateStatusGood)
+                .flatMap(ocsp -> Optional.ofNullable(ocsp.getProductionDate()).stream())
+                .collect(Collectors.toList());
+    }
+
+    private static Predicate<Date> notAfterPredicateWithSamePrecision(final Date referenceTime) {
+        return (timeToCompare) -> {
+            Instant referenceInstant = referenceTime.toInstant();
+            Instant instantToCompare = timeToCompare.toInstant();
+
+            boolean referenceInstantHighPrecision = referenceInstant.getNano() != 0L;
+            boolean instantToCompareHighPrecision = instantToCompare.getNano() != 0L;
+
+            if (referenceInstantHighPrecision && !instantToCompareHighPrecision) {
+                referenceInstant = referenceInstant.truncatedTo(ChronoUnit.SECONDS);
             }
-            boolean revocationFreshnessCheckInvokeWarning = areNotWithinRange(ocspProducedAt, timeStampProductionTime, REVOCATION_FRESHNESS_FIFTEEN_MINUTES_DIFFERENCE);
-            if (revocationFreshnessCheckInvokeWarning) {
-                reports.getSimpleReport().getWarnings(signatureId).add(REVOCATION_FRESHNESS_FAULT);
+            if (instantToCompareHighPrecision && !referenceInstantHighPrecision) {
+                instantToCompare = instantToCompare.truncatedTo(ChronoUnit.SECONDS);
             }
-        }
+
+            return !referenceInstant.isAfter(instantToCompare);
+        };
     }
 
-    private boolean isRevocationFreshnessCheckInvalid(Date ocspProducedAt, CRLValidity crlValidity, Date timeStampProductionTime) {
-        if (crlValidity != null) {
-            return !(timeStampProductionTime.after(crlValidity.getThisUpdate()) && timeStampProductionTime.before(crlValidity.getNextUpdate()));
-        }
-        return areNotWithinRange(ocspProducedAt, timeStampProductionTime, REVOCATION_FRESHNESS_DAY_DIFFERENCE);
-
+    private static Date findEarliestTime(List<Date> dateList, Predicate<Date> datePredicate) {
+        return dateList.stream()
+                .filter(datePredicate)
+                .min(Comparator.naturalOrder())
+                .orElse(null);
     }
 
-    private static boolean areNotWithinRange(Date date1, Date date2, Duration range) {
-        Duration timeBetweenDates = Duration.between(date1.toInstant(), date2.toInstant()).abs();
-        return timeBetweenDates.compareTo(range) > 0;
+    private void addSignatureWarning(String signatureId, String warning) {
+        reports.getSimpleReport().getWarnings(signatureId).add(warning);
     }
+
+    private void addSignatureError(String signatureId, String error) {
+        reports.getSimpleReport().getErrors(signatureId).add(error);
+    }
+
 }

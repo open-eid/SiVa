@@ -266,7 +266,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("SINIVEE,VEIKO,36706020210"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIEPzCCAyegAwIBAgIQH0FobucEcidPGVN0HUUgATANBgkqhk"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName",  Matchers.is("DemoCA"))
-                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content",  Matchers.startsWith("MIIEBzCCAu+gAwIBAgIJALWMTsk6oP/yMA0GCSqGSIb3DQEBBQ"))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content",  Matchers.startsWith("MIIDmjCCAoKgAwIBAgICEAAwDQYJKoZIhvcNAQEFBQAwgZkxCz"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -784,8 +784,33 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-E"))
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
+                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
+                .body("signatures[0].errors.content", Matchers.hasItem("The signed qualifying property: neither 'message-digest' nor 'SignedProperties' is present!"))
+                .body("validSignaturesCount", Matchers.is(0));
+    }
+
+    /**
+     * TestCaseID: Bdoc-ValidationFail-32
+     * <p>
+     * TestType: Automated
+     * <p>
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
+     * <p>
+     * Title: Bdoc OCSP certificate in both signature and OCSP token
+     * <p>
+     * Expected Result: The document should fail the validation
+     * <p>
+     * File: NoOcspCertificateAnywhere.bdoc
+     */
+    @Test
+    public void bdocTimemarkNoOcspCertificate() {
+        setTestFilesDirectory("bdoc/test/timemark/");
+        post(validationRequestFor("NoOcspCertificateAnywhere.bdoc"))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].errors.content", Matchers.hasItem("SignedProperties Reference element is missing"))
+                .body("signatures[0].errors.content", Matchers.hasItem("OCSP Responder does not meet TM requirements"))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 

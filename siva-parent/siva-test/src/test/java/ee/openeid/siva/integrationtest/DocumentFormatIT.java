@@ -87,7 +87,8 @@ public class DocumentFormatIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())
-                .body("signatures[0].warnings", Matchers.emptyOrNullString())
+                .body("signatures[0].warnings", Matchers.hasSize(1))
+                .body("signatures[0].warnings[0].content", Matchers.is("Data file 'Proov (2).txt' is empty"))
                 .body("signaturesCount", Matchers.is(2))
                 .body("validSignaturesCount", Matchers.is(2));
     }

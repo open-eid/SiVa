@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2017 - 2021 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -14,7 +14,7 @@
  * See the Licence for the specific language governing permissions and limitations under the Licence.
  */
 
-package ee.openeid.validation.service.generic.report;
+package ee.openeid.validation.service.generic.validator.report;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Reports;
@@ -24,10 +24,27 @@ import ee.openeid.siva.validation.document.report.SubjectDistinguishedName;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
-import ee.openeid.validation.service.generic.validator.report.GenericValidationReportBuilder;
-import ee.openeid.validation.service.generic.validator.report.ReportBuilderData;
-import eu.europa.esig.dss.diagnostic.jaxb.*;
+import eu.europa.esig.dss.diagnostic.CertificateRevocationWrapper;
+import eu.europa.esig.dss.diagnostic.TimestampWrapper;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlBasicSignature;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlCertificate;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlContainerInfo;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlDiagnosticData;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlDigestAlgoAndValue;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlDistinguishedName;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlFoundRevocations;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlFoundTimestamp;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlPolicy;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlRelatedRevocation;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlRevocation;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlSignature;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlSignatureProductionPlace;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlSignatureScope;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlSignerRole;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlSigningCertificate;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlTimestamp;
 import eu.europa.esig.dss.enumerations.ASiCContainerType;
+import eu.europa.esig.dss.enumerations.CertificateStatus;
 import eu.europa.esig.dss.enumerations.DigestAlgorithm;
 import eu.europa.esig.dss.enumerations.EncryptionAlgorithm;
 import eu.europa.esig.dss.enumerations.EndorsementType;
@@ -41,22 +58,28 @@ import eu.europa.esig.dss.simplereport.jaxb.XmlSimpleReport;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.validation.AdvancedSignature;
 import eu.europa.esig.dss.validation.executor.ValidationLevel;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Stream;
 
-
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class GenericValidationReportBuilderTest {
 
     @Mock
@@ -70,9 +93,9 @@ public class GenericValidationReportBuilderTest {
         ReportBuilderData reportBuilderData = getReportBuilderData(getDssReports(""));
         Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
         ValidationConclusion validationConclusion = reports.getSimpleReport().getValidationConclusion();
-        Assert.assertEquals(Integer.valueOf(1), validationConclusion.getValidSignaturesCount());
-        Assert.assertEquals("TOTAL-PASSED", validationConclusion.getSignatures().get(0).getIndication());
-        Assert.assertEquals("XAdES_BASELINE_LT", validationConclusion.getSignatures().get(0).getSignatureFormat());
+        Assertions.assertEquals(Integer.valueOf(1), validationConclusion.getValidSignaturesCount());
+        Assertions.assertEquals("TOTAL-PASSED", validationConclusion.getSignatures().get(0).getIndication());
+        Assertions.assertEquals("XAdES_BASELINE_LT", validationConclusion.getSignatures().get(0).getSignatureFormat());
     }
 
     @Test
@@ -80,9 +103,9 @@ public class GenericValidationReportBuilderTest {
 
         ReportBuilderData reportBuilderData = getReportBuilderData(getDssReports(TM_POLICY_OID));
         Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
-        Assert.assertEquals(Integer.valueOf(1), reports.getSimpleReport().getValidationConclusion().getValidSignaturesCount());
-        Assert.assertEquals("TOTAL-PASSED", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getIndication());
-        Assert.assertEquals("XAdES_BASELINE_LT_TM", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getSignatureFormat());
+        Assertions.assertEquals(Integer.valueOf(1), reports.getSimpleReport().getValidationConclusion().getValidSignaturesCount());
+        Assertions.assertEquals("TOTAL-PASSED", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getIndication());
+        Assertions.assertEquals("XAdES_BASELINE_LT_TM", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getSignatureFormat());
     }
 
     @Test
@@ -93,9 +116,9 @@ public class GenericValidationReportBuilderTest {
 
         ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
         Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
-        Assert.assertEquals(Integer.valueOf(0), reports.getSimpleReport().getValidationConclusion().getValidSignaturesCount());
-        Assert.assertEquals("TOTAL-FAILED", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getIndication());
-        Assert.assertEquals("Something is wrong", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getErrors().get(0).getContent());
+        Assertions.assertEquals(Integer.valueOf(0), reports.getSimpleReport().getValidationConclusion().getValidSignaturesCount());
+        Assertions.assertEquals("TOTAL-FAILED", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getIndication());
+        Assertions.assertEquals("Something is wrong", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getErrors().get(0).getContent());
     }
 
     @Test
@@ -104,8 +127,8 @@ public class GenericValidationReportBuilderTest {
         dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).setIndication(Indication.INDETERMINATE);
         ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
         Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
-        Assert.assertEquals(Integer.valueOf(0), reports.getSimpleReport().getValidationConclusion().getValidSignaturesCount());
-        Assert.assertEquals("INDETERMINATE", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getIndication());
+        Assertions.assertEquals(Integer.valueOf(0), reports.getSimpleReport().getValidationConclusion().getValidSignaturesCount());
+        Assertions.assertEquals("INDETERMINATE", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getIndication());
     }
 
     @Test
@@ -118,8 +141,8 @@ public class GenericValidationReportBuilderTest {
         Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
 
         SubjectDistinguishedName subjectDN = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getSubjectDistinguishedName();
-        Assert.assertEquals("", subjectDN.getCommonName());
-        Assert.assertEquals("", subjectDN.getSerialNumber());
+        Assertions.assertEquals("", subjectDN.getCommonName());
+        Assertions.assertEquals("", subjectDN.getSerialNumber());
     }
 
     @Test
@@ -147,8 +170,8 @@ public class GenericValidationReportBuilderTest {
         Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
 
         List<SignerRole> signerRole = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getSignerRole();
-        Assert.assertEquals(1, signerRole.size());
-        Assert.assertEquals("role1", signerRole.get(0).getClaimedRole());
+        Assertions.assertEquals(1, signerRole.size());
+        Assertions.assertEquals("role1", signerRole.get(0).getClaimedRole());
     }
 
     @Test
@@ -162,7 +185,7 @@ public class GenericValidationReportBuilderTest {
         Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
 
         List<SignerRole> signerRole = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getSignerRole();
-        Assert.assertTrue(signerRole.isEmpty());
+        Assertions.assertTrue(signerRole.isEmpty());
     }
 
     @Test
@@ -181,10 +204,10 @@ public class GenericValidationReportBuilderTest {
         Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
 
         SignatureProductionPlace signatureProductionPlace = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getSignatureProductionPlace();
-        Assert.assertEquals("Tallinn", signatureProductionPlace.getCity());
-        Assert.assertEquals("Eesti", signatureProductionPlace.getCountryName());
-        Assert.assertEquals("12345", signatureProductionPlace.getPostalCode());
-        Assert.assertEquals("Harjumaa", signatureProductionPlace.getStateOrProvince());
+        Assertions.assertEquals("Tallinn", signatureProductionPlace.getCity());
+        Assertions.assertEquals("Eesti", signatureProductionPlace.getCountryName());
+        Assertions.assertEquals("12345", signatureProductionPlace.getPostalCode());
+        Assertions.assertEquals("Harjumaa", signatureProductionPlace.getStateOrProvince());
     }
 
     @Test
@@ -198,7 +221,7 @@ public class GenericValidationReportBuilderTest {
         Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
 
         SignatureProductionPlace signatureProductionPlace = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getSignatureProductionPlace();
-        Assert.assertNull(signatureProductionPlace);
+        Assertions.assertNull(signatureProductionPlace);
     }
 
     @Test
@@ -214,7 +237,7 @@ public class GenericValidationReportBuilderTest {
         Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
 
         SignatureProductionPlace signatureProductionPlace = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getSignatureProductionPlace();
-        Assert.assertNull(signatureProductionPlace);
+        Assertions.assertNull(signatureProductionPlace);
     }
 
     @Test
@@ -225,7 +248,7 @@ public class GenericValidationReportBuilderTest {
         ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
         Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
 
-        Assert.assertEquals("http://www.w3.org/2007/05/xmldsig-more#sha256-rsa-MGF1",
+        Assertions.assertEquals("http://www.w3.org/2007/05/xmldsig-more#sha256-rsa-MGF1",
                 reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getSignatureMethod());
     }
 
@@ -245,7 +268,7 @@ public class GenericValidationReportBuilderTest {
         ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
         Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
 
-        Assert.assertEquals("", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getTimeAssertionMessageImprint());
+        Assertions.assertEquals("", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getTimeAssertionMessageImprint());
     }
 
     @Test
@@ -271,7 +294,7 @@ public class GenericValidationReportBuilderTest {
         ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
         Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
 
-        Assert.assertEquals("", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getTimeAssertionMessageImprint());
+        Assertions.assertEquals("", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getTimeAssertionMessageImprint());
     }
 
     @Test
@@ -282,7 +305,7 @@ public class GenericValidationReportBuilderTest {
         ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
         Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
 
-        Assert.assertEquals("2018-02-11T00:00:00Z",
+        Assertions.assertEquals("2018-02-11T00:00:00Z",
                 reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getTimestampCreationTime());
     }
 
@@ -295,7 +318,7 @@ public class GenericValidationReportBuilderTest {
 
         ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
         Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
-        Assert.assertNull(reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getTimestampCreationTime());
+        Assertions.assertNull(reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getTimestampCreationTime());
     }
 
     @Test
@@ -306,7 +329,7 @@ public class GenericValidationReportBuilderTest {
         ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
         Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
 
-        Assert.assertEquals("2018-02-16T00:00:00Z",
+        Assertions.assertEquals("2018-02-16T00:00:00Z",
                 reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getOcspResponseCreationTime());
     }
 
@@ -319,7 +342,92 @@ public class GenericValidationReportBuilderTest {
 
         ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
         Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
-        Assert.assertNull(reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getOcspResponseCreationTime());
+        Assertions.assertNull(reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getOcspResponseCreationTime());
+    }
+
+    @ParameterizedTest
+    @MethodSource("earliestBestFittingTimestampTestArguments")
+    public void testInternalGetEarliestBestFittingTimestamp(
+            List<TimestampWrapper> timestamps, TimestampWrapper expectedTimestamp
+    ) {
+        TimestampWrapper result = GenericValidationReportBuilder.getEarliestBestFittingTimestamp(timestamps);
+        Assertions.assertSame(expectedTimestamp, result);
+    }
+
+    private static Stream<Arguments> earliestBestFittingTimestampTestArguments() {
+        Instant now = Instant.now().truncatedTo(ChronoUnit.SECONDS);
+        TimestampWrapper validTimestamp = createTimestampWrapper(true, now);
+        TimestampWrapper invalidTimestamp = createTimestampWrapper(false, now);
+        return Stream.of(
+                Arguments.of(List.of(validTimestamp), validTimestamp),
+                Arguments.of(List.of(
+                        createTimestampWrapper(true, now.plusSeconds(1L)),
+                        createTimestampWrapper(false, null),
+                        createTimestampWrapper(true, now.plusSeconds(60L * 60L * 24L)),
+                        validTimestamp,
+                        createTimestampWrapper(false, null)
+                ), validTimestamp),
+                Arguments.of(List.of(invalidTimestamp), invalidTimestamp),
+                Arguments.of(List.of(
+                        createTimestampWrapper(false, now.plusSeconds(60L * 60L)),
+                        invalidTimestamp,
+                        createTimestampWrapper(false, now.plusSeconds(60L * 60L * 24L))
+                ), invalidTimestamp)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("latestBestFittingTimestampTestArguments")
+    public void testInternalGetLatestBestFittingTimestamp(
+            List<TimestampWrapper> timestamps, TimestampWrapper expectedTimestamp
+    ) {
+        TimestampWrapper result = GenericValidationReportBuilder.getLatestBestFittingTimestamp(timestamps);
+        Assertions.assertSame(expectedTimestamp, result);
+    }
+
+    private static Stream<Arguments> latestBestFittingTimestampTestArguments() {
+        Instant now = Instant.now().truncatedTo(ChronoUnit.SECONDS);
+        TimestampWrapper validTimestamp = createTimestampWrapper(true, now);
+        TimestampWrapper invalidTimestamp = createTimestampWrapper(false, now);
+        return Stream.of(
+                Arguments.of(List.of(validTimestamp), validTimestamp),
+                Arguments.of(List.of(
+                        createTimestampWrapper(true, now.minusSeconds(1L)),
+                        createTimestampWrapper(false, null),
+                        createTimestampWrapper(true, now.minusSeconds(60L * 60L * 24L)),
+                        validTimestamp,
+                        createTimestampWrapper(false, null)
+                ), validTimestamp),
+                Arguments.of(List.of(invalidTimestamp), invalidTimestamp),
+                Arguments.of(List.of(
+                        createTimestampWrapper(false, now.minusSeconds(60L * 60L)),
+                        invalidTimestamp,
+                        createTimestampWrapper(false, now.minusSeconds(60L * 60L * 24L))
+                ), invalidTimestamp)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("bestFittingRevocationTestArguments")
+    public void testInternalGetBestFittingRevocation(
+            List<CertificateRevocationWrapper> revocations, CertificateRevocationWrapper expectedResult
+    ) {
+        CertificateRevocationWrapper result = GenericValidationReportBuilder.getBestFittingRevocation(revocations);
+        Assertions.assertSame(expectedResult, result);
+    }
+
+    private static Stream<Arguments> bestFittingRevocationTestArguments() {
+        final CertificateRevocationWrapper validAndGoodRevocation = createCertificateRevocationWrapper(true, CertificateStatus.GOOD);
+        return Stream.of(
+                Arguments.of(List.of(validAndGoodRevocation), validAndGoodRevocation),
+                Arguments.of(List.of(
+                        createCertificateRevocationWrapper(false, null),
+                        createCertificateRevocationWrapper(true, CertificateStatus.REVOKED),
+                        createCertificateRevocationWrapper(true, CertificateStatus.UNKNOWN),
+                        validAndGoodRevocation,
+                        createCertificateRevocationWrapper(true, CertificateStatus.GOOD)
+                ), validAndGoodRevocation)
+        );
     }
 
     private ReportBuilderData getReportBuilderData(eu.europa.esig.dss.validation.reports.Reports reports) {
@@ -433,4 +541,33 @@ public class GenericValidationReportBuilderTest {
         simpleReport.getSignatureOrTimestamp().add(xmlSignature);
         return simpleReport;
     }
+
+    private static TimestampWrapper createTimestampWrapper(boolean valid, Instant productionTime) {
+        TimestampWrapper timestampWrapper = Mockito.mock(TimestampWrapper.class);
+        Mockito.doReturn(valid).when(timestampWrapper).isMessageImprintDataFound();
+        if (valid) {
+            Mockito.doReturn(valid).when(timestampWrapper).isMessageImprintDataIntact();
+            Mockito.doReturn(valid).when(timestampWrapper).isSignatureIntact();
+            Mockito.doReturn(valid).when(timestampWrapper).isSignatureValid();
+            Mockito.doReturn(valid).when(timestampWrapper).isTrustedChain();
+        }
+        if (productionTime != null) {
+            Mockito.doReturn(Date.from(productionTime)).when(timestampWrapper).getProductionTime();
+        }
+        return timestampWrapper;
+    }
+
+    private static CertificateRevocationWrapper createCertificateRevocationWrapper(boolean valid, CertificateStatus certificateStatus) {
+        CertificateRevocationWrapper certificateRevocationWrapper = Mockito.mock(CertificateRevocationWrapper.class);
+        Mockito.doReturn(valid).when(certificateRevocationWrapper).isSignatureIntact();
+        if (valid) {
+            Mockito.doReturn(valid).when(certificateRevocationWrapper).isSignatureValid();
+            Mockito.doReturn(valid).when(certificateRevocationWrapper).isTrustedChain();
+        }
+        if (certificateStatus != null) {
+            Mockito.doReturn(certificateStatus).when(certificateRevocationWrapper).getStatus();
+        }
+        return certificateRevocationWrapper;
+    }
+
 }

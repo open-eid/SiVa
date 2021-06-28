@@ -209,22 +209,23 @@ public class PdfValidationFailIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
      *
-     * Title: CRL is out of thisUpdate and nextUpdate range
+     * Title: The PDF-file has OCSP almost 24h before TS
      *
-     * Expected Result: Validation should fail
+     * Expected Result: Validation should fail with an error of OCSP being taken before timestamp
      *
-     * File: pades-lt-CRL-taken-days-later.pdf
+     * File: hellopades-lt-sha256-rsa2048-ocsp-before-ts.pdf
      */
     @Test
-    public void crlTaken24hAfterTsShouldFail() {
+    public void ocspAlmost24hBeforeTsShouldFail() {
         setTestFilesDirectory("pdf/signature_revocation_value_test_files/");
-        post(validationRequestFor("pades-lt-CRL-taken-days-later.pdf"))
+        post(validationRequestFor("hellopades-lt-sha256-rsa2048-ocsp-before-ts.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.emptyOrNullString())
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
-                .body("signatures[0].errors[0].content", Matchers.is("The revocation information is not considered as 'fresh'."))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[0].errors[0].content", Matchers.is("OCSP response production time is before timestamp time"))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1));
     }

@@ -466,7 +466,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
                 .body("Signatures.Signature[0].SignatureFormat", Matchers.is("PAdES_BASELINE_B"))
                 .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-FAILED"))
                 .body("Signatures.Signature[0].SubIndication", Matchers.is("FORMAT_FAILURE"))
-                .body("Signatures.Signature[0].SignatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
+                .body("Signatures.Signature[0].SignatureLevel", Matchers.is("NOT_ADES"))
                 .body("Signatures.Signature[0].SignatureScopes.SignatureScope.Scope", Matchers.is("FULL"));
     }
 

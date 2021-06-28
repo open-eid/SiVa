@@ -18,11 +18,11 @@ package ee.openeid.siva.webapp.request.validation.annotations;
 
 import org.hibernate.validator.constraints.CompositionType;
 import org.hibernate.validator.constraints.ConstraintComposition;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import javax.validation.ReportAsSingleViolation;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Null;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

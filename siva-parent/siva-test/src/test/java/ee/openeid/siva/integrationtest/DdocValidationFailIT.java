@@ -439,7 +439,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
         post(validationRequestFor("KS-02_tyhi.ddoc"))
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("requestErrors.message", Matchers.hasItems("Document is not encoded in a valid base64 string", "may not be empty"))
+                .body("requestErrors.message", Matchers.hasItems("Document is not encoded in a valid base64 string", "must not be blank"))
                 .body("requestErrors", Matchers.hasSize(2));
     }
 

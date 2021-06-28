@@ -18,13 +18,10 @@ package ee.openeid.siva.manualtest;
 import ee.openeid.siva.common.DateTimeMatcher;
 import ee.openeid.siva.integrationtest.SiVaRestTests;
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
-import ee.openeid.siva.signature.configuration.SignatureServiceConfigurationProperties;
-import io.restassured.response.Response;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -36,17 +33,12 @@ import static org.hamcrest.Matchers.*;
 
 public class DetailedReportValidationManualIT extends SiVaRestTests {
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "pdf/signature_cryptographic_algorithm_test_files/";
-    private static final String VALIDATION_ENDPOINT = "/validate";
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
-
-    private Response response;
 
     public void setTestFilesDirectory(String testFilesDirectory) {
         this.testFilesDirectory = testFilesDirectory;
     }
 
-    @Autowired
-    private SignatureServiceConfigurationProperties signatureServiceConfigurationProperties;
 
     @Before
     public void DirectoryBackToDefault() {
@@ -72,7 +64,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
         ZonedDateTime testStartDate = ZonedDateTime.now(ZoneId.of("GMT"));
 
         post(validationRequestFor("ValidLiveSignature.asice", null, REPORT_TYPE_DETAILED))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("policy.policyDescription", equalTo(POLICY_4_DESCRIPTION))
                 .body("policy.policyName", equalTo(SIGNATURE_POLICY_2))
                 .body("policy.policyUrl", equalTo(POLICY_4_URL))
@@ -112,7 +104,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
 
         post(validationRequestFor("pades-baseline-lta-live-aj.pdf", null, REPORT_TYPE_DETAILED))
-                .then().root(VALIDATION_PROCESS_PREFIX)
+                .then().rootPath(VALIDATION_PROCESS_PREFIX)
                 .body("tlanalysis", notNullValue())
                 .body("tlanalysis.constraint", notNullValue())
                 .body("tlanalysis[0]", notNullValue())
@@ -177,7 +169,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
         setTestFilesDirectory("pdf/signature_cryptographic_algorithm_test_files/");
 
         post(validationRequestFor("hellopades-lt-sha256-ec256.pdf", null, REPORT_TYPE_DETAILED))
-                .then().root(VALIDATION_PROCESS_PREFIX)
+                .then().rootPath(VALIDATION_PROCESS_PREFIX)
                 .body("signatureOrTimestampOrCertificate[0].validationProcessBasicSignature.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_5))
                 .body("signatureOrTimestampOrCertificate[0].validationProcessBasicSignature.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_5))
                 .body("signatureOrTimestampOrCertificate[0].validationProcessBasicSignature.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
@@ -258,7 +250,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
 
         post(validationRequestFor("pades-baseline-lta-live-aj.pdf", null, REPORT_TYPE_DETAILED))
-                .then().root(VALIDATION_PROCESS_PREFIX)
+                .then().rootPath(VALIDATION_PROCESS_PREFIX)
                 .body("basicBuildingBlocks[1].isc.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_9))
                 .body("basicBuildingBlocks[1].isc.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_9))
                 .body("basicBuildingBlocks[1].isc.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
@@ -292,8 +284,8 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
                 .body("basicBuildingBlocks[1].xcv.constraint.name[0].nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_21))
                 .body("basicBuildingBlocks[1].xcv.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
                 .body("basicBuildingBlocks[1].xcv.constraint.name", notNullValue())
-                .body("basicBuildingBlocks[1].xcv.constraint.name[1].value", equalTo(VALID_VALIDATION_PROCESS_VALUE_22))
-                .body("basicBuildingBlocks[1].xcv.constraint.name[1].nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_22))
+                .body("basicBuildingBlocks[1].xcv.constraint.name[1].value", equalTo(VALID_VALIDATION_PROCESS_VALUE_24))
+                .body("basicBuildingBlocks[1].xcv.constraint.name[1].nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_24))
                 .body("basicBuildingBlocks[1].xcv.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
                 .body("basicBuildingBlocks[1].xcv.conclusion", notNullValue())
                 .body("basicBuildingBlocks[1].xcv.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
@@ -326,7 +318,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
     public void detailedReportForPdfAssertBasicBuildingBlocksTypeRevocation() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         post(validationRequestFor("pades-baseline-lta-live-aj.pdf", null, REPORT_TYPE_DETAILED))
-                .then().root(VALIDATION_PROCESS_PREFIX)
+                .then().rootPath(VALIDATION_PROCESS_PREFIX)
                 .body("basicBuildingBlocks[0].isc.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_9))
                 .body("basicBuildingBlocks[0].isc.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_9))
                 .body("basicBuildingBlocks[0].isc.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
@@ -352,8 +344,8 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
                 .body("basicBuildingBlocks[0].xcv.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_21))
                 .body("basicBuildingBlocks[0].xcv.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
                 .body("basicBuildingBlocks[0].xcv.constraint[1].name", notNullValue())
-                .body("basicBuildingBlocks[0].xcv.constraint[1].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_22))
-                .body("basicBuildingBlocks[0].xcv.constraint[1].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_22))
+                .body("basicBuildingBlocks[0].xcv.constraint[1].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_24))
+                .body("basicBuildingBlocks[0].xcv.constraint[1].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_24))
                 .body("basicBuildingBlocks[0].xcv.constraint[1].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
                 .body("basicBuildingBlocks[0].xcv.conclusion", notNullValue())
                 .body("basicBuildingBlocks[0].xcv.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
@@ -387,7 +379,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
 
         post(validationRequestFor("pades-baseline-lta-live-aj.pdf", null, REPORT_TYPE_DETAILED))
-                .then().root(VALIDATION_PROCESS_PREFIX)
+                .then().rootPath(VALIDATION_PROCESS_PREFIX)
                 .body("basicBuildingBlocks[3].isc.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_9))
                 .body("basicBuildingBlocks[3].isc.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_9))
                 .body("basicBuildingBlocks[3].isc.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
@@ -402,28 +394,31 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
                 .body("basicBuildingBlocks[3].cv.conclusion.", notNullValue())
                 .body("basicBuildingBlocks[3].cv.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
                 .body("basicBuildingBlocks[3].sav.constraint[0].name", notNullValue())
-                .body("basicBuildingBlocks[3].sav.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_19))
-                .body("basicBuildingBlocks[3].sav.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_19))
+                .body("basicBuildingBlocks[3].sav.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_60))
+                .body("basicBuildingBlocks[3].sav.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_60))
                 .body("basicBuildingBlocks[3].sav.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
-                .body("basicBuildingBlocks[3].sav.constraint[1].name", notNullValue())
-                .body("basicBuildingBlocks[3].sav.constraint[1].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_59))
-                .body("basicBuildingBlocks[3].sav.constraint[1].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_59))
+                .body("basicBuildingBlocks[3].sav.constraint[1].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_19))
+                .body("basicBuildingBlocks[3].sav.constraint[1].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_19))
                 .body("basicBuildingBlocks[3].sav.constraint[1].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
                 .body("basicBuildingBlocks[3].sav.constraint[2].name", notNullValue())
-                .body("basicBuildingBlocks[3].sav.constraint[2].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_20))
-                .body("basicBuildingBlocks[3].sav.constraint[2].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_20))
+                .body("basicBuildingBlocks[3].sav.constraint[2].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_59))
+                .body("basicBuildingBlocks[3].sav.constraint[2].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_59))
                 .body("basicBuildingBlocks[3].sav.constraint[2].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
-                .body("basicBuildingBlocks[3].sav.constraint[2].additionalInfo", notNullValue())
+                .body("basicBuildingBlocks[3].sav.constraint[3].name", notNullValue())
+                .body("basicBuildingBlocks[3].sav.constraint[3].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_20))
+                .body("basicBuildingBlocks[3].sav.constraint[3].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_20))
+                .body("basicBuildingBlocks[3].sav.constraint[3].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
+                .body("basicBuildingBlocks[3].sav.constraint[3].additionalInfo", notNullValue())
                 .body("basicBuildingBlocks[3].sav.conclusion.", notNullValue())
                 .body("basicBuildingBlocks[3].sav.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
                 .body("basicBuildingBlocks[3].xcv.constraint[0]", notNullValue())
                 .body("basicBuildingBlocks[3].xcv.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_21))
                 .body("basicBuildingBlocks[3].xcv.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_21))
                 .body("basicBuildingBlocks[3].xcv.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
-                .body("basicBuildingBlocks[3].xcv.constraint[2].name", notNullValue())
                 .body("basicBuildingBlocks[3].xcv.constraint[1].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_24))
                 .body("basicBuildingBlocks[3].xcv.constraint[1].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_24))
                 .body("basicBuildingBlocks[3].xcv.constraint[1].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
+                .body("basicBuildingBlocks[3].xcv.constraint[2].name", notNullValue())
                 .body("basicBuildingBlocks[3].xcv.conclusion", notNullValue())
                 .body("basicBuildingBlocks[3].xcv.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
                 .body("basicBuildingBlocks[3].xcv.subXCV[1].conclusion", notNullValue())
@@ -456,7 +451,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
         setTestFilesDirectory("bdoc/live/timestamp/");
 
         post(validationRequestFor("TS-02_23634_TS_wrong_SignatureValue.asice", null, REPORT_TYPE_DETAILED))
-                .then().root(VALIDATION_PROCESS_PREFIX)
+                .then().rootPath(VALIDATION_PROCESS_PREFIX)
                 .body("signatureOrTimestampOrCertificate[0].validationProcessBasicSignature.constraint[0].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_5))
                 .body("signatureOrTimestampOrCertificate[0].validationProcessBasicSignature.constraint[0].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_5))
                 .body("signatureOrTimestampOrCertificate[0].validationProcessBasicSignature.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_1))
@@ -511,7 +506,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
     public void detailedReportForAsicsWrongDataFileInManifestAsics() {
         setTestFilesDirectory("asics/");
         post(validationRequestFor("WrongDataFileInManifestAsics.asics", null, REPORT_TYPE_DETAILED))
-                .then().root(VALIDATION_CONCLUSION_PREFIX)
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("policy.policyDescription", equalTo(POLICY_4_DESCRIPTION))
                 .body("policy.policyName", equalTo(SIGNATURE_POLICY_2))
                 .body("policy.policyUrl", equalTo(POLICY_4_URL))

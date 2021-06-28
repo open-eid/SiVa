@@ -43,6 +43,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 
 import static ee.openeid.siva.sample.siva.SivaSOAPValidationServiceClient.LINE_SEPARATOR;
@@ -85,8 +86,8 @@ public class SivaSOAPValidationServiceClientTest {
 
     @Test
     public void givenValidRequestWillReturnSOAPValidationReport() throws Exception {
-        String response = FileUtils.readFileToString(TestFileUtils.loadTestFile("/soap_response.xml")).replaceAll("\\n", System.lineSeparator());
-        response = response.replaceAll("\\r\\r\\n", System.lineSeparator());
+        String response = FileUtils.readFileToString(TestFileUtils.loadTestFile("/soap_response.xml"), StandardCharsets.UTF_8);
+        response = response.replaceAll("\\n", System.lineSeparator()).replaceAll("\\r\\r\\n", System.lineSeparator());
 
         serverMockResponse(response);
         UploadedFile uploadedFile = TestFileUtils.generateUploadFile(testingFolder, "hello.bdoc", "Valid document");

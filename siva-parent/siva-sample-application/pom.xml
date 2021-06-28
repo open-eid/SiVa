@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2017 Riigi Infosüsteemide Amet
+  ~ Copyright 2016 - 2021 Riigi Infosüsteemi Amet
   ~
   ~ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
   ~ the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -18,7 +18,7 @@
     <parent>
         <artifactId>siva-parent</artifactId>
         <groupId>ee.openid.siva</groupId>
-        <version>3.4.1</version>
+        <version>3.5.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -120,7 +120,6 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.12.0</version>
         </dependency>
         <!-- Lombok -->
         <dependency>
@@ -141,7 +140,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-yaml</artifactId>
-            <version>2.12.0</version>
+            <version>${jackson.version}</version>
         </dependency>
 
         <!-- Testing -->
@@ -169,7 +168,7 @@
         <dependency>
             <groupId>net.sourceforge.htmlunit</groupId>
             <artifactId>htmlunit</artifactId>
-            <version>2.45.0</version>
+            <version>2.50.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -200,7 +199,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>3.1.2</version>
                 <configuration>
                     <archive>
                         <manifestEntries>
@@ -214,7 +213,7 @@
             <plugin>
                 <groupId>com.spotify</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
-                <version>0.4.11</version>
+                <version>0.4.14</version>
                 <configuration>
                     <imageName>mihkels/${project.artifactId}</imageName>
                     <imageTags>

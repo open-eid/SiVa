@@ -19,8 +19,6 @@ package ee.openeid.tsl.configuration;
 import ee.openeid.tsl.keystore.DSSKeyStoreFactoryBean;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.spi.x509.KeyStoreCertificateSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -30,15 +28,24 @@ import java.util.ArrayList;
 
 @Configuration
 @EnableScheduling
-@EnableConfigurationProperties({
-
-        TSLValidationKeystoreProperties.class
-})
 public class TSLLoaderConfiguration {
-    private TSLValidationKeystoreProperties keystoreProperties;
+
+    @Profile("test")
+    @Bean
+    public TSLValidationKeystoreProperties tslValidationKeystorePropertiesTest() {
+        TSLValidationKeystoreProperties configurationProperties = new TSLValidationKeystoreProperties();
+        configurationProperties.setFilename("test-siva-keystore.jks");
+        return configurationProperties;
+    }
+
+    @Profile("!test")
+    @Bean
+    public TSLValidationKeystoreProperties tslValidationKeystorePropertiesProd() {
+        return new TSLValidationKeystoreProperties();
+    }
 
     @Bean
-    public DSSKeyStoreFactoryBean dssKeyStore() {
+    public DSSKeyStoreFactoryBean dssKeyStore(TSLValidationKeystoreProperties keystoreProperties) {
         DSSKeyStoreFactoryBean dssKeyStoreFactoryBean = new DSSKeyStoreFactoryBean();
         dssKeyStoreFactoryBean.setKeyStoreType(keystoreProperties.getType());
         dssKeyStoreFactoryBean.setKeyStoreFilename(keystoreProperties.getFilename());
@@ -66,8 +73,4 @@ public class TSLLoaderConfiguration {
         return new TrustedListsCertificateSource();
     }
 
-    @Autowired
-    public void setKeystoreProperties(TSLValidationKeystoreProperties keystoreProperties) {
-        this.keystoreProperties = keystoreProperties;
-    }
 }

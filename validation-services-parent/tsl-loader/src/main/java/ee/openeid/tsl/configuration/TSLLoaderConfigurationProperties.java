@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2016 - 2021 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -19,6 +19,7 @@ package ee.openeid.tsl.configuration;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,6 +27,7 @@ import java.util.List;
 @ConfigurationProperties(prefix = "siva.tsl.loader")
 public class TSLLoaderConfigurationProperties {
     private boolean loadFromCache = false;
+    private Duration onlineCacheExpirationTime = Duration.parse("PT1H");
     private String url = "https://ec.europa.eu/tools/lotl/eu-lotl.xml";
     private String ojUrl = "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=uriserv:OJ.C_.2019.276.01.0001.01.ENG";
     private String lotlRootSchemeInfoUri = "https://ec.europa.eu/tools/lotl/eu-lotl-legalnotice.html";

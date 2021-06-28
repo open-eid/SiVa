@@ -33,6 +33,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -48,12 +49,14 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
     private static final String VALIDATION_ENDPOINT = "/validate";
     private static final String HASHCODE_VALIDATION_ENDPOINT = "/validateHashcode";
     private static final String DATA_FILES_ENDPOINT = "/getDataFiles";
-    private static final String MONITORING_ENDPOINT = "/monitoring/health";
+    private static final String MONITORING_HEALTH_ENDPOINT = "/monitoring/health";
+    private static final String MONITORING_HEARTBEAT_ENDPOINT = "/monitoring/heartbeat";
+    private static final String MONITORING_VERSION_ENDPOINT = "/monitoring/version";
 
     @Step("Post")
     protected Response post(String request) {
         return given()
-                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset(StandardCharsets.UTF_8)))
                 .body(request)
                 .contentType(ContentType.JSON)
                 .when()
@@ -63,7 +66,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
     @Step("Post With XAuth User Header")
     protected Response postWithXAuthUsrHeader(String request, String xAuthUser) {
         return given()
-                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset(StandardCharsets.UTF_8)))
                 .header("x-authenticated-user", xAuthUser)
                 .body(request)
                 .contentType(ContentType.JSON)
@@ -74,7 +77,7 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
     @Step("Post For Data Files")
     protected Response postForDataFiles(String request) {
         return given()
-                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset(StandardCharsets.UTF_8)))
                 .body(request)
                 .contentType(ContentType.JSON)
                 .when()
@@ -84,19 +87,35 @@ public abstract class SiVaRestTests extends SiVaIntegrationTestsBase {
     @Step("Post Hashcode Validation")
     protected Response postHashcodeValidation(String request) {
         return given()
-                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset(StandardCharsets.UTF_8)))
                 .body(request)
                 .contentType(ContentType.JSON)
                 .when()
                 .post(createUrl(HASHCODE_VALIDATION_ENDPOINT));
     }
 
-    @Step("Get Monitoring")
-    protected Response getMonitoring() {
+    @Step("Get Monitoring Health")
+    protected Response getMonitoringHealth() {
         return given()
-                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset(StandardCharsets.UTF_8)))
                 .when()
-                .get(createUrl(MONITORING_ENDPOINT));
+                .get(createUrl(MONITORING_HEALTH_ENDPOINT));
+    }
+
+    @Step("Get Monitoring Heartbeat")
+    protected Response getMonitoringHeartbeat() {
+        return given()
+                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset(StandardCharsets.UTF_8)))
+                .when()
+                .get(createUrl(MONITORING_HEARTBEAT_ENDPOINT));
+    }
+
+    @Step("Get Monitoring Version")
+    protected Response getMonitoringVersion() {
+        return given()
+                .config(RestAssured.config().encoderConfig(encoderConfig().defaultContentCharset(StandardCharsets.UTF_8)))
+                .when()
+                .get(createUrl(MONITORING_VERSION_ENDPOINT));
     }
 
     protected String validationRequestFor(String file, String signaturePolicy, String reportType) {

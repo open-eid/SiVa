@@ -88,7 +88,7 @@
         </dependency>
         <dependency>
             <groupId>org.digidoc4j.dss</groupId>
-            <artifactId>dss-service</artifactId>
+            <artifactId>dss-asic-common</artifactId>
         </dependency>
     </dependencies>
 

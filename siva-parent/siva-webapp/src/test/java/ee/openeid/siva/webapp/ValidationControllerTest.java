@@ -24,6 +24,7 @@ import ee.openeid.siva.statistics.StatisticsService;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.webapp.request.ValidationRequest;
 import ee.openeid.siva.webapp.transformer.ValidationRequestToProxyDocumentTransformer;
+import eu.europa.esig.dss.asic.common.ZipContainerHandler;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,6 +35,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.function.Supplier;
 
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -47,6 +50,8 @@ public class ValidationControllerTest {
     @Mock
     private RESTProxyService restProxyService;
     @Mock
+    private Supplier<ZipContainerHandler> zipContainerHandlerFactory;
+    @Mock
     private StatisticsService statisticsService;
     @Mock
     private ApplicationContext applicationContext;
@@ -57,7 +62,7 @@ public class ValidationControllerTest {
     @Before
     public void setUp() {
         ValidationController validationController = new ValidationController();
-        ValidationProxySpy validationProxyServiceSpy = new ValidationProxySpy(restProxyService, statisticsService, applicationContext, environment);
+        ValidationProxySpy validationProxyServiceSpy = new ValidationProxySpy(restProxyService, zipContainerHandlerFactory, statisticsService, applicationContext, environment);
         validationController.setContainerValidationProxy(validationProxyServiceSpy);
         validationController.setTransformer(transformerSpy);
         mockMvc = standaloneSetup(validationController).build();
@@ -205,10 +210,11 @@ public class ValidationControllerTest {
     private static class ValidationProxySpy extends ContainerValidationProxy {
 
         public ValidationProxySpy(RESTProxyService restProxyService,
+                Supplier<ZipContainerHandler> zipContainerHandlerFactory,
                 StatisticsService statisticsService,
                 ApplicationContext applicationContext,
                 Environment environment) {
-            super(restProxyService, statisticsService, applicationContext, environment);
+            super(restProxyService, zipContainerHandlerFactory, statisticsService, applicationContext, environment);
         }
 
         @Override

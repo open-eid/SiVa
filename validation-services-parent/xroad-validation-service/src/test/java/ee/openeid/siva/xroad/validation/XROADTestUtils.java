@@ -17,6 +17,7 @@
 package ee.openeid.siva.xroad.validation;
 
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
+import ee.openeid.siva.validation.configuration.SecureZipContainerConfiguration;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
 import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
@@ -61,6 +62,7 @@ public class XROADTestUtils {
         validationService.setSignaturePolicyService(new SignaturePolicyService<>(policyProperties));
         validationService.loadXroadConfigurationDirectory();
         validationService.setReportConfigurationProperties(new ReportConfigurationProperties(true));
+        validationService.setZipContainerHandlerFactory(new SecureZipContainerConfiguration().zipContainerHandlerFactory());
         return validationService;
     }
 

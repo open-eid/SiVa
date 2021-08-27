@@ -30,11 +30,9 @@ import ee.ria.xroad.common.SystemProperties;
 import ee.ria.xroad.common.asic.AsicContainer;
 import ee.ria.xroad.common.asic.AsicContainerVerifier;
 import ee.ria.xroad.common.conf.globalconf.GlobalConf;
-import eu.europa.esig.dss.asic.common.ASiCUtils;
+import eu.europa.esig.dss.asic.common.ZipContainerHandler;
 import eu.europa.esig.dss.model.DSSDocument;
-import eu.europa.esig.dss.model.DSSException;
 import eu.europa.esig.dss.model.InMemoryDocument;
-import eu.europa.esig.dss.spi.DSSUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,12 +41,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import java.util.function.Supplier;
 
 @Service
 public class XROADValidationService implements ValidationService {
@@ -57,22 +51,12 @@ public class XROADValidationService implements ValidationService {
     private XROADValidationServiceProperties properties;
     private SignaturePolicyService<ValidationPolicy> signaturePolicyService;
     private ReportConfigurationProperties reportConfigurationProperties;
+    private Supplier<ZipContainerHandler> zipContainerHandlerFactory;
 
     @Override
     public Reports validateDocument(ValidationDocument validationDocument) {
-        ValidationPolicy policy = signaturePolicyService.getPolicy(validationDocument.getSignaturePolicy());
-        AsicContainer container;
-        DSSDocument dssDocument = new InMemoryDocument(Base64.decodeBase64(validationDocument.getDataBase64Encoded()));
-        long containerSize = DSSUtils.getFileByteSize(dssDocument);
-        try (ZipInputStream zipStream = new ZipInputStream(dssDocument.openStream())) {
-            while (zipStream.getNextEntry() != null) {
-                secureCopy(zipStream, containerSize);
-            }
-            container = AsicContainer.read(dssDocument.openStream());
-        } catch (Exception e) {
-            LOGGER.error("Unable to create AsicContainer from validation document", e);
-            throw new MalformedDocumentException(e);
-        }
+        final ValidationPolicy policy = signaturePolicyService.getPolicy(validationDocument.getSignaturePolicy());
+        final AsicContainer container = validateAndExtractAsicContainer(validationDocument);
         final AsicContainerVerifier verifier = new AsicContainerVerifier(container);
         try {
             verifier.verify();
@@ -85,10 +69,17 @@ public class XROADValidationService implements ValidationService {
         }
     }
 
-    private void secureCopy(ZipInputStream zipStream, long containerSize) {
-        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-            ASiCUtils.secureCopy(zipStream, baos, containerSize);
-        } catch (DSSException | IOException e) {
+    private AsicContainer validateAndExtractAsicContainer(ValidationDocument validationDocument) {
+        DSSDocument containerDocument = new InMemoryDocument(Base64.decodeBase64(validationDocument.getDataBase64Encoded()));
+        try {
+            // Use DSS' ZIP container extraction utilities to prevent ZIP bombing
+            zipContainerHandlerFactory.get().extractContainerContent(containerDocument);
+
+            try (InputStream inputStream = containerDocument.openStream()) {
+                return AsicContainer.read(inputStream);
+            }
+        } catch (Exception e) {
+            LOGGER.error("Unable to create AsicContainer from validation document", e);
             throw new MalformedDocumentException(e);
         }
     }
@@ -121,4 +112,10 @@ public class XROADValidationService implements ValidationService {
     public void setReportConfigurationProperties(ReportConfigurationProperties reportConfigurationProperties) {
         this.reportConfigurationProperties = reportConfigurationProperties;
     }
+
+    @Autowired
+    public void setZipContainerHandlerFactory(Supplier<ZipContainerHandler> zipContainerHandlerFactory) {
+        this.zipContainerHandlerFactory = zipContainerHandlerFactory;
+    }
+
 }

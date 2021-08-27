@@ -31,7 +31,7 @@ import ee.openeid.tsl.configuration.AlwaysFailingOCSPSource;
 import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
 import ee.openeid.validation.service.generic.validator.report.GenericValidationReportBuilder;
 import ee.openeid.validation.service.generic.validator.report.ReportBuilderData;
-import eu.europa.esig.dss.enumerations.TokenExtractionStategy;
+import eu.europa.esig.dss.enumerations.TokenExtractionStrategy;
 import eu.europa.esig.dss.model.DSSDocument;
 import eu.europa.esig.dss.model.DSSException;
 import eu.europa.esig.dss.model.InMemoryDocument;
@@ -135,7 +135,7 @@ public class GenericValidationService implements ValidationService {
         validator.setCertificateVerifier(certificateVerifier);
         validator.setValidationLevel(VALIDATION_LEVEL);
 
-        validator.setTokenExtractionStategy(TokenExtractionStategy.EXTRACT_TIMESTAMPS_AND_REVOCATION_DATA);
+        validator.setTokenExtractionStrategy(TokenExtractionStrategy.EXTRACT_TIMESTAMPS_AND_REVOCATION_DATA);
         return validator;
     }
 

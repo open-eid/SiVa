@@ -8,6 +8,8 @@ import eu.europa.esig.dss.enumerations.RevocationOrigin;
 import eu.europa.esig.dss.enumerations.SignatureAlgorithm;
 import eu.europa.esig.dss.enumerations.SignatureForm;
 import eu.europa.esig.dss.enumerations.SignatureLevel;
+import eu.europa.esig.dss.model.Digest;
+import eu.europa.esig.dss.model.SignaturePolicyStore;
 import eu.europa.esig.dss.model.identifier.EncapsulatedRevocationTokenIdentifier;
 import eu.europa.esig.dss.model.x509.CertificateToken;
 import eu.europa.esig.dss.model.x509.revocation.crl.CRL;
@@ -15,13 +17,20 @@ import eu.europa.esig.dss.model.x509.revocation.ocsp.OCSP;
 import eu.europa.esig.dss.spi.DSSRevocationUtils;
 import eu.europa.esig.dss.spi.DSSUtils;
 import eu.europa.esig.dss.spi.x509.revocation.OfflineRevocationSource;
-import eu.europa.esig.dss.spi.x509.revocation.RevocationToken;
 import eu.europa.esig.dss.spi.x509.revocation.crl.OfflineCRLSource;
 import eu.europa.esig.dss.spi.x509.revocation.ocsp.OCSPResponseBinary;
 import eu.europa.esig.dss.spi.x509.revocation.ocsp.OCSPToken;
 import eu.europa.esig.dss.spi.x509.revocation.ocsp.OfflineOCSPSource;
-import eu.europa.esig.dss.utils.Utils;
-import eu.europa.esig.dss.validation.*;
+import eu.europa.esig.dss.validation.AdvancedSignature;
+import eu.europa.esig.dss.validation.CommitmentTypeIndication;
+import eu.europa.esig.dss.validation.DefaultAdvancedSignature;
+import eu.europa.esig.dss.validation.ReferenceValidation;
+import eu.europa.esig.dss.validation.SignatureCertificateSource;
+import eu.europa.esig.dss.validation.SignatureDigestReference;
+import eu.europa.esig.dss.validation.SignatureIdentifierBuilder;
+import eu.europa.esig.dss.validation.SignaturePolicy;
+import eu.europa.esig.dss.validation.SignatureProductionPlace;
+import eu.europa.esig.dss.validation.SignerRole;
 import eu.europa.esig.dss.validation.timestamp.TimestampSource;
 import lombok.SneakyThrows;
 import org.bouncycastle.cert.ocsp.BasicOCSPResp;
@@ -42,8 +51,8 @@ import java.util.Set;
 
 public class MockSignature extends DefaultAdvancedSignature {
 
-    private OfflineCRLSource offlineCRLSource;
-    private OfflineOCSPSource offlineOCSPSource;
+    private final OfflineCRLSource offlineCRLSource;
+    private final OfflineOCSPSource offlineOCSPSource;
 
     public MockSignature(OfflineCRLSource offlineCRLSource, OfflineOCSPSource offlineOCSPSource) {
         super();
@@ -63,18 +72,12 @@ public class MockSignature extends DefaultAdvancedSignature {
 
     @Override
     public OfflineRevocationSource<CRL> getCRLSource() {
-        if (offlineCRLSource == null) {
-            return null;
-        }
         return offlineCRLSource;
     }
 
     @SneakyThrows
     @Override
     public OfflineRevocationSource<OCSP> getOCSPSource() {
-        if (offlineOCSPSource == null) {
-            return null;
-        }
         return offlineOCSPSource;
     }
 
@@ -84,7 +87,7 @@ public class MockSignature extends DefaultAdvancedSignature {
     }
 
     @Override
-    protected SignatureIdentifier buildSignatureIdentifier() {
+    protected SignatureIdentifierBuilder getSignatureIdentifierBuilder() {
         return null;
     }
 
@@ -148,16 +151,6 @@ public class MockSignature extends DefaultAdvancedSignature {
     }
 
     @Override
-    public String getContentIdentifier() {
-        return null;
-    }
-
-    @Override
-    public String getContentHints() {
-        return null;
-    }
-
-    @Override
     public List<SignerRole> getSignedAssertions() {
         return null;
     }
@@ -188,16 +181,6 @@ public class MockSignature extends DefaultAdvancedSignature {
     }
 
     @Override
-    public SignatureLevel[] getSignatureLevels() {
-        return new SignatureLevel[0];
-    }
-
-    @Override
-    public void checkSignaturePolicy(SignaturePolicyProvider signaturePolicyDetector) {
-
-    }
-
-    @Override
     public byte[] getSignatureValue() {
         return new byte[0];
     }
@@ -212,6 +195,20 @@ public class MockSignature extends DefaultAdvancedSignature {
         return null;
     }
 
+    @Override
+    public SignaturePolicy getSignaturePolicy() {
+        return null;
+    }
+
+    @Override
+    public SignaturePolicyStore getSignaturePolicyStore() {
+        return null;
+    }
+
+    @Override
+    public Digest getDataToBeSignedRepresentation() {
+        return null;
+    }
 
     private static class MockCRLBinary extends CRLBinary {
 
@@ -227,7 +224,7 @@ public class MockSignature extends DefaultAdvancedSignature {
 
         @SneakyThrows
         @Override
-        public Set<EncapsulatedRevocationTokenIdentifier> getAllRevocationBinaries() {
+        public Set<EncapsulatedRevocationTokenIdentifier<CRL>> getAllRevocationBinaries() {
             ClassLoader classLoader = MockSignature.class.getClassLoader();
             File file = new File(classLoader.getResource("test-files/crl.crl").getFile());
             MockCRLBinary crlBinary = new MockCRLBinary(Files.readAllBytes(file.toPath()));

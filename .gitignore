@@ -4,7 +4,6 @@ dependency-reduced-pom.xml
 .*
 !.gitignore
 !.mvn
-!.travis.yml
 *.iml
 .idea
 target

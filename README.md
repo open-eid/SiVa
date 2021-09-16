@@ -2,8 +2,7 @@
 
 # Signature Verification Service
 
-[![Build Status](https://travis-ci.com/open-eid/SiVa.svg?branch=develop)](https://travis-ci.com/open-eid/SiVa)
-[![Coverage Status](https://coveralls.io/repos/github/open-eid/SiVa/badge.svg?branch=develop)](https://coveralls.io/github/open-eid/SiVa?branch=develop)
+[![SiVa CI with Maven](https://github.com/open-eid/siva/actions/workflows/siva-verify.yml/badge.svg?branch=master)](https://github.com/open-eid/siva/actions/workflows/siva-verify.yml)
 [![GitHub license](https://img.shields.io/badge/license-EUPLv1.1-blue.svg)](https://raw.githubusercontent.com/open-eid/SiVa/develop/LICENSE.md)
 
 SiVa is digital signature validation web service that provides JSON and SOAP API to validate following file types:

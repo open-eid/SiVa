@@ -29,4 +29,4 @@ jobs:
       - name: Build with Maven
         env:
           TZ: Europe/Helsinki
-        run: mvn clean verify -q
+        run: ./mvnw clean install -P\!dependency-check

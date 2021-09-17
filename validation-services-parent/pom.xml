@@ -184,6 +184,10 @@
 
     <repositories>
         <repository>
+            <id>central</id>
+            <url>https://repo1.maven.org/maven2/</url>
+        </repository>
+        <repository>
             <id>cefdigital</id>
             <name>cefdigital</name>
             <url>https://ec.europa.eu/cefdigital/artifact/content/repositories/esignaturedss/</url>
@@ -202,6 +206,10 @@
     </repositories>
 
     <pluginRepositories>
+        <pluginRepository>
+            <id>central</id>
+            <url>https://repo1.maven.org/maven2/</url>
+        </pluginRepository>
         <pluginRepository>
             <id>spring-snapshots</id>
             <url>http://repo.spring.io/snapshot</url>

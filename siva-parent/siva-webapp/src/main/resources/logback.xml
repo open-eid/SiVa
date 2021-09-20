@@ -12,12 +12,22 @@
         </filter>
         <encoder class="co.elastic.logging.logback.EcsEncoder"/>
     </appender>
-    <appender name="COMMON_LOG_FILE" class="ch.qos.logback.core.FileAppender">
+    <appender name="COMMON_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${COMMON_LOG_FILE}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>/var/log/siva/siva-common.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>14</maxHistory>
+            <maxFileSize>100MB</maxFileSize>
+        </rollingPolicy>
         <encoder class="co.elastic.logging.logback.EcsEncoder"/>
     </appender>
-    <appender name="STATISTICS_CONTAINER_LOG_FILE" class="ch.qos.logback.core.FileAppender">
+    <appender name="STATISTICS_CONTAINER_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${STATISTICS_CONTAINER_LOG_FILE}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>/var/log/siva/siva-statistics-container.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>14</maxHistory>
+            <maxFileSize>100MB</maxFileSize>
+        </rollingPolicy>
         <encoder class="co.elastic.logging.logback.EcsEncoder"/>
         <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
             <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
@@ -27,8 +37,13 @@
             <onMatch>NEUTRAL</onMatch>
         </filter>
     </appender>
-    <appender name="STATISTICS_SIGNATURE_LOG_FILE" class="ch.qos.logback.core.FileAppender">
+    <appender name="STATISTICS_SIGNATURE_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${STATISTICS_SIGNATURE_LOG_FILE}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>/var/log/siva/siva-statistics-signature.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>14</maxHistory>
+            <maxFileSize>100MB</maxFileSize>
+        </rollingPolicy>
         <encoder class="co.elastic.logging.logback.EcsEncoder"/>
         <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
             <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">

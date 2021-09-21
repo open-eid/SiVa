@@ -49,25 +49,25 @@ Run following command:
 SiVa project compiles **3 fat executable JAR** files that You can run after successfully building the
 project by issuing below commands:
 
-**First start SiVa REST and SOAP web service**
+**First start SiVa REST and SOAP web service. NB! X.X.X denotes the version you are running.**
 
 ```bash
-./siva-parent/siva-webapp/target/siva-webapp-3.5.0.jar
+java -jar siva-parent/siva-webapp/target/siva-webapp-X.X.X-exec.jar
 ```
 
-**Second we need to start SiVa XRoad validation service**
+**Second we need to start SiVa XRoad validation service. NB! X.X.X denotes the version you are running.**
 
 ```bash
-./validation-services-parent/xroad-validation-service/target/xroad-validation-service-3.5.0.jar
+java -jar validation-services-parent/xroad-validation-service/target/xroad-validation-service-X.X.X-exec.jar
 ```
 
 The SiVa webapp by default runs on port **8080** and XRoad validation service starts up on port **8081**.
 Easiest way to test out validation is run SiVa demo application.
 
-**Start SiVa Demo Application**
+**Start SiVa Demo Application. NB! X.X.X denotes the version you are running.**
 
 ```bash
-./siva-parent/siva-sample-application/target/siva-sample-application-3.5.0.jar
+java -jar siva-parent/siva-sample-application/target/siva-sample-application-X.X.X.jar
 ```
 
 Now point Your browser to URL: <http://localhost:9000>
@@ -85,10 +85,10 @@ To build the WAR file use helper script with all the correct Maven parameters.
 ./war-build.sh
 ```
 
-Copy built WAR file into Tomcat `webapps` directory and start the servlet container.
+Copy built WAR file into Tomcat `webapps` directory and start the servlet container. NB! X.X.X denotes the version you are running.
 
 ```bash
-cp siva-parent/siva-webapp/target/siva-webapp-3.5.0.war apache-tomcat-7.0.70/webapps
+cp siva-parent/siva-webapp/target/siva-webapp-X.X.X.war apache-tomcat-7.0.70/webapps
 ./apache-tomcat-7.0.77/bin/catalina.sh run
 ```
 
@@ -132,10 +132,10 @@ tests, SiVa Web application has to be started before the tests are executed.
 > **Note**: PDF load test files contain test certificates. In order for PDF load tests to succeed
 > SiVa application should be started with test certificates preloaded.
 
-To load trusted test certificates in addition to TSL, "test" spring profile should be activated at startup, for example:
+To load trusted test certificates in addition to TSL, "test" spring profile should be activated at startup (NB! X.X.X denotes the version you are running), for example:
 
 ```bash
-java -Dspring.profiles.active=test -jar siva-webapp-3.5.0.jar
+java -Dspring.profiles.active=test -jar siva-parent/siva-webapp/target/siva-webapp-X.X.X-exec.jar
 ```
 
 To run load tests after unit tests in non GUI mode:

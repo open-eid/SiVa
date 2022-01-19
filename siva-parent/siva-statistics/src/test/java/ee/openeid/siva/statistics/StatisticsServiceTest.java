@@ -16,17 +16,18 @@
 
 package ee.openeid.siva.statistics;
 
-import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,12 +36,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static org.mockito.Mockito.*;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.slf4j.MarkerFactory.getMarker;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({LoggerFactory.class})
+@RunWith(MockitoJUnitRunner.class)
 public class StatisticsServiceTest {
 
     private static final String X_AUTHENTICATED_USER = "x-authenticated-user";
@@ -48,18 +53,24 @@ public class StatisticsServiceTest {
     private static final String SIGNATURE_LOG_MARKER = "STATISTICS_SIGNATURE_LOG";
 
     private static StatisticsService statisticsService;
+    private static MockedStatic<LoggerFactory> loggerFactoryMock;
     private static Logger loggerMock;
 
     @BeforeClass
     public static void setUp() {
-        mockStatic(LoggerFactory.class);
         loggerMock = mock(Logger.class);
-        when(LoggerFactory.getLogger(StatisticsService.class)).thenReturn(loggerMock);
+        loggerFactoryMock = mockStatic(LoggerFactory.class);
+        loggerFactoryMock.when(() -> LoggerFactory.getLogger(StatisticsService.class)).thenReturn(loggerMock);
 
         statisticsService = new StatisticsService();
 
         HttpServletRequest mockedRequest = mock(HttpServletRequest.class);
         statisticsService.setHttpRequest(mockedRequest);
+    }
+
+    @AfterClass
+    public static void tearDown() {
+        loggerFactoryMock.close();
     }
 
     @After

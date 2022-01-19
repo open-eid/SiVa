@@ -94,7 +94,7 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-sleuth</artifactId>
-            <version>2.2.8.RELEASE</version>
+            <version>3.1.0</version>
         </dependency>
 
         <dependency>
@@ -117,11 +117,6 @@
                     <artifactId>android-json</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito2</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.vintage</groupId>

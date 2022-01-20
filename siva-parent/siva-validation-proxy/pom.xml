@@ -31,6 +31,28 @@
 
     <dependencies>
         <dependency>
+            <groupId>ee.openid.siva</groupId>
+            <artifactId>validation-commons</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ee.openid.siva</groupId>
+            <artifactId>generic-validation-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ee.openid.siva</groupId>
+            <artifactId>timestamptoken-validation-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ee.openid.siva</groupId>
+            <artifactId>timemark-container-validation-service</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>ee.openid.siva</groupId>
+            <artifactId>siva-statistics</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.digidoc4j.dss</groupId>
             <artifactId>dss-service</artifactId>
         </dependency>
@@ -38,6 +60,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -48,6 +76,12 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -68,33 +102,6 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-inline</artifactId>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>ee.openid.siva</groupId>
-            <artifactId>validation-commons</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>ee.openid.siva</groupId>
-            <artifactId>generic-validation-service</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>ee.openid.siva</groupId>
-            <artifactId>timestamptoken-validation-service</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>ee.openid.siva</groupId>
-            <artifactId>timemark-container-validation-service</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>ee.openid.siva</groupId>
-            <artifactId>siva-statistics</artifactId>
         </dependency>
 
     </dependencies>

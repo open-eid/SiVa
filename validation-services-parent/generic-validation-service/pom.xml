@@ -19,7 +19,7 @@
     <parent>
         <artifactId>validation-services-parent</artifactId>
         <groupId>ee.openid.siva</groupId>
-        <version>3.5.0</version>
+        <version>3.5.1</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -34,10 +34,9 @@
             <artifactId>validation-commons</artifactId>
             <version>${project.version}</version>
         </dependency>
-
         <dependency>
-            <artifactId>tsl-loader</artifactId>
             <groupId>ee.openid.siva</groupId>
+            <artifactId>tsl-loader</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -74,10 +73,28 @@
             <artifactId>dss-spi</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>31.0.1-jre</version>
+        </dependency>
+
         <!-- Spring Boot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- Lombok for getters and setters -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
 
         <!-- Testing -->
@@ -102,31 +119,6 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <!-- JSON -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-        </dependency>
-
-        <!-- Lombok for getters and setters -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.digidoc4j.dss</groupId>
-            <artifactId>dss-crl-parser-x509crl</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.digidoc4j.dss</groupId>
             <artifactId>dss-asic-xades</artifactId>

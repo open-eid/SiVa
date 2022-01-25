@@ -417,10 +417,9 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
                 .body("basicBuildingBlocks[3].xcv.constraint[0].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
                 .body("basicBuildingBlocks[3].xcv.constraint[1].name.value", equalTo(VALID_VALIDATION_PROCESS_VALUE_24))
                 .body("basicBuildingBlocks[3].xcv.constraint[1].name.nameId", equalTo(VALID_VALIDATION_PROCESS_NAMEID_24))
-                .body("basicBuildingBlocks[3].xcv.constraint[1].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_2))
-                .body("basicBuildingBlocks[3].xcv.constraint[2].name", notNullValue())
+                .body("basicBuildingBlocks[3].xcv.constraint[1].status", equalTo(VALID_VALIDATION_PROCESS_STATUS_1))
                 .body("basicBuildingBlocks[3].xcv.conclusion", notNullValue())
-                .body("basicBuildingBlocks[3].xcv.conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
+                .body("basicBuildingBlocks[3].xcv.conclusion.indication", equalTo(INDETERMINATE))
                 .body("basicBuildingBlocks[3].xcv.subXCV[1].conclusion", notNullValue())
                 .body("basicBuildingBlocks[3].xcv.subXCV[1].conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
                 .body("basicBuildingBlocks[3].xcv.subXCV[1].id", notNullValue())
@@ -428,7 +427,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
                 .body("basicBuildingBlocks[3].certificateChain.chainItem[0].source", equalTo("SIGNATURE"))
                 .body("basicBuildingBlocks[3].certificateChain.chainItem[0].id", notNullValue())
                 .body("basicBuildingBlocks[3].conclusion", notNullValue())
-                .body("basicBuildingBlocks[3].conclusion.indication", equalTo(VALID_INDICATION_VALUE_PASSED))
+                .body("basicBuildingBlocks[3].conclusion.indication", equalTo(INDETERMINATE))
                 .body("basicBuildingBlocks[3].id", notNullValue())
                 .body("basicBuildingBlocks[3].type", equalTo("SIGNATURE"));
     }

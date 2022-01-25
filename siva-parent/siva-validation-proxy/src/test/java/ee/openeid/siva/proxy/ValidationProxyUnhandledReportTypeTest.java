@@ -19,30 +19,26 @@ package ee.openeid.siva.proxy;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.document.ReportType;
 import ee.openeid.siva.validation.service.ValidationService;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
+import org.mockito.MockedStatic;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationContext;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
-@RunWith(PowerMockRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ValidationProxyUnhandledReportTypeTest {
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
     @InjectMocks
     private ContainerValidationProxy validationProxy;
@@ -54,26 +50,25 @@ public class ValidationProxyUnhandledReportTypeTest {
     private ValidationService validationService;
 
     @Test
-    @PrepareForTest(ReportType.class)
     public void unhandledReportTypeThrowsIllegalArgumentException() {
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("Failed to determine report type - report of type 'NEW_UNHANDLED_ENUM_VALUE' is unhandled");
-
         ReportType[] reportTypeRealValues = ReportType.values();
 
-        ReportType mockedReportType = PowerMockito.mock(ReportType.class);
-        Whitebox.setInternalState(mockedReportType, "name", "NEW_UNHANDLED_ENUM_VALUE");
-        Whitebox.setInternalState(mockedReportType, "ordinal", ReportType.values().length);
-        PowerMockito.mockStatic(ReportType.class);
+        try (MockedStatic<ReportType> reportType = mockStatic(ReportType.class)) {
+            ReportType mockedReportType = mock(ReportType.class);
+            when(mockedReportType.name()).thenReturn("NEW_UNHANDLED_ENUM_VALUE");
+            when(mockedReportType.ordinal()).thenReturn(reportTypeRealValues.length);
 
-        List<ReportType> reportTypeValues = Arrays.stream(reportTypeRealValues).collect(Collectors.toList());
-        reportTypeValues.add(mockedReportType);
-        PowerMockito.when(ReportType.values()).thenReturn(reportTypeValues.toArray(new ReportType[reportTypeValues.size()]));
+            List<ReportType> reportTypeValues = Arrays.stream(reportTypeRealValues).collect(Collectors.toList());
+            reportTypeValues.add(mockedReportType);
+            reportType.when(ReportType::values).thenReturn(reportTypeValues.toArray(new ReportType[reportTypeValues.size()]));
 
-        when(applicationContext.getBean(anyString())).thenReturn(validationService);
-        ProxyDocument proxyDocument = new ProxyDocument();
-        proxyDocument.setReportType(mockedReportType);
-        proxyDocument.setName("TEST_FILE_NAME.bdoc");
-        validationProxy.validateRequest(proxyDocument);
+            when(applicationContext.getBean(anyString())).thenReturn(validationService);
+            ProxyDocument proxyDocument = new ProxyDocument();
+            proxyDocument.setReportType(mockedReportType);
+            proxyDocument.setName("TEST_FILE_NAME.bdoc");
+            assertThatExceptionOfType(IllegalArgumentException.class)
+                    .isThrownBy(() -> validationProxy.validateRequest(proxyDocument))
+                    .withMessage("Failed to determine report type - report of type 'NEW_UNHANDLED_ENUM_VALUE' is unhandled");
+        }
     }
 }

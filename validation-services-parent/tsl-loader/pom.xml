@@ -19,7 +19,7 @@
     <parent>
         <artifactId>validation-services-parent</artifactId>
         <groupId>ee.openid.siva</groupId>
-        <version>3.5.0</version>
+        <version>3.5.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -27,17 +27,25 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>30.1.1-jre</version>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.digidoc4j.dss</groupId>
             <artifactId>dss-service</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.digidoc4j.dss</groupId>
-            <artifactId>dss-xades</artifactId>
         </dependency>
         <dependency>
             <groupId>org.digidoc4j.dss</groupId>
@@ -47,11 +55,33 @@
             <groupId>org.digidoc4j.dss</groupId>
             <artifactId>dss-utils-apache-commons</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.digidoc4j</groupId>
+            <artifactId>digidoc4j</artifactId>
+            <!-- Used for utility classes only -->
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
         <!-- Spring Boot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
 
         <!-- Testing -->
@@ -75,40 +105,6 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-collections4</artifactId>
-            <version>${commons.collections.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>${commons.codec.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.digidoc4j</groupId>
-            <artifactId>digidoc4j</artifactId>
-            <!-- Used for utility classes only -->
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
     </dependencies>
 

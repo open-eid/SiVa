@@ -19,7 +19,7 @@
     <parent>
         <artifactId>siva-parent</artifactId>
         <groupId>ee.openid.siva</groupId>
-        <version>3.5.0</version>
+        <version>3.5.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -28,7 +28,7 @@
 
     <properties>
         <restassured.version>4.2.1</restassured.version>
-        <allure.version>2.13.10</allure.version>
+        <allure.version>2.16.1</allure.version>
         <aspectj.version>1.9.5</aspectj.version>
         <maven.surefire.plugin.version>2.22.1</maven.surefire.plugin.version>
     </properties>
@@ -39,14 +39,22 @@
             <artifactId>siva-webapp</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -56,6 +64,10 @@
                 <exclusion>
                     <groupId>com.vaadin.external.google</groupId>
                     <artifactId>android-json</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -191,7 +203,7 @@
                     </plugin>
                     <plugin>
                         <artifactId>maven-failsafe-plugin</artifactId>
-                        <version>3.0.0-M4</version>
+                        <version>3.0.0-M5</version>
                         <configuration>
                             <forkCount>1</forkCount>
                             <reuseForks>true</reuseForks>

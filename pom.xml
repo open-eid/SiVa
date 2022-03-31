@@ -22,7 +22,7 @@
 
     <groupId>ee.openid.siva</groupId>
     <artifactId>siva</artifactId>
-    <version>3.5.1</version>
+    <version>3.5.2</version>
     <packaging>pom</packaging>
     <name>SiVa Digitally signed documents validation service</name>
     <url>https://github.com/open-eid/SiVa</url>
@@ -112,12 +112,12 @@
         <commons.codec.version>1.15</commons.codec.version>
         <commons.collections.version>4.4</commons.collections.version>
         <commons.io.version>2.11.0</commons.io.version>
-        <jackson.version>2.13.1</jackson.version>
-        <json.version>20211205</json.version>
-        <logback.version>1.2.10</logback.version>
+        <jackson.version>2.13.2</jackson.version>
+        <json.version>20220320</json.version>
+        <logback.version>1.2.11</logback.version>
         <lombok.version>1.18.22</lombok.version>
         <snakeyaml.version>1.30</snakeyaml.version>
-        <spring.boot.version>2.6.2</spring.boot.version>
+        <spring.boot.version>2.6.6</spring.boot.version>
         <xmlsec.version>2.1.7</xmlsec.version>
 
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>

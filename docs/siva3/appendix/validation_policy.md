@@ -98,7 +98,7 @@ http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
 
 1. SiVa implicitly implements constraints that are specified in the specification documents of the signature formats supported by the Service:
 
-	* [BDOC 2.1](http://id.ee/wp-content/uploads/2020/06/bdoc-spec212-eng.pdf) ASiC-E/XAdES signatures
+	* [BDOC 2.1](https://www.id.ee/wp-content/uploads/2021/06/bdoc-spec212-eng.pdf) ASiC-E/XAdES signatures
 	* [X-Road](https://cyber.ee/research/reports/T-4-23-Profile-for-High-Performance-Digital-Signatures.pdf) ASiC-E/XAdES signatures
 	* [PAdES](http://www.etsi.org/deliver/etsi_en/319100_319199/31914201/01.01.01_60/en_31914201v010101p.pdf) signatures
 	* [XAdES](http://www.etsi.org/deliver/etsi_en/319100_319199/31913201/01.01.01_60/en_31913201v010101p.pdf) signatures
@@ -184,7 +184,7 @@ Legend:
 
 
 ### BDOC container spceific requirements
-The BDOC container must conform with [BDOC 2.1](http://id.ee/wp-content/uploads/2020/06/bdoc-spec212-eng.pdf) standard.
+The BDOC container must conform with [BDOC 2.1](https://www.id.ee/wp-content/uploads/2021/06/bdoc-spec212-eng.pdf) standard.
 1.	File extension
 	* ".bdoc" file extension is supported during signature validation.
 2. Only one signature shall be stored in one signatures.xml file.

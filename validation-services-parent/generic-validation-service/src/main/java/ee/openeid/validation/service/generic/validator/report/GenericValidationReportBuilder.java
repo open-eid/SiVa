@@ -36,8 +36,10 @@ import ee.openeid.siva.validation.document.report.Warning;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import ee.openeid.siva.validation.util.CertUtil;
+import ee.openeid.siva.validation.util.DistinguishedNameUtil;
 import ee.openeid.siva.validation.util.SubjectDNParser;
 import ee.openeid.validation.service.generic.validator.TokenUtils;
+import eu.europa.esig.dss.diagnostic.AbstractTokenProxy;
 import eu.europa.esig.dss.diagnostic.CertificateRevocationWrapper;
 import eu.europa.esig.dss.diagnostic.CertificateWrapper;
 import eu.europa.esig.dss.diagnostic.RelatedRevocationWrapper;
@@ -60,6 +62,7 @@ import eu.europa.esig.dss.model.x509.CertificateToken;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.validation.AdvancedSignature;
 import eu.europa.esig.dss.validation.executor.ValidationLevel;
+import eu.europa.esig.dss.validation.reports.AbstractReports;
 import eu.europa.esig.dss.validation.timestamp.TimestampToken;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections4.CollectionUtils;
@@ -197,7 +200,7 @@ public class GenericValidationReportBuilder {
         signatureValidationData.setSignatureFormat(changeAndValidateSignatureFormat(dssReports.getSimpleReport().getSignatureFormat(signatureId).toString(), signatureId));
         signatureValidationData.setSignatureMethod(parseSignatureMethod(signatureId));
         signatureValidationData.setSignatureLevel(dssReports.getSimpleReport().getSignatureQualification(signatureId).name());
-        signatureValidationData.setSignedBy(parseSubjectDistinguishedName(signatureId).getCommonName());
+        signatureValidationData.setSignedBy(parseSignedBy(signatureId));
         signatureValidationData.setSubjectDistinguishedName(parseSubjectDistinguishedName(signatureId));
         signatureValidationData.setClaimedSigningTime(parseClaimedSigningTime(signatureId));
         signatureValidationData.setSignatureScopes(parseSignatureScopes(signatureId));
@@ -354,6 +357,22 @@ public class GenericValidationReportBuilder {
             return daIdentifier;
         }
         return signatureId;
+    }
+
+    private String parseSignedBy(String signatureId) {
+        return Optional.ofNullable(dssReports)
+                .map(AbstractReports::getDiagnosticData)
+                .map(diagnosticData -> diagnosticData.getSignatureById(signatureId))
+                .map(AbstractTokenProxy::getSigningCertificate)
+                .map(signingCertificate -> Optional
+                        .ofNullable(DistinguishedNameUtil.getSurnameAndGivenNameAndSerialNumber(
+                                signingCertificate.getSurname(),
+                                signingCertificate.getGivenName(),
+                                signingCertificate.getSubjectSerialNumber()
+                        ))
+                        .orElseGet(signingCertificate::getCommonName)
+                )
+                .orElseGet(ReportBuilderUtils::valueNotPresent);
     }
 
     private SubjectDistinguishedName parseSubjectDistinguishedName(String signatureId) {

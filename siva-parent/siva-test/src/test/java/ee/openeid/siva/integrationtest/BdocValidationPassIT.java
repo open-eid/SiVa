@@ -56,6 +56,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT_TM))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[0].signedBy", Matchers.is("NURM,AARE,38211015222"))
                 .body("signatures[0].certificates.size()", Matchers.is(2))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("NURM,AARE,38211015222"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIEmDCCA4CgAwIBAgIQP0r+1SmYLpVSgfYqBWYcBzANBgkqhk"))
@@ -138,6 +139,9 @@ public class BdocValidationPassIT extends SiVaRestTests {
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-E"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].signedBy", Matchers.is("PELANIS,MINDAUGAS,37412260478"))
+                .body("signatures[0].subjectDistinguishedName.commonName",  Matchers.is("MINDAUGAS PELANIS"))
+                .body("signatures[0].subjectDistinguishedName.serialNumber",  Matchers.is("37412260478"))
                 .body("signatures[0].certificates.size()", Matchers.is(3))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("MINDAUGAS PELANIS"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIGJzCCBQ+gAwIBAgIObV8h37aTlaYAAQAEAckwDQYJKoZIhv"))
@@ -244,6 +248,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LTA"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2014-10-30T18:50:35Z"))
+                .body("signatures[0].signedBy", Matchers.is("METSMA,RAUL,38207162766"))
                 .body("signatures[0].certificates.size()", Matchers.is(3))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("METSMA,RAUL,38207162766"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIEmzCCA4OgAwIBAgIQFQe7NKtE06tRSY1vHfPijjANBgkqhk"))
@@ -325,6 +330,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].signedBy", Matchers.is("Wilson OÜ digital stamp"))
                 .body("validSignaturesCount", Matchers.is(1));
     }
 
@@ -483,6 +489,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].signedBy", Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
                 .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("47101010033"))
                 .body("signatures[0].subjectDistinguishedName.commonName", Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
                 .body("validSignaturesCount", Matchers.is(1))
@@ -581,13 +588,14 @@ public class BdocValidationPassIT extends SiVaRestTests {
      */
 
     @Test
-    public void validSignatureTestOfOCSPResponder2020ForTimeMarkShoulPass() {
+    public void validSignatureTestOfOCSPResponder2020ForTimeMarkShouldPass() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestFor("test_of_OCSP_responder_2020.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT_TM))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[0].signedBy", Matchers.is("ŽAIKOVSKI,IGOR,37101010021"))
                 .body("signatures[0].certificates.size()", Matchers.is(2))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("ŽAIKOVSKI,IGOR,37101010021"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIFvjCCA6agAwIBAgIQN7pWa1fk0oJaAwZD/BO7MjANBgkqhk"))

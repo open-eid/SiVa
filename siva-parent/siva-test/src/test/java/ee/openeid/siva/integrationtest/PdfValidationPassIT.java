@@ -57,6 +57,7 @@ public class PdfValidationPassIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signatures[0].signedBy", Matchers.is("Veiko Sinivee"))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
 
@@ -111,6 +112,7 @@ public class PdfValidationPassIT extends SiVaRestTests {
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].warnings", Matchers.emptyOrNullString())
+                .body("signatures[0].signedBy", Matchers.is("NURM,AARE,38211015222"))
                 .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.notNullValue())
                 .body("signatures[0].subjectDistinguishedName.commonName", Matchers.notNullValue())
                 .body("validSignaturesCount", Matchers.is(1))

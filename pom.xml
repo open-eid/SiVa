@@ -112,13 +112,13 @@
         <commons.codec.version>1.15</commons.codec.version>
         <commons.collections.version>4.4</commons.collections.version>
         <commons.io.version>2.11.0</commons.io.version>
-        <jackson.version>2.13.2</jackson.version>
+        <jackson.version>2.13.3</jackson.version>
         <json.version>20220320</json.version>
         <logback.version>1.2.11</logback.version>
-        <lombok.version>1.18.22</lombok.version>
+        <lombok.version>1.18.24</lombok.version>
         <snakeyaml.version>1.30</snakeyaml.version>
-        <spring.boot.version>2.6.6</spring.boot.version>
-        <xmlsec.version>2.1.7</xmlsec.version>
+        <spring.boot.version>2.6.7</spring.boot.version>
+        <xmlsec.version>2.1.8</xmlsec.version>
 
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
@@ -131,7 +131,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>3.1.2</version>
+                <version>3.3.0</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -146,7 +146,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-pmd-plugin</artifactId>
-                <version>3.15.0</version>
+                <version>3.16.0</version>
             </plugin>
         </plugins>
     </reporting>
@@ -156,7 +156,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.9.0</version>
+                <version>3.10.1</version>
                 <configuration>
                     <forceJavacCompilerUse>true</forceJavacCompilerUse>
                     <source>${language.level}</source>
@@ -225,7 +225,7 @@
                     <plugin>
                         <groupId>org.owasp</groupId>
                         <artifactId>dependency-check-maven</artifactId>
-                        <version>6.2.2</version>
+                        <version>7.1.0</version>
                         <configuration>
                             <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
                             <failOnError>false</failOnError>

@@ -22,6 +22,7 @@ import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.siva.validation.util.CertUtil;
+import ee.openeid.siva.validation.util.DistinguishedNameUtil;
 import eu.europa.esig.dss.diagnostic.DiagnosticData;
 import eu.europa.esig.dss.diagnostic.SignatureWrapper;
 import eu.europa.esig.dss.diagnostic.TimestampWrapper;
@@ -48,6 +49,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -171,7 +173,7 @@ public abstract class TimemarkContainerValidationReportBuilder {
         signatureValidationData.setSignatureFormat(getSignatureFormat(signature.getProfile()));
         signatureValidationData.setSignatureMethod(signature.getSignatureMethod());
         signatureValidationData.setSignatureLevel(getSignatureLevel(signature));
-        signatureValidationData.setSignedBy(removeQuotes(signature.getSigningCertificate().getSubjectName(CN)));
+        signatureValidationData.setSignedBy(parseSignedBy(signature.getSigningCertificate()));
         signatureValidationData.setSubjectDistinguishedName(parseSubjectDistinguishedName(signature.getSigningCertificate()));
         signatureValidationData.setErrors(getErrors(signature));
         signatureValidationData.setSignatureScopes(getSignatureScopes(signature, dataFilenames));
@@ -184,6 +186,18 @@ public abstract class TimemarkContainerValidationReportBuilder {
         signatureValidationData.setCertificates(getCertificateList(signature));
 
         return signatureValidationData;
+    }
+
+    private String parseSignedBy(X509Cert signingCertificate) {
+        return Optional.ofNullable(signingCertificate)
+                .flatMap(certificate -> Optional
+                        .ofNullable(certificate.getX509Certificate())
+                        .map(DistinguishedNameUtil::getSubjectSurnameAndGivenNameAndSerialNumber)
+                        .or(() -> Optional
+                                .ofNullable(certificate.getSubjectName(CN))
+                                .map(this::removeQuotes))
+                )
+                .orElseGet(ReportBuilderUtils::valueNotPresent);
     }
 
     private SubjectDistinguishedName parseSubjectDistinguishedName(X509Cert signingCertificate) {

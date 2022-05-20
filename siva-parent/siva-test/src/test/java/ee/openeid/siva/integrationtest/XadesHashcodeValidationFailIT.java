@@ -56,6 +56,7 @@ public class XadesHashcodeValidationFailIT extends SiVaRestTests {
                 .body("signatures[0].subIndication", Matchers.is("SIGNED_DATA_NOT_FOUND"))
                 .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2019-02-05T13:36:23Z"))
+                .body("signatures[0].signedBy", Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
                 .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("47101010033"))
                 .body("signatures[0].subjectDistinguishedName.commonName", Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
                 .body("validationLevel", Matchers.is("ARCHIVAL_DATA"))

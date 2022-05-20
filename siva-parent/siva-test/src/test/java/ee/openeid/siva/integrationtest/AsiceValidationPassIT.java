@@ -57,6 +57,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2016-10-11T09:36:10Z"))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
+                .body("signatures[0].signedBy", Matchers.is("NURM,AARE,38211015222"))
                 .body("signatures[0].certificates.size()", Matchers.is(3))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("NURM,AARE,38211015222"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIE3DCCAsSgAwIBAgIQSsqdjzAQgvpX80krgJy83DANBgkqhk"))
@@ -77,7 +78,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      *
      * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
      *
-     * Title: Asice TM with multiple valid signatures
+     * Title: Asice with multiple valid signatures
      *
      * Expected Result: The document should pass the validation
      *
@@ -116,6 +117,9 @@ public class AsiceValidationPassIT extends SiVaRestTests {
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[0].signedBy", Matchers.is("PELANIS,MINDAUGAS,37412260478"))
+                .body("signatures[0].subjectDistinguishedName.commonName",  Matchers.is("MINDAUGAS PELANIS"))
+                .body("signatures[0].subjectDistinguishedName.serialNumber",  Matchers.is("37412260478"))
                 .body("signatures[0].certificates.size()", Matchers.is(3))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("MINDAUGAS PELANIS"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIGJzCCBQ+gAwIBAgIObV8h37aTlaYAAQAEAckwDQYJKoZIhv"))
@@ -151,6 +155,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2016-05-23T10:06:23Z"))
+                .body("signatures[0].signedBy", Matchers.is("UUKKIVI,KRISTI,48505280278"))
                 .body("signatures[0].certificates.size()", Matchers.is(3))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("UUKKIVI,KRISTI,48505280278"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIEojCCA4qgAwIBAgIQPKphkF8jscxRrFRhBsxlhjANBgkqhk"))
@@ -186,6 +191,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LTA))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2014-10-30T18:50:35Z"))
+                .body("signatures[0].signedBy", Matchers.is("METSMA,RAUL,38207162766"))
                 .body("signatures[0].certificates.size()", Matchers.is(4))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("METSMA,RAUL,38207162766"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIEmzCCA4OgAwIBAgIQFQe7NKtE06tRSY1vHfPijjANBgkqhk"))
@@ -250,6 +256,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
                 .body("signatures[0].signatureLevel", Matchers.is(SIGNATURE_LEVEL_QESIG))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[0].signedBy", Matchers.is("LUKIN,LIISA,47710110274"))
                 .body("signatures[0].certificates.size()", Matchers.is(3))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("LUKIN,LIISA,47710110274"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIFfzCCA2egAwIBAgIQL+hzDhb7R0xWi+03fxcZKDANBgkqhk"))
@@ -284,6 +291,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
                 .body("signatures[0].signatureLevel", Matchers.is(SIGNATURE_LEVEL_QESIG))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[0].signedBy", Matchers.is("Wilson OÜ digital stamp"))
                 .body("signatures[0].subjectDistinguishedName.commonName", Matchers.is("Wilson OÜ digital stamp"))
                 .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("12508548"))
                 .body("signatures[0].certificates.size()", Matchers.is(3))
@@ -381,6 +389,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
                 .body("signatures[0].warnings", Matchers.emptyOrNullString())
+                .body("signatures[0].signedBy", Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
                 .body("signatures[0].subjectDistinguishedName.commonName", Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
                 .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("47101010033"))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
@@ -410,6 +419,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
                 .body("signatures[0].warnings", Matchers.emptyOrNullString())
                 .body("signatures[0].signatureMethod", Matchers.is("http://www.w3.org/2007/05/xmldsig-more#sha256-rsa-MGF1"))
+                .body("signatures[0].signedBy", Matchers.is("ŽÕRINÜWŠKY,MÄRÜ-LÖÖZ,11404176865"))
                 .body("signatures[0].subjectDistinguishedName.commonName", Matchers.is("ŽÕRINÜWŠKY,MÄRÜ-LÖÖZ,11404176865"))
                 .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("11404176865"))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
@@ -452,6 +462,46 @@ public class AsiceValidationPassIT extends SiVaRestTests {
                 .body("validSignaturesCount", Matchers.is(1));
     }
 
+    /**
+     * TestCaseID: Asice-ValidationPass-15
+     * <p>
+     * TestType: Automated
+     * <p>
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
+     * <p>
+     * Title: ASICE with new Smart-ID certificate profile without personal number in CommonName
+     * <p>
+     * Expected Result: The document should pass
+     * <p>
+     * File: validSidSignatureWithCertWithoutPnoInCn.asice
+     */
+
+    @Test
+    public void validSignatureSignerCertDoNotHavePersonalNumberInCnShouldPass() {
+        setTestFilesDirectory("bdoc/test/timestamp/");
+        post(validationRequestFor("validSidSignatureWithCertWithoutPnoInCn.asice"))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
+                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[0].signedBy", Matchers.is("TESTNUMBER,QUALIFIED OK1,30303039914"))
+                .body("signatures[0].subjectDistinguishedName.commonName",  Matchers.is("TESTNUMBER,QUALIFIED OK1"))
+                .body("signatures[0].subjectDistinguishedName.serialNumber",  Matchers.is("PNOEE-30303039914"))
+                .body("signatures[1].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
+                .body("signatures[1].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[1].signedBy", Matchers.is("TESTNUMBER,BOD,39912319997"))
+                .body("signatures[1].subjectDistinguishedName.commonName",  Matchers.is("TESTNUMBER,BOD"))
+                .body("signatures[1].subjectDistinguishedName.serialNumber",  Matchers.is("PNOEE-39912319997"))
+                .body("signatures[1].certificates.size()", Matchers.is(3))
+                .body("signatures[1].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("TESTNUMBER,BOD"))
+                .body("signatures[1].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIIojCCBoqgAwIBAgIQJ5zu8nauSO5hSFPXGPNAtzANBgkqhk"))
+                .body("signatures[1].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].commonName",  Matchers.is("DEMO SK TIMESTAMPING AUTHORITY 2020"))
+                .body("signatures[1].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].content",  Matchers.startsWith("MIIEgzCCA2ugAwIBAgIQcGzJsYR4QLlft+S73s/WfTANBgkqhk"))
+                .body("signatures[1].certificates.findAll{it.type == 'REVOCATION'}[0].commonName",  Matchers.is("DEMO of EID-SK 2016 AIA OCSP RESPONDER 2018"))
+                .body("signatures[1].certificates.findAll{it.type == 'REVOCATION'}[0].content",  Matchers.startsWith("MIIFQDCCAyigAwIBAgIQSKlAnTgs72Ra5xCvMScb/jANBgkqhk"))
+                .body("signaturesCount", Matchers.is(2))
+                .body("validSignaturesCount", Matchers.is(2));
+    }
 
     @Override
     protected String getTestFilesDirectory() {

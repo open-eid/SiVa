@@ -215,7 +215,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].id", Matchers.is("S1510667783001"))
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC"))
-                .body("signatures[0].signedBy", Matchers.is("NURM,AARE,PNOEE-38211015222"))
+                .body("signatures[0].signedBy", Matchers.is("NURM,AARE,38211015222"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
                 .body("signatures[0].errors[0].content", Matchers.is("The result of the LTV validation process is not acceptable to continue the process!"))

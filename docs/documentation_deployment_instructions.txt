@@ -1,44 +1,29 @@
-Our documentation is written using [MkDocs](http://www.mkdocs.org/) static documentation site generator and 
-language that we use to write documentation is [Markdown](https://daringfireball.net/projects/markdown/). 
+Our documentation is written using [MkDocs](http://www.mkdocs.org/) static documentation site generator with [Material theme](https://squidfunk.github.io/mkdocs-material/)  and [Markdown](https://daringfireball.net/projects/markdown/).
 
 System requirements
 -------------------
 
-* **Python 2** - All version above 2.6 should work
+* **Python 3** - currently used version is 3.10
 * **pip** - Python package manager
-* **MkDocs CLI** - to generate and deploy new version of documentation
 * **Text Editor** - to edit Markdown documents (i.e [Haroopad](http://pad.haroopress.com/#))
 
-Installing MkDocs
+Installing required software
 -----------------
 
 ### Ubuntu and Mac OS X
 
-Both Ubuntu and Mac OS X come `python` version 2 already installed You only need to install `pip`
+Both Ubuntu and Mac OS X come `python` already installed (the version depends on OS)
 
-1.  Install `pip` on Ubuntu 15.04 `sudo apt-get install python-pip` on Mac OS X `sudo easy_install pip`
-2.  Next up install `mkdocs` using [pip](https://pip.pypa.io/en/stable/): `pip install mkdocs`
+1.  Install `pip` on Ubuntu 18.04 `sudo apt-get install python-pip` on Mac OS X `sudo easy_install pip`
+2.  Install `mkdocs` using [pip](https://pip.pypa.io/en/stable/): `pip install mkdocs`
+3.  Install material theme `pip install mkdocs-material`
 
 ### Windows
 
-Installing Python:
-
-1. Download the installer from the official `python` homepage: <https://www.python.org/downloads/>
-> **NOTE:** Starting with version 2.7.9 and onwards `pip` ships along with python,<br/>
-so there shouldn't be any need to install `pip` separately.
-2. Execute the python installer
-
-Installing Pip:
-
-1. Download [get-pip.py](https://bootstrap.pypa.io/get-pip.py)
-2. Then run the following command (which may require administrator access): `python get-pip.py`
-3. Add C:\Python27\Scripts to the system path (PATH environment variable)
-
-Installing Mkdocs:
-
-Install `mkdocs` using [pip](https://pip.pypa.io/en/stable/): `pip install mkdocs`
-
-Now You're done and can start editing the PDF Validator documentation. 
+1. Install python. Download the installer from the official `python` homepage: <https://www.python.org/downloads/> and install
+> **NOTE:** Starting with version 2.7.9 and onwards `pip` ships along with python, so there shouldn't be any need to install `pip` separately.
+2. Install `mkdocs` using [pip](https://pip.pypa.io/en/stable/): `pip install mkdocs`
+3.  Install material theme `pip install mkdocs-material`
 
 Editing content
 ---------------

@@ -34,4 +34,5 @@ SiVa architecture document will cover:
   servers required when deploying SiVa validation web service
   into production
 * [**Quality Assurance**](siva3/qa_strategy) - overview of quality assurance strategy and testing
+* [**Roadmap**](siva3/roadmap) - info about planned releases
 

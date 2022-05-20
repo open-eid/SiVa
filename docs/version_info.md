@@ -15,3 +15,4 @@
 | 1.9                | 12.04.2021      | Markus Kivisalu                                       | Updated URL-s and reference links                                             |
 | 1.10               | 16.06.2021      | Risto Seene, Markus Kivisalu                          | SIVA 3.5 documentation additions                                              |
 | 1.11               | 20.04.2022      | Aare Nurm                                             | Roadmap added                                                                 |
+| 1.12               | 20.05.2022      | Aare Nurm                                             | SignedBy field description update                                             |

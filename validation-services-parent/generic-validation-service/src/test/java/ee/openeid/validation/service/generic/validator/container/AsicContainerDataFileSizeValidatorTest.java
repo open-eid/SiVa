@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Riigi Infosüsteemi Amet
+ * Copyright 2021 - 2022 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -16,8 +16,11 @@
 
 package ee.openeid.validation.service.generic.validator.container;
 
+import ee.openeid.validation.service.generic.helper.TestXmlDetailUtils;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlContainerInfo;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlDiagnosticData;
+import eu.europa.esig.dss.simplereport.jaxb.XmlDetails;
+import eu.europa.esig.dss.simplereport.jaxb.XmlMessage;
 import eu.europa.esig.dss.simplereport.jaxb.XmlSignature;
 import eu.europa.esig.dss.simplereport.jaxb.XmlSimpleReport;
 import eu.europa.esig.dss.validation.reports.Reports;
@@ -44,7 +47,7 @@ public class AsicContainerDataFileSizeValidatorTest {
     @ParameterizedTest
     @MethodSource("listsOfDataFiles")
     public void testEntryIsNeverReadIfNotDataFile(List<String> dataFiles) throws IOException {
-        List<String> signatureWarnings = new ArrayList<>();
+        List<XmlMessage> signatureWarnings = new ArrayList<>();
         AsicContainerDataFileSizeValidator validator = createValidatorFor(dataFiles, Map.of("123", signatureWarnings));
         ZipEntry nonDataFileEntry = createZipEntryMockWithName("non-datafile");
         InputStream entryStream = Mockito.mock(InputStream.class);
@@ -73,7 +76,7 @@ public class AsicContainerDataFileSizeValidatorTest {
         dataFileMappings.put("data-file-3", new byte[] {1, 2, 3});
         dataFileMappings.put("empty-data-file-4", new byte[0]);
         dataFileMappings.put("data-file-5", new byte[] {0x7F, (byte) 0xFF, (byte) 0x80, (byte) 0x8F, 0x00});
-        Map<String, List<String>> signatureMappings = new LinkedHashMap<>();
+        Map<String, List<XmlMessage>> signatureMappings = new LinkedHashMap<>();
         for (int i = 0; i < signatureCount; ++i) {
             signatureMappings.put("signature-with-id-" + i, new ArrayList<>());
         }
@@ -83,10 +86,11 @@ public class AsicContainerDataFileSizeValidatorTest {
         for (int df = 0; df < dataFiles.size(); ++df) {
             String dataFileName = dataFiles.get(df);
             ZipEntry zipEntry = createZipEntryMockWithName(dataFileName);
-            List<String> expectedWarnings = dataFileMappings.entrySet().stream()
+            List<XmlMessage> expectedWarnings = dataFileMappings.entrySet().stream()
                     .limit(df + 1L) // Consider warnings only up to the current datafile
                     .filter(dataFileEntry -> dataFileEntry.getValue().length == 0)
                     .map(dataFileEntry -> String.format("Data file '%s' is empty", dataFileEntry.getKey()))
+                    .map(message -> TestXmlDetailUtils.createMessage(null, message))
                     .collect(Collectors.toList());
 
             try (InputStream entryStream = new ByteArrayInputStream(dataFileMappings.get(dataFileName))) {
@@ -94,14 +98,17 @@ public class AsicContainerDataFileSizeValidatorTest {
             }
 
             assertOnlyZipEntryGetNameCalled(zipEntry);
-            for (Map.Entry<String, List<String>> signatureEntry : signatureMappings.entrySet()) {
-                Assertions.assertEquals(expectedWarnings, signatureEntry.getValue());
+            for (Map.Entry<String, List<XmlMessage>> signatureEntry : signatureMappings.entrySet()) {
+                TestXmlDetailUtils.assertEquals(expectedWarnings, signatureEntry.getValue());
             }
         }
 
-        for (Map.Entry<String, List<String>> signatureEntry : signatureMappings.entrySet()) {
-            Assertions.assertEquals(
-                    List.of("Data file 'empty-data-file-2' is empty", "Data file 'empty-data-file-4' is empty"),
+        for (Map.Entry<String, List<XmlMessage>> signatureEntry : signatureMappings.entrySet()) {
+            TestXmlDetailUtils.assertEquals(
+                    TestXmlDetailUtils.createMessageList(
+                            TestXmlDetailUtils.createMessage(null, "Data file 'empty-data-file-2' is empty"),
+                            TestXmlDetailUtils.createMessage(null, "Data file 'empty-data-file-4' is empty")
+                    ),
                     signatureEntry.getValue()
             );
         }
@@ -109,7 +116,10 @@ public class AsicContainerDataFileSizeValidatorTest {
 
     @Test
     public void testWarningOfEmptyDataFileIsAppendedToExistingWarnings() throws IOException {
-        List<String> signatureWarnings = new ArrayList<>(List.of("Existing warning 1", "Existing warning 2"));
+        List<XmlMessage> signatureWarnings = TestXmlDetailUtils.createMessageList(
+                TestXmlDetailUtils.createMessage("Key 1", "Existing warning 1"),
+                TestXmlDetailUtils.createMessage("Key 2", "Existing warning 2")
+        );
         AsicContainerDataFileSizeValidator validator = createValidatorFor(List.of("data-file"), Map.of("123", signatureWarnings));
         ZipEntry dataFileEntry = createZipEntryMockWithName("data-file");
 
@@ -118,13 +128,17 @@ public class AsicContainerDataFileSizeValidatorTest {
         }
 
         assertOnlyZipEntryGetNameCalled(dataFileEntry);
-        Assertions.assertEquals(
-                List.of("Existing warning 1", "Existing warning 2", "Data file 'data-file' is empty"),
+        TestXmlDetailUtils.assertEquals(
+                TestXmlDetailUtils.createMessageList(
+                        TestXmlDetailUtils.createMessage("Key 1", "Existing warning 1"),
+                        TestXmlDetailUtils.createMessage("Key 2", "Existing warning 2"),
+                        TestXmlDetailUtils.createMessage(null, "Data file 'data-file' is empty")
+                ),
                 signatureWarnings
         );
     }
 
-    private static AsicContainerDataFileSizeValidator createValidatorFor(List<String> dataFilesNames, Map<String, List<String>> mappingsOfSignatureIdToWarningList) {
+    private static AsicContainerDataFileSizeValidator createValidatorFor(List<String> dataFilesNames, Map<String, List<XmlMessage>> mappingsOfSignatureIdToWarningList) {
         XmlDiagnosticData diagnosticData = new XmlDiagnosticData();
         XmlContainerInfo containerInfo = new XmlContainerInfo();
         containerInfo.getContentFiles().addAll(dataFilesNames);
@@ -134,8 +148,11 @@ public class AsicContainerDataFileSizeValidatorTest {
         mappingsOfSignatureIdToWarningList.forEach((signatureId, signatureWarningList) -> {
             XmlSignature simpleReportSignature = Mockito.mock(XmlSignature.class);
             Mockito.doReturn(signatureId).when(simpleReportSignature).getId();
-            Mockito.doReturn(signatureWarningList).when(simpleReportSignature).getWarnings();
             simpleReport.getSignatureOrTimestamp().add(simpleReportSignature);
+
+            XmlDetails signatureAdESValidationDetails = Mockito.mock(XmlDetails.class);
+            Mockito.doReturn(signatureWarningList).when(signatureAdESValidationDetails).getWarning();
+            Mockito.doReturn(signatureAdESValidationDetails).when(simpleReportSignature).getAdESValidationDetails();
         });
 
         Reports validationReports = new Reports(diagnosticData, null, simpleReport, null);

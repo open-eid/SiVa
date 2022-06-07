@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Riigi Infosüsteemide Amet
+ * Copyright 2019 - 2022 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -43,24 +43,24 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
     private static final String PDF_WITH_CRL = "PadesProfileLtWithCrl.pdf";
 
     @Test
-    public void validatingWithValidPdfShouldReturnValidationReportPojo() throws Exception {
+    public void validatingWithValidPdfShouldReturnValidationReportPojo() {
         SimpleReport report = validateAndAssertReports(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE)).getSimpleReport();
         assertNotNull(report);
     }
 
     @Test
-    public void validationReportForValidPdfShouldHaveEqualSignatureCountAndValidSignatureCount() throws Exception {
+    public void validationReportForValidPdfShouldHaveEqualSignatureCountAndValidSignatureCount() {
         SimpleReport report = validateAndAssertReports(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE)).getSimpleReport();
         ValidationConclusion validationConclusion = report.getValidationConclusion();
         assertEquals(PDF_WITH_ONE_VALID_SIGNATURE, validationConclusion.getValidatedDocument().getFilename());
-        assertTrue(validationConclusion.getValidSignaturesCount() == 1);
-        assertTrue(validationConclusion.getSignaturesCount() == 1);
+        assertEquals(1, (int) validationConclusion.getValidSignaturesCount());
+        assertEquals(1, (int) validationConclusion.getSignaturesCount());
     }
 
     @Test
-    public void whenValidatingValidPDFThenDateTimesShouldBeCorrectlyParsed() throws Exception {
+    public void whenValidatingValidPDFThenDateTimesShouldBeCorrectlyParsed() {
         SimpleReport report = validateAndAssertReports(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE)).getSimpleReport();
         SignatureValidationData signature = report.getValidationConclusion().getSignatures().get(0);
@@ -69,15 +69,15 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
     }
 
     @Test
-    public void validatedSignatureShouldHaveCorrectId() throws Exception {
+    public void validatedSignatureShouldHaveCorrectId() {
         SimpleReport report = validateAndAssertReports(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE)).getSimpleReport();
         SignatureValidationData signature = report.getValidationConclusion().getSignatures().get(0);
-        assertEquals("S-50C07012D215F87BD0FC9F5BAE03B63C0BBDE3D0469003ABD5A43D79D7CAA991", signature.getId());
+        assertEquals("S-A5BA0559F579E2593C4785C87BD8F59DA37E413F9016099D7FD33FAC8C485176", signature.getId());
     }
 
     @Test
-    public void validatedSignatureShouldHaveFormatAndLevel() throws Exception {
+    public void validatedSignatureShouldHaveFormatAndLevel() {
         SimpleReport report = validateAndAssertReports(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE)).getSimpleReport();
         SignatureValidationData signature = report.getValidationConclusion().getSignatures().get(0);
@@ -86,7 +86,7 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
     }
 
     @Test
-    public void validationResultForValidPDFShouldHaveCorrectSignatureScopeForPDF() throws Exception {
+    public void validationResultForValidPDFShouldHaveCorrectSignatureScopeForPDF() {
         SimpleReport report = validateAndAssertReports(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE)).getSimpleReport();
         SignatureScope scope = report.getValidationConclusion().getSignatures().get(0).getSignatureScopes().get(0);
@@ -104,7 +104,7 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
     }
 
     @Test
-    public void validationResultForPdfShouldContainNull() throws Exception {
+    public void validationResultForPdfShouldContainNull() {
         SimpleReport report = validateAndAssertReports(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE)).getSimpleReport();
         assertNull(report.getValidationConclusion().getSignatureForm());
@@ -119,7 +119,7 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
 
     @Test
     @Ignore //TODO: Warnings are not returned when validationLevel is set to ARCHIVAL_DATA (default level)
-    public void validatingPdfSignedWithUnqualifiedCertificateReturnsReportWithoutErrorsButWithWarning() throws Exception {
+    public void validatingPdfSignedWithUnqualifiedCertificateReturnsReportWithoutErrorsButWithWarning() {
         SimpleReport report = validateAndAssertReports(
                 buildValidationDocument(PDF_SIGNED_WITH_UNQUALIFIED_CERTIFICATE)).getSimpleReport();
         assertNotNull(report);

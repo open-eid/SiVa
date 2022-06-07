@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2017 - 2022 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -449,15 +449,15 @@ public class AsiceValidationPassIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
                 .body("signatures[0].signatureScopes.size()", Matchers.is(5))
-                .body("signatures[0].signatureScopes[0].name", Matchers.is("data-file-1.txt"))
-                .body("signatures[0].signatureScopes[1].name", Matchers.is("empty-file-2.txt"))
-                .body("signatures[0].signatureScopes[2].name", Matchers.is("data-file-3.txt"))
-                .body("signatures[0].signatureScopes[3].name", Matchers.is("empty-file-4.txt"))
-                .body("signatures[0].signatureScopes[4].name", Matchers.is("data-file-5.txt"))
+                .body("signatures[0].signatureScopes.name", Matchers.containsInRelativeOrder(
+                        "data-file-1.txt", "empty-file-2.txt", "data-file-3.txt", "empty-file-4.txt", "data-file-5.txt"
+                ))
                 .body("signatures[0].warnings.size()", Matchers.is(3))
-                .body("signatures[0].warnings[0].content", Matchers.is("The trusted certificate does not match the trust service!"))
-                .body("signatures[0].warnings[1].content", Matchers.is("Data file 'empty-file-2.txt' is empty"))
-                .body("signatures[0].warnings[2].content", Matchers.is("Data file 'empty-file-4.txt' is empty"))
+                .body("signatures[0].warnings.content", Matchers.containsInAnyOrder(
+                        "The trusted certificate does not match the trust service!",
+                        "Data file 'empty-file-2.txt' is empty",
+                        "Data file 'empty-file-4.txt' is empty"
+                ))
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1));
     }

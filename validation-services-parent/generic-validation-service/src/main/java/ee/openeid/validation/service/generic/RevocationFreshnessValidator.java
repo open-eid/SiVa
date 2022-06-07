@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 - 2021 Riigi Infosüsteemi Amet
+ * Copyright 2020 - 2022 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -17,6 +17,7 @@
 package ee.openeid.validation.service.generic;
 
 import ee.openeid.validation.service.generic.validator.TokenUtils;
+import ee.openeid.validation.service.generic.validator.report.DssSimpleReportWrapper;
 import eu.europa.esig.dss.diagnostic.CertificateWrapper;
 import eu.europa.esig.dss.diagnostic.SignatureWrapper;
 import eu.europa.esig.dss.enumerations.RevocationType;
@@ -81,16 +82,16 @@ public class RevocationFreshnessValidator {
             if (timestampOcspDifference.compareTo(REVOCATION_FRESHNESS_OK_LIMIT) <= 0) {
                 return; // OCSP is not taken later than the OK limit after timestamp
             } else if (timestampOcspDifference.compareTo(REVOCATION_FRESHNESS_WARNING_LIMIT) <= 0) {
-                addSignatureWarning(signatureWrapper.getId(), REVOCATION_FRESHNESS_FAULT);
+                addSignatureAdESWarning(signatureWrapper.getId(), REVOCATION_FRESHNESS_FAULT);
                 return; // OCSP is not taken later than the WARNING limit after timestamp
             }
         } else if (CollectionUtils.isNotEmpty(validOcspProducedAtDates)) {
-            addSignatureError(signatureWrapper.getId(), TIMESTAMP_OCSP_ORDER_FAULT);
+            addSignatureAdESError(signatureWrapper.getId(), TIMESTAMP_OCSP_ORDER_FAULT);
             return; // There are valid OCSP responses, but all of them are taken before the timestamp
         }
 
         // Every other case is considered as revocation freshness error
-        addSignatureError(signatureWrapper.getId(), REVOCATION_FRESHNESS_FAULT);
+        addSignatureAdESError(signatureWrapper.getId(), REVOCATION_FRESHNESS_FAULT);
     }
 
     private static Date findEarliestValidSignatureTimestampProductionTime(SignatureWrapper signatureWrapper) {
@@ -147,12 +148,14 @@ public class RevocationFreshnessValidator {
                 .orElse(null);
     }
 
-    private void addSignatureWarning(String signatureId, String warning) {
-        reports.getSimpleReport().getWarnings(signatureId).add(warning);
+    private void addSignatureAdESWarning(String signatureId, String warning) {
+        new DssSimpleReportWrapper(reports).getSignatureAdESValidationXmlDetails(signatureId)
+                .getWarning().add(DssSimpleReportWrapper.createXmlMessage(warning));
     }
 
-    private void addSignatureError(String signatureId, String error) {
-        reports.getSimpleReport().getErrors(signatureId).add(error);
+    private void addSignatureAdESError(String signatureId, String error) {
+        new DssSimpleReportWrapper(reports).getSignatureAdESValidationXmlDetails(signatureId)
+                .getError().add(DssSimpleReportWrapper.createXmlMessage(error));
     }
 
 }

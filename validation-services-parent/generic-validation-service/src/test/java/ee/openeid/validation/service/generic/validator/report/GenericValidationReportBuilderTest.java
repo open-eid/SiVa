@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 - 2021 Riigi Infosüsteemi Amet
+ * Copyright 2017 - 2022 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -24,6 +24,7 @@ import ee.openeid.siva.validation.document.report.SubjectDistinguishedName;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
+import ee.openeid.validation.service.generic.helper.TestXmlDetailUtils;
 import eu.europa.esig.dss.diagnostic.CertificateRevocationWrapper;
 import eu.europa.esig.dss.diagnostic.TimestampWrapper;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlBasicSignature;
@@ -54,7 +55,9 @@ import eu.europa.esig.dss.enumerations.SignatureLevel;
 import eu.europa.esig.dss.enumerations.TimestampType;
 import eu.europa.esig.dss.model.FileDocument;
 import eu.europa.esig.dss.pades.validation.PDFDocumentValidator;
+import eu.europa.esig.dss.simplereport.jaxb.XmlDetails;
 import eu.europa.esig.dss.simplereport.jaxb.XmlSimpleReport;
+import eu.europa.esig.dss.simplereport.jaxb.XmlTimestamps;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.validation.AdvancedSignature;
 import eu.europa.esig.dss.validation.executor.ValidationLevel;
@@ -109,16 +112,56 @@ public class GenericValidationReportBuilderTest {
     }
 
     @Test
-    public void totalFailedIndicationReportBuild() {
+    public void totalFailedIndicationWithAdESErrorReportBuild() {
         eu.europa.esig.dss.validation.reports.Reports dssReports = getDssReports("");
         dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).setIndication(Indication.TOTAL_FAILED);
-        dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).getErrors().add("Something is wrong");
+        dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).setAdESValidationDetails(new XmlDetails());
+        dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).getAdESValidationDetails().getError()
+                .add(TestXmlDetailUtils.createMessage(null, "Something is wrong"));
 
         ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
         Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
         Assertions.assertEquals(Integer.valueOf(0), reports.getSimpleReport().getValidationConclusion().getValidSignaturesCount());
         Assertions.assertEquals("TOTAL-FAILED", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getIndication());
         Assertions.assertEquals("Something is wrong", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getErrors().get(0).getContent());
+    }
+
+    @Test
+    public void totalFailedIndicationWithQualificationErrorReportBuild() {
+        eu.europa.esig.dss.validation.reports.Reports dssReports = getDssReports("");
+        dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).setIndication(Indication.TOTAL_FAILED);
+        dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).setQualificationDetails(new XmlDetails());
+        dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).getQualificationDetails().getError()
+                .add(TestXmlDetailUtils.createMessage(null, "Something is wrong"));
+
+        ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
+        Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
+        Assertions.assertEquals(Integer.valueOf(0), reports.getSimpleReport().getValidationConclusion().getValidSignaturesCount());
+        Assertions.assertEquals("TOTAL-FAILED", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getIndication());
+        Assertions.assertEquals("Something is wrong", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getErrors().get(0).getContent());
+    }
+
+    @Test
+    public void totalFailedIndicationWithTimestampErrorsReportBuild() {
+        eu.europa.esig.dss.validation.reports.Reports dssReports = getDssReports("");
+        dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).setIndication(Indication.TOTAL_FAILED);
+        eu.europa.esig.dss.simplereport.jaxb.XmlSignature signature = (eu.europa.esig.dss.simplereport.jaxb.XmlSignature) dssReports
+                .getSimpleReportJaxb().getSignatureOrTimestamp().get(0);
+        signature.setTimestamps(new XmlTimestamps());
+        signature.getTimestamps().getTimestamp().add(new eu.europa.esig.dss.simplereport.jaxb.XmlTimestamp());
+        signature.getTimestamps().getTimestamp().get(0).setAdESValidationDetails(new XmlDetails());
+        signature.getTimestamps().getTimestamp().get(0).getAdESValidationDetails().getError()
+                .add(TestXmlDetailUtils.createMessage(null, "AdES is wrong"));
+        signature.getTimestamps().getTimestamp().get(0).setQualificationDetails(new XmlDetails());
+        signature.getTimestamps().getTimestamp().get(0).getQualificationDetails().getError()
+                .add(TestXmlDetailUtils.createMessage(null, "Qualification is wrong"));
+
+        ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
+        Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
+        Assertions.assertEquals(Integer.valueOf(0), reports.getSimpleReport().getValidationConclusion().getValidSignaturesCount());
+        Assertions.assertEquals("TOTAL-FAILED", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getIndication());
+        Assertions.assertEquals("AdES is wrong", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getErrors().get(0).getContent());
+        Assertions.assertEquals("Qualification is wrong", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getErrors().get(1).getContent());
     }
 
     @Test

@@ -1,5 +1,22 @@
+/*
+ * Copyright 2020 - 2022 Riigi Infosüsteemi Amet
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
+ * the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and limitations under the Licence.
+ */
+
 package ee.openeid.validation.service.generic;
 
+import ee.openeid.validation.service.generic.helper.TestXmlDetailUtils;
 import eu.europa.esig.dss.diagnostic.CertificateRevocationWrapper;
 import eu.europa.esig.dss.diagnostic.CertificateWrapper;
 import eu.europa.esig.dss.diagnostic.DiagnosticData;
@@ -9,8 +26,11 @@ import eu.europa.esig.dss.enumerations.CertificateStatus;
 import eu.europa.esig.dss.enumerations.RevocationType;
 import eu.europa.esig.dss.enumerations.TimestampType;
 import eu.europa.esig.dss.simplereport.SimpleReport;
+import eu.europa.esig.dss.simplereport.jaxb.XmlDetails;
+import eu.europa.esig.dss.simplereport.jaxb.XmlMessage;
+import eu.europa.esig.dss.simplereport.jaxb.XmlSignature;
+import eu.europa.esig.dss.simplereport.jaxb.XmlSimpleReport;
 import eu.europa.esig.dss.validation.reports.Reports;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -24,9 +44,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -377,14 +397,19 @@ public class RevocationFreshnessValidatorTest {
         Mockito.doReturn(List.of(ocspRevocationWrapperMock)).when(certificateWrapperMock).getCertificateRevocationData();
         Mockito.doReturn("S-12345").when(signatureWrapperMock).getId();
         mockDiagnosticDataGetSignatures(signatureWrapperMock);
-        List<String> signatureWarnings = new ArrayList<>();
-        Mockito.doReturn(simpleReport).when(validationReports).getSimpleReport();
-        mockSimpleReportGetSignatureWarnings(Map.of("S-12345", signatureWarnings));
+        XmlSignature xmlSignatureMock = Mockito.mock(XmlSignature.class);
+        Mockito.doReturn("S-12345").when(xmlSignatureMock).getId();
+        XmlDetails signatureAdESValidationDetails = new XmlDetails();
+        Mockito.doReturn(signatureAdESValidationDetails).when(xmlSignatureMock).getAdESValidationDetails();
+        List<XmlMessage> signatureWarnings = signatureAdESValidationDetails.getWarning();
+        mockSimpleReportGetSignatures(xmlSignatureMock);
 
         validator.validate();
 
-        Assertions.assertEquals(
-                List.of("The revocation information is not considered as 'fresh'."),
+        TestXmlDetailUtils.assertEquals(
+                TestXmlDetailUtils.createMessageList(
+                        TestXmlDetailUtils.createMessage(null, "The revocation information is not considered as 'fresh'.")
+                ),
                 signatureWarnings
         );
         assertDiagnosticDataGetSignaturesCalled();
@@ -396,8 +421,10 @@ public class RevocationFreshnessValidatorTest {
         assertValidOcspCertificateRevocationWrapperMockInteractions(ocspRevocationWrapperMock);
         Mockito.verify(certificateWrapperMock, Mockito.times(2)).getCertificateRevocationData();
         Mockito.verifyNoMoreInteractions(certificateWrapperMock);
-        Mockito.verify(validationReports).getSimpleReport();
-        Mockito.verify(simpleReport).getWarnings("S-12345");
+        assertSimpleReportGetSignaturesCalled();
+        Mockito.verify(xmlSignatureMock).getId();
+        Mockito.verify(xmlSignatureMock).getAdESValidationDetails();
+        Mockito.verifyNoMoreInteractions(xmlSignatureMock);
         Mockito.verifyNoMoreInteractions(validationReports);
     }
 
@@ -415,14 +442,19 @@ public class RevocationFreshnessValidatorTest {
         Mockito.doReturn(List.of(ocspRevocationWrapperMock)).when(certificateWrapperMock).getCertificateRevocationData();
         Mockito.doReturn("S-12345").when(signatureWrapperMock).getId();
         mockDiagnosticDataGetSignatures(signatureWrapperMock);
-        List<String> signatureErrors = new ArrayList<>();
-        Mockito.doReturn(simpleReport).when(validationReports).getSimpleReport();
-        mockSimpleReportGetSignatureErrors(Map.of("S-12345", signatureErrors));
+        XmlSignature xmlSignatureMock = Mockito.mock(XmlSignature.class);
+        Mockito.doReturn("S-12345").when(xmlSignatureMock).getId();
+        XmlDetails signatureAdESValidationDetails = new XmlDetails();
+        Mockito.doReturn(signatureAdESValidationDetails).when(xmlSignatureMock).getAdESValidationDetails();
+        List<XmlMessage> signatureErrors = signatureAdESValidationDetails.getError();
+        mockSimpleReportGetSignatures(xmlSignatureMock);
 
         validator.validate();
 
-        Assertions.assertEquals(
-                List.of("The revocation information is not considered as 'fresh'."),
+        TestXmlDetailUtils.assertEquals(
+                TestXmlDetailUtils.createMessageList(
+                        TestXmlDetailUtils.createMessage(null, "The revocation information is not considered as 'fresh'.")
+                ),
                 signatureErrors
         );
         assertDiagnosticDataGetSignaturesCalled();
@@ -434,8 +466,10 @@ public class RevocationFreshnessValidatorTest {
         assertValidOcspCertificateRevocationWrapperMockInteractions(ocspRevocationWrapperMock);
         Mockito.verify(certificateWrapperMock, Mockito.times(2)).getCertificateRevocationData();
         Mockito.verifyNoMoreInteractions(certificateWrapperMock);
-        Mockito.verify(validationReports).getSimpleReport();
-        Mockito.verify(simpleReport).getErrors("S-12345");
+        assertSimpleReportGetSignaturesCalled();
+        Mockito.verify(xmlSignatureMock).getId();
+        Mockito.verify(xmlSignatureMock).getAdESValidationDetails();
+        Mockito.verifyNoMoreInteractions(xmlSignatureMock);
         Mockito.verifyNoMoreInteractions(validationReports);
     }
 
@@ -453,14 +487,19 @@ public class RevocationFreshnessValidatorTest {
         Mockito.doReturn(List.of(ocspRevocationWrapperMock)).when(certificateWrapperMock).getCertificateRevocationData();
         Mockito.doReturn("S-12345").when(signatureWrapperMock).getId();
         mockDiagnosticDataGetSignatures(signatureWrapperMock);
-        List<String> signatureErrors = new ArrayList<>();
-        Mockito.doReturn(simpleReport).when(validationReports).getSimpleReport();
-        mockSimpleReportGetSignatureErrors(Map.of("S-12345", signatureErrors));
+        XmlSignature xmlSignatureMock = Mockito.mock(XmlSignature.class);
+        Mockito.doReturn("S-12345").when(xmlSignatureMock).getId();
+        XmlDetails signatureAdESValidationDetails = new XmlDetails();
+        Mockito.doReturn(signatureAdESValidationDetails).when(xmlSignatureMock).getAdESValidationDetails();
+        List<XmlMessage> signatureErrors = signatureAdESValidationDetails.getError();
+        mockSimpleReportGetSignatures(xmlSignatureMock);
 
         validator.validate();
 
-        Assertions.assertEquals(
-                List.of("OCSP response production time is before timestamp time"),
+        TestXmlDetailUtils.assertEquals(
+                TestXmlDetailUtils.createMessageList(
+                        TestXmlDetailUtils.createMessage(null, "OCSP response production time is before timestamp time")
+                ),
                 signatureErrors
         );
         assertDiagnosticDataGetSignaturesCalled();
@@ -472,8 +511,10 @@ public class RevocationFreshnessValidatorTest {
         assertValidOcspCertificateRevocationWrapperMockInteractions(ocspRevocationWrapperMock);
         Mockito.verify(certificateWrapperMock, Mockito.times(2)).getCertificateRevocationData();
         Mockito.verifyNoMoreInteractions(certificateWrapperMock);
-        Mockito.verify(validationReports).getSimpleReport();
-        Mockito.verify(simpleReport).getErrors("S-12345");
+        assertSimpleReportGetSignaturesCalled();
+        Mockito.verify(xmlSignatureMock).getId();
+        Mockito.verify(xmlSignatureMock).getAdESValidationDetails();
+        Mockito.verifyNoMoreInteractions(xmlSignatureMock);
         Mockito.verifyNoMoreInteractions(validationReports);
     }
 
@@ -568,22 +609,27 @@ public class RevocationFreshnessValidatorTest {
         mockDiagnosticDataGetSignatures(List.of(signatures));
     }
 
+    private void mockSimpleReportGetSignatures(List<XmlSignature> signatures) {
+        XmlSimpleReport xmlSimpleReport = new XmlSimpleReport();
+        xmlSimpleReport.getSignatureOrTimestamp().addAll(signatures);
+        Mockito.doReturn(simpleReport).when(validationReports).getSimpleReport();
+        Mockito.doReturn(xmlSimpleReport).when(simpleReport).getJaxbModel();
+    }
+
+    private void mockSimpleReportGetSignatures(XmlSignature... signatures) {
+        mockSimpleReportGetSignatures(Arrays.asList(signatures));
+    }
+
     private void assertDiagnosticDataGetSignaturesCalled() {
         Mockito.verify(validationReports).getDiagnosticData();
         Mockito.verify(diagnosticData).getSignatures();
         Mockito.verifyNoMoreInteractions(diagnosticData);
     }
 
-    private void mockSimpleReportGetSignatureWarnings(Map<String, List<String>> mappingsOfSignatureIdToWarningList) {
-        mappingsOfSignatureIdToWarningList.forEach((signatureId, signatureWarningList) -> Mockito
-                .doReturn(signatureWarningList).when(simpleReport).getWarnings(signatureId)
-        );
-    }
-
-    private void mockSimpleReportGetSignatureErrors(Map<String, List<String>> mappingsOfSignatureIdToErrorList) {
-        mappingsOfSignatureIdToErrorList.forEach((signatureId, signatureWarningList) -> Mockito
-                .doReturn(signatureWarningList).when(simpleReport).getErrors(signatureId)
-        );
+    private void assertSimpleReportGetSignaturesCalled() {
+        Mockito.verify(validationReports).getSimpleReport();
+        Mockito.verify(simpleReport).getJaxbModel();
+        Mockito.verifyNoMoreInteractions(simpleReport);
     }
 
 }

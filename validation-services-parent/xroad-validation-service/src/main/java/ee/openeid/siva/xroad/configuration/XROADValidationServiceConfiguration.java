@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2017 - 2022 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -18,11 +18,14 @@ package ee.openeid.siva.xroad.configuration;
 
 import ee.openeid.siva.monitoring.configuration.MonitoringConfiguration;
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
+import ee.openeid.siva.validation.configuration.SecureZipContainerConfiguration;
 import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import javax.annotation.PostConstruct;
 
 @Configuration
 @EnableConfigurationProperties({XROADValidationServiceProperties.class, XROADSignaturePolicyProperties.class, ReportConfigurationProperties.class})
@@ -32,4 +35,10 @@ public class XROADValidationServiceConfiguration extends MonitoringConfiguration
     public SignaturePolicyService<ValidationPolicy> signaturePolicyService(XROADSignaturePolicyProperties properties) {
         return new SignaturePolicyService<>(properties);
     }
+
+    @PostConstruct
+    public void setUpGlobalThreadSafeSecureContainerHandler() {
+        new SecureZipContainerConfiguration().setUpGlobalThreadSafeSecureContainerHandler();
+    }
+
 }

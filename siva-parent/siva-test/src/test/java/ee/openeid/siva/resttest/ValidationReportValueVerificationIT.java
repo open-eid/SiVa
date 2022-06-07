@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2017 - 2022 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -432,7 +432,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
         post(validationRequestFor("reason_and_location_Test.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
-                .body("signatures[0].id", Matchers.is("S-1CA4D655909860192F80E6EA6D3FCC18C25A81E8902819C5E05B5C12D5BD6784"))
+                .body("signatures[0].id", Matchers.is("S-4D0D5A83688FC617AA83810ED74E26C5A79063D110B00AD207EAB3EFDC3F5619"))
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("signatures[0].signatureMethod", Matchers.is("http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
@@ -484,7 +484,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
         post(validationRequestFor("pades_lt_two_valid_sig.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
-                .body("signatures[1].id", Matchers.is("S-87966FE26A3FB0B27130B11EBF254A196E9C3319A56D25D479FFF2780C00494D"))
+                .body("signatures[1].id", Matchers.is("S-E5D6D118C4B604343E1395213075D5C429CD68E9178E4E8252EDB027732EF3F6"))
                 .body("signatures[1].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("signatures[1].signatureMethod", Matchers.is("http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"))
                 .body("signatures[1].signatureLevel", Matchers.is("QESIG"))
@@ -535,7 +535,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
         post(validationRequestFor("hellopades-lt-b.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
-                .body("signatures[1].id", Matchers.is("S-8E37E9F25D08ECE70EA1D135CEFCFE8A713CB2AD39183D1591A4561A4809EB90"))
+                .body("signatures[1].id", Matchers.is("S-9D2DD421E47AE2C851EBD4C467DA97042362BB48331511E272B64110CFF862EE"))
                 .body("signatures[1].signatureFormat", Matchers.is("PAdES_BASELINE_B"))
                 .body("signatures[1].signatureLevel", Matchers.is("NOT_ADES"))
                 .body("signatures[1].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
@@ -584,7 +584,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
         post(validationRequestFor("hellopades-lt-rsa1024-sha1-expired.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
-                .body("signatures[0].id", Matchers.is("S-12BD46636D1B6AE7156E209D4AC465A61B13D0BBB9668E07690091D1E4BB8F3E"))
+                .body("signatures[0].id", Matchers.is("S-B2DE2D1E57C3DD8F518A13F027988A4BDBE03DC7A1DF96301351694DCDB88213"))
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_T"))
                 .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
                 .body("signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))

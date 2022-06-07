@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2017 Riigi Infosüsteemide Amet
+  ~ Copyright 2017 - 2022 Riigi Infosüsteemide Amet
   ~
   ~ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
   ~ the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -68,7 +68,7 @@
                 <AuthorityInfoAccessPresent Level="INFORM" />
                 <RevocationInfoAccessPresent Level="WARN"/>
                 <RevocationDataAvailable Level="FAIL"/>
-                <RevocationDataNextUpdatePresent Level="WARN"/>
+                <CRLNextUpdatePresent Level="WARN"/>
                 <RevocationDataFreshness Level="FAIL"/>
                 <KeyUsage Level="FAIL">
                     <Id>nonRepudiation</Id>
@@ -107,7 +107,7 @@
                 <Signature Level="FAIL"/>
                 <NotExpired Level="FAIL"/>
                 <RevocationDataAvailable Level="FAIL"/>
-                <RevocationDataNextUpdatePresent Level="WARN"/>
+                <CRLNextUpdatePresent Level="WARN"/>
                 <RevocationDataFreshness Level="FAIL"/>
                 <NotRevoked Level="FAIL"/>
                 <NotOnHold Level="FAIL"/>
@@ -198,7 +198,7 @@
                 <Signature Level="FAIL"/>
                 <NotExpired Level="FAIL"/>
                 <RevocationDataAvailable Level="FAIL"/>
-                <RevocationDataNextUpdatePresent Level="WARN"/>
+                <CRLNextUpdatePresent Level="WARN"/>
                 <RevocationDataFreshness Level="FAIL"/>
                 <ExtendedKeyUsage Level="FAIL">
                     <Id>timeStamping</Id>
@@ -235,7 +235,7 @@
                 <Signature Level="FAIL"/>
                 <NotExpired Level="FAIL"/>
                 <RevocationDataAvailable Level="FAIL"/>
-                <RevocationDataNextUpdatePresent Level="WARN"/>
+                <CRLNextUpdatePresent Level="WARN"/>
                 <RevocationDataFreshness Level="FAIL"/>
                 <NotRevoked Level="FAIL"/>
                 <NotOnHold Level="FAIL"/>
@@ -303,7 +303,7 @@
                 <Signature Level="FAIL"/>
                 <NotExpired Level="FAIL"/>
                 <RevocationDataAvailable Level="FAIL"/>
-                <RevocationDataNextUpdatePresent Level="WARN"/>
+                <CRLNextUpdatePresent Level="WARN"/>
                 <RevocationDataFreshness Level="FAIL"/>
                 <NotRevoked Level="FAIL"/>
                 <NotOnHold Level="FAIL"/>
@@ -336,7 +336,7 @@
                 <Signature Level="FAIL"/>
                 <NotExpired Level="FAIL"/>
                 <RevocationDataAvailable Level="FAIL"/>
-                <RevocationDataNextUpdatePresent Level="WARN"/>
+                <CRLNextUpdatePresent Level="WARN"/>
                 <RevocationDataFreshness Level="FAIL"/>
                 <NotRevoked Level="FAIL"/>
                 <NotOnHold Level="FAIL"/>

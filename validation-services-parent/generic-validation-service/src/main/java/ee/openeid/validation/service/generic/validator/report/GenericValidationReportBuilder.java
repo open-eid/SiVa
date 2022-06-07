@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 - 2021 Riigi Infosüsteemi Amet
+ * Copyright 2016 - 2022 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -59,6 +59,9 @@ import eu.europa.esig.dss.enumerations.SignatureAlgorithm;
 import eu.europa.esig.dss.enumerations.SubIndication;
 import eu.europa.esig.dss.enumerations.TimestampType;
 import eu.europa.esig.dss.model.x509.CertificateToken;
+import eu.europa.esig.dss.simplereport.jaxb.XmlDetails;
+import eu.europa.esig.dss.simplereport.jaxb.XmlMessage;
+import eu.europa.esig.dss.simplereport.jaxb.XmlToken;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.validation.AdvancedSignature;
 import eu.europa.esig.dss.validation.executor.ValidationLevel;
@@ -85,6 +88,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.FORMAT_NOT_FOUND;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
@@ -92,6 +96,7 @@ import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUt
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.getValidationTime;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.processSignatureIndications;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.valueNotKnown;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.valueNotPresent;
 
 public class GenericValidationReportBuilder {
 
@@ -398,7 +403,8 @@ public class GenericValidationReportBuilder {
         }
         if (isInvalidFormat(signatureFormat, signatureId)) {
             signatureFormat = signatureFormat.replace(LT_SIGNATURE_FORMAT_SUFFIX, BASELINE_SIGNATURE_FORMAT_SUFFIX);
-            dssReports.getSimpleReport().getErrors(signatureId).add(FORMAT_NOT_FOUND);
+            new DssSimpleReportWrapper(dssReports).getSignatureAdESValidationXmlDetails(signatureId)
+                    .getError().add(DssSimpleReportWrapper.createXmlMessage(FORMAT_NOT_FOUND));
         }
         signatureFormat = signatureFormat.replace("-", "_");
         return signatureFormat;
@@ -521,50 +527,88 @@ public class GenericValidationReportBuilder {
     private SignatureProductionPlace parseSignatureProductionPlace(String signatureId) {
         SignatureWrapper signature = dssReports.getDiagnosticData().getSignatureById(signatureId);
 
-        if (isSignatureProductionPlaceEmpty(signature)) {
-            return null;
+        if (isSignatureProductionPlaceNotEmpty(signature)) {
+            SignatureProductionPlace signatureProductionPlace = new SignatureProductionPlace();
+            signatureProductionPlace.setCountryName(emptyWhenNull(signature.getCountryName()));
+            signatureProductionPlace.setStateOrProvince(emptyWhenNull(signature.getStateOrProvince()));
+            signatureProductionPlace.setCity(emptyWhenNull(signature.getCity()));
+            signatureProductionPlace.setPostalCode(emptyWhenNull(signature.getPostalCode()));
+            return signatureProductionPlace;
+        } else if (StringUtils.isNotEmpty(signature.getLocation())) {
+            // Since DSS 5.8, PDF signatures do not have SignatureProductionPlace attached anymore.
+            //  Use Location from PDFRevision > PDFSignatureDictionary as CountryName; See:
+            //  https://github.com/esig/dss/blob/5.7/dss-pades/src/main/java/eu/europa/esig/dss/pades/validation/PAdESSignature.java#L128-L130
+            SignatureProductionPlace signatureProductionPlace = new SignatureProductionPlace();
+            signatureProductionPlace.setCountryName(signature.getLocation());
+            signatureProductionPlace.setStateOrProvince(valueNotPresent());
+            signatureProductionPlace.setCity(valueNotPresent());
+            signatureProductionPlace.setPostalCode(valueNotPresent());
+            return signatureProductionPlace;
         }
 
-        SignatureProductionPlace signatureProductionPlace = new SignatureProductionPlace();
-        signatureProductionPlace.setCountryName(StringUtils.defaultString(signature.getCountryName()));
-        signatureProductionPlace.setStateOrProvince(StringUtils.defaultString(signature.getStateOrProvince()));
-        signatureProductionPlace.setCity(StringUtils.defaultString(signature.getCity()));
-        signatureProductionPlace.setPostalCode(StringUtils.defaultString(signature.getPostalCode()));
-        return signatureProductionPlace;
+        return null;
     }
 
-    private boolean isSignatureProductionPlaceEmpty(SignatureWrapper signature) {
-        return !signature.isSignatureProductionPlacePresent() || StringUtils.isAllEmpty(
+    private boolean isSignatureProductionPlaceNotEmpty(SignatureWrapper signature) {
+        return signature.isSignatureProductionPlacePresent() && !StringUtils.isAllEmpty(
                 signature.getCountryName(),
                 signature.getStateOrProvince(),
                 signature.getCity(),
-                signature.getPostalCode());
+                signature.getPostalCode()
+        );
     }
 
     private List<Error> parseSignatureErrors(String signatureId) {
-        return dssReports.getSimpleReport().getErrors(signatureId)
-                .stream()
-                .map(this::mapDssError)
+        return parseSignatureMessages(signatureId, XmlDetails::getError)
+                .map(GenericValidationReportBuilder::mapDssXmlMessage)
+                .map(GenericValidationReportBuilder::mapDssError)
                 .collect(Collectors.toList());
     }
 
-    private Error mapDssError(String dssError) {
+    private static Error mapDssError(String dssError) {
         Error error = new Error();
         error.setContent(emptyWhenNull(dssError));
         return error;
     }
 
     private List<Warning> parseSignatureWarnings(String signatureId) {
-        return dssReports.getSimpleReport().getWarnings(signatureId)
-                .stream()
-                .map(this::mapDssWarning)
+        return parseSignatureMessages(signatureId, XmlDetails::getWarning)
+                .map(GenericValidationReportBuilder::mapDssXmlMessage)
+                .map(GenericValidationReportBuilder::mapDssWarning)
                 .collect(Collectors.toList());
     }
 
-    private Warning mapDssWarning(String dssWarning) {
+    private static Warning mapDssWarning(String dssWarning) {
         Warning warning = new Warning();
         warning.setContent(emptyWhenNull(dssWarning));
         return warning;
+    }
+
+    private Stream<XmlMessage> parseSignatureMessages(String signatureId, Function<XmlDetails, List<XmlMessage>> detailMessagesExtractor) {
+        DssSimpleReportWrapper dssSimpleReportWrapper = new DssSimpleReportWrapper(dssReports);
+        return Optional
+                .ofNullable(dssSimpleReportWrapper.getXmlSignature(signatureId)).stream()
+                .flatMap(signature -> Stream.concat(
+                        Stream.of(signature),
+                        Optional.ofNullable(dssSimpleReportWrapper.getDssSimpleReport().getSignatureTimestamps(signatureId))
+                                .stream().flatMap(List::stream)
+                ))
+                .flatMap(token -> extractTokenMessages(token, detailMessagesExtractor));
+    }
+
+    private static Stream<XmlMessage> extractTokenMessages(XmlToken token, Function<XmlDetails, List<XmlMessage>> detailMessagesExtractor) {
+        return Stream.concat(
+                Optional.ofNullable(token).map(XmlToken::getAdESValidationDetails).stream(),
+                Optional.ofNullable(token).map(XmlToken::getQualificationDetails).stream()
+        )
+                .map(detailMessagesExtractor)
+                .flatMap(List::stream);
+    }
+
+    private static String mapDssXmlMessage(XmlMessage dssXmlMessage) {
+        return Optional.ofNullable(dssXmlMessage)
+                .map(XmlMessage::getValue)
+                .orElse(null);
     }
 
     private List<SignatureScope> parseSignatureScopes(String signatureId) {

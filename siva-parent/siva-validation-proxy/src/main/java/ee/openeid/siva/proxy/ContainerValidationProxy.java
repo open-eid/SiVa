@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 - 2022 Riigi Infosüsteemide Amet
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
+ * the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and limitations under the Licence.
+ */
+
 package ee.openeid.siva.proxy;
 
 import ee.openeid.siva.proxy.document.DocumentType;
@@ -14,23 +30,24 @@ import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.validation.service.timemark.report.DDOCContainerValidationReportBuilder;
 import ee.openeid.validation.service.timestamptoken.TimeStampTokenValidationService;
-import eu.europa.esig.dss.asic.common.ASiCUtils;
+import eu.europa.esig.dss.asic.common.ZipUtils;
+import eu.europa.esig.dss.exception.IllegalInputException;
 import eu.europa.esig.dss.model.DSSDocument;
 import eu.europa.esig.dss.model.DSSException;
 import eu.europa.esig.dss.model.InMemoryDocument;
-import eu.europa.esig.dss.spi.DSSUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.digidoc4j.utils.ZipEntryInputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -162,43 +179,36 @@ public class ContainerValidationProxy extends ValidationProxy {
 
     private String decideAsicsValidatorService(byte[] document, String extension) {
         DSSDocument dssDocument = new InMemoryDocument(document);
-        long containerSize = DSSUtils.getFileByteSize(dssDocument);
-        try (ZipInputStream zipStream = new ZipInputStream(dssDocument.openStream())) {
-            ZipEntry entry;
-            boolean isAsicsMimeType = false;
-            boolean isTimeStampExtension = false;
-            while ((entry = zipStream.getNextEntry()) != null) {
-                byte[] file = secureCopy(zipStream, containerSize);
-                if (isAsicsMimeType(entry, file)) {
-                    isAsicsMimeType = true;
-                }
-                if (entry.getName().toUpperCase().endsWith(TIMESTAMP_EXTENSION)) {
-                    isTimeStampExtension = true;
-                }
-            }
-            if (extension.equals(ZIP_FILE_TYPE)) {
-                if (isAsicsMimeType && isTimeStampExtension) {
-                    return TIMESTAMP_TOKEN_SERVICE + SERVICE_BEAN_NAME_POSTFIX;
-                }
-            } else {
-                if (isTimeStampExtension) {
-                    return TIMESTAMP_TOKEN_SERVICE + SERVICE_BEAN_NAME_POSTFIX;
-                }
-            }
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return GENERIC_SERVICE + SERVICE_BEAN_NAME_POSTFIX;
-    }
-
-    private byte[] secureCopy(ZipInputStream zipStream, long containerSize) {
-        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-            ASiCUtils.secureCopy(zipStream, baos, containerSize);
-            return baos.toByteArray();
-        } catch (DSSException | IOException e) {
+        List<DSSDocument> containerContent;
+        try {
+            containerContent = ZipUtils.getInstance().extractContainerContent(dssDocument);
+        } catch (DSSException | IllegalInputException e) {
             throw new MalformedDocumentException(e);
         }
+
+        boolean isAsicsMimeType = false;
+        boolean isTimeStampExtension = false;
+
+        for (DSSDocument containerEntry : containerContent) {
+            if (isAsicsMimeType(containerEntry)) {
+                isAsicsMimeType = true;
+            }
+            if (isTimeStamp(containerEntry)) {
+                isTimeStampExtension = true;
+            }
+        }
+
+        if (extension.equals(ZIP_FILE_TYPE)) {
+            if (isAsicsMimeType && isTimeStampExtension) {
+                return TIMESTAMP_TOKEN_SERVICE + SERVICE_BEAN_NAME_POSTFIX;
+            }
+        } else {
+            if (isTimeStampExtension) {
+                return TIMESTAMP_TOKEN_SERVICE + SERVICE_BEAN_NAME_POSTFIX;
+            }
+        }
+
+        return GENERIC_SERVICE + SERVICE_BEAN_NAME_POSTFIX;
     }
 
     void removeUnnecessaryWarning(ValidationConclusion validationConclusion) {
@@ -210,8 +220,24 @@ public class ContainerValidationProxy extends ValidationProxy {
         validationConclusion.setValidationWarnings(newList);
     }
 
-    private boolean isAsicsMimeType(ZipEntry entry, byte[] file) {
-        return entry.getName().equals(MIME_TYPE_FILE_NAME)
-                && ASICS_MIME_TYPE.equals(new String(file));
+    private static boolean isAsicsMimeType(DSSDocument entry) {
+        if (!entry.getName().equals(MIME_TYPE_FILE_NAME)) {
+            return false;
+        }
+        try (InputStream inputStream = entry.openStream()) {
+            byte[] expectedBytes = ASICS_MIME_TYPE.getBytes(StandardCharsets.US_ASCII);
+            byte[] readBuffer = new byte[expectedBytes.length];
+
+            return inputStream.read(readBuffer) == expectedBytes.length
+                    && Arrays.equals(readBuffer, expectedBytes)
+                    && inputStream.read() < 0;
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to read entry", e);
+        }
     }
+
+    private static boolean isTimeStamp(DSSDocument entry) {
+        return entry.getName().toUpperCase().endsWith(TIMESTAMP_EXTENSION);
+    }
+
 }

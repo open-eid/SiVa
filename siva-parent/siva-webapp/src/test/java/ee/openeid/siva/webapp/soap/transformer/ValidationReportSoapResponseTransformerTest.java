@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Riigi Infosüsteemide Amet
+ * Copyright 2020 - 2022 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -35,7 +35,6 @@ import eu.europa.esig.dss.enumerations.DigestAlgorithm;
 import eu.europa.esig.dss.enumerations.DigestMatcherType;
 import eu.europa.esig.dss.enumerations.EncryptionAlgorithm;
 import eu.europa.esig.dss.enumerations.MaskGenerationFunction;
-import eu.europa.esig.dss.enumerations.TimestampLocation;
 import eu.europa.esig.dss.validation.diagnostic.*;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -234,17 +233,24 @@ public class ValidationReportSoapResponseTransformerTest {
         assertEquals(dssSignature.getPolicy().getUrl(), signature.getPolicy().getUrl());
         assertArrayEquals(dssSignature.getPolicy().getDigestAlgoAndValue().getDigestValue(), signature.getPolicy().getDigestAlgoAndValue().getDigestValue());
         assertEquals(dssSignature.getPolicy().getDigestAlgoAndValue().getDigestMethod(), signature.getPolicy().getDigestAlgoAndValue().getDigestMethod());
+        assertEquals(dssSignature.getPolicy().getDigestAlgoAndValue().isDigestAlgorithmsEqual(), signature.getPolicy().getDigestAlgoAndValue().isDigestAlgorithmsEqual());
+        assertEquals(dssSignature.getPolicy().getDigestAlgoAndValue().isMatch(), signature.getPolicy().getDigestAlgoAndValue().isMatch());
+        assertEquals(dssSignature.getPolicy().getDigestAlgoAndValue().isZeroHash(), signature.getPolicy().getDigestAlgoAndValue().isZeroHash());
         assertEquals(dssSignature.getPolicy().isAsn1Processable(), signature.getPolicy().isAsn1Processable());
-        assertEquals(dssSignature.getPolicy().isDigestAlgorithmsEqual(), signature.getPolicy().isDigestAlgorithmsEqual());
         assertEquals(dssSignature.getPolicy().isIdentified(), signature.getPolicy().isIdentified());
-        assertEquals(dssSignature.getPolicy().isStatus(), signature.getPolicy().isStatus());
-        assertEquals(dssSignature.getStructuralValidation().getMessage(), signature.getStructuralValidation().getMessage());
+        assertEquals(dssSignature.getPolicy().getDescription(), signature.getPolicy().getDescription());
+        assertEquals(dssSignature.getPolicy().getDocSpecification(), signature.getPolicy().getDocSpecification());
+        assertEquals(dssSignature.getPolicy().getDocumentationReferences(), signature.getPolicy().getDocumentationReferences().getDocumentationReference());
+        assertEquals(dssSignature.getPolicy().getTransformations(), signature.getPolicy().getTransformations().getTransformation());
+        assertEquals(dssSignature.getStructuralValidation().getMessages(), signature.getStructuralValidation().getMessages());
         assertEquals(dssSignature.getStructuralValidation().isValid(), signature.getStructuralValidation().isValid());
-        assertEquals(dssSignature.getSignatureProductionPlace().getAddress(), signature.getSignatureProductionPlace().getAddress());
+        assertEquals(dssSignature.getSignatureProductionPlace().getPostalAddress(), signature.getSignatureProductionPlace().getPostalAddress());
         assertEquals(dssSignature.getSignatureProductionPlace().getCity(), signature.getSignatureProductionPlace().getCity());
-        assertEquals(dssSignature.getSignatureProductionPlace().getCountryName(), signature.getSignatureProductionPlace().getCountryName());
-        assertEquals(dssSignature.getSignatureProductionPlace().getPostalCode(), signature.getSignatureProductionPlace().getPostalCode());
         assertEquals(dssSignature.getSignatureProductionPlace().getStateOrProvince(), signature.getSignatureProductionPlace().getStateOrProvince());
+        assertEquals(dssSignature.getSignatureProductionPlace().getPostOfficeBoxNumber(), signature.getSignatureProductionPlace().getPostOfficeBoxNumber());
+        assertEquals(dssSignature.getSignatureProductionPlace().getPostalCode(), signature.getSignatureProductionPlace().getPostalCode());
+        assertEquals(dssSignature.getSignatureProductionPlace().getCountryName(), signature.getSignatureProductionPlace().getCountryName());
+        assertEquals(dssSignature.getSignatureProductionPlace().getStreetAddress(), signature.getSignatureProductionPlace().getStreetAddress());
         assertEquals(dssSignature.isCounterSignature(), signature.isCounterSignature());
         assertEquals(dssSignature.getSignerRole().size(), signature.getSignerRole().size());
 
@@ -559,32 +565,39 @@ public class ValidationReportSoapResponseTransformerTest {
 
         XmlPolicy policy = new XmlPolicy();
         policy.setId("ID");
-        policy.setDigestAlgorithmsEqual(true);
         policy.setAsn1Processable(true);
         policy.setIdentified(true);
-        policy.setStatus(true);
-        policy.setDigestAlgorithmsEqual(true);
         policy.setNotice("NOTICE");
         policy.setProcessingError("PROCESSING_ERROR");
+        policy.setDescription("DESCRIPTION");
+        policy.setDocSpecification("DOC_SPECIFICATION");
+        policy.setDocumentationReferences(List.of("DOCUMENTATION_REFERENCE"));
+        policy.setTransformations(List.of("POLICY_TRANSFORMATION"));
+        policy.setUrl("POLICY_URL");
 
-        XmlDigestAlgoAndValue xmlDigestAlgoAndValue = new XmlDigestAlgoAndValue();
-        xmlDigestAlgoAndValue.setDigestMethod(DigestAlgorithm.SHA256);
-        xmlDigestAlgoAndValue.setDigestValue("VALUE".getBytes());
-        policy.setDigestAlgoAndValue(xmlDigestAlgoAndValue);
+        XmlPolicyDigestAlgoAndValue xmlPolicyDigestAlgoAndValue = new XmlPolicyDigestAlgoAndValue();
+        xmlPolicyDigestAlgoAndValue.setDigestMethod(DigestAlgorithm.SHA256);
+        xmlPolicyDigestAlgoAndValue.setDigestValue("VALUE".getBytes());
+        xmlPolicyDigestAlgoAndValue.setDigestAlgorithmsEqual(true);
+        xmlPolicyDigestAlgoAndValue.setMatch(true);
+        xmlPolicyDigestAlgoAndValue.setZeroHash(true);
+        policy.setDigestAlgoAndValue(xmlPolicyDigestAlgoAndValue);
         signature.setPolicy(policy);
         signature.setSigningCertificate(createMockedSigningCertificate());
 
         XmlStructuralValidation xmlStructuralValidation = new XmlStructuralValidation();
-        xmlStructuralValidation.setMessage("MESSAGE");
+        xmlStructuralValidation.getMessages().add("MESSAGE");
         xmlStructuralValidation.setValid(true);
         signature.setStructuralValidation(xmlStructuralValidation);
 
         XmlSignatureProductionPlace xmlSignatureProductionPlace = new XmlSignatureProductionPlace();
-        xmlSignatureProductionPlace.setAddress("ADDRESS");
+        xmlSignatureProductionPlace.getPostalAddress().add("ADDRESS");
         xmlSignatureProductionPlace.setCity("CITY");
-        xmlSignatureProductionPlace.setCountryName("ESTONIA");
-        xmlSignatureProductionPlace.setPostalCode("POSTAL_CODE");
         xmlSignatureProductionPlace.setStateOrProvince("STATE");
+        xmlSignatureProductionPlace.setPostOfficeBoxNumber("10");
+        xmlSignatureProductionPlace.setPostalCode("POSTAL_CODE");
+        xmlSignatureProductionPlace.setCountryName("ESTONIA");
+        xmlSignatureProductionPlace.setStreetAddress("STREET");
         signature.setSignatureProductionPlace(xmlSignatureProductionPlace);
 
         signature.setCertificateChain(Arrays.asList(createMockedXmlChainItem("1"), createMockedXmlChainItem("2")));
@@ -661,7 +674,6 @@ public class ValidationReportSoapResponseTransformerTest {
         timestamp.getDigestMatchers().add(digestMatcher);
 
         xmlFoundTimestamp.setTimestamp(timestamp);
-        xmlFoundTimestamp.setLocation(TimestampLocation.XAdES);
         return xmlFoundTimestamp;
     }
 }

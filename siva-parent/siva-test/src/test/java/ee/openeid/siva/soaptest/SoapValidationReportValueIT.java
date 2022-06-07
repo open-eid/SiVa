@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Riigi Infosüsteemide Amet
+ * Copyright 2019 - 2022 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -422,7 +422,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
                 .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
                 .body("SignaturesCount", Matchers.is("1"))
                 .body("ValidSignaturesCount", Matchers.is("1"))
-                .body("Signatures.Signature[0].Id", Matchers.is("S-1CA4D655909860192F80E6EA6D3FCC18C25A81E8902819C5E05B5C12D5BD6784"))
+                .body("Signatures.Signature[0].Id", Matchers.is("S-4D0D5A83688FC617AA83810ED74E26C5A79063D110B00AD207EAB3EFDC3F5619"))
                 .body("Signatures.Signature[0].SignatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("Signatures.Signature[0].SignatureMethod", Matchers.is("http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"))
                 .body("Signatures.Signature[0].SignatureLevel", Matchers.is("QESIG"))

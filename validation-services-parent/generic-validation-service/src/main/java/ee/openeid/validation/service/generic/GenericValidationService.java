@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 - 2021 Riigi Infosüsteemi Amet
+ * Copyright 2016 - 2022 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -31,7 +31,8 @@ import ee.openeid.tsl.configuration.AlwaysFailingOCSPSource;
 import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
 import ee.openeid.validation.service.generic.validator.report.GenericValidationReportBuilder;
 import ee.openeid.validation.service.generic.validator.report.ReportBuilderData;
-import eu.europa.esig.dss.enumerations.TokenExtractionStategy;
+import eu.europa.esig.dss.enumerations.TokenExtractionStrategy;
+import eu.europa.esig.dss.exception.IllegalInputException;
 import eu.europa.esig.dss.model.DSSDocument;
 import eu.europa.esig.dss.model.DSSException;
 import eu.europa.esig.dss.model.InMemoryDocument;
@@ -39,6 +40,7 @@ import eu.europa.esig.dss.model.MimeType;
 import eu.europa.esig.dss.service.http.commons.CommonsDataLoader;
 import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
+import eu.europa.esig.dss.spi.x509.aia.DefaultAIASource;
 import eu.europa.esig.dss.validation.AdvancedSignature;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import eu.europa.esig.dss.validation.SignedDocumentValidator;
@@ -49,7 +51,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
 
 @Service
 public class GenericValidationService implements ValidationService {
@@ -109,7 +111,7 @@ public class GenericValidationService implements ValidationService {
         } catch (InvalidPolicyException e) {
             endExceptionally(e);
             throw e;
-        } catch (MalformedDocumentException | DSSException e) {
+        } catch (MalformedDocumentException | DSSException | IllegalInputException e) {
             endExceptionally(e);
             throw constructMalformedDocumentException(e);
         } catch (Exception e) {
@@ -124,22 +126,18 @@ public class GenericValidationService implements ValidationService {
 
     protected SignedDocumentValidator createValidatorFromDocument(final ValidationDocument validationDocument) {
         final DSSDocument dssDocument = createDssDocument(validationDocument);
-        SignedDocumentValidator validator = SignedDocumentValidator.fromDocument(dssDocument);
-        CommonsDataLoader dataLoader = new CommonsDataLoader();
-        dataLoader.setProxyConfig(proxyConfig);
-
-        CommonCertificateVerifier certificateVerifier = new CommonCertificateVerifier(Collections.singletonList(trustedListsCertificateSource),
-                new AlwaysFailingCRLSource(), new AlwaysFailingOCSPSource(), dataLoader);
+        SignedDocumentValidator validator = createSignedDocumentValidator(dssDocument);
+        CommonCertificateVerifier certificateVerifier = createCertificateVerifier();
 
         LOGGER.info("Certificate pool size: {}", getCertificatePoolSize(certificateVerifier));
         validator.setCertificateVerifier(certificateVerifier);
         validator.setValidationLevel(VALIDATION_LEVEL);
 
-        validator.setTokenExtractionStategy(TokenExtractionStategy.EXTRACT_TIMESTAMPS_AND_REVOCATION_DATA);
+        validator.setTokenExtractionStrategy(TokenExtractionStrategy.EXTRACT_TIMESTAMPS_AND_REVOCATION_DATA);
         return validator;
     }
 
-    DSSDocument createDssDocument(final ValidationDocument validationDocument) {
+    protected DSSDocument createDssDocument(final ValidationDocument validationDocument) {
         if (validationDocument == null) {
             return null;
         }
@@ -148,6 +146,32 @@ public class GenericValidationService implements ValidationService {
         dssDocument.setMimeType(MimeType.fromFileName(validationDocument.getName()));
 
         return dssDocument;
+    }
+
+    private SignedDocumentValidator createSignedDocumentValidator(DSSDocument dssDocument) {
+        try {
+            return SignedDocumentValidator.fromDocument(dssDocument);
+        } catch (UnsupportedOperationException e) {
+            // Some of the validation proxies make decisions based on that specific exception message
+            // TODO: find a better mechanism for communicating to the validation proxies
+            //  when such a document format is not supported by DSS
+            throw new IllegalInputException(e.getMessage(), e);
+        }
+    }
+
+    private CommonCertificateVerifier createCertificateVerifier() {
+        CommonCertificateVerifier certificateVerifier = new CommonCertificateVerifier(true);
+        certificateVerifier.setTrustedCertSources(trustedListsCertificateSource);
+        certificateVerifier.setOcspSource(new AlwaysFailingOCSPSource());
+        certificateVerifier.setCrlSource(new AlwaysFailingCRLSource());
+
+        CommonsDataLoader dataLoader = new CommonsDataLoader();
+        dataLoader.setProxyConfig(proxyConfig);
+
+        DefaultAIASource aiaSource = new DefaultAIASource(dataLoader);
+        certificateVerifier.setAIASource(aiaSource);
+
+        return certificateVerifier;
     }
 
     private int getCertificatePoolSize(CommonCertificateVerifier certificateVerifier) {

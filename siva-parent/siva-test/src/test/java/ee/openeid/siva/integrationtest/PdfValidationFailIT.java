@@ -23,7 +23,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import static ee.openeid.siva.integrationtest.TestData.VALIDATION_CONCLUSION_PREFIX;
+import static ee.openeid.siva.integrationtest.TestData.*;
 
 
 @Category(IntegrationTest.class)
@@ -58,7 +58,7 @@ public class PdfValidationFailIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_T"))
                 .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].errors.content", Matchers.hasItem("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].errors.content", Matchers.hasItem(CERT_VALIDATION_NOT_CONCLUSIVE))
                 .body("signatures[0].warnings.content[0]", Matchers.is("The signature/seal is not a valid AdES digital signature!"))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1));
@@ -119,8 +119,7 @@ public class PdfValidationFailIT extends SiVaRestTests {
                 .body("signatures[0].subjectDistinguishedName.commonName", Matchers.is("SINIVEE,VEIKO,36706020210"))
                 .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
                 .body("signatures[0].subIndication", Matchers.is("CHAIN_CONSTRAINTS_FAILURE"))
-                .body("signatures[0].errors[0].content", Matchers.is("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("signatures[0].errors[1].content", Matchers.is("The signer's certificate does not have an expected key-usage!"))
+                .body("signatures[0].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE, NOT_EXPECTED_KEY_USAGE))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1));
     }

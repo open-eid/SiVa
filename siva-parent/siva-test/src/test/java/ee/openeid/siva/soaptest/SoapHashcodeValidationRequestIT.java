@@ -1002,8 +1002,8 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
                 .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Content", is(TestData.VALID_SIGNATURE_SCOPE_CONTENT_FULL))
                 .body("Signatures.Signature[0].ClaimedSigningTime", is(TestData.MOCK_XADES_SIGNATURE_CLAIMED_SIGNING_TIME))
                 .body("Signatures.Signature[0].Info.BestSignatureTime", is(TestData.MOCK_XADES_SIGNATURE_BEST_SIGNATURE_TIME))
-                .body("Signatures.Signature[0].Errors.children().size()", is(2))
-                .body("Signatures.Signature[0].Errors.Error[0].Content", is("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("Signatures.Signature[0].Errors.children().size()", is(1))
+                .body("Signatures.Signature[0].Errors.Error[0].Content", is(REFERENCE_DATA_NOT_FOUND))
                 .body("ValidSignaturesCount", is("0"))
                 .body("SignaturesCount", is("1"));
     }
@@ -1023,8 +1023,8 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
                 .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Content", is(VALID_SIGNATURE_SCOPE_CONTENT_FULL))
                 .body("Signatures.Signature[0].ClaimedSigningTime", is(TestData.MOCK_XADES_SIGNATURE_CLAIMED_SIGNING_TIME))
                 .body("Signatures.Signature[0].Info.BestSignatureTime", is(TestData.MOCK_XADES_SIGNATURE_BEST_SIGNATURE_TIME))
-                .body("Signatures.Signature[0].Errors.children().size()", is(2))
-                .body("Signatures.Signature[0].Errors.Error[0].Content", is("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("Signatures.Signature[0].Errors.children().size()", is(1))
+                .body("Signatures.Signature[0].Errors.Error[0].Content", oneOf(REFERENCE_DATA_NOT_INTACT, REFERENCE_DATA_NOT_FOUND))
                 .body("ValidSignaturesCount", is("0"))
                 .body("SignaturesCount", is("1"));
     }

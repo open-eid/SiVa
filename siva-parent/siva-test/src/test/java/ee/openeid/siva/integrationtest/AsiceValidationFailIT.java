@@ -47,7 +47,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * <p>
      * TestType: Automated
      * <p>
-     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common-validation-constraints-polv3-polv4
      * <p>
      * Title: Bdoc with single invalid signature
      * <p>
@@ -67,7 +67,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("38211015222"))
                 .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_HASH_FAILURE))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2016-10-11T09:36:10Z"))
-                .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE, TS_PROCESS_NOT_CONCLUSIVE, REFERENCE_DATA_NOT_INTACT))
+                .body("signatures[0].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE, TS_MESSAGE_NOT_INTACT, REFERENCE_DATA_NOT_INTACT))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("validSignaturesCount", Matchers.is(0));
     }
@@ -93,11 +93,11 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
                 .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_SIG_CRYPTO_FAILURE))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2016-06-21T21:33:10Z"))
-                .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE, TS_PROCESS_NOT_CONCLUSIVE, REFERENCE_DATA_NOT_INTACT))
+                .body("signatures[0].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE, TS_MESSAGE_NOT_INTACT, VALID_VALIDATION_PROCESS_ERROR_VALUE_9))
                 .body("signatures[1].indication", Matchers.is(TOTAL_FAILED))
                 .body("signatures[1].subIndication", Matchers.is(SUB_INDICATION_SIG_CRYPTO_FAILURE))
                 .body("signatures[1].info.bestSignatureTime", Matchers.is("2016-06-21T21:38:50Z"))
-                .body("signatures[1].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE, TS_PROCESS_NOT_CONCLUSIVE, REFERENCE_DATA_NOT_INTACT))
+                .body("signatures[1].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE, TS_MESSAGE_NOT_INTACT, VALID_VALIDATION_PROCESS_ERROR_VALUE_9))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(2));
@@ -126,7 +126,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
                 .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_SIG_CRYPTO_FAILURE))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2016-06-21T21:33:10Z"))
-                .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE, TS_PROCESS_NOT_CONCLUSIVE, REFERENCE_DATA_NOT_INTACT))
+                .body("signatures[0].errors.content", Matchers.hasItems(TS_MESSAGE_NOT_INTACT, VALID_VALIDATION_PROCESS_ERROR_VALUE_9))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(2));
@@ -178,7 +178,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
                 .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_SIG_CRYPTO_FAILURE))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2015-11-13T11:15:36Z"))
-                .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE, TS_PROCESS_NOT_CONCLUSIVE, REFERENCE_DATA_NOT_INTACT))
+                .body("signatures[0].errors.content", Matchers.hasItems(TS_MESSAGE_NOT_INTACT, VALID_VALIDATION_PROCESS_ERROR_VALUE_9))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("validSignaturesCount", Matchers.is(0));
     }
@@ -204,7 +204,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("signatures[0].signatureLevel", Matchers.is(SIGNATURE_LEVEL_NA))
                 .body("signatures[0].indication", Matchers.is(INDETERMINATE))
                 .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_CHAIN_CONSTRAINTS_FAILURE))
-                .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE))
+                .body("signatures[0].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE, NOT_EXPECTED_KEY_USAGE))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("validSignaturesCount", Matchers.is(0));
     }
@@ -230,7 +230,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("signatures[0].indication", Matchers.is(INDETERMINATE))
                 .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_CHAIN_CONSTRAINTS_FAILURE))
-                .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE))
+                .body("signatures[0].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE, NOT_EXPECTED_KEY_USAGE))
                 .body("signatures[0].errors.content", Matchers.hasItems(NOT_EXPECTED_KEY_USAGE))
                 .body("validSignaturesCount", Matchers.is(0));
     }
@@ -256,7 +256,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
                 .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_FORMAT_FAILURE))
-                .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE))
+                .body("signatures[0].errors.content", Matchers.hasItems(VALID_VALIDATION_PROCESS_ERROR_VALUE_5, REVOCATION_NOT_TRUSTED))
                 .body("signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
                 .body("signatures[0].certificates.size()", Matchers.is(1))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("SINIVEE,VEIKO,36706020210"))
@@ -286,7 +286,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
-                .body("signatures[0].errors.content", Matchers.hasItems(TS_PROCESS_NOT_CONCLUSIVE))
+                .body("signatures[0].errors.content", Matchers.hasItems(TS_NOT_TRUSTED))
                 .body("signatures[0].certificates.size()", Matchers.is(3))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("ŽAIKOVSKI,IGOR,37101010021"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIEjzCCA3egAwIBAgIQZTNeodpzkAxPgpfyQEp1dTANBgkqhk"))
@@ -396,7 +396,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
                 .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_SIG_CRYPTO_FAILURE))
-                .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE))
+                .body("signatures[0].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE, VALID_VALIDATION_PROCESS_ERROR_VALUE_9))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("validSignaturesCount", Matchers.is(0));
     }
@@ -421,7 +421,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_B))
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
-                .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE))
+                .body("signatures[0].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE, SIG_UNEXPECTED_FORMAT))
                 .body("signatures[0].signedBy", Matchers.is("UUKKIVI,KRISTI,48505280278"))
                 .body("signatures[0].certificates.size()", Matchers.is(1))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("UUKKIVI,KRISTI,48505280278"))
@@ -454,7 +454,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_B))
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
-                .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE))
+                .body("signatures[0].errors.content", Matchers.hasItems(SIG_UNEXPECTED_FORMAT))
                 .body("signatures[0].signedBy", Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
                 .body("signatures[0].certificates.size()", Matchers.is(1))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
@@ -485,8 +485,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
-                .body("signatures[0].errors[0].content", Matchers.is(CERT_PATH_NOT_TRUSTED))
-                .body("signatures[0].errors[1].content", Matchers.is(LTV_PROCESS_NOT_ACCEPTABLE))
+                .body("signatures[0].errors.content", Matchers.hasItems(SIG_NOT_TRUSTED, CERT_PATH_NOT_TRUSTED))
                 .body("signatures[0].signedBy", Matchers.is("signer1"))
                 .body("signatures[0].certificates.size()", Matchers.is(2))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("signer1"))
@@ -546,7 +545,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(INDETERMINATE))
-                .body("signatures[0].errors.content", Matchers.hasItems(LTV_PROCESS_NOT_ACCEPTABLE))
+                .body("signatures[0].errors.content", Matchers.hasItems(REVOCATION_UNKNOWN))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("validSignaturesCount", Matchers.is(0));
     }
@@ -572,7 +571,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(INDETERMINATE))
                 .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_SIGNED_DATA_NOT_FOUND))
-                .body("signatures[0].errors[0].content", Matchers.is(LTV_PROCESS_NOT_ACCEPTABLE))
+                .body("signatures[0].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE, REFERENCE_DATA_NOT_FOUND))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("validSignaturesCount", Matchers.is(0));
     }
@@ -620,7 +619,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
                 .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_HASH_FAILURE))
-                .body("signatures[0].errors.content", Matchers.hasItem(LTV_PROCESS_NOT_ACCEPTABLE))
+                .body("signatures[0].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE, REFERENCE_DATA_NOT_INTACT))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("validSignaturesCount", Matchers.is(0));
     }
@@ -645,7 +644,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_T))
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
-                .body("signatures[0].errors.content", Matchers.hasItem(LTV_PROCESS_NOT_ACCEPTABLE))
+                .body("signatures[0].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE, REVOCATION_NOT_FOUND))
                 .body("signatures[0].signedBy", Matchers.is("ŽAIKOVSKI,IGOR,37101010021"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("ŽAIKOVSKI,IGOR,37101010021"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIEjzCCA3egAwIBAgIQZTNeodpzkAxPgpfyQEp1dTANBgkqhk"))
@@ -707,7 +706,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_T))
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
                 .body("signatures[0].claimedSigningTime", Matchers.is("2013-10-11T11:47:40Z"))
-                .body("signatures[0].errors.content", Matchers.hasItem(LTV_PROCESS_NOT_ACCEPTABLE))
+                .body("signatures[0].errors.content", Matchers.hasItem(VALID_VALIDATION_PROCESS_ERROR_VALUE_9))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1))

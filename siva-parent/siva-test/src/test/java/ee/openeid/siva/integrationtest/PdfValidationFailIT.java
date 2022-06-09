@@ -56,7 +56,7 @@ public class PdfValidationFailIT extends SiVaRestTests {
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.emptyOrNullString())
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_T"))
-                .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
+                .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].errors.content", Matchers.hasItem(CERT_VALIDATION_NOT_CONCLUSIVE))
                 .body("signatures[0].warnings.content[0]", Matchers.is("The signature/seal is not a valid AdES digital signature!"))

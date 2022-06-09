@@ -734,8 +734,8 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].signedBy", Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
-                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
-                .body("signatures[0].indication", Matchers.is(INDETERMINATE))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_B))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
                 .body("signatures[0].claimedSigningTime", Matchers.is("2016-08-01T13:07:13Z"))
                 .body("signatures[0].errors.content", Matchers.hasItem(VALID_VALIDATION_PROCESS_ERROR_VALUE_10))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
@@ -763,9 +763,9 @@ public class AsiceValidationFailIT extends SiVaRestTests {
         post(validationRequestFor("REF-03_bdoc21-TS-no-signedpropref.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
-                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
-                .body("signatures[0].indication", Matchers.is(INDETERMINATE))
-                .body("signatures[0].errors.content", Matchers.hasItem("The signed qualifying property: neither 'message-digest' nor 'SignedProperties' is present!"))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_NOT_ETSI))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].errors.content", Matchers.hasItem(SIG_QUALIFYING_PROPERTY_MISSING))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 

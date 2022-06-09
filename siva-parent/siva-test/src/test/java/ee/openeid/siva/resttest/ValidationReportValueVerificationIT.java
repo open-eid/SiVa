@@ -586,7 +586,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
                 .body("signatures[0].id", Matchers.is("S-B2DE2D1E57C3DD8F518A13F027988A4BDBE03DC7A1DF96301351694DCDB88213"))
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_T"))
-                .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
+                .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES"))
                 .body("signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].errors.content", Matchers.hasItem(CERT_VALIDATION_NOT_CONCLUSIVE))

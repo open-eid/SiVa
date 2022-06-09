@@ -785,8 +785,8 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-E"))
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
-                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("signatures[0].errors.content", Matchers.hasItem("The signed qualifying property: neither 'message-digest' nor 'SignedProperties' is present!"))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].errors.content", Matchers.hasItem(SIG_QUALIFYING_PROPERTY_MISSING))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 

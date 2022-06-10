@@ -87,7 +87,7 @@ public class PdfValidationFailIT extends SiVaRestTests {
                 .body("signatures[0].signedBy", Matchers.is("NURM,AARE,38211015222"))
                 .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
                 .body("signatures[0].subIndication", Matchers.is("REVOKED_NO_POE"))
-                .body("signatures[0].errors[0].content", Matchers.is("The past signature validation is not conclusive!"))
+                .body("signatures[0].errors.content", Matchers.hasItem("The past signature validation is not conclusive!"))
                 .body("signatures[0].claimedSigningTime", Matchers.is("2016-06-29T08:38:31Z"))
                 .body("signatures[0].warnings[0].content", Matchers.is("The signature/seal is an INDETERMINATE AdES digital signature!"))
                 .body("validSignaturesCount", Matchers.is(0))

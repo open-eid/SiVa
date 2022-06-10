@@ -245,8 +245,8 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
                 .body("signatures[1].signatureFormat", Matchers.is("PAdES_BASELINE_B"))
                 .body("signatures[1].signatureLevel", Matchers.is("NOT_ADES"))
                 .body("signatures[1].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[1].errors[0].content", Matchers.is("The certificate is not related to a granted status!"))
-                .body("signatures[1].warnings[0].content", Matchers.is("The signature/seal is not a valid AdES digital signature!"))
+                .body("signatures[1].errors.content", Matchers.hasItem(CERT_NOT_GRANTED))
+                .body("signatures[1].warnings.content", Matchers.hasItem(VALID_VALIDATION_PROCESS_VALUE_35))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(2));
 

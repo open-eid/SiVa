@@ -541,7 +541,7 @@ public class ValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[1].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
                 .body("signatures[1].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[1].subIndication", Matchers.is("FORMAT_FAILURE"))
-                .body("signatures[1].errors[0].content", Matchers.is("The certificate is not related to a granted status!"))
+                .body("signatures[1].errors.content", Matchers.hasItem(CERT_NOT_GRANTED))
                 .body("signatures[1].signatureScopes[0].name", Matchers.is("Full PDF"))
                 .body("signatures[1].signatureScopes[0].scope", Matchers.is("FULL"))
                 .body("signatures[1].signatureScopes[0].content", Matchers.is("Full document"))

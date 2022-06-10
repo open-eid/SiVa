@@ -230,8 +230,9 @@ public class TestData {
     public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_7 = "The certificate is not qualified!";
     public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_8 = "No revocation data for the certificate";
     public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_9 = "The signature is not intact!";
-    public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_10 = "The current time is not in the validity range of the signer's certificate.";
+    public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_10 = "The current time is not in the validity range of the signer's certificate!";
     public static final String CERT_VALIDATION_NOT_CONCLUSIVE = "The certificate validation is not conclusive!";
+    public static final String CERT_NOT_GRANTED = "The certificate is not related to a granted status!";
     public static final String TS_PROCESS_NOT_CONCLUSIVE = "The result of the timestamps validation process is not conclusive!";
     public static final String TS_MESSAGE_NOT_INTACT = "The time-stamp message imprint is not intact!";
     public static final String TS_NOT_TRUSTED = "The certificate chain for time-stamp is not trusted, it does not contain a trust anchor.";

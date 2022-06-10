@@ -260,9 +260,9 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("signatures[0].signatureLevel", Matchers.is("ADESIG_QC"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())
-                .body("signatures[0].warnings[0].content", Matchers.is("The private key does not reside in a QSCD at issuance time!"))
-                .body("signatures[0].warnings[1].content", Matchers.is("The private key does not reside in a QSCD at (best) signing time!"))
-                .body("signatures[0].warnings[2].content", Matchers.is("The signature is not in the Qualified Electronic Signature level"))
+                .body("signatures[0].warnings.content", Matchers.hasItem("The private key does not reside in a QSCD at issuance time!"))
+                .body("signatures[0].warnings.content", Matchers.hasItem("The private key does not reside in a QSCD at (best) signing time!"))
+                .body("signatures[0].warnings.content", Matchers.hasItem("The signature is not in the Qualified Electronic Signature level"))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -292,8 +292,8 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("signatures[0].signatureLevel", Matchers.is("ADESIG_QC"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())
-                .body("signatures[0].warnings[0].content", Matchers.is("The private key does not reside in a QSCD at issuance time!"))
-                .body("signatures[0].warnings[1].content", Matchers.is("The private key does not reside in a QSCD at (best) signing time!"))
+                .body("signatures[0].warnings.content", Matchers.hasItem("The private key does not reside in a QSCD at issuance time!"))
+                .body("signatures[0].warnings.content", Matchers.hasItem("The private key does not reside in a QSCD at (best) signing time!"))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -837,8 +837,8 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("signatures[0].signatureLevel", Matchers.is("ADESIG_QC"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())
-                .body("signatures[0].warnings[0].content", Matchers.is("The private key does not reside in a QSCD at issuance time!"))
-                .body("signatures[0].warnings[1].content", Matchers.is("The private key does not reside in a QSCD at (best) signing time!"))
+                .body("signatures[0].warnings.content", Matchers.hasItem("The private key does not reside in a QSCD at issuance time!"))
+                .body("signatures[0].warnings.content", Matchers.hasItem("The private key does not reside in a QSCD at (best) signing time!"))
                 .body("signatures[0].warnings", Matchers.hasSize(2))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
@@ -869,8 +869,8 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("signatures[0].signatureLevel", Matchers.is("ADESIG_QC"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())
-                .body("signatures[0].warnings[0].content", Matchers.is("The private key does not reside in a QSCD at issuance time!"))
-                .body("signatures[0].warnings[1].content", Matchers.is("The private key does not reside in a QSCD at (best) signing time!"))
+                .body("signatures[0].warnings.content", Matchers.hasItem("The private key does not reside in a QSCD at issuance time!"))
+                .body("signatures[0].warnings.content", Matchers.hasItem("The private key does not reside in a QSCD at (best) signing time!"))
                 .body("signatures[0].warnings", Matchers.hasSize(2))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));

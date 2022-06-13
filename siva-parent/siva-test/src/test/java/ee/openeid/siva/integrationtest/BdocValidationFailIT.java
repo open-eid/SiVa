@@ -711,7 +711,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-E"))
                 .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("signatures[0].errors.content", Matchers.hasItem("Signature has been created with expired certificate"))
+                .body("signatures[0].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE, CERT_NOT_GRANTED))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 

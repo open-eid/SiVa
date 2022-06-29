@@ -24,7 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import static ee.openeid.siva.integrationtest.TestData.VALIDATION_CONCLUSION_PREFIX;
+import static ee.openeid.siva.integrationtest.TestData.*;
 
 
 @Category(IntegrationTest.class)
@@ -66,14 +66,14 @@ public class DocumentValidationIT extends SiVaRestTests {
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
-                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE))
                 .body("signatures[0].errors.content", Matchers.hasItems("Manifest file has an entry for file <document_3.xml> with mimetype <application/octet-stream> but the signature file for signature S0 does not have an entry for this file"))
                 .body("signatures[0].errors.content", Matchers.hasItems("Manifest file has an entry for file <document_3.xml> with mimetype <application/octet-stream> but the signature file for signature S1 does not have an entry for this file"))
                 .body("signatures[0].errors.content", Matchers.hasItems("Container contains a file named <document_3.xml> which is not found in the signature file"))
                 .body("signatures[0].warnings.content", Matchers.hasItem("The signature/seal is not a valid AdES digital signature!"))
                 .body("signatures[1].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[1].subIndication", Matchers.is("HASH_FAILURE"))
-                .body("signatures[1].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[1].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE))
                 .body("signatures[1].errors.content", Matchers.hasItems("Manifest file has an entry for file <document_3.xml> with mimetype <application/octet-stream> but the signature file for signature S0 does not have an entry for this file"))
                 .body("signatures[1].errors.content", Matchers.hasItems("Manifest file has an entry for file <document_3.xml> with mimetype <application/octet-stream> but the signature file for signature S1 does not have an entry for this file"))
                 .body("signatures[1].errors.content", Matchers.hasItems("Container contains a file named <document_3.xml> which is not found in the signature file"))
@@ -103,7 +103,7 @@ public class DocumentValidationIT extends SiVaRestTests {
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
-                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE))
                 .body("signatures[0].errors.content", Matchers.hasItems("Manifest file has an entry for file <document_3.xml> with mimetype <application/octet-stream> but the signature file for signature S0 does not have an entry for this file"))
                 .body("signatures[0].warnings.content", Matchers.hasItems("The signature/seal is not a valid AdES digital signature!"))
                 .body("signatures[1].indication", Matchers.is("TOTAL-FAILED"))
@@ -134,10 +134,10 @@ public class DocumentValidationIT extends SiVaRestTests {
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
-                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE))
                 .body("signatures[0].warnings.content", Matchers.hasItem("The signature/seal is not a valid AdES digital signature!"))
                 .body("signatures[1].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signatures[1].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE))
                 .body("signatures[1].warnings.content", Matchers.hasItem("The signature/seal is not a valid AdES digital signature!"));
 
     }
@@ -166,7 +166,7 @@ public class DocumentValidationIT extends SiVaRestTests {
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
-                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE))
                 .body("signatures[0].errors.content", Matchers.hasItems("Manifest file has an entry for file <unsigned.txt> with mimetype <application/octet-stream> but the signature file for signature S0 does not have an entry for this file"))
                 .body("signatures[0].errors.content", Matchers.hasItems("Manifest file has an entry for file <document_3.xml> with mimetype <application/octet-stream> but the signature file for signature S0 does not have an entry for this file"))
                 .body("signatures[0].errors.content", Matchers.hasItems("Manifest file has an entry for file <document_2.docx> with mimetype <application/octet-stream> but the signature file for signature S1 does not have an entry for this file"))
@@ -237,7 +237,7 @@ public class DocumentValidationIT extends SiVaRestTests {
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
                 .body("signatures[0].subIndication", Matchers.is("SIGNED_DATA_NOT_FOUND"))
-                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE, REFERENCE_DATA_NOT_FOUND))
                 .body("validationWarnings", Matchers.hasSize(1))
                 .body("validationWarnings[0].content", Matchers.is(Constants.TEST_ENV_VALIDATION_WARNING));
     }
@@ -266,7 +266,7 @@ public class DocumentValidationIT extends SiVaRestTests {
                 .body("signatures[0].signatureLevel", Matchers.is("INDETERMINATE_QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is("SIGNED_DATA_NOT_FOUND"))
-                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE))
                 .body("signatures[0].errors.content", Matchers.hasItems("The signature file for signature S0 has an entry for file <Test document.pdf> with mimetype <application/octet-stream> but the manifest file does not have an entry for this file"));
 
     }

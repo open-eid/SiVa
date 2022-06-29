@@ -182,7 +182,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is("SIG_CRYPTO_FAILURE"))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2015-11-13T11:15:36Z"))
-                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!", "The result of the timestamps validation process is not conclusive!", "The reference data object is not intact!", "Signature has an invalid timestamp"))
+                .body("signatures[0].errors.content", Matchers.hasItems(VALID_VALIDATION_PROCESS_ERROR_VALUE_9, SIG_INVALID_TS))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -208,8 +208,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .body("signatures[0].signatureLevel", Matchers.is("NA"))
                 .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
                 .body("signatures[0].subIndication", Matchers.is("CHAIN_CONSTRAINTS_FAILURE"))
-                .body("signatures[0].errors[0].content", Matchers.is("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("signatures[0].errors[1].content", Matchers.is("The signer's certificate does not have an expected key-usage!"))
+                .body("signatures[0].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE, NOT_EXPECTED_KEY_USAGE))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -234,9 +233,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .body("signatureForm", Matchers.is("ASiC-E"))
                 .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
                 .body("signatures[0].subIndication", Matchers.is("CHAIN_CONSTRAINTS_FAILURE"))
-                .body("signatures[0].errors[0].content", Matchers.is("The result of the LTV validation process is not acceptable to continue the process!"))
-                .body("signatures[0].errors[1].content", Matchers.is("The signer's certificate does not have an expected key-usage!"))
-
+                .body("signatures[0].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE, NOT_EXPECTED_KEY_USAGE))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -262,7 +259,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .body("signatureForm", Matchers.is("ASiC-E"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is("FORMAT_FAILURE"))
-                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE, REVOCATION_NOT_TRUSTED))
                 .body("signatures[0].signedBy", Matchers.is("SINIVEE,VEIKO,36706020210"))
                 .body("signatures[0].certificates.size()", Matchers.is(2))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("SINIVEE,VEIKO,36706020210"))
@@ -399,7 +396,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .body("signatureForm", Matchers.is("ASiC-E"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is("SIG_CRYPTO_FAILURE"))
-                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE, VALID_VALIDATION_PROCESS_ERROR_VALUE_9))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -426,7 +423,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.notNullValue())
                 .body("signatures[0].subjectDistinguishedName.commonName", Matchers.notNullValue())
-                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE))
                 .body("signatures[0].signedBy", Matchers.is("UUKKIVI,KRISTI,48505280278"))
                 .body("signatures[0].certificates.size()", Matchers.is(1))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("UUKKIVI,KRISTI,48505280278"))
@@ -456,7 +453,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .body("signatureForm", Matchers.is("ASiC-E"))
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B_EPES"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE))
                 .body("signatures[0].signedBy", Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
                 .body("signatures[0].certificates.size()", Matchers.is(1))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
@@ -485,8 +482,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .body("signatureForm", Matchers.is("ASiC-E"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2013-10-11T08:15:47Z"))
-                .body("signatures[0].errors[0].content", Matchers.is("Unable to build a certificate chain until a trusted list!"))
-                .body("signatures[0].errors[1].content", Matchers.is("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].errors.content", Matchers.hasItems(SIG_NOT_TRUSTED, CERT_PATH_NOT_TRUSTED))
                 .body("signatures[0].signedBy", Matchers.is("signer1"))
                 .body("signatures[0].certificates.size()", Matchers.is(2))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("signer1"))
@@ -541,7 +537,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-E"))
                 .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE, REVOCATION_UNKNOWN))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -635,7 +631,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .body("signatureForm", Matchers.is("ASiC-E"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].subIndication", Matchers.is("HASH_FAILURE"))
-                .body("signatures[0].errors.content", Matchers.hasItem("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE, REFERENCE_DATA_NOT_INTACT))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -661,7 +657,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2014-05-19T10:48:04Z"))
-                .body("signatures[0].errors.content", Matchers.hasItem("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE, REVOCATION_NOT_FOUND))
                 .body("signatures[0].certificates.size()", Matchers.is(2))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("ŽAIKOVSKI,IGOR,37101010021"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIEjzCCA3egAwIBAgIQZTNeodpzkAxPgpfyQEp1dTANBgkqhk"))
@@ -715,7 +711,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-E"))
                 .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("signatures[0].errors.content", Matchers.hasItem("Signature has been created with expired certificate"))
+                .body("signatures[0].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE, CERT_NOT_GRANTED))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 
@@ -789,8 +785,8 @@ public class BdocValidationFailIT extends SiVaRestTests {
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-E"))
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
-                .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("signatures[0].errors.content", Matchers.hasItem("The signed qualifying property: neither 'message-digest' nor 'SignedProperties' is present!"))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].errors.content", Matchers.hasItem(SIG_QUALIFYING_PROPERTY_MISSING))
                 .body("validSignaturesCount", Matchers.is(0));
     }
 

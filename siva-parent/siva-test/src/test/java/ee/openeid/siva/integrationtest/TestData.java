@@ -30,6 +30,7 @@ public class TestData {
     public static final String HASH_ALGO_SHA384 = "SHA384";
     public static final String HASH_ALGO_SHA512 = "SHA512";
 
+    public static final String SIGNATURE_FORMAT_NOT_ETSI = "XML_NOT_ETSI";
     public static final String SIGNATURE_FORMAT_PADES_LT = "PAdES_BASELINE_LT";
     public static final String SIGNATURE_FORMAT_PADES_LTA = "PAdES_BASELINE_LTA";
     public static final String SIGNATURE_FORMAT_PADES_B = "PAdES_BASELINE_B";
@@ -225,21 +226,33 @@ public class TestData {
     public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_3 = "The result of the Basic validation process is not acceptable to continue the process!";
     public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_4 = "The expected format is not found!";
     public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_5 = "No acceptable revocation data for the certificate!";
-    public static final String LTV_PROCESS_NOT_ACCEPTABLE = "The result of the LTV validation process is not acceptable to continue the process!";
     public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_6 = "The expected format is not found!";
     public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_7 = "The certificate is not qualified!";
     public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_8 = "No revocation data for the certificate";
     public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_9 = "The signature is not intact!";
-    public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_10 = "The current time is not in the validity range of the signer's certificate.";
+    public static final String VALID_VALIDATION_PROCESS_ERROR_VALUE_10 = "The current time is not in the validity range of the signer's certificate!";
+    public static final String CERT_VALIDATION_NOT_CONCLUSIVE = "The certificate validation is not conclusive!";
+    public static final String CERT_NOT_GRANTED = "The certificate is not related to a granted status!";
     public static final String TS_PROCESS_NOT_CONCLUSIVE = "The result of the timestamps validation process is not conclusive!";
+    public static final String TS_MESSAGE_NOT_INTACT = "The time-stamp message imprint is not intact!";
+    public static final String TS_NOT_TRUSTED = "The certificate chain for time-stamp is not trusted, it does not contain a trust anchor.";
     public static final String REFERENCE_DATA_NOT_INTACT = "The reference data object is not intact!";
+    public static final String REFERENCE_DATA_NOT_FOUND = "The reference data object has not been found!";
     public static final String CERTIFICATE_DO_NOT_MATCH_TRUST_SERVICE = "The trusted certificate doesn't match the trust service";
     public static final String PAST_SIG_VALIDATION_NOT_CONCLUSIVE = "The past signature validation is not conclusive!";
     public static final String SIG_CREATED_WITH_EXP_CERT = "Signature has been created with expired certificate";
-    public static final String CERT_PATH_NOT_TRUSTED = "Unable to build a certificate chain until a trusted list!";
+    public static final String SIG_UNEXPECTED_FORMAT = "The signature does not correspond to the expected format(s)!";
+    public static final String SIG_NOT_TRUSTED = "The certificate chain for signature is not trusted, it does not contain a trust anchor.";
+    public static final String SIG_NO_CANDIDATE = "There is no candidate for the signing certificate!";
+    public static final String SIG_INVALID_TS = "Signature has an invalid timestamp";
+    public static final String CERT_PATH_NOT_TRUSTED = "Unable to build a certificate chain up to a trusted list!";
     public static final String REVOCATION_NOT_FRESH = "The revocation information is not considered as 'fresh'.";
+    public static final String REVOCATION_NOT_TRUSTED = "The certificate chain for revocation data is not trusted, it does not contain a trust anchor.";
+    public static final String REVOCATION_UNKNOWN = "The revocation status is unknown (Unknown response from OCSP)!";
+    public static final String REVOCATION_NOT_FOUND = "No revocation data found for the certificate!";
     public static final String ALL_FILES_NOT_SIGNED = "Not all files are signed!";
     public static final String NOT_EXPECTED_KEY_USAGE = "The signer's certificate does not have an expected key-usage!";
+    public static final String SIG_QUALIFYING_PROPERTY_MISSING = "The signed qualifying property: neither 'message-digest' nor 'SignedProperties' is present!";
 
 
     public static final String VALID_VALIDATION_PROCESS_ERROR_NAMEID_1 = "ADEST_ROBVPIIC_ANS";

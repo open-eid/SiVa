@@ -123,7 +123,7 @@ public class SivaSOAPValidationServiceClientTest {
 
     @Test
     public void validXmlSoapCreation() {
-        String request = SivaSOAPValidationServiceClient.createXMLValidationRequest("dGVzdA==", FileType.XROAD, "filename.asice", "Simple", "POLv3");
+        String request = SivaSOAPValidationServiceClient.createXMLValidationRequest("dGVzdA==", "filename.asice", "Simple", "POLv3");
         String expectedRequest = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">" + LINE_SEPARATOR +
                 "   <soapenv:Header/>" + LINE_SEPARATOR +
                 "   <soapenv:Body>" + LINE_SEPARATOR +
@@ -131,7 +131,6 @@ public class SivaSOAPValidationServiceClientTest {
                 "         <soap:ValidationRequest>" + LINE_SEPARATOR +
                 "            <Document>dGVzdA==</Document>" + LINE_SEPARATOR +
                 "            <Filename>filename.asice</Filename>" + LINE_SEPARATOR +
-                "            <DocumentType>XROAD</DocumentType>" + LINE_SEPARATOR +
                 "            <ReportType>Simple</ReportType>" + LINE_SEPARATOR +
                 "            <SignaturePolicy>POLv3</SignaturePolicy>" + LINE_SEPARATOR +
                 "         </soap:ValidationRequest>" + LINE_SEPARATOR +

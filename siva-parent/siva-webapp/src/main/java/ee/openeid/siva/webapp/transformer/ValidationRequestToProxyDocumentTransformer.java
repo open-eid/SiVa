@@ -34,6 +34,7 @@ public class ValidationRequestToProxyDocumentTransformer {
         proxyDocument.setSignaturePolicy(validationRequest.getSignaturePolicy());
 
         setDocumentType(validationRequest, proxyDocument);
+
         setReportType(validationRequest, proxyDocument);
         return proxyDocument;
     }

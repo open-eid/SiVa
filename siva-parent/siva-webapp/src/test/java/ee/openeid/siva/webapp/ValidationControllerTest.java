@@ -19,7 +19,6 @@ package ee.openeid.siva.webapp;
 import ee.openeid.siva.proxy.ContainerValidationProxy;
 import ee.openeid.siva.proxy.ProxyRequest;
 import ee.openeid.siva.proxy.document.ProxyDocument;
-import ee.openeid.siva.proxy.http.RESTProxyService;
 import ee.openeid.siva.statistics.StatisticsService;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.webapp.request.ValidationRequest;
@@ -45,8 +44,6 @@ public class ValidationControllerTest {
 
     private ValidationRequestToProxyDocumentTransformerSpy transformerSpy = new ValidationRequestToProxyDocumentTransformerSpy();
     @Mock
-    private RESTProxyService restProxyService;
-    @Mock
     private StatisticsService statisticsService;
     @Mock
     private ApplicationContext applicationContext;
@@ -57,7 +54,7 @@ public class ValidationControllerTest {
     @Before
     public void setUp() {
         ValidationController validationController = new ValidationController();
-        ValidationProxySpy validationProxyServiceSpy = new ValidationProxySpy(restProxyService, statisticsService, applicationContext, environment);
+        ValidationProxySpy validationProxyServiceSpy = new ValidationProxySpy(statisticsService, applicationContext, environment);
         validationController.setContainerValidationProxy(validationProxyServiceSpy);
         validationController.setTransformer(transformerSpy);
         mockMvc = standaloneSetup(validationController).build();
@@ -71,14 +68,6 @@ public class ValidationControllerTest {
         );
         assertEquals("filename.asd", transformerSpy.validationRequest.getFilename());
         assertEquals("QVNE", transformerSpy.validationRequest.getDocument());
-    }
-
-    @Test
-    public void requestWithInvalidDocumentTypeReturnsErroneousResponse() throws Exception {
-        mockMvc.perform(post("/validate")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestWithInvalidDocumentType().toString().getBytes()))
-                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -204,11 +193,11 @@ public class ValidationControllerTest {
 
     private static class ValidationProxySpy extends ContainerValidationProxy {
 
-        public ValidationProxySpy(RESTProxyService restProxyService,
+        public ValidationProxySpy(
                 StatisticsService statisticsService,
                 ApplicationContext applicationContext,
                 Environment environment) {
-            super(restProxyService, statisticsService, applicationContext, environment);
+            super(statisticsService, applicationContext, environment);
         }
 
         @Override

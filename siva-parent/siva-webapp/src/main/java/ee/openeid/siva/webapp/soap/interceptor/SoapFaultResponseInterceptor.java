@@ -16,7 +16,6 @@
 
 package ee.openeid.siva.webapp.soap.interceptor;
 
-import ee.openeid.siva.proxy.http.RESTValidationProxyRequestException;
 import ee.openeid.siva.validation.exception.DocumentRequirementsException;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.exception.MalformedSignatureFileException;
@@ -64,9 +63,6 @@ public class SoapFaultResponseInterceptor extends AbstractSoapInterceptor {
                 t instanceof InvalidPolicyException ||
                 t instanceof UnmarshalException) {
             return true;
-        } else if (t instanceof RESTValidationProxyRequestException) {
-            RESTValidationProxyRequestException restProxyException = (RESTValidationProxyRequestException) t;
-            return restProxyException.getHttpStatus() == HttpStatus.BAD_REQUEST;
         } else if (t instanceof DSSException) {
             return DOCUMENT_FORMAT_NOT_RECOGNIZED.equals(t.getMessage());
         }

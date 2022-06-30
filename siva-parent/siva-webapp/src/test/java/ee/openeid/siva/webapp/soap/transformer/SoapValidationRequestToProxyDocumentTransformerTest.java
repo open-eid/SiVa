@@ -18,7 +18,6 @@ package ee.openeid.siva.webapp.soap.transformer;
 
 import ee.openeid.siva.proxy.document.ReportType;
 import ee.openeid.siva.proxy.document.typeresolver.UnsupportedTypeException;
-import ee.openeid.siva.webapp.soap.DocumentType;
 import ee.openeid.siva.webapp.soap.SoapValidationRequest;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Rule;
@@ -37,14 +36,14 @@ public class SoapValidationRequestToProxyDocumentTransformerTest {
     @Test
     public void contentIsCorrectlyTransformedToBytes() {
         String documentContent = "ZmlsZWNvbnRlbnQ=";
-        SoapValidationRequest validationRequest = createSoapValidationRequest(documentContent, DocumentType.XROAD, "file.bdoc", "some policy");
+        SoapValidationRequest validationRequest = createSoapValidationRequest(documentContent, "file.bdoc", "some policy");
         assertEquals(validationRequest.getDocument(), Base64.encodeBase64String(transformer.transform(validationRequest).getBytes()));
     }
 
     @Test
     public void reportTypeIsCorrectlyTransformed() {
         for (ReportType reportType : ReportType.values()) {
-            SoapValidationRequest validationRequest = createSoapValidationRequest("ZmlsZWNvbnRlbnQ=", DocumentType.XROAD, "file.bdoc", "some policy");
+            SoapValidationRequest validationRequest = createSoapValidationRequest("ZmlsZWNvbnRlbnQ=", "file.bdoc", "some policy");
             validationRequest.setReportType(reportType.getValue());
             assertEquals(validationRequest.getReportType(), transformer.transform(validationRequest).getReportType().getValue());
         }
@@ -52,7 +51,7 @@ public class SoapValidationRequestToProxyDocumentTransformerTest {
 
     @Test
     public void reportTypeNullIsNotOverAssigned() {
-        SoapValidationRequest validationRequest = createSoapValidationRequest("ZmlsZWNvbnRlbnQ=", DocumentType.XROAD, "file.bdoc", "some policy");
+        SoapValidationRequest validationRequest = createSoapValidationRequest("ZmlsZWNvbnRlbnQ=", "file.bdoc", "some policy");
         validationRequest.setReportType(null);
         assertEquals(null, transformer.transform(validationRequest).getReportType());
     }
@@ -62,36 +61,28 @@ public class SoapValidationRequestToProxyDocumentTransformerTest {
         String reportType = "INVALID_REPORT_TYPE";
         exception.expect(UnsupportedTypeException.class);
         exception.expectMessage("ReportType of type '" + reportType + "' is not supported");
-        SoapValidationRequest validationRequest = createSoapValidationRequest("ZmlsZWNvbnRlbnQ=", DocumentType.XROAD, "file.bdoc", "some policy");
+        SoapValidationRequest validationRequest = createSoapValidationRequest("ZmlsZWNvbnRlbnQ=", "file.bdoc", "some policy");
         validationRequest.setReportType(reportType);
         transformer.transform(validationRequest);
     }
 
     @Test
-    public void xroadTypeIsCorrectlyTransformedToDocumentType() {
-        DocumentType docType = DocumentType.XROAD;
-        SoapValidationRequest validationRequest = createSoapValidationRequest("Ymxh", docType, "file.asice", "some policy");
-        assertEquals(validationRequest.getDocumentType().name(), transformer.transform(validationRequest).getDocumentType().name());
-    }
-
-    @Test
     public void filenameRemainsUnchanged() {
         String filename = "random file name.bdoc";
-        SoapValidationRequest validationRequest = createSoapValidationRequest("Ymxh", DocumentType.XROAD, filename, "some policy");
+        SoapValidationRequest validationRequest = createSoapValidationRequest("Ymxh", filename, "some policy");
         assertEquals(validationRequest.getFilename(), transformer.transform(validationRequest).getName());
     }
 
     @Test
     public void signaturePolicyRemainsUnchanged() {
         String policy = "policy";
-        SoapValidationRequest validationRequest = createSoapValidationRequest("Ymxh", DocumentType.XROAD, "file.bdoc", policy);
+        SoapValidationRequest validationRequest = createSoapValidationRequest("Ymxh", "file.bdoc", policy);
         assertEquals(validationRequest.getSignaturePolicy(), transformer.transform(validationRequest).getSignaturePolicy());
     }
 
-    private SoapValidationRequest createSoapValidationRequest(String document, DocumentType docType, String filename, String signaturePolicy) {
+    private SoapValidationRequest createSoapValidationRequest(String document, String filename, String signaturePolicy) {
         SoapValidationRequest validationRequest = new SoapValidationRequest();
         validationRequest.setDocument(document);
-        validationRequest.setDocumentType(docType);
         validationRequest.setFilename(filename);
         validationRequest.setSignaturePolicy(signaturePolicy);
         return validationRequest;

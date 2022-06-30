@@ -17,7 +17,6 @@
 package ee.openeid.siva.webapp.soap.interceptor;
 
 import ee.openeid.siva.webapp.request.validation.annotations.ValidSignaturePolicyPattern;
-import ee.openeid.siva.webapp.soap.DocumentType;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 
@@ -34,7 +33,6 @@ public class SoapRequestValidationInterceptor extends AbstractRequestValidationI
     void validateRequestBody(SOAPBody body) {
         validateDocumentElement(body);
         validateFilenameElement(body);
-        validateDocumentTypeElement(body);
         validateSignaturePolicyElement(body);
     }
 
@@ -52,29 +50,10 @@ public class SoapRequestValidationInterceptor extends AbstractRequestValidationI
         }
     }
 
-    private void validateDocumentTypeElement(SOAPBody body) {
-        String documentValue = getElementValueFromBody(body, "DocumentType");
-        if (!isValidDocumentType(documentValue)) {
-            throwFault(errorMessage("validation.error.message.documentType"));
-        }
-    }
-
     private void validateSignaturePolicyElement(SOAPBody body) {
         String signaturePolicyValue = getElementValueFromBody(body, "SignaturePolicy");
         if (signaturePolicyValue != null && (!SIGNATURE_POLICY_PATTERN.matcher(signaturePolicyValue).matches() || signaturePolicyValue.length() > MAX_POLICY_LENGTH || signaturePolicyValue.length() < 1)) {
             throwFault(errorMessage("validation.error.message.signaturePolicy"));
         }
-    }
-
-    private boolean isValidDocumentType(String inputDocumentType) {
-        if (inputDocumentType == null) {
-            return true;
-        }
-        for (DocumentType dt : DocumentType.values()) {
-            if (dt.name().equals(inputDocumentType)) {
-                return true;
-            }
-        }
-        return false;
     }
 }

@@ -204,6 +204,7 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
     }
 
     protected Response postDataFiles(String request) {
+        System.out.println("TEST TEST TEST: " + createUrl(SOAP_DATA_FILES_ENDPOINT));
         return given().
                 contentType("text/xml;charset=UTF-8").
                 body(request).

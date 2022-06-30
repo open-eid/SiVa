@@ -69,12 +69,6 @@ public class ValidationRequestToProxyDocumentTransformerTest {
     }
 
     @Test
-    public void xroadTypeIsCorrectlyTransformedToDocumentType() {
-        validationRequest.setType("xroad");
-        assertEquals(DocumentType.XROAD, transformer.transform(validationRequest).getDocumentType());
-    }
-
-    @Test
     public void reportTypeIsCorrectlyTransformedToReportType() {
         for (ReportType reportType : ReportType.values()) {
             validationRequest.setReportType(reportType.name());

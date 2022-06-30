@@ -165,43 +165,6 @@ public class StatisticsServiceTest {
     }
 
     @Test
-    public void testXroadValidationStatisticsLogging() {
-        long validationDurationInMillis = 1000L;
-        String signatureForm = "ASiC-E_batchsignature";
-        int validSignaturesCount = 1;
-        int totalSignatureCount = 1;
-        SignatureValidationData.Indication indication = SignatureValidationData.Indication.TOTAL_PASSED;
-        String subindication = "";
-        String countryCode = "EE";
-        String signatureFormat = "XAdES_some_prefix";
-
-        SimpleReport report = createDummySimpleReport(signatureForm, validSignaturesCount, totalSignatureCount);
-        addSignatureValidationData(report.getValidationConclusion(), indication, subindication, countryCode, signatureFormat);
-
-        HttpServletRequest mockedRequest = mock(HttpServletRequest.class);
-        statisticsService.setHttpRequest(mockedRequest);
-        when(mockedRequest.getHeader(X_AUTHENTICATED_USER)).thenReturn("");
-
-        statisticsService.publishXroadValidationStatistics(TimeUnit.MILLISECONDS.toNanos(validationDurationInMillis), report.getValidationConclusion());
-
-        verify(loggerMock).info(getMarker(CONTAINER_LOG_MARKER),
-                "{\"stats\":{" +
-                        "\"type\":\"ASiC-E\"," +
-                        "\"usrId\":\"N/A\"," +
-                        "\"dur\":1000," +
-                        "\"sigCt\":1," +
-                        "\"vSigCt\":1," +
-                        "\"sigRslt\":[" +
-                        "{\"i\":\"TOTAL-PASSED\"," +
-                        "\"cc\":\"EE\"," +
-                        "\"sf\":\"XAdES_some_prefix\"}]," +
-                        "\"sigType\":\"XAdES_XROAD\"}}");
-
-        verify(loggerMock).info(getMarker(SIGNATURE_LOG_MARKER),
-                "{\"signatureStats\":{\"i\":\"TOTAL-PASSED\",\"cc\":\"EE\",\"sf\":\"XAdES_some_prefix\"}}");
-    }
-
-    @Test
     public void testValidationStatisticsLoggingDoesNotLogSignatureInfoForTstTypeContainer() {
         long validationDurationInMillis = 1000L;
         String signatureForm = "ASiC-S";

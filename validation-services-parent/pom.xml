@@ -30,7 +30,6 @@
         <module>generic-validation-service</module>
         <module>timestamptoken-validation-service</module>
         <module>timemark-container-validation-service</module>
-        <module>xroad-validation-service</module>
         <module>tsl-loader</module>
     </modules>
 

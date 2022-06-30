@@ -51,7 +51,6 @@ public class SivaJSONValidationServiceClient implements ValidationService {
             validationRequest.setReportType(report);
         final String filename = file.getFilename();
         validationRequest.setFilename(filename);
-        setValidationDocumentType(validationRequest, file);
 
         try {
             restTemplate.setErrorHandler(errorHandler);
@@ -61,11 +60,6 @@ public class SivaJSONValidationServiceClient implements ValidationService {
             String errorMessage = "Connection to web service failed. Make sure You have configured SiVa web service correctly";
             return new ObjectMapper().writer().writeValueAsString(new ServiceError(GENERIC_ERROR_CODE, errorMessage));
         }
-    }
-
-    private void setValidationDocumentType(ValidationRequest validationRequest, UploadedFile uploadedFile) throws IOException {
-        final FileType uploadedFileExtension = ValidationRequestUtils.getValidationServiceType(uploadedFile);
-        validationRequest.setDocumentType(uploadedFileExtension);
     }
 
     @Autowired

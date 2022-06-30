@@ -21,7 +21,7 @@ import java.util.Optional;
 import static java.util.Arrays.stream;
 
 public enum DocumentType {
-    PDF, XROAD, BDOC, DDOC;
+    PDF, BDOC, DDOC;
 
     public static DocumentType documentTypeFromString(String type) {
         Optional<DocumentType> documentType = stream(DocumentType.class.getEnumConstants())

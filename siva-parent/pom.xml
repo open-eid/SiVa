@@ -146,17 +146,6 @@
 
             <dependency>
                 <groupId>ee.openid.siva</groupId>
-                <artifactId>xroad-validation-service</artifactId>
-                <version>${project.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.apache.logging.log4j</groupId>
-                        <artifactId>*</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>ee.openid.siva</groupId>
                 <artifactId>tsl-loader</artifactId>
                 <version>${project.version}</version>
                 <exclusions>

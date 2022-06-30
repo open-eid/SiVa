@@ -20,7 +20,6 @@ import ee.openeid.siva.proxy.document.DocumentType;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.document.ReportType;
 import ee.openeid.siva.proxy.exception.ValidatonServiceNotFoundException;
-import ee.openeid.siva.proxy.http.RESTProxyService;
 import ee.openeid.siva.statistics.StatisticsService;
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
@@ -100,9 +99,6 @@ public class ValidationProxyTest {
     private ValidationServiceSpy validationServiceSpy;
 
     @Mock
-    private RESTProxyService restProxyService;
-
-    @Mock
     private StatisticsService statisticsService;
 
     @Mock
@@ -114,23 +110,6 @@ public class ValidationProxyTest {
     @Before
     public void setUp() {
         validationServiceSpy = new ValidationServiceSpy();
-    }
-
-    @Test
-    public void givenXroadValidationWillReturnValidatedDocument() throws Exception {
-        ValidationConclusion validationConclusion = new ValidationConclusion();
-        validationConclusion.setSignaturesCount(1);
-        validationConclusion.setValidSignaturesCount(1);
-        Reports reports = new Reports(new SimpleReport(validationConclusion), null, null);
-
-        BDDMockito.given(restProxyService.validate(any(ValidationDocument.class))).willReturn(reports);
-        ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.XROAD);
-
-        SimpleReport validationReport = validationProxy.validate(proxyDocument);
-        verify(restProxyService).validate(any(ValidationDocument.class));
-
-        Assertions.assertThat(validationReport.getValidationConclusion().getValidSignaturesCount()).isEqualTo(1);
-        Assertions.assertThat(validationReport.getValidationConclusion().getSignaturesCount()).isEqualTo(1);
     }
 
     @Test
@@ -308,9 +287,6 @@ public class ValidationProxyTest {
         ValidationService validationServiceMock = mock(ValidationService.class);
         when(applicationContext.getBean(anyString())).thenReturn(validationServiceMock);
         when(validationServiceMock.validateDocument(any())).thenReturn(mockReports);
-
-        // Separate service used for documents of type XROAD
-        when(restProxyService.validate(any())).thenReturn(mockReports);
     }
 
     private void validateRequestAndAssertExpectedReportType(ProxyDocument proxyDocument, Class<? extends SimpleReport> expectedReportClass) {

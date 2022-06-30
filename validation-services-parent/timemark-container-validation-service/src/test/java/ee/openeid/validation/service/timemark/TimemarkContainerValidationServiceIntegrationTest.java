@@ -132,22 +132,6 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     @Test
-    public void validatingAnXRoadBatchSignatureAsicContainerWithBdocValidatorThrowsMalformedDocumentException() throws Exception {
-        ValidationDocument validationDocument = buildValidationDocument(XROAD_BATCHSIGNATURE_CONTAINER);
-        expectedException.expect(MalformedDocumentException.class);
-        expectedException.expectMessage(DOCUMENT_MALFORMED_MESSAGE);
-        timemarkContainerValidationService.validateDocument(validationDocument);
-    }
-
-    @Test
-    public void validatingAnXRoadSimpleAsicContainerWithBdocValidatorThrowsMalformedDocumentException() throws Exception {
-        ValidationDocument validationDocument = buildValidationDocument(XROAD_SIMPLE_CONTAINER);
-        expectedException.expect(MalformedDocumentException.class);
-        expectedException.expectMessage(DOCUMENT_MALFORMED_MESSAGE);
-        timemarkContainerValidationService.validateDocument(validationDocument);
-    }
-
-    @Test
     public void bdocValidationResultShouldIncludeValidationReportPOJO() throws Exception {
         SimpleReport validationResult2Signatures = timemarkContainerValidationService.validateDocument(bdocValid2Signatures()).getSimpleReport();
         assertNotNull(validationResult2Signatures);

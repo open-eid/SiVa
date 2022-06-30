@@ -70,21 +70,9 @@ public class TimemarkContainerValidationService implements ValidationService {
         } catch (DigiDoc4JException e) {
             throw new MalformedDocumentException(e);
         } catch (Exception e) {
-            if (isXRoadContainer(container)) {
-                LOGGER.error("XROAD container passed to BDOC validator", e);
-                throw new MalformedDocumentException(e);
-            }
             LOGGER.error("An error occurred when validating document " + validationDocument.getName(), e);
             throw new ValidationServiceException(getClass().getSimpleName(), e);
         }
-    }
-
-    private boolean isXRoadContainer(Container container) {
-        return container
-                .getDataFiles()
-                .stream()
-                .filter(dataFile -> StringUtils.equals(dataFile.getName(), "message.xml"))
-                .count() == 1;
     }
 
     private Container createContainer(ValidationDocument validationDocument, Configuration configuration) {

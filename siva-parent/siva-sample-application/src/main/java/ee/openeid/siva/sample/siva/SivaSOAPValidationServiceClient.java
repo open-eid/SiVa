@@ -38,19 +38,17 @@ public class SivaSOAPValidationServiceClient implements ValidationService {
             throw new IOException("File not found");
         }
 
-        FileType serviceType = ValidationRequestUtils.getValidationServiceType(file);
-        String requestBody = createXMLValidationRequest(file.getEncodedFile(), serviceType, file.getFilename(), report, policy);
+        String requestBody = createXMLValidationRequest(file.getEncodedFile(), file.getFilename(), report, policy);
 
         String fullUrl = properties.getServiceHost() + properties.getSoapServicePath();
         return XMLTransformer.formatXML(restTemplate.postForObject(fullUrl, requestBody, String.class));
     }
 
-    static String createXMLValidationRequest(String base64Document, FileType fileType, String filename, String report, String policy) {
-        String documentType = getSoapDocumentTypeRow(fileType);
+    static String createXMLValidationRequest(String base64Document, String filename, String report, String policy) {
         String reportType = getSoapReportTypeRow(report);
         String policyType = getSoapPolicyTypeRow(policy);
 
-        String extraLines = documentType + reportType + policyType;
+        String extraLines = reportType + policyType;
         return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">" + LINE_SEPARATOR +
                 "   <soapenv:Header/>" + LINE_SEPARATOR +
                 "   <soapenv:Body>" + LINE_SEPARATOR +
@@ -74,12 +72,6 @@ public class SivaSOAPValidationServiceClient implements ValidationService {
     private static String getSoapReportTypeRow(String report) {
         if (StringUtils.isNotBlank(report))
             return "            <ReportType>" + report + "</ReportType>" + LINE_SEPARATOR;
-        return EMPTY_STRING;
-    }
-
-    private static String getSoapDocumentTypeRow(FileType fileType) {
-        if (fileType == FileType.XROAD)
-            return "            <DocumentType>" + fileType.name() + "</DocumentType>" + LINE_SEPARATOR;
         return EMPTY_STRING;
     }
 

@@ -3,9 +3,6 @@ spring.http.encoding.charset: UTF-8 # Charset of HTTP requests and responses. Ad
 spring.http.encoding.enabled: true # Enable http encoding support.
 spring.http.encoding.force: true # Force the encoding to the configured charset on HTTP requests and responses.
 
-siva:
-  proxy:
-    xroadUrl: http://localhost:8081
 management:
   health:
     diskspace:

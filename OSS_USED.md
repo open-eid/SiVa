@@ -77,26 +77,3 @@ jackson-databind, rxjava, spring-security-config, spring-security-core, spring-s
 * **Eclipse Public License - Version 1.0:** Jetty :: Asynchronous HTTP Client, Jetty :: Http Utility, Jetty :: IO Utility, Jetty :: Utilities, Jetty :: Websocket :: API, Jetty :: Websocket :: Client, Jetty :: Websocket :: Common, Jetty :: XML utilities
 * **Eclipse Public License - v 1.0:** Logback Classic Module, Logback Core Module
 * **The W3C Software License:** Simple API for CSS
-
-## SiVa XRoad Validation Service
-
-* **The Apache Software License, Version 2.0:** JBoss Logging 3, Undertow Core, Undertow Servlet, Undertow WebSockets JSR356 implementations, Objenesis, Apache Commons IO,
-Apache Commons Lang, AssertJ fluent assertions, Hibernate Validator Engine, SnakeYAML, Spring AOP, Spring Beans, Spring Boot, Spring Boot Actuator, Spring Boot Actuator Starter,
-Spring Boot AutoConfigure, Spring Boot Logging Starter, Spring Boot Starter, Spring Boot Test, Spring Boot Test Auto-Configure, Spring Boot Test Starter, Spring Boot Undertow
-Starter, Spring Boot Web Starter, Spring Context, Spring Core, Spring Expression Language (SpEL), Spring TestContext Framework, Spring Web, Spring Web MVC, ASM based accessors
-helper used by json-smart, Apache XML Security for Java, Bean Validation API, ClassMate, Commons Logging, IntelliJ IDEA Annotations, JSON Small and Fast Parser, JSONassert,
-Jackson-annotations, Jackson-core, Json Path, ZT Zip, jackson-databind
-* **Common Development and Distribution License:** Java(TM) API for WebSocket
-* **Eclipse Public License 1.0:** JUnit, Logback Classic Module, Logback Core Module
-* **MIT License:** JCL 1.2 implemented over SLF4J, JUL to SLF4J bridge, SLF4J API Module, Mockito, Project Lombok
-* **The JSON License:** JSON in Java
-* **Public Domain:** XNIO API, XNIO NIO Implementation
-* **CDDL or GPLv2 with exceptions:** Common Annotations 1.2 API
-* **GNU Lesser General Public License:** DSS Model, DSS Service Provider Interface, DSS Utils API, JAXB Detailed Report Data Model, Logback Classic Module, Logback Core Module, dss-common-validation-jaxb
-* **New BSD License:** Hamcrest Core, Hamcrest library
-* **Bouncy Castle Licence:** Bouncy Castle PKIX, CMS, EAC, TSP, PKCS, OCSP, CMP, and CRMF APIs, Bouncy Castle Provider
-* **BSD:** ASM Core, ASM Core, jcabi-log, jcabi-manifests
-* **European Union Public License 1.1:** siva-monitoring, validation-commons, xroad-validation-service
-* **Apache Software Licenses:** Log4j Implemented Over SLF4J
-* **CDDL + GPLv2 with classpath exception:** Expression Language 3.0, Java Servlet API
-* **GNU General Public License, Version 2 with the Classpath Exception:** Java(TM) API for WebSocket

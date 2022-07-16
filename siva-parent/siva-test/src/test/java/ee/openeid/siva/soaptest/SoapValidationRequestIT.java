@@ -24,6 +24,7 @@ import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.springframework.http.HttpStatus;
 
 import static ee.openeid.siva.integrationtest.TestData.*;
 import static org.hamcrest.Matchers.*;
@@ -475,8 +476,33 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body(SOAP_ERROR_RESPONSE_PREFIX + ".faultstring", Matchers.is(INVALID_SIGNATURE_POLICY));
     }
 
+
     /**
      * TestCaseID: Soap-ValidationRequest-17
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
+     *
+     * Title: Request with wrong signature policy
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_IDCard_MobID_signatures.bdoc
+     */
+    @Test
+    public void soapValidationRequestWrongSignaturePolicy() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
+        post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", null, INVALID_SIGNATURE_POLICY))
+                .then()
+                .rootPath(SOAP_ERROR_RESPONSE_PREFIX)
+                .statusCode(HttpStatus.OK.value())
+                .body("faultcode", Matchers.is(CLIENT_FAULT))
+                .body("faultstring", Matchers.is("Invalid signature policy: " + INVALID_SIGNATURE_POLICY + "; Available abstractPolicies: [" + VALID_SIGNATURE_POLICY_3 + ", " + VALID_SIGNATURE_POLICY_4 + "]"));
+    }
+
+    /**
+     * TestCaseID: Soap-ValidationRequest-18
      *
      * TestType: Automated
      *
@@ -502,7 +528,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
     }
 
     /**
-     * TestCaseID: Soap-ValidationRequest-18
+     * TestCaseID: Soap-ValidationRequest-19
      *
      * TestType: Automated
      *
@@ -528,7 +554,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
     }
 
     /**
-     * TestCaseID: Soap-ValidationRequest-19
+     * TestCaseID: Soap-ValidationRequest-20
      *
      * TestType: Automated
      *
@@ -553,7 +579,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
     }
 
     /**
-     * TestCaseID: Soap-ValidationRequest-20
+     * TestCaseID: Soap-ValidationRequest-21
      *
      * TestType: Automated
      *

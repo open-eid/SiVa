@@ -22,6 +22,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matchers;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.springframework.http.HttpStatus;
@@ -99,6 +100,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
+    @Ignore("SIVA-352 - remark 3")
     public void validationRequestInvalidDocumentType() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.cdoc", "CDOC", VALID_SIGNATURE_POLICY_3))
@@ -122,6 +124,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
+    @Ignore("SIVA-352 - remark 3")
     public void soapValidationRequestCaseChangeDocumentType() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "bdoC", ""))
@@ -145,6 +148,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
+    @Ignore("SIVA-352 - remark 3")
     public void soapValidationRequestXmlDocument() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "XML", ""))
@@ -217,6 +221,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
+    @Ignore("SIVA-352 - remark 3")
     public void soapValidationRequestExtraKeyBetweenValues() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         String requestBody = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +

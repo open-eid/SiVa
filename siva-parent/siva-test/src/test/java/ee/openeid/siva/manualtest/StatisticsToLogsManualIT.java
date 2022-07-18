@@ -20,6 +20,7 @@ import ee.openeid.siva.integrationtest.SiVaRestTests;
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
@@ -129,6 +130,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      * File: xroad-simple.asice
      */
     @Test
+    @Ignore("SIVA-352 - remark 8")
     public void bdocWithErrorResponse() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));

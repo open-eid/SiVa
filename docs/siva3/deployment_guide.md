@@ -40,7 +40,6 @@ The last lines of build output should look very similar to below image:
 [INFO] Time-mark container Validation Service ............. SUCCESS [ 36.508 s]
 [INFO] SiVa webapp and other core modules ................. SUCCESS [  0.374 s]
 [INFO] siva-monitoring .................................... SUCCESS [ 11.982 s]
-[INFO] xroad-validation-service ........................... SUCCESS [ 19.587 s]
 [INFO] siva-statistics .................................... SUCCESS [  9.816 s]
 [INFO] SiVa validation service proxy ...................... SUCCESS [ 14.861 s]
 [INFO] SiVa signature service ............................. SUCCESS [  7.801 s]
@@ -70,13 +69,7 @@ project by issuing below commands:
 ./siva-parent/siva-webapp/target/siva-webapp-3.3.0.jar
 ```
 
-**Secondly start X-road validation webapp**
-
-```bash
-./validation-services-parent/xroad-validation-service/target/xroad-validation-service-3.3.0.jar
-```
-
-The SiVa webapp by default runs on port **8080** and XRoad validation service starts up on port **8081**.
+The SiVa webapp by default runs on port **8080**.
 Easiest way to test out the deployment is to run SiVa demo application and use it for validation.
 
 **Start the Demo webapp**
@@ -322,7 +315,7 @@ management.endpoints.web.exposure.include=health
 The endpoint is implemented as a customized Spring boot [health endpoint](http://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html#production-ready-health), which allows to add custom health indicators.
 
 Demo webapp and Siva webapp include additional information about the health of their dependent services.
-These links to dependent web services have been preconfigured. For example, the Demo webapp is preset to check whether the Siva webapp is accessible from the following url (parameter `siva.service.serviceHost` value)/monitoring/health and the Siva webapp verifies that the X-road validation service webapp is accessible by checking the default url (configured by parameter `siva.proxy.xroadUrl` value)/monitoring/health url.
+These links to dependent web services have been preconfigured. For example, the Demo webapp is preset to check whether the Siva webapp is accessible from the following url (parameter `siva.service.serviceHost` value)/monitoring/health.
 
 ### Heartbeat endpoint
 
@@ -465,12 +458,6 @@ See the reference list of all common [application properties](http://docs.spring
     TSL is currently used only by Generic and BDOC validators
 
 
-* Forward to custom X-road webapp instance
-
-| Property | Description |
-| ------ | ----------- |
-| **siva.proxy.xroadUrl** | A URL where the X-Road validation requests are forwarded <ul><li>Default: **http://localhost:8081**</li></ul>|
-
 * Configure SOAP services endpoint URL-s displayed in WSDL
 
 | Property | Description |
@@ -532,34 +519,6 @@ siva.europe.signaturePolicy.policies[1].constraintPath=generic_constraint_qes.xm
 
 !!! note
     Default policy configuration is lost when policy detail properties (name, description, url or constraintPath) are overridden or new custom policies added in custom configuration files (in this case, the existing default policies must be redefined in configuration files explicitly)
-
-* X-road validation
-
-| Property | Description |
-| -------- | ----------- |
-|**siva.xroad.validation.service.configurationDirectoryPath**| Directory that contains the certs of approved CA's, TSA's and list of members <ul><li>Default: **/verificationconf**</li></ul> |
-
-
-| Property | Description |
-| -------- | ----------- |
-|**siva.xroad.signaturePolicy.defaultPolicy**| Selected default policy name <ul><li>Default: **N/A**</li></ul>|
-|**siva.xroad.signaturePolicy.policies[index].name**| Policy name <ul><li>Default: **N/A**</li></ul>|
-|**siva.xroad.signaturePolicy.policies[index].description**| Policy description <ul><li>Default: **N/A**</li></ul>|
-|**siva.xroad.signaturePolicy.policies[index].constraintPath**| Constraint XML file path for the policy. An absolute path or a reference to a resource on the classpath<ul><li>Default: **N/A**</li></ul>|
-|**siva.xroad.signaturePolicy.policies[index].url**| Policy URL <ul><li>Default: **N/A**</li></ul>|
-
-By default, the following configuration is used
-```text
-siva.xroad.signaturePolicy.policies[0].name=POLv3
-siva.xroad.signaturePolicy.policies[0].description=Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature.
-siva.xroad.signaturePolicy.policies[0].url=http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv3
-siva.xroad.signaturePolicy.policies[0].constraintPath=xroad_constraint_no_type.xml
-```
-
-!!! note
-    Default policy configuration is lost when policy detail properties (name, description, url or constraintPath) are overridden or new custom policies added in custom configuration files (in this case, the existing default policies must be redefined in configuration files explicitly)
-!!! note
-    By default, X-road validation currently supports only POLv3
    
 ### Demo webapp parameters
 

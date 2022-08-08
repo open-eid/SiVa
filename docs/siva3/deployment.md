@@ -15,6 +15,6 @@ In the following section, a description of each network node element is describe
 
 ### Horizontal scaling
 
-Neither the **Siva webapp**, **X-road validation webapp**, nor **Demo wbapp** persist their state in sessions between requests. Therefore it is possible to install multiple instances of these services behind respective load balancers.
+Neither the **Siva webapp**, nor **Demo wbapp** persist their state in sessions between requests. Therefore it is possible to install multiple instances of these services behind respective load balancers.
 
 

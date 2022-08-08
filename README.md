@@ -20,7 +20,6 @@ SiVa is digital signature validation web service that provides JSON and SOAP API
 Below is list of Java libraries used for validation:
 
 * [DigiDoc4J](https://github.com/open-eid/digidoc4j) - is used to validate DDOC and BDOC digital signature containers.
-* [asicverifier](https://github.com/ria-ee/X-Road/tree/master/src/asicverifier) - is used to validate XRoad signature containers.
 * [DigiDoc4J DSS fork](https://github.com/open-eid/sd-dss) - to validate all other digitally signed files.
 
 ## Requirements
@@ -55,13 +54,7 @@ project by issuing below commands:
 java -jar siva-parent/siva-webapp/target/siva-webapp-X.X.X-exec.jar
 ```
 
-**Second we need to start SiVa XRoad validation service. NB! X.X.X denotes the version you are running.**
-
-```bash
-java -jar validation-services-parent/xroad-validation-service/target/xroad-validation-service-X.X.X-exec.jar
-```
-
-The SiVa webapp by default runs on port **8080** and XRoad validation service starts up on port **8081**.
+The SiVa webapp by default runs on port **8080**.
 Easiest way to test out validation is run SiVa demo application.
 
 **Start SiVa Demo Application. NB! X.X.X denotes the version you are running.**
@@ -121,8 +114,7 @@ To execute the tests from command line after application is built use:
 
 ### How to run integration tests
 Integration tests are disabled by default, but can be enabled with maven parameter `-DrunIntegrationTests=true`. 
-Executing integration tests requires running SiVa Web application instance (and XROAD validation service instance). 
-It is possible to run integration tests without xroad tests `-DrunWithoutXroadIntegrationTests=true`.
+Executing integration tests requires running SiVa Web application instance.
 
 ### How to run load tests
 

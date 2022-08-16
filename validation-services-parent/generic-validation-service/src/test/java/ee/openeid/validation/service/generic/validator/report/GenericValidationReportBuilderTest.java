@@ -28,6 +28,7 @@ import eu.europa.esig.dss.diagnostic.CertificateRevocationWrapper;
 import eu.europa.esig.dss.diagnostic.TimestampWrapper;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlBasicSignature;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlCertificate;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlCertificateRevocation;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlContainerInfo;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlDiagnosticData;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlDigestAlgoAndValue;
@@ -337,7 +338,7 @@ public class GenericValidationReportBuilderTest {
     public void ocspResponseIsEmpty() {
         XmlDiagnosticData diagnosticData = getDiagnosticDataJaxb("");
 
-        diagnosticData.getSignatures().get(0).setFoundRevocations(null);
+        diagnosticData.getSignatures().get(0).getSigningCertificate().getCertificate().setRevocations(null);
         eu.europa.esig.dss.validation.reports.Reports dssReports = new eu.europa.esig.dss.validation.reports.Reports(diagnosticData, null, getSimpleReport(), null);
 
         ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
@@ -502,6 +503,11 @@ public class GenericValidationReportBuilderTest {
         XmlSigningCertificate signingCertificate = new XmlSigningCertificate();
         XmlCertificate certificate = new XmlCertificate();
         certificate.setId("SIG-CERT-id");
+        List<XmlCertificateRevocation> XmlCertificateRevocations = new ArrayList<>();
+        XmlCertificateRevocation xmlCertificateRevocation = new XmlCertificateRevocation();
+        xmlCertificateRevocation.setRevocation(xmlRevocation);
+        XmlCertificateRevocations.add(xmlCertificateRevocation);
+        certificate.setRevocations(XmlCertificateRevocations);
         signingCertificate.setCertificate(certificate);
 
         xmlSignature.setSigningCertificate(signingCertificate);

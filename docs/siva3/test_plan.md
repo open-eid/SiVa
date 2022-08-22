@@ -52,7 +52,6 @@ The testing of the SiVa web service is divided into sections based on the softwa
   * ASICE container signature validation
   * ASIC-S container signature validation
   * PDF signature validation
-  * X-Road ASIC-E signature validation
   * XAdES hashcode validation
 
 The goal is to focus testing on functionalities implemented in SiVa web service application. Functionalities provided by [Validation libraries](../overview/#Validation-libraries) are not explicitly tested.

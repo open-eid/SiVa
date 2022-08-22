@@ -31,7 +31,7 @@ PDF
   looks like a printed document and can be viewed, printed, and electronically transmitted.
 
 SiVa
-: is RESTful web service providing digital signature validation services for BDOC, DDOC, PDF and X-Road
+: is RESTful web service providing digital signature validation services for BDOC, DDOC and PDF
   files
 
 Spring Boot

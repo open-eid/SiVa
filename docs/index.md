@@ -9,7 +9,6 @@ API to validate following file types:
 
  * Estonian DDOC containers
  * Estonian BDOC containers with `TimeMark` and `TimeStamp` signatures
- * Estonian X-Road security server ASiCE signature containers
  * Estonian ASiCS containers with time stamp tokens
  * ETSI standard based ASiCE and ASiCS containers
  * ETSI standard based XAdES, CAdES and PAdES signatures

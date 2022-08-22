@@ -10,7 +10,6 @@ Base64 encoded string. The validation of file and validation policy
 is handled by validation services underlying libraries.
 
 * In case of DDOC or BDOC containers with XAdES signatures it will be Timemark container validation Service
-* In case of X-ROAD ASIC-E containers with XAdES signatures it will be Xroad Validation Service
 * In case of ASIC-S containers with TimeStampToken it will be Timestamptoken Validation Service
 * In case of other containers or with XAdES, CAdES and PAdES signatures it will be Generic Validation Service
 

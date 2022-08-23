@@ -18,7 +18,6 @@ package ee.openeid.siva.webapp.soap.transformer;
 
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.document.ReportType;
-import ee.openeid.siva.proxy.document.typeresolver.DocumentTypeResolver;
 import ee.openeid.siva.webapp.soap.SoapValidationRequest;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Component;

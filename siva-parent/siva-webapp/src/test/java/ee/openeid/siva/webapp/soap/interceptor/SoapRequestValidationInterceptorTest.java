@@ -16,7 +16,6 @@
 
 package ee.openeid.siva.webapp.soap.interceptor;
 
-import ee.openeid.siva.proxy.document.DocumentType;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.interceptor.Fault;
 import org.junit.Test;

@@ -16,7 +16,6 @@
 
 package ee.openeid.siva.proxy;
 
-import ee.openeid.siva.proxy.document.DocumentType;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.statistics.StatisticsService;
 import ee.openeid.siva.validation.document.ValidationDocument;
@@ -58,6 +57,8 @@ public class ContainerValidationProxy extends ValidationProxy {
     private static final String ASICS_EXTENSION = "ASICS";
     private static final String SCS_FILE_TYPE = "SCS";
     private static final String ZIP_FILE_TYPE = "ZIP";
+    private static final String BDOC_FILE_TYPE = "BDOC";
+    private static final String DDOC_FILE_TYPE = "DDOC";
     private static final String TIMESTAMP_EXTENSION = ".TST";
     private static final String TIMEMARK_CONTAINER_SERVICE = "timemarkContainer";
     private static final String TIMESTAMP_TOKEN_SERVICE = "timeStampToken";
@@ -114,9 +115,8 @@ public class ContainerValidationProxy extends ValidationProxy {
         if (!StringUtils.isNotBlank(extension)) {
             throw new IllegalArgumentException("Invalid file format:" + filename);
         }
-        if (DocumentType.DDOC.name().equals(extension) || DocumentType.BDOC.name().equals(extension)) {
+        if (DDOC_FILE_TYPE.equals(extension) || BDOC_FILE_TYPE.equals(extension)) {
             return TIMEMARK_CONTAINER_SERVICE + SERVICE_BEAN_NAME_POSTFIX;
-
         } else if (extension.equals(ASICS_EXTENSION) || extension.equals(SCS_FILE_TYPE) || extension.equals(ZIP_FILE_TYPE)) {
             return decideAsicsValidatorService(proxyDocument.getBytes(), extension);
         }

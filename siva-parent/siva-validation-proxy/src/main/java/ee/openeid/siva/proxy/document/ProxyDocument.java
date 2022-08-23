@@ -31,7 +31,5 @@ public class ProxyDocument extends ProxyRequest {
 
     private String name;
 
-    protected DocumentType documentType;
-
     private List<Datafile> datafiles;
 }

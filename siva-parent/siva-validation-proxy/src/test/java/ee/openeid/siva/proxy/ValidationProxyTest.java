@@ -45,7 +45,6 @@ import ee.openeid.validation.service.generic.configuration.GenericSignaturePolic
 import ee.openeid.validation.service.timemark.report.DDOCContainerValidationReportBuilder;
 import ee.openeid.validation.service.timestamptoken.TimeStampTokenValidationService;
 import ee.openeid.validation.service.timestamptoken.configuration.TimeStampTokenSignaturePolicyProperties;
-import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -328,7 +327,6 @@ public class ValidationProxyTest {
 
     private ProxyDocument mockProxyDocumentWithDocument(DocumentType documentType, ReportType reportType) {
         ProxyDocument proxyDocument = new ProxyDocument();
-        proxyDocument.setDocumentType(documentType);
         proxyDocument.setName(DEFAULT_DOCUMENT_NAME + documentType.name());
         proxyDocument.setBytes("TEST_FILE_CONTENT".getBytes(StandardCharsets.UTF_8));
         proxyDocument.setReportType(reportType);

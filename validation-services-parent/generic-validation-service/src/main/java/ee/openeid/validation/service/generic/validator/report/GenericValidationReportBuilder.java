@@ -436,11 +436,14 @@ public class GenericValidationReportBuilder {
 
     private String getOcspResponseTime(String signatureId) {
         SignatureWrapper signatureWrapper = dssReports.getDiagnosticData().getSignatureById(signatureId);
-        List<RelatedRevocationWrapper> revocations = signatureWrapper.foundRevocations().getRelatedRevocationData();
+        if (signatureWrapper.getSigningCertificate() == null) {
+            return null;
+        }
+        List<CertificateRevocationWrapper> revocations = signatureWrapper.getSigningCertificate().getCertificateRevocationData();
         if (revocations.isEmpty()) {
             return null;
         }
-        RelatedRevocationWrapper revocationWrapper = revocations.get(0);
+        CertificateRevocationWrapper revocationWrapper = revocations.get(0);
         return revocationWrapper.getRevocationType() == RevocationType.CRL ? null : formatDate(revocationWrapper.getProductionDate());
     }
 

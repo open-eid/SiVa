@@ -48,7 +48,7 @@ public class XRoadValidationFAilIT extends SiVaRestTests {
     @Test
     public void validatingSimpleXroadDocumentShouldFail() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
-        post(validationRequestWithDocumentTypeValidKeys(encodedString, "xroad-simple.asice", "xroad", VALID_SIGNATURE_POLICY_3))
+        post(validationRequestWithValidKeys(encodedString, "xroad-simple.asice", VALID_SIGNATURE_POLICY_3))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
@@ -78,7 +78,7 @@ public class XRoadValidationFAilIT extends SiVaRestTests {
     @Test
     public void validatingBatchXroadDocumentShouldFail() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-batchsignature.asice"));
-        post(validationRequestWithDocumentTypeValidKeys(encodedString, "xroad-batchsignature.asice", "xroad", VALID_SIGNATURE_POLICY_3))
+        post(validationRequestWithValidKeys(encodedString, "xroad-batchsignature.asice", VALID_SIGNATURE_POLICY_3))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
@@ -108,7 +108,7 @@ public class XRoadValidationFAilIT extends SiVaRestTests {
     @Test
     public void validatingAttachXroadDocumentShouldFail() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-attachment.asice"));
-        post(validationRequestWithDocumentTypeValidKeys(encodedString, "xroad-attachment.asice", "xroad", VALID_SIGNATURE_POLICY_3))
+        post(validationRequestWithValidKeys(encodedString, "xroad-attachment.asice", VALID_SIGNATURE_POLICY_3))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))

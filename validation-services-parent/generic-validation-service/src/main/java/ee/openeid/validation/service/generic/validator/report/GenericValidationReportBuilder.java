@@ -247,7 +247,8 @@ public class GenericValidationReportBuilder {
     }
 
     private Certificate getArchiveTimestampCertificate(SignatureWrapper signatureWrapper) {
-        List<TimestampWrapper> archiveTimestamps = signatureWrapper.getTimestampListByType(TimestampType.ARCHIVE_TIMESTAMP);
+        List<TimestampWrapper> archiveTimestamps = signatureWrapper.getALevelTimestamps();
+
         if (CollectionUtils.isNotEmpty(archiveTimestamps)) {
             TimestampWrapper latestBestFittingTimestamp = getLatestBestFittingTimestamp(archiveTimestamps);
             if (latestBestFittingTimestamp.getSigningCertificate() != null) {

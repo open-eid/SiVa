@@ -17,6 +17,7 @@
 package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
+import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -817,6 +818,102 @@ public class AsiceValidationFailIT extends SiVaRestTests {
                 .body("signatures[0].indication", Matchers.is(INDETERMINATE))
                 .body("signatures[0].errors.content", Matchers.hasItem(VALID_VALIDATION_PROCESS_ERROR_VALUE_5))
                 .body("validSignaturesCount", Matchers.is(0));
+    }
+
+    /**
+     * TestCaseID: Asice-ValidationFail-29
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
+     *
+     * Title: Asice simple xroad document
+     *
+     * Expected Result: Document should fail as xroad document validation is not supported
+     *
+     * File: xroad-simple.asice
+     */
+    @Test
+    public void asiceSimpleXroadDocumentShouldFail() {
+        setTestFilesDirectory("xroad/");
+
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
+        post(validationRequestWithValidKeys(encodedString, "xroad-simple.asice", VALID_SIGNATURE_POLICY_3))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B"))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_FORMAT_FAILURE))
+                .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("70006317"))
+                .body("signatures[0].subjectDistinguishedName.commonName", Matchers.is("Riigi Infosüsteemi Amet"))
+                .body("signatures[0].errors.content", Matchers.hasItems(SIG_UNEXPECTED_FORMAT))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(1));
+    }
+
+    /**
+     * TestCaseID: Asice-ValidationFail-30
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
+     *
+     * Title: Asice batchsignature xroad document
+     *
+     * Expected Result: Document should fail as xroad document validation is not supported
+     *
+     * File: xroad-batchsignature.asice
+     */
+    @Test
+    public void asiceBatchXroadDocumentShouldFail() {
+        setTestFilesDirectory("xroad/");
+
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-batchsignature.asice"));
+        post(validationRequestWithValidKeys(encodedString, "xroad-batchsignature.asice", VALID_SIGNATURE_POLICY_3))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B"))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_FORMAT_FAILURE))
+                .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("70006317"))
+                .body("signatures[0].subjectDistinguishedName.commonName", Matchers.is("Riigi Infosüsteemi Amet"))
+                .body("signatures[0].errors.content", Matchers.hasItems(SIG_UNEXPECTED_FORMAT))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(1));
+    }
+
+    /**
+     * TestCaseID: Asice-ValidationFail-31
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
+     *
+     * Title: Asice attachment xroad document
+     *
+     * Expected Result: Document should fail as xroad document validation is not supported
+     *
+     * File: xroad-attachment.asice
+     */
+    @Test
+    public void validatingAttachXroadDocumentShouldFail() {
+        setTestFilesDirectory("xroad/");
+
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-attachment.asice"));
+        post(validationRequestWithValidKeys(encodedString, "xroad-attachment.asice", VALID_SIGNATURE_POLICY_3))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B"))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_FORMAT_FAILURE))
+                .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("70006317"))
+                .body("signatures[0].subjectDistinguishedName.commonName", Matchers.is("Riigi Infosüsteemi Amet"))
+                .body("signatures[0].errors.content", Matchers.hasItems(SIG_UNEXPECTED_FORMAT))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signaturesCount", Matchers.is(1));
     }
 
     @Override

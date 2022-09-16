@@ -174,7 +174,7 @@
                                     <value>${project.build.directory}/allure-results</value>
                                 </property>
                             </systemProperties>
-                            <groups>ee.openeid.siva.xroadtest.configuration.XroadIntegrationTest,ee.openeid.siva.integrationtest.configuration.IntegrationTest</groups>
+                            <groups>ee.openeid.siva.integrationtest.configuration.IntegrationTest</groups>
                         </configuration>
                         <dependencies>
                             <dependency>

@@ -99,7 +99,6 @@ http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
 1. SiVa implicitly implements constraints that are specified in the specification documents of the signature formats supported by the Service:
 
 	* [BDOC 2.1](https://www.id.ee/wp-content/uploads/2021/06/bdoc-spec212-eng.pdf) ASiC-E/XAdES signatures
-	* [X-Road](https://cyber.ee/research/reports/T-4-23-Profile-for-High-Performance-Digital-Signatures.pdf) ASiC-E/XAdES signatures
 	* [PAdES](http://www.etsi.org/deliver/etsi_en/319100_319199/31914201/01.01.01_60/en_31914201v010101p.pdf) signatures
 	* [XAdES](http://www.etsi.org/deliver/etsi_en/319100_319199/31913201/01.01.01_60/en_31913201v010101p.pdf) signatures
 	* [CAdES](http://www.etsi.org/deliver/etsi_en/319100_319199/31912201/01.01.01_60/en_31912201v010101p.pdf) signatures
@@ -112,7 +111,6 @@ http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
 1. SiVa implicitly implements constraints that are imposed by the base software libraries that are used by the service. For more information, see the documentation and source code of the base libraries:
 
 	* [DigiDoc4J](https://github.com/open-eid/digidoc4j) - is used to validate signatures in BDOC 2.1 and DDOC format
-	* [asicverifier](https://github.com/vrk-kpa/xroad-public/tree/master/src/asicverifier) - is used for validating ASiC-E/XAdES signatures created in [X-Road](https://www.ria.ee/en/x-road.html) system.
 	* [Open-eID DSS fork](https://github.com/open-eid/sd-dss) - is used to validate all other signature formats than mentioned above
 
 ### Baseline Profile constraints
@@ -126,8 +124,6 @@ http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
 | Signature format | BASELINE_B | BASELINE_T | BASELINE_LT | BASELINE_LT_TM | BASELINE_LTA |
 |--|--|--|--|--|--|
 |**BDOC** | NOK | NOK| **OK** | **OK** | **OK** |
-|**X-Road signature (simple form)** | NOK | NOK | **OK** | NOK | NOK |
-|**X-Road signature (batch signature)** | **OK** | NOK | NOK | NOK | NOK |
 |**PAdES** | NOK | NOK | **OK** | NOK | **OK** |
 |**XAdES** | NOK | NOK | **OK** | NOK | **OK** |
 |**CAdES** | NOK | NOK | **OK** | NOK | **OK** |
@@ -157,7 +153,6 @@ Legend:
 2. Trust Anchors are:
 	* In case of XAdES/CAdES/PAdES formats: [EU Member State Trusted Lists](https://ec.europa.eu/tools/lotl/eu-lotl.xml).
 	* In case of DIGIDOC-XML 1.0...1.3 and respective hashcode formats: Estonian CA certificates issued by [SK](https://www.skidsolutions.eu/en/repository/certs/), defined in local configuration file.
-	* In case of X-Road ASiC-E signatures, SK issued KLASS3-SK 2010, and KLASS3-SK 2010 OCSP RESPONDER and SK TIMESTAMPING AUTHORITY certificates, defined in local configuration file.
 
 
 ### Revocation data constraints
@@ -165,7 +160,7 @@ Legend:
 2.  The evidence record of signer certificate must be in the form of an [OCSP confirmation](https://tools.ietf.org/html/rfc6960) or as a Certificate Revocation List.
 3. No additional revocation data other than the data that was originally incorporated in the signature shall be requested during validation time.
 4. Checking revocation of certificates regarded as Trust Anchors:
-	* In case of DIGIDOC-XML 1.0...1.3 and X-Road formats: revocation of Trust Anchor certificates is not checked.
+	* In case of DIGIDOC-XML 1.0...1.3 format: revocation of Trust Anchor certificates is not checked.
 	* In case of XAdES/CAdES/PAdES formats: revocation of Trust Anchor certificates is checked on the basis of the data in Trusted Lists.
 
 

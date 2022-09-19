@@ -37,12 +37,10 @@ import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import ee.openeid.siva.validation.util.CertUtil;
 import ee.openeid.siva.validation.util.DistinguishedNameUtil;
-import ee.openeid.siva.validation.util.SubjectDNParser;
 import ee.openeid.validation.service.generic.validator.TokenUtils;
 import eu.europa.esig.dss.diagnostic.AbstractTokenProxy;
 import eu.europa.esig.dss.diagnostic.CertificateRevocationWrapper;
 import eu.europa.esig.dss.diagnostic.CertificateWrapper;
-import eu.europa.esig.dss.diagnostic.RelatedRevocationWrapper;
 import eu.europa.esig.dss.diagnostic.SignatureWrapper;
 import eu.europa.esig.dss.diagnostic.TimestampWrapper;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlRevocation;
@@ -389,12 +387,16 @@ public class GenericValidationReportBuilder {
             return SubjectDistinguishedName.builder()
                     .serialNumber("")
                     .commonName("")
+                    .givenName("")
+                    .surname("")
                     .build();
         }
 
         return SubjectDistinguishedName.builder()
-                .serialNumber(SubjectDNParser.parse(signingCertificate.getCertificateDN(), SubjectDNParser.RDN.SERIALNUMBER))
+                .serialNumber(signingCertificate.getSubjectSerialNumber())
                 .commonName(signingCertificate.getCommonName())
+                .givenName(signingCertificate.getGivenName())
+                .surname(signingCertificate.getSurname())
                 .build();
     }
 

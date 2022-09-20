@@ -23,11 +23,11 @@ import ee.openeid.siva.validation.service.signature.policy.properties.Validation
 import eu.europa.esig.dss.diagnostic.TimestampWrapper;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlDigestMatcher;
 import eu.europa.esig.dss.enumerations.SignatureQualification;
+import eu.europa.esig.dss.spi.DSSASN1Utils;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.asn1.tsp.MessageImprint;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
-import org.bouncycastle.operator.DefaultDigestAlgorithmIdentifierFinder;
 
 import java.io.IOException;
 import java.security.MessageDigest;
@@ -146,7 +146,7 @@ public final class ReportBuilderUtils {
             return "";
         }
         XmlDigestMatcher messageImprint = timestamp.getMessageImprint();
-        AlgorithmIdentifier algorithm = new DefaultDigestAlgorithmIdentifierFinder().find(messageImprint.getDigestMethod().getJavaName());
+        AlgorithmIdentifier algorithm = DSSASN1Utils.getAlgorithmIdentifier(messageImprint.getDigestMethod());
         byte[] nonce = new MessageImprint(algorithm, messageImprint.getDigestValue()).getEncoded();
         return StringUtils.defaultString(org.apache.tomcat.util.codec.binary.Base64.encodeBase64String(nonce));
     }

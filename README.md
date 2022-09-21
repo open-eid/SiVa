@@ -9,7 +9,6 @@ SiVa is digital signature validation web service that provides JSON and SOAP API
 
 * Estonian DDOC containers
 * Estonian BDOC containers with TimeMark and TimeStamp signatures
-* Estonian X-Road security server ASiCE signature containers
 * Estonian ASiC-S containers with time stamp tokens
 * ETSI standard based ASiC-E and ASiC-S containers
 * ETSI standard based XAdES, CAdES and PAdES signatures

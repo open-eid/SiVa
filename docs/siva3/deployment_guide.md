@@ -259,7 +259,7 @@ For every validation a statistical report is composed that contains the followin
 |----------|------|-------------|
 | stats | Object | Object containing statistic info |
 | stats.type | String | Container type ( text value that identifies the container type) of the validated document: ASiC-E, ASIC-S, PAdES, DIGIDOC_XML, N/A |
-| stats.sigType | String | Signature type in validated document: XAdES, CAdES, PAdES, XROAD_XAdES, N/A |
+| stats.sigType | String | Signature type in validated document: XAdES, CAdES, PAdES, N/A |
 | stats.usrId | String | (Text data that contains the SiVa user identifier for reports (from the HTTP x-authenticated-user header) or N/A) |
 | stats.dur | Number | The time it takes to process an incoming request - measured in milliseconds |
 | stats.sigCt | Number | The value of the "signaturesCount" element in the validation report |

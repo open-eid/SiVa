@@ -9,8 +9,6 @@ SiVa uses following Java libraries and command line utilities:
 
 * DigiDoc4J Java library to validate BDOC (supported signature
   types are `TimeStamp` and `TimeMark`) and DDOC containers.
-* X-Road ASiCE containers are validated using X-Road security server project
-  provided command line utility
 * EU DSS (Digital Signature Service) library is used to validate all other types of digital signatures that are not covered above.
 
 ## Validation libraries
@@ -33,11 +31,6 @@ SiVa will use the following functionality of DigiDoc4J:
 
 * BDOC validation functionality
 * DDOC validation functionality
-
-### X-Road signature validation utility
-
-X-Road signature validation utility is command line tool to validate X-Road Security server
-generated ASiCe files. For more information on this utility visit [GitHub](https://github.com/ria-ee/X-Road)
 
 ## Main features of SiVa validation service:
 

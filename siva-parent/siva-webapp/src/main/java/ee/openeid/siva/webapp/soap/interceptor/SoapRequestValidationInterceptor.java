@@ -33,6 +33,7 @@ public class SoapRequestValidationInterceptor extends AbstractRequestValidationI
     void validateRequestBody(SOAPBody body) {
         validateDocumentElement(body);
         validateFilenameElement(body);
+        validateDocumentTypeElement(body);
         validateSignaturePolicyElement(body);
     }
 
@@ -50,10 +51,25 @@ public class SoapRequestValidationInterceptor extends AbstractRequestValidationI
         }
     }
 
+    private void validateDocumentTypeElement(SOAPBody body) {
+        String documentValue = getElementValueFromBody(body, "DocumentType");
+        if (!isValidDocumentType(documentValue)) {
+            throwFault(errorMessage("validation.error.message.documentType"));
+        }
+    }
+
     private void validateSignaturePolicyElement(SOAPBody body) {
         String signaturePolicyValue = getElementValueFromBody(body, "SignaturePolicy");
         if (signaturePolicyValue != null && (!SIGNATURE_POLICY_PATTERN.matcher(signaturePolicyValue).matches() || signaturePolicyValue.length() > MAX_POLICY_LENGTH || signaturePolicyValue.length() < 1)) {
             throwFault(errorMessage("validation.error.message.signaturePolicy"));
+        }
+    }
+
+    private boolean isValidDocumentType(String inputDocumentType) {
+        if (inputDocumentType == null) {
+            return true;
+        } else {
+            return false;
         }
     }
 }

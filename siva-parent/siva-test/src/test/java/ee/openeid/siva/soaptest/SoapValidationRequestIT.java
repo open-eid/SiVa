@@ -103,7 +103,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
     @Ignore("SIVA-352 - remark 3")
     public void validationRequestInvalidDocumentType() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.cdoc", "CDOC", VALID_SIGNATURE_POLICY_3))
+        post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.cdoc", "XROAD", VALID_SIGNATURE_POLICY_3))
                 .then()
                 .statusCode(200)
                 .body(SOAP_ERROR_RESPONSE_PREFIX + ".faultcode", Matchers.is(CLIENT_FAULT))
@@ -736,7 +736,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
     public void soapBdocValidationRequestNotMatchingDocumentTypeAndActualFileXroad() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
-        post(validationRequestForDocumentExtended(encodedString, "xroad-simple.ddoc", null, VALID_SIGNATURE_POLICY_3))
+        post(validationRequestForDocumentExtended(encodedString, "xroad-simple.ddoc", "CDOC", VALID_SIGNATURE_POLICY_3))
                 .then()
                 .statusCode(200)
                 .body(SOAP_ERROR_RESPONSE_PREFIX + ".faultcode", Matchers.is(CLIENT_FAULT))

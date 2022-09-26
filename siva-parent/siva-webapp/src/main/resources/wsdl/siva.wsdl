@@ -31,7 +31,6 @@
 
             <xs:simpleType name="DocumentType">
                 <xs:restriction base="xs:string">
-                    <xs:enumeration value="XROAD"/>
                 </xs:restriction>
             </xs:simpleType>
         </xs:schema>

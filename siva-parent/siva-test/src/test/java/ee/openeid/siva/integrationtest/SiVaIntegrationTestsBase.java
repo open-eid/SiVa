@@ -35,7 +35,7 @@ import java.util.Optional;
 public abstract class SiVaIntegrationTestsBase {
 
     protected static final String DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE = "Document malformed or not matching documentType";
-    protected static final String INVALID_DOCUMENT_TYPE = "Invalid document type";
+    protected static final String DOCUMENT_TYPE_NOT_ACCEPTED = "documentType is not a valid request parameter";
     protected static final String INVALID_DATA_FILE_FILENAME = "Invalid filename. Can only return data files for DDOC type containers.";
     protected static final String INVALID_FILENAME = "Invalid filename";
     protected static final String INVALID_DATAFILES_LIST = "Invalid dataFiles list";

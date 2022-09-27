@@ -728,7 +728,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      *
      * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
-     * Title: DocumentType parameter value "xroad" is invalid
+     * Title: DocumentType parameter is not allowed
      *
      * Expected Result: Error is returned
      *
@@ -736,14 +736,14 @@ public class ValidationRequestIT extends SiVaRestTests {
      */
 
     @Test
-    public void validationRequestInvalidDocumentType() {
+    public void validationRequestWithDocumentType() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
 
         post(validationRequestWithDocumentTypeValidKeys(encodedString, "xroad-simple.asice", "xroad", VALID_SIGNATURE_POLICY_3))
                 .then().statusCode(400)
                 .body("requestErrors[0].key", Matchers.is("documentType"))
-                .body("requestErrors[0].message", Matchers.is("Invalid document type"));
+                .body("requestErrors[0].message", Matchers.is(DOCUMENT_TYPE_NOT_ACCEPTED));
     }
 
     /**

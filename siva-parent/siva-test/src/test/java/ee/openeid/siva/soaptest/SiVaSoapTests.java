@@ -58,7 +58,7 @@ public abstract class SiVaSoapTests extends SiVaIntegrationTestsBase {
     protected static final String INVALID_FILENAME = "Invalid filename";
     protected static final String FILENAME_MAY_NOT_BE_EMPTY = "Filename may not be empty";
     protected static final String INVALID_SIGNATURE_POLICY = "Invalid signature policy";
-    protected static final String INVALID_DOCUMENT_TYPE = "Invalid document type";
+    protected static final String DOCUMENT_TYPE_NOT_ACCEPTED = "documentType is not a valid request parameter";
     protected static final String INVALID_DATA_FILE_FILENAME = "Invalid file name. Can only return data files for DDOC type containers.";
     protected static final String DATAFILE_FILENAME_MAY_NOT_BE_EMPTY = "Datafile filename may not be empty";
 

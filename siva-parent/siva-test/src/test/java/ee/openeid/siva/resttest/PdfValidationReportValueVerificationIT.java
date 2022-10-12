@@ -63,6 +63,8 @@ public class PdfValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].signedBy", Matchers.is("ŽÕRINÜWŠKY,MÄRÜ-LÖÖZ,11404176865"))
                 .body("signatures[0].subjectDistinguishedName.commonName", Matchers.is("ŽÕRINÜWŠKY,MÄRÜ-LÖÖZ,11404176865"))
                 .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("11404176865"))
+                .body("signatures[0].subjectDistinguishedName.givenName", Matchers.is("MÄRÜ-LÖÖZ"))
+                .body("signatures[0].subjectDistinguishedName.surname", Matchers.is("ŽÕRINÜWŠKY"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())
                 .body("signatures[0].signatureScopes[0].name", Matchers.is("Partial PDF"))

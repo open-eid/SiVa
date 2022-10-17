@@ -255,76 +255,78 @@ General structure of validation response.
 
 Structure of validationConclusion block
 
-| JSON parameter | SOAP parameter | Mandatory |  JSON data type | Description |
-|----------------|----------------|-----------|-----------------|-------------|
-| policy | Policy | + |  Object | Object containing information of the SiVa signature validation policy that was used for validation. |
-| policy.policyName | Policy.PolicyName | + | String | Name of the validation policy |
-| policy. policyDescription | Policy. PolicyDescription | + | String | Short description of the validation policy. |
-| policy.policyUrl | Policy.PolicyUrl | + | String | URL where the signature validation policy document can be downloaded. The validation policy document shall include information about validation of all the document formats, including the different validation policies that are used in case of different file formats and base libraries. |
-| signaturesCount | SignaturesCount | + | Number | Number of signatures found inside digitally signed file. |
-| validSignaturesCount | ValidSignaturesCount | + | Number | Signatures count that have validated to `TOTAL-PASSED`. See also `Signature.Indication` field. |
-| validationLevel | ValidationLevel | - | Date | Validation process against what the document is validated, only applicable on DSS based validations. <br>**Possible values:** <br> ARCHIVAL_DATA|
-| validationTime | ValidationTime | + | Date | Time of validating the signature by the service. |
-| validationWarnings | ValidationWarnings | - | Array | Array of SiVa validation warnings that do not affect the overall validation result. See also `signatures.warnings` parameter. |
-| validationWarnings[0] | ValidationWarning | + | Object | Object containing the warning. |
-| validationWarnings[0]. content | ValidationWarning. Content| + | String | Description of the warning. |
-| validatedDocument | ValidatedDocument | - | Object | Object containing information about validated document. |
-| validatedDocument. filename | ValidatedDocument. Filename | - | String | Digitally signed document's file name. Not present for hashcode validation. |
-| validatedDocument. fileHash | ValidatedDocument. FileHash | - | String | Calculated hash for validated document in Base64. Present when report signing is enabled. |
-| validatedDocument. hashAlgo | ValidatedDocument. HashAlgo | - | String | Hash algorithm used. Present when report signing is enabled. |
-| signatureForm | SignatureForm | - | String | Format (and optionally version) of the digitally signed document container. <br> In case of documents in [DIGIDOC-XML](https://www.id.ee/wp-content/uploads/2020/08/digidoc_format_1.3.pdf) (DDOC) format, the "hashcode" suffix is used to denote that the container was validated in [hashcode mode](http://sertkeskus.github.io/dds-documentation/api/api_docs/#ddoc-format-and-hashcode), i.e. without original data files. <br> **Possible values:**  <br> DIGIDOC_XML_1.0 <br> DIGIDOC_XML_1.0_hashcode <br> DIGIDOC_XML_1.1 <br> DIGIDOC_XML_1.1_hashcode <br> DIGIDOC_XML_1.2 <br> DIGIDOC_XML_1.2_hashcode <br> DIGIDOC_XML_1.3 <br> DIGIDOC_XML_1.3_hashcode <br> ASiC_E - used in case of all ASIC-E ([BDOC](https://www.id.ee/wp-content/uploads/2021/06/bdoc-spec212-eng.pdf)) documents <br> ASiC_S - used in case of all ASIC-S documents |
-| signatures | Signatures | - | Array | Collection of signatures found in digitally signed document |
-| signatures[0] | Signature | + | Object | Signature information object |
-| signatures[0]. claimedSigningTime | Signature. ClaimedSigningTime | + | Date | Claimed signing time, i.e. signer's computer time during signature creation |
-| signatures[0].id | Signature.Id | + | String | Signature ID attribute  |
-| signatures[0].indication | Signature.Indication | + | String | Overall result of the signature's validation process, according to [ETSI EN 319 102-1](http://www.etsi.org/deliver/etsi_en/319100_319199/31910201/01.01.01_60/en_31910201v010101p.pdf) "Table 5: Status indications of the signature validation process". <br> Note that the validation results of different signatures in one signed document (signature container) may vary. <br> See also `validSignaturesCount` and `SignaturesCount` fields. <br>**Possible values:** <br> TOTAL-PASSED <br> TOTAL-FAILED <br> INDETERMINATE |
-| signatures[0]. subIndication | Signature. SubIndication | - | String | Additional subindication in case of failed or indeterminate validation result, according to [ETSI EN 319 102-1](http://www.etsi.org/deliver/etsi_en/319100_319199/31910201/01.01.01_60/en_31910201v010101p.pdf) "Table 6: Validation Report Structure and Semantics" |
-| signatures[0].errors | Signature.Errors | - | Array | Information about validation error(s), array of error messages.  |
-| signatures[0].errors[0] | Signature.Errors. Error | + | Object | Object containing the error |
-| signatures[0].errors[0].  content | Signature.Errors. Error.Content | + | String | Error message, as returned by the base library that was used for signature validation. |
-| signatures[0].info | Signature.Info | - | Object | Object containing trusted signing time information and user added additional signing info. |
-| signatures[0].info. bestSignatureTime | Signature.Info. BestSignatureTime | + | Date | Time value that is regarded as trusted signing time, denoting the earliest time when it can be trusted by the validation application (because proven by some Proof-of-Existence present in the signature) that a signature has existed.<br>The source of the value depends on the signature profile (see also `SignatureFormat` parameter):<br>- Signature with time-mark (LT_TM level) - the producedAt value of the earliest valid time-mark (OCSP confirmation of the signer's certificate) in the signature.<br>- Signature with time-stamp (LT or LTA level) - the genTime value of the earliest valid signature time-stamp token in the signature. <br> - Signature with BES or EPES level - the value is empty, i.e. there is no trusted signing time value available. |
-| signatures[0].info. timeAssertionMessageImprint | Signature.Info. TimeAssertionMessageImprint | - | String | Base64 encoded value of message imprint retrieved from time assertion. In case of LT_TM (TimeMark) signatures, OCSP nonce value is returned. In case of T, LT or LTA (TimeStamp) signatures, TimeStamp message imprint is returned. |
-| signatures[0].info. ocspResponseCreationTime | Signatures.Info. OcspResponseCreationTime | - | Date | Time value that is regarded as the original OCSP response creation time. |
-| signatures[0].info. timestampCreationTime | Signatures.Info. TimestampCreationTime | - | Date | Time value of the timestamp creation |
-| signatures[0].info. signerRole | Signature.Info. SignerRole | - | Array | Array of roles attached to the signature. |
-| signatures[0].info. signerRole[0] | Signature.Info. SignerRole[0] | + | Object | Object containing claimed roles. |
-| signatures[0].info. signerRole[0]. claimedRole | Signature.Info. SignerRole[0].ClaimedRole | + | String | Role stated by signer on signing. |
-| signatures[0].info. signatureProductionPlace | Signature.Info. SignatureProductionPlace | - | Object | Object containing stated signing location info. |
-| signatures[0].info. signatureProductionPlace.countryName | Signature.Info. SignatureProductionPlace.CountryName | - | String | Stated signing country. |
+| JSON parameter | SOAP parameter                                           | Mandatory |  JSON data type | Description |
+|----------------|----------------------------------------------------------|-----------|-----------------|-------------|
+| policy | Policy                                                   | + |  Object | Object containing information of the SiVa signature validation policy that was used for validation. |
+| policy.policyName | Policy.PolicyName                                        | + | String | Name of the validation policy |
+| policy. policyDescription | Policy. PolicyDescription                                | + | String | Short description of the validation policy. |
+| policy.policyUrl | Policy.PolicyUrl                                         | + | String | URL where the signature validation policy document can be downloaded. The validation policy document shall include information about validation of all the document formats, including the different validation policies that are used in case of different file formats and base libraries. |
+| signaturesCount | SignaturesCount                                          | + | Number | Number of signatures found inside digitally signed file. |
+| validSignaturesCount | ValidSignaturesCount                                     | + | Number | Signatures count that have validated to `TOTAL-PASSED`. See also `Signature.Indication` field. |
+| validationLevel | ValidationLevel                                          | - | Date | Validation process against what the document is validated, only applicable on DSS based validations. <br>**Possible values:** <br> ARCHIVAL_DATA|
+| validationTime | ValidationTime                                           | + | Date | Time of validating the signature by the service. |
+| validationWarnings | ValidationWarnings                                       | - | Array | Array of SiVa validation warnings that do not affect the overall validation result. See also `signatures.warnings` parameter. |
+| validationWarnings[0] | ValidationWarning                                        | + | Object | Object containing the warning. |
+| validationWarnings[0]. content | ValidationWarning. Content                               | + | String | Description of the warning. |
+| validatedDocument | ValidatedDocument                                        | - | Object | Object containing information about validated document. |
+| validatedDocument. filename | ValidatedDocument. Filename                              | - | String | Digitally signed document's file name. Not present for hashcode validation. |
+| validatedDocument. fileHash | ValidatedDocument. FileHash                              | - | String | Calculated hash for validated document in Base64. Present when report signing is enabled. |
+| validatedDocument. hashAlgo | ValidatedDocument. HashAlgo                              | - | String | Hash algorithm used. Present when report signing is enabled. |
+| signatureForm | SignatureForm                                            | - | String | Format (and optionally version) of the digitally signed document container. <br> In case of documents in [DIGIDOC-XML](https://www.id.ee/wp-content/uploads/2020/08/digidoc_format_1.3.pdf) (DDOC) format, the "hashcode" suffix is used to denote that the container was validated in [hashcode mode](http://sertkeskus.github.io/dds-documentation/api/api_docs/#ddoc-format-and-hashcode), i.e. without original data files. <br> **Possible values:**  <br> DIGIDOC_XML_1.0 <br> DIGIDOC_XML_1.0_hashcode <br> DIGIDOC_XML_1.1 <br> DIGIDOC_XML_1.1_hashcode <br> DIGIDOC_XML_1.2 <br> DIGIDOC_XML_1.2_hashcode <br> DIGIDOC_XML_1.3 <br> DIGIDOC_XML_1.3_hashcode <br> ASiC_E - used in case of all ASIC-E ([BDOC](https://www.id.ee/wp-content/uploads/2021/06/bdoc-spec212-eng.pdf)) documents <br> ASiC_S - used in case of all ASIC-S documents |
+| signatures | Signatures                                               | - | Array | Collection of signatures found in digitally signed document |
+| signatures[0] | Signature                                                | + | Object | Signature information object |
+| signatures[0]. claimedSigningTime | Signature. ClaimedSigningTime                            | + | Date | Claimed signing time, i.e. signer's computer time during signature creation |
+| signatures[0].id | Signature.Id                                             | + | String | Signature ID attribute  |
+| signatures[0].indication | Signature.Indication                                     | + | String | Overall result of the signature's validation process, according to [ETSI EN 319 102-1](http://www.etsi.org/deliver/etsi_en/319100_319199/31910201/01.01.01_60/en_31910201v010101p.pdf) "Table 5: Status indications of the signature validation process". <br> Note that the validation results of different signatures in one signed document (signature container) may vary. <br> See also `validSignaturesCount` and `SignaturesCount` fields. <br>**Possible values:** <br> TOTAL-PASSED <br> TOTAL-FAILED <br> INDETERMINATE |
+| signatures[0]. subIndication | Signature. SubIndication                                 | - | String | Additional subindication in case of failed or indeterminate validation result, according to [ETSI EN 319 102-1](http://www.etsi.org/deliver/etsi_en/319100_319199/31910201/01.01.01_60/en_31910201v010101p.pdf) "Table 6: Validation Report Structure and Semantics" |
+| signatures[0].errors | Signature.Errors                                         | - | Array | Information about validation error(s), array of error messages.  |
+| signatures[0].errors[0] | Signature.Errors. Error                                  | + | Object | Object containing the error |
+| signatures[0].errors[0].  content | Signature.Errors. Error.Content                          | + | String | Error message, as returned by the base library that was used for signature validation. |
+| signatures[0].info | Signature.Info                                           | - | Object | Object containing trusted signing time information and user added additional signing info. |
+| signatures[0].info. bestSignatureTime | Signature.Info. BestSignatureTime                        | + | Date | Time value that is regarded as trusted signing time, denoting the earliest time when it can be trusted by the validation application (because proven by some Proof-of-Existence present in the signature) that a signature has existed.<br>The source of the value depends on the signature profile (see also `SignatureFormat` parameter):<br>- Signature with time-mark (LT_TM level) - the producedAt value of the earliest valid time-mark (OCSP confirmation of the signer's certificate) in the signature.<br>- Signature with time-stamp (LT or LTA level) - the genTime value of the earliest valid signature time-stamp token in the signature. <br> - Signature with BES or EPES level - the value is empty, i.e. there is no trusted signing time value available. |
+| signatures[0].info. timeAssertionMessageImprint | Signature.Info. TimeAssertionMessageImprint              | - | String | Base64 encoded value of message imprint retrieved from time assertion. In case of LT_TM (TimeMark) signatures, OCSP nonce value is returned. In case of T, LT or LTA (TimeStamp) signatures, TimeStamp message imprint is returned. |
+| signatures[0].info. ocspResponseCreationTime | Signatures.Info. OcspResponseCreationTime                | - | Date | Time value that is regarded as the original OCSP response creation time. |
+| signatures[0].info. timestampCreationTime | Signatures.Info. TimestampCreationTime                   | - | Date | Time value of the timestamp creation |
+| signatures[0].info. signerRole | Signature.Info. SignerRole                               | - | Array | Array of roles attached to the signature. |
+| signatures[0].info. signerRole[0] | Signature.Info. SignerRole[0]                            | + | Object | Object containing claimed roles. |
+| signatures[0].info. signerRole[0]. claimedRole | Signature.Info. SignerRole[0].ClaimedRole                | + | String | Role stated by signer on signing. |
+| signatures[0].info. signatureProductionPlace | Signature.Info. SignatureProductionPlace                 | - | Object | Object containing stated signing location info. |
+| signatures[0].info. signatureProductionPlace.countryName | Signature.Info. SignatureProductionPlace.CountryName     | - | String | Stated signing country. |
 | signatures[0].info. signatureProductionPlace.stateOrProvince | Signature.Info. SignatureProductionPlace.StateOrProvince | - | String | Stated state or province. |
-| signatures[0].info. signatureProductionPlace.city | Signature.Info. SignatureProductionPlace.City | - | String | Stated city. |
-| signatures[0].info. signatureProductionPlace.postalCode | Signature.Info. SignatureProductionPlace.PostalCode | - | String | Stated postal code. |
-| signatures[0].info. signingReason | Signature.Info SigningReason | - | String | Free text field for PAdES type signatures for stating the signing reason |
-| signatures[0]. signatureFormat | Signature. SignatureFormat | + | String | Format and profile (according to Baseline Profile) of the signature. See [XAdES Baseline Profile](http://www.etsi.org/deliver/etsi_ts/103100_103199/103171/02.01.01_60/ts_103171v020101p.pdf), [CAdES Baseline Profile](http://www.etsi.org/deliver/etsi_ts/103100_103199/103173/02.02.01_60/ts_103173v020201p.pdf) and [PAdES Baseline Profile](http://www.etsi.org/deliver/etsi_ts/103100_103199/103172/02.02.02_60/ts_103172v020202p.pdf) for detailed description of the Baseline Profile levels. Levels that are accepted in SiVa validation policy are described in [SiVa signature validation policy](/siva3/appendix/validation_policy) <br>**Possible values:**  <br> XAdES_BASELINE_B <br> XAdES_BASELINE_B_BES <br> XAdES_BASELINE_B_EPES <br> XAdES_BASELINE_T <br> XAdES_BASELINE_LT - long-term level XAdES signature where time-stamp is used as a assertion of trusted signing time<br> XAdES_BASELINE_LT_TM - long-term level XAdES signature where time-mark is used as a assertion of trusted signing time. Used in case of [BDOC](https://www.id.ee/wp-content/uploads/2021/06/bdoc-spec212-eng.pdf) signatures with time-mark profile and [DIGIDOC-XML](https://www.id.ee/wp-content/uploads/2020/08/digidoc_format_1.3.pdf) (DDOC) signatures.<br>  XAdES_BASELINE_LTA <br> CAdES_BASELINE_B <br> CAdES_BASELINE_T <br> CAdES_BASELINE_LT <br> CAdES_BASELINE_LTA<br> PAdES_BASELINE_B <br> PAdES_BASELINE_T <br> PAdES_BASELINE_LT <br> PAdES_BASELINE_LTA |
-| signatures[0]. signatureMethod | Signature. SignatureMethod | + | String | Signature method specification URI used in signature creation. |
-| signatures[0]. signatureLevel | Signature. SignatureLevel | - |String | Legal level of the signature, according to Regulation (EU) No 910/2014. <br> - **Possible values on positive validation result:**<br> QESIG <br> QESEAL <br> QES <br> ADESIG_QC <br> ADESEAL_QC <br> ADES_QC <br> ADESIG <br> ADESEAL <br> ADES <br> - **Possible values on indeterminate validation result:**<br> prefix INDETERMINATE is added to the level described in positive result. For example  INDETERMINATE_QESIG <br> - **Possible values on negative validation result:**<br>In addition to abovementioned<br> NOT_ADES_QC_QSCD <br> NOT_ADES_QC <br> NOT_ADES <br> NA <br> - In case of DIGIDOC-XML 1.0..1.3 formats, value is missing as the signature level is not checked by the JDigiDoc base library that is used for validation. However, the signatures can be indirectly regarded as QES level signatures, see also [SiVa Validation Policy](/siva3/appendix/validation_policy)<br>|
-| signatures[0].signedBy | Signature.SignedBy | + | String | In format of "surname, givenName, serialNumber" if  these fields are present in subject distinguished name field. In other cases, value of common name field. |
-| signatures[0].subjectDistinguishedName.serialNumber | Signature.SubjectDistinguishedName.SerialNumber | - | String | SERIALNUMBER value portion in signer's certificate's subject distinguished name |
-| signatures[0].subjectDistinguishedName.commonName | Signature.SubjectDistinguishedName.CommonName | - | String | CN (common name) value portion in signer's certificate's subject distinguished name |
-| signatures[0]. signatureScopes | Signature. SignatureScopes | - | Array | Contains information of the original data that is covered by the signature. |
-| signatures[0]. signatureScopes[0]. name | Signature. SignatureScopes.  SignatureScope.Name | + | String | Name of the signature scope. |
-| signatures[0]. signatureScopes[0]. scope | Signature. SignatureScopes.  SignatureScope. Scope | + | String | Type of the signature scope. |
-| signatures[0]. signatureScopes[0]. content | Signature. SignatureScopes.  SignatureScope. Content | + | String | Description of the scope. |
-| signatures[0]. signatureScopes[0]. hashAlgo | Signature. SignatureScopes.  SignatureScope. HashAlgo | - | String | Hash algorithm used for datafile hash calculation. Present for hashcode validation. |
-| signatures[0]. signatureScopes[0]. hash | Signature. SignatureScopes.  SignatureScope. Hash | - | String | Hash of data file encoded in Base64. Present for hashcode validation. |
-| signatures[0]. warnings | Signature.Warnings | - | Array | Block of validation warnings that do not affect the overall validation result. |
-| signatures[0]. warnings[0] | Signature.Warnings. Warning | + | Object | Object containing the warning |
-| signatures[0]. warnings[0]. content | Signature.Warnings. Warning.Description | + | String | Warning description, as retuned by the base library that was used for validation. |
-| signatures[0].certificates | Signature.Certificates | - | Array | Array containing certificates that are present in the signature or can be fetched from TSL. |
-| signatures[0].certificates[0] | Signature.Certificates.Certificate | + | Object | Object containinig certificate type, common name and certificate. Minimal object is signer certificate. If present contains certificates for TimeStamps and OCSP as well. |
-| signatures[0].certificates[0].commonName | Signature.Certificates.Certificate.CommonName | + | String | CN (common name) value in certificate. |
-| signatures[0].certificates[0].type | Signature.Certificates.Certificate.Type | + | String | Type of the certificate. Can be SIGNING, REVOCATION, SIGNATURE_TIMESTAMP, ARCHIVE_TIMESTAMP or CONTENT_TIMESTAMP. |
-| signatures[0].certificates[0].content | Signature.Certificates.Certificate.Content | + | String | DER encoded X.509 certificate in Base64. |
-| signatures[0].certificates[0].issuer | Signature.Certificates.Certificate.Issuer | + | String | Object containing issuer certificate information. Can create chain til the trust anchor. |
-| timeStampTokens | TimeStampTokens | - | Array | Array containing the time stamp tokens |
-| timeStampTokens[0]. | TimeStampToken | + | Object | Object containing the time stamp token (TST) |
-| timeStampTokens[0]. indication | TimeStampToken. Indication | + | String | Result of the time stamp token validation. <br>**Possible values:** <br> TOTAL-PASSED <br> TOTAL-FAILED |
-| timeStampTokens[0]. signedBy | TimeStampToken. SignedBy | + | String | Signer of the time stamp token. |
-| timeStampTokens[0]. signedTime | TimeStampToken. SignedTime | + | String | Time when the time stamp token was given. |
-| timeStampTokens[0]. error | TimeStampToken. Errors| - | Array | Errors returned in time stamp token validation. |
-| timeStampTokens[0]. error[0] | Errors. Error | + | Object | Object containing the error. |
-| timeStampTokens[0]. error[0]. content | Error. Content | + | String | Error description. |
+| signatures[0].info. signatureProductionPlace.city | Signature.Info. SignatureProductionPlace.City            | - | String | Stated city. |
+| signatures[0].info. signatureProductionPlace.postalCode | Signature.Info. SignatureProductionPlace.PostalCode      | - | String | Stated postal code. |
+| signatures[0].info. signingReason | Signature.Info SigningReason                             | - | String | Free text field for PAdES type signatures for stating the signing reason |
+| signatures[0]. signatureFormat | Signature. SignatureFormat                               | + | String | Format and profile (according to Baseline Profile) of the signature. See [XAdES Baseline Profile](http://www.etsi.org/deliver/etsi_ts/103100_103199/103171/02.01.01_60/ts_103171v020101p.pdf), [CAdES Baseline Profile](http://www.etsi.org/deliver/etsi_ts/103100_103199/103173/02.02.01_60/ts_103173v020201p.pdf) and [PAdES Baseline Profile](http://www.etsi.org/deliver/etsi_ts/103100_103199/103172/02.02.02_60/ts_103172v020202p.pdf) for detailed description of the Baseline Profile levels. Levels that are accepted in SiVa validation policy are described in [SiVa signature validation policy](/siva3/appendix/validation_policy) <br>**Possible values:**  <br> XAdES_BASELINE_B <br> XAdES_BASELINE_B_BES <br> XAdES_BASELINE_B_EPES <br> XAdES_BASELINE_T <br> XAdES_BASELINE_LT - long-term level XAdES signature where time-stamp is used as a assertion of trusted signing time<br> XAdES_BASELINE_LT_TM - long-term level XAdES signature where time-mark is used as a assertion of trusted signing time. Used in case of [BDOC](https://www.id.ee/wp-content/uploads/2021/06/bdoc-spec212-eng.pdf) signatures with time-mark profile and [DIGIDOC-XML](https://www.id.ee/wp-content/uploads/2020/08/digidoc_format_1.3.pdf) (DDOC) signatures.<br>  XAdES_BASELINE_LTA <br> CAdES_BASELINE_B <br> CAdES_BASELINE_T <br> CAdES_BASELINE_LT <br> CAdES_BASELINE_LTA<br> PAdES_BASELINE_B <br> PAdES_BASELINE_T <br> PAdES_BASELINE_LT <br> PAdES_BASELINE_LTA |
+| signatures[0]. signatureMethod | Signature. SignatureMethod                               | + | String | Signature method specification URI used in signature creation. |
+| signatures[0]. signatureLevel | Signature. SignatureLevel                                | - |String | Legal level of the signature, according to Regulation (EU) No 910/2014. <br> - **Possible values on positive validation result:**<br> QESIG <br> QESEAL <br> QES <br> ADESIG_QC <br> ADESEAL_QC <br> ADES_QC <br> ADESIG <br> ADESEAL <br> ADES <br> - **Possible values on indeterminate validation result:**<br> prefix INDETERMINATE is added to the level described in positive result. For example  INDETERMINATE_QESIG <br> - **Possible values on negative validation result:**<br>In addition to abovementioned<br> NOT_ADES_QC_QSCD <br> NOT_ADES_QC <br> NOT_ADES <br> NA <br> - In case of DIGIDOC-XML 1.0..1.3 formats, value is missing as the signature level is not checked by the JDigiDoc base library that is used for validation. However, the signatures can be indirectly regarded as QES level signatures, see also [SiVa Validation Policy](/siva3/appendix/validation_policy)<br>|
+| signatures[0].signedBy | Signature.SignedBy                                       | + | String | In format of "surname, givenName, serialNumber" if  these fields are present in subject distinguished name field. In other cases, value of common name field. |
+| signatures[0].subjectDistinguishedName.serialNumber | Signature.SubjectDistinguishedName.SerialNumber          | - | String | SERIALNUMBER value portion in signer's certificate's subject distinguished name |
+| signatures[0].subjectDistinguishedName.commonName | Signature.SubjectDistinguishedName.CommonName            | - | String | CN (common name) value portion in signer's certificate's subject distinguished name |
+| signatures[0].subjectDistinguishedName.givenName | Signature.SubjectDistinguishedName.GivenName             | - | String | Given name value portion in signer's certificate's subject distinguished name |
+| signatures[0].subjectDistinguishedName.surname | Signature.SubjectDistinguishedName.Surname               | - | String | Surname value portion in signer's certificate's subject distinguished name |
+| signatures[0]. signatureScopes | Signature. SignatureScopes                               | - | Array | Contains information of the original data that is covered by the signature. |
+| signatures[0]. signatureScopes[0]. name | Signature. SignatureScopes.  SignatureScope.Name         | + | String | Name of the signature scope. |
+| signatures[0]. signatureScopes[0]. scope | Signature. SignatureScopes.  SignatureScope. Scope       | + | String | Type of the signature scope. |
+| signatures[0]. signatureScopes[0]. content | Signature. SignatureScopes.  SignatureScope. Content     | + | String | Description of the scope. |
+| signatures[0]. signatureScopes[0]. hashAlgo | Signature. SignatureScopes.  SignatureScope. HashAlgo    | - | String | Hash algorithm used for datafile hash calculation. Present for hashcode validation. |
+| signatures[0]. signatureScopes[0]. hash | Signature. SignatureScopes.  SignatureScope. Hash        | - | String | Hash of data file encoded in Base64. Present for hashcode validation. |
+| signatures[0]. warnings | Signature.Warnings                                       | - | Array | Block of validation warnings that do not affect the overall validation result. |
+| signatures[0]. warnings[0] | Signature.Warnings. Warning                              | + | Object | Object containing the warning |
+| signatures[0]. warnings[0]. content | Signature.Warnings. Warning.Description                  | + | String | Warning description, as retuned by the base library that was used for validation. |
+| signatures[0].certificates | Signature.Certificates                                   | - | Array | Array containing certificates that are present in the signature or can be fetched from TSL. |
+| signatures[0].certificates[0] | Signature.Certificates.Certificate                       | + | Object | Object containinig certificate type, common name and certificate. Minimal object is signer certificate. If present contains certificates for TimeStamps and OCSP as well. |
+| signatures[0].certificates[0].commonName | Signature.Certificates.Certificate.CommonName            | + | String | CN (common name) value in certificate. |
+| signatures[0].certificates[0].type | Signature.Certificates.Certificate.Type                  | + | String | Type of the certificate. Can be SIGNING, REVOCATION, SIGNATURE_TIMESTAMP, ARCHIVE_TIMESTAMP or CONTENT_TIMESTAMP. |
+| signatures[0].certificates[0].content | Signature.Certificates.Certificate.Content               | + | String | DER encoded X.509 certificate in Base64. |
+| signatures[0].certificates[0].issuer | Signature.Certificates.Certificate.Issuer                | + | String | Object containing issuer certificate information. Can create chain til the trust anchor. |
+| timeStampTokens | TimeStampTokens                                          | - | Array | Array containing the time stamp tokens |
+| timeStampTokens[0]. | TimeStampToken                                           | + | Object | Object containing the time stamp token (TST) |
+| timeStampTokens[0]. indication | TimeStampToken. Indication                               | + | String | Result of the time stamp token validation. <br>**Possible values:** <br> TOTAL-PASSED <br> TOTAL-FAILED |
+| timeStampTokens[0]. signedBy | TimeStampToken. SignedBy                                 | + | String | Signer of the time stamp token. |
+| timeStampTokens[0]. signedTime | TimeStampToken. SignedTime                               | + | String | Time when the time stamp token was given. |
+| timeStampTokens[0]. error | TimeStampToken. Errors                                   | - | Array | Errors returned in time stamp token validation. |
+| timeStampTokens[0]. error[0] | Errors. Error                                            | + | Object | Object containing the error. |
+| timeStampTokens[0]. error[0]. content | Error. Content                                           | + | String | Error description. |
 
 #### Sample JSON response Simple Report (successful scenario)
 
@@ -420,6 +422,8 @@ Structure of validationConclusion block
               <ns3:SubjectDistinguishedName>
                 <ns3:SerialNumber>PNOEE-38001085718</ns3:SerialNumber>
                 <ns3:CommonName>JÕEORG,JAAK-KRISTJAN,38001085718</ns3:CommonName>
+                <ns3:GivenName>JAAK-KRISTJAN</ns3:GivenName>
+                <ns3:Surname>JÕEORG</ns3:Surname>
               </ns3:SubjectDistinguishedName>
               <ns3:Certificates>
                 <ns3:Certificate>
@@ -808,14 +812,16 @@ Changes are described using notation from REST endpoint.
 
 ### Changes in response
 
-| Response type | Parameter | Change | Link | Comment |
-|---------------|-----------|--------|------|---------|
-| Simple | validatedDocument | now optional |  [Link](../interfaces/#validation-response-parameters-simple-report-successful-scenario) | Object now optional |
-| Simple | validatedDocument.filename | now optional |  [Link](../interfaces/#validation-response-parameters-simple-report-successful-scenario) | String now optional |
+| Response type | Parameter | Change | Link | Comment                                                               |
+|---------------|-----------|--------|------|-----------------------------------------------------------------------|
+| Simple | validatedDocument | now optional |  [Link](../interfaces/#validation-response-parameters-simple-report-successful-scenario) | Object now optional                                                   |
+| Simple | validatedDocument.filename | now optional |  [Link](../interfaces/#validation-response-parameters-simple-report-successful-scenario) | String now optional                                                   |
 | Simple | validatedDocument.fileHash | changed |  [Link](../interfaces/#validation-response-parameters-simple-report-successful-scenario) | Previously validatedDocument.fileHashInHex. Now contains Base64 value |
-| Simple | signatures[0].subjectDistinguishedName.serialNumber | added |  [Link](../interfaces/#validation-response-parameters-simple-report-successful-scenario) | Added signers serial number field |
-| Simple | signatures[0].subjectDistinguishedName.commonName | added |  [Link](../interfaces/#validation-response-parameters-simple-report-successful-scenario) | Added signers common name field |
-| Simple | signatures[0].signatureScopes[0].hashAlgo | added |  [Link](../interfaces/#validation-response-parameters-simple-report-successful-scenario) | Added datafile hash algo field for hashcode validation |
-| Simple | signatures[0].signatureScopes[0].hash | added |  [Link](../interfaces/#validation-response-parameters-simple-report-successful-scenario) | Added datafile hash field for hashcode validation |
-| Diagnostic | whole response | added |  [Link](../interfaces/#validation-response-parameters-for-diagnostic-data-report-successful-scenario) | New report type added |
+| Simple | signatures[0].subjectDistinguishedName.serialNumber | added |  [Link](../interfaces/#validation-response-parameters-simple-report-successful-scenario) | Added signers serial number field                                     |
+| Simple | signatures[0].subjectDistinguishedName.commonName | added |  [Link](../interfaces/#validation-response-parameters-simple-report-successful-scenario) | Added signers common name field                                       |
+| Simple | signatures[0].subjectDistinguishedName.givenName | added |  [Link](../interfaces/#validation-response-parameters-simple-report-successful-scenario) | Added signers given name from SubjectDistinguishedName field          |
+| Simple | signatures[0].subjectDistinguishedName.surname | added |  [Link](../interfaces/#validation-response-parameters-simple-report-successful-scenario) | Added signers surname from SubjectDistinguishedName field                          |
+| Simple | signatures[0].signatureScopes[0].hashAlgo | added |  [Link](../interfaces/#validation-response-parameters-simple-report-successful-scenario) | Added datafile hash algo field for hashcode validation                |
+| Simple | signatures[0].signatureScopes[0].hash | added |  [Link](../interfaces/#validation-response-parameters-simple-report-successful-scenario) | Added datafile hash field for hashcode validation                     |
+| Diagnostic | whole response | added |  [Link](../interfaces/#validation-response-parameters-for-diagnostic-data-report-successful-scenario) | New report type added                                                 |
 

@@ -94,7 +94,7 @@ public class TSLLoader {
 
         lotlSource.setCertificateSource(keyStoreCertificateSource);
         lotlSource.setSigningCertificatesAnnouncementPredicate(new OfficialJournalSchemeInformationURI(configurationProperties.getOjUrl()));
-        lotlSource.setPivotSupport(false);
+        lotlSource.setPivotSupport(configurationProperties.isLotlPivotSupportEnabled());
         lotlSource.setLotlPredicate(new EULOTLOtherTSLPointer()
                 .and(new XMLOtherTSLPointer())
         );

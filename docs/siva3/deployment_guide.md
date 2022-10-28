@@ -444,6 +444,7 @@ See the reference list of all common [application properties](http://docs.spring
 | **siva.tsl.loader.sslTruststorePath** | Path to truststore containing trusted CA certificates used in HTTPS connection to retrieve member states TSLs <ul><li>Default: **classpath:tsl-ssl-truststore.p12**</li></ul> |
 | **siva.tsl.loader.sslTruststoreType** | Truststore type <ul><li>Default: **PKCS12**</li></ul> |
 | **siva.tsl.loader.sslTruststorePassword** | Truststore password <ul><li>Default: **digidoc4j-password**</li></ul>  |
+| **siva.tsl.loader.LotlPivotSupportEnabled** | A boolean value that determines, whether LOTL pivot mode should be used or not <ul><li>Default: **true**</li></ul> |
 | **siva.keystore.type** | Keystore type <ul><li>Default: **JKS**</li></ul> |
 | **siva.keystore.filename** | Keystore that contains public keys of trusted LOTL signers for LOTL signature validation<ul><li>Default: **siva-keystore.jks**</li></ul> |
 | **siva.keystore.password** | Keystore password <ul><li>Default: **siva-keystore-password**</li></ul> |

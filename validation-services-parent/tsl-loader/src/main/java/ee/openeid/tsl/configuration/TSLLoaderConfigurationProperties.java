@@ -37,4 +37,5 @@ public class TSLLoaderConfigurationProperties {
     private String sslTruststoreType = "PKCS12";
     @SuppressWarnings("squid:S2068") //default password
     private String sslTruststorePassword = "digidoc4j-password";
+    private boolean lotlPivotSupportEnabled = true;
 }

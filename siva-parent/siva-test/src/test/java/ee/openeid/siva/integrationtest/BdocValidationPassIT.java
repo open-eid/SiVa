@@ -226,40 +226,6 @@ public class BdocValidationPassIT extends SiVaRestTests {
     }
 
     /**
-     * TestCaseID: Bdoc-ValidationPass-8
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
-     *
-     * Title: Asice Baseline-LTA file
-     *
-     * Expected Result: The document should pass the validation. DD4J do not return certificates for LTA timestamp.
-     *
-     * File: EE_SER-AEX-B-LTA-V-24.asice
-     */
-    @Test
-    @Ignore("DD4J-615")
-    public void bdocBaselineLtaProfileValidSignature() {
-        setTestFilesDirectory("bdoc/live/timestamp/");
-        post(validationRequestForDD4j("EE_SER-AEX-B-LTA-V-24.asice", null, null))
-                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
-                .body("signatureForm", Matchers.is("ASiC-E"))
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LTA"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].info.bestSignatureTime", Matchers.is("2014-10-30T18:50:35Z"))
-                .body("signatures[0].signedBy", Matchers.is("METSMA,RAUL,38207162766"))
-                .body("signatures[0].certificates.size()", Matchers.is(3))
-                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("METSMA,RAUL,38207162766"))
-                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIEmzCCA4OgAwIBAgIQFQe7NKtE06tRSY1vHfPijjANBgkqhk"))
-                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].commonName",  Matchers.is("BalTstamp QTSA TSU2"))
-                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].content",  Matchers.startsWith("MIIEtzCCA5+gAwIBAgIKFg5NNQAAAAADhzANBgkqhkiG9w0BAQ"))
-                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName",  Matchers.is("SK OCSP RESPONDER 2011"))
-                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content",  Matchers.startsWith("MIIEvDCCA6SgAwIBAgIQcpyVmdruRVxNgzI3N/NZQTANBgkqhk"))
-                .body("validSignaturesCount", Matchers.is(1));
-    }
-
-    /**
      * TestCaseID: Bdoc-ValidationPass-9
      *
      * TestType: Automated

@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import static ee.openeid.siva.integrationtest.TestData.SOAP_VALIDATION_CONCLUSION_PREFIX;
+import static ee.openeid.siva.integrationtest.TestData.VALID_VALIDATION_PROCESS_ERROR_VALUE_11;
 
 @Category(IntegrationTest.class)
 public class SoapValidationReportValueIT extends SiVaSoapTests {
@@ -215,18 +216,17 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      */
     @Test
-    @Ignore("DD4J-615")
     public void SoapBdocCorrectValuesArePresentInvalidLtSignatureAdesqc() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDocument("EE_SER-AEX-B-LTA-V-24.bdoc"))
                 .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
                 .body("SignaturesCount", Matchers.is("1"))
-                .body("ValidSignaturesCount", Matchers.is("1"))
+                .body("ValidSignaturesCount", Matchers.is("0"))
                 .body("Signatures.Signature[0].SignatureFormat", Matchers.is("XAdES_BASELINE_LTA"))
-                .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-PASSED"))
+                .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-FAILED"))
                 .body("Signatures.Signature[0].SignatureLevel", Matchers.is("QESIG"))
                 .body("Signatures.Signature[0].SignatureScopes.SignatureScope.Scope", Matchers.is("FullSignatureScope"))
-                .body("Signatures.Signature[0].Errors", Matchers.emptyOrNullString())
+                .body("Signatures.Signature[0].Errors", Matchers.hasItems(VALID_VALIDATION_PROCESS_ERROR_VALUE_11))
                 .body("Signatures.Signature[0].Warnings", Matchers.emptyOrNullString())
                 .body("SignatureForm", Matchers.is("ASiC-E"));
     }

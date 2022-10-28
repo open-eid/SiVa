@@ -175,7 +175,6 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      *
      * File: pades-baseline-lta-live-aj.pdf
      */
-    //TODO SIVA-350 needs investigation why archive TS type is missing
     @Test
     public void baselineProfileLTADocumentShouldPasspolv3() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades-baseline-lta-live-aj.pdf"));
@@ -186,11 +185,11 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())
                 .body("signatures[0].warnings", Matchers.emptyOrNullString())
-                //.body("signatures[0].certificates.size()", Matchers.is(4))
+                .body("signatures[0].certificates.size()", Matchers.is(4))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("JUHANSON,ALLAN,38608014910"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.commonName",  Matchers.is("ESTEID-SK 2015"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].commonName",  Matchers.is("SK TIMESTAMPING AUTHORITY"))
-                //.body("signatures[0].certificates.findAll{it.type == 'ARCHIVE_TIMESTAMP'}[0].commonName",  Matchers.is("SK TIMESTAMPING AUTHORITY"))
+                .body("signatures[0].certificates.findAll{it.type == 'ARCHIVE_TIMESTAMP'}[0].commonName",  Matchers.is("SK TIMESTAMPING AUTHORITY"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName",  Matchers.is("SK OCSP RESPONDER 2011"))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
@@ -219,6 +218,12 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())
                 .body("signatures[0].warnings", Matchers.emptyOrNullString())
+                .body("signatures[0].certificates.size()", Matchers.is(4))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("JUHANSON,ALLAN,38608014910"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.commonName",  Matchers.is("ESTEID-SK 2015"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].commonName",  Matchers.is("SK TIMESTAMPING AUTHORITY"))
+                .body("signatures[0].certificates.findAll{it.type == 'ARCHIVE_TIMESTAMP'}[0].commonName",  Matchers.is("SK TIMESTAMPING AUTHORITY"))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName",  Matchers.is("SK OCSP RESPONDER 2011"))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }

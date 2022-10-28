@@ -172,48 +172,6 @@ public class AsiceValidationPassIT extends SiVaRestTests {
     }
 
     /**
-     * TestCaseID: Asice-ValidationPass-6
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
-     *
-     * Title: Asice Baseline-LTA file
-     *
-     * Expected Result: The document should pass the validation
-     *
-     * File: EE_SER-AEX-B-LTA-V-24.asice
-     */
-    @Test
-    @Ignore("DD4J-615")
-    public void asiceBaselineLtaProfileValidSignature() {
-        post(validationRequestFor("EE_SER-AEX-B-LTA-V-24.asice"))
-                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
-                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
-                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LTA))
-                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
-                .body("signatures[0].info.bestSignatureTime", Matchers.is("2014-10-30T18:50:35Z"))
-                .body("signatures[0].signedBy", Matchers.is("METSMA,RAUL,38207162766"))
-                .body("signatures[0].certificates.size()", Matchers.is(4))
-                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("METSMA,RAUL,38207162766"))
-                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIEmzCCA4OgAwIBAgIQFQe7NKtE06tRSY1vHfPijjANBgkqhk"))
-                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.commonName",  Matchers.startsWith("ESTEID-SK 2011"))
-                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.content",  Matchers.startsWith("MIIFBTCCA+2gAwIBAgIQKVKTqv2MxtRNgzCjwmRRDTANBgkqhk"))
-                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].commonName",  Matchers.is("BalTstamp QTSA TSU2"))
-                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].content",  Matchers.startsWith("MIIEtzCCA5+gAwIBAgIKFg5NNQAAAAADhzANBgkqhkiG9w0BAQ"))
-                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].issuer.commonName",  Matchers.startsWith("SSC Qualified Class 3 CA"))
-                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].issuer.content",  Matchers.startsWith("MIIFvTCCA6WgAwIBAgIQWJFmnMAIyiVAcLMn/5wGnjANBgkqhk"))
-                .body("signatures[0].certificates.findAll{it.type == 'ARCHIVE_TIMESTAMP'}[0].commonName",  Matchers.is("BalTstamp QTSA TSU2"))
-                .body("signatures[0].certificates.findAll{it.type == 'ARCHIVE_TIMESTAMP'}[0].content",  Matchers.startsWith("MIIEtzCCA5+gAwIBAgIKFg5NNQAAAAADhzANBgkqhkiG9w0BAQ"))
-                .body("signatures[0].certificates.findAll{it.type == 'ARCHIVE_TIMESTAMP'}[0].issuer.commonName",  Matchers.startsWith("SSC Qualified Class 3 CA"))
-                .body("signatures[0].certificates.findAll{it.type == 'ARCHIVE_TIMESTAMP'}[0].issuer.content",  Matchers.startsWith("MIIFvTCCA6WgAwIBAgIQWJFmnMAIyiVAcLMn/5wGnjANBgkqhk"))
-                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName",  Matchers.is("SK OCSP RESPONDER 2011"))
-                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content",  Matchers.startsWith("MIIEvDCCA6SgAwIBAgIQcpyVmdruRVxNgzI3N/NZQTANBgkqhk"))
-                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
-                .body("validSignaturesCount", Matchers.is(1));
-    }
-
-    /**
      * TestCaseID: Asice-ValidationPass-7
      *
      * TestType: Automated
@@ -327,20 +285,22 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      * File: ASICE_TS_LTA_content_as_sce.sce
      */
     @Test
-    @Ignore("DD4J-615")
     public void asiceWithSceFileExtensionShouldPass() {
-        post(validationRequestFor("ASICE_TS_LTA_content_as_sce.sce"))
+        setTestFilesDirectory("bdoc/test/timestamp/");
+        post(validationRequestFor("3_signatures_TM_LT_LTA.sce"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
-                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LTA))
-                .body("signatures[0].signatureLevel", Matchers.is(SIGNATURE_LEVEL_QESIG))
-                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
-                .body("signatures[0].info.bestSignatureTime", Matchers.is("2014-10-30T18:50:35Z"))
-                .body("signatures[0].subjectDistinguishedName.commonName", Matchers.notNullValue())
-                .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.notNullValue())
-                .body("validSignaturesCount", Matchers.is(1))
-                .body("signaturesCount", Matchers.is(1));
+                .body("signatures[2].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LTA))
+                .body("signatures[2].signatureLevel", Matchers.is(SIGNATURE_LEVEL_QESIG))
+                .body("signatures[2].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[2].info.bestSignatureTime", Matchers.is("2021-01-29T14:38:11Z"))
+                .body("signatures[2].subjectDistinguishedName.commonName", Matchers.notNullValue())
+                .body("signatures[2].subjectDistinguishedName.serialNumber", Matchers.notNullValue())
+                .body("signatures[2].certificates.findAll{it.type == 'ARCHIVE_TIMESTAMP'}[0].commonName",  Matchers.is("DEMO SK TIMESTAMPING AUTHORITY 2020"))
+                .body("signatures[2].certificates.findAll{it.type == 'ARCHIVE_TIMESTAMP'}[0].content",  Matchers.startsWith("MIIEgzCCA2ugAwIBAgIQcGzJsYR4QLlft+S73s/WfTANBgkqhk"))
+                .body("validSignaturesCount", Matchers.is(3))
+                .body("signaturesCount", Matchers.is(3));
     }
 
     /**

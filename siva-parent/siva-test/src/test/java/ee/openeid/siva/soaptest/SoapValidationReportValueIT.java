@@ -478,6 +478,55 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
 
     /**
      *
+     * TestCaseID: Pdf-SoapValidationReportValue-3
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
+     *
+     * Title: Verification of values in Validation Report, PAdES_baseline_LTA
+     *
+     * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
+     *
+     * File: pades-baseline-lta-live-aj.pdf
+     *
+     */
+    @Test
+    public void SoapPdfCorrectValuesArePresentBaselineLtaSignature() {
+        setTestFilesDirectory("pdf/baseline_profile_test_files/");
+        post(validationRequestForDocument("pades-baseline-lta-live-aj.pdf"))
+                .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+                .body("Signatures.Signature[0].SignatureFormat", Matchers.is("PAdES_BASELINE_LTA"))
+                .body("Signatures.Signature[0].Id", Matchers.is("S-55E9C780EF821A871FF17DD4A6C47392D4D52AD326CD803A7C92714649C92147"))
+                .body("Signatures.Signature[0].SignatureMethod", Matchers.is("http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"))
+                .body("Signatures.Signature[0].SignatureLevel", Matchers.is("QESIG"))
+                .body("Signatures.Signature[0].SignedBy", Matchers.is("JUHANSON,ALLAN,38608014910"))
+                .body("Signatures.Signature[0].SubjectDistinguishedName.CommonName", Matchers.is("JUHANSON,ALLAN,38608014910"))
+                .body("Signatures.Signature[0].SubjectDistinguishedName.SerialNumber", Matchers.is("38608014910"))
+                .body("Signatures.Signature[0].SubjectDistinguishedName.GivenName", Matchers.is("ALLAN"))
+                .body("Signatures.Signature[0].SubjectDistinguishedName.Surname", Matchers.is("JUHANSON"))
+                .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-PASSED"))
+                .body("Signatures.Signature[0].Errors", Matchers.emptyOrNullString())
+                .body("Signatures.Signature[0].Warnings", Matchers.emptyOrNullString())
+                .body("Signatures.Signature[0].Certificates.Certificate[0].Type",  Matchers.oneOf("SIGNATURE_TIMESTAMP", "ARCHIVE_TIMESTAMP", "REVOCATION", "SIGNING"))
+                .body("Signatures.Signature[0].Certificates.Certificate[1].Type",  Matchers.oneOf("SIGNATURE_TIMESTAMP", "ARCHIVE_TIMESTAMP", "REVOCATION", "SIGNING"))
+                .body("Signatures.Signature[0].Certificates.Certificate[2].Type",  Matchers.oneOf("SIGNATURE_TIMESTAMP", "ARCHIVE_TIMESTAMP", "REVOCATION", "SIGNING"))
+                .body("Signatures.Signature[0].Certificates.Certificate[3].Type",  Matchers.oneOf("SIGNATURE_TIMESTAMP", "ARCHIVE_TIMESTAMP", "REVOCATION", "SIGNING"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Name", Matchers.is("Partial PDF"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Scope", Matchers.is("PARTIAL"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Content", Matchers.is("The document ByteRange : [0, 9136, 28082, 26387]"))
+                .body("Signatures.Signature[0].ClaimedSigningTime", Matchers.is("2016-09-26T09:20:05Z"))
+                .body("Signatures.Signature[0].Info.BestSignatureTime", Matchers.is("2016-09-26T09:20:18Z"))
+                .body("Signatures.Signature[0].Info.TimestampCreationTime", Matchers.is("2016-09-26T09:20:18Z"))
+                .body("Signatures.Signature[0].Info.OcspResponseCreationTime", Matchers.is("2016-09-26T09:20:18Z"))
+                .body("Signatures.Signature[0].Info.TimeAssertionMessageImprint", Matchers.is("MDEwDQYJYIZIAWUDBAIBBQAEIOw4WEKkdTKlUd8gwGNx4J471Y2JkKSTyPQH4anvLrJg"))
+                .body("ValidatedDocument.Filename", Matchers.is("pades-baseline-lta-live-aj.pdf"))
+                .body("ValidSignaturesCount", Matchers.is("1"))
+                .body("SignaturesCount", Matchers.is("1"));
+    }
+
+    /**
+     *
      * TestCaseID: Asice-SoapRoleAndProductionPlaceValue-1
      *
      * TestType: Automated

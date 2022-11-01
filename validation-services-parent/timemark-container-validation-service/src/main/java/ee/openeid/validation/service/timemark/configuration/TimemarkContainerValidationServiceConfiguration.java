@@ -18,6 +18,7 @@ package ee.openeid.validation.service.timemark.configuration;
 
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.tsl.configuration.TSLLoaderConfigurationProperties;
+import ee.openeid.tsl.configuration.TSLValidationKeystoreProperties;
 import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.Configuration;
 import org.digidoc4j.ExternalConnectionType;
@@ -39,12 +40,15 @@ public class TimemarkContainerValidationServiceConfiguration {
 
     private final TSLLoaderConfigurationProperties tslLoaderConfigurationProperties;
     private final BDOCValidationServiceProperties bdocValidationServiceProperties;
+    private final TSLValidationKeystoreProperties tslValidationKeystoreProperties;
 
     @Autowired
     public TimemarkContainerValidationServiceConfiguration(TSLLoaderConfigurationProperties tslLoaderConfigurationProperties,
-                                                           BDOCValidationServiceProperties bdocValidationServiceProperties) {
+                                                           BDOCValidationServiceProperties bdocValidationServiceProperties,
+                                                           TSLValidationKeystoreProperties tslValidationKeystoreProperties) {
         this.tslLoaderConfigurationProperties = tslLoaderConfigurationProperties;
         this.bdocValidationServiceProperties = bdocValidationServiceProperties;
+        this.tslValidationKeystoreProperties = tslValidationKeystoreProperties;
     }
 
     @Bean(name = "timemarkPolicyService")
@@ -76,6 +80,10 @@ public class TimemarkContainerValidationServiceConfiguration {
         configuration.setSslTruststorePasswordFor(ExternalConnectionType.TSL, tslLoaderConfigurationProperties.getSslTruststorePassword());
         configuration.setSslTruststoreTypeFor(ExternalConnectionType.TSL, tslLoaderConfigurationProperties.getSslTruststoreType());
         configuration.setLotlLocation(tslLoaderConfigurationProperties.getUrl());
+        configuration.setLotlPivotSupportEnabled(tslLoaderConfigurationProperties.isLotlPivotSupportEnabled());
+        configuration.setLotlTruststorePath(tslValidationKeystoreProperties.getFilename());
+        configuration.setLotlTruststorePassword(tslValidationKeystoreProperties.getPassword());
+        configuration.setLotlTruststoreType(tslValidationKeystoreProperties.getType());
         return configuration;
     }
 

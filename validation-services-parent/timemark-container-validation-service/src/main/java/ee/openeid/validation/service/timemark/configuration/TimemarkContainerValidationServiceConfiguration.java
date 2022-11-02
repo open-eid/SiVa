@@ -19,6 +19,7 @@ package ee.openeid.validation.service.timemark.configuration;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.tsl.configuration.TSLLoaderConfigurationProperties;
 import ee.openeid.tsl.configuration.TSLValidationKeystoreProperties;
+import ee.openeid.tsl.keystore.DSSKeyStoreFactoryBean;
 import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.Configuration;
 import org.digidoc4j.ExternalConnectionType;
@@ -29,6 +30,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
+
+import java.io.File;
 
 @SpringBootConfiguration
 @EnableAutoConfiguration
@@ -81,7 +84,8 @@ public class TimemarkContainerValidationServiceConfiguration {
         configuration.setSslTruststoreTypeFor(ExternalConnectionType.TSL, tslLoaderConfigurationProperties.getSslTruststoreType());
         configuration.setLotlLocation(tslLoaderConfigurationProperties.getUrl());
         configuration.setLotlPivotSupportEnabled(tslLoaderConfigurationProperties.isLotlPivotSupportEnabled());
-        configuration.setLotlTruststorePath(tslValidationKeystoreProperties.getFilename());
+        String sivaLotlTruststorePath = DSSKeyStoreFactoryBean.getDssDataFolder() + File.separatorChar + tslValidationKeystoreProperties.getFilename();
+        configuration.setLotlTruststorePath(sivaLotlTruststorePath);
         configuration.setLotlTruststorePassword(tslValidationKeystoreProperties.getPassword());
         configuration.setLotlTruststoreType(tslValidationKeystoreProperties.getType());
         return configuration;

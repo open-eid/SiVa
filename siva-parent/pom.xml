@@ -19,14 +19,14 @@
     <parent>
         <artifactId>siva</artifactId>
         <groupId>ee.openid.siva</groupId>
-        <version>3.5.4</version>
+        <version>3.6.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>siva-parent</artifactId>
     <packaging>pom</packaging>
     <name>SiVa webapp and other core modules</name>
-    <version>3.5.4</version>
+    <version>3.6.0</version>
 
     <modules>
         <module>siva-validation-proxy</module>

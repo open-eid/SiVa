@@ -31,7 +31,7 @@ import java.io.OutputStream;
 
 public class DSSKeyStoreFactoryBean extends AbstractFactoryBean<KeyStoreCertificateSource> {
     private static final Logger KEY_STORE_LOGGER = LoggerFactory.getLogger(DSSKeyStoreFactoryBean.class);
-    private static final String ENVIRONMENT_VARIABLE_DSS_DATA_FOLDER = "DSS_DATA_FOLDER";
+    public static final String ENVIRONMENT_VARIABLE_DSS_DATA_FOLDER = "DSS_DATA_FOLDER";
 
     private String keyStoreType;
     private String keyStoreFilename;
@@ -88,7 +88,7 @@ public class DSSKeyStoreFactoryBean extends AbstractFactoryBean<KeyStoreCertific
         return keystoreFile;
     }
 
-    private String getDssDataFolder() {
+    public static String getDssDataFolder() {
         String dssDataFolder = System.getProperty(ENVIRONMENT_VARIABLE_DSS_DATA_FOLDER);
         if (StringUtils.isNotEmpty(dssDataFolder)) {
             KEY_STORE_LOGGER.info(ENVIRONMENT_VARIABLE_DSS_DATA_FOLDER + " found as system property : " + dssDataFolder);

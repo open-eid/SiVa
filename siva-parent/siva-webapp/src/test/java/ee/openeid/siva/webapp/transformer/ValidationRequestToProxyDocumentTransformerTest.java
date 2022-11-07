@@ -52,29 +52,6 @@ public class ValidationRequestToProxyDocumentTransformerTest {
     }
 
     @Test
-    public void pdfTypeIsCorrectlyTransformedToDocumentType() {
-        assertEquals(DocumentType.PDF, transformer.transform(validationRequest).getDocumentType());
-    }
-
-    @Test
-    public void bdocTypeIsCorrectlyTransformedToDocumentType() {
-        validationRequest.setType("bdoc");
-        assertEquals(DocumentType.BDOC, transformer.transform(validationRequest).getDocumentType());
-    }
-
-    @Test
-    public void ddocTypeIsCorrectlyTransformedToDocumentType() {
-        validationRequest.setType("ddoc");
-        assertEquals(DocumentType.DDOC, transformer.transform(validationRequest).getDocumentType());
-    }
-
-    @Test
-    public void xroadTypeIsCorrectlyTransformedToDocumentType() {
-        validationRequest.setType("xroad");
-        assertEquals(DocumentType.XROAD, transformer.transform(validationRequest).getDocumentType());
-    }
-
-    @Test
     public void reportTypeIsCorrectlyTransformedToReportType() {
         for (ReportType reportType : ReportType.values()) {
             validationRequest.setReportType(reportType.name());
@@ -101,14 +78,6 @@ public class ValidationRequestToProxyDocumentTransformerTest {
     public void contentIsCorrectlyTransformedToBytes() {
         ProxyDocument proxyDocument = transformer.transform(validationRequest);
         assertEquals(validationRequest.getDocument(), Base64.encodeBase64String(proxyDocument.getBytes()));
-    }
-
-    @Test
-    public void unsupportedTypeThrowsException() {
-        validationRequest = MockValidationRequestBuilder.aValidationRequest().withType("unsupported").build();
-        expectedException.expect(RuntimeException.class);
-        expectedException.expectMessage("type = unsupported is unsupported");
-        transformer.transform(validationRequest);
     }
 
     @Test

@@ -31,4 +31,6 @@ public class SubjectDistinguishedName {
 
     private String serialNumber;
     private String commonName;
+    private String givenName;
+    private String surname;
 }

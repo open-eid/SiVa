@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2017 - 2022 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -120,6 +120,8 @@ public class AsiceValidationPassIT extends SiVaRestTests {
                 .body("signatures[0].signedBy", Matchers.is("PELANIS,MINDAUGAS,37412260478"))
                 .body("signatures[0].subjectDistinguishedName.commonName",  Matchers.is("MINDAUGAS PELANIS"))
                 .body("signatures[0].subjectDistinguishedName.serialNumber",  Matchers.is("37412260478"))
+                .body("signatures[0].subjectDistinguishedName.givenName",  Matchers.is("MINDAUGAS"))
+                .body("signatures[0].subjectDistinguishedName.surname",  Matchers.is("PELANIS"))
                 .body("signatures[0].certificates.size()", Matchers.is(3))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("MINDAUGAS PELANIS"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIGJzCCBQ+gAwIBAgIObV8h37aTlaYAAQAEAckwDQYJKoZIhv"))
@@ -163,48 +165,6 @@ public class AsiceValidationPassIT extends SiVaRestTests {
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.content",  Matchers.startsWith("MIIFBTCCA+2gAwIBAgIQKVKTqv2MxtRNgzCjwmRRDTANBgkqhk"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].commonName",  Matchers.is("SK TIMESTAMPING AUTHORITY"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].content",  Matchers.startsWith("MIIEDTCCAvWgAwIBAgIQJK/s6xJo0AJUF/eG7W8BWTANBgkqhk"))
-                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName",  Matchers.is("SK OCSP RESPONDER 2011"))
-                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content",  Matchers.startsWith("MIIEvDCCA6SgAwIBAgIQcpyVmdruRVxNgzI3N/NZQTANBgkqhk"))
-                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
-                .body("validSignaturesCount", Matchers.is(1));
-    }
-
-    /**
-     * TestCaseID: Asice-ValidationPass-6
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
-     *
-     * Title: Asice Baseline-LTA file
-     *
-     * Expected Result: The document should pass the validation
-     *
-     * File: EE_SER-AEX-B-LTA-V-24.asice
-     */
-    @Test
-    @Ignore("DD4J-615")
-    public void asiceBaselineLtaProfileValidSignature() {
-        post(validationRequestFor("EE_SER-AEX-B-LTA-V-24.asice"))
-                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
-                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
-                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LTA))
-                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
-                .body("signatures[0].info.bestSignatureTime", Matchers.is("2014-10-30T18:50:35Z"))
-                .body("signatures[0].signedBy", Matchers.is("METSMA,RAUL,38207162766"))
-                .body("signatures[0].certificates.size()", Matchers.is(4))
-                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("METSMA,RAUL,38207162766"))
-                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIEmzCCA4OgAwIBAgIQFQe7NKtE06tRSY1vHfPijjANBgkqhk"))
-                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.commonName",  Matchers.startsWith("ESTEID-SK 2011"))
-                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.content",  Matchers.startsWith("MIIFBTCCA+2gAwIBAgIQKVKTqv2MxtRNgzCjwmRRDTANBgkqhk"))
-                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].commonName",  Matchers.is("BalTstamp QTSA TSU2"))
-                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].content",  Matchers.startsWith("MIIEtzCCA5+gAwIBAgIKFg5NNQAAAAADhzANBgkqhkiG9w0BAQ"))
-                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].issuer.commonName",  Matchers.startsWith("SSC Qualified Class 3 CA"))
-                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].issuer.content",  Matchers.startsWith("MIIFvTCCA6WgAwIBAgIQWJFmnMAIyiVAcLMn/5wGnjANBgkqhk"))
-                .body("signatures[0].certificates.findAll{it.type == 'ARCHIVE_TIMESTAMP'}[0].commonName",  Matchers.is("BalTstamp QTSA TSU2"))
-                .body("signatures[0].certificates.findAll{it.type == 'ARCHIVE_TIMESTAMP'}[0].content",  Matchers.startsWith("MIIEtzCCA5+gAwIBAgIKFg5NNQAAAAADhzANBgkqhkiG9w0BAQ"))
-                .body("signatures[0].certificates.findAll{it.type == 'ARCHIVE_TIMESTAMP'}[0].issuer.commonName",  Matchers.startsWith("SSC Qualified Class 3 CA"))
-                .body("signatures[0].certificates.findAll{it.type == 'ARCHIVE_TIMESTAMP'}[0].issuer.content",  Matchers.startsWith("MIIFvTCCA6WgAwIBAgIQWJFmnMAIyiVAcLMn/5wGnjANBgkqhk"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName",  Matchers.is("SK OCSP RESPONDER 2011"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content",  Matchers.startsWith("MIIEvDCCA6SgAwIBAgIQcpyVmdruRVxNgzI3N/NZQTANBgkqhk"))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
@@ -294,6 +254,8 @@ public class AsiceValidationPassIT extends SiVaRestTests {
                 .body("signatures[0].signedBy", Matchers.is("Wilson OÜ digital stamp"))
                 .body("signatures[0].subjectDistinguishedName.commonName", Matchers.is("Wilson OÜ digital stamp"))
                 .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("12508548"))
+                .body("signatures[0].subjectDistinguishedName.givenName", Matchers.emptyOrNullString())
+                .body("signatures[0].subjectDistinguishedName.surname", Matchers.emptyOrNullString())
                 .body("signatures[0].certificates.size()", Matchers.is(3))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("Wilson OÜ digital stamp"))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIEcDCCA1igAwIBAgIQBCCW1H7A4/xUfYW+dTWZgzANBgkqhk"))
@@ -323,20 +285,22 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      * File: ASICE_TS_LTA_content_as_sce.sce
      */
     @Test
-    @Ignore("DD4J-615")
     public void asiceWithSceFileExtensionShouldPass() {
-        post(validationRequestFor("ASICE_TS_LTA_content_as_sce.sce"))
+        setTestFilesDirectory("bdoc/test/timestamp/");
+        post(validationRequestFor("3_signatures_TM_LT_LTA.sce"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
-                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LTA))
-                .body("signatures[0].signatureLevel", Matchers.is(SIGNATURE_LEVEL_QESIG))
-                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
-                .body("signatures[0].info.bestSignatureTime", Matchers.is("2014-10-30T18:50:35Z"))
-                .body("signatures[0].subjectDistinguishedName.commonName", Matchers.notNullValue())
-                .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.notNullValue())
-                .body("validSignaturesCount", Matchers.is(1))
-                .body("signaturesCount", Matchers.is(1));
+                .body("signatures[2].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LTA))
+                .body("signatures[2].signatureLevel", Matchers.is(SIGNATURE_LEVEL_QESIG))
+                .body("signatures[2].indication", Matchers.is(TOTAL_PASSED))
+                .body("signatures[2].info.bestSignatureTime", Matchers.is("2021-01-29T14:38:11Z"))
+                .body("signatures[2].subjectDistinguishedName.commonName", Matchers.notNullValue())
+                .body("signatures[2].subjectDistinguishedName.serialNumber", Matchers.notNullValue())
+                .body("signatures[2].certificates.findAll{it.type == 'ARCHIVE_TIMESTAMP'}[0].commonName",  Matchers.is("DEMO SK TIMESTAMPING AUTHORITY 2020"))
+                .body("signatures[2].certificates.findAll{it.type == 'ARCHIVE_TIMESTAMP'}[0].content",  Matchers.startsWith("MIIEgzCCA2ugAwIBAgIQcGzJsYR4QLlft+S73s/WfTANBgkqhk"))
+                .body("validSignaturesCount", Matchers.is(3))
+                .body("signaturesCount", Matchers.is(3));
     }
 
     /**
@@ -449,15 +413,15 @@ public class AsiceValidationPassIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
                 .body("signatures[0].signatureScopes.size()", Matchers.is(5))
-                .body("signatures[0].signatureScopes[0].name", Matchers.is("data-file-1.txt"))
-                .body("signatures[0].signatureScopes[1].name", Matchers.is("empty-file-2.txt"))
-                .body("signatures[0].signatureScopes[2].name", Matchers.is("data-file-3.txt"))
-                .body("signatures[0].signatureScopes[3].name", Matchers.is("empty-file-4.txt"))
-                .body("signatures[0].signatureScopes[4].name", Matchers.is("data-file-5.txt"))
+                .body("signatures[0].signatureScopes.name", Matchers.containsInRelativeOrder(
+                        "data-file-1.txt", "empty-file-2.txt", "data-file-3.txt", "empty-file-4.txt", "data-file-5.txt"
+                ))
                 .body("signatures[0].warnings.size()", Matchers.is(3))
-                .body("signatures[0].warnings[0].content", Matchers.is("The trusted certificate does not match the trust service!"))
-                .body("signatures[0].warnings[1].content", Matchers.is("Data file 'empty-file-2.txt' is empty"))
-                .body("signatures[0].warnings[2].content", Matchers.is("Data file 'empty-file-4.txt' is empty"))
+                .body("signatures[0].warnings.content", Matchers.containsInAnyOrder(
+                        "The trusted certificate does not match the trust service!",
+                        "Data file 'empty-file-2.txt' is empty",
+                        "Data file 'empty-file-4.txt' is empty"
+                ))
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1));
     }

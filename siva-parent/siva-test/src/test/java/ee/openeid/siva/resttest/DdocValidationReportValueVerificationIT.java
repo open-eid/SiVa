@@ -63,6 +63,8 @@ public class DdocValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[0].signedBy", Matchers.is("LUKIN,LIISA,47710110274"))
                 .body("signatures[0].subjectDistinguishedName.commonName", Matchers.is("LUKIN,LIISA,47710110274"))
                 .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("47710110274"))
+                .body("signatures[0].subjectDistinguishedName.givenName", Matchers.is("LIISA"))
+                .body("signatures[0].subjectDistinguishedName.surname", Matchers.is("LUKIN"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())
                 .body("signatures[0].signatureScopes[0].name", Matchers.is("Glitter-rock-4_gallery.jpg"))

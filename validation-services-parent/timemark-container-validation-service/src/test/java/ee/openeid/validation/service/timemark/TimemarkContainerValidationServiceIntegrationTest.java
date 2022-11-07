@@ -132,22 +132,6 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     @Test
-    public void validatingAnXRoadBatchSignatureAsicContainerWithBdocValidatorThrowsMalformedDocumentException() throws Exception {
-        ValidationDocument validationDocument = buildValidationDocument(XROAD_BATCHSIGNATURE_CONTAINER);
-        expectedException.expect(MalformedDocumentException.class);
-        expectedException.expectMessage(DOCUMENT_MALFORMED_MESSAGE);
-        timemarkContainerValidationService.validateDocument(validationDocument);
-    }
-
-    @Test
-    public void validatingAnXRoadSimpleAsicContainerWithBdocValidatorThrowsMalformedDocumentException() throws Exception {
-        ValidationDocument validationDocument = buildValidationDocument(XROAD_SIMPLE_CONTAINER);
-        expectedException.expect(MalformedDocumentException.class);
-        expectedException.expectMessage(DOCUMENT_MALFORMED_MESSAGE);
-        timemarkContainerValidationService.validateDocument(validationDocument);
-    }
-
-    @Test
     public void bdocValidationResultShouldIncludeValidationReportPOJO() throws Exception {
         SimpleReport validationResult2Signatures = timemarkContainerValidationService.validateDocument(bdocValid2Signatures()).getSimpleReport();
         assertNotNull(validationResult2Signatures);
@@ -378,9 +362,11 @@ public class TimemarkContainerValidationServiceIntegrationTest {
 
         String expectedSerialNumber = "47711040261";
         String expectedCommonName = "SOLOVEI,JULIA,47711040261";
-        assertSubjectDNPresent(reports.getSimpleReport().getValidationConclusion().getSignatures().get(0), expectedSerialNumber, expectedCommonName);
-        assertSubjectDNPresent(reports.getDetailedReport().getValidationConclusion().getSignatures().get(0), expectedSerialNumber, expectedCommonName);
-        assertSubjectDNPresent(reports.getDiagnosticReport().getValidationConclusion().getSignatures().get(0), expectedSerialNumber, expectedCommonName);
+        String givenName = "JULIA";
+        String surname = "SOLOVEI";
+        assertSubjectDNPresent(reports.getSimpleReport().getValidationConclusion().getSignatures().get(0), expectedSerialNumber, expectedCommonName, givenName, surname);
+        assertSubjectDNPresent(reports.getDetailedReport().getValidationConclusion().getSignatures().get(0), expectedSerialNumber, expectedCommonName, givenName, surname);
+        assertSubjectDNPresent(reports.getDiagnosticReport().getValidationConclusion().getSignatures().get(0), expectedSerialNumber, expectedCommonName, givenName, surname);
     }
 
     @Test
@@ -455,11 +441,13 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     private void assertSubjectDNPresent(SignatureValidationData signature, String serialNumber, String
-            commonName) {
+            commonName, String givenName, String surname) {
         SubjectDistinguishedName subjectDistinguishedName = signature.getSubjectDistinguishedName();
         assertNotNull(subjectDistinguishedName);
         assertEquals(serialNumber, subjectDistinguishedName.getSerialNumber());
         assertEquals(commonName, subjectDistinguishedName.getCommonName());
+        assertEquals(givenName, subjectDistinguishedName.getGivenName());
+        assertEquals(surname, subjectDistinguishedName.getSurname());
     }
 
     private void testWithAllQualifiersSet(String policy) throws Exception {

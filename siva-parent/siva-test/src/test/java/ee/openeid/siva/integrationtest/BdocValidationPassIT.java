@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2017 - 2022 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -222,40 +222,6 @@ public class BdocValidationPassIT extends SiVaRestTests {
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].info.bestSignatureTime", Matchers.is("2016-10-11T09:36:10Z"))
-                .body("validSignaturesCount", Matchers.is(1));
-    }
-
-    /**
-     * TestCaseID: Bdoc-ValidationPass-8
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
-     *
-     * Title: Asice Baseline-LTA file
-     *
-     * Expected Result: The document should pass the validation. DD4J do not return certificates for LTA timestamp.
-     *
-     * File: EE_SER-AEX-B-LTA-V-24.asice
-     */
-    @Test
-    @Ignore("DD4J-615")
-    public void bdocBaselineLtaProfileValidSignature() {
-        setTestFilesDirectory("bdoc/live/timestamp/");
-        post(validationRequestForDD4j("EE_SER-AEX-B-LTA-V-24.asice", null, null))
-                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
-                .body("signatureForm", Matchers.is("ASiC-E"))
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LTA"))
-                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
-                .body("signatures[0].info.bestSignatureTime", Matchers.is("2014-10-30T18:50:35Z"))
-                .body("signatures[0].signedBy", Matchers.is("METSMA,RAUL,38207162766"))
-                .body("signatures[0].certificates.size()", Matchers.is(3))
-                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("METSMA,RAUL,38207162766"))
-                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].content",  Matchers.startsWith("MIIEmzCCA4OgAwIBAgIQFQe7NKtE06tRSY1vHfPijjANBgkqhk"))
-                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].commonName",  Matchers.is("BalTstamp QTSA TSU2"))
-                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].content",  Matchers.startsWith("MIIEtzCCA5+gAwIBAgIKFg5NNQAAAAADhzANBgkqhkiG9w0BAQ"))
-                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName",  Matchers.is("SK OCSP RESPONDER 2011"))
-                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].content",  Matchers.startsWith("MIIEvDCCA6SgAwIBAgIQcpyVmdruRVxNgzI3N/NZQTANBgkqhk"))
                 .body("validSignaturesCount", Matchers.is(1));
     }
 
@@ -627,14 +593,13 @@ public class BdocValidationPassIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT_TM))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
                 .body("signatures[0].signatureScopes.size()", Matchers.is(5))
-                .body("signatures[0].signatureScopes[0].name", Matchers.is("data-file-1.txt"))
-                .body("signatures[0].signatureScopes[1].name", Matchers.is("empty-file-2.txt"))
-                .body("signatures[0].signatureScopes[2].name", Matchers.is("data-file-3.txt"))
-                .body("signatures[0].signatureScopes[3].name", Matchers.is("empty-file-4.txt"))
-                .body("signatures[0].signatureScopes[4].name", Matchers.is("data-file-5.txt"))
+                .body("signatures[0].signatureScopes.name", Matchers.containsInRelativeOrder(
+                        "data-file-1.txt", "empty-file-2.txt", "data-file-3.txt", "empty-file-4.txt", "data-file-5.txt"
+                ))
                 .body("signatures[0].warnings.size()", Matchers.is(2))
-                .body("signatures[0].warnings[0].content", Matchers.is("Data file 'empty-file-2.txt' is empty"))
-                .body("signatures[0].warnings[1].content", Matchers.is("Data file 'empty-file-4.txt' is empty"))
+                .body("signatures[0].warnings.content", Matchers.containsInAnyOrder(
+                        "Data file 'empty-file-2.txt' is empty", "Data file 'empty-file-4.txt' is empty"
+                ))
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1));
     }

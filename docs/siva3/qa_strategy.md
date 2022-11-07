@@ -3,11 +3,10 @@
 The goal of this document is to give general overview of the used infrastructure, processes, schedule and actions to ensure good quality delivery. The document describes activities in the whole software development process. Analysis, development and testing are separated for the sake of structure and transparency although they are integral parts of the development cycle.
 This is living document and will be constantly updated as the project evolves.
 ## Environments and infrastructure
-![Enviroment](../img/siva/qa_strategy/siva3/Env.png)
 
 There are different test environments for quality assurance, depending on the nature and aim.
 
-1. TravisCI environment for public CI - Platform: Linux
+1. GitHub Actions environment for public CI - Platform: Linux
 2. Test environment for local test and load test - Platform: Linux
 
 Instructions how to set up test enviroment and run tests together with more info can be found in [SiVa GitHub page](https://github.com/open-eid/SiVa)
@@ -15,13 +14,12 @@ Instructions how to set up test enviroment and run tests together with more info
 System requirements:
 
 * At least 4GB of RAM on machine where the build is executed
-* Minimum required Java version is Java 8
+* Minimum required Java version is Java 11
 * SiVa project provided Maven Wrapper (./mvnw)
 
 Tools used:
 
-* TravisCI – is a continuous integration service used to build and test software projects hosted at GitHub
-* Jenkins – is an open source continuous integration tool written in Java.
+* GitHub Actions – is a continuous integration service used to build and test software projects hosted at GitHub
 * JMeter – tool for creating and running load tests.
 * IntelliJ IDEA – is a Java integrated development environment(IDE) for developing and executing automated tests locally
 * Apache Tomcat - is an open source servlet container developed by the Apache Software Foundation.
@@ -39,7 +37,7 @@ Customized process based on Kanban is used in the development. The process consi
 * Tasks are maintained through JIRA Kanban board
 * Daily team stand-ups are held
 * Tasks marked done are developed, tested and ready to be shipped
-* Bi-weekly meetings are held to give status on progress and discuss open questions
+* Weekly meetings are held to give status on progress and discuss open questions
 ![Development process](../img/siva/qa_strategy/siva3/developmentProcess.png)
 
 ### Issue lifecycle
@@ -76,10 +74,9 @@ Testing follows the principles described in reference document [(1) in Reference
 The goal is to automate as much of the testing process as possible, however some aspects of the testing will be carried out manually.
 As the development is carried out by the backlog priority the testing follows the same principle. After each feature release test cases, test automation code and test results will be available through GitHub.
 ![Testing schedule](../img/siva/qa_strategy/siva3/testingFlow.png)
-### Testing process
 
-All automatic tests, except load tests will follow the same execution process. The tests are ran automatically during the project build process by Travis CI after each push in GitHub.
-![Testing process](../img/siva/qa_strategy/siva3/TestProcess.png)
+### Testing process
+Automatic integration and system tests are ran against deployed SiVa instance (deployed either locally or through CI).
 
 ### Test case management
 Test cases are handled as integral part of test automation code. The same applies on manual tests, in manual test cases some portion of automation may be used to execute the tests but the results are verified manually. All the test cases and test code will be maintained in the GitHub.
@@ -134,8 +131,8 @@ The report will have at least the following elements:
 	* **Expected behavior** - expected outcome of the test sequence.
 	* **Actual behavior** - actual result of the test sequence. The description should be thorough enough to enable the debugging of the problem and to give objective base for severity assessment.
 	* **File attachments** - Test files, logs, images, ...
-### Test levels
 
+### Test levels
 **Integration testing**
 
 The scope of the tests is illustrated on the image below. The goal is to test the SiVA application API (both X-Road and REST/JSON) and to test the independent module capability for validation of specific type of file. Both valid and invalid inputs are tested. More info about testing specifics can be found in Test Plan [Integration testing](/siva/test_plan/#integration-test-introduction) section.
@@ -145,7 +142,6 @@ The scope of the tests is illustrated on the image below. The goal is to test th
 
 The scope of the tests is illustrated on the image below. The goal of the test is to test the entire length of signature validation process and to test supportive functions. In addition Demo application is tested. More info about testing specifics can be found in Test Plan [System testing](/siva/test_plan/#system-test-introduction) section.
 ![System testing](../img/siva/qa_strategy/siva3/systemTest.png)
-
 
 **Regression testing**
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Riigi Infosüsteemi Amet
+ * Copyright 2021 - 2022 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -16,6 +16,7 @@
 
 package ee.openeid.validation.service.generic.validator.container;
 
+import ee.openeid.validation.service.generic.validator.report.DssSimpleReportWrapper;
 import eu.europa.esig.dss.diagnostic.DiagnosticData;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlContainerInfo;
 import eu.europa.esig.dss.simplereport.SimpleReport;
@@ -28,6 +29,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.zip.ZipEntry;
+
+import static ee.openeid.validation.service.generic.validator.report.DssSimpleReportWrapper.createXmlMessage;
 
 /**
  * An implementation of {@link ZipBasedContainerValidator.EntryValidator} for validating that datafiles in an ASiC
@@ -77,12 +80,13 @@ public class AsicContainerDataFileSizeValidator implements ZipBasedContainerVali
      */
     @Override
     public void validate(@NonNull ZipEntry entry, @NonNull InputStream entryInputStream) throws IOException {
-        if (dataFiles.contains(entry.getName()) && isEmpty(entryInputStream)) {
+        if (simpleReport != null && dataFiles.contains(entry.getName()) && isEmpty(entryInputStream)) {
+            final DssSimpleReportWrapper dssSimpleReportWrapper = new DssSimpleReportWrapper(simpleReport);
             final String emptyDataFileWarning = String.format("Data file '%s' is empty", entry.getName());
 
             signatureIds.forEach(signatureId -> Optional
-                    .ofNullable(simpleReport.getWarnings(signatureId))
-                    .ifPresent(warnings -> warnings.add(emptyDataFileWarning))
+                    .ofNullable(dssSimpleReportWrapper.getSignatureAdESValidationXmlDetails(signatureId))
+                    .ifPresent(details -> details.getWarning().add(createXmlMessage(emptyDataFileWarning)))
             );
         }
     }

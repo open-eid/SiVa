@@ -60,14 +60,6 @@ public class StatisticsService {
         logStats(simpleValidationReport);
     }
 
-    public void publishXroadValidationStatistics(long validationDurationInNanos, ValidationConclusion validationConclusion) {
-        SimpleValidationReport simpleValidationReport = createValidationResult(
-                validationDurationInNanos,
-                validationConclusion,
-                SignatureTypeResolver::resolveXroadSignatureType);
-        logStats(simpleValidationReport);
-    }
-
     private SimpleValidationReport createValidationResult(long validationDurationInNanos,
                                                           ValidationConclusion report,
                                                           Supplier<String> signatureTypeSupplier) {

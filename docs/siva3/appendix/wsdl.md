@@ -623,6 +623,8 @@ See also [Interfaces](/siva3/interfaces) for more information about the SOAP int
         <xs:sequence>
             <xs:element name="SerialNumber" type="xs:string"/>
             <xs:element name="CommonName" type="xs:string"/>
+            <xs:element name="GivenName" type="xs:string"/>
+            <xs:element name="Surname" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 

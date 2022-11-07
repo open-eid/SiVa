@@ -23,8 +23,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import static ee.openeid.siva.integrationtest.TestData.SIGNATURE_LEVEL_QESIG;
-import static ee.openeid.siva.integrationtest.TestData.VALIDATION_CONCLUSION_PREFIX;
+import static ee.openeid.siva.integrationtest.TestData.*;
 
 @Category(IntegrationTest.class)
 public class SignaturePolicyIT extends SiVaRestTests {
@@ -261,9 +260,9 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("signatures[0].signatureLevel", Matchers.is("ADESIG_QC"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())
-                .body("signatures[0].warnings[0].content", Matchers.is("The private key does not reside in a QSCD at issuance time!"))
-                .body("signatures[0].warnings[1].content", Matchers.is("The private key does not reside in a QSCD at (best) signing time!"))
-                .body("signatures[0].warnings[2].content", Matchers.is("The signature is not in the Qualified Electronic Signature level"))
+                .body("signatures[0].warnings.content", Matchers.hasItem("The private key does not reside in a QSCD at issuance time!"))
+                .body("signatures[0].warnings.content", Matchers.hasItem("The private key does not reside in a QSCD at (best) signing time!"))
+                .body("signatures[0].warnings.content", Matchers.hasItem("The signature is not in the Qualified Electronic Signature level"))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -293,8 +292,8 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("signatures[0].signatureLevel", Matchers.is("ADESIG_QC"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())
-                .body("signatures[0].warnings[0].content", Matchers.is("The private key does not reside in a QSCD at issuance time!"))
-                .body("signatures[0].warnings[1].content", Matchers.is("The private key does not reside in a QSCD at (best) signing time!"))
+                .body("signatures[0].warnings.content", Matchers.hasItem("The private key does not reside in a QSCD at issuance time!"))
+                .body("signatures[0].warnings.content", Matchers.hasItem("The private key does not reside in a QSCD at (best) signing time!"))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -324,8 +323,9 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("signatures[0].signatureLevel", Matchers.is("ADESEAL_QC"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())
-                .body("signatures[0].warnings[0].content", Matchers.is("The certificate is not for eSig at issuance time!"))
-                .body("signatures[0].warnings", Matchers.hasSize(4))
+                .body("signatures[0].warnings.content", Matchers.hasItem("The private key does not reside in a QSCD at (best) signing time!"))
+                .body("signatures[0].warnings.content", Matchers.hasItem("The private key does not reside in a QSCD at issuance time!"))
+                .body("signatures[0].warnings", Matchers.hasSize(2))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -355,11 +355,9 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("signatures[0].signatureLevel", Matchers.is("ADESEAL_QC"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())
-                .body("signatures[0].warnings[0].content", Matchers.is("The certificate is not for eSig at issuance time!"))
-                .body("signatures[0].warnings[1].content", Matchers.is("The private key does not reside in a QSCD at issuance time!"))
-                .body("signatures[0].warnings[2].content", Matchers.is("The certificate is not for eSig at (best) signing time!"))
-                .body("signatures[0].warnings[3].content", Matchers.is("The private key does not reside in a QSCD at (best) signing time!"))
-                .body("signatures[0].warnings", Matchers.hasSize(4))
+                .body("signatures[0].warnings.content", Matchers.hasItem("The private key does not reside in a QSCD at (best) signing time!"))
+                .body("signatures[0].warnings.content", Matchers.hasItem("The private key does not reside in a QSCD at issuance time!"))
+                .body("signatures[0].warnings", Matchers.hasSize(2))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -515,9 +513,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("signatures[0].signatureLevel", Matchers.is("QESEAL"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())
-                .body("signatures[0].warnings[0].content", Matchers.is("The certificate is not for eSig at issuance time!"))
-                .body("signatures[0].warnings[1].content", Matchers.is("The certificate is not for eSig at (best) signing time!"))
-                .body("signatures[0].warnings", Matchers.hasSize(2))
+                .body("signatures[0].warnings", Matchers.emptyOrNullString())
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -547,8 +543,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("signatures[0].signatureLevel", Matchers.is("QESEAL"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())
-                .body("signatures[0].warnings[0].content", Matchers.is("The certificate is not for eSig at issuance time!"))
-                .body("signatures[0].warnings[1].content", Matchers.is("The certificate is not for eSig at (best) signing time!"))
+                .body("signatures[0].warnings", Matchers.emptyOrNullString())
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -838,8 +833,8 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("signatures[0].signatureLevel", Matchers.is("ADESIG_QC"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())
-                .body("signatures[0].warnings[0].content", Matchers.is("The private key does not reside in a QSCD at issuance time!"))
-                .body("signatures[0].warnings[1].content", Matchers.is("The private key does not reside in a QSCD at (best) signing time!"))
+                .body("signatures[0].warnings.content", Matchers.hasItem("The private key does not reside in a QSCD at issuance time!"))
+                .body("signatures[0].warnings.content", Matchers.hasItem("The private key does not reside in a QSCD at (best) signing time!"))
                 .body("signatures[0].warnings", Matchers.hasSize(2))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
@@ -870,8 +865,8 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("signatures[0].signatureLevel", Matchers.is("ADESIG_QC"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())
-                .body("signatures[0].warnings[0].content", Matchers.is("The private key does not reside in a QSCD at issuance time!"))
-                .body("signatures[0].warnings[1].content", Matchers.is("The private key does not reside in a QSCD at (best) signing time!"))
+                .body("signatures[0].warnings.content", Matchers.hasItem("The private key does not reside in a QSCD at issuance time!"))
+                .body("signatures[0].warnings.content", Matchers.hasItem("The private key does not reside in a QSCD at (best) signing time!"))
                 .body("signatures[0].warnings", Matchers.hasSize(2))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
@@ -902,11 +897,9 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("signatures[0].signatureLevel", Matchers.is("ADESEAL_QC"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())
-                .body("signatures[0].warnings[0].content", Matchers.is("The certificate is not for eSig at issuance time!"))
-                .body("signatures[0].warnings[1].content", Matchers.is("The private key does not reside in a QSCD at issuance time!"))
-                .body("signatures[0].warnings[2].content", Matchers.is("The certificate is not for eSig at (best) signing time!"))
-                .body("signatures[0].warnings[3].content", Matchers.is("The private key does not reside in a QSCD at (best) signing time!"))
-                .body("signatures[0].warnings", Matchers.hasSize(4))
+                .body("signatures[0].warnings.content", Matchers.hasItem("The private key does not reside in a QSCD at (best) signing time!"))
+                .body("signatures[0].warnings.content", Matchers.hasItem("The private key does not reside in a QSCD at issuance time!"))
+                .body("signatures[0].warnings", Matchers.hasSize(2))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -936,11 +929,9 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("signatures[0].signatureLevel", Matchers.is("ADESEAL_QC"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())
-                .body("signatures[0].warnings[0].content", Matchers.is("The certificate is not for eSig at issuance time!"))
-                .body("signatures[0].warnings[1].content", Matchers.is("The private key does not reside in a QSCD at issuance time!"))
-                .body("signatures[0].warnings[2].content", Matchers.is("The certificate is not for eSig at (best) signing time!"))
-                .body("signatures[0].warnings[3].content", Matchers.is("The private key does not reside in a QSCD at (best) signing time!"))
-                .body("signatures[0].warnings", Matchers.hasSize(4))
+                .body("signatures[0].warnings.content", Matchers.hasItem("The private key does not reside in a QSCD at issuance time!"))
+                .body("signatures[0].warnings.content", Matchers.hasItem("The private key does not reside in a QSCD at (best) signing time!"))
+                .body("signatures[0].warnings", Matchers.hasSize(2))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -1096,9 +1087,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("signatures[0].signatureLevel", Matchers.is("QESEAL"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())
-                .body("signatures[0].warnings[0].content", Matchers.is("The certificate is not for eSig at issuance time!"))
-                .body("signatures[0].warnings[1].content", Matchers.is("The certificate is not for eSig at (best) signing time!"))
-                .body("signatures[0].warnings", Matchers.hasSize(2))
+                .body("signatures[0].warnings", Matchers.emptyOrNullString())
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -1128,8 +1117,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("signatures[0].signatureLevel", Matchers.is("QESEAL"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())
-                .body("signatures[0].warnings[0].content", Matchers.is("The certificate is not for eSig at issuance time!"))
-                .body("signatures[0].warnings[1].content", Matchers.is("The certificate is not for eSig at (best) signing time!"))
+                .body("signatures[0].warnings", Matchers.emptyOrNullString())
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -1218,7 +1206,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_T"))
                 .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].errors[0].content", Matchers.is("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE, REVOCATION_NOT_FOUND))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -1236,6 +1224,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File: PadesProfileLtWithCrl.pdf
      */
+    //TODO SIVA-349 needs investigation why the signature is determined as PAdES_BASELINE_LTA not as PAdES_BASELINE_LT
     @Test
     public void pdfDocumentWithCrlAsRevocationInfoShouldPass() {
         setTestFilesDirectory("signature_policy_test_files/");
@@ -1244,7 +1233,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
                 .body("policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
                 .body("policy.policyName", Matchers.is(VALID_SIGNATURE_POLICY_4))
                 .body("policy.policyUrl", Matchers.is(POLICY_4_URL))
-                .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
+                //.body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("QESIG"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())

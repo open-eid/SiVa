@@ -433,35 +433,6 @@ public class ValidationRequestIT extends SiVaRestTests {
     }
 
     /**
-     * TestCaseID: ValidationRequest-Parameters-19
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
-     *
-     * Title: DocumentType parameter is XROAD
-     *
-     * Expected Result: Xroad validatior is used for validation and report is returned
-     *
-     * File: xroad-simple.asice
-     */
-    @Test
-    public void validationRequestDocumentTypeInvalid() {
-        setTestFilesDirectory("xroad/");
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put(DOCUMENT, encodedString);
-        jsonObject.put(FILENAME, "xroad-simple.asice");
-        jsonObject.put(DOCUMENT_TYPE, "NotXroad");
-
-        post(jsonObject.toString())
-                .then()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("requestErrors[0].key", Matchers.is(DOCUMENT_TYPE))
-                .body("requestErrors[0].message", Matchers.containsString(INVALID_DOCUMENT_TYPE));
-    }
-
-    /**
      * TestCaseID: ValidationRequest-Parameters-20
      *
      * TestType: Automated
@@ -748,6 +719,31 @@ public class ValidationRequestIT extends SiVaRestTests {
                 .body("validationReport.validationProcess", emptyOrNullString())
                 .body("validationReport.diagnosticData.documentName", equalTo("singleValidSignatureTS.asice"))
                 .body(VALIDATION_CONCLUSION_PREFIX + "validSignaturesCount", equalTo(1));
+    }
+
+    /**
+     * TestCaseID: ValidationRequest-Parameters-32
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
+     *
+     * Title: DocumentType parameter is not allowed
+     *
+     * Expected Result: Error is returned
+     *
+     * File: xroad-simple.asice
+     */
+
+    @Test
+    public void validationRequestWithDocumentType() {
+        setTestFilesDirectory("xroad/");
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
+
+        post(validationRequestWithDocumentTypeValidKeys(encodedString, "xroad-simple.asice", "xroad", VALID_SIGNATURE_POLICY_3))
+                .then().statusCode(400)
+                .body("requestErrors[0].key", Matchers.is("documentType"))
+                .body("requestErrors[0].message", Matchers.is(DOCUMENT_TYPE_NOT_ACCEPTED));
     }
 
     /**

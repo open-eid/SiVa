@@ -244,6 +244,8 @@ public class ValidationReportSoapResponseTransformer {
         SubjectDistinguishedName responseSubjectDN = new SubjectDistinguishedName();
         responseSubjectDN.setCommonName(subjectDistinguishedName.getCommonName());
         responseSubjectDN.setSerialNumber(subjectDistinguishedName.getSerialNumber());
+        responseSubjectDN.setGivenName(subjectDistinguishedName.getGivenName());
+        responseSubjectDN.setSurname(subjectDistinguishedName.getSurname());
         return responseSubjectDN;
     }
 

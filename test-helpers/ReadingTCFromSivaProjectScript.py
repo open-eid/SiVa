@@ -44,7 +44,11 @@ for root, dirs, filenames in os.walk(source_in_dir):
             elif '* File:' in a_line:
                 Test_cases.write("  "+a_line.lstrip().rstrip()+"\n\n")
             elif '@Ignore' in a_line:
-                Test_cases.write("  **Attention! This test is disabled: "+a_line[20:].rstrip()+"\n\n")
+                a_line = a_line.replace("@Ignore","")
+                if '//TODO:' in a_line:
+                    Test_cases.write("  **Attention! This test is disabled: "+a_line[12:].strip()+"\n\n")
+                else:
+                    Test_cases.write("  **Attention! This test is disabled: "+a_line.strip()+"\n\n")
         a_file.close()
 Test_cases.close()
             

@@ -47,29 +47,6 @@
             "details"
           ]
         },
-        "link1": {
-          "type": "object",
-          "properties": {
-            "status": {
-              "type": "string"
-            },
-            "details": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "name"
-              ]
-            }
-          },
-          "required": [
-            "status",
-            "details"
-          ]
-        },
         "ping": {
           "type": "object",
           "properties": {
@@ -84,7 +61,6 @@
       },
       "required": [
         "health",
-        "link1",
         "ping"
       ]
     }

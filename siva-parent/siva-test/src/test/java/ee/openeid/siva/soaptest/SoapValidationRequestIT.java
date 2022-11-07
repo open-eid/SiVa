@@ -24,6 +24,7 @@ import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.springframework.http.HttpStatus;
 
 import static ee.openeid.siva.integrationtest.TestData.*;
 import static org.hamcrest.Matchers.*;
@@ -98,59 +99,13 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
-    public void validationRequestInvalidDocumentType() {
+    public void soapValidationRequestDocumentTypeShouldReturnError() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.cdoc", "CDOC", VALID_SIGNATURE_POLICY_3))
+        post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "XROAD", VALID_SIGNATURE_POLICY_3))
                 .then()
                 .statusCode(200)
                 .body(SOAP_ERROR_RESPONSE_PREFIX + ".faultcode", Matchers.is(CLIENT_FAULT))
-                .body(SOAP_ERROR_RESPONSE_PREFIX + ".faultstring", Matchers.is(INVALID_DOCUMENT_TYPE));
-    }
-
-    /**
-     * TestCaseID: Soap-ValidationRequest-4
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
-     *
-     * Title: Verification of case sensitivity in document type
-     *
-     * Expected Result: Error is returned as WSDL defines the allowed values
-     *
-     * File: Valid_IDCard_MobID_signatures.bdoc
-     */
-    @Test
-    public void soapValidationRequestCaseChangeDocumentType() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "bdoC", ""))
-                .then()
-                .statusCode(200)
-                .body(SOAP_ERROR_RESPONSE_PREFIX + ".faultcode", Matchers.is(CLIENT_FAULT))
-                .body(SOAP_ERROR_RESPONSE_PREFIX + ".faultstring", Matchers.is(INVALID_DOCUMENT_TYPE));
-    }
-
-    /**
-     * TestCaseID: Soap-ValidationRequest-5
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
-     *
-     * Title: Request has XML as document type (special case, XML is similar to ddoc and was a accepted document type in earlier versions)
-     *
-     * Expected Result: Error is given
-     *
-     * File: Valid_IDCard_MobID_signatures.bdoc
-     */
-    @Test
-    public void soapValidationRequestXmlDocument() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
-        post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "XML", ""))
-                .then()
-                .statusCode(200)
-                .body(SOAP_ERROR_RESPONSE_PREFIX + ".faultcode", Matchers.is(CLIENT_FAULT))
-                .body(SOAP_ERROR_RESPONSE_PREFIX + ".faultstring", Matchers.is(INVALID_DOCUMENT_TYPE));
+                .body(SOAP_ERROR_RESPONSE_PREFIX + ".faultstring", Matchers.is(DOCUMENT_TYPE_NOT_ACCEPTED));
     }
 
     /**
@@ -360,7 +315,6 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                         "         <soap:ValidationRequest>\n" +
                         "            <Document>" + encodedString + "</Document>\n" +
                         "            <Filename>&xxe</Filename>\n" +
-                        "            <DocumentType>BDOC</DocumentType>\n" +
                         "         </soap:ValidationRequest>\n" +
                         "      </soap:ValidateDocument>\n" +
                         "   </soapenv:Body>\n" +
@@ -395,7 +349,6 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 "         <soap:ValidationRequest>\n" +
                 "            <Document>" + encodedString + "</Document>\n" +
                 "            <Filename>Valid_IDCard_MobID_signatures.bdoc</Filename>\n" +
-                "            <DocumentType>BDOC</DocumentType>\n" +
                 "            <SigmaturePolicy>" + "" + "</SignaturePolicy>" +
                 "         </soap:ValidationRequest>\n" +
                 "      </soap:ValidateDocument>\n" +
@@ -422,7 +375,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      */
     @Test
     public void soapValidationRequestWithEmptyDocument() {
-        post(validationRequestForDocumentExtended("", "Valid_IDCard_MobID_signatures.bdoc", "BDOC", VALID_SIGNATURE_POLICY_3))
+        post(validationRequestForDocumentExtended("", "Valid_IDCard_MobID_signatures.bdoc", null, VALID_SIGNATURE_POLICY_3))
                 .then()
                 .statusCode(200)
                 .body(SOAP_ERROR_RESPONSE_PREFIX + ".faultcode", Matchers.is(CLIENT_FAULT))
@@ -475,8 +428,33 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body(SOAP_ERROR_RESPONSE_PREFIX + ".faultstring", Matchers.is(INVALID_SIGNATURE_POLICY));
     }
 
+
     /**
      * TestCaseID: Soap-ValidationRequest-17
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
+     *
+     * Title: Request with wrong signature policy
+     *
+     * Expected Result: Error is returned
+     *
+     * File: Valid_IDCard_MobID_signatures.bdoc
+     */
+    @Test
+    public void soapValidationRequestWrongSignaturePolicy() {
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
+        post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", null, INVALID_SIGNATURE_POLICY))
+                .then()
+                .rootPath(SOAP_ERROR_RESPONSE_PREFIX)
+                .statusCode(HttpStatus.OK.value())
+                .body("faultcode", Matchers.is(CLIENT_FAULT))
+                .body("faultstring", Matchers.is("Invalid signature policy: " + INVALID_SIGNATURE_POLICY + "; Available abstractPolicies: [" + VALID_SIGNATURE_POLICY_3 + ", " + VALID_SIGNATURE_POLICY_4 + "]"));
+    }
+
+    /**
+     * TestCaseID: Soap-ValidationRequest-18
      *
      * TestType: Automated
      *
@@ -502,7 +480,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
     }
 
     /**
-     * TestCaseID: Soap-ValidationRequest-18
+     * TestCaseID: Soap-ValidationRequest-19
      *
      * TestType: Automated
      *
@@ -528,7 +506,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
     }
 
     /**
-     * TestCaseID: Soap-ValidationRequest-19
+     * TestCaseID: Soap-ValidationRequest-20
      *
      * TestType: Automated
      *
@@ -553,7 +531,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
     }
 
     /**
-     * TestCaseID: Soap-ValidationRequest-20
+     * TestCaseID: Soap-ValidationRequest-21
      *
      * TestType: Automated
      *
@@ -688,31 +666,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .body(SOAP_VALIDATION_CONCLUSION_PREFIX + ".ValidSignaturesCount", Matchers.is("2"));
     }
 
-    /**
-     * TestCaseID: Soap-DdocValidationRequest-7
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
-     *
-     * Title: Mismatch in documentType and actual document (bdoc and xroad)
-     *
-     * Expected Result: Error is returned
-     *
-     * File: xroad-simple.asice
-     */
-    @Test
-    public void soapBdocValidationRequestNotMatchingDocumentTypeAndActualFileXroad() {
-        setTestFilesDirectory("xroad/");
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
-        post(validationRequestForDocumentExtended(encodedString, "xroad-simple.ddoc", null, VALID_SIGNATURE_POLICY_3))
-                .then()
-                .statusCode(200)
-                .body(SOAP_ERROR_RESPONSE_PREFIX + ".faultcode", Matchers.is(CLIENT_FAULT))
-                .body(SOAP_ERROR_RESPONSE_PREFIX + ".faultstring", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
-    }
-
-    /**
+     /**
      * TestCaseID: Soap-DdocValidationRequest-1
      *
      * TestType: Automated
@@ -1148,72 +1102,6 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
         ValidatableResponse response = post(validationRequestForDocumentReportType("Mac_AS0099904_EsimeneAmetlikSKTestElliptilistega_TS.asice", REPORT_TYPE_DIAGNOSTIC))
                 .then();
         isDiagnosticReport(response);
-    }
-
-    /**
-     * TestCaseID: Soap-ValidationRequest-XROAD-ReportType-1
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
-     *
-     * Title: Simple report is requested
-     *
-     * Expected Result: Simple report is returned
-     *
-     * File: xroad-simple.asice
-     */
-    @Test
-    public void soapXROADValidationRequestSimpleReportType() {
-        setTestFilesDirectory("xroad/");
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
-        ValidatableResponse response = post(validationRequestForDocumentExtendedAll(encodedString, "xroad-simple.asice", REPORT_TYPE_SIMPLE, "XROAD", SIGNATURE_POLICY_1))
-                .then();
-        isSimpleReport(response);
-    }
-
-    /**
-     * TestCaseID: Soap-ValidationRequest-XROAD-ReportType-2
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
-     *
-     * Title: Detailed report is requested
-     *
-     * Expected Result: Simple report is returned
-     *
-     * File: xroad-simple.asice
-     */
-    @Test
-    public void soapXROADValidationRequestDetailedReportType() {
-        setTestFilesDirectory("xroad/");
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
-        ValidatableResponse response = post(validationRequestForDocumentExtendedAll(encodedString, "xroad-simple.asice", REPORT_TYPE_DETAILED, "XROAD", SIGNATURE_POLICY_1))
-                .then();
-        isSimpleReport(response);
-    }
-
-    /**
-     * TestCaseID: Soap-ValidationRequest-XROAD-ReportType-3
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
-     *
-     * Title: Diagnostic report is requested
-     *
-     * Expected Result: Simple report is returned
-     *
-     * File: xroad-simple.asice
-     */
-    @Test
-    public void soapXROADValidationRequestDiagnosticReportType() {
-        setTestFilesDirectory("xroad/");
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
-        ValidatableResponse response = post(validationRequestForDocumentExtendedAll(encodedString, "xroad-simple.asice", REPORT_TYPE_DIAGNOSTIC, "XROAD", SIGNATURE_POLICY_1))
-                .then();
-        isSimpleReport(response);
     }
 
     @Override

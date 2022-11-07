@@ -20,7 +20,7 @@
     <parent>
         <artifactId>siva-parent</artifactId>
         <groupId>ee.openid.siva</groupId>
-        <version>3.5.4</version>
+        <version>3.6.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -41,11 +41,6 @@
         <dependency>
             <groupId>ee.openid.siva</groupId>
             <artifactId>siva-sample-application</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>ee.openid.siva</groupId>
-            <artifactId>xroad-validation-service</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

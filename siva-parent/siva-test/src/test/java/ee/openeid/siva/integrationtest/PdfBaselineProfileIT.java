@@ -24,7 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import static ee.openeid.siva.integrationtest.TestData.VALIDATION_CONCLUSION_PREFIX;
+import static ee.openeid.siva.integrationtest.TestData.*;
 
 @Category(IntegrationTest.class)
 public class PdfBaselineProfileIT extends SiVaRestTests{
@@ -63,7 +63,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_B"))
                 .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE))
                 .body("signatures[0].warnings", Matchers.hasSize(3))
                 .body("signatures[0].certificates.size()", Matchers.is(1))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("SINIVEE,VEIKO,36706020210"))
@@ -93,7 +93,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_T"))
                 .body("signatures[0].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[0].errors.content", Matchers.hasItems("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[0].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE))
                 .body("signatures[0].warnings", Matchers.hasSize(1))
                 .body("signatures[0].certificates.size()", Matchers.is(2))
                 .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("JUHANSON,ALLAN,38608014910"))
@@ -218,6 +218,12 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signatures[0].errors", Matchers.emptyOrNullString())
                 .body("signatures[0].warnings", Matchers.emptyOrNullString())
+                .body("signatures[0].certificates.size()", Matchers.is(4))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].commonName",  Matchers.is("JUHANSON,ALLAN,38608014910"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNING'}[0].issuer.commonName",  Matchers.is("ESTEID-SK 2015"))
+                .body("signatures[0].certificates.findAll{it.type == 'SIGNATURE_TIMESTAMP'}[0].commonName",  Matchers.is("SK TIMESTAMPING AUTHORITY"))
+                .body("signatures[0].certificates.findAll{it.type == 'ARCHIVE_TIMESTAMP'}[0].commonName",  Matchers.is("SK TIMESTAMPING AUTHORITY"))
+                .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName",  Matchers.is("SK OCSP RESPONDER 2011"))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(1));
     }
@@ -245,8 +251,8 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
                 .body("signatures[1].signatureFormat", Matchers.is("PAdES_BASELINE_B"))
                 .body("signatures[1].signatureLevel", Matchers.is("NOT_ADES"))
                 .body("signatures[1].indication", Matchers.is("TOTAL-FAILED"))
-                .body("signatures[1].errors[0].content", Matchers.is("The certificate is not related to a granted status!"))
-                .body("signatures[1].warnings[0].content", Matchers.is("The signature/seal is not a valid AdES digital signature!"))
+                .body("signatures[1].errors.content", Matchers.hasItem(CERT_NOT_GRANTED))
+                .body("signatures[1].warnings.content", Matchers.hasItem(VALID_VALIDATION_PROCESS_VALUE_35))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(2));
 
@@ -270,10 +276,10 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
         post(validationRequestFor("hellopades-lt1-lt2-wrongDigestValue.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatures[1].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
-                .body("signatures[1].signatureLevel", Matchers.is("NOT_ADES_QC_QSCD"))
+                .body("signatures[1].signatureLevel", Matchers.is("NOT_ADES"))
                 .body("signatures[1].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[1].subIndication", Matchers.is("HASH_FAILURE"))
-                .body("signatures[1].errors[0].content", Matchers.is("The result of the LTV validation process is not acceptable to continue the process!"))
+                .body("signatures[1].errors[0].content", Matchers.is(CERT_VALIDATION_NOT_CONCLUSIVE))
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("signaturesCount", Matchers.is(2));
     }

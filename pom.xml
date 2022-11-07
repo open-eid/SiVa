@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2016 - 2021 Riigi Infosüsteemi Amet
+  ~ Copyright 2016 - 2022 Riigi Infosüsteemi Amet
   ~
   ~ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
   ~ the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -22,7 +22,7 @@
 
     <groupId>ee.openid.siva</groupId>
     <artifactId>siva</artifactId>
-    <version>3.5.4</version>
+    <version>3.6.0</version>
     <packaging>pom</packaging>
     <name>SiVa Digitally signed documents validation service</name>
     <url>https://github.com/open-eid/SiVa</url>
@@ -88,6 +88,13 @@
                 <role>quality assurance</role>
             </roles>
         </developer>
+        <developer>
+            <id>rsarendus</id>
+            <name>Risto Seene</name>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
     </developers>
 
     <!--
@@ -107,18 +114,18 @@
 
         <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss'Z'</maven.build.timestamp.format>
 
-        <bouncycastle.version>1.68</bouncycastle.version>
-        <dss.version>5.7.d4j.2</dss.version>
+        <bouncycastle.version>1.70</bouncycastle.version>
+        <dss.version>5.9.d4j.1</dss.version>
         <commons.codec.version>1.15</commons.codec.version>
         <commons.collections.version>4.4</commons.collections.version>
         <commons.io.version>2.11.0</commons.io.version>
-        <jackson.version>2.13.3</jackson.version>
-        <json.version>20220320</json.version>
+        <jackson.version>2.13.4</jackson.version>
+        <json.version>20220924</json.version>
         <logback.version>1.2.11</logback.version>
         <lombok.version>1.18.24</lombok.version>
-        <snakeyaml.version>1.30</snakeyaml.version>
-        <spring.boot.version>2.6.7</spring.boot.version>
-        <xmlsec.version>2.1.8</xmlsec.version>
+        <snakeyaml.version>1.33</snakeyaml.version>
+        <spring.boot.version>2.7.4</spring.boot.version>
+        <xmlsec.version>2.2.4</xmlsec.version>
 
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
@@ -131,7 +138,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.4.1</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -146,7 +153,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-pmd-plugin</artifactId>
-                <version>3.16.0</version>
+                <version>3.19.0</version>
             </plugin>
         </plugins>
     </reporting>
@@ -175,14 +182,13 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.7</version>
+                <version>0.8.8</version>
                 <configuration>
                     <excludes>
                         <exclude>**/*Application.*</exclude>
                         <exclude>**/*Configuration.*</exclude>
                         <exclude>**/extra-jars/**</exclude>
                         <exclude>**/ext-lib/**</exclude>
-                        <exclude>**/xroad-jars/**</exclude>
                         <exclude>**/ee/openeid/siva/webapp/soap/*.class</exclude>
                         <exclude>**/eu/x_road/xsd/**</exclude>
                         <exclude>**/eu/europa/**</exclude>
@@ -218,14 +224,14 @@
         <profile>
             <id>dependency-check</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <activeByDefault>false</activeByDefault>
             </activation>
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.owasp</groupId>
                         <artifactId>dependency-check-maven</artifactId>
-                        <version>7.1.0</version>
+                        <version>7.2.1</version>
                         <configuration>
                             <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
                             <failOnError>false</failOnError>

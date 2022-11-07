@@ -16,7 +16,6 @@
 
 package ee.openeid.siva.webapp.request.validation;
 
-import ee.openeid.siva.proxy.document.DocumentType;
 import ee.openeid.siva.proxy.document.ReportType;
 import eu.europa.esig.dss.enumerations.DigestAlgorithm;
 
@@ -29,7 +28,7 @@ public enum AcceptedValue {
     DOCUMENT {
         @Override
         public List<String> getAcceptedValues() {
-            return Collections.singletonList(DocumentType.XROAD.name());
+            return Collections.emptyList();
         }
     }, REPORT_TYPE {
         @Override

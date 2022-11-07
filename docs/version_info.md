@@ -16,3 +16,4 @@
 | 1.10               | 16.06.2021      | Risto Seene, Markus Kivisalu                          | SIVA 3.5 documentation additions                                              |
 | 1.11               | 20.04.2022      | Aare Nurm                                             | Roadmap added                                                                 |
 | 1.12               | 20.05.2022      | Aare Nurm                                             | SignedBy field description update                                             |
+| 1.13               | 07.11.2022      | Aare Nurm                                             | SIVA 3.6 documentation additions. Removal of xroad-validation-service         |

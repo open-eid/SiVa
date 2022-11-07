@@ -52,7 +52,6 @@ The testing of the SiVa web service is divided into sections based on the softwa
   * ASICE container signature validation
   * ASIC-S container signature validation
   * PDF signature validation
-  * X-Road ASIC-E signature validation
   * XAdES hashcode validation
 
 The goal is to focus testing on functionalities implemented in SiVa web service application. Functionalities provided by [Validation libraries](../overview/#Validation-libraries) are not explicitly tested.
@@ -108,9 +107,9 @@ SiVa web service returns uniform Validation Report on all the supported document
 
 Following areas are tested on output (Validation Report):
 
-  * JSON structure on DDOC, BDOC, PDF, ASIC-E, ASIC-S, XAdES hashcode and ASICE-E X-Road document types
-  * Presence of the mandatory elements on DDOC, BDOC, PDF, ASIC-E, ASIC-S, XAdES hashcode and ASICE-E X-Road document types
-  * Presence of optional elements on DDOC, BDOC, PDF, ASIC-E, ASIC-S, XAdES hashcode and ASICE-E X-Road document types
+  * JSON structure on DDOC, BDOC, PDF, ASIC-E, ASIC-S, XAdES hashcode 
+  * Presence of the mandatory elements on DDOC, BDOC, PDF, ASIC-E, ASIC-S, XAdES hashcode
+  * Presence of optional elements on DDOC, BDOC, PDF, ASIC-E, ASIC-S, XAdES hashcode
   * Verification of expected values
   * JSON structure on containers without signatures
 
@@ -170,8 +169,8 @@ SiVa web service returns uniform Validation Report on all the supported document
 
 Following areas are tested on output (Validation Report):
 
-  * Presence of the mandatory elements on DDOC, BDOC, PDF, ASIC-S ASIC-E, XAdES hashcode and ASICE-E X-Road document types
-  * Presence of optional elements on DDOC, BDOC, PDF, ASIC-S, ASIC-E, XAdES hashcode and ASICE-E X-Road document types
+  * Presence of the mandatory elements on DDOC, BDOC, PDF, ASIC-S ASIC-E, XAdES hashcode
+  * Presence of optional elements on DDOC, BDOC, PDF, ASIC-S, ASIC-E, XAdES hashcode and
   * Verification of expected values
 
 Specific test cases and input files can be found in:
@@ -314,24 +313,6 @@ Specific test cases and input files can be found in:
   * [PdfValidationPassIT.java](../appendix/test_cases/#pdfvalidationpassitjava)
   * [LargeFileIT.java](../appendix/test_cases/#largefileitjava)
 
-## Testing of X-Road ASIC-E container signature validation
-
-The goal of the ASICE container signature validation testing is to check that the validation results given by X-Road signature validation utility are properly presented in validation report.
-
-The testing of ASICE signatures consists of following main cases:
-
-  * Containers with valid signature(s) are validated
-  * Containers with invalid signature(s) are validated
-
-Specific test cases and input files can be found in:
-
-  * [XroadValidationPassIT.java](../appendix/test_cases/#xroadvalidationpassitjava)
-  * [XroadValidationFailIT.java](../appendix/test_cases/#xroadvalidationfailitjava)
-
-**What is not tested:**
-
-  * Verification of different causes in container for invalid result is out of scope.
-
 ## Testing of Data Files Extraction
 
 The goal of the Data Files Extraction testing  is to check if right data files returned for DDOC container and error messages for other types of containers.
@@ -400,7 +381,7 @@ Following areas are covered for document validation:
   * Validation of invalid signatur
   * Validation that returns Soap error
 
-All of the above test cases are run with BDOC, DDOC, PDF, ASIC-S and X-Road ASiC-E containers. 
+All of the above test cases are run with BDOC, DDOC, PDF and ASIC-S containers. 
 
 Following areas are covered for file extraction:
 
@@ -419,7 +400,6 @@ Specific test cases and input files can be found in:
 Following areas are covered:
 
   * SiVa Web Application configuration
-  * X-Road validation service configuration
   * Sample application configuration
 
 Specific test cases can be found in:

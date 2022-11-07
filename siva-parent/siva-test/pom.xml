@@ -19,7 +19,7 @@
     <parent>
         <artifactId>siva-parent</artifactId>
         <groupId>ee.openid.siva</groupId>
-        <version>3.5.4</version>
+        <version>3.6.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -174,7 +174,7 @@
                                     <value>${project.build.directory}/allure-results</value>
                                 </property>
                             </systemProperties>
-                            <groups>ee.openeid.siva.xroadtest.configuration.XroadIntegrationTest,ee.openeid.siva.integrationtest.configuration.IntegrationTest</groups>
+                            <groups>ee.openeid.siva.integrationtest.configuration.IntegrationTest</groups>
                         </configuration>
                         <dependencies>
                             <dependency>
@@ -203,7 +203,7 @@
                     </plugin>
                     <plugin>
                         <artifactId>maven-failsafe-plugin</artifactId>
-                        <version>3.0.0-M5</version>
+                        <version>3.0.0-M7</version>
                         <configuration>
                             <forkCount>1</forkCount>
                             <reuseForks>true</reuseForks>

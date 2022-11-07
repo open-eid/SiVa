@@ -18,7 +18,7 @@
     <parent>
         <artifactId>siva-parent</artifactId>
         <groupId>ee.openid.siva</groupId>
-        <version>3.5.4</version>
+        <version>3.6.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -28,7 +28,7 @@
     <packaging>${packaging.type}</packaging>
 
     <properties>
-        <jade4j.version>1.3.1</jade4j.version>
+        <pug4j.version>2.0.6</pug4j.version>
     </properties>
 
     <dependencies>
@@ -64,31 +64,20 @@
 
         <!-- Spring Boot Jade -->
         <dependency>
-            <groupId>com.domingosuarez.boot</groupId>
-            <artifactId>jade4j-spring-boot-starter</artifactId>
-            <version>2.0.4.RELEASE</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>de.neuland-bfi</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>de.neuland-bfi</groupId>
+            <artifactId>pug4j</artifactId>
+            <version>${pug4j.version}</version>
         </dependency>
         <dependency>
             <groupId>de.neuland-bfi</groupId>
-            <artifactId>spring-jade4j</artifactId>
-            <version>${jade4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>de.neuland-bfi</groupId>
-            <artifactId>jade4j</artifactId>
-            <version>${jade4j.version}</version>
+            <artifactId>spring-pug4j</artifactId>
+            <version>${pug4j.version}</version>
         </dependency>
 
         <dependency>
             <groupId>eu.michael-simons</groupId>
             <artifactId>wro4j-spring-boot-starter</artifactId>
-            <version>0.10.4</version>
+            <version>0.11.2</version>
         </dependency>
 
         <!-- Caching in memory file store -->
@@ -229,7 +218,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.2</version>
+                <version>3.3.0</version>
                 <configuration>
                     <archive>
                         <manifestEntries>
@@ -305,16 +294,5 @@
             </build>
         </profile>
     </profiles>
-
-    <repositories>
-        <repository>
-            <id>central</id>
-            <url>https://repo1.maven.org/maven2/</url>
-        </repository>
-        <repository>
-            <id>jCenter</id>
-            <url>https://jcenter.bintray.com/</url>
-        </repository>
-    </repositories>
 
 </project>

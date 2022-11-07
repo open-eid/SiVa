@@ -246,30 +246,6 @@ public class LargeFileIT extends SiVaRestTests{
                 .body("requestErrors[0].message", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
     }
 
-    /**
-     * TestCaseID: xRoad-ZipBomb-1
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
-     *
-     * Title: xRoad Zip container with Bomb file
-     *
-     * Expected Result: The document should fail the validation
-     *
-     * File: zip-bomb-package-zip-1gb.bdoc
-     */
-
-    @Test
-    public void validatingSimpleXroadDocumentShouldReturnAReport() {
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("zip-bomb-package-zip-1gb.bdoc"));
-        post(validationRequestWithDocumentTypeValidKeys(encodedString, "zip-bomb-package-zip-1gb.asice", "xroad", VALID_SIGNATURE_POLICY_3))
-                .then()
-                .body("requestErrors[0].key", Matchers.is("document"))
-                .body("requestErrors[0].message", Matchers.is(DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE));
-    }
-
-
     @Override
     protected String getTestFilesDirectory() {
         return testFilesDirectory;

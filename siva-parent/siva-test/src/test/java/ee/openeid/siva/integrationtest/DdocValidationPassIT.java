@@ -186,6 +186,8 @@ public class DdocValidationPassIT extends SiVaRestTests {
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_DIGIDOC_XML_13))
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
                 .body("signatures[0].signedBy", Matchers.is("SK: dokumendi kinnitus"))
+                .body("signatures[0].subjectDistinguishedName.commonName", Matchers.is("SK: dokumendi kinnitus"))
+                .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("10747013"))
                 .body("signatures[0].certificates.findAll{it.type == 'REVOCATION'}[0].commonName",  Matchers.is("KLASS3-SK OCSP RESPONDER"))
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1));

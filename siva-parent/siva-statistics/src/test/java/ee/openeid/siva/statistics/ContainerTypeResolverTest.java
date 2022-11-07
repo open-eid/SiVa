@@ -27,7 +27,6 @@ public class ContainerTypeResolverTest {
     private static final String PADES_SIGNATURE_FORMAT_PREFIX = "PAdES_";
     private static final String ASIC_E_SIGNATURE_FORM = "ASiC-E";
     private static final String ASIC_S_SIGNATURE_FORM = "ASiC-S";
-    private static final String XROAD_SIGNATURE_FORM = "ASiC-E_batchsignature";
     private static final String DDOC_SIGNATURE_FORM_PREFIX = "DIGIDOC_XML_";
 
     private static final String PADES_CONTAINER_TYPE = "PAdES";
@@ -80,11 +79,6 @@ public class ContainerTypeResolverTest {
     }
 
     @Test
-    public void xRoadSignatureFormReturnsAsiceContainerType() {
-        assertEquals(ASIC_E_CONTAINER_TYPE, resolveContainerType(reportWithSignatureForm(XROAD_SIGNATURE_FORM)));
-    }
-
-    @Test
     public void asicsSignatureFormReturnsAsicsContainerType(){
         assertEquals(ASIC_S_CONTAINER_TYPE, resolveContainerType(reportWithSignatureForm(ASIC_S_SIGNATURE_FORM)));
     }
@@ -104,7 +98,6 @@ public class ContainerTypeResolverTest {
     @Test
     public void signatureFormThatContainsButNotEqualsAValidSignatureFormReturnsNa() {
         assertEquals(NA, resolveContainerType(reportWithSignatureForm("b" + ASIC_E_SIGNATURE_FORM)));
-        assertEquals(NA, resolveContainerType(reportWithSignatureForm("b" + XROAD_SIGNATURE_FORM)));
         assertEquals(NA, resolveContainerType(reportWithSignatureForm("b" + ASIC_S_SIGNATURE_FORM)));
     }
 

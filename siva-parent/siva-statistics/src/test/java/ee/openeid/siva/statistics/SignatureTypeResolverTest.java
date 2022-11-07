@@ -21,24 +21,17 @@ import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import org.junit.Test;
 
 import static ee.openeid.siva.statistics.SignatureTypeResolver.resolveSignatureType;
-import static ee.openeid.siva.statistics.SignatureTypeResolver.resolveXroadSignatureType;
 import static org.junit.Assert.*;
 
 public class SignatureTypeResolverTest {
 
     private static final String SK_XML = "SK_XML";
     private static final String DIGIDOC_XML = "DIGIDOC_XML";
-    private static final String XADES_XROAD = "XAdES_XROAD";
     private static final String ASIC_S = "ASiC-S";
     private static final String XADES = "XAdES";
     private static final String CADES = "CAdES";
     private static final String PADES = "PAdES";
     private static final String NA = "N/A";
-
-    @Test
-    public void resolveXroadSignatureTypeReturnsXadesXroad() {
-        assertEquals(XADES_XROAD, resolveXroadSignatureType());
-    }
 
     @Test
     public void reportWithEmptySignaturesReturnsNa() {

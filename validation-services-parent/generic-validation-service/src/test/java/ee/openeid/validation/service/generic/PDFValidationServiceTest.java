@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 - 2021 Riigi Infosüsteemi Amet
+ * Copyright 2016 - 2022 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -88,7 +88,7 @@ public class PDFValidationServiceTest {
     }
 
     @Test
-    public void givenInvalidPDFFileShouldThrowServiceException() throws Exception {
+    public void givenInvalidPDFFileShouldThrowServiceException() {
         expectedException.expect(ValidationServiceException.class);
         validationService.validateDocument(new ValidationDocument());
     }
@@ -98,6 +98,7 @@ public class PDFValidationServiceTest {
         SimpleReport report = validateAndAssertReports(buildValidationDocument(PDF_WITH_REASON_AND_LOCATION)).getSimpleReport();
         SignatureProductionPlace signatureProductionPlace = report.getValidationConclusion().getSignatures().get(0)
                 .getInfo().getSignatureProductionPlace();
+        assertNotNull(signatureProductionPlace);
         assertEquals("Narva", signatureProductionPlace.getCountryName());
         assertEquals("", signatureProductionPlace.getPostalCode());
         assertEquals("", signatureProductionPlace.getStateOrProvince());
@@ -120,7 +121,7 @@ public class PDFValidationServiceTest {
     }
 
     void assertNoErrors(SignatureValidationData signatureValidationData) {
-        assertTrue(signatureValidationData.getErrors().size() == 0);
+        assertEquals(0, signatureValidationData.getErrors().size());
     }
 
     void assertValidationDate(Date validationStartDate, Date validationDate) {

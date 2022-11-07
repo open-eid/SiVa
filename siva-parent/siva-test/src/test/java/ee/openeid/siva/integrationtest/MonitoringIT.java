@@ -59,9 +59,7 @@ public class MonitoringIT extends SiVaRestTests {
                 .then()
                 .body(matchesJsonSchemaInClasspath("MonitorHealthSchema.json"))
                 .body("status", Matchers.is("UP"))
-                .body("components.health.status", Matchers.is("UP"))
-                .body("components.link1.status", Matchers.is("UP"))
-                .body("components.link1.details.name", Matchers.is("xRoadService"));
+                .body("components.health.status", Matchers.is("UP"));
     }
 
     /**

@@ -21,9 +21,7 @@ library is described in each of the validation service section.
 | **Timemark container validation service** | Provides validation services for BDOC and DDOC containers. BDOC for ASiC compliant containers both TM and TS is supported. Uses Maven released **DigiDoc4J** library |
 | **TST validation service** | Provides validation service for Time Stamp Token based ASIC-S containers with Estonian specific validation policy |
 | **DDOC data files service** | Provides files extraction services for DigiDoc containers. DDOC for previous generation digitally signed files. Uses latest Maven release of **JDigiDoc** |
-| **X-Road validation service** | X-Road containers are similar to ASiCE containers but are **not** valid ASiCE containers. There we could not use DSS nor DigiDoc4J provided ASiCE validation functionality but need to X-Road developed `asicverifier` Java command line utility to validate these containers.<br><br>Source code for `asicverifier` can be found in [GitHub xroad-public repository](https://github.com/ria-ee/X-Road/tree/master/src/asicverifier): `Asicverfier` has been integrated into SiVa as Java library. Making possible to use all the Java libraries packaged into `asicverifier` fat JAR.<br><br>Configurable functionality:<br>- In SiVa configuration `application.yml` file You can define alternative location for `globalconf` directory to be loaded in using input stream. **PS!** X-road validation service is no longer distributed as a separate webapp installation since SiVa 2.0 |
 | **Dss** | Dss library implementations are used for ASICE, XAdES, CAdES and PAdES validation and TSL loading. SiVa uses [Digidoc4J DSS fork Java library](https://github.com/open-eid/sd-dss). |
-| **Asicverifier** | X-road signature validation utility (see [github project](https://github.com/vrk-kpa/xroad-public/tree/master/src/asicverifier) for details). A command line tool to validate X-Road Security server generated ASiCe files. The utility was chosen because it's only available packaged to tool to validate X-Road signature file. |  **Digidoc4j** | Digidoc4j implementation is used by BDOC validation service. See the project Github [page](https://github.com/open-eid/digidoc4j) for further details. |
 | **TSL loader** | TSL loader loads the contents of TSL file from given URL in online mode or from directory when using offline mode in predefined interval.|
 | **Logger** | Logging functionality is handled by the **SLF4J** logging facade and on top of the **Logback** framework. As a result, logging can be configured via the standard Logback configuration file. By default, logging works on the `INFO` level and logs are directed to the system console. Additional logging appenders can be added (consult logback documentation for more [details](http://logback.qos.ch/documentation.html))  |
 | **Configuration** | Configuration is a global component used throughout the webapp. Responsible for reading and handling the application configuration management |
@@ -51,7 +49,6 @@ Provided:
 
 Required:
 
-* X-road validation webapp - interface for validating X-road signed requests
 * EU TSL provider interface - interface for loading the TSL
 
 ### Demo webapp
@@ -64,7 +61,7 @@ Required:
 
 Provided:
 
-* Web interface - interface for handling X-Road signed requests.
+* Web interface - interface for handling signed requests.
     * JSON formatted POST queries
 
 Required:

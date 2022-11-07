@@ -195,7 +195,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
      *
      * File: DIGIDOC-XML1.3_hashcode.ddoc
      * */
-    @Ignore
+    @Ignore ("SIVA-376")
     @Test
     public void testGetDataFileFromDdocHashcoded(){
         setTestFilesDirectory("ddoc/live/timemark/");

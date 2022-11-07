@@ -17,7 +17,6 @@
 package ee.openeid.siva.webapp.soap.interceptor;
 
 import ee.openeid.siva.webapp.request.validation.annotations.ValidSignaturePolicyPattern;
-import ee.openeid.siva.webapp.soap.DocumentType;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 
@@ -69,12 +68,8 @@ public class SoapRequestValidationInterceptor extends AbstractRequestValidationI
     private boolean isValidDocumentType(String inputDocumentType) {
         if (inputDocumentType == null) {
             return true;
+        } else {
+            return false;
         }
-        for (DocumentType dt : DocumentType.values()) {
-            if (dt.name().equals(inputDocumentType)) {
-                return true;
-            }
-        }
-        return false;
     }
 }

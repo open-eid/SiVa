@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Riigi Infosüsteemide Amet
+ * Copyright 2019 - 2022 Riigi Infosüsteemide Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import static ee.openeid.siva.integrationtest.TestData.SOAP_VALIDATION_CONCLUSION_PREFIX;
+import static ee.openeid.siva.integrationtest.TestData.VALID_VALIDATION_PROCESS_ERROR_VALUE_11;
 
 @Category(IntegrationTest.class)
 public class SoapValidationReportValueIT extends SiVaSoapTests {
@@ -69,6 +70,8 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
                 .body("Signatures.Signature[0].SignedBy", Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
                 .body("Signatures.Signature[0].SubjectDistinguishedName.CommonName", Matchers.is("MÄNNIK,MARI-LIIS,47101010033"))
                 .body("Signatures.Signature[0].SubjectDistinguishedName.SerialNumber", Matchers.is("47101010033"))
+                .body("Signatures.Signature[0].SubjectDistinguishedName.GivenName", Matchers.is("MARI-LIIS"))
+                .body("Signatures.Signature[0].SubjectDistinguishedName.Surname", Matchers.is("MÄNNIK"))
                 .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-PASSED"))
                 .body("Signatures.Signature[0].SubIndication", Matchers.emptyOrNullString())
                 .body("Signatures.Signature[0].SignatureLevel", Matchers.is("QESIG"))
@@ -213,18 +216,17 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      */
     @Test
-    @Ignore("DD4J-615")
     public void SoapBdocCorrectValuesArePresentInvalidLtSignatureAdesqc() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDocument("EE_SER-AEX-B-LTA-V-24.bdoc"))
                 .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
                 .body("SignaturesCount", Matchers.is("1"))
-                .body("ValidSignaturesCount", Matchers.is("1"))
+                .body("ValidSignaturesCount", Matchers.is("0"))
                 .body("Signatures.Signature[0].SignatureFormat", Matchers.is("XAdES_BASELINE_LTA"))
-                .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-PASSED"))
+                .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-FAILED"))
                 .body("Signatures.Signature[0].SignatureLevel", Matchers.is("QESIG"))
                 .body("Signatures.Signature[0].SignatureScopes.SignatureScope.Scope", Matchers.is("FullSignatureScope"))
-                .body("Signatures.Signature[0].Errors", Matchers.emptyOrNullString())
+                .body("Signatures.Signature[0].Errors", Matchers.hasItems(VALID_VALIDATION_PROCESS_ERROR_VALUE_11))
                 .body("Signatures.Signature[0].Warnings", Matchers.emptyOrNullString())
                 .body("SignatureForm", Matchers.is("ASiC-E"));
     }
@@ -297,6 +299,8 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
                 .body("Signatures.Signature[0].SignedBy", Matchers.is("SOONSEIN,SIMMO,38508134916"))
                 .body("Signatures.Signature[0].SubjectDistinguishedName.CommonName", Matchers.is("SOONSEIN,SIMMO,38508134916"))
                 .body("Signatures.Signature[0].SubjectDistinguishedName.SerialNumber", Matchers.is("38508134916"))
+                .body("Signatures.Signature[0].SubjectDistinguishedName.GivenName", Matchers.is("SIMMO"))
+                .body("Signatures.Signature[0].SubjectDistinguishedName.Surname", Matchers.is("SOONSEIN"))
                 .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-PASSED"))
                 .body("Signatures.Signature[0].Errors", Matchers.emptyOrNullString())
                 .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Name", Matchers.is("DigiDocService_spec_1_110_est.pdf"))
@@ -422,13 +426,15 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
                 .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
                 .body("SignaturesCount", Matchers.is("1"))
                 .body("ValidSignaturesCount", Matchers.is("1"))
-                .body("Signatures.Signature[0].Id", Matchers.is("S-1CA4D655909860192F80E6EA6D3FCC18C25A81E8902819C5E05B5C12D5BD6784"))
+                .body("Signatures.Signature[0].Id", Matchers.is("S-4D0D5A83688FC617AA83810ED74E26C5A79063D110B00AD207EAB3EFDC3F5619"))
                 .body("Signatures.Signature[0].SignatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("Signatures.Signature[0].SignatureMethod", Matchers.is("http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"))
                 .body("Signatures.Signature[0].SignatureLevel", Matchers.is("QESIG"))
                 .body("Signatures.Signature[0].SignedBy", Matchers.is("ŽÕRINÜWŠKY,MÄRÜ-LÖÖZ,11404176865"))
                 .body("Signatures.Signature[0].SubjectDistinguishedName.CommonName", Matchers.is("ŽÕRINÜWŠKY,MÄRÜ-LÖÖZ,11404176865"))
                 .body("Signatures.Signature[0].SubjectDistinguishedName.SerialNumber", Matchers.is("11404176865"))
+                .body("Signatures.Signature[0].SubjectDistinguishedName.GivenName", Matchers.is("MÄRÜ-LÖÖZ"))
+                .body("Signatures.Signature[0].SubjectDistinguishedName.Surname", Matchers.is("ŽÕRINÜWŠKY"))
                 .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-PASSED"))
                 .body("Signatures.Signature[0].Errors", Matchers.emptyOrNullString())
                 .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Name", Matchers.is("Partial PDF"))
@@ -468,6 +474,55 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
                 .body("Signatures.Signature[0].SubIndication", Matchers.is("FORMAT_FAILURE"))
                 .body("Signatures.Signature[0].SignatureLevel", Matchers.is("NOT_ADES"))
                 .body("Signatures.Signature[0].SignatureScopes.SignatureScope.Scope", Matchers.is("FULL"));
+    }
+
+    /**
+     *
+     * TestCaseID: Pdf-SoapValidationReportValue-3
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface
+     *
+     * Title: Verification of values in Validation Report, PAdES_baseline_LTA
+     *
+     * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
+     *
+     * File: pades-baseline-lta-live-aj.pdf
+     *
+     */
+    @Test
+    public void SoapPdfCorrectValuesArePresentBaselineLtaSignature() {
+        setTestFilesDirectory("pdf/baseline_profile_test_files/");
+        post(validationRequestForDocument("pades-baseline-lta-live-aj.pdf"))
+                .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
+                .body("Signatures.Signature[0].SignatureFormat", Matchers.is("PAdES_BASELINE_LTA"))
+                .body("Signatures.Signature[0].Id", Matchers.is("S-55E9C780EF821A871FF17DD4A6C47392D4D52AD326CD803A7C92714649C92147"))
+                .body("Signatures.Signature[0].SignatureMethod", Matchers.is("http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"))
+                .body("Signatures.Signature[0].SignatureLevel", Matchers.is("QESIG"))
+                .body("Signatures.Signature[0].SignedBy", Matchers.is("JUHANSON,ALLAN,38608014910"))
+                .body("Signatures.Signature[0].SubjectDistinguishedName.CommonName", Matchers.is("JUHANSON,ALLAN,38608014910"))
+                .body("Signatures.Signature[0].SubjectDistinguishedName.SerialNumber", Matchers.is("38608014910"))
+                .body("Signatures.Signature[0].SubjectDistinguishedName.GivenName", Matchers.is("ALLAN"))
+                .body("Signatures.Signature[0].SubjectDistinguishedName.Surname", Matchers.is("JUHANSON"))
+                .body("Signatures.Signature[0].Indication", Matchers.is("TOTAL-PASSED"))
+                .body("Signatures.Signature[0].Errors", Matchers.emptyOrNullString())
+                .body("Signatures.Signature[0].Warnings", Matchers.emptyOrNullString())
+                .body("Signatures.Signature[0].Certificates.Certificate[0].Type",  Matchers.oneOf("SIGNATURE_TIMESTAMP", "ARCHIVE_TIMESTAMP", "REVOCATION", "SIGNING"))
+                .body("Signatures.Signature[0].Certificates.Certificate[1].Type",  Matchers.oneOf("SIGNATURE_TIMESTAMP", "ARCHIVE_TIMESTAMP", "REVOCATION", "SIGNING"))
+                .body("Signatures.Signature[0].Certificates.Certificate[2].Type",  Matchers.oneOf("SIGNATURE_TIMESTAMP", "ARCHIVE_TIMESTAMP", "REVOCATION", "SIGNING"))
+                .body("Signatures.Signature[0].Certificates.Certificate[3].Type",  Matchers.oneOf("SIGNATURE_TIMESTAMP", "ARCHIVE_TIMESTAMP", "REVOCATION", "SIGNING"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Name", Matchers.is("Partial PDF"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Scope", Matchers.is("PARTIAL"))
+                .body("Signatures.Signature[0].SignatureScopes.SignatureScope[0].Content", Matchers.is("The document ByteRange : [0, 9136, 28082, 26387]"))
+                .body("Signatures.Signature[0].ClaimedSigningTime", Matchers.is("2016-09-26T09:20:05Z"))
+                .body("Signatures.Signature[0].Info.BestSignatureTime", Matchers.is("2016-09-26T09:20:18Z"))
+                .body("Signatures.Signature[0].Info.TimestampCreationTime", Matchers.is("2016-09-26T09:20:18Z"))
+                .body("Signatures.Signature[0].Info.OcspResponseCreationTime", Matchers.is("2016-09-26T09:20:18Z"))
+                .body("Signatures.Signature[0].Info.TimeAssertionMessageImprint", Matchers.is("MDEwDQYJYIZIAWUDBAIBBQAEIOw4WEKkdTKlUd8gwGNx4J471Y2JkKSTyPQH4anvLrJg"))
+                .body("ValidatedDocument.Filename", Matchers.is("pades-baseline-lta-live-aj.pdf"))
+                .body("ValidSignaturesCount", Matchers.is("1"))
+                .body("SignaturesCount", Matchers.is("1"));
     }
 
     /**

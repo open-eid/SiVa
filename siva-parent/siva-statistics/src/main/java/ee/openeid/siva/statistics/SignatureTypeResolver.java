@@ -30,16 +30,11 @@ class SignatureTypeResolver {
     private static final String DIGIDOC_XML = "DIGIDOC_XML";
     private static final String ASIC_S = "ASiC-S";
 
-    private static final String XADES_XROAD = "XAdES_XROAD";
     private static final String XADES = "XAdES";
     private static final String CADES = "CAdES";
     private static final String PADES = "PAdES";
 
     static final String NA = "N/A";
-
-    static String resolveXroadSignatureType() {
-        return XADES_XROAD;
-    }
 
     static String resolveSignatureType(ValidationConclusion validationConclusion) {
         if (CollectionUtils.isEmpty(validationConclusion.getSignatures()) || isTstTypeContainer(validationConclusion)) {

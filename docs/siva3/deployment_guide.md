@@ -31,7 +31,7 @@ The last lines of build output should look very similar to below image:
 ```text
 [INFO] Reactor Summary:
 [INFO]
-[INFO] SiVa Digitally signed documents validation service 3.3.0 SUCCESS [  2.089 s]
+[INFO] SiVa Digitally signed documents validation service X.X.X SUCCESS [  2.089 s]
 [INFO] validation-services-parent ......................... SUCCESS [  0.380 s]
 [INFO] validation-commons ................................. SUCCESS [ 13.782 s]
 [INFO] tsl-loader ......................................... SUCCESS [  9.372 s]
@@ -40,14 +40,13 @@ The last lines of build output should look very similar to below image:
 [INFO] Time-mark container Validation Service ............. SUCCESS [ 36.508 s]
 [INFO] SiVa webapp and other core modules ................. SUCCESS [  0.374 s]
 [INFO] siva-monitoring .................................... SUCCESS [ 11.982 s]
-[INFO] xroad-validation-service ........................... SUCCESS [ 19.587 s]
 [INFO] siva-statistics .................................... SUCCESS [  9.816 s]
 [INFO] SiVa validation service proxy ...................... SUCCESS [ 14.861 s]
 [INFO] SiVa signature service ............................. SUCCESS [  7.801 s]
 [INFO] siva-webapp ........................................ SUCCESS [ 42.451 s]
 [INFO] SiVa Sample Web application ........................ SUCCESS [ 42.236 s]
 [INFO] SiVa Web Service integration tests ................. SUCCESS [ 18.830 s]
-[INFO] siva-distribution 3.3.0 ............................ SUCCESS [  5.763 s]
+[INFO] siva-distribution X.X.X ............................ SUCCESS [  5.763 s]
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
@@ -67,22 +66,16 @@ project by issuing below commands:
 **First start the Siva webapp**
 
 ```bash
-./siva-parent/siva-webapp/target/siva-webapp-3.3.0.jar
+./siva-parent/siva-webapp/target/siva-webapp-X.X.X.jar
 ```
 
-**Secondly start X-road validation webapp**
-
-```bash
-./validation-services-parent/xroad-validation-service/target/xroad-validation-service-3.3.0.jar
-```
-
-The SiVa webapp by default runs on port **8080** and XRoad validation service starts up on port **8081**.
+The SiVa webapp by default runs on port **8080**.
 Easiest way to test out the deployment is to run SiVa demo application and use it for validation.
 
 **Start the Demo webapp**
 
 ```bash
-./siva-parent/siva-sample-application/target/siva-sample-application-3.3.0.jar
+./siva-parent/siva-sample-application/target/siva-sample-application-X.X.X.jar
 ```
 
 Now point Your browser to URL: <http://localhost:9000>
@@ -122,7 +115,7 @@ WantedBy=multi-user.target
 ```
 
 Save and close the `siva-webapp.service` file.
-Next we need to move `siva-webapp-3.3.0.jar` into newly created `/var/apps` directory and rename to
+Next we need to move `siva-webapp-X.X.X.jar` into newly created `/var/apps` directory and rename to
 JAR file to `siva-webapp.jar`. match
 
 !!! note
@@ -130,7 +123,7 @@ JAR file to `siva-webapp.jar`. match
 
 ```bash
 sudo mkdir /var/apps
-sudo cp siva-parent/siva-webapp/target/executable/siva-webapp-3.3.0.jar /var/apps/siva-webapp.jar
+sudo cp siva-parent/siva-webapp/target/executable/siva-webapp-X.X.X.jar /var/apps/siva-webapp.jar
 ```
 
 Next we need to copy the `siva-webapp.service` file into `/lib/systemd/system` directory.
@@ -200,7 +193,7 @@ Now we should build the WAR file. We have created helper script with all the cor
 Final steps would be copying built WAR file into Tomcat `webapps` directory and starting the servlet container.
 
 ```bash
-cp siva-parent/siva-webapp/target/siva-webapp-3.3.0.war apache-tomcat-8.5.24/webapps
+cp siva-parent/siva-webapp/target/siva-webapp-X.X.X.war apache-tomcat-8.5.24/webapps
 ./apache-tomcat-7.0.77/bin/catalina.sh run
 ```
 
@@ -266,7 +259,7 @@ For every validation a statistical report is composed that contains the followin
 |----------|------|-------------|
 | stats | Object | Object containing statistic info |
 | stats.type | String | Container type ( text value that identifies the container type) of the validated document: ASiC-E, ASIC-S, PAdES, DIGIDOC_XML, N/A |
-| stats.sigType | String | Signature type in validated document: XAdES, CAdES, PAdES, XROAD_XAdES, N/A |
+| stats.sigType | String | Signature type in validated document: XAdES, CAdES, PAdES, N/A |
 | stats.usrId | String | (Text data that contains the SiVa user identifier for reports (from the HTTP x-authenticated-user header) or N/A) |
 | stats.dur | Number | The time it takes to process an incoming request - measured in milliseconds |
 | stats.sigCt | Number | The value of the "signaturesCount" element in the validation report |
@@ -322,7 +315,7 @@ management.endpoints.web.exposure.include=health
 The endpoint is implemented as a customized Spring boot [health endpoint](http://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html#production-ready-health), which allows to add custom health indicators.
 
 Demo webapp and Siva webapp include additional information about the health of their dependent services.
-These links to dependent web services have been preconfigured. For example, the Demo webapp is preset to check whether the Siva webapp is accessible from the following url (parameter `siva.service.serviceHost` value)/monitoring/health and the Siva webapp verifies that the X-road validation service webapp is accessible by checking the default url (configured by parameter `siva.proxy.xroadUrl` value)/monitoring/health url.
+These links to dependent web services have been preconfigured. For example, the Demo webapp is preset to check whether the Siva webapp is accessible from the following url (parameter `siva.service.serviceHost` value)/monitoring/health.
 
 ### Heartbeat endpoint
 
@@ -451,6 +444,7 @@ See the reference list of all common [application properties](http://docs.spring
 | **siva.tsl.loader.sslTruststorePath** | Path to truststore containing trusted CA certificates used in HTTPS connection to retrieve member states TSLs <ul><li>Default: **classpath:tsl-ssl-truststore.p12**</li></ul> |
 | **siva.tsl.loader.sslTruststoreType** | Truststore type <ul><li>Default: **PKCS12**</li></ul> |
 | **siva.tsl.loader.sslTruststorePassword** | Truststore password <ul><li>Default: **digidoc4j-password**</li></ul>  |
+| **siva.tsl.loader.LotlPivotSupportEnabled** | A boolean value that determines, whether LOTL pivot mode should be used or not <ul><li>Default: **true**</li></ul> |
 | **siva.keystore.type** | Keystore type <ul><li>Default: **JKS**</li></ul> |
 | **siva.keystore.filename** | Keystore that contains public keys of trusted LOTL signers for LOTL signature validation<ul><li>Default: **siva-keystore.jks**</li></ul> |
 | **siva.keystore.password** | Keystore password <ul><li>Default: **siva-keystore-password**</li></ul> |
@@ -464,12 +458,6 @@ See the reference list of all common [application properties](http://docs.spring
 !!! note
     TSL is currently used only by Generic and BDOC validators
 
-
-* Forward to custom X-road webapp instance
-
-| Property | Description |
-| ------ | ----------- |
-| **siva.proxy.xroadUrl** | A URL where the X-Road validation requests are forwarded <ul><li>Default: **http://localhost:8081**</li></ul>|
 
 * Configure SOAP services endpoint URL-s displayed in WSDL
 
@@ -532,34 +520,6 @@ siva.europe.signaturePolicy.policies[1].constraintPath=generic_constraint_qes.xm
 
 !!! note
     Default policy configuration is lost when policy detail properties (name, description, url or constraintPath) are overridden or new custom policies added in custom configuration files (in this case, the existing default policies must be redefined in configuration files explicitly)
-
-* X-road validation
-
-| Property | Description |
-| -------- | ----------- |
-|**siva.xroad.validation.service.configurationDirectoryPath**| Directory that contains the certs of approved CA's, TSA's and list of members <ul><li>Default: **/verificationconf**</li></ul> |
-
-
-| Property | Description |
-| -------- | ----------- |
-|**siva.xroad.signaturePolicy.defaultPolicy**| Selected default policy name <ul><li>Default: **N/A**</li></ul>|
-|**siva.xroad.signaturePolicy.policies[index].name**| Policy name <ul><li>Default: **N/A**</li></ul>|
-|**siva.xroad.signaturePolicy.policies[index].description**| Policy description <ul><li>Default: **N/A**</li></ul>|
-|**siva.xroad.signaturePolicy.policies[index].constraintPath**| Constraint XML file path for the policy. An absolute path or a reference to a resource on the classpath<ul><li>Default: **N/A**</li></ul>|
-|**siva.xroad.signaturePolicy.policies[index].url**| Policy URL <ul><li>Default: **N/A**</li></ul>|
-
-By default, the following configuration is used
-```text
-siva.xroad.signaturePolicy.policies[0].name=POLv3
-siva.xroad.signaturePolicy.policies[0].description=Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature.
-siva.xroad.signaturePolicy.policies[0].url=http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv3
-siva.xroad.signaturePolicy.policies[0].constraintPath=xroad_constraint_no_type.xml
-```
-
-!!! note
-    Default policy configuration is lost when policy detail properties (name, description, url or constraintPath) are overridden or new custom policies added in custom configuration files (in this case, the existing default policies must be redefined in configuration files explicitly)
-!!! note
-    By default, X-road validation currently supports only POLv3
    
 ### Demo webapp parameters
 

@@ -18,8 +18,6 @@ package ee.openeid.siva;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import ee.openeid.siva.monitoring.configuration.MonitoringConfiguration;
-import ee.openeid.siva.monitoring.indicator.UrlHealthIndicator;
-import ee.openeid.siva.proxy.configuration.ProxyConfigurationProperties;
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.webapp.configuration.WsdlServiceConfigurationProperties;
 import ee.openeid.siva.webapp.soap.DataFilesWebService;
@@ -47,9 +45,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import javax.xml.namespace.QName;
@@ -59,7 +55,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootConfiguration
-@EnableConfigurationProperties({ReportConfigurationProperties.class, ProxyConfigurationProperties.class, WsdlServiceConfigurationProperties.class})
+@EnableConfigurationProperties({ReportConfigurationProperties.class, WsdlServiceConfigurationProperties.class})
 public class ServletConfiguration extends MonitoringConfiguration {
 
     private static final String VALIDATION_WEB_SERVICE_ENDPOINT = "/validationWebService";
@@ -68,7 +64,6 @@ public class ServletConfiguration extends MonitoringConfiguration {
     private static final String URL_MAPPING = "/soap/*";
     private static final String SIVA_SERVICE_NAMESPACE = "http://soap.webapp.siva.openeid.ee/";
 
-    private ProxyConfigurationProperties proxyProperties;
     private WsdlServiceConfigurationProperties wsdlConfProperties;
 
     @Autowired
@@ -144,18 +139,6 @@ public class ServletConfiguration extends MonitoringConfiguration {
         return constructDataFilesEndpoint(springBus, dataFilesWebService, "XRoadDataFilesWebService", "XRoad");
     }
 
-    @Bean
-    public UrlHealthIndicator link1() {
-        UrlHealthIndicator.ExternalLink link =new UrlHealthIndicator.ExternalLink("xRoadService", proxyProperties.getXroadUrl() + DEFAULT_MONITORING_ENDPOINT, DEFAULT_TIMEOUT);
-        UrlHealthIndicator indicator = new UrlHealthIndicator();
-        indicator.setExternalLink(link);
-        RestTemplate restTemplate = new RestTemplate();
-        ((SimpleClientHttpRequestFactory) restTemplate.getRequestFactory()).setConnectTimeout(link.getTimeout());
-        ((SimpleClientHttpRequestFactory) restTemplate.getRequestFactory()).setReadTimeout(link.getTimeout());
-        indicator.setRestTemplate(restTemplate);
-        return indicator;
-    }
-
     @SuppressWarnings("squid:S2095") //False positive for AutoCloseable bean
     private EndpointImpl constructValidationEndpoint(SpringBus springBus, ValidationWebService validationWebService, String serviceName, String endpointPathExtra) {
         EndpointImpl endpoint = new EndpointImpl(springBus, validationWebService);
@@ -220,11 +203,6 @@ public class ServletConfiguration extends MonitoringConfiguration {
         outInterceptors.add(new SAAJOutInterceptor());
         outInterceptors.add(reportSignatureInterceptor);
         return outInterceptors;
-    }
-
-    @Autowired
-    public void setProxyProperties(ProxyConfigurationProperties proxyProperties) {
-        this.proxyProperties = proxyProperties;
     }
 
     @Autowired

@@ -16,7 +16,6 @@
 
 package ee.openeid.siva.webapp.soap.interceptor;
 
-import ee.openeid.siva.proxy.document.DocumentType;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.interceptor.Fault;
 import org.junit.Test;
@@ -85,51 +84,23 @@ public class SoapRequestValidationInterceptorTest {
 
     @Test
     public void whenDocumentIsInvalidThenFaultIsThrownWithInvalidDocumentMessage() throws SOAPException {
-        mockSoapMessage("filename", "ÖÄÜ", "BDOC", "AA");
+        mockSoapMessage("filename", "ÖÄÜ", "AA");
         Fault soapFault = handleMessageInInterceptor(message);
         assertFaultWithExpectedMessage(soapFault, INVALID_BASE64);
     }
 
     @Test
-    public void whenDocumentTypeIsInvalidThenFaultIsThrownWithInvalidPolicyMessage() throws SOAPException {
-        mockSoapMessage("filename", "AABBBAA", "BLAH", ";:::;;");
-        Fault soapFault = handleMessageInInterceptor(message);
-        assertFaultWithExpectedMessage(soapFault, INVALID_DOCUMENTTYPE);
-    }
-
-    @Test
     public void whenPolicyIsInvalidThenFaultIsThrownWithInvalidPolicyMessage() throws SOAPException {
-        mockSoapMessage("filename", "AABBBAA", "XROAD", ";:::;;");
+        mockSoapMessage("filename", "AABBBAA", ";:::;;");
         Fault soapFault = handleMessageInInterceptor(message);
         assertFaultWithExpectedMessage(soapFault, INVALID_POLICY);
     }
 
     @Test
     public void noSoapFaultIsThrownWithValidRequest() throws SOAPException {
-        mockSoapMessage("filename", "c2Q=", "XROAD", "AA");
+        mockSoapMessage("filename", "c2Q=", "AA");
         Fault soapFault = handleMessageInInterceptor(message);
         assertNull(soapFault);
-    }
-
-    @Test
-    public void documentTypeBDOCThrowsInvalidDocumentTypeFault() throws SOAPException {
-        mockSoapMessage("filename", "c2Q=", DocumentType.BDOC.name(), "AA");
-        Fault soapFault = handleMessageInInterceptor(message);
-        assertFaultWithExpectedMessage(soapFault, INVALID_DOCUMENTTYPE);
-    }
-
-    @Test
-    public void documentTypeDDOCThrowsInvalidDocumentTypeFault() throws SOAPException {
-        mockSoapMessage("filename", "c2Q=", DocumentType.DDOC.name(), "AA");
-        Fault soapFault = handleMessageInInterceptor(message);
-        assertFaultWithExpectedMessage(soapFault, INVALID_DOCUMENTTYPE);
-    }
-
-    @Test
-    public void documentTypePDFThrowsInvalidDocumentTypeFault() throws SOAPException {
-        mockSoapMessage("filename", "c2Q=", DocumentType.PDF.name(), "AA");
-        Fault soapFault = handleMessageInInterceptor(message);
-        assertFaultWithExpectedMessage(soapFault, INVALID_DOCUMENTTYPE);
     }
 
     private Fault handleMessageInInterceptor(SoapMessage soapMessage) {
@@ -152,14 +123,13 @@ public class SoapRequestValidationInterceptorTest {
         doReturn(null).when(message).getContent(any());
     }
 
-    private void mockSoapMessage(String filename, String document, String documentType, String policy) throws SOAPException {
+    private void mockSoapMessage(String filename, String document, String policy) throws SOAPException {
         doReturn(body).when(envelope).getBody();
         doReturn(envelope).when(soapPart).getEnvelope();
         doReturn(soapPart).when(soapMessage).getSOAPPart();
         doReturn(soapMessage).when(message).getContent(SOAPMessage.class);
         mockFilenameNode(filename);
         mockDocumentNode(document);
-        mockDocumentTypeNode(documentType);
         mockPolicyNode(policy);
     }
 

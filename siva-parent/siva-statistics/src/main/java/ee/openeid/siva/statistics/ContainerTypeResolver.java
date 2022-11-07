@@ -32,7 +32,6 @@ class ContainerTypeResolver {
     private static final String PADES_SIGNATURE_FORMAT_PREFIX = "PAdES_";
     private static final String ASIC_E_SIGNATURE_FORM = "ASiC-E";
     private static final String ASIC_S_SIGNATURE_FORM = "ASiC-S";
-    private static final String XROAD_SIGNATURE_FORM = "ASiC-E_batchsignature";
     private static final String DDOC_SIGNATURE_FORM_PREFIX = "DIGIDOC_XML_";
 
     private static final String PADES_CONTAINER_TYPE = "PAdES";
@@ -54,7 +53,7 @@ class ContainerTypeResolver {
     }
 
     private static String resolveContainerTypeFromSignatureForm(String signatureForm) {
-        if (isAsicE(signatureForm) || isXRoad(signatureForm)) {
+        if (isAsicE(signatureForm)) {
             return ASIC_E_CONTAINER_TYPE;
         }
         if (isAsicS(signatureForm)) {
@@ -72,10 +71,6 @@ class ContainerTypeResolver {
 
     private static boolean isAsicS(String signatureForm) {
         return ASIC_S_SIGNATURE_FORM.equals(signatureForm);
-    }
-
-    private static boolean isXRoad(String signatureForm) {
-        return XROAD_SIGNATURE_FORM.equals(signatureForm);
     }
 
     private static boolean isDdoc(String signatureForm) {

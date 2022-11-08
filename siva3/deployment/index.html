@@ -1423,7 +1423,7 @@
 </tr>
 <tr>
 <td><strong>Siva server</strong></td>
-<td>Two separate services are set up to run on SiVa server: the <strong>SiVa webapp</strong> itself and the <strong>X-road validation webapp</strong>, to provide X-road support<ul><li>SiVa webapp</li></ul><br/>SiVa web appliction is executable Spring Boot JAR file. This means all the dependencies and servlet containers are packaged inside single JAR file. The JAR file can be placed anywhere in server and the JAR must be marked executable if its not already.<br/><br/>There also should be separate user created to run executalbe JAR as Linux service.<br/><br/>Read more about running <a href="https://docs.spring.io/spring-boot/docs/current/reference/html/deployment-install.html#deployment-service">Spring Boot applications as Linux system service</a><br/><ul><li>X-road validation webapp</li></ul><br/>SiVa X-Road validation service is also Spring Boot executable JAR application and also should be installed as Linux service. X-Road validation service communicates with SiVa web application over HTTP and default port is 8081<br/><br/>Note that X-Road separate installation is required to avoid BouncyCastle library version conflicts and class loader issues.</td>
+<td>The <strong>SiVa webapp</strong> service is set up to run on SiVa server.<br/>SiVa web appliction is executable Spring Boot JAR file. This means all the dependencies and servlet containers are packaged inside single JAR file. The JAR file can be placed anywhere in server and the JAR must be marked executable if its not already.<br/><br/>There also should be separate user created to run executalbe JAR as Linux service.<br/><br/>Read more about running <a href="https://docs.spring.io/spring-boot/docs/current/reference/html/deployment-install.html#deployment-service">Spring Boot applications as Linux system service</a></td>
 </tr>
 <tr>
 <td><strong>X-road security server</strong></td>
@@ -1436,7 +1436,7 @@
 </tbody>
 </table>
 <h3 id="horizontal-scaling">Horizontal scaling</h3>
-<p>Neither the <strong>Siva webapp</strong>, <strong>X-road validation webapp</strong>, nor <strong>Demo wbapp</strong> persist their state in sessions between requests. Therefore it is possible to install multiple instances of these services behind respective load balancers.</p>
+<p>Neither the <strong>Siva webapp</strong>, nor <strong>Demo wbapp</strong> persist their state in sessions between requests. Therefore it is possible to install multiple instances of these services behind respective load balancers.</p>
 
               
             </article>

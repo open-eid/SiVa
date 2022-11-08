@@ -1717,7 +1717,7 @@
 The last lines of build output should look very similar to below image:</p>
 <div class="codehilite"><pre><span></span><code>[INFO] Reactor Summary:
 [INFO]
-[INFO] SiVa Digitally signed documents validation service 3.3.0 SUCCESS [  2.089 s]
+[INFO] SiVa Digitally signed documents validation service X.X.X SUCCESS [  2.089 s]
 [INFO] validation-services-parent ......................... SUCCESS [  0.380 s]
 [INFO] validation-commons ................................. SUCCESS [ 13.782 s]
 [INFO] tsl-loader ......................................... SUCCESS [  9.372 s]
@@ -1726,14 +1726,13 @@ The last lines of build output should look very similar to below image:</p>
 [INFO] Time-mark container Validation Service ............. SUCCESS [ 36.508 s]
 [INFO] SiVa webapp and other core modules ................. SUCCESS [  0.374 s]
 [INFO] siva-monitoring .................................... SUCCESS [ 11.982 s]
-[INFO] xroad-validation-service ........................... SUCCESS [ 19.587 s]
 [INFO] siva-statistics .................................... SUCCESS [  9.816 s]
 [INFO] SiVa validation service proxy ...................... SUCCESS [ 14.861 s]
 [INFO] SiVa signature service ............................. SUCCESS [  7.801 s]
 [INFO] siva-webapp ........................................ SUCCESS [ 42.451 s]
 [INFO] SiVa Sample Web application ........................ SUCCESS [ 42.236 s]
 [INFO] SiVa Web Service integration tests ................. SUCCESS [ 18.830 s]
-[INFO] siva-distribution 3.3.0 ............................ SUCCESS [  5.763 s]
+[INFO] siva-distribution X.X.X ............................ SUCCESS [  5.763 s]
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
@@ -1747,17 +1746,13 @@ The last lines of build output should look very similar to below image:</p>
 <p>SiVa project compiles <strong>3 fat executable JAR</strong> files that you can run after successfully building the
 project by issuing below commands:</p>
 <p><strong>First start the Siva webapp</strong></p>
-<div class="codehilite"><pre><span></span><code>./siva-parent/siva-webapp/target/siva-webapp-3.3.0.jar
+<div class="codehilite"><pre><span></span><code>./siva-parent/siva-webapp/target/siva-webapp-X.X.X.jar
 </code></pre></div>
 
-<p><strong>Secondly start X-road validation webapp</strong></p>
-<div class="codehilite"><pre><span></span><code>./validation-services-parent/xroad-validation-service/target/xroad-validation-service-3.3.0.jar
-</code></pre></div>
-
-<p>The SiVa webapp by default runs on port <strong>8080</strong> and XRoad validation service starts up on port <strong>8081</strong>.
+<p>The SiVa webapp by default runs on port <strong>8080</strong>.
 Easiest way to test out the deployment is to run SiVa demo application and use it for validation.</p>
 <p><strong>Start the Demo webapp</strong></p>
-<div class="codehilite"><pre><span></span><code>./siva-parent/siva-sample-application/target/siva-sample-application-3.3.0.jar
+<div class="codehilite"><pre><span></span><code>./siva-parent/siva-sample-application/target/siva-sample-application-X.X.X.jar
 </code></pre></div>
 
 <p>Now point Your browser to URL: <a href="http://localhost:9000">http://localhost:9000</a></p>
@@ -1790,14 +1785,14 @@ single JAR file. It makes a lot easier to deploy it into servers.</p>
 </code></pre></div>
 
 <p>Save and close the <code>siva-webapp.service</code> file.
-Next we need to move <code>siva-webapp-3.3.0.jar</code> into newly created <code>/var/apps</code> directory and rename to
+Next we need to move <code>siva-webapp-X.X.X.jar</code> into newly created <code>/var/apps</code> directory and rename to
 JAR file to <code>siva-webapp.jar</code>. match</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The copied JAR filename must match option <code>ExecStart</code> in  <code>siva-webapp.service</code> file</p>
 </div>
 <div class="codehilite"><pre><span></span><code>sudo mkdir /var/apps
-sudo cp siva-parent/siva-webapp/target/executable/siva-webapp-3.3.0.jar /var/apps/siva-webapp.jar
+sudo cp siva-parent/siva-webapp/target/executable/siva-webapp-X.X.X.jar /var/apps/siva-webapp.jar
 </code></pre></div>
 
 <p>Next we need to copy the <code>siva-webapp.service</code> file into <code>/lib/systemd/system</code> directory.
@@ -1851,7 +1846,7 @@ the http connector parameter <code>maxPostSize</code> should be configured with 
 </code></pre></div>
 
 <p>Final steps would be copying built WAR file into Tomcat <code>webapps</code> directory and starting the servlet container.</p>
-<div class="codehilite"><pre><span></span><code>cp siva-parent/siva-webapp/target/siva-webapp-3.3.0.war apache-tomcat-8.5.24/webapps
+<div class="codehilite"><pre><span></span><code>cp siva-parent/siva-webapp/target/siva-webapp-X.X.X.war apache-tomcat-8.5.24/webapps
 ./apache-tomcat-7.0.77/bin/catalina.sh run
 </code></pre></div>
 
@@ -1917,7 +1912,7 @@ the command below.</p>
 <tr>
 <td>stats.sigType</td>
 <td>String</td>
-<td>Signature type in validated document: XAdES, CAdES, PAdES, XROAD_XAdES, N/A</td>
+<td>Signature type in validated document: XAdES, CAdES, PAdES, N/A</td>
 </tr>
 <tr>
 <td>stats.usrId</td>
@@ -2009,7 +2004,7 @@ the command below.</p>
 </ul>
 <p>The endpoint is implemented as a customized Spring boot <a href="http://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html#production-ready-health">health endpoint</a>, which allows to add custom health indicators.</p>
 <p>Demo webapp and Siva webapp include additional information about the health of their dependent services.
-These links to dependent web services have been preconfigured. For example, the Demo webapp is preset to check whether the Siva webapp is accessible from the following url (parameter <code>siva.service.serviceHost</code> value)/monitoring/health and the Siva webapp verifies that the X-road validation service webapp is accessible by checking the default url (configured by parameter <code>siva.proxy.xroadUrl</code> value)/monitoring/health url.</p>
+These links to dependent web services have been preconfigured. For example, the Demo webapp is preset to check whether the Siva webapp is accessible from the following url (parameter <code>siva.service.serviceHost</code> value)/monitoring/health.</p>
 <h3 id="heartbeat-endpoint">Heartbeat endpoint</h3>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -2199,6 +2194,10 @@ Default configuration parameters can be overridden by providing custom applicati
 <td>Truststore password <ul><li>Default: <strong>digidoc4j-password</strong></li></ul></td>
 </tr>
 <tr>
+<td><strong>siva.tsl.loader.LotlPivotSupportEnabled</strong></td>
+<td>A boolean value that determines, whether LOTL pivot mode should be used or not <ul><li>Default: <strong>true</strong></li></ul></td>
+</tr>
+<tr>
 <td><strong>siva.keystore.type</strong></td>
 <td>Keystore type <ul><li>Default: <strong>JKS</strong></li></ul></td>
 </tr>
@@ -2224,23 +2223,6 @@ Default configuration parameters can be overridden by providing custom applicati
 <p class="admonition-title">Note</p>
 <p>TSL is currently used only by Generic and BDOC validators</p>
 </div>
-<ul>
-<li>Forward to custom X-road webapp instance</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Property</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>siva.proxy.xroadUrl</strong></td>
-<td>A URL where the X-Road validation requests are forwarded <ul><li>Default: <strong>http://localhost:8081</strong></li></ul></td>
-</tr>
-</tbody>
-</table>
 <ul>
 <li>Configure SOAP services endpoint URL-s displayed in WSDL</li>
 </ul>
@@ -2369,68 +2351,6 @@ siva.europe.signaturePolicy.policies[1].constraintPath=generic_constraint_qes.xm
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Default policy configuration is lost when policy detail properties (name, description, url or constraintPath) are overridden or new custom policies added in custom configuration files (in this case, the existing default policies must be redefined in configuration files explicitly)</p>
-</div>
-<ul>
-<li>X-road validation</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Property</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>siva.xroad.validation.service.configurationDirectoryPath</strong></td>
-<td>Directory that contains the certs of approved CA's, TSA's and list of members <ul><li>Default: <strong>/verificationconf</strong></li></ul></td>
-</tr>
-</tbody>
-</table>
-<table>
-<thead>
-<tr>
-<th>Property</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>siva.xroad.signaturePolicy.defaultPolicy</strong></td>
-<td>Selected default policy name <ul><li>Default: <strong>N/A</strong></li></ul></td>
-</tr>
-<tr>
-<td><strong>siva.xroad.signaturePolicy.policies[index].name</strong></td>
-<td>Policy name <ul><li>Default: <strong>N/A</strong></li></ul></td>
-</tr>
-<tr>
-<td><strong>siva.xroad.signaturePolicy.policies[index].description</strong></td>
-<td>Policy description <ul><li>Default: <strong>N/A</strong></li></ul></td>
-</tr>
-<tr>
-<td><strong>siva.xroad.signaturePolicy.policies[index].constraintPath</strong></td>
-<td>Constraint XML file path for the policy. An absolute path or a reference to a resource on the classpath<ul><li>Default: <strong>N/A</strong></li></ul></td>
-</tr>
-<tr>
-<td><strong>siva.xroad.signaturePolicy.policies[index].url</strong></td>
-<td>Policy URL <ul><li>Default: <strong>N/A</strong></li></ul></td>
-</tr>
-</tbody>
-</table>
-<p>By default, the following configuration is used</p>
-<div class="codehilite"><pre><span></span><code>siva.xroad.signaturePolicy.policies[0].name=POLv3
-siva.xroad.signaturePolicy.policies[0].description=Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature.
-siva.xroad.signaturePolicy.policies[0].url=http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv3
-siva.xroad.signaturePolicy.policies[0].constraintPath=xroad_constraint_no_type.xml
-</code></pre></div>
-
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Default policy configuration is lost when policy detail properties (name, description, url or constraintPath) are overridden or new custom policies added in custom configuration files (in this case, the existing default policies must be redefined in configuration files explicitly)</p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>By default, X-road validation currently supports only POLv3</p>
 </div>
 <h3 id="demo-webapp-parameters">Demo webapp parameters</h3>
 <ul>

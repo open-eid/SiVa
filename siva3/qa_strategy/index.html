@@ -1588,23 +1588,21 @@
 <p>The goal of this document is to give general overview of the used infrastructure, processes, schedule and actions to ensure good quality delivery. The document describes activities in the whole software development process. Analysis, development and testing are separated for the sake of structure and transparency although they are integral parts of the development cycle.
 This is living document and will be constantly updated as the project evolves.</p>
 <h2 id="environments-and-infrastructure">Environments and infrastructure</h2>
-<p><img alt="Enviroment" src="../../img/siva/qa_strategy/siva3/Env.png" /></p>
 <p>There are different test environments for quality assurance, depending on the nature and aim.</p>
 <ol>
-<li>TravisCI environment for public CI - Platform: Linux</li>
+<li>GitHub Actions environment for public CI - Platform: Linux</li>
 <li>Test environment for local test and load test - Platform: Linux</li>
 </ol>
 <p>Instructions how to set up test enviroment and run tests together with more info can be found in <a href="https://github.com/open-eid/SiVa">SiVa GitHub page</a></p>
 <p>System requirements:</p>
 <ul>
 <li>At least 4GB of RAM on machine where the build is executed</li>
-<li>Minimum required Java version is Java 8</li>
+<li>Minimum required Java version is Java 11</li>
 <li>SiVa project provided Maven Wrapper (./mvnw)</li>
 </ul>
 <p>Tools used:</p>
 <ul>
-<li>TravisCI – is a continuous integration service used to build and test software projects hosted at GitHub</li>
-<li>Jenkins – is an open source continuous integration tool written in Java.</li>
+<li>GitHub Actions – is a continuous integration service used to build and test software projects hosted at GitHub</li>
 <li>JMeter – tool for creating and running load tests.</li>
 <li>IntelliJ IDEA – is a Java integrated development environment(IDE) for developing and executing automated tests locally</li>
 <li>Apache Tomcat - is an open source servlet container developed by the Apache Software Foundation.</li>
@@ -1621,7 +1619,7 @@ See documents<a href="/siva3/references/">(2) and (3) in References</a></p>
 <li>Tasks are maintained through JIRA Kanban board</li>
 <li>Daily team stand-ups are held</li>
 <li>Tasks marked done are developed, tested and ready to be shipped</li>
-<li>Bi-weekly meetings are held to give status on progress and discuss open questions
+<li>Weekly meetings are held to give status on progress and discuss open questions
 <img alt="Development process" src="../../img/siva/qa_strategy/siva3/developmentProcess.png" /></li>
 </ul>
 <h3 id="issue-lifecycle">Issue lifecycle</h3>
@@ -1652,8 +1650,7 @@ The goal is to automate as much of the testing process as possible, however some
 As the development is carried out by the backlog priority the testing follows the same principle. After each feature release test cases, test automation code and test results will be available through GitHub.
 <img alt="Testing schedule" src="../../img/siva/qa_strategy/siva3/testingFlow.png" /></p>
 <h3 id="testing-process">Testing process</h3>
-<p>All automatic tests, except load tests will follow the same execution process. The tests are ran automatically during the project build process by Travis CI after each push in GitHub.
-<img alt="Testing process" src="../../img/siva/qa_strategy/siva3/TestProcess.png" /></p>
+<p>Automatic integration and system tests are ran against deployed SiVa instance (deployed either locally or through CI).</p>
 <h3 id="test-case-management">Test case management</h3>
 <p>Test cases are handled as integral part of test automation code. The same applies on manual tests, in manual test cases some portion of automation may be used to execute the tests but the results are verified manually. All the test cases and test code will be maintained in the GitHub.
 Test cases are developed and maintained together with test automation code by the QA specialist for Integration and System Testing.

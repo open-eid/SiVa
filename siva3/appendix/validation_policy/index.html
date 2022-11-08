@@ -1884,7 +1884,6 @@
 <p>SiVa implicitly implements constraints that are specified in the specification documents of the signature formats supported by the Service:</p>
 <ul>
 <li><a href="https://www.id.ee/wp-content/uploads/2021/06/bdoc-spec212-eng.pdf">BDOC 2.1</a> ASiC-E/XAdES signatures</li>
-<li><a href="https://cyber.ee/research/reports/T-4-23-Profile-for-High-Performance-Digital-Signatures.pdf">X-Road</a> ASiC-E/XAdES signatures</li>
 <li><a href="http://www.etsi.org/deliver/etsi_en/319100_319199/31914201/01.01.01_60/en_31914201v010101p.pdf">PAdES</a> signatures</li>
 <li><a href="http://www.etsi.org/deliver/etsi_en/319100_319199/31913201/01.01.01_60/en_31913201v010101p.pdf">XAdES</a> signatures</li>
 <li><a href="http://www.etsi.org/deliver/etsi_en/319100_319199/31912201/01.01.01_60/en_31912201v010101p.pdf">CAdES</a> signatures</li>
@@ -1900,7 +1899,6 @@
 <p>SiVa implicitly implements constraints that are imposed by the base software libraries that are used by the service. For more information, see the documentation and source code of the base libraries:</p>
 <ul>
 <li><a href="https://github.com/open-eid/digidoc4j">DigiDoc4J</a> - is used to validate signatures in BDOC 2.1 and DDOC format</li>
-<li><a href="https://github.com/vrk-kpa/xroad-public/tree/master/src/asicverifier">asicverifier</a> - is used for validating ASiC-E/XAdES signatures created in <a href="https://www.ria.ee/en/x-road.html">X-Road</a> system.</li>
 <li><a href="https://github.com/open-eid/sd-dss">Open-eID DSS fork</a> - is used to validate all other signature formats than mentioned above</li>
 </ul>
 </li>
@@ -1935,22 +1933,6 @@
 <td><strong>OK</strong></td>
 <td><strong>OK</strong></td>
 <td><strong>OK</strong></td>
-</tr>
-<tr>
-<td><strong>X-Road signature (simple form)</strong></td>
-<td>NOK</td>
-<td>NOK</td>
-<td><strong>OK</strong></td>
-<td>NOK</td>
-<td>NOK</td>
-</tr>
-<tr>
-<td><strong>X-Road signature (batch signature)</strong></td>
-<td><strong>OK</strong></td>
-<td>NOK</td>
-<td>NOK</td>
-<td>NOK</td>
-<td>NOK</td>
 </tr>
 <tr>
 <td><strong>PAdES</strong></td>
@@ -2021,7 +2003,6 @@
 <li>Trust Anchors are:<ul>
 <li>In case of XAdES/CAdES/PAdES formats: <a href="https://ec.europa.eu/tools/lotl/eu-lotl.xml">EU Member State Trusted Lists</a>.</li>
 <li>In case of DIGIDOC-XML 1.0...1.3 and respective hashcode formats: Estonian CA certificates issued by <a href="https://www.skidsolutions.eu/en/repository/certs/">SK</a>, defined in local configuration file.</li>
-<li>In case of X-Road ASiC-E signatures, SK issued KLASS3-SK 2010, and KLASS3-SK 2010 OCSP RESPONDER and SK TIMESTAMPING AUTHORITY certificates, defined in local configuration file.</li>
 </ul>
 </li>
 </ol>
@@ -2031,7 +2012,7 @@
 <li>The evidence record of signer certificate must be in the form of an <a href="https://tools.ietf.org/html/rfc6960">OCSP confirmation</a> or as a Certificate Revocation List.</li>
 <li>No additional revocation data other than the data that was originally incorporated in the signature shall be requested during validation time.</li>
 <li>Checking revocation of certificates regarded as Trust Anchors:<ul>
-<li>In case of DIGIDOC-XML 1.0...1.3 and X-Road formats: revocation of Trust Anchor certificates is not checked.</li>
+<li>In case of DIGIDOC-XML 1.0...1.3 format: revocation of Trust Anchor certificates is not checked.</li>
 <li>In case of XAdES/CAdES/PAdES formats: revocation of Trust Anchor certificates is checked on the basis of the data in Trusted Lists.</li>
 </ul>
 </li>

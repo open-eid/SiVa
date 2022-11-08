@@ -1543,16 +1543,8 @@ library is described in each of the validation service section.</p>
 <td>Provides files extraction services for DigiDoc containers. DDOC for previous generation digitally signed files. Uses latest Maven release of <strong>JDigiDoc</strong></td>
 </tr>
 <tr>
-<td><strong>X-Road validation service</strong></td>
-<td>X-Road containers are similar to ASiCE containers but are <strong>not</strong> valid ASiCE containers. There we could not use DSS nor DigiDoc4J provided ASiCE validation functionality but need to X-Road developed <code>asicverifier</code> Java command line utility to validate these containers.<br><br>Source code for <code>asicverifier</code> can be found in <a href="https://github.com/ria-ee/X-Road/tree/master/src/asicverifier">GitHub xroad-public repository</a>: <code>Asicverfier</code> has been integrated into SiVa as Java library. Making possible to use all the Java libraries packaged into <code>asicverifier</code> fat JAR.<br><br>Configurable functionality:<br>- In SiVa configuration <code>application.yml</code> file You can define alternative location for <code>globalconf</code> directory to be loaded in using input stream. <strong>PS!</strong> X-road validation service is no longer distributed as a separate webapp installation since SiVa 2.0</td>
-</tr>
-<tr>
 <td><strong>Dss</strong></td>
 <td>Dss library implementations are used for ASICE, XAdES, CAdES and PAdES validation and TSL loading. SiVa uses <a href="https://github.com/open-eid/sd-dss">Digidoc4J DSS fork Java library</a>.</td>
-</tr>
-<tr>
-<td><strong>Asicverifier</strong></td>
-<td>X-road signature validation utility (see <a href="https://github.com/vrk-kpa/xroad-public/tree/master/src/asicverifier">github project</a> for details). A command line tool to validate X-Road Security server generated ASiCe files. The utility was chosen because it's only available packaged to tool to validate X-Road signature file.</td>
 </tr>
 <tr>
 <td><strong>TSL loader</strong></td>
@@ -1610,7 +1602,6 @@ library is described in each of the validation service section.</p>
 </ul>
 <p>Required:</p>
 <ul>
-<li>X-road validation webapp - interface for validating X-road signed requests</li>
 <li>EU TSL provider interface - interface for loading the TSL</li>
 </ul>
 <h3 id="demo-webapp">Demo webapp</h3>
@@ -1631,7 +1622,7 @@ library is described in each of the validation service section.</p>
 <h3 id="demo-webapp-interfaces">Demo webapp interfaces</h3>
 <p>Provided:</p>
 <ul>
-<li>Web interface - interface for handling X-Road signed requests.<ul>
+<li>Web interface - interface for handling signed requests.<ul>
 <li>JSON formatted POST queries</li>
 </ul>
 </li>

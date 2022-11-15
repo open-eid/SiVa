@@ -1,0 +1,23 @@
+version: "3.7"
+
+services:
+
+  siva-demo-application:
+    image: siva-demo-application:latest
+    ports:
+      - "9000:9000"
+    networks:
+      default:
+        aliases:
+          - siva-demo.localhost
+    depends_on:
+      - siva-webapp
+
+  siva-webapp:
+    image: siva-webapp:latest
+    ports:
+      - "8080:8080"
+    networks:
+      default:
+        aliases:
+          - siva.localhost

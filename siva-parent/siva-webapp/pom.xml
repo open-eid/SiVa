@@ -26,6 +26,11 @@
     <artifactId>siva-webapp</artifactId>
     <packaging>${packaging.type}</packaging>
 
+    <properties>
+        <spring-boot.build-image.builder>paketobuildpacks/builder:tiny</spring-boot.build-image.builder>
+        <spring-boot.build-image.imageName>${project.artifactId}:latest</spring-boot.build-image.imageName><!-- Use "latest" tag instead of version tag. -->
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>ee.openid.siva</groupId>

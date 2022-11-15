@@ -42,9 +42,27 @@ Run following command:
 ./mvnw clean install
 ```
 
+Or create image for Docker:
+
+```bash
+./mvnw spring-boot:build-image -pl siva-parent/siva-webapp
+```
+
 ## How-to run
 
-SiVa project compiles a fat executable JAR file that You can run after successfully building the
+### With docker
+
+Before continuing, the [siva-demo-application](https://github.com/open-eid/SiVa-demo-application) docker image must be built and available on Docker as `siva-demo-application:latest`.
+
+The following command will run siva-webapp along with siva-demo-application:
+
+```
+docker compose up
+```
+
+### Without docker
+
+SiVa project compiles **2 fat executable JAR** files that You can run after successfully building the
 project by issuing below command:
 
 **Starting the SiVa REST and SOAP webservice. NB! X.X.X denotes the version you are running.**
@@ -54,7 +72,8 @@ java -jar siva-parent/siva-webapp/target/siva-webapp-X.X.X-exec.jar
 ```
 
 The SiVa webapp by default runs on port **8080**.
-Easiest way to test out validation is run [SiVa demo application](https://github.com/open-eid/SiVa-demo-application).
+
+Easiest way to test out validation is to [start SiVa Demo Application without docker](https://github.com/open-eid/SiVa-demo-application#without-docker).
 
 ## WAR and Tomcat setup for legacy systems
 
@@ -64,7 +83,7 @@ Easiest way to test out validation is run [SiVa demo application](https://github
 To build the WAR file use helper script with all the correct Maven parameters.
 
 ```bash
-./war-build.sh
+./build-war.sh
 ```
 
 Copy built WAR file into Tomcat `webapps` directory and start the servlet container. NB! X.X.X denotes the version you are running.

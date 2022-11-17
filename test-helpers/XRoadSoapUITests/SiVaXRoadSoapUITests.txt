@@ -5,7 +5,7 @@ SiVa web service
 X-Road validation web service
 
 Configuration:
-- X-Road v6 Security Server must be set up and configured. SiVa web service must be added to provided service list also sccess rights to use the service must be added. For details how to set up and configure X-Road v6 Security server check https://www.ria.ee/ee/x-tee-juhendid.html#v6
+- X-Road v6 Security Server must be set up and configured. SiVa web service must be added to provided service list also sccess rights to use the service must be added. For details how to set up and configure X-Road v6 Security server check https://www.ria.ee/en/state-information-system/data-exchange-platforms/data-exchange-layer-x-tee
 
 - SiVa web service (and X-Road validation web service) must be set up and configured in a way that they are accessible for X-Road Security Server. Details how to deploy SiVa web service can be found http://open-eid.github.io/SiVa/siva/v2/deployment/
 

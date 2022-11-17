@@ -8,7 +8,7 @@ SiVa service provides **REST JSON** and **SOAP** interfaces that enable the serv
 * Request validation of XAdES signature without datafiles.
 * Request datafiles inside of DDOC container
 
-SiVa service SOAP interface supports X-Road v6. However, it is optional whether to integrate SiVa service using X-Road or using "plain" SOAP interface. This document only describes the SiVa service part of the interface, for the X-Road specifics visit Riigi Infosüsteemi Amet [webpage](https://www.ria.ee/ee/x-tee.html).
+SiVa service SOAP interface supports X-Road v6. However, it is optional whether to integrate SiVa service using X-Road or using "plain" SOAP interface. This document only describes the SiVa service part of the interface, for the X-Road specifics visit Riigi Infosüsteemi Amet [webpage](https://www.ria.ee/en/state-information-system/data-exchange-platforms/data-exchange-layer-x-tee).
 
 In the following subsections, the SiVa validation request and response interfaces are described in detail. 
 

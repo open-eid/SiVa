@@ -38,11 +38,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>ee.openid.siva</groupId>
-            <artifactId>siva-sample-application</artifactId>
-            <version>${project.version}</version>
-        </dependency>
     </dependencies>
 
     <build>

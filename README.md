@@ -44,27 +44,17 @@ Run following command:
 
 ## How-to run
 
-SiVa project compiles **3 fat executable JAR** files that You can run after successfully building the
-project by issuing below commands:
+SiVa project compiles a fat executable JAR file that You can run after successfully building the
+project by issuing below command:
 
-**First start SiVa REST and SOAP web service. NB! X.X.X denotes the version you are running.**
+**Starting the SiVa REST and SOAP webservice. NB! X.X.X denotes the version you are running.**
 
 ```bash
 java -jar siva-parent/siva-webapp/target/siva-webapp-X.X.X-exec.jar
 ```
 
 The SiVa webapp by default runs on port **8080**.
-Easiest way to test out validation is run SiVa demo application.
-
-**Start SiVa Demo Application. NB! X.X.X denotes the version you are running.**
-
-```bash
-java -jar siva-parent/siva-sample-application/target/siva-sample-application-X.X.X.jar
-```
-
-Now point Your browser to URL: <http://localhost:9000>
-
-![Sample of validation result](https://raw.githubusercontent.com/open-eid/SiVa/develop/docs/img/siva-responsive.png)
+Easiest way to test out validation is run [SiVa demo application](https://github.com/open-eid/SiVa-demo-application).
 
 ## WAR and Tomcat setup for legacy systems
 

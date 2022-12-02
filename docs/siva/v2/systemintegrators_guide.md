@@ -59,7 +59,6 @@ The last lines of build output should look very similar to below image:
 [INFO] SIVa webapp and other core modules ................. SUCCESS [  0.315 s]
 [INFO] SiVa validation service proxy ...................... SUCCESS [ 43.098 s]
 [INFO] siva-webapp ........................................ SUCCESS [04:06 min]
-[INFO] SiVa Sample Web application ........................ SUCCESS [04:31 min]
 [INFO] SiVa Web Service integration tests ................. SUCCESS [03:41 min]
 [INFO] siva-distribution .................................. SUCCESS [ 56.941 s]
 [INFO] ------------------------------------------------------------------------
@@ -75,7 +74,7 @@ The last lines of build output should look very similar to below image:
 ## Deploying
 
 ### OPTION 1 - starting webapps from command line
-SiVa project compiles **3 fat executable JAR** files that you can run after successfully building the
+SiVa project compiles **2 fat executable JAR** files that you can run after successfully building the
 project by issuing below commands:
 
 **First start the Siva webapp**
@@ -93,10 +92,10 @@ project by issuing below commands:
 The SiVa webapp by default runs on port **8080** and XRoad validation service starts up on port **8081**.
 Easiest way to test out validation is run SiVa demo application.
 
-**Start the Demo webapp**
+**Start the [SiVa Demo Application](https://github.com/open-eid/SiVa-demo-application)**
 
 ```bash
-./siva-parent/siva-sample-application/target/siva-sample-application-3.1.0.jar
+./target/siva-demo-application-3.1.0.jar
 ```
 
 Now point Your browser to URL: <http://localhost:9000>

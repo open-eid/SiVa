@@ -390,7 +390,7 @@ Sample response:
   "status":"UP",
     "health":{
       "status":"UP",
-      "webappName":"siva-sample-application",
+      "webappName":"siva-demo-application",
       "version":"3.1.0",
       "buildTime":"2016-10-21T15:56:21Z",
       "startTime":"2016-10-21T15:57:48Z",

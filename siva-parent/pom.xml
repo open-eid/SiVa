@@ -31,7 +31,6 @@
     <modules>
         <module>siva-validation-proxy</module>
         <module>siva-webapp</module>
-        <module>siva-sample-application</module>
         <module>siva-test</module>
         <module>siva-distribution</module>
         <module>siva-statistics</module>

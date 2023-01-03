@@ -60,6 +60,8 @@ The following command will run siva-webapp along with siva-demo-application:
 docker compose up
 ```
 
+Now SiVa itself is accessible http://siva.localhost:8080/ and siva-demo-application http://siva-demo.localhost:9000/.
+
 ### Without docker
 
 SiVa project compiles **2 fat executable JAR** files that You can run after successfully building the

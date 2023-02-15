@@ -34,13 +34,6 @@ public class ReportBuilderUtilsTest {
     private static final String QES_POLICY = "POLv4";
 
     @Test
-    public void indicationNotChangingQesSignatureLevel() {
-        ValidationConclusion validationConclusion = getDefaultValidationConclusion(SignatureQualification.QES);
-        ReportBuilderUtils.processSignatureIndications(validationConclusion, QES_POLICY);
-        assertTotalPassed(validationConclusion);
-    }
-
-    @Test
     public void indicationNotChangingQesigSignatureLevel() {
         ValidationConclusion validationConclusion = getDefaultValidationConclusion(SignatureQualification.QESIG);
         ReportBuilderUtils.processSignatureIndications(validationConclusion, QES_POLICY);
@@ -59,20 +52,6 @@ public class ReportBuilderUtilsTest {
         ValidationConclusion validationConclusion = getDefaultValidationConclusion(SignatureQualification.ADESEAL_QC);
         ReportBuilderUtils.processSignatureIndications(validationConclusion, QES_POLICY);
         assertTotalPassed(validationConclusion);
-    }
-
-    @Test
-    public void indicationToTotalFailedAdesQsSignatureLevel() {
-        ValidationConclusion validationConclusion = getDefaultValidationConclusion(SignatureQualification.ADES_QC);
-        ReportBuilderUtils.processSignatureIndications(validationConclusion, QES_POLICY);
-        assertTotalFailed(validationConclusion);
-    }
-
-    @Test
-    public void indicationToTotalFailedAdesSignatureLevel() {
-        ValidationConclusion validationConclusion = getDefaultValidationConclusion(SignatureQualification.ADES);
-        ReportBuilderUtils.processSignatureIndications(validationConclusion, QES_POLICY);
-        assertTotalFailed(validationConclusion);
     }
 
     @Test

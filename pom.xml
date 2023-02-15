@@ -115,7 +115,7 @@
         <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss'Z'</maven.build.timestamp.format>
 
         <bouncycastle.version>1.70</bouncycastle.version>
-        <dss.version>5.9.d4j.1</dss.version>
+        <dss.version>5.11.1.d4j.1</dss.version>
         <commons.codec.version>1.15</commons.codec.version>
         <commons.collections.version>4.4</commons.collections.version>
         <commons.io.version>2.11.0</commons.io.version>

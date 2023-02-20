@@ -11,20 +11,15 @@ import org.digidoc4j.ContainerValidationResult;
 import org.digidoc4j.ddoc.DigiDocException;
 import org.digidoc4j.exceptions.DigiDoc4JException;
 import org.digidoc4j.impl.ddoc.DDocSignatureValidationResult;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.util.Collections;
 
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 public class DDOCContainerValidationReportBuilderTest {
-
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
 
     private static final String VALID_DDOC_WITH_2_SIGNATURES = "ddoc_valid_2_signatures.ddoc";
 
@@ -53,7 +48,7 @@ public class DDOCContainerValidationReportBuilderTest {
         validationResult.getContainerErrors().add(new DigiDoc4JException("Container level error"));
 
         Reports reports = new DDOCContainerValidationReportBuilder(container, validationDocument, new ValidationPolicy(), validationResult, true).build();
-        Assert.assertEquals(1, reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getErrors().size());
+        assertEquals(1, reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getErrors().size());
     }
 
     private ValidationDocument validationDocument() {

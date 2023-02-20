@@ -26,22 +26,26 @@ import eu.europa.esig.dss.diagnostic.jaxb.XmlDiagnosticData;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlSignature;
 import eu.europa.esig.dss.enumerations.SignatureLevel;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PDFWithInvalidSignaturesTest extends PDFValidationServiceTest {
 
     private static final String PDF_WITH_ONE_BASELINE_PROFILE_B_SIGNATURE = "hellopades-pades-b-sha256-auth.pdf";
 
     @Test
-    @Ignore("java.lang.OutOfMemoryError: Java heap space may occur")
-    public void validatingPdfWithOneBaselineProfileBSignatureReturnsReportWithNoValidSignatures() throws Exception {
+    @Disabled("java.lang.OutOfMemoryError: Java heap space may occur")
+    public void validatingPdfWithOneBaselineProfileBSignatureReturnsReportWithNoValidSignatures() {
         SimpleReport report = validateAndAssertReports(
                 buildValidationDocument(PDF_WITH_ONE_BASELINE_PROFILE_B_SIGNATURE)).getSimpleReport();
         assertNotNull(report);
@@ -50,9 +54,9 @@ public class PDFWithInvalidSignaturesTest extends PDFValidationServiceTest {
         assertTrue(validationConclusion.getValidSignaturesCount() == 0);
     }
 
-    @Ignore(/*TODO:*/"SignatureFormatConstraint outputs error node in wrong format, so error is not parsed correctly to report (VAL-197)")
+    @Disabled(/*TODO:*/"SignatureFormatConstraint outputs error node in wrong format, so error is not parsed correctly to report (VAL-197)")
     @Test
-    public void validatingPdfWithOneBaselineProfileBSignatureReturnsReportWithOneCorrectlyFormattedError() throws Exception {
+    public void validatingPdfWithOneBaselineProfileBSignatureReturnsReportWithOneCorrectlyFormattedError() {
         SimpleReport report = validateAndAssertReports(
                 buildValidationDocument(PDF_WITH_ONE_BASELINE_PROFILE_B_SIGNATURE)).getSimpleReport();
         System.out.println(report);

@@ -22,11 +22,15 @@ import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlDiagnosticData;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PDFWithNoSignaturesTest extends PDFValidationServiceTest {
 
@@ -64,7 +68,8 @@ public class PDFWithNoSignaturesTest extends PDFValidationServiceTest {
 
     @Test
     public void validatingNullDocumentThrowsException() {
-        expectedException.expect(ValidationServiceException.class);
-        validationService.validateDocument(null);
+        assertThrows(
+                ValidationServiceException.class, () -> validationService.validateDocument(null)
+        );
     }
 }

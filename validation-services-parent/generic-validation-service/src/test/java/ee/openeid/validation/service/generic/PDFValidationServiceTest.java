@@ -34,30 +34,29 @@ import ee.openeid.validation.service.generic.configuration.GenericValidationServ
 import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
 import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Date;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(classes = {PDFValidationServiceTest.TestConfiguration.class})
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 public class PDFValidationServiceTest {
 
     private static final String TEST_FILES_LOCATION = "test-files/";
     private static final String PDF_WITH_REASON_AND_LOCATION = "pdf_with_reason_and_location.pdf";
 
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
     GenericValidationService validationService;
 
     private ConstraintLoadingSignaturePolicyService signaturePolicyService;
@@ -68,7 +67,7 @@ public class PDFValidationServiceTest {
     @Autowired
     private ContainerValidatorFactory containerValidatorFactory;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         validationService = new GenericValidationService();
         validationService.setTrustedListsCertificateSource(trustedListsCertificateSource);
@@ -89,8 +88,9 @@ public class PDFValidationServiceTest {
 
     @Test
     public void givenInvalidPDFFileShouldThrowServiceException() {
-        expectedException.expect(ValidationServiceException.class);
-        validationService.validateDocument(new ValidationDocument());
+        assertThrows(
+                ValidationServiceException.class, () -> validationService.validateDocument(new ValidationDocument())
+        );
     }
 
     @Test

@@ -17,17 +17,17 @@
 package ee.openeid.tsl.configuration;
 
 import ee.openeid.tsl.TSLRefresher;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.internal.verification.VerificationModeFactory;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class TSLRefreshConfigurationTest {
 
     private static final String SCHEDULER_CRON = "0 0 3 * * ?";
@@ -41,7 +41,7 @@ public class TSLRefreshConfigurationTest {
     private TSLRefreshConfiguration tslRefreshConfiguration;
 
     @Test
-    public void verifySchedulerCronIsQueriedFromPropertiesWhenCreatingTSLRefreshTask() throws Exception {
+    public void verifySchedulerCronIsQueriedFromPropertiesWhenCreatingTSLRefreshTask() {
         when(properties.getSchedulerCron()).thenReturn(SCHEDULER_CRON);
         tslRefreshConfiguration.tslRefreshTask();
         verify(properties, VerificationModeFactory.times(1)).getSchedulerCron();

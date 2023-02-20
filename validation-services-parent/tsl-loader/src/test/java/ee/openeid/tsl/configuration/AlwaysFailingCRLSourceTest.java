@@ -18,9 +18,9 @@ package ee.openeid.tsl.configuration;
 
 
 import eu.europa.esig.dss.spi.x509.revocation.crl.CRLSource;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class AlwaysFailingCRLSourceTest {
 

@@ -37,16 +37,13 @@ import eu.europa.esig.dss.spi.tsl.TrustProperties;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.util.encoders.Base64;
 import org.digidoc4j.TSLCertificateSource;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.ByteArrayInputStream;
 import java.security.cert.Certificate;
@@ -58,9 +55,15 @@ import java.util.List;
 import static ee.openeid.validation.service.timemark.BDOCTestUtils.*;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
         TSLLoaderConfiguration.class,
         TSLLoader.class,
@@ -84,8 +87,6 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     private static String POL_V4 = "POLv4";
 
     private static String DOCUMENT_MALFORMED_MESSAGE = "Document malformed or not matching documentType";
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
     @Autowired
     private TimemarkContainerValidationService timemarkContainerValidationService;
     @Autowired
@@ -95,7 +96,7 @@ public class TimemarkContainerValidationServiceIntegrationTest {
 
 
     @Test
-    public void vShouldHaveSignatureWarnings() throws Exception {
+    public void vShouldHaveSignatureWarnings() {
         SimpleReport validationResult = timemarkContainerValidationService.validateDocument(buildValidationDocument(BDOC_TEST_FILE_UNSIGNED)).getSimpleReport();
         List<Warning> signatureValidationData = validationResult.getValidationConclusion().getSignatures().get(0).getWarnings();
         assertThat(signatureValidationData, hasSize(1));
@@ -105,14 +106,14 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     @Test
-    public void vShouldNotHaveValidationWarnings() throws Exception {
+    public void vShouldNotHaveValidationWarnings() {
         SimpleReport validationResult = timemarkContainerValidationService.validateDocument(buildValidationDocument(BDOC_TEST_FILE_ALL_SIGNED)).getSimpleReport();
         List<ValidationWarning> validationWarnings = validationResult.getValidationConclusion().getValidationWarnings();
         assertThat(validationWarnings, hasSize(0));
     }
 
     @Test
-    public void verifyCorrectPolicyIsLoadedToD4JConfiguration() throws Exception {
+    public void verifyCorrectPolicyIsLoadedToD4JConfiguration() {
         System.out.println(configurationService.loadPolicyConfiguration(null).getConfiguration().getValidationPolicy());
 
         System.out.println(configurationService.loadPolicyConfiguration(POL_V4).getConfiguration().getValidationPolicy());
@@ -123,12 +124,13 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     @Test
-    public void validatingABDOCWithMalformedBytesResultsInMalformedDocumentException() throws Exception {
+    public void validatingABDOCWithMalformedBytesResultsInMalformedDocumentException() {
         ValidationDocument validationDocument = new ValidationDocument();
         validationDocument.setBytes("Hello".getBytes());
-        expectedException.expect(MalformedDocumentException.class);
-        expectedException.expectMessage(DOCUMENT_MALFORMED_MESSAGE);
-        timemarkContainerValidationService.validateDocument(validationDocument);
+        MalformedDocumentException caughtException = assertThrows(
+                MalformedDocumentException.class, () -> timemarkContainerValidationService.validateDocument(validationDocument)
+        );
+        assertEquals(DOCUMENT_MALFORMED_MESSAGE, caughtException.getMessage());
     }
 
     @Test
@@ -150,7 +152,7 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     @Test
-    public void signatureScopeShouldBeCorrectWhenDatafilesContainSpacesOrParenthesis() throws Exception {
+    public void signatureScopeShouldBeCorrectWhenDatafilesContainSpacesOrParenthesis() {
         SimpleReport report = timemarkContainerValidationService.validateDocument(buildValidationDocument(VALID_ID_CARD_MOB_ID)).getSimpleReport();
         report.getValidationConclusion().getSignatures().forEach(sig -> assertContainsScope(sig, "Proov (2).txt"));
         SimpleReport report2 = timemarkContainerValidationService.validateDocument(buildValidationDocument(VALID_BALTIC_EST_LT)).getSimpleReport();
@@ -279,25 +281,26 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     @Test
-    public void whenNonExistingPolicyIsGivenThenValidatorShouldThrowException() throws Exception {
-        expectedException.expect(InvalidPolicyException.class);
-        validateWithPolicy("non-existing-policy").getValidationConclusion().getPolicy();
+    public void whenNonExistingPolicyIsGivenThenValidatorShouldThrowException() {
+        assertThrows(
+                InvalidPolicyException.class, () -> validateWithPolicy("non-existing-policy").getValidationConclusion().getPolicy()
+        );
     }
 
     @Test
-    @Ignore("fails because of DSS bug: https://esig-dss.atlassian.net/browse/DSS-915")
+    @Disabled("fails because of DSS bug: https://esig-dss.atlassian.net/browse/DSS-915")
     public void WhenAllQualifiersAreSetInServiceInfoThenSignatureLevelShouldBeQESAndValidWithPOLv4() throws Exception {
         testWithAllQualifiersSet(POL_V4);
     }
 
     @Test
-    @Ignore("fails because of DSS bug: https://esig-dss.atlassian.net/browse/DSS-915")
+    @Disabled("fails because of DSS bug: https://esig-dss.atlassian.net/browse/DSS-915")
     public void WhenAllQualifiersAreSetInServiceInfoThenSignatureLevelShouldBeQESAndValidWithPOLv3() throws Exception {
         testWithAllQualifiersSet(POL_V3);
     }
 
     @Test
-    @Ignore("fails because of DSS bug: https://esig-dss.atlassian.net/browse/DSS-915")
+    @Disabled("fails because of DSS bug: https://esig-dss.atlassian.net/browse/DSS-915")
     public void whenQCWithQSCDQualifierIsNotSetThenSignatureLevelShouldBeAdesQCAndInvalidWithPOLv4() throws Exception {
         String policy = POL_V4;
         TrustProperties trustProperties = getServiceInfoForService(TEST_OF_KLASS3_SK_2010, policy);
@@ -309,7 +312,7 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     @Test
-    @Ignore("fails because of DSS bug: https://esig-dss.atlassian.net/browse/DSS-915")
+    @Disabled("fails because of DSS bug: https://esig-dss.atlassian.net/browse/DSS-915")
     public void whenQCWithQSCDQualifierIsNotSetThenSignatureLevelShouldBeAdesQCAndValidWithPOLv3() throws Exception {
         String policy = POL_V3;
         TrustProperties trustProperties = getServiceInfoForService(TEST_OF_KLASS3_SK_2010, policy);
@@ -321,7 +324,7 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     @Test
-    @Ignore("Unknown reason")
+    @Disabled("Unknown reason")
     public void whenQCWithQSCDAndQCStatementQualifierIsNotSetThenSignatureLevelShouldBeAdesAndInvalidWithPOLv4() throws Exception {
         String policy = POL_V4;
         TrustProperties trustProperties = getServiceInfoForService(TEST_OF_KLASS3_SK_2010, policy);
@@ -332,7 +335,7 @@ public class TimemarkContainerValidationServiceIntegrationTest {
         assertEquals("AdES", signature.getSignatureLevel());
     }
 
-    @Ignore
+    @Disabled
     @Test
     public void whenQCWithQSCDAndQCStatementQualifierIsNotSetThenSignatureLevelShouldBeAdesAndValidWithPOLv3() throws Exception {
         String policy = POL_V3;
@@ -382,19 +385,19 @@ public class TimemarkContainerValidationServiceIntegrationTest {
     public void timestampAndRevocationTimeExistsInLT(){
         Reports reports = timemarkContainerValidationService.validateDocument(buildValidationDocument("LT_without_nonce.bdoc"));
         SignatureValidationData signatureValidationData = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0);
-        Assert.assertEquals("2020-06-04T11:34:54Z", signatureValidationData.getInfo().getOcspResponseCreationTime());
-        Assert.assertEquals("2020-06-04T11:34:53Z", signatureValidationData.getInfo().getTimestampCreationTime());
+        assertEquals("2020-06-04T11:34:54Z", signatureValidationData.getInfo().getOcspResponseCreationTime());
+        assertEquals("2020-06-04T11:34:53Z", signatureValidationData.getInfo().getTimestampCreationTime());
     }
 
     @Test
     public void timestampTimeMissingLT_TM(){
         Reports reports = timemarkContainerValidationService.validateDocument(buildValidationDocument("bdoc_tm_valid_2_signatures.bdoc"));
         SignatureValidationData signatureValidationData = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0);
-        Assert.assertEquals("2020-05-21T14:07:01Z", signatureValidationData.getInfo().getOcspResponseCreationTime());
-        Assert.assertNull(signatureValidationData.getInfo().getTimestampCreationTime());
+        assertEquals("2020-05-21T14:07:01Z", signatureValidationData.getInfo().getOcspResponseCreationTime());
+        assertNull(signatureValidationData.getInfo().getTimestampCreationTime());
         SignatureValidationData signatureValidationData2 = reports.getSimpleReport().getValidationConclusion().getSignatures().get(1);
-        Assert.assertEquals("2020-05-28T10:59:14Z", signatureValidationData2.getInfo().getOcspResponseCreationTime());
-        Assert.assertNull(signatureValidationData2.getInfo().getTimestampCreationTime());
+        assertEquals("2020-05-28T10:59:14Z", signatureValidationData2.getInfo().getOcspResponseCreationTime());
+        assertNull(signatureValidationData2.getInfo().getTimestampCreationTime());
     }
 
     @Test
@@ -403,17 +406,17 @@ public class TimemarkContainerValidationServiceIntegrationTest {
         SignatureValidationData signatureValidationData = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0);
         CertificateFactory cf = CertificateFactory.getInstance("X.509");
 
-        Assert.assertEquals(2, signatureValidationData.getCertificates().size());
+        assertEquals(2, signatureValidationData.getCertificates().size());
 
         ee.openeid.siva.validation.document.report.Certificate signerCertificate = signatureValidationData.getCertificatesByType(CertificateType.SIGNING).get(0);
         Certificate signerX509Certificate = cf.generateCertificate(new ByteArrayInputStream(Base64.decode(signerCertificate.getContent().getBytes())));
-        Assert.assertEquals("SOLOVEI,JULIA,47711040261", CertUtil.getCommonName((X509Certificate) signerX509Certificate));
-        Assert.assertEquals("SOLOVEI,JULIA,47711040261", signerCertificate.getCommonName());
+        assertEquals("SOLOVEI,JULIA,47711040261", CertUtil.getCommonName((X509Certificate) signerX509Certificate));
+        assertEquals("SOLOVEI,JULIA,47711040261", signerCertificate.getCommonName());
 
         ee.openeid.siva.validation.document.report.Certificate revocationCertificate = signatureValidationData.getCertificatesByType(CertificateType.REVOCATION).get(0);
         Certificate revocationX509Certificate = cf.generateCertificate(new ByteArrayInputStream(Base64.decode(revocationCertificate.getContent().getBytes())));
-        Assert.assertEquals("SK OCSP RESPONDER 2011", CertUtil.getCommonName((X509Certificate) revocationX509Certificate));
-        Assert.assertEquals("SK OCSP RESPONDER 2011", revocationCertificate.getCommonName());
+        assertEquals("SK OCSP RESPONDER 2011", CertUtil.getCommonName((X509Certificate) revocationX509Certificate));
+        assertEquals("SK OCSP RESPONDER 2011", revocationCertificate.getCommonName());
     }
 
     @Test
@@ -422,22 +425,22 @@ public class TimemarkContainerValidationServiceIntegrationTest {
         SignatureValidationData signatureValidationData = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0);
         CertificateFactory cf = CertificateFactory.getInstance("X.509");
 
-        Assert.assertEquals(3, signatureValidationData.getCertificates().size());
+        assertEquals(3, signatureValidationData.getCertificates().size());
 
         ee.openeid.siva.validation.document.report.Certificate signerCertificate = signatureValidationData.getCertificatesByType(CertificateType.SIGNING).get(0);
         Certificate signerX509Certificate = cf.generateCertificate(new ByteArrayInputStream(Base64.decode(signerCertificate.getContent().getBytes())));
-        Assert.assertEquals("SINIVEE,VEIKO,36706020210", CertUtil.getCommonName((X509Certificate) signerX509Certificate));
-        Assert.assertEquals("SINIVEE,VEIKO,36706020210", signerCertificate.getCommonName());
+        assertEquals("SINIVEE,VEIKO,36706020210", CertUtil.getCommonName((X509Certificate) signerX509Certificate));
+        assertEquals("SINIVEE,VEIKO,36706020210", signerCertificate.getCommonName());
 
         ee.openeid.siva.validation.document.report.Certificate revocationCertificate = signatureValidationData.getCertificatesByType(CertificateType.REVOCATION).get(0);
         Certificate revocationX509Certificate = cf.generateCertificate(new ByteArrayInputStream(Base64.decode(revocationCertificate.getContent().getBytes())));
-        Assert.assertEquals("SK OCSP RESPONDER 2011", CertUtil.getCommonName((X509Certificate) revocationX509Certificate));
-        Assert.assertEquals("SK OCSP RESPONDER 2011", revocationCertificate.getCommonName());
+        assertEquals("SK OCSP RESPONDER 2011", CertUtil.getCommonName((X509Certificate) revocationX509Certificate));
+        assertEquals("SK OCSP RESPONDER 2011", revocationCertificate.getCommonName());
 
         ee.openeid.siva.validation.document.report.Certificate timestampCertificate = signatureValidationData.getCertificatesByType(CertificateType.SIGNATURE_TIMESTAMP).get(0);
         Certificate timestampX509Certificate = cf.generateCertificate(new ByteArrayInputStream(Base64.decode(timestampCertificate.getContent().getBytes())));
-        Assert.assertEquals("SK TIMESTAMPING AUTHORITY", CertUtil.getCommonName((X509Certificate) timestampX509Certificate));
-        Assert.assertEquals("SK TIMESTAMPING AUTHORITY", timestampCertificate.getCommonName());
+        assertEquals("SK TIMESTAMPING AUTHORITY", CertUtil.getCommonName((X509Certificate) timestampX509Certificate));
+        assertEquals("SK TIMESTAMPING AUTHORITY", timestampCertificate.getCommonName());
     }
 
     private void assertSubjectDNPresent(SignatureValidationData signature, String serialNumber, String
@@ -450,7 +453,7 @@ public class TimemarkContainerValidationServiceIntegrationTest {
         assertEquals(surname, subjectDistinguishedName.getSurname());
     }
 
-    private void testWithAllQualifiersSet(String policy) throws Exception {
+    private void testWithAllQualifiersSet(String policy) {
         TrustProperties trustProperties = getServiceInfoForService(TEST_OF_KLASS3_SK_2010, policy);
         assertServiceHasQualifiers(trustProperties, QC_WITH_QSCD, QC_STATEMENT, QC_FOR_ESIG);
         SignatureValidationData signature = validateWithPolicy(policy, BDOC_TEST_OF_KLASS3_CHAIN).getValidationConclusion().getSignatures().get(0);
@@ -495,25 +498,25 @@ public class TimemarkContainerValidationServiceIntegrationTest {
         qualifiersAndConditions.stream().filter(i -> i.getQualifiers().contains(qualifiers)).forEach(qualifiersAndConditions::remove);
     }
 
-    private SimpleReport validateWithPolicy(String policyName) throws Exception {
+    private SimpleReport validateWithPolicy(String policyName) {
         return validateWithPolicy(policyName, VALID_BDOC_TM_2_SIGNATURES);
     }
 
-    private SimpleReport validateWithPolicy(String policyName, String file) throws Exception {
+    private SimpleReport validateWithPolicy(String policyName, String file) {
         ValidationDocument validationDocument = buildValidationDocument(file);
         validationDocument.setSignaturePolicy(policyName);
         return timemarkContainerValidationService.validateDocument(validationDocument).getSimpleReport();
     }
 
-    private ValidationDocument bdocValid2Signatures() throws Exception {
+    private ValidationDocument bdocValid2Signatures() {
         return buildValidationDocument(VALID_BDOC_TM_2_SIGNATURES);
     }
 
-    private ValidationDocument bdocValidIdCardAndMobIdSignatures() throws Exception {
+    private ValidationDocument bdocValidIdCardAndMobIdSignatures() {
         return buildValidationDocument(VALID_ID_CARD_MOB_ID);
     }
 
-    private ValidationDocument bdocCRLRevocationOnly() throws Exception {
+    private ValidationDocument bdocCRLRevocationOnly() {
         return buildValidationDocument(ASICE_CRL_ONLY);
     }
 }

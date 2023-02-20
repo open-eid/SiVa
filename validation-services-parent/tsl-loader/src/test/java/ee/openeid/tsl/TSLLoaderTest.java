@@ -20,19 +20,19 @@ import ee.openeid.tsl.configuration.TSLLoaderConfigurationProperties;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.spi.x509.KeyStoreCertificateSource;
 import eu.europa.esig.dss.tsl.job.TLValidationJob;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class TSLLoaderTest {
 
     private static final String TSL_URL = "url";
@@ -53,11 +53,11 @@ public class TSLLoaderTest {
     @InjectMocks
     private TSLLoader tslLoader;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         when(tslValidationJobFactory.createValidationJob()).thenReturn(tslValidationJob);
-        doNothing().when(tslValidationJob).offlineRefresh();
-        doNothing().when(tslValidationJob).onlineRefresh();
+        lenient().doNothing().when(tslValidationJob).offlineRefresh();
+        lenient().doNothing().when(tslValidationJob).onlineRefresh();
     }
 
     private void initCacheLoadingConfigurationProperties() {

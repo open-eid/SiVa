@@ -35,18 +35,15 @@ import ee.openeid.validation.service.timemark.signature.policy.BDOCSignaturePoli
 import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.util.encoders.Base64;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -59,9 +56,13 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
         TSLLoaderConfiguration.class,
         TSLLoader.class,
@@ -85,8 +86,6 @@ public class DDOCServiceIntegrationTest {
     private static final String DDOC_1_2_HASHCODE = "DigiDoc 1.2 hashcode.ddoc";
     public static final String VALID_DDOC = "ddoc_valid_2_signatures.ddoc";
 
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
     @Autowired
     private TimemarkContainerValidationService timemarkContainerValidationService;
     @Autowired
@@ -97,21 +96,22 @@ public class DDOCServiceIntegrationTest {
     private ReportConfigurationProperties reportConfigurationProperties;
 
     @Test
-    public void getDataFilesDDOCWithMalformedBytesResultsInMalformedDocumentException() throws Exception {
+    public void getDataFilesDDOCWithMalformedBytesResultsInMalformedDocumentException() {
         DataFilesDocument dataFilesDocument = buildDataFilesDocument();
         dataFilesDocument.setBytes(Base64.decode("ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA=="));
-        expectedException.expect(MalformedDocumentException.class);
-        ddocDataFilesService.getDataFiles(dataFilesDocument);
+        assertThrows(
+                MalformedDocumentException.class, () -> ddocDataFilesService.getDataFiles(dataFilesDocument)
+        );
     }
 
     @Test
-    public void ddocGetDataFilesResultShouldIncludeDataFilesReportPOJO() throws Exception {
+    public void ddocGetDataFilesResultShouldIncludeDataFilesReportPOJO() {
         DataFilesReport dataFilesReport = ddocDataFilesService.getDataFiles(buildDataFilesDocument());
         assertNotNull(dataFilesReport);
     }
 
     @Test
-    public void ddocGetDataFilesShouldReturnDataFilesReportWithDataFileIncluded() throws Exception {
+    public void ddocGetDataFilesShouldReturnDataFilesReportWithDataFileIncluded() {
         DataFilesReport report = ddocDataFilesService.getDataFiles(buildDataFilesDocument());
 
         List<DataFileData> dataFiles = report.getDataFiles();
@@ -127,27 +127,28 @@ public class DDOCServiceIntegrationTest {
     }
 
     @Test
-    public void validatingADDOCWithMalformedBytesResultsInMalformedDocumentException() throws Exception {
+    public void validatingADDOCWithMalformedBytesResultsInMalformedDocumentException() {
         ValidationDocument validationDocument = buildValidationDocument(VALID_DDOC_2_SIGNATURES);
         validationDocument.setBytes(Base64.decode("ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA=="));
-        expectedException.expect(MalformedDocumentException.class);
-        timemarkContainerValidationService.validateDocument(validationDocument);
+        assertThrows(
+                MalformedDocumentException.class, () -> timemarkContainerValidationService.validateDocument(validationDocument)
+        );
     }
 
     @Test
-    public void ddocValidationResultShouldIncludeValidationReportPOJO() throws Exception {
+    public void ddocValidationResultShouldIncludeValidationReportPOJO() {
         SimpleReport validationResult2Signatures = timemarkContainerValidationService.validateDocument(buildValidationDocument(VALID_DDOC_2_SIGNATURES)).getSimpleReport();
         assertNotNull(validationResult2Signatures);
     }
 
     @Test
-    public void vShouldIncludeSignatureFormWithCorrectPrefixAndVersion() throws Exception {
+    public void vShouldIncludeSignatureFormWithCorrectPrefixAndVersion() {
         SimpleReport validationResult2Signatures = timemarkContainerValidationService.validateDocument(buildValidationDocument(VALID_DDOC_2_SIGNATURES)).getSimpleReport();
         assertEquals("DIGIDOC_XML_1.3", validationResult2Signatures.getValidationConclusion().getSignatureForm());
     }
 
     @Test
-    public void vShouldIncludeRequiredFields() throws Exception {
+    public void vShouldIncludeRequiredFields() {
         SimpleReport validationResult2Signatures = timemarkContainerValidationService.validateDocument(buildValidationDocument(VALID_DDOC_2_SIGNATURES)).getSimpleReport();
         ValidationConclusion validationConclusion = validationResult2Signatures.getValidationConclusion();
         assertNotNull(validationConclusion.getPolicy());
@@ -159,7 +160,7 @@ public class DDOCServiceIntegrationTest {
     }
 
     @Test
-    public void vShouldHaveCorrectSignatureValidationDataForSignature1() throws Exception {
+    public void vShouldHaveCorrectSignatureValidationDataForSignature1() {
         SimpleReport validationResult2Signatures = timemarkContainerValidationService.validateDocument(buildValidationDocument(VALID_DDOC_2_SIGNATURES)).getSimpleReport();
         SignatureValidationData sig1 = validationResult2Signatures.getValidationConclusion().getSignatures()
                 .stream()
@@ -193,7 +194,7 @@ public class DDOCServiceIntegrationTest {
     }
 
     @Test
-    public void vShouldHaveCorrectSignatureValidationDataForSignature2() throws Exception {
+    public void vShouldHaveCorrectSignatureValidationDataForSignature2() {
         SimpleReport validationResult2Signatures = timemarkContainerValidationService.validateDocument(buildValidationDocument(VALID_DDOC_2_SIGNATURES)).getSimpleReport();
         SignatureValidationData sig2 = validationResult2Signatures.getValidationConclusion().getSignatures()
                 .stream()
@@ -226,7 +227,7 @@ public class DDOCServiceIntegrationTest {
     }
 
     @Test
-    public void dDocValidationError173ForMissingDataFileXmlnsShouldBeShownAsWarningInReport() throws Exception {
+    public void dDocValidationError173ForMissingDataFileXmlnsShouldBeShownAsWarningInReport() {
         SimpleReport report = timemarkContainerValidationService.validateDocument(buildValidationDocument(DATAFILE_XMLNS_MISSING)).getSimpleReport();
         ValidationConclusion validationConclusion = report.getValidationConclusion();
         assertEquals(validationConclusion.getSignaturesCount(), validationConclusion.getValidSignaturesCount());
@@ -237,22 +238,22 @@ public class DDOCServiceIntegrationTest {
     }
 
     @Test
-    @Ignore("SIVA-159")
-    public void reportShouldHaveHashcodeSingnatureFormSuffixWhenValidatingDdocHashcode13Format() throws Exception {
+    @Disabled("SIVA-159")
+    public void reportShouldHaveHashcodeSingnatureFormSuffixWhenValidatingDdocHashcode13Format() {
         SimpleReport report = timemarkContainerValidationService.validateDocument(buildValidationDocument(DDOC_1_3_HASHCODE)).getSimpleReport();
         assertEquals("DIGIDOC_XML_1.3_hashcode", report.getValidationConclusion().getSignatureForm());
     }
 
     @Test
-    @Ignore("SIVARIA2-126")
-    public void reportShouldHaveHashcodeSingnatureFormSuffixWhenValidatingDdocHashcode10Format() throws Exception {
+    @Disabled("SIVARIA2-126")
+    public void reportShouldHaveHashcodeSingnatureFormSuffixWhenValidatingDdocHashcode10Format() {
         SimpleReport report = timemarkContainerValidationService.validateDocument(buildValidationDocument(DDOC_1_0_HASHCODE)).getSimpleReport();
         assertEquals("DIGIDOC_XML_1.0_hashcode", report.getValidationConclusion().getSignatureForm());
     }
 
     @Test
-    @Ignore("SIVA-159")
-    public void reportShouldHaveHashcodeSingnatureFormSuffixWhenValidatingDdocHashcode12Format() throws Exception {
+    @Disabled("SIVA-159")
+    public void reportShouldHaveHashcodeSingnatureFormSuffixWhenValidatingDdocHashcode12Format() {
         SimpleReport report = timemarkContainerValidationService.validateDocument(buildValidationDocument(DDOC_1_2_HASHCODE)).getSimpleReport();
         assertEquals("DIGIDOC_XML_1.2_hashcode", report.getValidationConclusion().getSignatureForm());
     }
@@ -282,13 +283,14 @@ public class DDOCServiceIntegrationTest {
     }
 
     @Test
-    public void whenNonExistingPolicyIsGivenThenValidatorShouldThrowException() throws Exception {
-        expectedException.expect(InvalidPolicyException.class);
-        validateWithPolicy("non-existing-policy");
+    public void whenNonExistingPolicyIsGivenThenValidatorShouldThrowException() {
+        assertThrows(
+                InvalidPolicyException.class, () -> validateWithPolicy("non-existing-policy")
+        );
     }
 
     @Test
-    public void multiSignatureDDOCSubjectDNValuesPresent() throws Exception {
+    public void multiSignatureDDOCSubjectDNValuesPresent() {
         SimpleReport report = timemarkContainerValidationService.validateDocument(buildValidationDocument(VALID_DDOC_2_SIGNATURES)).getSimpleReport();
         SignatureValidationData signatureValidationData = report.getValidationConclusion().getSignatures().get(0);
         SignatureValidationData signatureValidationData2 = report.getValidationConclusion().getSignatures().get(1);
@@ -298,7 +300,7 @@ public class DDOCServiceIntegrationTest {
     }
 
     @Test
-    public void timeAssertionMessageImprintIsEmptyForCorruptedOcspData() throws Exception {
+    public void timeAssertionMessageImprintIsEmptyForCorruptedOcspData() {
         SimpleReport report = timemarkContainerValidationService
                 .validateDocument(buildValidationDocument("ddoc_corrupted_ocsp_2_signatures.ddoc"))
                 .getSimpleReport();
@@ -311,7 +313,7 @@ public class DDOCServiceIntegrationTest {
     }
 
     @Test
-    public void timeAssertionMessageImprintIsEmptyForMissingOcspData() throws Exception {
+    public void timeAssertionMessageImprintIsEmptyForMissingOcspData() {
         SimpleReport report = timemarkContainerValidationService
                 .validateDocument(buildValidationDocument("ddoc_missing_ocsp_2_signatures.ddoc"))
                 .getSimpleReport();
@@ -330,29 +332,29 @@ public class DDOCServiceIntegrationTest {
         SignatureValidationData signatureValidationData2 = report.getValidationConclusion().getSignatures().get(1);
         CertificateFactory cf = CertificateFactory.getInstance("X.509");
 
-        Assert.assertEquals(2, signatureValidationData1.getCertificates().size());
-        Assert.assertEquals(2, signatureValidationData2.getCertificates().size());
+        assertEquals(2, signatureValidationData1.getCertificates().size());
+        assertEquals(2, signatureValidationData2.getCertificates().size());
 
         ee.openeid.siva.validation.document.report.Certificate signerCertificate1 = signatureValidationData1.getCertificatesByType(CertificateType.SIGNING).get(0);
         Certificate signerX509Certificate1 = cf.generateCertificate(new ByteArrayInputStream(Base64.decode(signerCertificate1.getContent().getBytes())));
-        Assert.assertEquals("KESKEL,URMO,38002240232", CertUtil.getCommonName((X509Certificate) signerX509Certificate1));
-        Assert.assertEquals("KESKEL,URMO,38002240232", signerCertificate1.getCommonName());
+        assertEquals("KESKEL,URMO,38002240232", CertUtil.getCommonName((X509Certificate) signerX509Certificate1));
+        assertEquals("KESKEL,URMO,38002240232", signerCertificate1.getCommonName());
 
         ee.openeid.siva.validation.document.report.Certificate revocationCertificate1 = signatureValidationData1.getCertificatesByType(CertificateType.REVOCATION).get(0);
         Certificate revocationX509Certificate1 = cf.generateCertificate(new ByteArrayInputStream(Base64.decode(revocationCertificate1.getContent().getBytes())));
-        Assert.assertEquals("ESTEID-SK OCSP RESPONDER", CertUtil.getCommonName((X509Certificate) revocationX509Certificate1));
-        Assert.assertEquals("ESTEID-SK OCSP RESPONDER", revocationCertificate1.getCommonName());
+        assertEquals("ESTEID-SK OCSP RESPONDER", CertUtil.getCommonName((X509Certificate) revocationX509Certificate1));
+        assertEquals("ESTEID-SK OCSP RESPONDER", revocationCertificate1.getCommonName());
 
         ee.openeid.siva.validation.document.report.Certificate signerCertificate2 = signatureValidationData2.getCertificatesByType(CertificateType.SIGNING).get(0);
         Certificate signerX509Certificate2 = cf.generateCertificate(new ByteArrayInputStream(Base64.decode(signerCertificate2.getContent().getBytes())));
 
-        Assert.assertEquals("JALUKSE,KRISTJAN,38003080336", CertUtil.getCommonName((X509Certificate) signerX509Certificate2));
-        Assert.assertEquals("JALUKSE,KRISTJAN,38003080336", signerCertificate2.getCommonName());
+        assertEquals("JALUKSE,KRISTJAN,38003080336", CertUtil.getCommonName((X509Certificate) signerX509Certificate2));
+        assertEquals("JALUKSE,KRISTJAN,38003080336", signerCertificate2.getCommonName());
 
         ee.openeid.siva.validation.document.report.Certificate revocationCertificate2 = signatureValidationData2.getCertificatesByType(CertificateType.REVOCATION).get(0);
         Certificate revocationX509Certificate2 = cf.generateCertificate(new ByteArrayInputStream(Base64.decode(revocationCertificate2.getContent().getBytes())));
-        Assert.assertEquals("ESTEID-SK 2007 OCSP RESPONDER", CertUtil.getCommonName((X509Certificate) revocationX509Certificate2));
-        Assert.assertEquals("ESTEID-SK 2007 OCSP RESPONDER", revocationCertificate2.getCommonName());
+        assertEquals("ESTEID-SK 2007 OCSP RESPONDER", CertUtil.getCommonName((X509Certificate) revocationX509Certificate2));
+        assertEquals("ESTEID-SK 2007 OCSP RESPONDER", revocationCertificate2.getCommonName());
     }
 
     private void assertSubjectDNPresent(SignatureValidationData signature, String commonName, String serialNumber) {
@@ -362,14 +364,14 @@ public class DDOCServiceIntegrationTest {
         assertEquals(commonName, subjectDistinguishedName.getCommonName());
     }
 
-    private static DataFilesDocument buildDataFilesDocument() throws Exception {
+    private static DataFilesDocument buildDataFilesDocument() {
         return DummyDataFilesDocumentBuilder
                 .aDataFilesDocument()
                 .withDocument(TEST_FILES_LOCATION + VALID_DDOC)
                 .build();
     }
 
-    private static ValidationDocument buildValidationDocument(String testFile) throws Exception {
+    private static ValidationDocument buildValidationDocument(String testFile) {
         return DummyValidationDocumentBuilder
                 .aValidationDocument()
                 .withDocument(TEST_FILES_LOCATION + testFile)

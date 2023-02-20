@@ -27,34 +27,31 @@ import ee.openeid.siva.validation.service.signature.policy.properties.Validation
 import ee.openeid.siva.validation.util.CertUtil;
 import ee.openeid.validation.service.timestamptoken.configuration.TimeStampTokenSignaturePolicyProperties;
 import org.bouncycastle.util.encoders.Base64;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.ByteArrayInputStream;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 public class TimeStampTokenValidationServiceTest {
 
     private static final String TEST_FILES_LOCATION = "test-files/";
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
 
     private TimeStampTokenValidationService validationService;
     private TimeStampTokenSignaturePolicyProperties policyProperties = new TimeStampTokenSignaturePolicyProperties();
 
 
-    @Before
+    @BeforeEach
     public void setUp() {
         validationService = new TimeStampTokenValidationService();
         policyProperties.initPolicySettings();
@@ -68,9 +65,9 @@ public class TimeStampTokenValidationServiceTest {
     public void validTimeStampToken() {
         SimpleReport simpleReport = validationService.validateDocument(buildValidationDocument("timestamptoken-ddoc.asics")).getSimpleReport();
         TimeStampTokenValidationData validationData = simpleReport.getValidationConclusion().getTimeStampTokens().get(0);
-        Assert.assertEquals(TimeStampTokenValidationData.Indication.TOTAL_PASSED, validationData.getIndication());
-        Assert.assertEquals("SK TIMESTAMPING AUTHORITY", validationData.getSignedBy());
-        Assert.assertNull(validationData.getError());
+        assertEquals(TimeStampTokenValidationData.Indication.TOTAL_PASSED, validationData.getIndication());
+        assertEquals("SK TIMESTAMPING AUTHORITY", validationData.getSignedBy());
+        assertNull(validationData.getError());
     }
 
     @Test
@@ -79,38 +76,45 @@ public class TimeStampTokenValidationServiceTest {
         TimeStampTokenValidationData timeStampTokenValidationData = simpleReport.getValidationConclusion().getTimeStampTokens().get(0);
         CertificateFactory cf = CertificateFactory.getInstance("X.509");
 
-        Assert.assertEquals(1, timeStampTokenValidationData.getCertificates().size());
+        assertEquals(1, timeStampTokenValidationData.getCertificates().size());
 
         ee.openeid.siva.validation.document.report.Certificate certificate = timeStampTokenValidationData.getCertificates().get(0);
-        Assert.assertEquals(CertificateType.CONTENT_TIMESTAMP, certificate.getType());
-        Assert.assertEquals("SK TIMESTAMPING AUTHORITY", certificate.getCommonName());
+        assertEquals(CertificateType.CONTENT_TIMESTAMP, certificate.getType());
+        assertEquals("SK TIMESTAMPING AUTHORITY", certificate.getCommonName());
         Certificate timeStampCertificate = cf.generateCertificate(new ByteArrayInputStream(Base64.decode(certificate.getContent().getBytes())));
-        Assert.assertEquals("SK TIMESTAMPING AUTHORITY", CertUtil.getCommonName((X509Certificate) timeStampCertificate));
+        assertEquals("SK TIMESTAMPING AUTHORITY", CertUtil.getCommonName((X509Certificate) timeStampCertificate));
 
     }
 
     @Test
-    public void multipleDataFile() throws Exception {
-        expectedException.expect(DocumentRequirementsException.class);
-        validationService.validateDocument(buildValidationDocument("timestamptoken-two-data-files.asics"));
+    public void multipleDataFile() {
+        assertThrows(
+            DocumentRequirementsException.class, () -> {
+                validationService.validateDocument(buildValidationDocument("timestamptoken-two-data-files.asics"));
+            }
+        );
     }
 
     @Test
-    public void notValidTstFile() throws Exception {
-        expectedException.expect(MalformedDocumentException.class);
-        validationService.validateDocument(buildValidationDocument("timestamptoken-invalid.asics"));
+    public void notValidTstFile() {
+        assertThrows(
+            MalformedDocumentException.class, () -> {
+                validationService.validateDocument(buildValidationDocument("timestamptoken-invalid.asics"));
+            }
+        );
+
     }
 
     @Test
-    public void dataFiledChanged() throws Exception {
+    public void dataFiledChanged() {
         SimpleReport simpleReport = validationService.validateDocument(buildValidationDocument("timestamptoken-datafile-changed.asics")).getSimpleReport();
-        Assert.assertEquals("Signature not intact", simpleReport.getValidationConclusion().getTimeStampTokens().get(0).getError().get(0).getContent());
+        assertEquals("Signature not intact", simpleReport.getValidationConclusion().getTimeStampTokens().get(0).getError().get(0).getContent());
     }
 
     @Test
-    public void signatureNotIntact() throws Exception {
+    public void signatureNotIntact() {
         SimpleReport simpleReport = validationService.validateDocument(buildValidationDocument("timestamptoken-signature-modified.asics")).getSimpleReport();
-        Assert.assertEquals("Signature not intact", simpleReport.getValidationConclusion().getTimeStampTokens().get(0).getError().get(0).getContent());
+        assertEquals("Signature not intact", simpleReport.getValidationConclusion().getTimeStampTokens().get(0).getError().get(0).getContent());
     }
 
     @Test

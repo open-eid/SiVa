@@ -19,15 +19,15 @@ package ee.openeid.validation.service.generic;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import org.bouncycastle.util.encoders.Base64;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MalformedPDFTest extends PDFValidationServiceTest {
 
     @Test
-    @Ignore("DD4J to DSS ")
+    @Disabled("DD4J to DSS ")
     public void validatingAPdfWithMalformedBytesResultsInMalformedDocumentException() {
         ValidationDocument validationDocument = new ValidationDocument();
         validationDocument.setName("Some name.pdf");

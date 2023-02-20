@@ -17,13 +17,14 @@
 package ee.openeid.siva.validation.util;
 
 import org.bouncycastle.util.encoders.Base64;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CertUtilTest {
     private static final String CERTIFICATE = "MIIEnDCCA4SgAwIBAgIQL9ObKmnMcfRSaL7iJK7tXDANBgkqhkiG9w0BAQUF\n" +
@@ -56,12 +57,12 @@ public class CertUtilTest {
 
     @Test
     public void validCountryFromCertificate() throws CertificateException {
-        Assert.assertEquals("EE", CertUtil.getCountryCode(getCertificate()));
+        assertEquals("EE", CertUtil.getCountryCode(getCertificate()));
     }
 
     @Test
     public void validCommonNameFromCertificate() throws CertificateException {
-        Assert.assertEquals("VOLL,ANDRES,39004170346", CertUtil.getCommonName(getCertificate()));
+        assertEquals("VOLL,ANDRES,39004170346", CertUtil.getCommonName(getCertificate()));
     }
 
     private X509Certificate getCertificate() throws CertificateException {

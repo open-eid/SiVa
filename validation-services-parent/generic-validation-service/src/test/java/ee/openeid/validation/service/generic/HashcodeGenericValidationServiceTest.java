@@ -26,13 +26,12 @@ import ee.openeid.validation.service.generic.configuration.GenericSignaturePolic
 import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import org.bouncycastle.util.encoders.Base64;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -47,11 +46,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 @SpringBootTest(classes = {PDFValidationServiceTest.TestConfiguration.class})
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 public class HashcodeGenericValidationServiceTest {
 
 
@@ -64,7 +64,7 @@ public class HashcodeGenericValidationServiceTest {
     @Autowired
     private ContainerValidatorFactory containerValidatorFactory;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         validationService = new HashcodeGenericValidationService();
         validationService.setTrustedListsCertificateSource(trustedListsCertificateSource);
@@ -80,11 +80,11 @@ public class HashcodeGenericValidationServiceTest {
     public void validHashcodeRequest() throws Exception {
         Reports response = validationService.validate(getValidationDocumentSingletonList());
         SignatureScope signatureScope = response.getSimpleReport().getValidationConclusion().getSignatures().get(0).getSignatureScopes().get(0);
-        Assert.assertEquals("LvhnsrgBZBK9kTQ8asbPtcsjuEhBo9s3QDdCcIxlMmo=", signatureScope.getHash());
-        Assert.assertEquals("SHA256", signatureScope.getHashAlgo());
-        Assert.assertEquals("test.pdf", signatureScope.getName());
-        Assert.assertEquals((Integer) 1, response.getSimpleReport().getValidationConclusion().getValidSignaturesCount());
-        Assert.assertEquals(1L, response.getSimpleReport().getValidationConclusion().getSignatures().size());
+        assertEquals("LvhnsrgBZBK9kTQ8asbPtcsjuEhBo9s3QDdCcIxlMmo=", signatureScope.getHash());
+        assertEquals("SHA256", signatureScope.getHashAlgo());
+        assertEquals("test.pdf", signatureScope.getName());
+        assertEquals((Integer) 1, response.getSimpleReport().getValidationConclusion().getValidSignaturesCount());
+        assertEquals(1L, response.getSimpleReport().getValidationConclusion().getSignatures().size());
     }
 
     @Test
@@ -92,9 +92,9 @@ public class HashcodeGenericValidationServiceTest {
         List<ValidationDocument> validationDocuments = getValidationDocumentSingletonList();
         validationDocuments.addAll(getValidationDocumentSingletonList());
         Reports response = validationService.validate(validationDocuments);
-        Assert.assertEquals((Integer) 2, response.getSimpleReport().getValidationConclusion().getValidSignaturesCount());
-        Assert.assertEquals((Integer) 2, response.getSimpleReport().getValidationConclusion().getSignaturesCount());
-        Assert.assertEquals(2L, response.getSimpleReport().getValidationConclusion().getSignatures().size());
+        assertEquals((Integer) 2, response.getSimpleReport().getValidationConclusion().getValidSignaturesCount());
+        assertEquals((Integer) 2, response.getSimpleReport().getValidationConclusion().getSignaturesCount());
+        assertEquals(2L, response.getSimpleReport().getValidationConclusion().getSignatures().size());
     }
 
     @Test
@@ -103,9 +103,9 @@ public class HashcodeGenericValidationServiceTest {
         validationDocuments.get(0).setDatafiles(null);
         Reports response = validationService.validate(validationDocuments);
         SignatureScope signatureScope = response.getSimpleReport().getValidationConclusion().getSignatures().get(0).getSignatureScopes().get(0);
-        Assert.assertEquals("LvhnsrgBZBK9kTQ8asbPtcsjuEhBo9s3QDdCcIxlMmo=", signatureScope.getHash());
-        Assert.assertEquals("SHA256", signatureScope.getHashAlgo());
-        Assert.assertEquals("test.pdf", signatureScope.getName());
+        assertEquals("LvhnsrgBZBK9kTQ8asbPtcsjuEhBo9s3QDdCcIxlMmo=", signatureScope.getHash());
+        assertEquals("SHA256", signatureScope.getHashAlgo());
+        assertEquals("test.pdf", signatureScope.getName());
     }
 
     @Test
@@ -114,23 +114,23 @@ public class HashcodeGenericValidationServiceTest {
         SignatureValidationData signatureValidationData = response.getSimpleReport().getValidationConclusion().getSignatures().get(0);
         CertificateFactory cf = CertificateFactory.getInstance("X.509");
 
-        Assert.assertEquals(3, signatureValidationData.getCertificates().size());
+        assertEquals(3, signatureValidationData.getCertificates().size());
 
         ee.openeid.siva.validation.document.report.Certificate signerCertificate = signatureValidationData.getCertificatesByType(CertificateType.SIGNING).get(0);
         Certificate signerX509Certificate = cf.generateCertificate(new ByteArrayInputStream(Base64.decode(signerCertificate.getContent().getBytes())));
-        Assert.assertEquals("PAULIUS PODOLSKIS", CertUtil.getCommonName((X509Certificate) signerX509Certificate));
-        Assert.assertEquals("PAULIUS PODOLSKIS", signerCertificate.getCommonName());
+        assertEquals("PAULIUS PODOLSKIS", CertUtil.getCommonName((X509Certificate) signerX509Certificate));
+        assertEquals("PAULIUS PODOLSKIS", signerCertificate.getCommonName());
 
         ee.openeid.siva.validation.document.report.Certificate timestampCertificate = signatureValidationData.getCertificatesByType((CertificateType.SIGNATURE_TIMESTAMP)).get(0);
         Certificate timestampX509Certificate = cf.generateCertificate(new ByteArrayInputStream(Base64.decode(timestampCertificate.getContent().getBytes())));
-        Assert.assertEquals("SK TIMESTAMPING AUTHORITY", CertUtil.getCommonName((X509Certificate) timestampX509Certificate));
-        Assert.assertEquals("SK TIMESTAMPING AUTHORITY", timestampCertificate.getCommonName());
+        assertEquals("SK TIMESTAMPING AUTHORITY", CertUtil.getCommonName((X509Certificate) timestampX509Certificate));
+        assertEquals("SK TIMESTAMPING AUTHORITY", timestampCertificate.getCommonName());
 
 
         ee.openeid.siva.validation.document.report.Certificate revocationCertificate = signatureValidationData.getCertificatesByType((CertificateType.REVOCATION)).get(0);
         Certificate revocationX509Certificate = cf.generateCertificate(new ByteArrayInputStream(Base64.decode(revocationCertificate.getContent().getBytes())));
-        Assert.assertEquals("VI Registru Centras OCSP (IssuingCA-A)", CertUtil.getCommonName((X509Certificate) revocationX509Certificate));
-        Assert.assertEquals("VI Registru Centras OCSP (IssuingCA-A)", revocationCertificate.getCommonName());
+        assertEquals("VI Registru Centras OCSP (IssuingCA-A)", CertUtil.getCommonName((X509Certificate) revocationX509Certificate));
+        assertEquals("VI Registru Centras OCSP (IssuingCA-A)", revocationCertificate.getCommonName());
 
     }
 
@@ -138,7 +138,7 @@ public class HashcodeGenericValidationServiceTest {
     public void hashcodeValidationSubjectDNCorrectlyPresent() throws Exception {
         Reports reports = validationService.validate(getValidationDocumentSingletonList());
 
-        Assert.assertSame(1, reports.getSimpleReport().getValidationConclusion().getSignatures().size());
+        assertSame(1, reports.getSimpleReport().getValidationConclusion().getSignatures().size());
         SignatureValidationData signature = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0);
         assertNotNull(signature.getSubjectDistinguishedName());
         assertEquals("38605170596", signature.getSubjectDistinguishedName().getSerialNumber());

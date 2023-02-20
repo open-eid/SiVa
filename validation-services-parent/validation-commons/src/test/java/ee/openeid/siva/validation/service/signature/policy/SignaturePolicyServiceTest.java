@@ -18,28 +18,27 @@ package ee.openeid.siva.validation.service.signature.policy;
 
 import ee.openeid.siva.validation.service.signature.policy.properties.SignaturePolicyProperties;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.stream;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SignaturePolicyServiceTest {
 
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
-
     @Test
     public void whenSignaturePolicesDoNotContainDefaultPolicyThenThrowException() {
-        expectedException.expect(DefaultPolicyNotDefinedException.class);
-        ValidationPolicy pol1 = createValidationPolicy("pol1", "desc1");
-        SignaturePolicyService<ValidationPolicy> signaturePolicyService = createSignaturePolicyService("RANDOM_PREFIX" + "pol1", pol1);
-        signaturePolicyService.getPolicy("pol1");
+        assertThrows(
+            DefaultPolicyNotDefinedException.class, () -> {
+                ValidationPolicy pol1 = createValidationPolicy("pol1", "desc1");
+                SignaturePolicyService<ValidationPolicy> signaturePolicyService = createSignaturePolicyService("RANDOM_PREFIX" + "pol1", pol1);
+                signaturePolicyService.getPolicy("pol1");
+            }
+        );
     }
 
     @Test

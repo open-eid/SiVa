@@ -17,9 +17,10 @@
 package ee.openeid.siva.validation.service.signature.policy;
 
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 public class PredefinedValidationPolicySourceTest {
 

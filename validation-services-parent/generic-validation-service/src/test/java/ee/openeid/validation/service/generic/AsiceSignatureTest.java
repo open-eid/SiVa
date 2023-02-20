@@ -8,19 +8,18 @@ import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSign
 import ee.openeid.validation.service.generic.configuration.GenericSignaturePolicyProperties;
 import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(classes = {PDFValidationServiceTest.TestConfiguration.class})
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
 public class AsiceSignatureTest {
 
@@ -39,7 +38,7 @@ public class AsiceSignatureTest {
     @Autowired
     private ContainerValidatorFactory containerValidatorFactory;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         validationService = new GenericValidationService();
         validationService.setTrustedListsCertificateSource(trustedListsCertificateSource);
@@ -59,8 +58,8 @@ public class AsiceSignatureTest {
         String imprint1 = simpleReport.getValidationConclusion().getSignatures().get(0).getInfo().getTimeAssertionMessageImprint();
         String imprint2 = simpleReport.getValidationConclusion().getSignatures().get(1).getInfo().getTimeAssertionMessageImprint();
 
-        Assert.assertEquals("MDEwDQYJYIZIAWUDBAIBBQAEIGKrO2Grf+WLkmOnj9QQbCXAa2A3881D9PUIOk0M7Nm6", imprint1);
-        Assert.assertEquals("MDEwDQYJYIZIAWUDBAIBBQAEIDDnPj4HDgSwi+tj/s30GshbBf1L8Nqnt2GMK+6VnEdt", imprint2);
+        assertEquals("MDEwDQYJYIZIAWUDBAIBBQAEIGKrO2Grf+WLkmOnj9QQbCXAa2A3881D9PUIOk0M7Nm6", imprint1);
+        assertEquals("MDEwDQYJYIZIAWUDBAIBBQAEIDDnPj4HDgSwi+tj/s30GshbBf1L8Nqnt2GMK+6VnEdt", imprint2);
     }
 
     @Test
@@ -70,7 +69,7 @@ public class AsiceSignatureTest {
                 .getSimpleReport();
         String imprint = simpleReport.getValidationConclusion().getSignatures().get(0).getInfo().getTimeAssertionMessageImprint();
 
-        Assert.assertEquals("MDEwDQYJYIZIAWUDBAIBBQAEIE541TO5ZHHgKv60XxTXJX0Qg04pjs4uN8bELnDUDFp1", imprint);
+        assertEquals("MDEwDQYJYIZIAWUDBAIBBQAEIE541TO5ZHHgKv60XxTXJX0Qg04pjs4uN8bELnDUDFp1", imprint);
     }
 
     @Test

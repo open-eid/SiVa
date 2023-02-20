@@ -26,15 +26,19 @@ import ee.openeid.siva.validation.document.report.Warning;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlDiagnosticData;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlSignature;
 import eu.europa.esig.dss.enumerations.SignatureLevel;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
 
@@ -118,7 +122,7 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
     }
 
     @Test
-    @Ignore //TODO: Warnings are not returned when validationLevel is set to ARCHIVAL_DATA (default level)
+    @Disabled //TODO: Warnings are not returned when validationLevel is set to ARCHIVAL_DATA (default level)
     public void validatingPdfSignedWithUnqualifiedCertificateReturnsReportWithoutErrorsButWithWarning() {
         SimpleReport report = validateAndAssertReports(
                 buildValidationDocument(PDF_SIGNED_WITH_UNQUALIFIED_CERTIFICATE)).getSimpleReport();

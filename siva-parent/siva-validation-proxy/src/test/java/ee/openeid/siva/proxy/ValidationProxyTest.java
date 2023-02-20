@@ -45,12 +45,9 @@ import ee.openeid.validation.service.generic.configuration.GenericSignaturePolic
 import ee.openeid.validation.service.timemark.report.DDOCContainerValidationReportBuilder;
 import ee.openeid.validation.service.timestamptoken.TimeStampTokenValidationService;
 import ee.openeid.validation.service.timestamptoken.configuration.TimeStampTokenSignaturePolicyProperties;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -59,9 +56,8 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.StandardEnvironment;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -71,15 +67,18 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.Matchers.contains;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 public class ValidationProxyTest {
     private static final String DEFAULT_DOCUMENT_NAME = "document.";
     private static final String TEST_FILES_LOCATION = "test-files/";
@@ -88,9 +87,6 @@ public class ValidationProxyTest {
     private static final String GENERIC_VALIDATION_SERVICE_BEAN = "genericValidationService";
 
     private static final ValidationWarning TEST_ENV_WARNING = getTestEnvironmentValidationWarning();
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
     @InjectMocks
     private ContainerValidationProxy validationProxy;
@@ -106,25 +102,27 @@ public class ValidationProxyTest {
     @Spy
     private StandardEnvironment environment;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         validationServiceSpy = new ValidationServiceSpy();
     }
 
     @Test
-    public void applicationContextHasNoBeanWithGivenNameThrowsException() throws Exception {
+    public void applicationContextHasNoBeanWithGivenNameThrowsException() {
         BDDMockito.given(applicationContext.getBean(anyString())).willThrow(new NoSuchBeanDefinitionException("Bean not loaded"));
 
-        exception.expect(ValidatonServiceNotFoundException.class);
-        exception.expectMessage("genericValidationService not found");
-        ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.PDF);
-        validationProxy.validate(proxyDocument);
-
-        verify(applicationContext).getBean(anyString());
+        ValidatonServiceNotFoundException caughtException = assertThrows(
+                ValidatonServiceNotFoundException.class, () -> {
+                    ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.PDF);
+                    validationProxy.validate(proxyDocument);
+                    verify(applicationContext).getBean(anyString());
+                }
+        );
+        assertEquals("genericValidationService not found", caughtException.getMessage());
     }
 
     @Test
-    public void proxyDocumentWithBDOCDocumentTypeShouldReturnValidationReport() throws Exception {
+    public void proxyDocumentWithBDOCDocumentTypeShouldReturnValidationReport() {
         when(applicationContext.getBean(TIMEMARK_CONTAINER_VALIDATION_SERVICE_BEAN)).thenReturn(validationServiceSpy);
 
         ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.BDOC);
@@ -133,7 +131,7 @@ public class ValidationProxyTest {
     }
 
     @Test
-    public void proxyDocumentWithPDFDocumentTypeShouldReturnValidationReport() throws Exception {
+    public void proxyDocumentWithPDFDocumentTypeShouldReturnValidationReport() {
         when(applicationContext.getBean(GENERIC_VALIDATION_SERVICE_BEAN)).thenReturn(validationServiceSpy);
 
         ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.PDF);
@@ -142,7 +140,7 @@ public class ValidationProxyTest {
     }
 
     @Test
-    public void proxyDocumentWithDDOCDocumentTypeShouldReturnValidationReport() throws Exception {
+    public void proxyDocumentWithDDOCDocumentTypeShouldReturnValidationReport() {
         when(applicationContext.getBean(TIMEMARK_CONTAINER_VALIDATION_SERVICE_BEAN)).thenReturn(validationServiceSpy);
 
         ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.DDOC);
@@ -204,12 +202,15 @@ public class ValidationProxyTest {
     }
 
     @Test
-    public void proxyDocumentAsicsWithTwoDataFiles() throws Exception {
-        exception.expect(DocumentRequirementsException.class);
-        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(getTimeStampValidationService());
-        ProxyDocument proxyDocument = mockProxyDocumentWithExtension("asics");
-        proxyDocument.setBytes(buildValidationDocument("TwoDataFilesAsics.asics"));
-        validationProxy.validate(proxyDocument);
+    public void proxyDocumentAsicsWithTwoDataFiles() {
+        assertThrows(
+                DocumentRequirementsException.class, () -> {
+                    when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(getTimeStampValidationService());
+                    ProxyDocument proxyDocument = mockProxyDocumentWithExtension("asics");
+                    proxyDocument.setBytes(buildValidationDocument("TwoDataFilesAsics.asics"));
+                    validationProxy.validate(proxyDocument);
+                }
+        );
     }
 
     @Test
@@ -233,13 +234,13 @@ public class ValidationProxyTest {
     }
 
     @Test
-    public void removeUnnecessaryWarningsFromValidationConclusion() throws Exception {
+    public void removeUnnecessaryWarningsFromValidationConclusion() {
         ValidationConclusion validationConclusion = new ValidationConclusion();
         ValidationWarning validationWarning = new ValidationWarning();
         validationWarning.setContent(DDOCContainerValidationReportBuilder.DDOC_TIMESTAMP_WARNING);
         validationConclusion.setValidationWarnings(Collections.singletonList(validationWarning));
         validationProxy.removeUnnecessaryWarning(validationConclusion);
-        Assert.assertTrue( validationConclusion.getValidationWarnings().isEmpty());
+        assertTrue( validationConclusion.getValidationWarnings().isEmpty());
     }
 
     @Test
@@ -259,13 +260,13 @@ public class ValidationProxyTest {
     public void addsTestEnvironmentWarningForTestProfile() {
         environment.setActiveProfiles("test");
         SimpleReport report = getValidationProxySpy().validate(new ProxyDocument());
-        Assert.assertThat(report.getValidationConclusion().getValidationWarnings(), contains(TEST_ENV_WARNING));
+        assertThat(report.getValidationConclusion().getValidationWarnings(), contains(TEST_ENV_WARNING));
     }
 
     @Test
     public void doesNotAddTestEnvironmentWarningWhenTestProfileNotSet() {
         SimpleReport report = getValidationProxySpy().validate(new ProxyDocument());
-        Assert.assertNull(report.getValidationConclusion().getValidationWarnings());
+        assertNull(report.getValidationConclusion().getValidationWarnings());
     }
 
     @Test
@@ -278,7 +279,7 @@ public class ValidationProxyTest {
 
         SimpleReport report = getValidationProxySpyWithValidationWarningsInReport(Arrays.asList(warning1, warning2))
                 .validate(new ProxyDocument());
-        Assert.assertThat(report.getValidationConclusion().getValidationWarnings(), contains(TEST_ENV_WARNING, warning1, warning2));
+        assertThat(report.getValidationConclusion().getValidationWarnings(), contains(TEST_ENV_WARNING, warning1, warning2));
     }
 
     private void mockValidationServices() {
@@ -339,7 +340,7 @@ public class ValidationProxyTest {
         return proxyDocument;
     }
 
-    private void assertSimpleReport(SimpleReport report) throws IOException {
+    private void assertSimpleReport(SimpleReport report) {
         assertEquals(validationServiceSpy.reports.getSimpleReport(), report);
     }
 

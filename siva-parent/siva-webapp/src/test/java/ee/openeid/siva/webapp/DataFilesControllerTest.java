@@ -22,12 +22,12 @@ import ee.openeid.siva.validation.document.report.DataFilesReport;
 import ee.openeid.siva.webapp.request.DataFilesRequest;
 import ee.openeid.siva.webapp.transformer.DataFilesRequestToProxyDocumentTransformer;
 import org.json.JSONObject;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
@@ -39,7 +39,7 @@ public class DataFilesControllerTest {
 
     private MockMvc mockMvc;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         DataFilesController dataFilesController = new DataFilesController();
         dataFilesController.setDataFilesProxy(dataFilesProxyServiceSpy);

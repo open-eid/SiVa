@@ -18,7 +18,7 @@ package ee.openeid.siva.webapp.request.validation;
 
 import ee.openeid.siva.webapp.request.validation.annotations.ValidReportType;
 import lombok.AllArgsConstructor;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ValidReportTypeTest extends AnnotationValidatorTestBase {
 

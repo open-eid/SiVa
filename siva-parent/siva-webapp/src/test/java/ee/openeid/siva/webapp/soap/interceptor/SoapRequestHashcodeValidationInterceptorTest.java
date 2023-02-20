@@ -19,21 +19,24 @@ package ee.openeid.siva.webapp.soap.interceptor;
 import ee.openeid.siva.proxy.document.ReportType;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.interceptor.Fault;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.soap.*;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class SoapRequestHashcodeValidationInterceptorTest {
 
     private static final int EXPECTED_STATUS_CODE = 400;
@@ -77,7 +80,7 @@ public class SoapRequestHashcodeValidationInterceptorTest {
     @InjectMocks
     private SoapRequestHashcodeValidationInterceptor validationInterceptor = new SoapRequestHashcodeValidationInterceptor();
 
-    @Before
+    @BeforeEach
     public void setUp() throws SOAPException {
         mockDataFileChildNode(dataFilesFilenameNode, "test.txt");
         mockDataFileChildNode(dataFilesHashAlgoNode, "SHA256");
@@ -224,10 +227,10 @@ public class SoapRequestHashcodeValidationInterceptorTest {
     }
 
     private void mockValidSoapMessage() throws SOAPException {
-        doReturn(body).when(envelope).getBody();
-        doReturn(envelope).when(soapPart).getEnvelope();
-        doReturn(soapPart).when(soapMessage).getSOAPPart();
-        doReturn(soapMessage).when(message).getContent(SOAPMessage.class);
+        lenient().doReturn(body).when(envelope).getBody();
+        lenient().doReturn(envelope).when(soapPart).getEnvelope();
+        lenient().doReturn(soapPart).when(soapMessage).getSOAPPart();
+        lenient().doReturn(soapMessage).when(message).getContent(SOAPMessage.class);
         mockSignatureFilesNode();
         mockReportTypeNode(ReportType.DETAILED.getValue());
         mockSignaturePolicyNode("POLv3");
@@ -237,20 +240,20 @@ public class SoapRequestHashcodeValidationInterceptorTest {
 
         Node signatureFilesNode = mock(Node.class);
         NodeList nodeList = new MockNodeList(signatureFilesNode);
-        doReturn(nodeList).when(body).getElementsByTagName("SignatureFiles");
-        doReturn((short) 1).when(signatureFilesNode).getNodeType();
+        lenient().doReturn(nodeList).when(body).getElementsByTagName("SignatureFiles");
+        lenient().doReturn((short) 1).when(signatureFilesNode).getNodeType();
 
         NodeList signatureFilesChildNodes = new MockNodeList( signatureFileNode);
-        doReturn(signatureFilesChildNodes).when(signatureFilesNode).getChildNodes();
-        doReturn((short) 1).when(signatureFileNode).getNodeType();
+        lenient().doReturn(signatureFilesChildNodes).when(signatureFilesNode).getChildNodes();
+        lenient().doReturn((short) 1).when(signatureFileNode).getNodeType();
 
         NodeList signatureFileChildNodes = new MockNodeList(signatureNode, dataFilesNode);
-        doReturn(signatureFileChildNodes).when(signatureFileNode).getChildNodes();
-        doReturn((short) 1).when(signatureNode).getNodeType();
-        doReturn((short) 1).when(dataFilesNode).getNodeType();
+        lenient().doReturn(signatureFileChildNodes).when(signatureFileNode).getChildNodes();
+        lenient().doReturn((short) 1).when(signatureNode).getNodeType();
+        lenient().doReturn((short) 1).when(dataFilesNode).getNodeType();
 
-        doReturn("Signature").when(signatureNode).getLocalName();
-        doReturn("DataFiles").when(dataFilesNode).getLocalName();
+        lenient().doReturn("Signature").when(signatureNode).getLocalName();
+        lenient().doReturn("DataFiles").when(dataFilesNode).getLocalName();
 
 
         mockDataFileNode();
@@ -272,28 +275,28 @@ public class SoapRequestHashcodeValidationInterceptorTest {
 
         Node dataFileNode = mock(Node.class);
         NodeList childNodes = new MockNodeList(dataFileNode);
-        doReturn(childNodes).when(dataFilesNode).getChildNodes();
-        doReturn((short) 1).when(dataFileNode).getNodeType();
+        lenient().doReturn(childNodes).when(dataFilesNode).getChildNodes();
+        lenient().doReturn((short) 1).when(dataFileNode).getNodeType();
 
         NodeList parameterChildNodes = new MockNodeList(dataFilesFilenameNode, dataFilesHashAlgoNode, dataFilesHashNode);
-        doReturn(parameterChildNodes).when(dataFileNode).getChildNodes();
+        lenient().doReturn(parameterChildNodes).when(dataFileNode).getChildNodes();
 
-        doReturn("Filename").when(dataFilesFilenameNode).getLocalName();
-        doReturn("HashAlgo").when(dataFilesHashAlgoNode).getLocalName();
-        doReturn("Hash").when(dataFilesHashNode).getLocalName();
-        doReturn((short) 1).when(dataFilesFilenameNode).getNodeType();
-        doReturn((short) 1).when(dataFilesHashAlgoNode).getNodeType();
-        doReturn((short) 1).when(dataFilesHashNode).getNodeType();
+        lenient().doReturn("Filename").when(dataFilesFilenameNode).getLocalName();
+        lenient().doReturn("HashAlgo").when(dataFilesHashAlgoNode).getLocalName();
+        lenient().doReturn("Hash").when(dataFilesHashNode).getLocalName();
+        lenient().doReturn((short) 1).when(dataFilesFilenameNode).getNodeType();
+        lenient().doReturn((short) 1).when(dataFilesHashAlgoNode).getNodeType();
+        lenient().doReturn((short) 1).when(dataFilesHashNode).getNodeType();
     }
 
     private void mockDataFileChildNode(Node dataFileChildNode, String textContent) {
-        doReturn(textContent).when(dataFileChildNode).getTextContent();
+        lenient().doReturn(textContent).when(dataFileChildNode).getTextContent();
     }
 
     private void mockNode(Node node, String tagName, String value) {
         NodeList nodeList = new MockNodeList(node);
-        doReturn(value).when(node).getNodeValue();
-        doReturn(nodeList).when(body).getElementsByTagName(tagName);
+        lenient().doReturn(value).when(node).getNodeValue();
+        lenient().doReturn(nodeList).when(body).getElementsByTagName(tagName);
     }
 
     static class MockNodeList implements NodeList {

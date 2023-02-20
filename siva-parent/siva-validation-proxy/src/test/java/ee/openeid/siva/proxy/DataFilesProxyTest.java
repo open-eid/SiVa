@@ -16,8 +16,9 @@
 
 package ee.openeid.siva.proxy;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
@@ -30,23 +31,18 @@ import ee.openeid.siva.validation.document.report.DataFilesReport;
 import ee.openeid.siva.validation.service.DataFilesService;
 import ee.openeid.validation.service.timemark.DDOCDataFilesService;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Collections;
 import java.util.List;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 public class DataFilesProxyTest {
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
     private DataFilesProxy dataFilesProxy;
 
@@ -54,7 +50,7 @@ public class DataFilesProxyTest {
 
     private DataFilesServiceSpy dataFilesServiceSpy;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         dataFilesProxy = new DataFilesProxy();
 
@@ -65,19 +61,21 @@ public class DataFilesProxyTest {
     }
 
     @Test
-    public void applicationContextHasNoBeanWithGivenNameThrowsException() throws Exception {
+    public void applicationContextHasNoBeanWithGivenNameThrowsException() {
         given(applicationContext.getBean(anyString())).willThrow(new NoSuchBeanDefinitionException("Bean not loaded"));
 
-        exception.expect(DataFilesServiceNotFoundException.class);
-        exception.expectMessage("BDOCDataFilesService not found");
-        ProxyDocument proxyDocument = mockProxyDocumentWithDocument("filename.bdoc");
-        dataFilesProxy.getDataFiles(proxyDocument);
-
-        verify(applicationContext).getBean(anyString());
+        DataFilesServiceNotFoundException caughtException = assertThrows(
+                DataFilesServiceNotFoundException.class, () -> {
+                    ProxyDocument proxyDocument = mockProxyDocumentWithDocument("filename.bdoc");
+                    dataFilesProxy.getDataFiles(proxyDocument);
+                    verify(applicationContext).getBean(anyString());
+                }
+        );
+        assertEquals("BDOCDataFilesService not found", caughtException.getMessage());
     }
 
     @Test
-    public void ProxyDocumentWithDDOCDocumentTypeShouldReturnDataFilesReport() throws Exception {
+    public void ProxyDocumentWithDDOCDocumentTypeShouldReturnDataFilesReport() {
         when(applicationContext.getBean(DDOCDataFilesService.class.getSimpleName())).thenReturn(dataFilesServiceSpy);
 
         ProxyDocument proxyDocument = mockProxyDocumentWithDocument("filename.ddoc");

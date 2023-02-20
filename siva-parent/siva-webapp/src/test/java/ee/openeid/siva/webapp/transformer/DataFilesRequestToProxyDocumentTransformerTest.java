@@ -20,26 +20,21 @@ import ee.openeid.siva.proxy.document.DocumentType;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.testutils.MockDataFilesRequestBuilder;
 import org.apache.commons.codec.binary.Base64;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DataFilesRequestToProxyDocumentTransformerTest {
-
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
 
     private static final String VALID_DDOC_FILE = "test-files/ddoc_valid_2_signatures.ddoc";
     private DataFilesRequestToProxyDocumentTransformer transformer = new DataFilesRequestToProxyDocumentTransformer();
     private MockDataFilesRequestBuilder.MockDataFilesRequest dataFilesRequest;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         setValidDdocDataFilesRequest();
     }

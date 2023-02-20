@@ -18,11 +18,11 @@ package ee.openeid.siva.webapp.soap.interceptor;
 
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.interceptor.Fault;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -32,14 +32,15 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.SOAPPart;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.lenient;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class SoapRequestValidationInterceptorTest {
 
     private static final String INVALID_REQUEST = "Invalid request";
@@ -151,8 +152,8 @@ public class SoapRequestValidationInterceptorTest {
 
     private void mockNode(Node node, NodeList nodeList, String tagName, String value) {
         nodeList = new MockNodeList(node);
-        doReturn(value).when(node).getNodeValue();
-        doReturn(nodeList).when(body).getElementsByTagName(tagName);
+        lenient().doReturn(value).when(node).getNodeValue();
+        lenient().doReturn(nodeList).when(body).getElementsByTagName(tagName);
     }
 
     static class MockNodeList implements NodeList {

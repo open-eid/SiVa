@@ -21,22 +21,22 @@ import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.message.Exchange;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPMessage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
-import static junit.framework.TestCase.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ReportSignatureInterceptorTest {
 
     @Mock
@@ -55,9 +55,9 @@ public class ReportSignatureInterceptorTest {
 
     private ReportSignatureInterceptor reportSignatureInterceptor;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
-        when(signatureService.getSignature(any(byte[].class), anyString(), anyString())).thenReturn(getRawSignatureMock());
+        lenient().when(signatureService.getSignature(any(byte[].class), anyString(), anyString())).thenReturn(getRawSignatureMock());
 
         reportSignatureInterceptor = new ReportSignatureInterceptor();
         reportSignatureInterceptor.setSignatureService(signatureService);

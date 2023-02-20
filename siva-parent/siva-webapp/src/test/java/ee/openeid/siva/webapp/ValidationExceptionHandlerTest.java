@@ -33,18 +33,16 @@ import ee.openeid.siva.webapp.transformer.HashcodeValidationRequestToProxyDocume
 import ee.openeid.siva.webapp.transformer.ValidationRequestToProxyDocumentTransformer;
 import org.assertj.core.api.Assertions;
 import org.json.JSONObject;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.MessageSource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -54,11 +52,12 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = MessageSourceAutoConfiguration.class)
 public class ValidationExceptionHandlerTest {
 
@@ -75,7 +74,7 @@ public class ValidationExceptionHandlerTest {
     @Autowired
     private MessageSource messageSource;
 
-    @Before
+    @BeforeEach
     public void SetUp() {
         validationController = new ValidationController();
         dataFilesController = new DataFilesController();
@@ -133,7 +132,7 @@ public class ValidationExceptionHandlerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        Assert.assertEquals(content, "{\"requestErrors\":[{\"key\":\"document\",\"message\":\"Document malformed or not matching documentType\"}]}");
+        assertEquals(content, "{\"requestErrors\":[{\"key\":\"document\",\"message\":\"Document malformed or not matching documentType\"}]}");
     }
 
     @SuppressWarnings("unchecked")
@@ -147,7 +146,7 @@ public class ValidationExceptionHandlerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        Assert.assertEquals(content, "{\"requestErrors\":[{\"key\":\"document\",\"message\":\"Document does not meet the requirements\"}]}");
+        assertEquals(content, "{\"requestErrors\":[{\"key\":\"document\",\"message\":\"Document does not meet the requirements\"}]}");
     }
 
     @Test
@@ -160,7 +159,7 @@ public class ValidationExceptionHandlerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        Assert.assertEquals(content, "{\"requestErrors\":[{\"key\":\"document\",\"message\":\"Document malformed or not matching documentType\"}]}");
+        assertEquals(content, "{\"requestErrors\":[{\"key\":\"document\",\"message\":\"Document malformed or not matching documentType\"}]}");
     }
 
     @SuppressWarnings("unchecked")
@@ -188,7 +187,7 @@ public class ValidationExceptionHandlerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        Assert.assertEquals(content, "{\"requestErrors\":[{\"key\":\"document\",\"message\":\"Unfortunately there was an error validating your document\"}]}");
+        assertEquals(content, "{\"requestErrors\":[{\"key\":\"document\",\"message\":\"Unfortunately there was an error validating your document\"}]}");
     }
 
     @SuppressWarnings("unchecked")
@@ -202,7 +201,7 @@ public class ValidationExceptionHandlerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        Assert.assertEquals(content, "{\"requestErrors\":[{\"key\":\"document\",\"message\":\"Unfortunately there was an error validating your document\"}]}");
+        assertEquals(content, "{\"requestErrors\":[{\"key\":\"document\",\"message\":\"Unfortunately there was an error validating your document\"}]}");
     }
 
     @Test

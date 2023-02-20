@@ -24,22 +24,22 @@ import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.webapp.request.ValidationRequest;
 import ee.openeid.siva.webapp.transformer.ValidationRequestToProxyDocumentTransformer;
 import org.json.JSONObject;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ValidationControllerTest {
 
     private ValidationRequestToProxyDocumentTransformerSpy transformerSpy = new ValidationRequestToProxyDocumentTransformerSpy();
@@ -51,7 +51,7 @@ public class ValidationControllerTest {
     private Environment environment;
     private MockMvc mockMvc;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         ValidationController validationController = new ValidationController();
         ValidationProxySpy validationProxyServiceSpy = new ValidationProxySpy(statisticsService, applicationContext, environment);

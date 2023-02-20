@@ -24,21 +24,21 @@ import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.webapp.response.ValidationResponse;
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import org.apache.commons.codec.binary.Base64;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
 import java.util.Date;
 
-import static org.junit.Assert.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ReportSignatureInterceptorTest {
 
     private ReportSignatureInterceptor reportSignatureInterceptor;
@@ -46,7 +46,7 @@ public class ReportSignatureInterceptorTest {
     @Mock
     private SignatureService signatureService;
 
-    @Before
+    @BeforeEach
     public void setUp() throws IOException {
         when(signatureService.getSignature(any(byte[].class), anyString(), anyString())).thenReturn(getRawSignatureMock());
 

@@ -15,22 +15,22 @@
  */
 package ee.openeid.siva.monitoring.indicator;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.Status;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import static ee.openeid.siva.monitoring.indicator.UrlHealthIndicator.RESPONSE_PARAM_NAME;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class UrlHealthIndicatorTest {
 
     public static final String TEST_LINK_NAME = "someLinkToExternalSystem";
@@ -45,7 +45,7 @@ public class UrlHealthIndicatorTest {
     @InjectMocks
     private UrlHealthIndicator urlHealthIndicator;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         Mockito.when(externalLink.getName()).thenReturn(TEST_LINK_NAME);
         Mockito.when(externalLink.getUrl()).thenReturn(TEST_LINK_URL);

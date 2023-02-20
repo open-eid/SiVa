@@ -18,9 +18,9 @@ package ee.openeid.siva.webapp.soap.transformer;
 
 import ee.openeid.siva.webapp.soap.SoapDataFilesRequest;
 import org.apache.commons.codec.binary.Base64;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SoapDataFilesRequestToProxyDocumentTransformerTest {
 

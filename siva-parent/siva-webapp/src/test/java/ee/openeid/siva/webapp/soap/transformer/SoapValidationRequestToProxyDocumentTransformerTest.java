@@ -20,16 +20,12 @@ import ee.openeid.siva.proxy.document.ReportType;
 import ee.openeid.siva.proxy.document.typeresolver.UnsupportedTypeException;
 import ee.openeid.siva.webapp.soap.SoapValidationRequest;
 import org.apache.commons.codec.binary.Base64;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class SoapValidationRequestToProxyDocumentTransformerTest {
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
     private SoapValidationRequestToProxyDocumentTransformer transformer = new SoapValidationRequestToProxyDocumentTransformer();
 
@@ -59,11 +55,15 @@ public class SoapValidationRequestToProxyDocumentTransformerTest {
     @Test
     public void invalidReportTypeThrowsUnsupportedTypeException() {
         String reportType = "INVALID_REPORT_TYPE";
-        exception.expect(UnsupportedTypeException.class);
-        exception.expectMessage("ReportType of type '" + reportType + "' is not supported");
-        SoapValidationRequest validationRequest = createSoapValidationRequest("ZmlsZWNvbnRlbnQ=", "file.bdoc", "some policy");
-        validationRequest.setReportType(reportType);
-        transformer.transform(validationRequest);
+
+        UnsupportedTypeException caughtException = assertThrows(
+                UnsupportedTypeException.class, () -> {
+                    SoapValidationRequest validationRequest = createSoapValidationRequest("ZmlsZWNvbnRlbnQ=", "file.bdoc", "some policy");
+                    validationRequest.setReportType(reportType);
+                    transformer.transform(validationRequest);
+                }
+        );
+        assertEquals("ReportType of type '" + reportType + "' is not supported", caughtException.getMessage());
     }
 
     @Test

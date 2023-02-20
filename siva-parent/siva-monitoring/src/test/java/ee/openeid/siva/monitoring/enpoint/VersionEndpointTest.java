@@ -16,7 +16,6 @@
 
 package ee.openeid.siva.monitoring.enpoint;
 
-import ee.openeid.siva.monitoring.util.ApplicationInfoConstants;
 import ee.openeid.siva.monitoring.util.ManifestReader;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

@@ -17,10 +17,10 @@
 package ee.openeid.siva.statistics;
 
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static ee.openeid.siva.statistics.ContainerTypeResolver.resolveContainerType;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ContainerTypeResolverTest {
 

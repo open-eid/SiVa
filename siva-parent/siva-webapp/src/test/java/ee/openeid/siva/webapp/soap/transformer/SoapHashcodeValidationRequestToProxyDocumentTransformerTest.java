@@ -24,7 +24,7 @@ import ee.openeid.siva.webapp.soap.HashDataFile;
 import ee.openeid.siva.webapp.soap.SignatureFile;
 import ee.openeid.siva.webapp.soap.SoapHashcodeValidationRequest;
 import org.apache.commons.codec.binary.Base64;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -32,10 +32,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 public class SoapHashcodeValidationRequestToProxyDocumentTransformerTest {
 

@@ -36,9 +36,8 @@ import eu.europa.esig.dss.enumerations.DigestMatcherType;
 import eu.europa.esig.dss.enumerations.EncryptionAlgorithm;
 import eu.europa.esig.dss.enumerations.MaskGenerationFunction;
 import eu.europa.esig.dss.validation.diagnostic.*;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.math.BigInteger;
@@ -51,7 +50,12 @@ import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 public class ValidationReportSoapResponseTransformerTest {
 
@@ -77,11 +81,11 @@ public class ValidationReportSoapResponseTransformerTest {
         ValidationReport responseValidationReport = transformer.toSoapResponse(detailedReport);
         assertValidationConclusion(validationConclusion, responseValidationReport.getValidationConclusion());
         assertNull(responseValidationReport.getDiagnosticData());
-        Assert.assertEquals("EE", responseValidationReport.getValidationProcess().getTLAnalysis().get(0).getCountryCode());
+        assertEquals("EE", responseValidationReport.getValidationProcess().getTLAnalysis().get(0).getCountryCode());
     }
 
     @Test
-    @Ignore("SIVA-187")
+    @Disabled("SIVA-187")
     public void qualifiedDiagnosticDataIsCorrectlyTransformedToSoapResponseReport() {
         ee.openeid.siva.validation.document.report.ValidationConclusion validationConclusion = createMockedValidationConclusion();
         eu.europa.esig.dss.diagnostic.jaxb.XmlDiagnosticData diagnosticData = createMockedDiagnosticData();
@@ -99,7 +103,7 @@ public class ValidationReportSoapResponseTransformerTest {
         SimpleReport simpleReport = new SimpleReport(validationConclusion);
         ValidationReport responseValidationReport = transformer.toSoapResponse(simpleReport);
         ValidationConclusion responseValidationConclusion = responseValidationReport.getValidationConclusion();
-        Assert.assertEquals(validationConclusion.getSignatures().get(0).getIndication(), responseValidationConclusion.getSignatures().getSignature().get(0).getIndication().value());
+        assertEquals(validationConclusion.getSignatures().get(0).getIndication(), responseValidationConclusion.getSignatures().getSignature().get(0).getIndication().value());
     }
 
     @Test

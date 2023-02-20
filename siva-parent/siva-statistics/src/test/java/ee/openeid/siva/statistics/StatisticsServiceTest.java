@@ -20,14 +20,14 @@ import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +45,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.slf4j.MarkerFactory.getMarker;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class StatisticsServiceTest {
 
     private static final String X_AUTHENTICATED_USER = "x-authenticated-user";
@@ -56,7 +56,7 @@ public class StatisticsServiceTest {
     private static MockedStatic<LoggerFactory> loggerFactoryMock;
     private static Logger loggerMock;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() {
         loggerMock = mock(Logger.class);
         loggerFactoryMock = mockStatic(LoggerFactory.class);
@@ -68,12 +68,12 @@ public class StatisticsServiceTest {
         statisticsService.setHttpRequest(mockedRequest);
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDown() {
         loggerFactoryMock.close();
     }
 
-    @After
+    @AfterEach
     public void clearMock() {
         Mockito.reset(loggerMock);
     }

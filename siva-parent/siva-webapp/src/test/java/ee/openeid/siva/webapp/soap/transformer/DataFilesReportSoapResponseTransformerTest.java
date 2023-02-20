@@ -17,12 +17,12 @@
 package ee.openeid.siva.webapp.soap.transformer;
 
 import ee.openeid.siva.webapp.soap.DataFilesReport;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DataFilesReportSoapResponseTransformerTest {
 

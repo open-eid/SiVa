@@ -21,23 +21,20 @@ import ee.openeid.siva.signature.configuration.SignatureServiceConfigurationProp
 import ee.openeid.siva.signature.exception.SignatureServiceException;
 import eu.europa.esig.dss.model.DSSException;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class AsiceWithXadesSignatureServiceTest {
 
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
-
     AsiceWithXadesSignatureService asiceSignatureService;
 
-    @Before
+    @BeforeEach
     public void setUp() {
 
         SignatureServiceConfigurationProperties properties = new SignatureServiceConfigurationProperties();
@@ -53,48 +50,65 @@ public class AsiceWithXadesSignatureServiceTest {
     }
 
     @Test
-    public void AsiceSignatureServiceNotConfiguredWithProperties_shouldThrowException() throws IOException {
-        expectedException.expect(SignatureServiceException.class);
-        expectedException.expectMessage("Signature configuration properties not set!");
-
-        asiceSignatureService = new AsiceWithXadesSignatureService(null, new TrustedListsCertificateSource());
-        asiceSignatureService.getSignature("Hello".getBytes(), "hello.txt", "application/text");
+    public void AsiceSignatureServiceNotConfiguredWithProperties_shouldThrowException() {
+        SignatureServiceException caughtException = assertThrows(
+                SignatureServiceException.class, () -> {
+                    asiceSignatureService = new AsiceWithXadesSignatureService(null, new TrustedListsCertificateSource());
+                    asiceSignatureService.getSignature("Hello".getBytes(), "hello.txt", "application/text");
+                }
+        );
+        assertEquals("Signature configuration properties not set!", caughtException.getMessage());
     }
 
     @Test
-    public void AsiceSignatureServiceNotConfiguredWithPkcs12Properties_shouldThrowException() throws IOException {
-        expectedException.expect(SignatureServiceException.class);
-        expectedException.expectMessage("Either Pkcs11 or Pkcs12 must be configured! Currently there is none configured..");
+    public void AsiceSignatureServiceNotConfiguredWithPkcs12Properties_shouldThrowException() {
+        SignatureServiceException caughtException = assertThrows(
+                SignatureServiceException.class, () -> {
+                    asiceSignatureService.getProperties().setPkcs12(null);
+                    asiceSignatureService.getSignature("Hello".getBytes(), "hello.txt", "application/text");
+                }
+        );
+        assertEquals("Either Pkcs11 or Pkcs12 must be configured! Currently there is none configured..", caughtException.getMessage());
 
-        asiceSignatureService.getProperties().setPkcs12(null);
-        asiceSignatureService.getSignature("Hello".getBytes(), "hello.txt", "application/text");
     }
 
     @Test
-    public void AsiceSignatureServiceConfiguredWithInvalidPkcs12Keystore_shouldThrowException() throws IOException {
-        expectedException.expect(SignatureServiceException.class);
-        expectedException.expectMessage("Error reading keystore from path: ");
-
-        asiceSignatureService.getProperties().getPkcs12().setPath("classpath:invalid.p12");
-        asiceSignatureService.getSignature("Hello".getBytes(), "hello.txt", "application/text");
+    public void AsiceSignatureServiceConfiguredWithInvalidPkcs12Keystore_shouldThrowException() {
+        SignatureServiceException caughtException = assertThrows(
+                SignatureServiceException.class, () -> {
+                    asiceSignatureService.getProperties().getPkcs12().setPath("classpath:invalid.p12");
+                    asiceSignatureService.getSignature("Hello".getBytes(), "hello.txt", "application/text");
+                }
+        );
+        assertEquals("Error reading keystore from path: classpath:invalid.p12", caughtException.getMessage());
     }
 
     @Test
-    public void AsiceSignatureServiceConfiguredWithInvalidPkcs12Password_shouldThrowException() throws IOException {
-        expectedException.expect(DSSException.class);
-        expectedException.expectMessage("Unable to instantiate KeyStoreSignatureTokenConnection");
-
-        asiceSignatureService.getProperties().getPkcs12().setPassword("invalid password");
-        asiceSignatureService.getSignature("Hello".getBytes(), "hello.txt", "application/text");
+    public void AsiceSignatureServiceConfiguredWithInvalidPkcs12Password_shouldThrowException() {
+        DSSException caughtException = assertThrows(
+                DSSException.class, () -> {
+                    asiceSignatureService.getProperties().getPkcs12().setPassword("invalid password");
+                    asiceSignatureService.getSignature("Hello".getBytes(), "hello.txt", "application/text");
+                }
+        );
+        assertEquals("Unable to instantiate KeyStoreSignatureTokenConnection", caughtException.getMessage());
     }
 
     @Test
-    public void AsiceSignatureServiceConfiguredWithInvalidSignatureLevel_shouldThrowException() throws IOException {
-        expectedException.expect(SignatureServiceException.class);
-        expectedException.expectMessage("Invalid signature level - 'SOME_INVALID_LEVEL'! Valid signature levels:");
-
-        asiceSignatureService.getProperties().setSignatureLevel("SOME_INVALID_LEVEL");
-        asiceSignatureService.getSignature("Hello".getBytes(), "hello.txt", "application/text");
+    public void AsiceSignatureServiceConfiguredWithInvalidSignatureLevel_shouldThrowException() {
+        SignatureServiceException caughtException = assertThrows(
+                SignatureServiceException.class, () -> {
+                    asiceSignatureService.getProperties().setSignatureLevel("SOME_INVALID_LEVEL");
+                    asiceSignatureService.getSignature("Hello".getBytes(), "hello.txt", "application/text");
+                }
+        );
+        assertEquals("Invalid signature level - 'SOME_INVALID_LEVEL'! Valid signature levels: " +
+                "[XML-NOT-ETSI, XAdES-C, XAdES-X, XAdES-XL, XAdES-A, XAdES-BASELINE-LTA, XAdES-BASELINE-LT, " +
+                "XAdES-BASELINE-T, XAdES-BASELINE-B, CMS-NOT-ETSI, CAdES-C, CAdES-X, CAdES-XL, CAdES-A, " +
+                "CAdES-BASELINE-LTA, CAdES-BASELINE-LT, CAdES-BASELINE-T, CAdES-BASELINE-B, PDF-NOT-ETSI, " +
+                "PAdES-BASELINE-LTA, PAdES-BASELINE-LT, PAdES-BASELINE-T, PAdES-BASELINE-B, PKCS7-B, PKCS7-T, " +
+                "PKCS7-LT, PKCS7-LTA, JSON-NOT-ETSI, JAdES-BASELINE-B, JAdES-BASELINE-T, JAdES-BASELINE-LT, " +
+                "JAdES-BASELINE-LTA, UNKNOWN, XAdES-BASELINE-LT-TM, XAdES-BASELINE-B-EPES]", caughtException.getMessage());
     }
 
     @Test

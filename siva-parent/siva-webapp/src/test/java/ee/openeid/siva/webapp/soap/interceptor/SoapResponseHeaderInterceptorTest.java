@@ -19,17 +19,17 @@ package ee.openeid.siva.webapp.soap.interceptor;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.headers.Header;
 import org.apache.cxf.message.Exchange;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class SoapResponseHeaderInterceptorTest {
 
     @Mock
@@ -40,7 +40,7 @@ public class SoapResponseHeaderInterceptorTest {
 
     private SoapResponseHeaderInterceptor soapResponseHeaderInterceptor = new SoapResponseHeaderInterceptor();
 
-    @Before
+    @BeforeEach
     public void setUp() {
         soapResponseHeaderInterceptor = new SoapResponseHeaderInterceptor();
     }

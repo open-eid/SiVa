@@ -16,21 +16,19 @@
 
 package ee.openeid.siva.integrationtest;
 
-import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.hamcrest.Matchers;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import static ee.openeid.siva.integrationtest.TestData.*;
 
-@Category(IntegrationTest.class)
+@Tag("IntegrationTest")
 public class AsiceValidationPassIT extends SiVaRestTests {
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "bdoc/live/timestamp/";
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
 
-    @Before
+    @BeforeEach
     public void DirectoryBackToDefault() {
         setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
     }

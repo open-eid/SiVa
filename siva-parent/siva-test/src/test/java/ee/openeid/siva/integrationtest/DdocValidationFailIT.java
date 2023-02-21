@@ -17,19 +17,18 @@
 package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.common.Constants;
-import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.hamcrest.Matchers;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
 import static ee.openeid.siva.integrationtest.TestData.*;
 
-@Category(IntegrationTest.class)
+@Tag("IntegrationTest")
 public class DdocValidationFailIT extends SiVaRestTests{
 
-    @Before
+    @BeforeEach
     public void DirectoryBackToDefault() {
         setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
     }

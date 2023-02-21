@@ -17,15 +17,14 @@
 package ee.openeid.siva.integrationtest;
 
 
-import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import ee.openeid.siva.signature.configuration.SignatureServiceConfigurationProperties;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.json.JSONObject;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static io.restassured.RestAssured.given;
@@ -33,10 +32,10 @@ import static io.restassured.config.EncoderConfig.encoderConfig;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.emptyOrNullString;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
-@Category(IntegrationTest.class)
-@Ignore("SIVA-196")
+@Tag("IntegrationTest")
+@Disabled("SIVA-196")
 public class ReportSignatureIT extends SiVaRestTests {
 
     private static final String TEST_FILES_DIRECTORY = "document_format_test_files/";
@@ -164,7 +163,7 @@ public class ReportSignatureIT extends SiVaRestTests {
      *
      * File: hellopades-lt-sha256-rsa2048.pdf
      */
-    @Ignore //This test should be ran manually after configuring the report signature feature
+    @Disabled //This test should be ran manually after configuring the report signature feature
     @Test
     public void whenRequestingSimpleReport_andreportSignatureEnabledFalse_fileHash_NotInReport() {
         post(validationRequestFor("hellopades-pades-lt-sha256-sign.pdf", null, "Simple"))

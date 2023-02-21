@@ -16,26 +16,25 @@
 
 package ee.openeid.siva.soaptest;
 
-import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import io.restassured.response.ValidatableResponse;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matchers;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
 import static ee.openeid.siva.integrationtest.TestData.*;
 import static org.hamcrest.Matchers.*;
 
-@Category(IntegrationTest.class)
+@Tag("IntegrationTest")
 public class SoapValidationRequestIT extends SiVaSoapTests {
 
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "document_format_test_files/";
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
 
-    @Before
+    @BeforeEach
     public void DirectoryBackToDefault() {
         setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
     }

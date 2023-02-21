@@ -20,8 +20,8 @@ import ee.openeid.siva.common.Constants;
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.json.JSONObject;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
@@ -29,7 +29,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 
-@Ignore
+@Disabled
 public class EuPlugValidationPassIT extends SiVaRestTests {
 
     @Value("${plugtest.location}")

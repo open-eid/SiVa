@@ -16,18 +16,17 @@
 
 package ee.openeid.siva.soaptest;
 
-import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.emptyOrNullString;
 import static org.hamcrest.Matchers.not;
 
-@Category(IntegrationTest.class)
+@Tag("IntegrationTest")
 public class ReportSignatureIT extends SiVaSoapTests {
 
     private static final String TEST_FILES_DIRECTORY = "document_format_test_files/";
@@ -38,7 +37,7 @@ public class ReportSignatureIT extends SiVaSoapTests {
         this.testFilesDirectory = testFilesDirectory;
     }
 
-    @Before
+    @BeforeEach
     public void DirectoryBackToDefault() {
         setTestFilesDirectory(TEST_FILES_DIRECTORY);
     }
@@ -46,14 +45,14 @@ public class ReportSignatureIT extends SiVaSoapTests {
     @Test
     public void whenRequestingSimpleReport_thenValidationReportSignatureShouldNotBeInResponse() {
         Document report = extractValidateDocumentResponseDom(post(validationRequestForDocument("hellopades-pades-lt-sha256-sign.pdf")).andReturn().body().asString());
-        Assert.assertThat(getValidateDocumentResponseFromDom(report).getValidationReportSignature(), emptyOrNullString());
+        assertThat(getValidateDocumentResponseFromDom(report).getValidationReportSignature(), emptyOrNullString());
     }
 
     @Test
-    @Ignore("SIVA-196")
+    @Disabled("SIVA-196")
     public void whenRequestingDetailedReport_thenValidationReportSignatureShouldBeInResponse() {
         Document report = extractValidateDocumentResponseDom(post(validationRequestForDocumentReportType("hellopades-pades-lt-sha256-sign.pdf", "Detailed")).andReturn().body().asString());
-        Assert.assertThat(getValidateDocumentResponseFromDom(report).getValidationReportSignature(), not(emptyOrNullString()));
+        assertThat(getValidateDocumentResponseFromDom(report).getValidationReportSignature(), not(emptyOrNullString()));
     }
 
     @Override

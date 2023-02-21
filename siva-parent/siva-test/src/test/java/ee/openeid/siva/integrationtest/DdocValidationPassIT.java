@@ -17,14 +17,13 @@
 package ee.openeid.siva.integrationtest;
 
 import ee.openeid.siva.common.Constants;
-import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.hamcrest.Matchers;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import static ee.openeid.siva.integrationtest.TestData.*;
 
-@Category(IntegrationTest.class)
+@Tag("IntegrationTest")
 public class DdocValidationPassIT extends SiVaRestTests {
 
     private static final String TEST_FILES_DIRECTORY = "ddoc/live/timemark/";

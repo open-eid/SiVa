@@ -16,21 +16,20 @@
 
 package ee.openeid.siva.soaptest;
 
-import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matchers;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import static ee.openeid.siva.integrationtest.TestData.SOAP_VALIDATION_CONCLUSION_PREFIX;
 import static ee.openeid.siva.integrationtest.TestData.VALID_VALIDATION_PROCESS_ERROR_VALUE_11;
 
-@Category(IntegrationTest.class)
+@Tag("IntegrationTest")
 public class SoapValidationReportValueIT extends SiVaSoapTests {
 
-    @Before
+    @BeforeEach
     public void DirectoryBackToDefault() {
         setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
     }
@@ -153,7 +152,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      */
     @Test
-    @Ignore //TODO: New testfile needed
+    @Disabled //TODO: New testfile needed
     public void SoapBdocCorrectValuesArePresentValidLtSignatureAdes() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestForDocument("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc"))
@@ -184,7 +183,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      * File: testAdesQC.bdoc
      *
      */
-    @Ignore //TODO: Testfile needed
+    @Disabled //TODO: Testfile needed
     @Test
     public void SoapBdocCorrectValuesArePresentValidLtSignatureAdesqc() {
         setTestFilesDirectory("bdoc/live/timemark/");

@@ -19,7 +19,6 @@ package ee.openeid.siva.resttest;
 import ee.openeid.siva.common.DateTimeMatcher;
 import ee.openeid.siva.integrationtest.SiVaRestTests;
 import ee.openeid.siva.integrationtest.TestData;
-import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import ee.openeid.siva.proxy.document.ReportType;
 import ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
@@ -33,9 +32,9 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matchers;
 import org.json.JSONObject;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.xml.sax.SAXException;
 
@@ -64,7 +63,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
-@Category(IntegrationTest.class)
+@Tag("IntegrationTest")
 public class HashcodeValidationRequestIT extends SiVaRestTests {
 
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "xades/";
@@ -76,7 +75,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
         return key + " error or corresponding message was not in the response";
     }
 
-    @Before
+    @BeforeEach
     public void DirectoryBackToDefault() {
         setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
         testStartDate = ZonedDateTime.now(ZoneId.of("GMT"));

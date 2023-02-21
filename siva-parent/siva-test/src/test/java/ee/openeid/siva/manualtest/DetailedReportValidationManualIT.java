@@ -17,13 +17,12 @@ package ee.openeid.siva.manualtest;
 
 import ee.openeid.siva.common.DateTimeMatcher;
 import ee.openeid.siva.integrationtest.SiVaRestTests;
-import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.hamcrest.Matchers;
 import org.hamcrest.core.Every;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -32,7 +31,7 @@ import static ee.openeid.siva.common.DssMessages.*;
 import static ee.openeid.siva.integrationtest.TestData.*;
 import static org.hamcrest.Matchers.*;
 
-@Category(IntegrationTest.class)
+@Tag("IntegrationTest")
 
 public class DetailedReportValidationManualIT extends SiVaRestTests {
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "pdf/signature_cryptographic_algorithm_test_files/";
@@ -43,7 +42,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
     }
 
 
-    @Before
+    @BeforeEach
     public void DirectoryBackToDefault() {
         setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
     }
@@ -102,7 +101,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      * File: pades-baseline-lta-live-aj.pdf
      */
     @Test
-    @Ignore //TODO: New test LOTL is needed with correct data
+    @Disabled //TODO: New test LOTL is needed with correct data
     public void detailedReportAssertValidationProcessTlanalysis() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
 
@@ -471,7 +470,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      * File: hellopades-lt-sha256-rsa2048.pdf
      */
     @Test
-    @Ignore("SIVA-196")
+    @Disabled("SIVA-196")
     public void validateFileHashInDetailedReportReportSignatureEnabledTrue() {
         post(validationRequestFor("hellopades-lt-sha256-rsa2048.pdf", null, REPORT_TYPE_DETAILED))
                 .then()
@@ -494,7 +493,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      *
      * File: hellopades-lt-sha256-rsa2048.pdf
      */
-    @Ignore //TODO: Needs possibility to configure report signing in tests
+    @Disabled //TODO: Needs possibility to configure report signing in tests
     @Test
     public void validateFileHashInDetailedReportReportSignatureEnabledFalse() {
         post(validationRequestFor("hellopades-lt-sha256-rsa2048.pdf", null, REPORT_TYPE_DETAILED))

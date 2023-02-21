@@ -16,23 +16,22 @@
 
 package ee.openeid.siva.integrationtest;
 
-import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.hamcrest.Matchers;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import static ee.openeid.siva.integrationtest.TestData.*;
 
 
-@Category(IntegrationTest.class)
+@Tag("IntegrationTest")
 public class PdfValidationFailIT extends SiVaRestTests {
 
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "pdf/signing_certifacte_test_files/";
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
 
-    @Before
+    @BeforeEach
     public void DirectoryBackToDefault() {
         setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
     }
@@ -139,7 +138,7 @@ public class PdfValidationFailIT extends SiVaRestTests {
      *
      * File: hellopades-lt-sha256-rsa2048-expired.pdf
      */
-    @Ignore //TODO: Needs new test file
+    @Disabled //TODO: Needs new test file
     @Test
     public void documentSignedWithExpiredRsa2048CertificateShouldFail() {
         post(validationRequestFor( "hellopades-lt-sha256-rsa2048-expired.pdf"))
@@ -170,7 +169,7 @@ public class PdfValidationFailIT extends SiVaRestTests {
      * File: hellopades-lt-sha256-rsa1024-expired2.pdf
      */
     @Test
-    @Ignore //TODO: Test file needed
+    @Disabled //TODO: Test file needed
     public void documentSignedWithExpiredSha256CertificateShouldFail() {
         post(validationRequestFor("hellopades-lt-sha256-rsa1024-expired2.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)

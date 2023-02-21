@@ -18,23 +18,22 @@ package ee.openeid.siva.resttest;
 
 import ee.openeid.siva.common.Constants;
 import ee.openeid.siva.integrationtest.SiVaRestTests;
-import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.hamcrest.Matchers;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import static ee.openeid.siva.integrationtest.TestData.VALIDATION_CONCLUSION_PREFIX;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 
-@Category(IntegrationTest.class)
+@Tag("IntegrationTest")
 
 public class DdocValidationReportValueVerificationIT extends SiVaRestTests {
 
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "ddoc/live/timemark/";
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
 
-    @Before
+    @BeforeEach
     public void DirectoryBackToDefault() {setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);}
 
     /**

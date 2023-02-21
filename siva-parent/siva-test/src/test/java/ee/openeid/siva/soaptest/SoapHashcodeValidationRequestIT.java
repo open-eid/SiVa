@@ -18,7 +18,6 @@ package ee.openeid.siva.soaptest;
 
 import ee.openeid.siva.common.DateTimeMatcher;
 import ee.openeid.siva.integrationtest.TestData;
-import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.siva.webapp.request.Datafile;
@@ -29,9 +28,9 @@ import io.restassured.response.ValidatableResponse;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matchers;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
 import java.nio.charset.StandardCharsets;
@@ -44,7 +43,7 @@ import java.util.Collections;
 import static ee.openeid.siva.integrationtest.TestData.*;
 import static org.hamcrest.Matchers.*;
 
-@Category(IntegrationTest.class)
+@Tag("IntegrationTest")
 public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
 
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "xades/";
@@ -52,7 +51,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
     private ZonedDateTime testStartDate;
 
-    @Before
+    @BeforeEach
     public void DirectoryBackToDefault() {
         setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
         testStartDate = ZonedDateTime.now(ZoneId.of("GMT"));

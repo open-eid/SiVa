@@ -17,14 +17,13 @@
 package ee.openeid.siva.resttest;
 
 import ee.openeid.siva.integrationtest.SiVaRestTests;
-import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matchers;
 import org.json.JSONObject;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
@@ -37,9 +36,9 @@ import static ee.openeid.siva.integrationtest.TestData.VALIDATION_CONCLUSION_PRE
 import static io.restassured.path.json.JsonPath.from;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.emptyOrNullString;
-import static org.junit.Assert.assertTrue;
+import static org.springframework.test.util.AssertionErrors.assertTrue;
 
-@Category(IntegrationTest.class)
+@Tag("IntegrationTest")
 public class ValidationRequestIT extends SiVaRestTests {
 
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "bdoc/test/timestamp/";
@@ -54,7 +53,7 @@ public class ValidationRequestIT extends SiVaRestTests {
         return key + " error or corresponding message was not in the response";
     }
 
-    @Before
+    @BeforeEach
     public void DirectoryBackToDefault() {
         setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
     }

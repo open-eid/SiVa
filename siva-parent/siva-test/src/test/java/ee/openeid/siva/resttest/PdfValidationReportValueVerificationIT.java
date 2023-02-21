@@ -17,24 +17,23 @@
 package ee.openeid.siva.resttest;
 
 import ee.openeid.siva.integrationtest.SiVaRestTests;
-import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.hamcrest.Matchers;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import static ee.openeid.siva.integrationtest.TestData.*;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 
-@Category(IntegrationTest.class)
+@Tag("IntegrationTest")
 
 public class PdfValidationReportValueVerificationIT extends SiVaRestTests {
 
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "pdf/baseline_profile_test_files/";
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
 
-    @Before
+    @BeforeEach
     public void DirectoryBackToDefault() {setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);}
 
     /**
@@ -276,7 +275,7 @@ public class PdfValidationReportValueVerificationIT extends SiVaRestTests {
      *
      * File: hellopades-lt-b.pdf
      */
-    @Ignore("SIVA-365")
+    @Disabled("SIVA-365")
     @Test
     public void pdfMixedSameCertificateSignaturesCorrectOcspResponseCreationTime() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");

@@ -17,25 +17,24 @@
 package ee.openeid.siva.resttest;
 
 import ee.openeid.siva.integrationtest.SiVaRestTests;
-import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import static ee.openeid.siva.integrationtest.TestData.*;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 
-@Category(IntegrationTest.class)
+@Tag("IntegrationTest")
 
 public class AsiceValidationReportValueVerificationIT extends SiVaRestTests {
 
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "bdoc/live/timemark/";
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
 
-    @Before
+    @BeforeEach
     public void DirectoryBackToDefault() {
         setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
     }
@@ -308,7 +307,7 @@ public class AsiceValidationReportValueVerificationIT extends SiVaRestTests {
      *
      * File: SS-4_teadmataCA.4.asice
      */
-    @Ignore //TODO: needs investigation why the signature is determined as XAdES_BASELINE_T not as XAdES_BASELINE_LT_TM
+    @Disabled //TODO: needs investigation why the signature is determined as XAdES_BASELINE_T not as XAdES_BASELINE_LT_TM
     @Test
     public void bdocAllElementsArePresentIndeterminateSignature() {
         post(validationRequestFor("SS-4_teadmataCA.4.asice", VALID_SIGNATURE_POLICY_3, "simple"))
@@ -433,7 +432,7 @@ public class AsiceValidationReportValueVerificationIT extends SiVaRestTests {
      *
      * File: 3_signatures_TM_LT_LTA.asice
      */
-    @Ignore("SIVA-365")
+    @Disabled("SIVA-365")
     @Test
     public void asiceMixedSignaturesSameCertificateContainerCorrectOcspResponseCreationTime() {
         setTestFilesDirectory("bdoc/test/timestamp/");

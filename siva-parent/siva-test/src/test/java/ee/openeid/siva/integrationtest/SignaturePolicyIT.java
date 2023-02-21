@@ -16,22 +16,21 @@
 
 package ee.openeid.siva.integrationtest;
 
-import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import org.hamcrest.Matchers;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import static ee.openeid.siva.integrationtest.TestData.*;
 
-@Category(IntegrationTest.class)
+@Tag("IntegrationTest")
 public class SignaturePolicyIT extends SiVaRestTests {
 
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "pdf/signing_certifacte_test_files/";
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
 
-    @Before
+    @BeforeEach
     public void DirectoryBackToDefault() {
         setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
     }
@@ -49,7 +48,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File: soft-cert-signature.pdf
      */
-    @Ignore //TODO: New test file is needed
+    @Disabled //TODO: New test file is needed
     @Test
     public void pdfDocumentAdesNonSscdCompliantShouldFailWithGivenPolicy() {
         post(validationRequestFor("soft-cert-signature.pdf", VALID_SIGNATURE_POLICY_4, null))
@@ -85,7 +84,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File:
      */
-    @Ignore //TODO: test file needed
+    @Disabled //TODO: test file needed
     @Test
     public void bdocDocumentAdesNonSscdCompliantShouldFailWithGivenPolicy() {
         setTestFilesDirectory("bdoc/test/timestamp/");
@@ -120,7 +119,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File:
      */
-    @Ignore //TODO: test file needed
+    @Disabled //TODO: test file needed
     @Test
     public void bdocDocumentAdesSigShouldFail() {
         setTestFilesDirectory("bdoc/live/timemark/");
@@ -152,7 +151,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File:
      */
-    @Ignore //TODO: test file needed
+    @Disabled //TODO: test file needed
     @Test
     public void asiceDocumentAdesSigShouldFail() {
         setTestFilesDirectory("bdoc/live/timemark/");
@@ -184,7 +183,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File:
      */
-    @Ignore //TODO: test file needed
+    @Disabled //TODO: test file needed
     @Test
     public void bdocDocumentAdesSealShouldFail() {
         setTestFilesDirectory("bdoc/live/timemark/");
@@ -216,7 +215,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File:
      */
-    @Ignore //TODO: test file needed
+    @Disabled //TODO: test file needed
     @Test
     public void asiceDocumentAdesSealShouldFail() {
         setTestFilesDirectory("bdoc/live/timemark/");
@@ -375,7 +374,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File:
      */
-    @Ignore //TODO: file needed
+    @Disabled //TODO: file needed
     @Test
     public void asiceDocumentAdesQCCompliantNoTypeShouldFail() {
         setTestFilesDirectory("bdoc/live/timestamp/");
@@ -408,7 +407,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File:
      */
-    @Ignore //TODO: file needed
+    @Disabled //TODO: file needed
     @Test
     public void bdocDocumentAdesQCCompliantNoTypeShouldFail() {
         setTestFilesDirectory("bdoc/live/timestamp/");
@@ -623,7 +622,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: soft-cert-signature.pdf
      */
     @Test
-    @Ignore //TODO: New testfile is needed
+    @Disabled //TODO: New testfile is needed
     public void pdfDocumentAdesNonSscdCompliantShouldPassWithGivenPolicy() {
         post(validationRequestFor("soft-cert-signature.pdf", VALID_SIGNATURE_POLICY_3, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -659,7 +658,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: allkiri_ades.asice
      */
     @Test
-    @Ignore //TODO: New testfile is needed
+    @Disabled //TODO: New testfile is needed
     public void bdocDocumentAdesNonSscdCompliantShouldPassWithGivenPolicy() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         post(validationRequestForDD4j("allkiri_ades.asice", VALID_SIGNATURE_POLICY_3, null))
@@ -693,7 +692,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File: allkiri_ades.asice
      */
-    @Ignore //TODO: test file needed
+    @Disabled //TODO: test file needed
     @Test
     public void bdocDocumentAdesSigShouldPass() {
         setTestFilesDirectory("bdoc/live/timemark/");
@@ -725,7 +724,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File:
      */
-    @Ignore //TODO: test file needed
+    @Disabled //TODO: test file needed
     @Test
     public void asiceDocumentAdesSigShouldPass() {
         setTestFilesDirectory("bdoc/live/timemark/");
@@ -757,7 +756,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File:
      */
-    @Ignore //TODO: test file needed
+    @Disabled //TODO: test file needed
     @Test
     public void bdocDocumentAdesSealShouldPass() {
         setTestFilesDirectory("bdoc/live/timemark/");
@@ -789,7 +788,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File:
      */
-    @Ignore //TODO: test file needed
+    @Disabled //TODO: test file needed
     @Test
     public void asiceDocumentAdesSealShouldPass() {
         setTestFilesDirectory("bdoc/live/timemark/");
@@ -949,7 +948,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File:
      */
-    @Ignore //TODO: file needed
+    @Disabled //TODO: file needed
     @Test
     public void asiceDocumentAdesQCCompliantNoTypeShouldPass() {
         setTestFilesDirectory("bdoc/live/timestamp/");
@@ -982,7 +981,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File:
      */
-    @Ignore //TODO: file needed
+    @Disabled //TODO: file needed
     @Test
     public void bdocDocumentAdesQCCompliantNoTypeShouldPass() {
         setTestFilesDirectory("bdoc/live/timestamp/");

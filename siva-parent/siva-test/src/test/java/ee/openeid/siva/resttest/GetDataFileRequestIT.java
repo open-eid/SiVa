@@ -17,22 +17,21 @@ package ee.openeid.siva.resttest;
 
 import static ee.openeid.siva.resttest.ValidationRequestIT.getFailMessageForKey;
 import static ee.openeid.siva.resttest.ValidationRequestIT.getRequestErrorsCount;
-import static org.junit.Assert.assertTrue;
+import static org.springframework.test.util.AssertionErrors.assertTrue;
 
 import ee.openeid.siva.integrationtest.SiVaRestTests;
-import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.json.JSONObject;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 
-@Category(IntegrationTest.class)
+@Tag("IntegrationTest")
 public class GetDataFileRequestIT extends SiVaRestTests {
-    @Before
+    @BeforeEach
     public void DirectoryBackToDefault() {
         setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
     }

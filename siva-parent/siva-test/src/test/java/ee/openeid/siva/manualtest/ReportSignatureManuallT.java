@@ -16,7 +16,6 @@
 
 package ee.openeid.siva.manualtest;
 
-import ee.openeid.siva.integrationtest.configuration.IntegrationTest;
 import ee.openeid.siva.signature.configuration.SignatureServiceConfigurationProperties;
 import ee.openeid.siva.soaptest.SiVaSoapTests;
 import io.restassured.RestAssured;
@@ -25,10 +24,10 @@ import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
@@ -37,12 +36,12 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 
-@Category(IntegrationTest.class)
-@Ignore("SIVA-196")
+@Tag("IntegrationTest")
+@Disabled("SIVA-196")
 public class ReportSignatureManuallT  extends SiVaSoapTests {
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "pdf/signature_cryptographic_algorithm_test_files/";
     private static final String VALIDATION_ENDPOINT = "/validate";
@@ -59,7 +58,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
     @Autowired
     private SignatureServiceConfigurationProperties signatureServiceConfigurationProperties;
 
-    @Before
+    @BeforeEach
     public void DirectoryBackToDefault() {
         setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
     }
@@ -77,7 +76,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      *
      * File: hellopades-lt-sha256-rsa2048.pdf
      */
-    @Ignore
+    @Disabled
     @Test
     public void validateDetailedReportRsaSignatureXadesBaselineLTA() {
         signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_LTA");
@@ -120,7 +119,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      *
      * File: hellopades-lt-sha256-rsa2048.pdf
      */
-    @Ignore
+    @Disabled
     @Test
     public void validateDetailedReportRsaSignatureXadesBaselineLT() {
         signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_LT");
@@ -163,7 +162,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      *
      * File: hellopades-lt-sha256-rsa2048.pdf
      */
-    @Ignore
+    @Disabled
     @Test
     public void validateDetailedReportRsaSignatureXadesBaselineT() {
         signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_T");
@@ -205,7 +204,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      *
      * File: hellopades-lt-sha256-rsa2048.pdf
      */
-    @Ignore
+    @Disabled
     @Test
     public void validateDetailedReportRsaSignatureXadesBaselineB() {
         signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_B");
@@ -247,7 +246,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      *
      * File: hellopades-lt-sha256-rsa2048.pdf
      */
-    @Ignore
+    @Disabled
     @Test
     public void validateDetailedReportEccSignatureXadesBaselineLTA() {
         signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_LTA");
@@ -290,7 +289,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      *
      * File: hellopades-lt-sha256-rsa2048.pdf
      */
-    @Ignore
+    @Disabled
     @Test
     public void validateDetailedReportEccSignatureXadesBaselineLT() {
         signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_LT");
@@ -333,7 +332,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      *
      * File: hellopades-lt-sha256-rsa2048.pdf
      */
-    @Ignore
+    @Disabled
     @Test
     public void validateDetailedReportEccSignatureXadesBaselineT() {
         signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_T");
@@ -374,7 +373,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      *
      * File: hellopades-lt-sha256-rsa2048.pdf
      */
-    @Ignore
+    @Disabled
     @Test
     public void validateDetailedReportEccSignatureXadesBaselineB() {
         signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_B");
@@ -466,7 +465,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      *
      * File: hellopades-lt-sha256-rsa2048.pdf
      */
-    @Ignore
+    @Disabled
     @Test
     public void validateDetailedReportSignaturePkcs11WrongCert() {
         signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_LT");
@@ -536,7 +535,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
     /*Testitud ja töötab RSA sertifikaatidega id-kaardiga. Ei tööta ECC kaardiga.
     Installida OpenSC
     slotIndex: 1 /Pin1 ja slotIndex: 2/Pin2*/
-    @Ignore
+    @Disabled
     @Test
     public void validateDetailedReportSignatureLevelPkcs11() {
         signatureServiceConfigurationProperties.getPkcs11().setPath("C:/Windows/System32/opensc-pkcs11.dll");

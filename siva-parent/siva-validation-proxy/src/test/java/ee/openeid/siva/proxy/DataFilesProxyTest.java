@@ -63,15 +63,15 @@ public class DataFilesProxyTest {
     @Test
     public void applicationContextHasNoBeanWithGivenNameThrowsException() {
         given(applicationContext.getBean(anyString())).willThrow(new NoSuchBeanDefinitionException("Bean not loaded"));
+        ProxyDocument proxyDocument = mockProxyDocumentWithDocument("filename.bdoc");
 
         DataFilesServiceNotFoundException caughtException = assertThrows(
                 DataFilesServiceNotFoundException.class, () -> {
-                    ProxyDocument proxyDocument = mockProxyDocumentWithDocument("filename.bdoc");
                     dataFilesProxy.getDataFiles(proxyDocument);
-                    verify(applicationContext).getBean(anyString());
                 }
         );
         assertEquals("BDOCDataFilesService not found", caughtException.getMessage());
+        verify(applicationContext).getBean(anyString());
     }
 
     @Test

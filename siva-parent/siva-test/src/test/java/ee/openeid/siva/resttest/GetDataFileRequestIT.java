@@ -17,7 +17,7 @@ package ee.openeid.siva.resttest;
 
 import static ee.openeid.siva.resttest.ValidationRequestIT.getFailMessageForKey;
 import static ee.openeid.siva.resttest.ValidationRequestIT.getRequestErrorsCount;
-import static org.springframework.test.util.AssertionErrors.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import ee.openeid.siva.integrationtest.SiVaRestTests;
 
@@ -61,9 +61,9 @@ public class GetDataFileRequestIT extends SiVaRestTests {
     @Test
     public void testGetDataFileRequestEmptyInputs() {
         String json = postForDataFiles(dataFilesRequestInvalidValues("", "")).asString();
-        assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(json, FILENAME, INVALID_DATA_FILE_FILENAME) == 1);
-        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(json, DOCUMENT, MUST_NOT_BE_BLANK) == 1);
-        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(json, DOCUMENT, INVALID_BASE_64) == 1);
+        assertEquals(1, getRequestErrorsCount(json, FILENAME, INVALID_DATA_FILE_FILENAME), getFailMessageForKey(FILENAME));
+        assertEquals(1, getRequestErrorsCount(json, DOCUMENT, MUST_NOT_BE_BLANK), getFailMessageForKey(DOCUMENT));
+        assertEquals(1, getRequestErrorsCount(json, DOCUMENT, INVALID_BASE_64), getFailMessageForKey(DOCUMENT));
     }
 
     /**
@@ -82,9 +82,9 @@ public class GetDataFileRequestIT extends SiVaRestTests {
     @Test
     public void testGetDataFileRequestEmptyInputsEmptyBody() {
         String response = postForDataFiles(new JSONObject().toString()).thenReturn().body().asString();
-        assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, INVALID_DATA_FILE_FILENAME) == 1);
-        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, MUST_NOT_BE_BLANK) == 1);
-        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, INVALID_BASE_64) == 1);
+        assertEquals(1, getRequestErrorsCount(response, FILENAME, INVALID_DATA_FILE_FILENAME), getFailMessageForKey(FILENAME));
+        assertEquals(1, getRequestErrorsCount(response, DOCUMENT, MUST_NOT_BE_BLANK), getFailMessageForKey(DOCUMENT));
+        assertEquals(1, getRequestErrorsCount(response, DOCUMENT, INVALID_BASE_64), getFailMessageForKey(DOCUMENT));
     }
 
     /**
@@ -152,7 +152,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
     public void testGetDataFileRequestDuplicatedKey() {
         String invalidRequest = "{\"documentType\":\"DDOC\",\"documentType\":\"BDOC\",\"document\":\"" + Base64.encodeBase64String(readFileFromTestResources("valid_XML1_3.ddoc")) + "\"}";
         String response = postForDataFiles(invalidRequest).asString();
-        assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, INVALID_DATA_FILE_FILENAME) == 1);
+        assertEquals(1, getRequestErrorsCount(response, FILENAME, INVALID_DATA_FILE_FILENAME), getFailMessageForKey(FILENAME));
     }
 
     /**
@@ -173,8 +173,8 @@ public class GetDataFileRequestIT extends SiVaRestTests {
         JSONObject jsonObject = new JSONObject(dataFilesRequest("valid_XML1_3.ddoc"));
         jsonObject.remove("document");
         String response = postForDataFiles(jsonObject.toString()).asString();
-        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, MUST_NOT_BE_BLANK) == 1);
-        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, INVALID_BASE_64) == 1);
+        assertEquals(1, getRequestErrorsCount(response, DOCUMENT, MUST_NOT_BE_BLANK), getFailMessageForKey(DOCUMENT));
+        assertEquals(1, getRequestErrorsCount(response, DOCUMENT, INVALID_BASE_64), getFailMessageForKey(DOCUMENT));
     }
 
     /**
@@ -218,7 +218,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
     @Test
     public void testGetDataFileRequestDocumentTypeSetToBdoc() {
         String response = postForDataFiles(dataFilesRequestExtended("valid_XML1_3.ddoc", "test.BDOC")).asString();
-        assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, INVALID_DATA_FILE_FILENAME) == 1);
+        assertEquals(1, getRequestErrorsCount(response, FILENAME, INVALID_DATA_FILE_FILENAME), getFailMessageForKey(FILENAME));
     }
 
     /**
@@ -237,7 +237,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
     @Test
     public void testGetDataFileRequestDocumentTypeSetToPdf() {
         String response = postForDataFiles(dataFilesRequestExtended("valid_XML1_3.ddoc", "test.PDF")).asString();
-        assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, INVALID_DATA_FILE_FILENAME) == 1);
+        assertEquals(1, getRequestErrorsCount(response, FILENAME, INVALID_DATA_FILE_FILENAME), getFailMessageForKey(FILENAME));
     }
 
     /**
@@ -256,7 +256,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
     @Test
     public void testGetDataFileRequestDocumentTypeSetToUnsupportedFormat() {
         String response = postForDataFiles(dataFilesRequestExtended("valid_XML1_3.ddoc", "test.JPG")).asString();
-        assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, INVALID_DATA_FILE_FILENAME) == 1);
+        assertEquals(1, getRequestErrorsCount(response, FILENAME, INVALID_DATA_FILE_FILENAME), getFailMessageForKey(FILENAME));
     }
 
     /**
@@ -275,7 +275,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
     @Test
     public void testGetDataFileRequestDocumentTypeSetToXroad() {
         String response = postForDataFiles(dataFilesRequestExtended("valid_XML1_3.ddoc", "test.XROAD")).asString();
-        assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, INVALID_DATA_FILE_FILENAME) == 1);
+        assertEquals(1, getRequestErrorsCount(response, FILENAME, INVALID_DATA_FILE_FILENAME), getFailMessageForKey(FILENAME));
     }
 
     /**
@@ -295,7 +295,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
     public void testGettDataFileRequestBdocDocumentTypeSetToDdoc() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         String response = postForDataFiles(dataFilesRequestExtended("BDOC-TS.bdoc", "test.DDOC")).asString();
-        assertTrue(getFailMessageForKey(DOCUMENT_TYPE), getRequestErrorsCount(response, DOCUMENT, DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE) == 1);
+        assertEquals(1, getRequestErrorsCount(response, DOCUMENT, DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE), getFailMessageForKey(DOCUMENT_TYPE));
     }
 
     /**
@@ -315,7 +315,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
     public void testGetDataFileRequestPdfDocumentTypeSetToDdoc() {
         setTestFilesDirectory("document_format_test_files/");
         String response = postForDataFiles(dataFilesRequestExtended("PdfValidSingleSignature.pdf", "test.DDOC")).asString();
-        assertTrue(getFailMessageForKey(DOCUMENT_TYPE), getRequestErrorsCount(response, DOCUMENT, DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE) == 1);
+        assertEquals(1, getRequestErrorsCount(response, DOCUMENT, DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE), getFailMessageForKey(DOCUMENT_TYPE));
     }
 
     /**
@@ -335,7 +335,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
     public void testGetDataFileRequestUnsupportedDocumentTypeSetToDdoc() {
         setTestFilesDirectory("document_format_test_files/");
         String response = postForDataFiles(dataFilesRequestExtended("Picture.png", "test.DDOC")).asString();
-        assertTrue(getFailMessageForKey(DOCUMENT_TYPE), getRequestErrorsCount(response, DOCUMENT, DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE) == 1);
+        assertEquals(1, getRequestErrorsCount(response, DOCUMENT, DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE), getFailMessageForKey(DOCUMENT_TYPE));
     }
 
     @Override

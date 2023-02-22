@@ -73,15 +73,15 @@ public class HashcodeValidationProxyTest {
     @Test
     public void applicationContextHasNoBeanWithGivenNameThrowsException() {
         BDDMockito.given(applicationContext.getBean(anyString())).willThrow(new NoSuchBeanDefinitionException("Bean not loaded"));
+        ProxyHashcodeDataSet proxyDocument = mockHashCodeDataSet();
 
         ValidatonServiceNotFoundException caughtException = assertThrows(
                 ValidatonServiceNotFoundException.class, () -> {
-                    ProxyHashcodeDataSet proxyDocument = mockHashCodeDataSet();
                     hashcodeValidationProxy.validate(proxyDocument);
-                    verify(applicationContext).getBean(anyString());
                 }
         );
         assertEquals("hashcodeGenericValidationService not found", caughtException.getMessage());
+        verify(applicationContext).getBean(anyString());
     }
 
     @Test

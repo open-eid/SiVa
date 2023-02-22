@@ -36,7 +36,7 @@ import static ee.openeid.siva.integrationtest.TestData.VALIDATION_CONCLUSION_PRE
 import static io.restassured.path.json.JsonPath.from;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.emptyOrNullString;
-import static org.springframework.test.util.AssertionErrors.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Tag("IntegrationTest")
 public class ValidationRequestIT extends SiVaRestTests {
@@ -99,10 +99,10 @@ public class ValidationRequestIT extends SiVaRestTests {
     public void validationRequestEmptyBody() {
         String response = post(new JSONObject().toString()).thenReturn().body().asString();
 
-        assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, MUST_NOT_BE_EMPTY) == 1);
-        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, MUST_NOT_BE_BLANK) == 1);
-        assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, INVALID_FILENAME) == 1);
-        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, INVALID_BASE_64) == 1);
+        assertEquals(1, getRequestErrorsCount(response, FILENAME, MUST_NOT_BE_EMPTY), getFailMessageForKey(FILENAME));
+        assertEquals(1, getRequestErrorsCount(response, DOCUMENT, MUST_NOT_BE_BLANK), getFailMessageForKey(DOCUMENT));
+        assertEquals(1, getRequestErrorsCount(response, FILENAME, INVALID_FILENAME), getFailMessageForKey(FILENAME));
+        assertEquals(1, getRequestErrorsCount(response, DOCUMENT, INVALID_BASE_64), getFailMessageForKey(DOCUMENT));
     }
 
     /**
@@ -128,9 +128,9 @@ public class ValidationRequestIT extends SiVaRestTests {
 
         String json = post(jsonObject.toString()).thenReturn().body().asString();
 
-        assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(json, FILENAME, MUST_NOT_BE_EMPTY) == 1);
-        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(json, DOCUMENT, MUST_NOT_BE_BLANK) == 1);
-        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(json, DOCUMENT, INVALID_BASE_64) == 1);
+        assertEquals(1, getRequestErrorsCount(json, FILENAME, MUST_NOT_BE_EMPTY), getFailMessageForKey(FILENAME));
+        assertEquals(1, getRequestErrorsCount(json, DOCUMENT, MUST_NOT_BE_BLANK), getFailMessageForKey(DOCUMENT));
+        assertEquals(1, getRequestErrorsCount(json, DOCUMENT, INVALID_BASE_64), getFailMessageForKey(DOCUMENT));
     }
 
     /**
@@ -181,10 +181,10 @@ public class ValidationRequestIT extends SiVaRestTests {
         String response = post(validationRequestForExtended("DOCUMENT", encodedString,
                 "FILENAME", "*.exe", SIGNATURE_POLICY, VALID_SIGNATURE_POLICY_3)).asString();
 
-        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, MUST_NOT_BE_BLANK) == 1);
-        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(response, DOCUMENT, INVALID_BASE_64) == 1);
-        assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, MUST_NOT_BE_EMPTY) == 1);
-        assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(response, FILENAME, INVALID_FILENAME) == 1);
+        assertEquals(1, getRequestErrorsCount(response, DOCUMENT, MUST_NOT_BE_BLANK), getFailMessageForKey(DOCUMENT));
+        assertEquals(1, getRequestErrorsCount(response, DOCUMENT, INVALID_BASE_64), getFailMessageForKey(DOCUMENT));
+        assertEquals(1, getRequestErrorsCount(response, FILENAME, MUST_NOT_BE_EMPTY), getFailMessageForKey(FILENAME));
+        assertEquals(1, getRequestErrorsCount(response, FILENAME, INVALID_FILENAME), getFailMessageForKey(FILENAME));
     }
 
     /**
@@ -208,8 +208,8 @@ public class ValidationRequestIT extends SiVaRestTests {
 
         String json = post(jsonObject.toString()).thenReturn().body().asString();
 
-        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(json, DOCUMENT, MUST_NOT_BE_BLANK) == 1);
-        assertTrue(getFailMessageForKey(DOCUMENT), getRequestErrorsCount(json, DOCUMENT, INVALID_BASE_64) == 1);
+        assertEquals(1, getRequestErrorsCount(json, DOCUMENT, MUST_NOT_BE_BLANK), getFailMessageForKey(DOCUMENT));
+        assertEquals(1, getRequestErrorsCount(json, DOCUMENT, INVALID_BASE_64), getFailMessageForKey(DOCUMENT));
     }
 
     /**
@@ -236,7 +236,7 @@ public class ValidationRequestIT extends SiVaRestTests {
 
         String json = post(jsonObject.toString()).thenReturn().body().asString();
 
-        assertTrue(getFailMessageForKey(FILENAME), getRequestErrorsCount(json, FILENAME, MUST_NOT_BE_EMPTY) == 1);
+        assertEquals(1, getRequestErrorsCount(json, FILENAME, MUST_NOT_BE_EMPTY), getFailMessageForKey(FILENAME));
     }
 
     /**

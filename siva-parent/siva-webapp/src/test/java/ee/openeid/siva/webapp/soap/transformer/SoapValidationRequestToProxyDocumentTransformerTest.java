@@ -55,10 +55,10 @@ public class SoapValidationRequestToProxyDocumentTransformerTest {
     @Test
     public void invalidReportTypeThrowsUnsupportedTypeException() {
         String reportType = "INVALID_REPORT_TYPE";
+        SoapValidationRequest validationRequest = createSoapValidationRequest("ZmlsZWNvbnRlbnQ=", "file.bdoc", "some policy");
 
         UnsupportedTypeException caughtException = assertThrows(
                 UnsupportedTypeException.class, () -> {
-                    SoapValidationRequest validationRequest = createSoapValidationRequest("ZmlsZWNvbnRlbnQ=", "file.bdoc", "some policy");
                     validationRequest.setReportType(reportType);
                     transformer.transform(validationRequest);
                 }

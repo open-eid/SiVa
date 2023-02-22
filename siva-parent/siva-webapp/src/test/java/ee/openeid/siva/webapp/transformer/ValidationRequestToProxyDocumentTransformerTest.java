@@ -62,9 +62,10 @@ public class ValidationRequestToProxyDocumentTransformerTest {
 
     @Test
     public void invalidReportTypeThrowsUnsupportedTypeException() {
+        validationRequest.setReportType("INVALID_MISS_TYPED_OR_MISSING_REPORT_TYPE");
+
         UnsupportedTypeException caughtException = assertThrows(
                 UnsupportedTypeException.class, () -> {
-                    validationRequest.setReportType("INVALID_MISS_TYPED_OR_MISSING_REPORT_TYPE");
                     transformer.transform(validationRequest).getReportType();
                 }
         );

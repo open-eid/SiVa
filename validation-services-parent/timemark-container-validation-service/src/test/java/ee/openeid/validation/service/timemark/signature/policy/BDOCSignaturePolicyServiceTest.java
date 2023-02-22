@@ -57,15 +57,13 @@ public class BDOCSignaturePolicyServiceTest {
 
     @Test
     public void givenInvalidPolicyWillThrowException() {
-        assertThrows(
-                BdocPolicyFileCreationException.class, () -> {
-                    try (MockedStatic<IOUtils> ioUtils = mockStatic(IOUtils.class)) {
+        try (MockedStatic<IOUtils> ioUtils = mockStatic(IOUtils.class)) {
                         ioUtils.when(() -> IOUtils.copy(any(InputStream.class), any(OutputStream.class))).thenThrow(new IOException("Copy error"));
                         given(policy.getConstraintDataStream()).willReturn(new ByteArrayInputStream("hello".getBytes()));
                         given(signaturePolicyService.getPolicy(anyString())).willReturn(policy);
-                        bdocSignaturePolicyService.getAbsolutePath("random");
+                        assertThrows(
+                                BdocPolicyFileCreationException.class, () -> bdocSignaturePolicyService.getAbsolutePath("random")
+                        );
                     }
-                }
-        );
     }
 }

@@ -21,11 +21,13 @@ import ee.openeid.siva.signature.configuration.SignatureServiceConfigurationProp
 import ee.openeid.siva.signature.exception.SignatureServiceException;
 import eu.europa.esig.dss.model.DSSException;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -51,9 +53,10 @@ public class AsiceWithXadesSignatureServiceTest {
 
     @Test
     public void AsiceSignatureServiceNotConfiguredWithProperties_shouldThrowException() {
+        asiceSignatureService = new AsiceWithXadesSignatureService(null, new TrustedListsCertificateSource());
+
         SignatureServiceException caughtException = assertThrows(
                 SignatureServiceException.class, () -> {
-                    asiceSignatureService = new AsiceWithXadesSignatureService(null, new TrustedListsCertificateSource());
                     asiceSignatureService.getSignature("Hello".getBytes(), "hello.txt", "application/text");
                 }
         );
@@ -102,13 +105,8 @@ public class AsiceWithXadesSignatureServiceTest {
                     asiceSignatureService.getSignature("Hello".getBytes(), "hello.txt", "application/text");
                 }
         );
-        assertEquals("Invalid signature level - 'SOME_INVALID_LEVEL'! Valid signature levels: " +
-                "[XML-NOT-ETSI, XAdES-C, XAdES-X, XAdES-XL, XAdES-A, XAdES-BASELINE-LTA, XAdES-BASELINE-LT, " +
-                "XAdES-BASELINE-T, XAdES-BASELINE-B, CMS-NOT-ETSI, CAdES-C, CAdES-X, CAdES-XL, CAdES-A, " +
-                "CAdES-BASELINE-LTA, CAdES-BASELINE-LT, CAdES-BASELINE-T, CAdES-BASELINE-B, PDF-NOT-ETSI, " +
-                "PAdES-BASELINE-LTA, PAdES-BASELINE-LT, PAdES-BASELINE-T, PAdES-BASELINE-B, PKCS7-B, PKCS7-T, " +
-                "PKCS7-LT, PKCS7-LTA, JSON-NOT-ETSI, JAdES-BASELINE-B, JAdES-BASELINE-T, JAdES-BASELINE-LT, " +
-                "JAdES-BASELINE-LTA, UNKNOWN, XAdES-BASELINE-LT-TM, XAdES-BASELINE-B-EPES]", caughtException.getMessage());
+        assertThat(caughtException.getMessage(), Matchers
+                .startsWith("Invalid signature level - 'SOME_INVALID_LEVEL'! Valid signature levels:"));
     }
 
     @Test

@@ -110,15 +110,15 @@ public class ValidationProxyTest {
     @Test
     public void applicationContextHasNoBeanWithGivenNameThrowsException() {
         BDDMockito.given(applicationContext.getBean(anyString())).willThrow(new NoSuchBeanDefinitionException("Bean not loaded"));
+        ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.PDF);
 
         ValidatonServiceNotFoundException caughtException = assertThrows(
                 ValidatonServiceNotFoundException.class, () -> {
-                    ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.PDF);
                     validationProxy.validate(proxyDocument);
-                    verify(applicationContext).getBean(anyString());
                 }
         );
         assertEquals("genericValidationService not found", caughtException.getMessage());
+        verify(applicationContext).getBean(anyString());
     }
 
     @Test

@@ -65,11 +65,10 @@ public class AsiceWithXadesSignatureServiceTest {
 
     @Test
     public void AsiceSignatureServiceNotConfiguredWithPkcs12Properties_shouldThrowException() {
+        asiceSignatureService.getProperties().setPkcs12(null);
+
         SignatureServiceException caughtException = assertThrows(
-                SignatureServiceException.class, () -> {
-                    asiceSignatureService.getProperties().setPkcs12(null);
-                    asiceSignatureService.getSignature("Hello".getBytes(), "hello.txt", "application/text");
-                }
+                SignatureServiceException.class, () -> asiceSignatureService.getSignature("Hello".getBytes(), "hello.txt", "application/text")
         );
         assertEquals("Either Pkcs11 or Pkcs12 must be configured! Currently there is none configured..", caughtException.getMessage());
 
@@ -77,33 +76,30 @@ public class AsiceWithXadesSignatureServiceTest {
 
     @Test
     public void AsiceSignatureServiceConfiguredWithInvalidPkcs12Keystore_shouldThrowException() {
+        asiceSignatureService.getProperties().getPkcs12().setPath("classpath:invalid.p12");
+
         SignatureServiceException caughtException = assertThrows(
-                SignatureServiceException.class, () -> {
-                    asiceSignatureService.getProperties().getPkcs12().setPath("classpath:invalid.p12");
-                    asiceSignatureService.getSignature("Hello".getBytes(), "hello.txt", "application/text");
-                }
+                SignatureServiceException.class, () -> asiceSignatureService.getSignature("Hello".getBytes(), "hello.txt", "application/text")
         );
         assertEquals("Error reading keystore from path: classpath:invalid.p12", caughtException.getMessage());
     }
 
     @Test
     public void AsiceSignatureServiceConfiguredWithInvalidPkcs12Password_shouldThrowException() {
+        asiceSignatureService.getProperties().getPkcs12().setPassword("invalid password");
+
         DSSException caughtException = assertThrows(
-                DSSException.class, () -> {
-                    asiceSignatureService.getProperties().getPkcs12().setPassword("invalid password");
-                    asiceSignatureService.getSignature("Hello".getBytes(), "hello.txt", "application/text");
-                }
+                DSSException.class, () -> asiceSignatureService.getSignature("Hello".getBytes(), "hello.txt", "application/text")
         );
         assertEquals("Unable to instantiate KeyStoreSignatureTokenConnection", caughtException.getMessage());
     }
 
     @Test
     public void AsiceSignatureServiceConfiguredWithInvalidSignatureLevel_shouldThrowException() {
+        asiceSignatureService.getProperties().setSignatureLevel("SOME_INVALID_LEVEL");
+
         SignatureServiceException caughtException = assertThrows(
-                SignatureServiceException.class, () -> {
-                    asiceSignatureService.getProperties().setSignatureLevel("SOME_INVALID_LEVEL");
-                    asiceSignatureService.getSignature("Hello".getBytes(), "hello.txt", "application/text");
-                }
+                SignatureServiceException.class, () -> asiceSignatureService.getSignature("Hello".getBytes(), "hello.txt", "application/text")
         );
         assertThat(caughtException.getMessage(), Matchers
                 .startsWith("Invalid signature level - 'SOME_INVALID_LEVEL'! Valid signature levels:"));

@@ -47,22 +47,19 @@ public class ConstraintLoadingSignaturePolicyServiceTest {
 
     @Test
     public void whenSignaturePolicesDoNotContainDefaultPolicyThenThrowException() {
+        ConstraintDefinedPolicy pol1 = createValidationPolicy("pol1", VALID_CLASSPATH_CONSTRAINT);
+
         assertThrows(
-            DefaultPolicyNotDefinedException.class, () -> {
-                ConstraintDefinedPolicy pol1 = createValidationPolicy("pol1", VALID_CLASSPATH_CONSTRAINT);
-                ConstraintLoadingSignaturePolicyService signaturePolicyService = createSignaturePolicyService("RANDOM_PREFIX" + "pol1", pol1);
-                signaturePolicyService.getPolicy("pol1");
-            }
+            DefaultPolicyNotDefinedException.class, () -> createSignaturePolicyService("RANDOM_PREFIX" + "pol1", pol1).getPolicy("pol1")
         );
     }
 
     @Test
     public void whenDefaultPolicyReferencesPolicyThatCannotBeLoadedThenThrowException() {
+        ConstraintDefinedPolicy pol1 = createValidationPolicy("pol1", INVALID_CLASSPATH_CONSTRAINT);
+
         assertThrows(
-                CannotLoadPolicyReferencedByDefaultPolicyException.class, () -> {
-                ConstraintDefinedPolicy pol1 = createValidationPolicy("pol1", INVALID_CLASSPATH_CONSTRAINT);
-                createSignaturePolicyService("pol1", pol1);
-            }
+                CannotLoadPolicyReferencedByDefaultPolicyException.class, () -> createSignaturePolicyService("pol1", pol1)
         );
     }
 
@@ -149,12 +146,11 @@ public class ConstraintLoadingSignaturePolicyServiceTest {
     }
 
     private void assertPolicyNotLoaded(ConstraintLoadingSignaturePolicyService signaturePolicyService, String notLoadedPolicyName) {
+        assertEquals(1, signaturePolicyService.getSignaturePolicies().size());
+        assertNull(signaturePolicyService.getSignaturePolicies().get(notLoadedPolicyName));
+
         assertThrows(
-                InvalidPolicyException.class, () -> {
-                assertEquals(1, signaturePolicyService.getSignaturePolicies().size());
-                assertNull(signaturePolicyService.getSignaturePolicies().get(notLoadedPolicyName));
-                signaturePolicyService.getPolicy(notLoadedPolicyName);
-            }
+                InvalidPolicyException.class, () -> signaturePolicyService.getPolicy(notLoadedPolicyName)
         );
     }
 

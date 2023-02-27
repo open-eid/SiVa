@@ -202,14 +202,13 @@ public class ValidationProxyTest {
     }
 
     @Test
-    public void proxyDocumentAsicsWithTwoDataFiles() {
+    public void proxyDocumentAsicsWithTwoDataFiles() throws Exception {
+        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(getTimeStampValidationService());
+        ProxyDocument proxyDocument = mockProxyDocumentWithExtension("asics");
+        proxyDocument.setBytes(buildValidationDocument("TwoDataFilesAsics.asics"));
+
         assertThrows(
-                DocumentRequirementsException.class, () -> {
-                    when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(getTimeStampValidationService());
-                    ProxyDocument proxyDocument = mockProxyDocumentWithExtension("asics");
-                    proxyDocument.setBytes(buildValidationDocument("TwoDataFilesAsics.asics"));
-                    validationProxy.validate(proxyDocument);
-                }
+                DocumentRequirementsException.class, () -> validationProxy.validate(proxyDocument)
         );
     }
 

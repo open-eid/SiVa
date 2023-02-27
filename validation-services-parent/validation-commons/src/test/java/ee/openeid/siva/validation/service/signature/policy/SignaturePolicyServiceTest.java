@@ -32,12 +32,10 @@ public class SignaturePolicyServiceTest {
 
     @Test
     public void whenSignaturePolicesDoNotContainDefaultPolicyThenThrowException() {
+        ValidationPolicy pol1 = createValidationPolicy("pol1", "desc1");
+
         assertThrows(
-            DefaultPolicyNotDefinedException.class, () -> {
-                ValidationPolicy pol1 = createValidationPolicy("pol1", "desc1");
-                SignaturePolicyService<ValidationPolicy> signaturePolicyService = createSignaturePolicyService("RANDOM_PREFIX" + "pol1", pol1);
-                signaturePolicyService.getPolicy("pol1");
-            }
+            DefaultPolicyNotDefinedException.class, () -> createSignaturePolicyService("RANDOM_PREFIX" + "pol1", pol1).getPolicy("pol1")
         );
     }
 

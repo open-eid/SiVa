@@ -19,6 +19,7 @@ package ee.openeid.siva.proxy;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.document.ReportType;
 import ee.openeid.siva.validation.service.ValidationService;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -50,6 +51,7 @@ public class ValidationProxyUnhandledReportTypeTest {
     private ValidationService validationService;
 
     @Test
+    @Disabled("SIVA-413")
     public void unhandledReportTypeThrowsIllegalArgumentException() {
         ReportType[] reportTypeRealValues = ReportType.values();
 

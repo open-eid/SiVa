@@ -105,8 +105,9 @@ public final class ReportBuilderUtils {
             for (SignatureValidationData signature : validationConclusion.getSignatures()) {
                 if (SignatureValidationData.Indication.TOTAL_PASSED.toString().equals(signature.getIndication())) {
                     String signatureLevel = signature.getSignatureLevel();
-                    if (SignatureQualification.ADESEAL_QC.name().equals(signatureLevel) || SignatureQualification.QES.name().equals(signatureLevel)
-                            || SignatureQualification.QESIG.name().equals(signatureLevel) || SignatureQualification.QESEAL.name().equals(signatureLevel)) {
+                    if (SignatureQualification.ADESEAL_QC.name().equals(signatureLevel)
+                            || SignatureQualification.QESIG.name().equals(signatureLevel)
+                            || SignatureQualification.QESEAL.name().equals(signatureLevel)) {
                         continue;
                     } else if (SignatureQualification.ADESIG_QC.name().equals(signatureLevel)) {
                         signature.getWarnings().add(getSignatureLevelWarning());

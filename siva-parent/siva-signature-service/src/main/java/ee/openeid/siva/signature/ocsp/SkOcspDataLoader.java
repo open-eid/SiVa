@@ -18,14 +18,13 @@ package ee.openeid.siva.signature.ocsp;
 
 import eu.europa.esig.dss.model.DSSException;
 import eu.europa.esig.dss.service.http.commons.OCSPDataLoader;
-import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.BufferedHttpEntity;
-import org.apache.http.entity.InputStreamEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.util.EntityUtils;
+import eu.europa.esig.dss.spi.exception.DSSExternalResourceException;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.io.entity.BufferedHttpEntity;
+import org.apache.hc.core5.http.io.entity.InputStreamEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,7 +55,7 @@ public class SkOcspDataLoader extends OCSPDataLoader {
             // So, the solution is to cache temporarily the complete content data (as we do not expect much here) in a byte-array.
             final ByteArrayInputStream bis = new ByteArrayInputStream(content);
 
-            final HttpEntity httpEntity = new InputStreamEntity(bis, content.length);
+            final HttpEntity httpEntity = new InputStreamEntity(bis, content.length, null);
             final HttpEntity requestEntity = new BufferedHttpEntity(httpEntity);
             httpRequest.setEntity(requestEntity);
             if (contentType != null) {
@@ -68,18 +67,9 @@ public class SkOcspDataLoader extends OCSPDataLoader {
 
             return readHttpResponse(httpResponse);
         } catch (IOException e) {
-            throw new DSSException(e);
+            throw new DSSExternalResourceException(String.format("Unable to process POST call for url [%s]. Reason : [%s]", url, e.getMessage()) , e);
         } finally {
-            try {
-                if (httpRequest != null) {
-                    httpRequest.releaseConnection();
-                }
-                if (httpResponse != null) {
-                    EntityUtils.consumeQuietly(httpResponse.getEntity());
-                }
-            } finally {
-                IOUtils.closeQuietly(client);
-            }
+            closeQuietly(httpRequest, httpResponse, client);
         }
     }
 }

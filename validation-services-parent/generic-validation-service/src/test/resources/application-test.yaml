@@ -1,0 +1,16 @@
+siva:
+  tsl:
+    loader:
+      lotls:
+        -
+          primary: true
+          url: https://ec.europa.eu/tools/lotl/eu-lotl.xml
+          ojurl: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=uriserv:OJ.C_.2019.276.01.0001.01.ENG
+          lotlRootSchemeInfoUri: https://ec.europa.eu/tools/lotl/eu-lotl-legalnotice.html
+          trustedTerritories: [ AT,BE,BG,CY,CZ,DE,DK,EE,ES,FI,FR,EL,HU,HR,IE,IS,IT,LT,LU,LV,LI,MT,NO,NL,PL,PT,RO,SE,SI,SK,UK ]
+          lotlPivotSupportEnabled: true
+          mraSupport: false
+          validationTruststore:
+            type: PKCS12
+            filename: siva-eu-lotl-truststore.p12
+            password: siva-keystore-password

@@ -1,0 +1,29 @@
+siva:
+  tsl:
+    loader:
+      lotls:
+        -
+          primary: true
+          url: https://open-eid.github.io/test-TL/tl-mp-test-EE.xml
+          ojurl: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=uriserv:OJ.C_.2019.276.01.0001.01.ENG
+          lotlRootSchemeInfoUri: https://ec.europa.eu/tools/lotl/eu-lotl-legalnotice.html
+          trustedTerritories: [ ]
+          lotlPivotSupportEnabled: false
+          mraSupport: false
+          validationTruststore:
+            type: PKCS12
+            filename: test-siva-eu-lotl-truststore.p12
+            password: siva-keystore-password
+        -
+          primary: false
+          url: https://ec.europa.eu/tools/lotl/mra/ades-lotl.xml
+          ojurl: https://ec.europa.eu/tools/lotl/mra/ades-lotl-legal-notice.html
+          lotlRootSchemeInfoUri: https://ec.europa.eu/tools/lotl/mra/ades-lotl-legal-notice.html
+          otherTslPointer: https://ec.europa.eu/tools/lotl/mra/ades-lotl-tsl-type
+          trustedTerritories: [UA]
+          lotlPivotSupportEnabled: false
+          mraSupport: true
+          validationTruststore:
+            type: PKCS12
+            filename: siva-mra-ades-lotl-truststore.p12
+            password: siva-keystore-password

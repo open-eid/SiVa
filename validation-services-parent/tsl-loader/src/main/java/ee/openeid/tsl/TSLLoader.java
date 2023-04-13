@@ -16,7 +16,9 @@
 
 package ee.openeid.tsl;
 
+import ee.openeid.tsl.configuration.LotlConfigurationProperties;
 import ee.openeid.tsl.configuration.TSLLoaderConfigurationProperties;
+import ee.openeid.tsl.keystore.DSSKeyStoreFactory;
 import eu.europa.esig.dss.model.DSSDocument;
 import eu.europa.esig.dss.model.InMemoryDocument;
 import eu.europa.esig.dss.service.http.commons.CommonsDataLoader;
@@ -25,16 +27,17 @@ import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
 import eu.europa.esig.dss.spi.client.http.DSSFileLoader;
 import eu.europa.esig.dss.spi.client.http.IgnoreDataLoader;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
-import eu.europa.esig.dss.spi.x509.KeyStoreCertificateSource;
 import eu.europa.esig.dss.tsl.function.EULOTLOtherTSLPointer;
 import eu.europa.esig.dss.tsl.function.EUTLOtherTSLPointer;
 import eu.europa.esig.dss.tsl.function.OfficialJournalSchemeInformationURI;
 import eu.europa.esig.dss.tsl.function.SchemeTerritoryOtherTSLPointer;
+import eu.europa.esig.dss.tsl.function.TypeOtherTSLPointer;
 import eu.europa.esig.dss.tsl.function.XMLOtherTSLPointer;
 import eu.europa.esig.dss.tsl.job.TLValidationJob;
 import eu.europa.esig.dss.tsl.source.LOTLSource;
 import eu.europa.esig.dss.tsl.sync.ExpirationAndSignatureCheckStrategy;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.utils.ResourceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +57,6 @@ public class TSLLoader {
     private TLValidationJob tslValidationJob;
     private TSLLoaderConfigurationProperties configurationProperties;
     private TrustedListsCertificateSource trustedListSource;
-    private KeyStoreCertificateSource keyStoreCertificateSource;
     private ProxyConfig proxyConfig;
 
 
@@ -72,7 +74,9 @@ public class TSLLoader {
             tslValidationJob.setOnlineDataLoader(onlineLoader());
         }
         tslValidationJob.setTrustedListCertificateSource(trustedListSource);
-        tslValidationJob.setListOfTrustedListSources(europeanLOTL());
+        tslValidationJob.setListOfTrustedListSources(configurationProperties.getLotls().stream()
+                .map(this::createLOTLSource)
+                .toArray(LOTLSource[]::new));
         tslValidationJob.setSynchronizationStrategy(new ExpirationAndSignatureCheckStrategy());
     }
 
@@ -88,23 +92,53 @@ public class TSLLoader {
         }
     }
 
-    public LOTLSource europeanLOTL() {
+    private LOTLSource createLOTLSource(LotlConfigurationProperties lotl) {
         LOTLSource lotlSource = new LOTLSource();
-        lotlSource.setUrl(configurationProperties.getUrl());
+        lotlSource.setUrl(lotl.getUrl());
 
-        lotlSource.setCertificateSource(keyStoreCertificateSource);
-        lotlSource.setSigningCertificatesAnnouncementPredicate(new OfficialJournalSchemeInformationURI(configurationProperties.getOjUrl()));
-        lotlSource.setPivotSupport(configurationProperties.isLotlPivotSupportEnabled());
-        lotlSource.setLotlPredicate(new EULOTLOtherTSLPointer()
-                .and(new XMLOtherTSLPointer())
-        );
+        DSSKeyStoreFactory dssKeyStoreFactory = new DSSKeyStoreFactory();
+        dssKeyStoreFactory.setKeyStoreType(lotl.getValidationTruststore().getType());
+        dssKeyStoreFactory.setKeyStoreFilename(lotl.getValidationTruststore().getFilename());
+        dssKeyStoreFactory.setKeyStorePassword(lotl.getValidationTruststore().getPassword());
 
-        if (!configurationProperties.getTrustedTerritories().isEmpty()) {
-            Set<String> trustedTerritories = new HashSet<>();
-            CollectionUtils.addAll(trustedTerritories, configurationProperties.getTrustedTerritories());
-            lotlSource.setTlPredicate(new SchemeTerritoryOtherTSLPointer(trustedTerritories).and(new EUTLOtherTSLPointer()
-                    .and(new XMLOtherTSLPointer()))
+        lotlSource.setCertificateSource(dssKeyStoreFactory.createCertificateSource());
+        lotlSource.setSigningCertificatesAnnouncementPredicate(new OfficialJournalSchemeInformationURI(lotl.getOjurl()));
+        lotlSource.setPivotSupport(lotl.isLotlPivotSupportEnabled());
+        lotlSource.setMraSupport(lotl.isMraSupport());
+
+        if (StringUtils.isBlank(lotl.getOtherTslPointer())) {
+            lotlSource.setLotlPredicate(new EULOTLOtherTSLPointer()
+                    .and(new XMLOtherTSLPointer())
             );
+        } else {
+            lotlSource.setLotlPredicate(new XMLOtherTSLPointer().and(new TypeOtherTSLPointer(lotl.getOtherTslPointer())));
+        }
+
+
+        if (CollectionUtils.isNotEmpty(lotl.getTrustedTerritories())) {
+            Set<String> trustedTerritories = new HashSet<>();
+            CollectionUtils.addAll(trustedTerritories, lotl.getTrustedTerritories());
+            if (StringUtils.isBlank(lotl.getOtherTslPointer())) {
+                lotlSource.setTlPredicate(new SchemeTerritoryOtherTSLPointer(trustedTerritories)
+                        .and(new EUTLOtherTSLPointer()
+                        .and(new XMLOtherTSLPointer()))
+                );
+            } else {
+                lotlSource.setTlPredicate(new SchemeTerritoryOtherTSLPointer(trustedTerritories)
+                        .and(new XMLOtherTSLPointer()
+                        .and(new TypeOtherTSLPointer(lotl.getOtherTslPointer()).negate()))
+                );
+            }
+        } else {
+            if (StringUtils.isBlank(lotl.getOtherTslPointer())) {
+                lotlSource.setTlPredicate(new EUTLOtherTSLPointer()
+                        .and(new XMLOtherTSLPointer())
+                );
+            } else {
+                lotlSource.setTlPredicate((new XMLOtherTSLPointer()
+                        .and(new TypeOtherTSLPointer(lotl.getOtherTslPointer()).negate()))
+                );
+            }
         }
         return lotlSource;
     }
@@ -151,11 +185,6 @@ public class TSLLoader {
     @Autowired
     public void setTslLoaderConfigurationProperties(TSLLoaderConfigurationProperties configurationProperties) {
         this.configurationProperties = configurationProperties;
-    }
-
-    @Autowired
-    public void setKeyStoreCertificateSource(KeyStoreCertificateSource keyStoreCertificateSource) {
-        this.keyStoreCertificateSource = keyStoreCertificateSource;
     }
 
     @Autowired

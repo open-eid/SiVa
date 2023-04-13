@@ -39,12 +39,13 @@ Recommended way of building this project is using [Maven Wrapper](https://github
 Run following command:
 
 ```bash
-./mvnw clean install
+./mvnw clean package
 ```
 
 Or create image for Docker:
 
 ```bash
+./mvnw clean install
 ./mvnw spring-boot:build-image -pl siva-parent/siva-webapp
 ```
 

@@ -22,15 +22,15 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.config.AbstractFactoryBean;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class DSSKeyStoreFactoryBean extends AbstractFactoryBean<KeyStoreCertificateSource> {
-    private static final Logger KEY_STORE_LOGGER = LoggerFactory.getLogger(DSSKeyStoreFactoryBean.class);
+public class DSSKeyStoreFactory {
+    private static final Logger KEY_STORE_LOGGER = LoggerFactory.getLogger(DSSKeyStoreFactory.class);
     public static final String ENVIRONMENT_VARIABLE_DSS_DATA_FOLDER = "DSS_DATA_FOLDER";
 
     private String keyStoreType;
@@ -49,8 +49,7 @@ public class DSSKeyStoreFactoryBean extends AbstractFactoryBean<KeyStoreCertific
         this.keyStorePassword = keyStorePassword;
     }
 
-    @Override
-    protected KeyStoreCertificateSource createInstance() throws Exception {
+    public KeyStoreCertificateSource createCertificateSource() {
         File keystoreFile = getKeyStoreFile();
         if (keystoreFile.exists()) {
             KEY_STORE_LOGGER.info("Keystore file found (" + keystoreFile.getAbsolutePath() + ")");
@@ -59,7 +58,7 @@ public class DSSKeyStoreFactoryBean extends AbstractFactoryBean<KeyStoreCertific
             KEY_STORE_LOGGER.info("Copying keystore file from the war");
 
             try (
-                    InputStream is = DSSKeyStoreFactoryBean.class.getResourceAsStream("/" + keyStoreFilename);
+                    InputStream is = DSSKeyStoreFactory.class.getResourceAsStream("/" + keyStoreFilename);
                     OutputStream os = new FileOutputStream(keystoreFile);
             ) {
                 IOUtils.copy(is, os);
@@ -67,12 +66,11 @@ public class DSSKeyStoreFactoryBean extends AbstractFactoryBean<KeyStoreCertific
                 throw new DSSException("Unable to create the keystore on the server : " + e.getMessage(), e);
             }
         }
-        return new KeyStoreCertificateSource(keystoreFile, keyStoreType, keyStorePassword);
-    }
-
-    @Override
-    public Class<?> getObjectType() {
-        return KeyStoreCertificateSource.class;
+        try {
+            return new KeyStoreCertificateSource(keystoreFile, keyStoreType, keyStorePassword);
+        } catch (IOException e) {
+            throw new DSSException("Failed to create a keystore certificate source : " + e.getMessage(), e);
+        }
     }
 
     private File getKeyStoreFile() {

@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.ByteArrayInputStream;
@@ -37,6 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest(classes = {ValidationServiceTest.TestConfiguration.class})
 @ExtendWith(SpringExtension.class)
 @Slf4j
+@ActiveProfiles("test")
 public class ValidationServiceTest {
 
     private static final String TEST_FILES_LOCATION = "test-files/";

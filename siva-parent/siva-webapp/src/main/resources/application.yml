@@ -3,6 +3,36 @@ spring.http.encoding.charset: UTF-8 # Charset of HTTP requests and responses. Ad
 spring.http.encoding.enabled: true # Enable http encoding support.
 spring.http.encoding.force: true # Force the encoding to the configured charset on HTTP requests and responses.
 
+siva:
+  tsl:
+    loader:
+      lotls:
+        -
+          primary: true
+          url: https://ec.europa.eu/tools/lotl/eu-lotl.xml
+          ojurl: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=uriserv:OJ.C_.2019.276.01.0001.01.ENG
+          lotlRootSchemeInfoUri: https://ec.europa.eu/tools/lotl/eu-lotl-legalnotice.html
+          trustedTerritories: [ AT,BE,BG,CY,CZ,DE,DK,EE,ES,FI,FR,EL,HU,HR,IE,IS,IT,LT,LU,LV,LI,MT,NO,NL,PL,PT,RO,SE,SI,SK,UK ]
+          lotlPivotSupportEnabled: true
+          mraSupport: false
+          validationTruststore:
+            type: PKCS12
+            filename: siva-eu-lotl-truststore.p12
+            password: siva-keystore-password
+        -
+          primary: false
+          url: https://ec.europa.eu/tools/lotl/mra/ades-lotl.xml
+          ojurl: https://ec.europa.eu/tools/lotl/mra/ades-lotl-legal-notice.html
+          lotlRootSchemeInfoUri: https://ec.europa.eu/tools/lotl/mra/ades-lotl-legal-notice.html
+          otherTslPointer: https://ec.europa.eu/tools/lotl/mra/ades-lotl-tsl-type
+          trustedTerritories: [UA]
+          lotlPivotSupportEnabled: false
+          mraSupport: true
+          validationTruststore:
+            type: PKCS12
+            filename: siva-mra-ades-lotl-truststore.p12
+            password: siva-keystore-password
+
 management:
   health:
     diskspace:

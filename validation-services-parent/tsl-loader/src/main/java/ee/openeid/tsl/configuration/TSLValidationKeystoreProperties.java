@@ -17,13 +17,10 @@
 package ee.openeid.tsl.configuration;
 
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Data
-@ConfigurationProperties(prefix = "siva.keystore")
 public class TSLValidationKeystoreProperties {
-    private String type = "JKS";
-    private String filename = "siva-keystore.jks";
-    @SuppressWarnings("squid:S2068") //default password
-    private String password = "siva-keystore-password";
+    private String type;
+    private String filename;
+    private String password;
 }

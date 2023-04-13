@@ -17,9 +17,9 @@
 package ee.openeid.validation.service.timemark.configuration;
 
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
+import ee.openeid.tsl.configuration.LotlConfigurationProperties;
 import ee.openeid.tsl.configuration.TSLLoaderConfigurationProperties;
-import ee.openeid.tsl.configuration.TSLValidationKeystoreProperties;
-import ee.openeid.tsl.keystore.DSSKeyStoreFactoryBean;
+import ee.openeid.tsl.keystore.DSSKeyStoreFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.Configuration;
 import org.digidoc4j.ExternalConnectionType;
@@ -43,15 +43,12 @@ public class TimemarkContainerValidationServiceConfiguration {
 
     private final TSLLoaderConfigurationProperties tslLoaderConfigurationProperties;
     private final BDOCValidationServiceProperties bdocValidationServiceProperties;
-    private final TSLValidationKeystoreProperties tslValidationKeystoreProperties;
 
     @Autowired
     public TimemarkContainerValidationServiceConfiguration(TSLLoaderConfigurationProperties tslLoaderConfigurationProperties,
-                                                           BDOCValidationServiceProperties bdocValidationServiceProperties,
-                                                           TSLValidationKeystoreProperties tslValidationKeystoreProperties) {
+                                                           BDOCValidationServiceProperties bdocValidationServiceProperties) {
         this.tslLoaderConfigurationProperties = tslLoaderConfigurationProperties;
         this.bdocValidationServiceProperties = bdocValidationServiceProperties;
-        this.tslValidationKeystoreProperties = tslValidationKeystoreProperties;
     }
 
     @Bean(name = "timemarkPolicyService")
@@ -73,22 +70,30 @@ public class TimemarkContainerValidationServiceConfiguration {
     public Configuration prodDigiDoc4JConfiguration() {
         Configuration configuration = createConfiguration(Configuration.Mode.PROD);
         configuration.loadConfiguration(getAdditionalConfigurationFilePath("/siva-digidoc4j.yaml"), true);
-        configuration.setTrustedTerritories(tslLoaderConfigurationProperties.getTrustedTerritories().toArray(String[]::new));
+        configuration.setTrustedTerritories(getPrimaryLotlConfigurationProperties().getTrustedTerritories().toArray(String[]::new));
         return configuration;
     }
 
     private Configuration createConfiguration(Configuration.Mode mode) {
         Configuration configuration = new Configuration(mode);
+        LotlConfigurationProperties lotlConfigurationProperties = getPrimaryLotlConfigurationProperties();
         configuration.setSslTruststorePathFor(ExternalConnectionType.TSL, tslLoaderConfigurationProperties.getSslTruststorePath());
         configuration.setSslTruststorePasswordFor(ExternalConnectionType.TSL, tslLoaderConfigurationProperties.getSslTruststorePassword());
         configuration.setSslTruststoreTypeFor(ExternalConnectionType.TSL, tslLoaderConfigurationProperties.getSslTruststoreType());
-        configuration.setLotlLocation(tslLoaderConfigurationProperties.getUrl());
-        configuration.setLotlPivotSupportEnabled(tslLoaderConfigurationProperties.isLotlPivotSupportEnabled());
-        String sivaLotlTruststorePath = DSSKeyStoreFactoryBean.getDssDataFolder() + File.separatorChar + tslValidationKeystoreProperties.getFilename();
+        configuration.setLotlLocation(lotlConfigurationProperties.getUrl());
+        configuration.setLotlPivotSupportEnabled(lotlConfigurationProperties.isLotlPivotSupportEnabled());
+        String sivaLotlTruststorePath = DSSKeyStoreFactory.getDssDataFolder() + File.separatorChar + lotlConfigurationProperties.getValidationTruststore().getFilename();
         configuration.setLotlTruststorePath(sivaLotlTruststorePath);
-        configuration.setLotlTruststorePassword(tslValidationKeystoreProperties.getPassword());
-        configuration.setLotlTruststoreType(tslValidationKeystoreProperties.getType());
+        configuration.setLotlTruststorePassword(lotlConfigurationProperties.getValidationTruststore().getPassword());
+        configuration.setLotlTruststoreType(lotlConfigurationProperties.getValidationTruststore().getType());
         return configuration;
+    }
+
+    private LotlConfigurationProperties getPrimaryLotlConfigurationProperties() {
+        return tslLoaderConfigurationProperties.getLotls().stream()
+                .filter(LotlConfigurationProperties::isPrimary)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("No primary Lotl found"));
     }
 
     private String getAdditionalConfigurationFilePath(String defaultFilePath) {

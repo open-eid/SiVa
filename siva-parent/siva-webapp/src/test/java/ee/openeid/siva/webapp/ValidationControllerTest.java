@@ -19,6 +19,7 @@ package ee.openeid.siva.webapp;
 import ee.openeid.siva.proxy.ContainerValidationProxy;
 import ee.openeid.siva.proxy.ProxyRequest;
 import ee.openeid.siva.proxy.document.ProxyDocument;
+import ee.openeid.siva.proxy.validation.ZipMimetypeValidator;
 import ee.openeid.siva.statistics.StatisticsService;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.webapp.request.ValidationRequest;
@@ -49,12 +50,14 @@ public class ValidationControllerTest {
     private ApplicationContext applicationContext;
     @Mock
     private Environment environment;
+    @Mock
+    private ZipMimetypeValidator zipMimetypeValidator;
     private MockMvc mockMvc;
 
     @BeforeEach
     public void setUp() {
         ValidationController validationController = new ValidationController();
-        ValidationProxySpy validationProxyServiceSpy = new ValidationProxySpy(statisticsService, applicationContext, environment);
+        ValidationProxySpy validationProxyServiceSpy = new ValidationProxySpy(statisticsService, applicationContext, environment, zipMimetypeValidator);
         validationController.setContainerValidationProxy(validationProxyServiceSpy);
         validationController.setTransformer(transformerSpy);
         mockMvc = standaloneSetup(validationController).build();
@@ -196,8 +199,9 @@ public class ValidationControllerTest {
         public ValidationProxySpy(
                 StatisticsService statisticsService,
                 ApplicationContext applicationContext,
-                Environment environment) {
-            super(statisticsService, applicationContext, environment);
+                Environment environment,
+                ZipMimetypeValidator zipMimetypeValidator) {
+            super(statisticsService, applicationContext, environment, zipMimetypeValidator);
         }
 
         @Override

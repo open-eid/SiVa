@@ -20,6 +20,7 @@ import ee.openeid.siva.proxy.document.DocumentType;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.document.ReportType;
 import ee.openeid.siva.proxy.exception.ValidatonServiceNotFoundException;
+import ee.openeid.siva.proxy.validation.ZipMimetypeValidator;
 import ee.openeid.siva.statistics.StatisticsService;
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
@@ -98,6 +99,9 @@ public class ValidationProxyTest {
 
     @Mock
     private ApplicationContext applicationContext;
+
+    @Mock
+    ZipMimetypeValidator zipMimetypeValidator;
 
     @Spy
     private StandardEnvironment environment;

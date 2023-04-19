@@ -16,11 +16,22 @@
 
 package ee.openeid.siva.proxy;
 
+import ee.openeid.siva.proxy.validation.ZipMimetypeValidator;
+import ee.openeid.siva.validation.constant.AsicContainerConstants;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ComponentScan("ee.openeid")
-public class SivaProxyConfiguration { }
+public class SivaProxyConfiguration {
+    @Bean
+    ZipMimetypeValidator zipMimetypeValidator() {
+        return new ZipMimetypeValidator(
+                AsicContainerConstants.ASICE_MIME_TYPE,
+                AsicContainerConstants.ASICS_MIME_TYPE
+        );
+    }
+}
 
 

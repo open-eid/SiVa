@@ -17,6 +17,8 @@
 package ee.openeid.siva.proxy;
 
 import ee.openeid.siva.proxy.document.ProxyDocument;
+import ee.openeid.siva.proxy.exception.ContainerMimetypeFileException;
+import ee.openeid.siva.proxy.validation.ZipMimetypeValidator;
 import ee.openeid.siva.statistics.StatisticsService;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Reports;
@@ -50,6 +52,10 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import static ee.openeid.siva.validation.constant.AsicContainerConstants.ASICS_MIME_TYPE;
+import static eu.europa.esig.dss.asic.common.ASiCUtils.META_INF_FOLDER;
+import static eu.europa.esig.dss.asic.common.ASiCUtils.MIME_TYPE;
+
 @Service
 public class ContainerValidationProxy extends ValidationProxy {
 
@@ -62,16 +68,17 @@ public class ContainerValidationProxy extends ValidationProxy {
     private static final String TIMESTAMP_EXTENSION = ".TST";
     private static final String TIMEMARK_CONTAINER_SERVICE = "timemarkContainer";
     private static final String TIMESTAMP_TOKEN_SERVICE = "timeStampToken";
-    private static final String MIME_TYPE_FILE_NAME = "mimetype";
-    private static final String ASICS_MIME_TYPE = "application/vnd.etsi.asic-s+zip";
-    private static final String META_INF_FOLDER = "META-INF/";
     private static final String DOCUMENT_FORMAT_NOT_RECOGNIZED = "Document format not recognized/handled";
+
+    private final ZipMimetypeValidator zipMimetypeValidator;
 
     @Autowired
     public ContainerValidationProxy(StatisticsService statisticsService,
                                     ApplicationContext applicationContext,
-                                    Environment environment) {
+                                    Environment environment,
+                                    ZipMimetypeValidator zipMimetypeValidator) {
         super(statisticsService, applicationContext, environment);
+        this.zipMimetypeValidator = zipMimetypeValidator;
     }
 
     @Override
@@ -86,6 +93,11 @@ public class ContainerValidationProxy extends ValidationProxy {
                 && report.getValidationConclusion().getTimeStampTokens().stream()
                 .allMatch(token -> token.getIndication() == TimeStampTokenValidationData.Indication.TOTAL_PASSED)) {
             report = generateDataFileReport(proxyRequest, report);
+        }
+        try {
+            zipMimetypeValidator.validateZipContainerMimetype((ProxyDocument) proxyRequest);
+        } catch (ContainerMimetypeFileException e) {
+            addWarningToReport(report, e.getMessage());
         }
 
         return report;
@@ -159,7 +171,7 @@ public class ContainerValidationProxy extends ValidationProxy {
         try (ZipInputStream zipStream = new ZipInputStream(new ByteArrayInputStream(proxyDocument))) {
             ZipEntry entry;
             while ((entry = zipStream.getNextEntry()) != null) {
-                if (!entry.getName().startsWith(META_INF_FOLDER) && !entry.getName().equalsIgnoreCase(MIME_TYPE_FILE_NAME)) {
+                if (!entry.getName().startsWith(META_INF_FOLDER) && !entry.getName().equalsIgnoreCase(MIME_TYPE)) {
                     return new InMemoryDocument(zipStream, entry.getName());
                 }
             }
@@ -212,8 +224,17 @@ public class ContainerValidationProxy extends ValidationProxy {
         validationConclusion.setValidationWarnings(newList);
     }
 
+    private static void addWarningToReport(SimpleReport report, String message) {
+        List<ValidationWarning> warnings = report.getValidationConclusion().getValidationWarnings();
+        List<ValidationWarning> newList = new ArrayList<>(warnings);
+        ValidationWarning validationWarning = new ValidationWarning();
+        validationWarning.setContent(message);
+        newList.add(validationWarning);
+        report.getValidationConclusion().setValidationWarnings(newList);
+    }
+
     private static boolean isAsicsMimeType(DSSDocument entry) {
-        if (!entry.getName().equals(MIME_TYPE_FILE_NAME)) {
+        if (!entry.getName().equals(MIME_TYPE)) {
             return false;
         }
         try (InputStream inputStream = entry.openStream()) {

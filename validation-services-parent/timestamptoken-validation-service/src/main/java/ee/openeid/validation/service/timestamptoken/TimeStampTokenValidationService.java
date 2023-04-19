@@ -56,14 +56,14 @@ import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.getDateFormatterWithGMTZone;
+import static eu.europa.esig.dss.asic.common.ASiCUtils.META_INF_FOLDER;
+import static eu.europa.esig.dss.asic.common.ASiCUtils.MIME_TYPE;
 
 @Service
 public class TimeStampTokenValidationService implements ValidationService {
@@ -73,8 +73,6 @@ public class TimeStampTokenValidationService implements ValidationService {
     }
 
     private static final String TIMESTAMP_FILE = "TIMESTAMP.TST";
-    private static final String META_INF_FOLDER = "META-INF/";
-    private static final String MIME_TYPE = "mimetype";
     private static final String SIGNATURE_FILE_EXTENSION_P7S = "SIGNATURE.P7S";
     private static final String EVIDENCE_RECORD_FILE_EXTENSION_ERS = "EVIDENCERECORD.ERS";
     private static final String EVIDENCE_RECORD_FILE_EXTENSION_XML = "EVIDENCERECORD.XML";

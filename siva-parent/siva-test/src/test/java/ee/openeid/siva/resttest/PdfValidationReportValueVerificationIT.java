@@ -169,7 +169,7 @@ public class PdfValidationReportValueVerificationIT extends SiVaRestTests {
                 .body("signatures[1].errors.content", Matchers.hasItem(CERT_NOT_GRANTED))
                 .body("signatures[1].signatureScopes[0].name", Matchers.is("Full PDF"))
                 .body("signatures[1].signatureScopes[0].scope", Matchers.is("FULL"))
-                .body("signatures[1].signatureScopes[0].content", Matchers.is("Full document"))
+                .body("signatures[1].signatureScopes[0].content", Matchers.is("The document ByteRange : [0, 94483, 132377, 492]"))
                 .body("signatures[1].claimedSigningTime", Matchers.is("2015-08-23T05:10:15Z"))
                 .body("signatures[1].warnings[0].content", Matchers.is("The signature/seal is not a valid AdES digital signature!"))
                 .body("signatures[1].info.timeAssertionMessageImprint", Matchers.emptyOrNullString())

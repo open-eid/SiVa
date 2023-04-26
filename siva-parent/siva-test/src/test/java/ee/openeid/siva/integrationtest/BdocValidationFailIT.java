@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
 import static ee.openeid.siva.integrationtest.TestData.*;
+import static org.hamcrest.Matchers.emptyOrNullString;
 
 @Tag("IntegrationTest")
 public class BdocValidationFailIT extends SiVaRestTests {
@@ -684,7 +685,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
         post(validationRequestFor("23608-bdoc21-TM-ocsp-bad-nonce.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-E"))
-                .body("signatures[0].info.bestSignatureTime", Matchers.is("2014-12-12T13:17:00Z"))
+                .body("signatures[0].info.bestSignatureTime", emptyOrNullString())
                 .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[0].errors.content", Matchers.hasItem("OCSP nonce is invalid"))
                 .body("validSignaturesCount", Matchers.is(0));

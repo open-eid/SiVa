@@ -115,7 +115,7 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
                 .body("signatures[0].signatureLevel", Matchers.is("INDETERMINATE_QESIG"))
                 .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
-                .body("signatures[0].errors.content", Matchers.hasItem("The algorithm ECDSA with key size 224 is too small for signature creation"))
+                .body("signatures[0].errors.content", Matchers.hasItem("The algorithm ECDSA with key size 224 is too small for signature creation!"))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1));
     }

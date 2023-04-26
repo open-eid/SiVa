@@ -195,10 +195,9 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
                 .body("timestamps[0].validationProcessTimestamp.type", equalTo("SIGNATURE_TIMESTAMP"))
 
                 .body("validationProcessLongTermData.constraint.name.key", Matchers.hasItem(LTV_ABSV.getKey()))
-                .body("validationProcessLongTermData.constraint.name.key", Matchers.hasItem(ADEST_RORPIIC.getKey()))
-                .body("validationProcessLongTermData.constraint.find {it.name.key == 'ADEST_RORPIIC'}.id", notNullValue())
-                .body("validationProcessLongTermData.constraint.name.key", Matchers.hasItem(BBB_XCV_RAC.getKey()))
-                .body("validationProcessLongTermData.constraint.find {it.name.key == 'BBB_XCV_RAC'}.status", equalTo("OK"))
+                .body("validationProcessLongTermData.constraint.find {it.name.key == 'LTV_ABSV'}.status", equalTo("OK"))
+                .body("validationProcessLongTermData.constraint.name.key", Matchers.hasItem(BBB_XCV_IRDPFC.getKey()))
+                .body("validationProcessLongTermData.constraint.find {it.name.key == 'BBB_XCV_IRDPFC'}.status", equalTo("OK"))
                 .body("validationProcessLongTermData.constraint.name.key", Matchers.hasItem(BBB_XCV_IARDPFC.getKey()))
                 .body("validationProcessLongTermData.constraint.find {it.name.key == 'BBB_XCV_IARDPFC'}.status", equalTo("OK"))
                 .body("validationProcessLongTermData.constraint.name.key", Matchers.hasItem(BBB_SAV_DMICTSTMCMI.getKey()))

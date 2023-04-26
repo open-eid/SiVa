@@ -27,6 +27,7 @@ public class DssMessages {
     public static final DssMessage BBB_SAV_ISQPMDOSPP = new DssMessage("BBB_SAV_ISQPMDOSPP", "Is the signed qualifying property: 'message-digest' or 'SignedProperties' present?");
     public static final DssMessage BBB_SAV_DMICTSTMCMI = new DssMessage("BBB_SAV_DMICTSTMCMI", "Does the message-imprint match the computed value?");
     public static final DssMessage BBB_SAV_ISVA = new DssMessage("BBB_SAV_ISVA", "Is the signature acceptable?");
+    public static final DssMessage BBB_XCV_IRDPFC = new DssMessage("BBB_XCV_IRDPFC", "Is the revocation data present for the certificate?");
     public static final DssMessage BBB_XCV_RAC = new DssMessage("BBB_XCV_RAC", "Is the revocation acceptance check conclusive?");
     public static final DssMessage BBB_XCV_IARDPFC = new DssMessage("BBB_XCV_IARDPFC", "Is an acceptable revocation data present for the certificate?");
 

@@ -763,7 +763,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
         post(validationRequestFor("REF-03_bdoc21-TS-no-signedpropref.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
-                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_NOT_ETSI))
+                .body("signatures[0].signatureFormat", Matchers.is("XAdES_LT"))
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
                 .body("signatures[0].errors.content", Matchers.hasItem(SIG_QUALIFYING_PROPERTY_MISSING))
                 .body("validSignaturesCount", Matchers.is(0));

@@ -274,7 +274,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
         post(validationRequestFor("hellopades-lt1-lt2-wrongDigestValue.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatures[1].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
-                .body("signatures[1].signatureLevel", Matchers.is("NOT_ADES"))
+                .body("signatures[1].signatureLevel", Matchers.is("NOT_ADES_QC"))
                 .body("signatures[1].indication", Matchers.is("TOTAL-FAILED"))
                 .body("signatures[1].subIndication", Matchers.is("HASH_FAILURE"))
                 .body("signatures[1].errors[0].content", Matchers.is(CERT_VALIDATION_NOT_CONCLUSIVE))

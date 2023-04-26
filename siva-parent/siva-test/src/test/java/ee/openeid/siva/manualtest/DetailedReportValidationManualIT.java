@@ -204,6 +204,8 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
                 .body("validationProcessLongTermData.constraint.find {it.name.key == 'BBB_SAV_DMICTSTMCMI'}.status", equalTo("OK"))
                 .body("validationProcessLongTermData.constraint.name.key", Matchers.hasItem(ADEST_IBSVPTC.getKey()))
                 .body("validationProcessLongTermData.constraint.find {it.name.key == 'ADEST_IBSVPTC'}.status", equalTo("OK"))
+                .body("validationProcessLongTermData.constraint.name.key", Matchers.hasItem(TSV_IBSTAIDOSC.getKey()))
+                .body("validationProcessLongTermData.constraint.find {it.name.key == 'ADEST_IBSVPTC'}.status", equalTo("OK"))
                 .body("validationProcessLongTermData.constraint.name.key", Matchers.hasItem(TSV_ASTPTCT.getKey()))
                 .body("validationProcessLongTermData.constraint.find {it.name.key == 'TSV_ASTPTCT'}.status", equalTo("OK"))
                 .body("validationProcessLongTermData.constraint.name.key", Matchers.hasItem(BBB_SAV_ISQPSTP.getKey()))

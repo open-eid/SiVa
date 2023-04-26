@@ -43,5 +43,6 @@ public class DssMessages {
     public static final DssMessage ARCH_LTVV = new DssMessage("ARCH_LTVV", "Is the result of the LTV validation process acceptable?");
 
     public static final DssMessage TSV_ASTPTCT = new DssMessage("TSV_ASTPTCT", "Are the time-stamps in the right order?");
+    public static final DssMessage TSV_IBSTAIDOSC = new DssMessage("TSV_IBSTAIDOSC", "Is the best-signature-time not before the issuance date of the signing certificate?");
 
 }

@@ -204,7 +204,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
         post(validationRequestForDD4j("EE_SER-AEX-B-LT-I-43.asice", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-E"))
-                .body("signatures[0].signatureLevel", Matchers.is("NA"))
+                .body("signatures[0].signatureLevel", Matchers.is(SIGNATURE_LEVEL_INDETERMINATE_UNKNOWN))
                 .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
                 .body("signatures[0].subIndication", Matchers.is("CHAIN_CONSTRAINTS_FAILURE"))
                 .body("signatures[0].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE, NOT_EXPECTED_KEY_USAGE))

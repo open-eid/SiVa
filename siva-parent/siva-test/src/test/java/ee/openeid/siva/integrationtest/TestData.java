@@ -58,6 +58,7 @@ public class TestData {
     public static final String SIGNATURE_LEVEL_QESIG = "QESIG";
     public static final String SIGNATURE_LEVEL_NOT_ADES_QC_QSCD = "NOT_ADES_QC_QSCD";
     public static final String SIGNATURE_LEVEL_INDETERMINATE_QESIG = "INDETERMINATE_QESIG";
+    public static final String SIGNATURE_LEVEL_INDETERMINATE_UNKNOWN = "INDETERMINATE_UNKNOWN";
     public static final String SIGNATURE_LEVEL_NOT_ADES = "NOT_ADES";
     public static final String SIGNATURE_LEVEL_NA = "NA";
 

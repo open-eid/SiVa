@@ -201,7 +201,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
         post(validationRequestFor("EE_SER-AEX-B-LT-I-43.asice", VALID_SIGNATURE_POLICY_3,"Simple"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
-                .body("signatures[0].signatureLevel", Matchers.is(SIGNATURE_LEVEL_NA))
+                .body("signatures[0].signatureLevel", Matchers.is(SIGNATURE_LEVEL_INDETERMINATE_UNKNOWN))
                 .body("signatures[0].indication", Matchers.is(INDETERMINATE))
                 .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_CHAIN_CONSTRAINTS_FAILURE))
                 .body("signatures[0].errors.content", Matchers.hasItems(CERT_VALIDATION_NOT_CONCLUSIVE, NOT_EXPECTED_KEY_USAGE))

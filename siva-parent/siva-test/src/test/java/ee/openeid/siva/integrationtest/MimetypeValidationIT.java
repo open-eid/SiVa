@@ -21,6 +21,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import static ee.openeid.siva.common.Constants.MIMETYPE_COMPRESSED_WARNING;
+import static ee.openeid.siva.common.Constants.MIMETYPE_NOT_FIRST_WARNING;
+import static ee.openeid.siva.common.Constants.TEST_ENV_VALIDATION_WARNING;
 import static ee.openeid.siva.integrationtest.TestData.SIGNATURE_FORMAT_XADES_LT;
 import static ee.openeid.siva.integrationtest.TestData.SIGNATURE_FORMAT_XADES_LT_TM;
 import static ee.openeid.siva.integrationtest.TestData.SIGNATURE_FORM_ASICE;
@@ -38,8 +41,21 @@ public class MimetypeValidationIT extends SiVaRestTests {
         setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
     }
 
+    /**
+     * TestCaseID: Mimetype-validation-1
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: ASICe container with valid mimetype.
+     *
+     * Expected Result: Validation report is returned without mimetype validation warnings.
+     *
+     * File: AsiceContainerValidMimetype.asice
+     */
     @Test
-    public void validAsiceContainer() {
+    public void asiceValidMimetype() {
         post(validationRequestFor("AsiceContainerValidMimetype.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
@@ -47,11 +63,25 @@ public class MimetypeValidationIT extends SiVaRestTests {
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1))
-                .body("validationWarnings.size()", Matchers.is(1));
+                .body("validationWarnings", Matchers.hasSize(1))
+                .body("validationWarnings.content", Matchers.hasItem(TEST_ENV_VALIDATION_WARNING));
     }
 
+    /**
+     * TestCaseID: Mimetype-validation-2
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: ASICs container with valid mimetype and Tmp file inside.
+     *
+     * Expected Result: Validation report is returned without mimetype validation warnings.
+     *
+     * File: AsicsContainerValidMimetype.asics
+     */
     @Test
-    public void validAsicsContainerContainingTmpFile() {
+    public void asicsValidMimetypeWithTmpFile() {
         post(validationRequestFor("AsicsContainerValidMimetype.asics"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-S"))
@@ -59,11 +89,25 @@ public class MimetypeValidationIT extends SiVaRestTests {
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(0))
-                .body("validationWarnings.size()", Matchers.is(1));
+                .body("validationWarnings", Matchers.hasSize(1))
+                .body("validationWarnings.content", Matchers.hasItem(TEST_ENV_VALIDATION_WARNING));
     }
 
+    /**
+     * TestCaseID: Mimetype-validation-3
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: ASICs container with valid mimetype and DDOC inside.
+     *
+     * Expected Result: Validation report is returned without mimetype validation warnings.
+     *
+     * File: Ddoc_as_AsicsContainerValidMimetype.asics
+     */
     @Test
-    public void validAsicsContainerContainingDdocContainer() {
+    public void asicsValidMimetypeWithDdocContainer() {
         post(validationRequestFor("Ddoc_as_AsicsContainerValidMimetype.asics"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-S"))
@@ -71,11 +115,25 @@ public class MimetypeValidationIT extends SiVaRestTests {
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1))
-                .body("validationWarnings.size()", Matchers.is(1));
+                .body("validationWarnings", Matchers.hasSize(1))
+                .body("validationWarnings.content", Matchers.hasItem(TEST_ENV_VALIDATION_WARNING));
     }
 
+    /**
+     * TestCaseID: Mimetype-validation-4
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: BDOC container with valid mimetype.
+     *
+     * Expected Result: Validation report is returned without mimetype validation warnings.
+     *
+     * File: BdocContainerValidMimetype.bdoc
+     */
     @Test
-    public void validBdocContainer() {
+    public void bdocValidMimetype() {
         post(validationRequestFor("BdocContainerValidMimetype.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
@@ -83,11 +141,25 @@ public class MimetypeValidationIT extends SiVaRestTests {
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1))
-                .body("validationWarnings.size()", Matchers.is(1));
+                .body("validationWarnings", Matchers.hasSize(1))
+                .body("validationWarnings.content", Matchers.hasItem(TEST_ENV_VALIDATION_WARNING));
     }
 
+    /**
+     * TestCaseID: Mimetype-validation-5
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: Invalid ASICe container with mimetype as last in cointainer.
+     *
+     * Expected Result: Validation report is returned with mimetype validation warning "mimetype should be the first file in the container".
+     *
+     * File: AsiceContainerMimetypeAsLast.asice
+     */
     @Test
-    public void invalidAsiceContainerWithMimetypeAsLast() {
+    public void asiceInvalidMimetypeLocationAsLast() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithMimetypeAsLast/");
         post(validationRequestFor("AsiceContainerMimetypeAsLast.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -96,12 +168,25 @@ public class MimetypeValidationIT extends SiVaRestTests {
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1))
-                .body("validationWarnings.size()", Matchers.is(2))
-                .body("validationWarnings[1].content", Matchers.is("\"mimetype\" should be the first file in the container"));
+                .body("validationWarnings", Matchers.hasSize(2))
+                .body("validationWarnings.content", Matchers.hasItem(MIMETYPE_NOT_FIRST_WARNING));
     }
 
+    /**
+     * TestCaseID: Mimetype-validation-6
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: Invalid ASICs container with mimetype as last and Tmp file inside.
+     *
+     * Expected Result: Validation report is returned with mimetype validation warning "mimetype should be the first file in the container".
+     *
+     * File: AsicsContainerMimetypeAsLast.asics
+     */
     @Test
-    public void invalidAsicsContainerContainingTmpFileWithMimetypeAsLast() {
+    public void asicsInvalidMimetypeLocationAsLastWithTmpFile() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithMimetypeAsLast/");
         post(validationRequestFor("AsicsContainerMimetypeAsLast.asics"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -110,12 +195,25 @@ public class MimetypeValidationIT extends SiVaRestTests {
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("signaturesCount", Matchers.is(1))
-                .body("validationWarnings.size()", Matchers.is(2))
-                .body("validationWarnings[1].content", Matchers.is("\"mimetype\" should be the first file in the container"));
+                .body("validationWarnings", Matchers.hasSize(2))
+                .body("validationWarnings.content", Matchers.hasItem(MIMETYPE_NOT_FIRST_WARNING));
     }
 
+    /**
+     * TestCaseID: Mimetype-validation-7
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: Invalid ASICs container with mimetype as last and DDOC inside.
+     *
+     * Expected Result: Validation report is returned with mimetype validation warning "mimetype should be the first file in the container".
+     *
+     * File: Ddoc_as_AsicsContainerMimetypeAsLast.asics
+     */
     @Test
-    public void invalidAsicsContainerContainingDdocContainerWithMimetypeAsLast() {
+    public void asicsInvalidMimetypeLocationAsLastWithDdoc() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithMimetypeAsLast/");
         post(validationRequestFor("Ddoc_as_AsicsContainerMimetypeAsLast.asics"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -124,12 +222,25 @@ public class MimetypeValidationIT extends SiVaRestTests {
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1))
-                .body("validationWarnings.size()", Matchers.is(2))
-                .body("validationWarnings[1].content", Matchers.is("\"mimetype\" should be the first file in the container"));
+                .body("validationWarnings", Matchers.hasSize(2))
+                .body("validationWarnings.content", Matchers.hasItem(MIMETYPE_NOT_FIRST_WARNING));
     }
 
+    /**
+     * TestCaseID: Mimetype-validation-8
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: Invalid BDOC container with mimetype as last.
+     *
+     * Expected Result: Validation report is returned with mimetype validation warning "mimetype should be the first file in the container".
+     *
+     * File: BdocContainerMimetypeAsLast.bdoc
+     */
     @Test
-    public void invalidBdocContainerWithMimetypeAsLast() {
+    public void bdocInvalidMimetypeLocationAsLast() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithMimetypeAsLast/");
         post(validationRequestFor("BdocContainerMimetypeAsLast.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -138,12 +249,25 @@ public class MimetypeValidationIT extends SiVaRestTests {
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1))
-                .body("validationWarnings.size()", Matchers.is(2))
-                .body("validationWarnings[1].content", Matchers.is("\"mimetype\" should be the first file in the container"));
+                .body("validationWarnings", Matchers.hasSize(2))
+                .body("validationWarnings.content", Matchers.hasItem(MIMETYPE_NOT_FIRST_WARNING));
     }
 
+    /**
+     * TestCaseID: Mimetype-validation-9
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: Invalid ASICe container with deflated mimetype.
+     *
+     * Expected Result: Validation report is returned with mimetype validation warning "Container "mimetype" file must not be compressed".
+     *
+     * File: AsiceContainerMimetypeIsDeflated.asice
+     */
     @Test
-    public void invalidAsiceContainerWithDeflatedMimetype() {
+    public void asiceInvalidMimetypeCompressionAsDeflated() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithDeflatedMimetype/");
         post(validationRequestFor("AsiceContainerMimetypeIsDeflated.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -152,12 +276,25 @@ public class MimetypeValidationIT extends SiVaRestTests {
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1))
-                .body("validationWarnings.size()", Matchers.is(2))
-                .body("validationWarnings[1].content", Matchers.is("Container \"mimetype\" file must not be compressed"));
+                .body("validationWarnings", Matchers.hasSize(2))
+                .body("validationWarnings.content", Matchers.hasItem(MIMETYPE_COMPRESSED_WARNING));
     }
 
+    /**
+     * TestCaseID: Mimetype-validation-10
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: Invalid ASICs container with deflated mimetype and Tmp file inside.
+     *
+     * Expected Result: Validation report is returned with mimetype validation warning "Container "mimetype" file must not be compressed".
+     *
+     * File: AsicsContainerMimetypeIsDeflated.asics
+     */
     @Test
-    public void invalidAsicsContainerContainingTmpFileWithMimetypeIsDeflated() {
+    public void asicsInvalidMimetypeCompressionAsDeflatedWithTmpFile() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithDeflatedMimetype/");
         post(validationRequestFor("AsicsContainerMimetypeIsDeflated.asics"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -166,12 +303,25 @@ public class MimetypeValidationIT extends SiVaRestTests {
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(0))
-                .body("validationWarnings.size()", Matchers.is(2))
-                .body("validationWarnings[1].content", Matchers.is("Container \"mimetype\" file must not be compressed"));
+                .body("validationWarnings", Matchers.hasSize(2))
+                .body("validationWarnings.content", Matchers.hasItem(MIMETYPE_COMPRESSED_WARNING));
     }
 
+    /**
+     * TestCaseID: Mimetype-validation-11
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: Invalid ASICs container with deflated mimetype and DDOC inside.
+     *
+     * Expected Result: Validation report is returned with mimetype validation warning "Container "mimetype" file must not be compressed".
+     *
+     * File: Ddoc_as_AsicsContainerMimetypeIsDeflated.asics
+     */
     @Test
-    public void invalidAsicsContainerContainingDdocContainerWithDeflatedMimetype() {
+    public void asicsInvalidMimetypeCompressionAsDeflatedWithDdoc() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithDeflatedMimetype/");
         post(validationRequestFor("Ddoc_as_AsicsContainerMimetypeIsDeflated.asics"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -180,12 +330,25 @@ public class MimetypeValidationIT extends SiVaRestTests {
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1))
-                .body("validationWarnings.size()", Matchers.is(2))
-                .body("validationWarnings[1].content", Matchers.is("Container \"mimetype\" file must not be compressed"));
+                .body("validationWarnings", Matchers.hasSize(2))
+                .body("validationWarnings.content", Matchers.hasItem(MIMETYPE_COMPRESSED_WARNING));
     }
 
+    /**
+     * TestCaseID: Mimetype-validation-12
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: Invalid BDOC container with deflated mimetype.
+     *
+     * Expected Result: Validation report is returned with mimetype validation warning "Container "mimetype" file must not be compressed".
+     *
+     * File: BdocContainerMimetypeIsDeflated.bdoc
+     */
     @Test
-    public void invalidBdocContainerWithMimetypeIsDeflated() {
+    public void bdocInvalidMimetypeCompressionAsDeflated() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithDeflatedMimetype/");
         post(validationRequestFor("BdocContainerMimetypeIsDeflated.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -194,12 +357,25 @@ public class MimetypeValidationIT extends SiVaRestTests {
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1))
-                .body("validationWarnings.size()", Matchers.is(2))
-                .body("validationWarnings[1].content", Matchers.is("Container \"mimetype\" file must not be compressed"));
+                .body("validationWarnings", Matchers.hasSize(2))
+                .body("validationWarnings.content", Matchers.hasItem(MIMETYPE_COMPRESSED_WARNING));
     }
 
+    /**
+     * TestCaseID: Mimetype-validation-13
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: Invalid ASICe container without mimetype.
+     *
+     * Expected Result: Validation report is returned with mimetype validation warning "mimetype should be the first file in the container".
+     *
+     * File: AsiceContainerNoMimetype.asice
+     */
     @Test
-    public void invalidAsiceContainerWithNoMimetype() {
+    public void asiceWithNoMimetype() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithNoMimetype/");
         post(validationRequestFor("AsiceContainerNoMimetype.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -208,12 +384,25 @@ public class MimetypeValidationIT extends SiVaRestTests {
                 .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1))
-                .body("validationWarnings.size()", Matchers.is(2))
-                .body("validationWarnings[1].content", Matchers.is("\"mimetype\" should be the first file in the container"));
+                .body("validationWarnings", Matchers.hasSize(2))
+                .body("validationWarnings.content", Matchers.hasItem(MIMETYPE_NOT_FIRST_WARNING));
     }
 
+    /**
+     * TestCaseID: Mimetype-validation-14
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: Invalid ASICs container without mimetype and Tmp file inside.
+     *
+     * Expected Result: Validation report is returned with mimetype validation warning "mimetype should be the first file in the container".
+     *
+     * File: AsicsContainerNoMimetype.asics
+     */
     @Test
-    public void invalidAsicsContainerContainingTmpFileWithNoMimetype() {
+    public void asicsContainingTmpFileWithNoMimetype() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithNoMimetype/");
         post(validationRequestFor("AsicsContainerNoMimetype.asics"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -222,12 +411,25 @@ public class MimetypeValidationIT extends SiVaRestTests {
                 .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(0))
-                .body("validationWarnings.size()", Matchers.is(2))
-                .body("validationWarnings[1].content", Matchers.is("\"mimetype\" should be the first file in the container"));
+                .body("validationWarnings", Matchers.hasSize(2))
+                .body("validationWarnings.content", Matchers.hasItem(MIMETYPE_NOT_FIRST_WARNING));
     }
 
+    /**
+     * TestCaseID: Mimetype-validation-15
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: Invalid ASICs container without mimetype and DDOC inside.
+     *
+     * Expected Result: Validation report is returned with mimetype validation warning "mimetype should be the first file in the container".
+     *
+     * File: Ddoc_as_AsicsContainerNoMimetype.asics
+     */
     @Test
-    public void invalidAsicsContainerContainingDdocContainerWithNoMimetype() {
+    public void asicsContainingDdocContainerWithNoMimetype() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithNoMimetype/");
         post(validationRequestFor("Ddoc_as_AsicsContainerNoMimetype.asics"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -236,10 +438,23 @@ public class MimetypeValidationIT extends SiVaRestTests {
                 .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
                 .body("signaturesCount", Matchers.is(1))
                 .body("validSignaturesCount", Matchers.is(1))
-                .body("validationWarnings.size()", Matchers.is(2))
-                .body("validationWarnings[1].content", Matchers.is("\"mimetype\" should be the first file in the container"));
+                .body("validationWarnings", Matchers.hasSize(2))
+                .body("validationWarnings.content", Matchers.hasItem(MIMETYPE_NOT_FIRST_WARNING));
     }
 
+    /**
+     * TestCaseID: Mimetype-validation-16
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: Invalid BDOC container without mimetype.
+     *
+     * Expected Result: HTTP 400 is returned with error message "Document malformed or not matching documentType".
+     *
+     * File: BdocContainerNoMimetype.bdoc
+     */
     @Test
     public void invalidBdocContainerWithNoMimetype() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithNoMimetype/");

@@ -7,6 +7,7 @@ public class Constants {
 
     public static final String MIMETYPE_NOT_FIRST_WARNING = "\"mimetype\" should be the first file in the container";
     public static final String MIMETYPE_COMPRESSED_WARNING = "Container \"mimetype\" file must not be compressed";
+    public static final String MIMETYPE_EXTRA_FIELDS_WARNING = "Container \"mimetype\" file must not contain \"Extra fields\" in its ZIP header";
 
     private Constants() {
 

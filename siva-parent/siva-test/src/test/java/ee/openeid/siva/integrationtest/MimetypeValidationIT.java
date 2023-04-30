@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static ee.openeid.siva.common.Constants.MIMETYPE_COMPRESSED_WARNING;
+import static ee.openeid.siva.common.Constants.MIMETYPE_EXTRA_FIELDS_WARNING;
 import static ee.openeid.siva.common.Constants.MIMETYPE_NOT_FIRST_WARNING;
 import static ee.openeid.siva.common.Constants.TEST_ENV_VALIDATION_WARNING;
 import static ee.openeid.siva.integrationtest.TestData.SIGNATURE_FORMAT_XADES_LT;
@@ -461,6 +462,109 @@ public class MimetypeValidationIT extends SiVaRestTests {
                 .body("validSignaturesCount", Matchers.is(1))
                 .body("validationWarnings", Matchers.hasSize(2))
                 .body("validationWarnings.content", Matchers.hasItem(MIMETYPE_NOT_FIRST_WARNING));
+    }
+
+    /**
+     * TestCaseID: Edoc-mimetype-validation-1
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: Valid EDOC container with valid.
+     *
+     * Expected Result: Validation report is returned without mimetype validation warnings.
+     *
+     * File: EdocContainerValidMimetype.edoc
+     */
+    @Test
+    public void edocValidMimetype() {
+        post(validationRequestFor("EdocContainerValidMimetype.edoc"))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationWarnings", Matchers.hasSize(1))
+                .body("validationWarnings.content", Matchers.hasItem(TEST_ENV_VALIDATION_WARNING));
+    }
+
+    /**
+     * TestCaseID: Edoc-mimetype-validation-2
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: Invalid EDOC container with mimetype as last in cointainer.
+     *
+     * Expected Result: Validation report is returned with mimetype validation warning "mimetype should be the first file in the container".
+     *
+     * File: EdocContainerValidMimetypeAsLast.edoc
+     */
+    @Test
+    public void edocInvalidMimetypeLocationAsLast() {
+        setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithMimetypeAsLast/");
+        post(validationRequestFor("EdocContainerValidMimetypeAsLast.edoc"))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-E"))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("validationWarnings", Matchers.hasSize(2))
+                .body("validationWarnings.content", Matchers.hasItem(MIMETYPE_NOT_FIRST_WARNING));
+    }
+
+    /**
+     * TestCaseID: Edoc-mimetype-validation-3
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: Invalid EDOC container without mimetype.
+     *
+     * Expected Result: Validation report is returned with mimetype validation warning "mimetype should be the first file in the container".
+     *
+     * File: EdocContainerNoMimetype.edoc
+     */
+    @Test
+    public void edocWithNoMimetype() {
+        setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithNoMimetype/");
+        post(validationRequestFor("EdocContainerNoMimetype.edoc"))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-S"))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationWarnings", Matchers.hasSize(2))
+                .body("validationWarnings.content", Matchers.hasItem(MIMETYPE_NOT_FIRST_WARNING));
+    }
+
+    /**
+     * TestCaseID: Adoc-mimetype-validation-1
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: Valid ADOC container with mimetype.
+     *
+     * Expected Result: Validation report is returned with mimetype validation warning "Container "mimetype" file must not contain "Extra fields" in its ZIP header".
+     *
+     * File: AdocContainerMimetypeWithExtraFields.adoc
+     */
+    @Test
+    public void adocMimetypeWithExtraFields() {
+        setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithExtraFieldsMimetype/");
+        post(validationRequestFor("AdocContainerMimetypeWithExtraFields.adoc"))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-S"))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("validationWarnings", Matchers.hasSize(2))
+                .body("validationWarnings.content", Matchers.hasItem(MIMETYPE_EXTRA_FIELDS_WARNING));
     }
 
     @Override

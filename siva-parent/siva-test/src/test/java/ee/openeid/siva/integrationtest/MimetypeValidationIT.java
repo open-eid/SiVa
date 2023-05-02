@@ -150,6 +150,87 @@ public class MimetypeValidationIT extends SiVaRestTests {
     }
 
     /**
+     * TestCaseID: Asice-mimetype-validation-5
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: Invalid ASICe container mimetype filename with capital letter (Mimetype).
+     *
+     * Expected Result: Validation report is returned with mimetype validation warning "mimetype should be the first file in the container".
+     *
+     * File: AsiceContainerMimetypeWithCapitalLetter.asice
+     */
+    @Test
+    public void asiceMimetypeFileNameWithCapitalLetter() {
+        setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithNoMimetype/");
+        post(validationRequestFor("AsiceContainerMimetypeWithCapitalLetter.asice"))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("validationWarnings", Matchers.hasSize(2))
+                .body("validationWarnings.content", Matchers.hasItem(MIMETYPE_NOT_FIRST_WARNING));
+    }
+
+    /**
+     * TestCaseID: Asice-mimetype-validation-6
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: Invalid ASICe container, where mimetype filename is with extra space in the end ("mimetype ").
+     *
+     * Expected Result: Validation report is returned with mimetype validation warning "mimetype should be the first file in the container".
+     *
+     * File: AsiceContainerMimetypeFilenameWithExtraSpace.asice
+     */
+    @Test
+    public void asiceMimetypeFilenameWithExtraSpace() {
+        setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithNoMimetype/");
+        post(validationRequestFor("AsiceContainerMimetypeFilenameWithExtraSpace.asice"))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("validationWarnings", Matchers.hasSize(2))
+                .body("validationWarnings.content", Matchers.hasItem(MIMETYPE_NOT_FIRST_WARNING));
+    }
+
+    /**
+     * TestCaseID: Asice-mimetype-validation-7
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: Invalid ASICe container with extra byte in the beginning of the container.
+     *
+     * Expected Result: Validation report is returned with mimetype validation warning "mimetype should be the first file in the container".
+     *
+     * File: AsiceContainerMimetypeWithCapitalLetter.asice
+     */
+    @Test
+    public void asiceContainerWithExtraByteInBeginning() {
+        setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithNoMimetype/");
+        post(validationRequestFor("AsiceContainerMimetypeWithCapitalLetter.asice"))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
+                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("validationWarnings", Matchers.hasSize(2))
+                .body("validationWarnings.content", Matchers.hasItem(MIMETYPE_NOT_FIRST_WARNING));
+    }
+
+    /**
      * TestCaseID: Bdoc-mimetype-validation-1
      *
      * TestType: Automated
@@ -243,9 +324,30 @@ public class MimetypeValidationIT extends SiVaRestTests {
      * File: BdocContainerNoMimetype.bdoc
      */
     @Test
-    public void invalidBdocContainerWithNoMimetype() {
+    public void bdocWithNoMimetype() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithNoMimetype/");
         post(validationRequestFor("BdocContainerNoMimetype.bdoc"))
+                .then().rootPath("requestErrors[0]")
+                .body("message", Matchers.is("Document malformed or not matching documentType"));
+    }
+
+    /**
+     * TestCaseID: Bdoc-mimetype-validation-5
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: Invalid BDOC container, where mimetype filename is with extra space in the end ("mimetype ").
+     *
+     * Expected Result: HTTP 400 is returned with error message "Document malformed or not matching documentType".
+     *
+     * File: BdocContainerMimetypeFilenameWithExtraSpace.bdoc
+     */
+    @Test
+    public void bdocMimetypeFilenameWithExtraSpace() {
+        setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithNoMimetype/");
+        post(validationRequestFor("BdocContainerMimetypeFilenameWithExtraSpace.bdoc"))
                 .then().rootPath("requestErrors[0]")
                 .body("message", Matchers.is("Document malformed or not matching documentType"));
     }
@@ -465,6 +567,33 @@ public class MimetypeValidationIT extends SiVaRestTests {
     }
 
     /**
+     * TestCaseID: Asics-mimetype-validation-9
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: Invalid ASICs container, where mimetype filename is with extra space in the end ("mimetype ").
+     *
+     * Expected Result: Validation report is returned with mimetype validation warning "mimetype should be the first file in the container".
+     *
+     * File: AsicsContainerMimetypeFilenameWithExtraSpace.asics
+     */
+    @Test
+    public void asicsMimetypeFilenameWithExtraSpace() {
+        setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithNoMimetype/");
+        post(validationRequestFor("AsicsContainerMimetypeFilenameWithExtraSpace.asics"))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-S"))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
+                .body("signatures[0].indication", Matchers.is("TOTAL-FAILED"))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(0))
+                .body("validationWarnings", Matchers.hasSize(2))
+                .body("validationWarnings.content", Matchers.hasItem(MIMETYPE_NOT_FIRST_WARNING));
+    }
+
+    /**
      * TestCaseID: Edoc-mimetype-validation-1
      *
      * TestType: Automated
@@ -556,7 +685,7 @@ public class MimetypeValidationIT extends SiVaRestTests {
      */
     @Test
     public void adocMimetypeWithExtraFields() {
-        setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithExtraFieldsMimetype/");
+        setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/");
         post(validationRequestFor("AdocContainerMimetypeWithExtraFields.adoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-S"))

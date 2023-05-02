@@ -371,9 +371,9 @@ public class MimetypeValidationIT extends SiVaRestTests {
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-S"))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
-                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
+                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
                 .body("signaturesCount", Matchers.is(1))
-                .body("validSignaturesCount", Matchers.is(0))
+                .body("validSignaturesCount", Matchers.is(1))
                 .body("validationWarnings", Matchers.hasSize(1))
                 .body("validationWarnings.content", Matchers.hasItem(TEST_ENV_VALIDATION_WARNING));
     }

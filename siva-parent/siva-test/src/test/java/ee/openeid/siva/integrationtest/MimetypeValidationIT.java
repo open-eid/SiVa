@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 
 import static ee.openeid.siva.common.Constants.MIMETYPE_COMPRESSED_WARNING;
 import static ee.openeid.siva.common.Constants.MIMETYPE_EXTRA_FIELDS_WARNING;
+import static ee.openeid.siva.common.Constants.MIMETYPE_INVALID_TYPE;
 import static ee.openeid.siva.common.Constants.MIMETYPE_NOT_FIRST_WARNING;
 import static ee.openeid.siva.common.Constants.TEST_ENV_VALIDATION_WARNING;
 import static ee.openeid.siva.integrationtest.TestData.SIGNATURE_FORMAT_XADES_LT;
@@ -231,6 +232,33 @@ public class MimetypeValidationIT extends SiVaRestTests {
     }
 
     /**
+     * TestCaseID: Asice-mimetype-validation-8
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: ASICe container with invalid mimetype as "text/plain".
+     *
+     * Expected Result: Validation report is returned with mimetype validation warning "Container should have one of the expected mimetypes: "application/vnd.etsi.asic-e+zip", "application/vnd.etsi.asic-s+zip"".
+     *
+     * File: AsiceInvalidMimetypeAsText.asice
+     */
+    @Test
+    public void asiceInvalidMimetypeAsText() {
+        setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithInvalidMimetype/");
+        post(validationRequestFor("AsiceInvalidMimetypeAsText.asice"))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
+                .body("signatures[0].indication", Matchers.is(TOTAL_PASSED))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("validationWarnings", Matchers.hasSize(2))
+                .body("validationWarnings.content", Matchers.hasItem(MIMETYPE_INVALID_TYPE));
+    }
+
+    /**
      * TestCaseID: Bdoc-mimetype-validation-1
      *
      * TestType: Automated
@@ -348,6 +376,27 @@ public class MimetypeValidationIT extends SiVaRestTests {
     public void bdocMimetypeFilenameWithExtraSpace() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithNoMimetype/");
         post(validationRequestFor("BdocContainerMimetypeFilenameWithExtraSpace.bdoc"))
+                .then().rootPath("requestErrors[0]")
+                .body("message", Matchers.is("Document malformed or not matching documentType"));
+    }
+
+    /**
+     * TestCaseID: Bdoc-mimetype-validation-6
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: BDOC container with invalid mimetype as "application/zip".
+     *
+     * Expected Result: HTTP 400 is returned with error message "Document malformed or not matching documentType".
+     *
+     * File: BdocInvalidMimetypeAsZip.bdoc
+     */
+    @Test
+    public void bdocInvalidMimetypeAsZip() {
+        setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithInvalidMimetype/");
+        post(validationRequestFor("BdocInvalidMimetypeAsZip.bdoc"))
                 .then().rootPath("requestErrors[0]")
                 .body("message", Matchers.is("Document malformed or not matching documentType"));
     }
@@ -591,6 +640,33 @@ public class MimetypeValidationIT extends SiVaRestTests {
                 .body("validSignaturesCount", Matchers.is(0))
                 .body("validationWarnings", Matchers.hasSize(2))
                 .body("validationWarnings.content", Matchers.hasItem(MIMETYPE_NOT_FIRST_WARNING));
+    }
+
+    /**
+     * TestCaseID: Asics-mimetype-validation-10
+     *
+     * TestType: Automated
+     *
+     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
+     *
+     * Title: ASICs container with invalid mimetype as "application/xml".
+     *
+     * Expected Result: Validation report is returned with mimetype validation warning "Container should have one of the expected mimetypes: "application/vnd.etsi.asic-e+zip", "application/vnd.etsi.asic-s+zip"".
+     *
+     * File: AsicsInvalidMimetypeAsXml.asics
+     */
+    @Test
+    public void asicsInvalidMimetypeAsXml() {
+        setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithInvalidMimetype/");
+        post(validationRequestFor("AsicsInvalidMimetypeAsXml.asics"))
+                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
+                .body("signatureForm", Matchers.is("ASiC-S"))
+                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
+                .body("signatures[0].indication", Matchers.is("TOTAL-PASSED"))
+                .body("signaturesCount", Matchers.is(1))
+                .body("validSignaturesCount", Matchers.is(1))
+                .body("validationWarnings", Matchers.hasSize(2))
+                .body("validationWarnings.content", Matchers.hasItem(MIMETYPE_INVALID_TYPE));
     }
 
     /**

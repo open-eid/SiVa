@@ -165,7 +165,7 @@ public class MimetypeValidationIT extends SiVaRestTests {
      */
     @Test
     public void asiceMimetypeFileNameWithCapitalLetter() {
-        setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithNoMimetype/");
+        setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithInvalidMimetype/");
         post(validationRequestFor("AsiceContainerMimetypeWithCapitalLetter.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
@@ -192,7 +192,7 @@ public class MimetypeValidationIT extends SiVaRestTests {
      */
     @Test
     public void asiceMimetypeFilenameWithExtraSpace() {
-        setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithNoMimetype/");
+        setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithInvalidMimetype/");
         post(validationRequestFor("AsiceContainerMimetypeFilenameWithExtraSpace.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
@@ -219,7 +219,7 @@ public class MimetypeValidationIT extends SiVaRestTests {
      */
     @Test
     public void asiceContainerWithExtraByteInBeginning() {
-        setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithNoMimetype/");
+        setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithInvalidMimetype/");
         post(validationRequestFor("AsiceContainerMimetypeWithCapitalLetter.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
@@ -374,7 +374,7 @@ public class MimetypeValidationIT extends SiVaRestTests {
      */
     @Test
     public void bdocMimetypeFilenameWithExtraSpace() {
-        setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithNoMimetype/");
+        setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithInvalidMimetype/");
         post(validationRequestFor("BdocContainerMimetypeFilenameWithExtraSpace.bdoc"))
                 .then().rootPath("requestErrors[0]")
                 .body("message", Matchers.is("Document malformed or not matching documentType"));
@@ -630,7 +630,7 @@ public class MimetypeValidationIT extends SiVaRestTests {
      */
     @Test
     public void asicsMimetypeFilenameWithExtraSpace() {
-        setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithNoMimetype/");
+        setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithInvalidMimetype/");
         post(validationRequestFor("AsicsContainerMimetypeFilenameWithExtraSpace.asics"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-S"))

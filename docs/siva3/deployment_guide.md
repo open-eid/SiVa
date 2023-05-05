@@ -60,7 +60,7 @@ The last lines of build output should look very similar to below image:
 ## Deploying
 
 ### OPTION 1 - starting webapps from command line
-SiVa project compiles **3 fat executable JAR** files that you can run after successfully building the
+SiVa project compiles **2 fat executable JAR** files that you can run after successfully building the
 project by issuing below commands:
 
 **First start the Siva webapp**

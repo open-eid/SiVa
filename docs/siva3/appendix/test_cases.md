@@ -1986,6 +1986,262 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 * File: zip-bomb-package-zip-1gb-asics.asics
 
 
+## MimetypeValidationIT.java
+[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/integrationtest/MimetypeValidationIT.java)
+
+
+**TestCaseID: Asice-mimetype-validation-1**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service)
+* Title: ASICe container with valid mimetype.
+* Expected Result: Validation report is returned without mimetype validation warnings.
+* File: AsiceContainerValidMimetype.asice
+
+
+**TestCaseID: Asice-mimetype-validation-2**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service)
+* Title: Invalid ASICe container with mimetype as last in cointainer.
+* Expected Result: Validation report is returned with mimetype validation warning "mimetype should be the first file in the container".
+* File: AsiceContainerMimetypeAsLast.asice
+
+
+**TestCaseID: Asice-mimetype-validation-3**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service)
+* Title: Invalid ASICe container with deflated mimetype.
+* Expected Result: Validation report is returned with mimetype validation warning "Container "mimetype" file must not be compressed".
+* File: AsiceContainerMimetypeIsDeflated.asice
+
+
+**TestCaseID: Asice-mimetype-validation-4**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service)
+* Title: Invalid ASICe container without mimetype.
+* Expected Result: Validation report is returned with mimetype validation warning "mimetype should be the first file in the container".
+* File: AsiceContainerNoMimetype.asice
+
+
+**TestCaseID: Asice-mimetype-validation-5**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service)
+* Title: Invalid ASICe container mimetype filename with capital letter (Mimetype).
+* Expected Result: Validation report is returned with mimetype validation warning "mimetype should be the first file in the container".
+* File: AsiceContainerMimetypeWithCapitalLetter.asice
+
+
+**TestCaseID: Asice-mimetype-validation-6**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service)
+* Title: Invalid ASICe container, where mimetype filename is with extra space in the end ("mimetype ").
+* Expected Result: Validation report is returned with mimetype validation warning "mimetype should be the first file in the container".
+* File: AsiceContainerMimetypeFilenameWithExtraSpace.asice
+
+
+**TestCaseID: Asice-mimetype-validation-7**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service)
+* Title: Invalid ASICe container with extra byte in the beginning of the container.
+* Expected Result: Validation report is returned with mimetype validation warning "mimetype should be the first file in the container".
+* File: AsiceContainerMimetypeWithCapitalLetter.asice
+
+
+**TestCaseID: Asice-mimetype-validation-8**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service)
+* Title: ASICe container with invalid mimetype as "text/plain".
+* Expected Result: Validation report is returned with mimetype validation warning "Container should have one of the expected mimetypes: "application/vnd.etsi.asic-e+zip", "application/vnd.etsi.asic-s+zip"".
+* File: AsiceInvalidMimetypeAsText.asice
+
+
+**TestCaseID: Bdoc-mimetype-validation-1**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service)
+* Title: BDOC container with valid mimetype.
+* Expected Result: Validation report is returned without mimetype validation warnings.
+* File: BdocContainerValidMimetype.bdoc
+
+
+**TestCaseID: Bdoc-mimetype-validation-2**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service)
+* Title: Invalid BDOC container with mimetype as last.
+* Expected Result: Validation report is returned with mimetype validation warning "mimetype should be the first file in the container".
+* File: BdocContainerMimetypeAsLast.bdoc
+
+
+**TestCaseID: Bdoc-mimetype-validation-3**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service)
+* Title: Invalid BDOC container with deflated mimetype.
+* Expected Result: Validation report is returned with mimetype validation warning "Container "mimetype" file must not be compressed".
+* File: BdocContainerMimetypeIsDeflated.bdoc
+
+
+**TestCaseID: Bdoc-mimetype-validation-4**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service)
+* Title: Invalid BDOC container without mimetype.
+* Expected Result: HTTP 400 is returned with error message "Document malformed or not matching documentType".
+* File: BdocContainerNoMimetype.bdoc
+
+
+**TestCaseID: Bdoc-mimetype-validation-5**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service)
+* Title: Invalid BDOC container, where mimetype filename is with extra space in the end ("mimetype ").
+* Expected Result: HTTP 400 is returned with error message "Document malformed or not matching documentType".
+* File: BdocContainerMimetypeFilenameWithExtraSpace.bdoc
+
+
+**TestCaseID: Bdoc-mimetype-validation-6**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service)
+* Title: BDOC container with invalid mimetype as "application/zip".
+* Expected Result: HTTP 400 is returned with error message "Document malformed or not matching documentType".
+* File: BdocInvalidMimetypeAsZip.bdoc
+
+
+**TestCaseID: Asics-mimetype-validation-1**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service)
+* Title: ASICs container with valid mimetype and Tmp file inside.
+* Expected Result: Validation report is returned without mimetype validation warnings.
+* File: AsicsContainerValidMimetype.asics
+
+
+**TestCaseID: Asics-mimetype-validation-2**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service)
+* Title: ASICs container with valid mimetype and DDOC inside.
+* Expected Result: Validation report is returned without mimetype validation warnings.
+* File: Ddoc_as_AsicsContainerValidMimetype.asics
+
+
+**TestCaseID: Asics-mimetype-validation-3**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service)
+* Title: Invalid ASICs container with mimetype as last and Tmp file inside.
+* Expected Result: Validation report is returned with mimetype validation warning "mimetype should be the first file in the container".
+* File: AsicsContainerMimetypeAsLast.asics
+
+
+**TestCaseID: Asics-mimetype-validation-4**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service)
+* Title: Invalid ASICs container with mimetype as last and DDOC inside.
+* Expected Result: Validation report is returned with mimetype validation warning "mimetype should be the first file in the container".
+* File: Ddoc_as_AsicsContainerMimetypeAsLast.asics
+
+
+**TestCaseID: Asics-mimetype-validation-5**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service)
+* Title: Invalid ASICs container with deflated mimetype and Tmp file inside.
+* Expected Result: Validation report is returned with mimetype validation warning "Container "mimetype" file must not be compressed".
+* File: AsicsContainerMimetypeIsDeflated.asics
+
+
+**TestCaseID: Asics-mimetype-validation-6**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service)
+* Title: Invalid ASICs container with deflated mimetype and DDOC inside.
+* Expected Result: Validation report is returned with mimetype validation warning "Container "mimetype" file must not be compressed".
+* File: Ddoc_as_AsicsContainerMimetypeIsDeflated.asics
+
+
+**TestCaseID: Asics-mimetype-validation-7**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service)
+* Title: Invalid ASICs container without mimetype and Tmp file inside.
+* Expected Result: Validation report is returned with mimetype validation warning "mimetype should be the first file in the container".
+* File: AsicsContainerNoMimetype.asics
+
+
+**TestCaseID: Asics-mimetype-validation-8**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service)
+* Title: Invalid ASICs container without mimetype and DDOC inside.
+* Expected Result: Validation report is returned with mimetype validation warning "mimetype should be the first file in the container".
+* File: Ddoc_as_AsicsContainerNoMimetype.asics
+
+
+**TestCaseID: Asics-mimetype-validation-9**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service)
+* Title: Invalid ASICs container, where mimetype filename is with extra space in the end ("mimetype ").
+* Expected Result: Validation report is returned with mimetype validation warning "mimetype should be the first file in the container".
+* File: AsicsContainerMimetypeFilenameWithExtraSpace.asics
+
+
+**TestCaseID: Asics-mimetype-validation-10**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service)
+* Title: ASICs container with invalid mimetype as "application/xml".
+* Expected Result: Validation report is returned with mimetype validation warning "Container should have one of the expected mimetypes: "application/vnd.etsi.asic-e+zip", "application/vnd.etsi.asic-s+zip"".
+* File: AsicsInvalidMimetypeAsXml.asics
+
+
+**TestCaseID: Edoc-mimetype-validation-1**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service)
+* Title: Valid EDOC container with valid.
+* Expected Result: Validation report is returned without mimetype validation warnings.
+* File: EdocContainerValidMimetype.edoc
+
+
+**TestCaseID: Edoc-mimetype-validation-2**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service)
+* Title: Invalid EDOC container with mimetype as last in cointainer.
+* Expected Result: Validation report is returned with mimetype validation warning "mimetype should be the first file in the container".
+* File: EdocContainerValidMimetypeAsLast.edoc
+
+
+**TestCaseID: Edoc-mimetype-validation-3**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service)
+* Title: Invalid EDOC container without mimetype.
+* Expected Result: Validation report is returned with mimetype validation warning "mimetype should be the first file in the container".
+* File: EdocContainerNoMimetype.edoc
+
+
+**TestCaseID: Adoc-mimetype-validation-1**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service](http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service)
+* Title: Valid ADOC container with mimetype.
+* Expected Result: Validation report is returned with mimetype validation warning "Container "mimetype" file must not contain "Extra fields" in its ZIP header".
+* File: AdocContainerMimetypeWithExtraFields.adoc
+
+
 ## MonitoringIT.java
 [Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/integrationtest/MonitoringIT.java)
 
@@ -4307,8 +4563,6 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 * Title: Input random base64 string as ddoc
 * Expected Result: Error is returned stating problem in document
 * File: not relevant
-
-**Attention! This test is disabled: ("SIVA-196")
 
 
 ## SoapGetDataFileReportIT.java

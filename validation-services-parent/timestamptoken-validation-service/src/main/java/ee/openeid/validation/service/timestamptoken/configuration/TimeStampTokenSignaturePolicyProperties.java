@@ -31,6 +31,7 @@ import java.util.stream.Stream;
 
 import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.ADES_POLICY;
 import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.QES_POLICY;
+import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.UA_POLICY;
 
 
 @Getter
@@ -53,7 +54,7 @@ public class TimeStampTokenSignaturePolicyProperties extends SignaturePolicyProp
     }
 
     private List<ValidationPolicy> getDefaultTimeStampPolicies() {
-        return Collections.unmodifiableList(Stream.of(ADES_POLICY, QES_POLICY).collect(Collectors.toList()));
+        return Collections.unmodifiableList(Stream.of(ADES_POLICY, QES_POLICY, UA_POLICY).collect(Collectors.toList()));
     }
 
     private void setPolicyValue() {

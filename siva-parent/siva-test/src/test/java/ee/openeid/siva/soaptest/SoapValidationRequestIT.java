@@ -847,7 +847,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
                 .then()
                 .statusCode(200)
                 .body(SOAP_ERROR_RESPONSE_PREFIX + ".faultcode", Matchers.is(CLIENT_FAULT))
-                .body(SOAP_ERROR_RESPONSE_PREFIX + ".faultstring", Matchers.is("Invalid signature policy: " + INVALID_SIGNATURE_POLICY + "; Available abstractPolicies: [" + VALID_SIGNATURE_POLICY_3 + ", " + VALID_SIGNATURE_POLICY_4 + "]"));
+                .body(SOAP_ERROR_RESPONSE_PREFIX + ".faultstring", Matchers.is("Invalid signature policy: " + INVALID_SIGNATURE_POLICY + "; Available abstractPolicies: [" + VALID_SIGNATURE_POLICY_3 + ", " + VALID_SIGNATURE_POLICY_4 + ", " + VALID_SIGNATURE_POLICY_5 + "]"));
     }
 
     /**

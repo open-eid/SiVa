@@ -84,7 +84,7 @@ public class PDFValidationServiceTest {
     @Test
     public void testConfiguration() {
         assertNotNull(trustedListsCertificateSource);
-        assertEquals(2, signaturePolicyService.getSignaturePolicies().size());
+        assertEquals(3, signaturePolicyService.getSignaturePolicies().size());
         assertNotNull(signaturePolicyService.getPolicy(null));
     }
 

@@ -305,7 +305,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
 
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
         assertErrorResponse(response,
-                new RequestError(SIGNATURE_POLICY, "Invalid signature policy: " + request.getSignaturePolicy() + "; Available abstractPolicies: [POLv3, POLv4]"));
+                new RequestError(SIGNATURE_POLICY, "Invalid signature policy: " + request.getSignaturePolicy() + "; Available abstractPolicies: [POLv3, POLv4, POLv5]"));
     }
 
     /**

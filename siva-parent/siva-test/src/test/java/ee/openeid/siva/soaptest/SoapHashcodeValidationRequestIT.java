@@ -280,7 +280,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
 
         ValidatableResponse response = postHashcodeValidation(request).then();
         assertClientFault(response,
-                "Invalid signature policy: " + request.getSignaturePolicy() + "; Available abstractPolicies: [POLv3, POLv4]");
+                "Invalid signature policy: " + request.getSignaturePolicy() + "; Available abstractPolicies: [POLv3, POLv4, POLv5]");
     }
 
     /**

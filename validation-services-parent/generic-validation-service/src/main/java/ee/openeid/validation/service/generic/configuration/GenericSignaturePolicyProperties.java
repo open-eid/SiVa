@@ -39,6 +39,7 @@ public class GenericSignaturePolicyProperties extends SignaturePolicyProperties<
 
     private static final String ADES_CONSTRAINT = "generic_constraint_ades.xml";
     private static final String QES_CONSTRAINT = "generic_constraint_qes.xml";
+    private static final String UA_CONSTRAINT = "ua_constraint_ades.xml";
 
     private String defaultPolicy;
     private List<ConstraintDefinedPolicy> policies = new ArrayList<>();
@@ -55,7 +56,7 @@ public class GenericSignaturePolicyProperties extends SignaturePolicyProperties<
     }
 
     private List<ConstraintDefinedPolicy> getDefaultPdfPolicies() {
-        return Collections.unmodifiableList(Stream.of(getAdesPolicy(),  getQesPolicy()).collect(Collectors.toList()));
+        return Collections.unmodifiableList(Stream.of(getAdesPolicy(),  getQesPolicy(), getUaPolicy()).collect(Collectors.toList()));
     }
 
     private void setPolicyValue() {
@@ -69,6 +70,10 @@ public class GenericSignaturePolicyProperties extends SignaturePolicyProperties<
 
     private ConstraintDefinedPolicy getAdesPolicy() {
         return createConstraintDefinedPolicy(ADES_POLICY, ADES_CONSTRAINT);
+    }
+
+    private ConstraintDefinedPolicy getUaPolicy() {
+        return createConstraintDefinedPolicy(UA_POLICY, UA_CONSTRAINT);
     }
 
 

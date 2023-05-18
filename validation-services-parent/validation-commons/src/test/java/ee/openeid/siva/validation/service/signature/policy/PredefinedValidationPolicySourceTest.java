@@ -44,6 +44,19 @@ public class PredefinedValidationPolicySourceTest {
             " Signatures and Seals which are not compliant with ETSI standards (referred by eIDAS) may produce unknown or invalid validation result." +
             " Validation process is based on eIDAS Article 32 and referred ETSI standards.";
 
+    private static final String EXPECTED_UA_POLICY_NAME = "POLv5";
+    private static final String EXPECTED_UA_POLICY_URL = "https://open-eid.github.io/SiVa/siva3/appendix/validation_policy/";
+    private static final String EXPECTED_UA_POLICY_DESCRIPTION = "Policy for validating Electronic Signatures and Electronic Seals regardless " +
+            "of the legal type of the signature or seal (according to Regulation (EU) No 910/2014, aka eIDAS), i.e. the fact that " +
+            "the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a " +
+            "Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result " +
+            "of the signature. All certificates and their related chains supporting the signatures are validated against the " +
+            "EU Member State Trusted Lists and third country Trusted Lists with voluntary-based AdES recognition (this includes " +
+            "signer's certificate and certificates used to validate certificate validity status services - CRLs, OCSP, and " +
+            "time-stamps). Signatures which are not compliant with ETSI standards (referred by Regulation (EU) No 910/2014) " +
+            "may produce unknown or invalid validation result. Validation process is based on eIDAS Article 32, Commission " +
+            "Implementing Decision (EU) 2015/1506 and referred ETSI standards.";
+
     @Test
     public void qesValidationPolicyShouldMatchSpecification() {
         ValidationPolicy qesPol = PredefinedValidationPolicySource.QES_POLICY;
@@ -58,6 +71,14 @@ public class PredefinedValidationPolicySourceTest {
         assertEquals(EXPECTED_ADES_POLICY_NAME, noTypePol.getName());
         assertEquals(EXPECTED_ADES_POLICY_URL, noTypePol.getUrl());
         assertEquals(EXPECTED_ADES_POLICY_DESCRIPTION, noTypePol.getDescription());
+    }
+
+    @Test
+    public void uaValidationPolicyShouldMatchSpecification() {
+        ValidationPolicy noTypePol = PredefinedValidationPolicySource.UA_POLICY;
+        assertEquals(EXPECTED_UA_POLICY_NAME, noTypePol.getName());
+        assertEquals(EXPECTED_UA_POLICY_URL, noTypePol.getUrl());
+        assertEquals(EXPECTED_UA_POLICY_DESCRIPTION, noTypePol.getDescription());
     }
 
 }

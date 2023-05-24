@@ -53,15 +53,19 @@ import eu.europa.esig.dss.enumerations.EndorsementType;
 import eu.europa.esig.dss.enumerations.Indication;
 import eu.europa.esig.dss.enumerations.MaskGenerationFunction;
 import eu.europa.esig.dss.enumerations.SignatureLevel;
+import eu.europa.esig.dss.enumerations.SignatureQualification;
 import eu.europa.esig.dss.enumerations.TimestampType;
 import eu.europa.esig.dss.model.FileDocument;
 import eu.europa.esig.dss.pades.validation.PDFDocumentValidator;
 import eu.europa.esig.dss.simplereport.jaxb.XmlDetails;
+import eu.europa.esig.dss.simplereport.jaxb.XmlMessage;
+import eu.europa.esig.dss.simplereport.jaxb.XmlSignatureLevel;
 import eu.europa.esig.dss.simplereport.jaxb.XmlSimpleReport;
 import eu.europa.esig.dss.simplereport.jaxb.XmlTimestamps;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.validation.AdvancedSignature;
 import eu.europa.esig.dss.validation.executor.ValidationLevel;
+import eu.europa.esig.dss.xades.validation.XAdESSignature;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -88,13 +92,15 @@ public class GenericValidationReportBuilderTest {
 
     @Mock
     TrustedListsCertificateSource trustedListsCertificateSource;
+    @Mock
+    XAdESSignature xAdESSignature;
 
     private static final String TM_POLICY_OID = "1.3.6.1.4.1.10015.1000.3.2.1";
 
     @Test
     public void totalPassedIndicationReportBuild() {
 
-        ReportBuilderData reportBuilderData = getReportBuilderData(getDssReports(""));
+        ReportBuilderData reportBuilderData = getReportBuilderData(getDssReports("", getSimpleReport()));
         Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
         ValidationConclusion validationConclusion = reports.getSimpleReport().getValidationConclusion();
         Assertions.assertEquals(Integer.valueOf(1), validationConclusion.getValidSignaturesCount());
@@ -103,9 +109,42 @@ public class GenericValidationReportBuilderTest {
     }
 
     @Test
+    public void totalPassedIndicationReportBuildWithQualificationDetailsError() {
+
+        ReportBuilderData reportBuilderData = getReportBuilderDataWithPOLv5(getDssReports("", getSimpleReportWithSignatureWithQualificationDetailsError()));
+        Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
+        ValidationConclusion validationConclusion = reports.getSimpleReport().getValidationConclusion();
+        Assertions.assertEquals(Integer.valueOf(1), validationConclusion.getValidSignaturesCount());
+        Assertions.assertEquals("TOTAL-PASSED", validationConclusion.getSignatures().get(0).getIndication());
+        Assertions.assertEquals("XAdES_BASELINE_LT", validationConclusion.getSignatures().get(0).getSignatureFormat());
+    }
+
+    @Test
+    public void totalPassedIndicationReportBuildWithQualificationDetailsErrorAndOtherErrorWithSameValue() {
+
+        ReportBuilderData reportBuilderData = getReportBuilderDataWithPOLv5(getDssReports("", getSimpleReportWithModifiedSignatureValuesAndMultipleErrors("Error")));
+        Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
+        ValidationConclusion validationConclusion = reports.getSimpleReport().getValidationConclusion();
+        Assertions.assertEquals(Integer.valueOf(1), validationConclusion.getValidSignaturesCount());
+        Assertions.assertEquals("TOTAL-PASSED", validationConclusion.getSignatures().get(0).getIndication());
+        Assertions.assertEquals("XAdES_BASELINE_LT", validationConclusion.getSignatures().get(0).getSignatureFormat());
+    }
+
+    @Test
+    public void totalFailedIndicationReportBuildWithQualificationDetailsErrorAndOtherErrorWithDifferentValue() {
+
+        ReportBuilderData reportBuilderData = getReportBuilderDataWithPOLv5(getDssReports("", getSimpleReportWithModifiedSignatureValuesAndMultipleErrors("Different Error")));
+        Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
+        ValidationConclusion validationConclusion = reports.getSimpleReport().getValidationConclusion();
+        Assertions.assertEquals(Integer.valueOf(0), validationConclusion.getValidSignaturesCount());
+        Assertions.assertEquals("TOTAL-FAILED", validationConclusion.getSignatures().get(0).getIndication());
+        Assertions.assertEquals("XAdES_BASELINE_LT", validationConclusion.getSignatures().get(0).getSignatureFormat());
+    }
+
+    @Test
     public void totalPassedIndicationTimeMarkReportBuild() {
 
-        ReportBuilderData reportBuilderData = getReportBuilderData(getDssReports(TM_POLICY_OID));
+        ReportBuilderData reportBuilderData = getReportBuilderData(getDssReports(TM_POLICY_OID, getSimpleReport()));
         Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
         Assertions.assertEquals(Integer.valueOf(1), reports.getSimpleReport().getValidationConclusion().getValidSignaturesCount());
         Assertions.assertEquals("TOTAL-PASSED", reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getIndication());
@@ -114,7 +153,7 @@ public class GenericValidationReportBuilderTest {
 
     @Test
     public void totalFailedIndicationWithAdESErrorReportBuild() {
-        eu.europa.esig.dss.validation.reports.Reports dssReports = getDssReports("");
+        eu.europa.esig.dss.validation.reports.Reports dssReports = getDssReports("", getSimpleReport());
         dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).setIndication(Indication.TOTAL_FAILED);
         dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).setAdESValidationDetails(new XmlDetails());
         dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).getAdESValidationDetails().getError()
@@ -129,7 +168,7 @@ public class GenericValidationReportBuilderTest {
 
     @Test
     public void totalFailedIndicationWithQualificationErrorReportBuild() {
-        eu.europa.esig.dss.validation.reports.Reports dssReports = getDssReports("");
+        eu.europa.esig.dss.validation.reports.Reports dssReports = getDssReports("", getSimpleReport());
         dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).setIndication(Indication.TOTAL_FAILED);
         dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).setQualificationDetails(new XmlDetails());
         dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).getQualificationDetails().getError()
@@ -144,7 +183,7 @@ public class GenericValidationReportBuilderTest {
 
     @Test
     public void totalFailedIndicationWithTimestampErrorsReportBuild() {
-        eu.europa.esig.dss.validation.reports.Reports dssReports = getDssReports("");
+        eu.europa.esig.dss.validation.reports.Reports dssReports = getDssReports("", getSimpleReport());
         dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).setIndication(Indication.TOTAL_FAILED);
         eu.europa.esig.dss.simplereport.jaxb.XmlSignature signature = (eu.europa.esig.dss.simplereport.jaxb.XmlSignature) dssReports
                 .getSimpleReportJaxb().getSignatureOrTimestamp().get(0);
@@ -167,7 +206,7 @@ public class GenericValidationReportBuilderTest {
 
     @Test
     public void indeterminateIndicationReportBuild() {
-        eu.europa.esig.dss.validation.reports.Reports dssReports = getDssReports("");
+        eu.europa.esig.dss.validation.reports.Reports dssReports = getDssReports("", getSimpleReport());
         dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).setIndication(Indication.INDETERMINATE);
         ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
         Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
@@ -478,26 +517,51 @@ public class GenericValidationReportBuilderTest {
         return ReportBuilderData.builder()
                 .dssReports(reports)
                 .validationLevel(ValidationLevel.ARCHIVAL_DATA)
-                .validationDocument(getValidationDocument())
-                .policy(getValidationPolicy())
+                .validationDocument(getBdocValidationDocument())
+                .policy(getPOLv3ValidationPolicy())
                 .isReportSignatureEnabled(false)
                 .trustedListsCertificateSource(trustedListsCertificateSource)
-                .signatures(getSignatures())
+                .signatures(getPdfSignatures())
                 .build();
     }
 
-    private ValidationDocument getValidationDocument() {
+    private ReportBuilderData getReportBuilderDataWithPOLv5(eu.europa.esig.dss.validation.reports.Reports reports) {
+        return ReportBuilderData.builder()
+                .dssReports(reports)
+                .validationLevel(ValidationLevel.ARCHIVAL_DATA)
+                .validationDocument(getAsiceValidationDocument())
+                .policy(getPOLv5ValidationPolicy())
+                .isReportSignatureEnabled(false)
+                .trustedListsCertificateSource(trustedListsCertificateSource)
+                .signatures(getXadesSignatures())
+                .build();
+    }
+
+    private ValidationDocument getBdocValidationDocument() {
         ValidationDocument validationDocument = new ValidationDocument();
         validationDocument.setName("filename.bdoc");
         validationDocument.setBytes("dGVzdA==".getBytes());
         return validationDocument;
     }
 
-    private List<AdvancedSignature> getSignatures() {
+    private ValidationDocument getAsiceValidationDocument() {
+        ValidationDocument validationDocument = new ValidationDocument();
+        validationDocument.setName("filename.asice");
+        validationDocument.setBytes("dGVzdA==".getBytes());
+        return validationDocument;
+    }
+
+    private List<AdvancedSignature> getPdfSignatures() {
         return new PDFDocumentValidator(new FileDocument("src/test/resources/test-files/no-signatures.pdf")).getSignatures();
     }
 
-    private ConstraintDefinedPolicy getValidationPolicy() {
+    private List<AdvancedSignature> getXadesSignatures() {
+        List<AdvancedSignature> signatures = new ArrayList<>();
+        signatures.add(xAdESSignature);
+        return signatures;
+    }
+
+    private ConstraintDefinedPolicy getPOLv3ValidationPolicy() {
         ValidationPolicy validationPolicy = new ValidationPolicy();
         validationPolicy.setName("POLv3");
         validationPolicy.setDescription("description");
@@ -505,8 +569,16 @@ public class GenericValidationReportBuilderTest {
         return new ConstraintDefinedPolicy(validationPolicy);
     }
 
-    private eu.europa.esig.dss.validation.reports.Reports getDssReports(String policyId) {
-        return new eu.europa.esig.dss.validation.reports.Reports(getDiagnosticDataJaxb(policyId), null, getSimpleReport(), null);
+    private ConstraintDefinedPolicy getPOLv5ValidationPolicy() {
+        ValidationPolicy validationPolicy = new ValidationPolicy();
+        validationPolicy.setName("POLv5");
+        validationPolicy.setDescription("description");
+        validationPolicy.setUrl("localhost");
+        return new ConstraintDefinedPolicy(validationPolicy);
+    }
+
+    private eu.europa.esig.dss.validation.reports.Reports getDssReports(String policyId, XmlSimpleReport simpleReport) {
+        return new eu.europa.esig.dss.validation.reports.Reports(getDiagnosticDataJaxb(policyId), null, simpleReport, null);
     }
 
     private XmlDiagnosticData getDiagnosticDataJaxb(String policyId) {
@@ -585,6 +657,49 @@ public class GenericValidationReportBuilderTest {
 
         eu.europa.esig.dss.simplereport.jaxb.XmlSignature xmlSignature = new eu.europa.esig.dss.simplereport.jaxb.XmlSignature();
         xmlSignature.setId("SIG-id");
+        xmlSignature.setIndication(Indication.TOTAL_PASSED);
+        xmlSignature.setSignatureFormat(SignatureLevel.XAdES_BASELINE_LT);
+        simpleReport.getSignatureOrTimestamp().add(xmlSignature);
+        return simpleReport;
+    }
+
+    private XmlSimpleReport getSimpleReportWithSignatureWithQualificationDetailsError() {
+        XmlSimpleReport simpleReport = new XmlSimpleReport();
+        XmlSigningCertificate xmlSigningCertificate = new XmlSigningCertificate();
+        XmlCertificate certificate = new XmlCertificate();
+        certificate.setId("CERT-id");
+        xmlSigningCertificate.setCertificate(certificate);
+
+        eu.europa.esig.dss.simplereport.jaxb.XmlSignature xmlSignature = new eu.europa.esig.dss.simplereport.jaxb.XmlSignature();
+        xmlSignature.setId("SIG-id");
+        xmlSignature.setSignatureLevel(new XmlSignatureLevel());
+        xmlSignature.getSignatureLevel().setValue(SignatureQualification.ADESIG);
+        xmlSignature.setQualificationDetails(new XmlDetails());
+        xmlSignature.getQualificationDetails().getError().add(new XmlMessage());
+        xmlSignature.getQualificationDetails().getError().get(0).setValue("Error");
+        xmlSignature.setIndication(Indication.TOTAL_PASSED);
+        xmlSignature.setSignatureFormat(SignatureLevel.XAdES_BASELINE_LT);
+        simpleReport.getSignatureOrTimestamp().add(xmlSignature);
+        return simpleReport;
+    }
+
+    private XmlSimpleReport getSimpleReportWithModifiedSignatureValuesAndMultipleErrors(String errorValue) {
+        XmlSimpleReport simpleReport = new XmlSimpleReport();
+        XmlSigningCertificate xmlSigningCertificate = new XmlSigningCertificate();
+        XmlCertificate certificate = new XmlCertificate();
+        certificate.setId("CERT-id");
+        xmlSigningCertificate.setCertificate(certificate);
+
+        eu.europa.esig.dss.simplereport.jaxb.XmlSignature xmlSignature = new eu.europa.esig.dss.simplereport.jaxb.XmlSignature();
+        xmlSignature.setId("SIG-id");
+        xmlSignature.setSignatureLevel(new XmlSignatureLevel());
+        xmlSignature.getSignatureLevel().setValue(SignatureQualification.ADESIG);
+        xmlSignature.setQualificationDetails(new XmlDetails());
+        xmlSignature.getQualificationDetails().getError().add(new XmlMessage());
+        xmlSignature.getQualificationDetails().getError().get(0).setValue("Error");
+        xmlSignature.setAdESValidationDetails(new XmlDetails());
+        xmlSignature.getAdESValidationDetails().getError().add(new XmlMessage());
+        xmlSignature.getAdESValidationDetails().getError().get(0).setValue(errorValue);
         xmlSignature.setIndication(Indication.TOTAL_PASSED);
         xmlSignature.setSignatureFormat(SignatureLevel.XAdES_BASELINE_LT);
         simpleReport.getSignatureOrTimestamp().add(xmlSignature);

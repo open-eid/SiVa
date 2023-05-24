@@ -59,6 +59,7 @@ import eu.europa.esig.dss.enumerations.TimestampType;
 import eu.europa.esig.dss.model.x509.CertificateToken;
 import eu.europa.esig.dss.simplereport.jaxb.XmlDetails;
 import eu.europa.esig.dss.simplereport.jaxb.XmlMessage;
+import eu.europa.esig.dss.simplereport.jaxb.XmlTimestamps;
 import eu.europa.esig.dss.simplereport.jaxb.XmlToken;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.validation.AdvancedSignature;
@@ -95,6 +96,7 @@ import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUt
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.processSignatureIndications;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.valueNotKnown;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.valueNotPresent;
+import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.UA_POLICY;
 
 public class GenericValidationReportBuilder {
 
@@ -652,13 +654,78 @@ public class GenericValidationReportBuilder {
 
     private SignatureValidationData.Indication parseIndication(String signatureId, List<Error> errors) {
         Indication dssIndication = dssReports.getSimpleReport().getIndication(signatureId);
-        if (errors.isEmpty() && StringUtils.equalsIgnoreCase(dssIndication.name(), Indication.TOTAL_PASSED.name())) {
+        boolean checkedErrorsResult = checkForPOLv5IfAllErrorsComeFromQualificationDetails(signatureId, errors);
+        if (checkedErrorsResult && StringUtils.equalsIgnoreCase(dssIndication.name(), Indication.TOTAL_PASSED.name())) {
             return SignatureValidationData.Indication.TOTAL_PASSED;
         } else if (StringUtils.equalsIgnoreCase(dssIndication.name(), Indication.INDETERMINATE.name())) {
             return SignatureValidationData.Indication.INDETERMINATE;
         } else {
             return SignatureValidationData.Indication.TOTAL_FAILED;
         }
+    }
+
+    private boolean checkForPOLv5IfAllErrorsComeFromQualificationDetails(String signatureId, List<Error> errors) {
+
+        if (errors.isEmpty()) {
+            return true;
+        }
+
+        if (!StringUtils.equals(UA_POLICY.getName(), validationPolicy.getName())) {
+            return false;
+        }
+
+        DssSimpleReportWrapper dssSimpleReportWrapper = new DssSimpleReportWrapper(dssReports);
+        String signatureLevel = Optional
+                .ofNullable(dssSimpleReportWrapper.getXmlSignature(signatureId))
+                .map(eu.europa.esig.dss.simplereport.jaxb.XmlSignature::getSignatureLevel)
+                .map(eu.europa.esig.dss.simplereport.jaxb.XmlSignatureLevel::getValue)
+                .map(eu.europa.esig.dss.enumerations.SignatureQualification::getReadable)
+                .orElse(null);
+
+        if (!StringUtils.equals("AdESig", signatureLevel) && !StringUtils.equals("AdESeal", signatureLevel)) {
+            return false;
+        }
+
+        eu.europa.esig.dss.simplereport.jaxb.XmlSignature xmlSignature = dssSimpleReportWrapper.getXmlSignature(signatureId);
+        List<String> allQualificationDetailsErrors = new ArrayList<>();
+        getTimestampsQualificationDetailsErrors(allQualificationDetailsErrors, xmlSignature);
+        getSignatureQualificationTimestampsErrors(allQualificationDetailsErrors, xmlSignature);
+
+        return checkIfAllErrorsMatchWithQualificationDetailsErrors(allQualificationDetailsErrors, errors);
+    }
+
+    private void getTimestampsQualificationDetailsErrors(List<String> allQualificationDetailsErrors,
+                                                         eu.europa.esig.dss.simplereport.jaxb.XmlSignature xmlSignature) {
+        Optional
+                .ofNullable(xmlSignature.getTimestamps())
+                .map(XmlTimestamps::getTimestamp)
+                .stream()
+                .flatMap(List::stream)
+                .map(XmlToken::getQualificationDetails)
+                .filter(Objects::nonNull)
+                .map(XmlDetails::getError)
+                .filter(Objects::nonNull)
+                .flatMap(List::stream)
+                .map(XmlMessage::getValue)
+                .forEach(allQualificationDetailsErrors::add);
+    }
+
+    private void getSignatureQualificationTimestampsErrors(List<String> allQualificationDetailsErrors,
+                                                           eu.europa.esig.dss.simplereport.jaxb.XmlSignature xmlSignature) {
+        Optional
+                .ofNullable(xmlSignature.getQualificationDetails())
+                .map(XmlDetails::getError)
+                .stream()
+                .flatMap(List::stream)
+                .map(XmlMessage::getValue)
+                .filter(Objects::nonNull)
+                .forEach(allQualificationDetailsErrors::add);
+    }
+
+    private boolean checkIfAllErrorsMatchWithQualificationDetailsErrors(List<String> allQualificationDetailsErrors, List<Error> errors) {
+        return errors.stream()
+                .map(Error::getContent)
+                .allMatch(allQualificationDetailsErrors::contains);
     }
 
     private String parseSubIndication(String signatureId, List<Error> errors) {

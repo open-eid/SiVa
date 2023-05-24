@@ -25,6 +25,7 @@ import static lombok.AccessLevel.PRIVATE;
 public class PredefinedValidationPolicySource {
     public static final ValidationPolicy QES_POLICY = createValidationPolicyPolV4();
     public static final ValidationPolicy ADES_POLICY = createValidationPolicyPolV3();
+    public static final ValidationPolicy UA_POLICY = createValidationPolicyPolV5();
 
     private static final String POL_V3_NAME = "POLv3";
     private static final String POL_V3_URL = "http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv3";
@@ -45,13 +46,29 @@ public class PredefinedValidationPolicySource {
             "seals, where AdES/QC and above will produce positive result. Signatures and Seals which are not compliant with ETSI " +
             "standards (referred by eIDAS) may produce unknown or invalid validation result. Validation process is based on eIDAS" +
             " Article 32 and referred ETSI standards.";
-    
+
+    private static final String POL_V5_NAME = "POLv5";
+    private static final String POL_V5_URL = "https://open-eid.github.io/SiVa/siva3/appendix/validation_policy/";
+    private static final String POL_V5_DESCRIPTION = "Policy for validating Electronic Signatures and Electronic Seals regardless " +
+            "of the legal type of the signature or seal (according to Regulation (EU) No 910/2014, aka eIDAS), i.e. the fact that " +
+            "the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a " +
+            "Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result " +
+            "of the signature. All certificates and their related chains supporting the signatures are validated against the " +
+            "EU Member State Trusted Lists and third country Trusted Lists with voluntary-based AdES recognition (this includes " +
+            "signer's certificate and certificates used to validate certificate validity status services - CRLs, OCSP, and " +
+            "time-stamps). Signatures which are not compliant with ETSI standards (referred by Regulation (EU) No 910/2014) " +
+            "may produce unknown or invalid validation result. Validation process is based on eIDAS Article 32, Commission " +
+            "Implementing Decision (EU) 2015/1506 and referred ETSI standards.";
 
     private static ValidationPolicy createValidationPolicyPolV3() {
         return new ValidationPolicy(POL_V3_NAME, POL_V3_DESCRIPTION, POL_V3_URL);
     }
     private static ValidationPolicy createValidationPolicyPolV4() {
         return new ValidationPolicy(POL_V4_NAME, POL_V4_DESCRIPTION, POL_V4_URL);
+    }
+
+    private static ValidationPolicy createValidationPolicyPolV5() {
+        return new ValidationPolicy(POL_V5_NAME, POL_V5_DESCRIPTION, POL_V5_URL);
     }
 
 }

@@ -26,6 +26,7 @@ import org.junit.jupiter.api.Test;
 
 import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.ADES_POLICY;
 import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.QES_POLICY;
+import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.UA_POLICY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -72,6 +73,14 @@ public class PDFSignaturePolicyTest extends PDFValidationServiceTest {
         assertEquals(QES_POLICY.getName(), policy.getPolicyName());
         assertEquals(QES_POLICY.getDescription(), policy.getPolicyDescription());
         assertEquals(QES_POLICY.getUrl(), policy.getPolicyUrl());
+    }
+
+    @Test
+    public void validationReportShouldContainUAPolicyWhenUAPolicyIsGivenToValidator() {
+        Policy policy = validateWithPolicy("POLv5").getValidationConclusion().getPolicy();
+        assertEquals(UA_POLICY.getName(), policy.getPolicyName());
+        assertEquals(UA_POLICY.getDescription(), policy.getPolicyDescription());
+        assertEquals(UA_POLICY.getUrl(), policy.getPolicyUrl());
     }
 
     @Test

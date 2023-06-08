@@ -20,7 +20,6 @@ System requirements:
 Tools used:
 
 * GitHub Actions – is a continuous integration service used to build and test software projects hosted at GitHub
-* JMeter – tool for creating and running load tests.
 * IntelliJ IDEA – is a Java integrated development environment(IDE) for developing and executing automated tests locally
 * Apache Tomcat - is an open source servlet container developed by the Apache Software Foundation.
 * Rest-Assured - is a Java DSL(Domain-specific language) for simplifying testing of REST based Services built on top of HTTP Builder.

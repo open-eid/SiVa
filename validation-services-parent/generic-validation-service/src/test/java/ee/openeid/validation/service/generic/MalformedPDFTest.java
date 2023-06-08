@@ -24,11 +24,11 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class MalformedPDFTest extends PDFValidationServiceTest {
+class MalformedPDFTest extends PDFValidationServiceTest {
 
     @Test
     @Disabled("DD4J to DSS ")
-    public void validatingAPdfWithMalformedBytesResultsInMalformedDocumentException() {
+    void validatingAPdfWithMalformedBytesResultsInMalformedDocumentException() {
         ValidationDocument validationDocument = new ValidationDocument();
         validationDocument.setName("Some name.pdf");
         validationDocument.setBytes(Base64.decode("ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA=="));

@@ -36,7 +36,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 @Tag("IntegrationTest")
 @Disabled("SIVA-196")
-public class ReportSignatureIT extends SiVaRestTests {
+class ReportSignatureIT extends SiVaRestTests {
 
     private static final String TEST_FILES_DIRECTORY = "document_format_test_files/";
     private static final String VALIDATION_ENDPOINT = "/validate";
@@ -62,7 +62,7 @@ public class ReportSignatureIT extends SiVaRestTests {
      * File: hellopades-pades-lt-sha256-sign.pdf
      */
     @Test
-    public void whenRequestingSimpleReport_thenValidationReportSignatureShouldNotBeInResponse() {
+    void whenRequestingSimpleReport_thenValidationReportSignatureShouldNotBeInResponse() {
         post(validationRequestFor("hellopades-pades-lt-sha256-sign.pdf", null, "Simple"))
                 .then()
                 .body("validationReportSignature", emptyOrNullString());
@@ -82,7 +82,7 @@ public class ReportSignatureIT extends SiVaRestTests {
      * File: hellopades-pades-lt-sha256-sign.pdf
      */
     @Test
-    public void whenRequestingDetailedReport_thenValidationReportSignatureShouldBeInResponse() {
+    void whenRequestingDetailedReport_thenValidationReportSignatureShouldBeInResponse() {
         post(validationRequestFor("hellopades-pades-lt-sha256-sign.pdf", null, "Detailed"))
                 .then()
                 .body("validationReportSignature", not(emptyOrNullString()));
@@ -102,7 +102,7 @@ public class ReportSignatureIT extends SiVaRestTests {
      * File: hellopades-lt-sha256-rsa2048.pdf
      */
     @Test
-    public void validateDetailedReportSignature() {
+    void validateDetailedReportSignature() {
         signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_LT");
         signatureServiceConfigurationProperties.setTspUrl("http://demo.sk.ee/tsa");
         signatureServiceConfigurationProperties.setOcspUrl("http://demo.sk.ee/ocsp");
@@ -144,7 +144,7 @@ public class ReportSignatureIT extends SiVaRestTests {
      * File: hellopades-lt-sha256-rsa2048.pdf
      */
     @Test
-    public void whenRequestingSimpleReport_andreportSignatureEnabledTrue_fileHash_InReport() {
+    void whenRequestingSimpleReport_andreportSignatureEnabledTrue_fileHash_InReport() {
         post(validationRequestFor("hellopades-pades-lt-sha256-sign.pdf", null, "Simple"))
                 .then()
                 .body("validationReport.validationConclusion.validatedDocument.fileHash", not(emptyOrNullString()));
@@ -163,9 +163,9 @@ public class ReportSignatureIT extends SiVaRestTests {
      *
      * File: hellopades-lt-sha256-rsa2048.pdf
      */
-    @Disabled //This test should be ran manually after configuring the report signature feature
+    @Disabled("This test should be ran manually after configuring the report signature feature")
     @Test
-    public void whenRequestingSimpleReport_andreportSignatureEnabledFalse_fileHash_NotInReport() {
+    void whenRequestingSimpleReport_andreportSignatureEnabledFalse_fileHash_NotInReport() {
         post(validationRequestFor("hellopades-pades-lt-sha256-sign.pdf", null, "Simple"))
                 .then()
                 .body("validationReport.validationConclusion.validatedDocument.fileHash", emptyOrNullString());

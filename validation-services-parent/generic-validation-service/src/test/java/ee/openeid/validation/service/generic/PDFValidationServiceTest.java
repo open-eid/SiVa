@@ -52,7 +52,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(classes = {PDFValidationServiceTest.TestConfiguration.class})
 @ExtendWith(SpringExtension.class)
-public class PDFValidationServiceTest {
+class PDFValidationServiceTest {
 
     private static final String TEST_FILES_LOCATION = "test-files/";
     private static final String PDF_WITH_REASON_AND_LOCATION = "pdf_with_reason_and_location.pdf";
@@ -80,21 +80,21 @@ public class PDFValidationServiceTest {
     }
 
     @Test
-    public void testConfiguration() {
+    void testConfiguration() {
         assertNotNull(trustedListsCertificateSource);
         assertEquals(2, signaturePolicyService.getSignaturePolicies().size());
         assertNotNull(signaturePolicyService.getPolicy(null));
     }
 
     @Test
-    public void givenInvalidPDFFileShouldThrowServiceException() {
+    void givenInvalidPDFFileShouldThrowServiceException() {
         assertThrows(
                 ValidationServiceException.class, () -> validationService.validateDocument(new ValidationDocument())
         );
     }
 
     @Test
-    public void populatesLocationAsCountryName() {
+    void populatesLocationAsCountryName() {
         SimpleReport report = validateAndAssertReports(buildValidationDocument(PDF_WITH_REASON_AND_LOCATION)).getSimpleReport();
         SignatureProductionPlace signatureProductionPlace = report.getValidationConclusion().getSignatures().get(0)
                 .getInfo().getSignatureProductionPlace();
@@ -106,7 +106,7 @@ public class PDFValidationServiceTest {
     }
 
     @Test
-    public void populatesSigningReason() {
+    void populatesSigningReason() {
         SimpleReport report = validateAndAssertReports(buildValidationDocument(PDF_WITH_REASON_AND_LOCATION)).getSimpleReport();
         String reason = report.getValidationConclusion().getSignatures().get(0)
                 .getInfo().getSigningReason();
@@ -114,7 +114,7 @@ public class PDFValidationServiceTest {
     }
 
     @Test
-    public void populatesSignatureMethod() {
+    void populatesSignatureMethod() {
         SimpleReport report = validateAndAssertReports(buildValidationDocument(PDF_WITH_REASON_AND_LOCATION)).getSimpleReport();
         assertEquals("http://www.w3.org/2001/04/xmldsig-more#rsa-sha512",
                 report.getValidationConclusion().getSignatures().get(0).getSignatureMethod());

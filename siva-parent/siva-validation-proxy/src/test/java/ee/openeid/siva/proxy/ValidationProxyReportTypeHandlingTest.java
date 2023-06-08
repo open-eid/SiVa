@@ -43,7 +43,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class ValidationProxyReportTypeHandlingTest {
+class ValidationProxyReportTypeHandlingTest {
 
     @InjectMocks
     private ContainerValidationProxy validationProxy;

@@ -30,11 +30,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import javax.xml.bind.UnmarshalException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class SoapFaultResponseInterceptorTest {
+class SoapFaultResponseInterceptorTest {
 
     @Mock
     private SoapMessage message;
@@ -47,7 +46,7 @@ public class SoapFaultResponseInterceptorTest {
     }
 
     @Test
-    public void whenSoapFaultHasNoCauseThenFaultStatusAndCodeRemainUnchanged() {
+    void whenSoapFaultHasNoCauseThenFaultStatusAndCodeRemainUnchanged() {
         Fault fault = mock(Fault.class);
         doReturn(null).when(fault).getCause();
         doReturn(fault).when(message).getContent(any());
@@ -57,38 +56,38 @@ public class SoapFaultResponseInterceptorTest {
     }
 
     @Test
-    public void whenSoapFaultIsCausedByMalformedDocumentExceptionThenFaultStatusAndCodeAreChanged() {
+    void whenSoapFaultIsCausedByMalformedDocumentExceptionThenFaultStatusAndCodeAreChanged() {
         Fault fault = new Fault(new MalformedDocumentException());
         doReturn(fault).when(message).getContent(any());
         soapFaultResponseInterceptor.handleMessage(message);
-        assertTrue(fault.getStatusCode() == 200);
+        assertEquals(200, fault.getStatusCode());
         assertEquals("Client", fault.getFaultCode().toString());
     }
 
     @Test
-    public void whenSoapFaultIsCausedByDocumentRequirementsExceptionThenFaultStatusAndCodeAreChanged() {
+    void whenSoapFaultIsCausedByDocumentRequirementsExceptionThenFaultStatusAndCodeAreChanged() {
         Fault fault = new Fault(new DocumentRequirementsException());
         doReturn(fault).when(message).getContent(any());
         soapFaultResponseInterceptor.handleMessage(message);
-        assertTrue(fault.getStatusCode() == 200);
+        assertEquals(200, fault.getStatusCode());
         assertEquals("Client", fault.getFaultCode().toString());
     }
 
     @Test
-    public void whenSoapFaultIsCausedByInvalidPolicyExceptionThenFaultStatusAndCodeAreChanged() {
+    void whenSoapFaultIsCausedByInvalidPolicyExceptionThenFaultStatusAndCodeAreChanged() {
         Fault fault = new Fault(new InvalidPolicyException(""));
         doReturn(fault).when(message).getContent(any());
         soapFaultResponseInterceptor.handleMessage(message);
-        assertTrue(fault.getStatusCode() == 200);
+        assertEquals(200, fault.getStatusCode());
         assertEquals("Client", fault.getFaultCode().toString());
     }
 
     @Test
-    public void whenSoapFaultIsCausedByUnmarshalExceptionThenFaultStatusAndCodeAreChanged() {
+    void whenSoapFaultIsCausedByUnmarshalExceptionThenFaultStatusAndCodeAreChanged() {
         Fault fault = new Fault(new UnmarshalException("Some message.."));
         doReturn(fault).when(message).getContent(any());
         soapFaultResponseInterceptor.handleMessage(message);
-        assertTrue(fault.getStatusCode() == 200);
+        assertEquals(200, fault.getStatusCode());
         assertEquals("Client", fault.getFaultCode().toString());
     }
 }

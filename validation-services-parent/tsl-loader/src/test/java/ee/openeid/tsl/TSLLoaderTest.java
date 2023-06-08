@@ -33,7 +33,7 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class TSLLoaderTest {
+class TSLLoaderTest {
 
     private static final String TSL_URL = "url";
     private static final String TSL_CODE = "CO";
@@ -81,14 +81,14 @@ public class TSLLoaderTest {
     }
 
     @Test
-    public void whenLoadFromCacheIsNotSetInPropertiesThenTSLShouldNotBeRefreshed() {
+    void whenLoadFromCacheIsNotSetInPropertiesThenTSLShouldNotBeRefreshed() {
         initCacheLoadingConfigurationProperties();
         verify(tslValidationJob).offlineRefresh();
         verify(tslValidationJob, never()).onlineRefresh();
     }
 
     @Test
-    public void whenLoadFromCacheIsSetInPropertiesThenTSLShouldBeRefreshed() {
+    void whenLoadFromCacheIsSetInPropertiesThenTSLShouldBeRefreshed() {
         initOnlineLoadingConfigurationProperties();
         verify(tslValidationJob).onlineRefresh();
         verify(tslValidationJob, never()).offlineRefresh();

@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 
 @Tag("IntegrationTest")
-public class MonitoringIT extends SiVaRestTests {
+class MonitoringIT extends SiVaRestTests {
 
     @BeforeEach
     public void DirectoryBackToDefault() {
@@ -53,7 +53,7 @@ public class MonitoringIT extends SiVaRestTests {
      * File: not relevant
      */
     @Test
-    public void requestingWebAppMonitoringHealthStatusShouldReturnProperStructure() {
+    void requestingWebAppMonitoringHealthStatusShouldReturnProperStructure() {
         getMonitoringHealth()
                 .then()
                 .body(matchesJsonSchemaInClasspath("MonitorHealthSchema.json"))
@@ -75,7 +75,7 @@ public class MonitoringIT extends SiVaRestTests {
      * File: not relevant
      */
     @Test
-    public void requestingWebAppMonitoringHeartbeatStatusShouldReturnProperStructure() {
+    void requestingWebAppMonitoringHeartbeatStatusShouldReturnProperStructure() {
         getMonitoringHeartbeat()
                 .then()
                 .body(matchesJsonSchemaInClasspath("MonitorHeartbeatSchema.json"))
@@ -96,7 +96,7 @@ public class MonitoringIT extends SiVaRestTests {
      * File: not relevant
      */
     @Test
-    public void requestingWebAppMonitoringVersionInfoShouldReturnProperStructure() {
+    void requestingWebAppMonitoringVersionInfoShouldReturnProperStructure() {
         getMonitoringVersion()
                 .then()
                 .body(matchesJsonSchemaInClasspath("MonitorVersionSchema.json"));

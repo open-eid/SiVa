@@ -22,10 +22,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class AlwaysFailingCRLSourceTest {
+class AlwaysFailingCRLSourceTest {
 
     @Test
-    public void alwaysFailingCRLSourceShouldNotFindCRL() {
+    void alwaysFailingCRLSourceShouldNotFindCRL() {
         CRLSource crlSource = new AlwaysFailingCRLSource();
         assertNull(crlSource.getRevocationToken(null, null));
     }

@@ -19,12 +19,12 @@ import java.util.Collections;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
-public class DDOCContainerValidationReportBuilderTest {
+class DDOCContainerValidationReportBuilderTest {
 
     private static final String VALID_DDOC_WITH_2_SIGNATURES = "ddoc_valid_2_signatures.ddoc";
 
     @Test
-    public void validDDOCReturnsSuccessfulResult() {
+    void validDDOCReturnsSuccessfulResult() {
         ValidationDocument validationDocument = validationDocument();
         Container container = ContainerBuilder.aContainer()
                 .fromStream(new ByteArrayInputStream(validationDocument.getBytes()))
@@ -38,7 +38,7 @@ public class DDOCContainerValidationReportBuilderTest {
     }
 
     @Test
-    public void ifThereAreContainerErrorsThatAreNotPresentUnderSignaturesErrorsThenExceptionIsThrown() {
+    void ifThereAreContainerErrorsThatAreNotPresentUnderSignaturesErrorsThenExceptionIsThrown() {
 
         ValidationDocument validationDocument = validationDocument();
         Container container = ContainerBuilder.aContainer()

@@ -57,12 +57,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
-public class ValidationReportSoapResponseTransformerTest {
+class ValidationReportSoapResponseTransformerTest {
 
     private ValidationReportSoapResponseTransformer transformer = new ValidationReportSoapResponseTransformer();
 
     @Test
-    public void qualifiedSimpleReportIsCorrectlyTransformedToSoapResponseReport() {
+    void qualifiedSimpleReportIsCorrectlyTransformedToSoapResponseReport() {
         ee.openeid.siva.validation.document.report.ValidationConclusion validationConclusion = createMockedValidationConclusion();
         SimpleReport simpleReport = new SimpleReport();
         simpleReport.setValidationConclusion(validationConclusion);
@@ -74,7 +74,7 @@ public class ValidationReportSoapResponseTransformerTest {
     }
 
     @Test
-    public void qualifiedDetailedReportIsCorrectlyTransformedToSoapResponseReport() {
+    void qualifiedDetailedReportIsCorrectlyTransformedToSoapResponseReport() {
         ee.openeid.siva.validation.document.report.ValidationConclusion validationConclusion = createMockedValidationConclusion();
         eu.europa.esig.dss.detailedreport.jaxb.XmlDetailedReport validationProcess = createMockedValidationProcess();
         DetailedReport detailedReport = new DetailedReport(validationConclusion, validationProcess);
@@ -86,7 +86,7 @@ public class ValidationReportSoapResponseTransformerTest {
 
     @Test
     @Disabled("SIVA-187")
-    public void qualifiedDiagnosticDataIsCorrectlyTransformedToSoapResponseReport() {
+    void qualifiedDiagnosticDataIsCorrectlyTransformedToSoapResponseReport() {
         ee.openeid.siva.validation.document.report.ValidationConclusion validationConclusion = createMockedValidationConclusion();
         eu.europa.esig.dss.diagnostic.jaxb.XmlDiagnosticData diagnosticData = createMockedDiagnosticData();
         DiagnosticReport diagnosticReport = new DiagnosticReport(validationConclusion, diagnosticData);
@@ -98,7 +98,7 @@ public class ValidationReportSoapResponseTransformerTest {
     }
 
     @Test
-    public void qualifiedDetailedReportIsNull() {
+    void qualifiedDetailedReportIsNull() {
         ee.openeid.siva.validation.document.report.ValidationConclusion validationConclusion = createMockedValidationConclusion();
         SimpleReport simpleReport = new SimpleReport(validationConclusion);
         ValidationReport responseValidationReport = transformer.toSoapResponse(simpleReport);
@@ -107,7 +107,7 @@ public class ValidationReportSoapResponseTransformerTest {
     }
 
     @Test
-    public void detailedReportWithNullValidationProcess() {
+    void detailedReportWithNullValidationProcess() {
         ee.openeid.siva.validation.document.report.ValidationConclusion validationConclusion = createMockedValidationConclusion();
         DetailedReport detailedReport = new DetailedReport(validationConclusion, null);
         ValidationReport responseValidationReport = transformer.toSoapResponse(detailedReport);
@@ -117,7 +117,7 @@ public class ValidationReportSoapResponseTransformerTest {
     }
 
     @Test
-    public void diagnosticReportWithNullDiagnosticData() {
+    void diagnosticReportWithNullDiagnosticData() {
         ee.openeid.siva.validation.document.report.ValidationConclusion validationConclusion = createMockedValidationConclusion();
         DiagnosticReport diagnosticReport = new DiagnosticReport(validationConclusion, null);
         ValidationReport responseValidationReport = transformer.toSoapResponse(diagnosticReport);

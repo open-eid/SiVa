@@ -49,7 +49,7 @@ public final class SubjectDNParser {
     }
 
     private static String removeQuotes(String value) {
-        return value.replaceAll("^\"|\"$", "");
+        return value.replaceAll("(^\")|(\"$)", "");
     }
 
     public enum RDN {

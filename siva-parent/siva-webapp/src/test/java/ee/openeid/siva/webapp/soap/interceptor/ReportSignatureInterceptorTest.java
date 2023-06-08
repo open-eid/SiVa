@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ReportSignatureInterceptorTest {
+class ReportSignatureInterceptorTest {
 
     @Mock
     private SoapMessage message;
@@ -66,7 +66,7 @@ public class ReportSignatureInterceptorTest {
     }
 
     @Test
-    public void whenDetailedReportTypeInRequest_thenReportSignatureIsAdded() throws Exception {
+    void whenDetailedReportTypeInRequest_thenReportSignatureIsAdded() throws Exception {
         mockSoapMessage("Detailed");
         reportSignatureInterceptor.handleMessage(message);
 
@@ -76,7 +76,7 @@ public class ReportSignatureInterceptorTest {
     }
 
     @Test
-    public void whenSimpleReportTypeInRequest_thenReportSignatureIsNotAdded() throws Exception {
+    void whenSimpleReportTypeInRequest_thenReportSignatureIsNotAdded() throws Exception {
         mockSoapMessage("Simple");
         reportSignatureInterceptor.handleMessage(message);
 
@@ -86,7 +86,7 @@ public class ReportSignatureInterceptorTest {
     }
 
     @Test
-    public void whenDiagnosticReportTypeInRequest_thenReportSignatureIsNotAdded() throws Exception {
+    void whenDiagnosticReportTypeInRequest_thenReportSignatureIsNotAdded() throws Exception {
         mockSoapMessage("Diagnostic");
         reportSignatureInterceptor.handleMessage(message);
 

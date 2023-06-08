@@ -26,7 +26,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @ExtendWith(MockitoExtension.class)
-public class TSLRefresherTest {
+class TSLRefresherTest {
 
     @Mock
     private TSLLoader tslLoader;
@@ -35,7 +35,7 @@ public class TSLRefresherTest {
     private TSLRefresher tslRefresher;
 
     @Test
-    public void runningTslRefresherShouldLoadTSL() {
+    void runningTslRefresherShouldLoadTSL() {
         tslRefresher.run();
         verify(tslLoader).loadTSL();
         verifyNoMoreInteractions(tslLoader);

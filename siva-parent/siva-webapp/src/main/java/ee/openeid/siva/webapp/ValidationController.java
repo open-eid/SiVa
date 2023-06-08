@@ -26,9 +26,8 @@ import ee.openeid.siva.webapp.transformer.HashcodeValidationRequestToProxyDocume
 import ee.openeid.siva.webapp.transformer.ValidationRequestToProxyDocumentTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -41,12 +40,12 @@ public class ValidationController {
     private ValidationRequestToProxyDocumentTransformer transformer;
     private HashcodeValidationRequestToProxyDocumentTransformer hashRequestTransformer;
 
-    @RequestMapping(value = "/validate", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    @PostMapping(value = "/validate", produces = MediaType.APPLICATION_JSON_VALUE)
     public ValidationResponse validate(@Valid @RequestBody JSONValidationRequest validationRequest) {
         return new ValidationResponse(containerValidationProxy.validate(transformer.transform(validationRequest)));
     }
 
-    @RequestMapping(value = "/validateHashcode", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    @PostMapping(value = "/validateHashcode", produces = MediaType.APPLICATION_JSON_VALUE)
     public ValidationResponse validateHashcode(@Valid @RequestBody JSONHashcodeValidationRequest validationRequest) {
         ProxyHashcodeDataSet proxyDocument = hashRequestTransformer.transform(validationRequest);
         return new ValidationResponse(hashcodeValidationProxy.validate(proxyDocument));

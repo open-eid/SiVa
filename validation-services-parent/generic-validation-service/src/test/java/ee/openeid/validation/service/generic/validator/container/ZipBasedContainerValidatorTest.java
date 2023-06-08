@@ -42,7 +42,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 @ExtendWith(MockitoExtension.class)
-public class ZipBasedContainerValidatorTest {
+class ZipBasedContainerValidatorTest {
 
     @Mock
     private ValidationDocument validationDocument;
@@ -52,7 +52,7 @@ public class ZipBasedContainerValidatorTest {
     private ZipBasedContainerValidator validator;
 
     @Test
-    public void testValidationThrowsOnMissingValidationDocumentBytes() {
+    void testValidationThrowsOnMissingValidationDocumentBytes() {
         Mockito.doReturn(null).when(validationDocument).getBytes();
 
         NullPointerException caughtException = Assertions.assertThrows(
@@ -65,7 +65,7 @@ public class ZipBasedContainerValidatorTest {
     }
 
     @Test
-    public void testValidationDoesNotInvokeEntryValidatorOnEmptyContainer() {
+    void testValidationDoesNotInvokeEntryValidatorOnEmptyContainer() {
         Mockito.doReturn(new byte[0]).when(validationDocument).getBytes();
 
         validator.validate();
@@ -75,7 +75,7 @@ public class ZipBasedContainerValidatorTest {
     }
 
     @Test
-    public void testValidationThrowsMalformedDocumentExceptionOnIOException() throws IOException {
+    void testValidationThrowsMalformedDocumentExceptionOnIOException() throws IOException {
         Pair<String, byte[]> containerEntry = Pair.of("entry", new byte[0]);
         byte[] containerBytes = createZipFile(containerEntry);
         Mockito.doReturn(containerBytes).when(validationDocument).getBytes();
@@ -97,7 +97,7 @@ public class ZipBasedContainerValidatorTest {
 
     @ParameterizedTest
     @MethodSource("entryLists")
-    public void testValidationInvokesEntryValidatorForEachEntry(List<Pair<String, byte[]>> entries) throws IOException {
+    void testValidationInvokesEntryValidatorForEachEntry(List<Pair<String, byte[]>> entries) throws IOException {
         byte[] containerBytes = createZipFile(entries);
         Mockito.doReturn(containerBytes).when(validationDocument).getBytes();
         final List<byte[]> caughtEntryBytes = new ArrayList<>();

@@ -20,7 +20,6 @@ import eu.europa.esig.dss.enumerations.DigestAlgorithm;
 import eu.europa.esig.dss.model.DSSException;
 import eu.europa.esig.dss.model.x509.CertificateToken;
 import eu.europa.esig.dss.spi.DSSRevocationUtils;
-import eu.europa.esig.dss.spi.x509.revocation.ocsp.OCSPRespStatus;
 import eu.europa.esig.dss.spi.x509.revocation.ocsp.OCSPSource;
 import eu.europa.esig.dss.spi.x509.revocation.ocsp.OCSPToken;
 import org.bouncycastle.asn1.DEROctetString;
@@ -72,16 +71,16 @@ public class SkOcspSource implements OCSPSource {
     public OCSPToken getRevocationToken(CertificateToken certificateToken, CertificateToken issuerCertificateToken) {
         LOGGER.debug("Getting OCSP token");
         if (dataLoader == null) {
-            throw new RuntimeException("Data loader is null");
+            throw new IllegalStateException("Data loader is null");
         }
         try {
             final String dssIdAsString = certificateToken.getDSSIdAsString();
             if (LOGGER.isTraceEnabled()) {
-                LOGGER.trace("--> OnlineOCSPSource queried for " + dssIdAsString);
+                LOGGER.trace("--> OnlineOCSPSource queried for {}", dssIdAsString);
             }
 
             final String ocspUri = url;
-            LOGGER.debug("Getting OCSP token from URI: " + ocspUri);
+            LOGGER.debug("Getting OCSP token from URI: {}", ocspUri);
             if (ocspUri == null) {
                 return null;
             }
@@ -115,8 +114,7 @@ public class SkOcspSource implements OCSPSource {
                 }
             }
             if (bestSingleResp != null) {
-                OCSPToken ocspToken = constructOCSPToken(basicOCSPResp, certificateToken, issuerCertificateToken);
-                return ocspToken;
+                return constructOCSPToken(basicOCSPResp, certificateToken, issuerCertificateToken);
             }
         } catch (OCSPException e) {
             LOGGER.error("OCSP error: " + e.getMessage(), e);

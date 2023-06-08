@@ -32,9 +32,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ConstraintLoadingSignaturePolicyServiceTest {
+class ConstraintLoadingSignaturePolicyServiceTest {
 
     private static final String VALID_CLASSPATH_CONSTRAINT = "valid-constraint.xml";
     private static final String INVALID_CLASSPATH_CONSTRAINT = "invalid-constraint.xml";
@@ -46,16 +45,16 @@ public class ConstraintLoadingSignaturePolicyServiceTest {
     private static final String NON_EXISITNG_ABSOLUTE_PATH_CONSTRAINT = "/non-existing-constraint.xml";
 
     @Test
-    public void whenSignaturePolicesDoNotContainDefaultPolicyThenThrowException() {
+    void whenSignaturePolicesDoNotContainDefaultPolicyThenThrowException() {
         ConstraintDefinedPolicy pol1 = createValidationPolicy("pol1", VALID_CLASSPATH_CONSTRAINT);
 
         assertThrows(
-            DefaultPolicyNotDefinedException.class, () -> createSignaturePolicyService("RANDOM_PREFIX" + "pol1", pol1).getPolicy("pol1")
+            DefaultPolicyNotDefinedException.class, () -> createSignaturePolicyService("RANDOM_PREFIX" + "pol1", pol1)
         );
     }
 
     @Test
-    public void whenDefaultPolicyReferencesPolicyThatCannotBeLoadedThenThrowException() {
+    void whenDefaultPolicyReferencesPolicyThatCannotBeLoadedThenThrowException() {
         ConstraintDefinedPolicy pol1 = createValidationPolicy("pol1", INVALID_CLASSPATH_CONSTRAINT);
 
         assertThrows(
@@ -64,7 +63,7 @@ public class ConstraintLoadingSignaturePolicyServiceTest {
     }
 
     @Test
-    public void settingValidPolicyFromClasspathResourceGetsLoaded() {
+    void settingValidPolicyFromClasspathResourceGetsLoaded() {
         ConstraintDefinedPolicy pol1 = createValidationPolicy("pol1", VALID_CLASSPATH_CONSTRAINT);
         ConstraintLoadingSignaturePolicyService signaturePolicyService = createSignaturePolicyService("pol1", pol1);
         assertEquals(1, signaturePolicyService.getSignaturePolicies().size());
@@ -72,7 +71,7 @@ public class ConstraintLoadingSignaturePolicyServiceTest {
     }
 
     @Test
-    public void settingValidPolicyFromAbsolutePathGetsLoaded() {
+    void settingValidPolicyFromAbsolutePathGetsLoaded() {
         ConstraintDefinedPolicy pol1 = createValidationPolicy("pol1", VALID_ABSOLUTE_PATH_CONSTRAINT);
         ConstraintLoadingSignaturePolicyService signaturePolicyService = createSignaturePolicyService("pol1", pol1);
         assertEquals(1, signaturePolicyService.getSignaturePolicies().size());
@@ -80,47 +79,47 @@ public class ConstraintLoadingSignaturePolicyServiceTest {
     }
 
     @Test
-    public void settingInvalidPolicyFromClasspathResourceGetsNotLoaded() {
+    void settingInvalidPolicyFromClasspathResourceGetsNotLoaded() {
         ConstraintDefinedPolicy pol1 = createValidationPolicy("pol1", INVALID_CLASSPATH_CONSTRAINT);
         ConstraintDefinedPolicy pol2 = createValidationPolicy("pol2", VALID_CLASSPATH_CONSTRAINT);
         assertPolicyNotLoaded(createSignaturePolicyService("pol2", pol1, pol2), "pol1");
     }
 
     @Test
-    public void settingInvalidPolicyFromAbsolutePathGetsNotLoaded() {
+    void settingInvalidPolicyFromAbsolutePathGetsNotLoaded() {
         ConstraintDefinedPolicy pol1 = createValidationPolicy("pol1", INVALID_ABSOLUTE_PATH_CONSTRAINT);
         ConstraintDefinedPolicy pol2 = createValidationPolicy("pol2", VALID_CLASSPATH_CONSTRAINT);
         assertPolicyNotLoaded(createSignaturePolicyService("pol2", pol1, pol2), "pol1");
     }
 
     @Test
-    public void settingNonExistingPolicyFromClasspathGetsNotLoaded() {
+    void settingNonExistingPolicyFromClasspathGetsNotLoaded() {
         ConstraintDefinedPolicy pol1 = createValidationPolicy("pol1", NON_EXISITNG_CLASSPATH_CONSTRAINT);
         ConstraintDefinedPolicy pol2 = createValidationPolicy("pol2", VALID_CLASSPATH_CONSTRAINT);
         assertPolicyNotLoaded(createSignaturePolicyService("pol2", pol1, pol2), "pol1");
     }
 
     @Test
-    public void settingNonExistingPolicyFromAbsolutePathGetsNotLoaded() {
+    void settingNonExistingPolicyFromAbsolutePathGetsNotLoaded() {
         ConstraintDefinedPolicy pol1 = createValidationPolicy("pol1", NON_EXISITNG_ABSOLUTE_PATH_CONSTRAINT);
         ConstraintDefinedPolicy pol2 = createValidationPolicy("pol2", VALID_CLASSPATH_CONSTRAINT);
         assertPolicyNotLoaded(createSignaturePolicyService("pol2", pol1, pol2), "pol1");
     }
 
     @Test
-    public void onlyPoliciesWithUniqueNamesAreLoaded() {
+    void onlyPoliciesWithUniqueNamesAreLoaded() {
         ConstraintDefinedPolicy pol1 = createValidationPolicy("pol1", VALID_CLASSPATH_CONSTRAINT);
         ConstraintDefinedPolicy pol2 = createValidationPolicy("pol2", VALID_CLASSPATH_CONSTRAINT);
         ConstraintDefinedPolicy pol3 = createValidationPolicy("pol2", VALID_CLASSPATH_CONSTRAINT);
         ConstraintLoadingSignaturePolicyService signaturePolicyService = createSignaturePolicyService("pol1", pol1, pol2, pol3);
-        assertTrue(signaturePolicyService.getSignaturePolicies().size() == 2);
+        assertEquals(2, signaturePolicyService.getSignaturePolicies().size());
         assertEquals(pol1, signaturePolicyService.getSignaturePolicies().get("pol1"));
         assertEquals(pol2, signaturePolicyService.getSignaturePolicies().get("pol2"));
         assertEquals(VALID_CLASSPATH_CONSTRAINT, signaturePolicyService.getSignaturePolicies().get("pol2").getConstraintPath());
     }
 
     @Test
-    public void settingMultipleValidPoliciesResultsInAllGetLoaded() throws IOException {
+    void settingMultipleValidPoliciesResultsInAllGetLoaded() throws IOException {
         ConstraintDefinedPolicy pol1 = createValidationPolicy("pol1", VALID_CLASSPATH_CONSTRAINT);
         ConstraintDefinedPolicy pol2 = createValidationPolicy("pol2", VALID_ABSOLUTE_PATH_CONSTRAINT);
         ConstraintLoadingSignaturePolicyService signaturePolicyService = createSignaturePolicyService("pol1", pol1, pol2);

@@ -30,28 +30,28 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class PDFSignaturePolicyTest extends PDFValidationServiceTest {
+class PDFSignaturePolicyTest extends PDFValidationServiceTest {
 
     private static final String PDF_WITH_ONE_VALID_SIGNATURE = "hellopades-pades-lt-sha256-sign.pdf";
     private static final String PDF_WITH_SOFT_CERT_SIGNATURE = "soft-cert-signature.pdf";
 
     @Test
-    @Disabled //TODO: New test file is needed
-    public void softCertSignatureShouldBeValidWithNoTypePolicy() {
+    @Disabled(/*TODO:*/"New test file is needed")
+    void softCertSignatureShouldBeValidWithNoTypePolicy() {
         SimpleReport report = validateWithPolicy("POLv3", PDF_WITH_SOFT_CERT_SIGNATURE);
         ValidationConclusion validationConclusion = report.getValidationConclusion();
         assertEquals(validationConclusion.getSignaturesCount(), validationConclusion.getValidSignaturesCount());
     }
 
     @Test
-    @Disabled //TODO: New test file is needed
-    public void softCertSignatureShouldBeInvalidWithQESPolicy() {
+    @Disabled(/*TODO:*/"New test file is needed")
+    void softCertSignatureShouldBeInvalidWithQESPolicy() {
         SimpleReport report = validateWithPolicy("POLv4", PDF_WITH_SOFT_CERT_SIGNATURE);
-        assertTrue(report.getValidationConclusion().getValidSignaturesCount() == 0);
+        assertEquals(0, (int) report.getValidationConclusion().getValidSignaturesCount());
     }
 
     @Test
-    public void validationReportShouldContainDefaultPolicyWhenPolicyIsNotExplicitlyGiven() {
+    void validationReportShouldContainDefaultPolicyWhenPolicyIsNotExplicitlyGiven() {
         Policy policy = validateWithPolicy("").getValidationConclusion().getPolicy();
         assertEquals(QES_POLICY.getName(), policy.getPolicyName());
         assertEquals(QES_POLICY.getDescription(), policy.getPolicyDescription());
@@ -59,7 +59,7 @@ public class PDFSignaturePolicyTest extends PDFValidationServiceTest {
     }
 
     @Test
-    public void validationReportShouldContainAdesPolicyWhenAdesPolicyIsGivenToValidator() {
+    void validationReportShouldContainAdesPolicyWhenAdesPolicyIsGivenToValidator() {
         Policy policy = validateWithPolicy("POLv3").getValidationConclusion().getPolicy();
         assertEquals(ADES_POLICY.getName(), policy.getPolicyName());
         assertEquals(ADES_POLICY.getDescription(), policy.getPolicyDescription());
@@ -67,7 +67,7 @@ public class PDFSignaturePolicyTest extends PDFValidationServiceTest {
     }
 
     @Test
-    public void validationReportShouldContainQESPolicyWhenQESPolicyIsGivenToValidator() {
+    void validationReportShouldContainQESPolicyWhenQESPolicyIsGivenToValidator() {
         Policy policy = validateWithPolicy("POLv4").getValidationConclusion().getPolicy();
         assertEquals(QES_POLICY.getName(), policy.getPolicyName());
         assertEquals(QES_POLICY.getDescription(), policy.getPolicyDescription());
@@ -75,7 +75,7 @@ public class PDFSignaturePolicyTest extends PDFValidationServiceTest {
     }
 
     @Test
-    public void whenNonExistingPolicyIsGivenThenValidatorShouldThrowException() {
+    void whenNonExistingPolicyIsGivenThenValidatorShouldThrowException() {
         assertThrows(
                 InvalidPolicyException.class, () -> validateWithPolicy("non-existing-policy")
         );

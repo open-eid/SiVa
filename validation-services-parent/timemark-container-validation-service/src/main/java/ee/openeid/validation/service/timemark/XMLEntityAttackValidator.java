@@ -19,6 +19,8 @@ package ee.openeid.validation.service.timemark;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.security.SecureSAXParsers;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.digidoc4j.ddoc.factory.SignatureInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +34,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-class XMLEntityAttackValidator {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+final class XMLEntityAttackValidator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(XMLEntityAttackValidator.class);
 

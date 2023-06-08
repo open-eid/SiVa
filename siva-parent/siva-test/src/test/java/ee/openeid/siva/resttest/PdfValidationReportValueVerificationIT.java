@@ -28,7 +28,7 @@ import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInC
 
 @Tag("IntegrationTest")
 
-public class PdfValidationReportValueVerificationIT extends SiVaRestTests {
+class PdfValidationReportValueVerificationIT extends SiVaRestTests {
 
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "pdf/baseline_profile_test_files/";
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
@@ -50,7 +50,7 @@ public class PdfValidationReportValueVerificationIT extends SiVaRestTests {
      * File: reason_and_location_Test.pdf
      */
     @Test
-    public void pdfAllElementsArePresentValidSignature() {
+    void pdfAllElementsArePresentValidSignature() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         post(validationRequestFor("reason_and_location_Test.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -104,7 +104,7 @@ public class PdfValidationReportValueVerificationIT extends SiVaRestTests {
      * File: pades_lt_two_valid_sig.pdf
      */
     @Test
-    public void pdfAllElementsArePresentValidMultipleSignatures() {
+    void pdfAllElementsArePresentValidMultipleSignatures() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         post(validationRequestFor("pades_lt_two_valid_sig.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -155,7 +155,7 @@ public class PdfValidationReportValueVerificationIT extends SiVaRestTests {
      * File: hellopades-lt-b.pdf
      */
     @Test
-    public void pdfAllElementsArePresentInvalidSignature() {
+    void pdfAllElementsArePresentInvalidSignature() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         post(validationRequestFor("hellopades-lt-b.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -204,7 +204,7 @@ public class PdfValidationReportValueVerificationIT extends SiVaRestTests {
      * File: hellopades-lt-rsa1024-sha1-expired.pdf
      */
     @Test
-    public void pdfAllElementsArePresentIndeterminateSignature() {
+    void pdfAllElementsArePresentIndeterminateSignature() {
         setTestFilesDirectory("pdf/signing_certifacte_test_files/");
         post(validationRequestFor("hellopades-lt-rsa1024-sha1-expired.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -250,7 +250,7 @@ public class PdfValidationReportValueVerificationIT extends SiVaRestTests {
      * File: PdfNoSignature.pdf
      */
     @Test
-    public void pdfNoSignature() {
+    void pdfNoSignature() {
         setTestFilesDirectory("document_format_test_files/");
         post(validationRequestFor("PdfNoSignature.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -277,7 +277,7 @@ public class PdfValidationReportValueVerificationIT extends SiVaRestTests {
      */
     @Disabled("SIVA-365")
     @Test
-    public void pdfMixedSameCertificateSignaturesCorrectOcspResponseCreationTime() {
+    void pdfMixedSameCertificateSignaturesCorrectOcspResponseCreationTime() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         post(validationRequestFor("hellopades-lt-b.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -308,7 +308,7 @@ public class PdfValidationReportValueVerificationIT extends SiVaRestTests {
      * File: hellopades-lt-b.pdf
      */
     @Test
-    public void pdfMixedDifferentCertificateSignaturesCorrectOcspResponseCreationTime() {
+    void pdfMixedDifferentCertificateSignaturesCorrectOcspResponseCreationTime() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         post(validationRequestFor("hellopades-pades-b-lt-sha256-auth.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)

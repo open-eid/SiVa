@@ -39,7 +39,7 @@ import static org.hamcrest.Matchers.emptyOrNullString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Tag("IntegrationTest")
-public class ValidationRequestIT extends SiVaRestTests {
+class ValidationRequestIT extends SiVaRestTests {
 
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "bdoc/test/timestamp/";
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
@@ -72,7 +72,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: singleValidSignatureTM.bdoc
      */
     @Test
-    public void validationRequestAllRequiredInputs() {
+    void validationRequestAllRequiredInputs() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestFor("singleValidSignatureTM.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -96,7 +96,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: not relevant
      */
     @Test
-    public void validationRequestEmptyBody() {
+    void validationRequestEmptyBody() {
         String response = post(new JSONObject().toString()).thenReturn().body().asString();
 
         assertEquals(1, getRequestErrorsCount(response, FILENAME, MUST_NOT_BE_EMPTY), getFailMessageForKey(FILENAME));
@@ -119,7 +119,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: not relevant
      */
     @Test
-    public void validationRequestEmptyInputs() {
+    void validationRequestEmptyInputs() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(DOCUMENT, "");
         jsonObject.put(FILENAME, "");
@@ -147,7 +147,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: singleValidSignatureTM.bdoc
      */
     @Test
-    public void validationRequestMoreKeysThanExpected() {
+    void validationRequestMoreKeysThanExpected() {
         setTestFilesDirectory("bdoc/test/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("singleValidSignatureTM.bdoc"));
         JSONObject jsonObject = new JSONObject();
@@ -175,7 +175,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: singleValidSignatureTM.bdoc
      */
     @Test
-    public void validationRequestInvalidDocumentKey() {
+    void validationRequestInvalidDocumentKey() {
         setTestFilesDirectory("bdoc/test/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("singleValidSignatureTM.bdoc"));
         String response = post(validationRequestForExtended("DOCUMENT", encodedString,
@@ -201,7 +201,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: not relevant
      */
     @Test
-    public void validationRequestDocumentParameterMissing() {
+    void validationRequestDocumentParameterMissing() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(DOCUMENT, "");
         jsonObject.put(FILENAME, "randomString.asice");
@@ -226,7 +226,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: singleValidSignatureTM.bdoc
      */
     @Test
-    public void validationRequestFilenameParameterMissing() {
+    void validationRequestFilenameParameterMissing() {
         setTestFilesDirectory("bdoc/test/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("singleValidSignatureTM.bdoc"));
 
@@ -253,7 +253,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: singleValidSignatureTM.bdoc
      */
     @Test
-    public void validationRequestCorrectBase64() {
+    void validationRequestCorrectBase64() {
         setTestFilesDirectory("bdoc/test/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("singleValidSignatureTM.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "singleValidSignatureTM.bdoc", null))
@@ -276,7 +276,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: singleValidSignatureTM.bdoc
      */
     @Test
-    public void validationRequestFaultyBase64() {
+    void validationRequestFaultyBase64() {
         setTestFilesDirectory("bdoc/test/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("singleValidSignatureTM.bdoc"));
         post(validationRequestWithValidKeys("a" + encodedString, "singleValidSignatureTM.bdoc", null))
@@ -300,7 +300,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
-    public void validationRequestNonBase64Input() {
+    void validationRequestNonBase64Input() {
         String encodedString = ",:";
         post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "POLv3"))
                 .then()
@@ -322,7 +322,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: singleValidSignatureTM.bdoc
      */
     @Test
-    public void ValidationRequestCaseInsensitiveFilename() {
+    void ValidationRequestCaseInsensitiveFilename() {
         setTestFilesDirectory("bdoc/test/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("singleValidSignatureTM.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "singleValidSignatureTM.bDoC", null))
@@ -344,7 +344,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: singleValidSignatureTM.bdoc
      */
     @Test
-    public void ValidationRequestSpaceInFilename() {
+    void ValidationRequestSpaceInFilename() {
         setTestFilesDirectory("bdoc/test/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("singleValidSignatureTM.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "singleValidSignatureTM .bDoC", null))
@@ -366,7 +366,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: singleValidSignatureTM.bdoc
      */
     @Test
-    public void validationRequestMaxFilename() {
+    void validationRequestMaxFilename() {
         setTestFilesDirectory("bdoc/test/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("singleValidSignatureTM.bdoc"));
 
@@ -391,7 +391,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: singleValidSignatureTM.bdoc
      */
     @Test
-    public void validationRequestTooLongFilename() {
+    void validationRequestTooLongFilename() {
         setTestFilesDirectory("bdoc/test/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("singleValidSignatureTM.bdoc"));
 
@@ -418,7 +418,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: singleValidSignatureTM.bdoc
      */
     @Test
-    public void validationRequestDocumentTypeMissing() {
+    void validationRequestDocumentTypeMissing() {
         setTestFilesDirectory("bdoc/test/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("singleValidSignatureTM.bdoc"));
         JSONObject jsonObject = new JSONObject();
@@ -445,7 +445,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: singleValidSignatureTM.bdoc
      */
     @Test
-    public void validationRequestDefaultPolicy() {
+    void validationRequestDefaultPolicy() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestFor("singleValidSignatureTM.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -466,7 +466,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: singleValidSignatureTM.bdoc
      */
     @Test
-    public void validationRequestPOLv3() {
+    void validationRequestPOLv3() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestFor("singleValidSignatureTM.bdoc", "POLv3", null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -487,7 +487,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: singleValidSignatureTM.bdoc
      */
     @Test
-    public void validationRequestPOLv4() {
+    void validationRequestPOLv4() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestFor("singleValidSignatureTM.bdoc", "POLv4", null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -508,7 +508,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: singleValidSignatureTM.bdoc
      */
     @Test
-    public void validationRequestInvalidPolicy() {
+    void validationRequestInvalidPolicy() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestFor("singleValidSignatureTM.bdoc", INVALID_SIGNATURE_POLICY, null))
                 .then()
@@ -531,7 +531,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: singleValidSignatureTS.asice
      */
     @Test
-    public void validationRequestDefaultReport() {
+    void validationRequestDefaultReport() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("singleValidSignatureTS.asice"));
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(DOCUMENT, encodedString);
@@ -557,7 +557,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: singleValidSignatureTS.asice
      */
     @Test
-    public void validationRequestSimpleReport() {
+    void validationRequestSimpleReport() {
         post(validationRequestFor("singleValidSignatureTS.asice", null, REPORT_TYPE_SIMPLE ))
                 .then()
                 .body("validationReport.validationProcess", emptyOrNullString())
@@ -579,7 +579,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: singleValidSignatureTS.asice
      */
     @Test
-    public void validationRequestDetailedReport() {
+    void validationRequestDetailedReport() {
         post(validationRequestFor("singleValidSignatureTS.asice", null, REPORT_TYPE_DETAILED ))
                 .then()
                 .body("validationReport.diagnosticData", emptyOrNullString())
@@ -601,7 +601,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: singleValidSignatureTS.asice
      */
     @Test
-    public void validationRequestReportTypeInvalid() {
+    void validationRequestReportTypeInvalid() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("singleValidSignatureTS.asice"));
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(DOCUMENT, encodedString);
@@ -628,7 +628,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: singleValidSignatureTM.bdoc
      */
     @Test
-    public void validationRequestTooShortFilename() {
+    void validationRequestTooShortFilename() {
         setTestFilesDirectory("bdoc/test/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("singleValidSignatureTM.bdoc"));
 
@@ -660,7 +660,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: singleValidSignatureTM.bdoc
      */
     @Test
-    public void validationRequestTooShortSignaturePolicy() {
+    void validationRequestTooShortSignaturePolicy() {
         setTestFilesDirectory("bdoc/test/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("singleValidSignatureTM.bdoc"));
         String signaturePolicy = "";
@@ -686,7 +686,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: singleValidSignatureTM.bdoc
      */
     @Test
-    public void validationRequestTooLongSignaturePolicy() {
+    void validationRequestTooLongSignaturePolicy() {
         setTestFilesDirectory("bdoc/test/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("singleValidSignatureTM.bdoc"));
         String signaturePolicy = StringUtils.repeat("a", 101);
@@ -712,7 +712,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: singleValidSignatureTS.asice
      */
     @Test
-    public void validationRequestDiagnosticReport() {
+    void validationRequestDiagnosticReport() {
         post(validationRequestFor("singleValidSignatureTS.asice", null, REPORT_TYPE_DIAGNOSTIC ))
                 .then()
                 .body("validationReport.validationProcess", emptyOrNullString())
@@ -735,7 +735,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      */
 
     @Test
-    public void validationRequestWithDocumentType() {
+    void validationRequestWithDocumentType() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
 
@@ -759,7 +759,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: PdfValidSingleSignature.pdf
      */
     @Test
-    public void bdocValidationRequestNotMatchingDocumentTypeAndActualFilePdf() {
+    void bdocValidationRequestNotMatchingDocumentTypeAndActualFilePdf() {
         setTestFilesDirectory("document_format_test_files/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
         post(validationRequestWithValidKeys(encodedString, "PdfValidSingleSignature.bdoc", "POLv3"))
@@ -783,7 +783,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: not relevant
      */
     @Test
-    public void validationRequestRandomInputAsBdocDocument() {
+    void validationRequestRandomInputAsBdocDocument() {
         String encodedString = "ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA==";
         post(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "POLv3"))
                 .then()
@@ -806,7 +806,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: singleValidSignatureTS.asice
      */
     @Test
-    public void validationRequestDocumentTypeBdocAndFileAsice() {
+    void validationRequestDocumentTypeBdocAndFileAsice() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("singleValidSignatureTS.asice"));
         post(validationRequestWithValidKeys(encodedString, "singleValidSignatureTS.bdoc", "POLv3"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -827,7 +827,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
-    public void validationRequestRandomInputAsPdfDocument() {
+    void validationRequestRandomInputAsPdfDocument() {
         String encodedString = "ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA==";
         post(validationRequestWithValidKeys(encodedString, "some_pdf.pdf", "POLv3"))
                 .then()
@@ -849,7 +849,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: singleValidSignatureTM.bdoc
      */
     @Test
-    public void ddocValidationRequestNotMatchingDocumentTypeAndActualFileBdoc() {
+    void ddocValidationRequestNotMatchingDocumentTypeAndActualFileBdoc() {
         setTestFilesDirectory("bdoc/test/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("singleValidSignatureTM.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "singleValidSignatureTM.ddoc", "POLv3"))
@@ -873,7 +873,7 @@ public class ValidationRequestIT extends SiVaRestTests {
      * File: not relevant
      */
     @Test
-    public void validationRequestRandomInputAsDdocDocument() {
+    void validationRequestRandomInputAsDdocDocument() {
         String encodedString = "ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA==";
         post(validationRequestWithValidKeys(encodedString, "some_pdf.ddoc", "POlv3"))
                 .then()

@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
-public class HashcodeValidationRequestToProxyDocumentTransformerTest {
+class HashcodeValidationRequestToProxyDocumentTransformerTest {
 
     private static final String SIGNATURE_FILE = "test-files/signatures0.xml";
     public static final String DEFAULT_SIGNATURE_POLICY = null;
@@ -48,7 +48,7 @@ public class HashcodeValidationRequestToProxyDocumentTransformerTest {
     private HashcodeValidationRequestToProxyDocumentTransformer transformer = new HashcodeValidationRequestToProxyDocumentTransformer();
 
     @Test
-    public void contentIsCorrectlyTransformedToBytes() throws IOException, URISyntaxException {
+    void contentIsCorrectlyTransformedToBytes() throws IOException, URISyntaxException {
 
         SignatureFile signatureFile = createSignatureFile(getSignature(), Collections.emptyList());
         MockHashcodeValidationRequest validationRequest = createHashcodeValidationRequest(null, Collections.singletonList(signatureFile));
@@ -58,7 +58,7 @@ public class HashcodeValidationRequestToProxyDocumentTransformerTest {
     }
 
     @Test
-    public void reportTypeDefaultsToSimple() throws URISyntaxException, IOException {
+    void reportTypeDefaultsToSimple() throws URISyntaxException, IOException {
         SignatureFile signatureFile = createSignatureFile(getSignature(), Collections.emptyList());
         MockHashcodeValidationRequest validationRequest = createHashcodeValidationRequest(null, Collections.singletonList(signatureFile));
         assertNull(validationRequest.getReportType());
@@ -67,7 +67,7 @@ public class HashcodeValidationRequestToProxyDocumentTransformerTest {
     }
 
     @Test
-    public void reportTypeRemainsUnchangedIfNotNull() throws URISyntaxException, IOException {
+    void reportTypeRemainsUnchangedIfNotNull() throws URISyntaxException, IOException {
         SignatureFile signatureFile = createSignatureFile(getSignature(), Collections.emptyList());
         MockHashcodeValidationRequest validationRequest = createHashcodeValidationRequest("Detailed", Collections.singletonList(signatureFile));
         ProxyRequest proxyRequest = transformer.transform(validationRequest);
@@ -75,7 +75,7 @@ public class HashcodeValidationRequestToProxyDocumentTransformerTest {
     }
 
     @Test
-    public void reportTypeIsCaseInsensitive() throws URISyntaxException, IOException {
+    void reportTypeIsCaseInsensitive() throws URISyntaxException, IOException {
 
         SignatureFile signatureFile = createSignatureFile(getSignature(), Collections.emptyList());
         MockHashcodeValidationRequest validationRequest = createHashcodeValidationRequest("simple", Collections.singletonList(signatureFile));
@@ -91,7 +91,7 @@ public class HashcodeValidationRequestToProxyDocumentTransformerTest {
     }
 
     @Test
-    public void signaturePolicyRemainsUnchanged() throws IOException, URISyntaxException {
+    void signaturePolicyRemainsUnchanged() throws IOException, URISyntaxException {
         SignatureFile signatureFile = createSignatureFile(getSignature(), Collections.emptyList());
         MockHashcodeValidationRequest validationRequest = createHashcodeValidationRequest(null, Collections.singletonList(signatureFile));
         ProxyRequest proxyRequest = transformer.transform(validationRequest);
@@ -99,7 +99,7 @@ public class HashcodeValidationRequestToProxyDocumentTransformerTest {
     }
 
     @Test
-    public void dataFilesTransformedCorrectlyWhileValuesRemainingUnchanged() throws URISyntaxException, IOException {
+    void dataFilesTransformedCorrectlyWhileValuesRemainingUnchanged() throws URISyntaxException, IOException {
         Datafile datafile1 = new Datafile();
         datafile1.setFilename("test.pdf");
         datafile1.setHashAlgo("SHA256");

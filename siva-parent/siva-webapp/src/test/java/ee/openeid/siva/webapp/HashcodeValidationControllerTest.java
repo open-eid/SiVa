@@ -48,7 +48,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 @ExtendWith(MockitoExtension.class)
-public class HashcodeValidationControllerTest {
+class HashcodeValidationControllerTest {
 
     private HashcodeValidationRequestToProxyDocumentTransformerSpy hashRequestTransformerSpy = new HashcodeValidationRequestToProxyDocumentTransformerSpy();
 
@@ -73,7 +73,7 @@ public class HashcodeValidationControllerTest {
     }
 
     @Test
-    public void requestWithEmptySignatureFiles() throws Exception {
+    void requestWithEmptySignatureFiles() throws Exception {
         JSONObject request = new JSONObject();
 
         mockMvc.perform(post("/validateHashcode")
@@ -83,7 +83,7 @@ public class HashcodeValidationControllerTest {
     }
 
     @Test
-    public void validHashJsonIsCorrectlyMappedToPOJO() throws Exception {
+    void validHashJsonIsCorrectlyMappedToPOJO() throws Exception {
         Datafile datafile1 = createDatafile("test-name-1", "test-hash-1", "SHA256");
         Datafile datafile2 = createDatafile("test-name-2", "test-hash-2", "SHA512");
         List<SignatureFile> signatureFiles = createSignatureFiles("QVNE", createDatafiles(datafile1, datafile2));
@@ -100,7 +100,7 @@ public class HashcodeValidationControllerTest {
     }
 
     @Test
-    public void hashRequestWithNonBase64EncodedSignatureReturnsErroneousResponse() throws Exception {
+    void hashRequestWithNonBase64EncodedSignatureReturnsErroneousResponse() throws Exception {
         List<SignatureFile> signatureFiles = createSignatureFiles("ÖÕ::žšPQ;ÜÜ", createValidDatafiles());
         JSONObject request = hashcodeValidationRequest(signatureFiles);
         mockMvc.perform(post("/validateHashcode")
@@ -110,7 +110,7 @@ public class HashcodeValidationControllerTest {
     }
 
     @Test
-    public void hashRequestWithInvalidHashAlgoReturnsErroneousResponse() throws Exception {
+    void hashRequestWithInvalidHashAlgoReturnsErroneousResponse() throws Exception {
         List<Datafile> datafiles = createDatafiles(createDatafile("test", "test-hash-1", "invalid"));
         List<SignatureFile> signatureFiles = createSignatureFiles("test", datafiles);
         JSONObject request = hashcodeValidationRequest(signatureFiles);
@@ -121,7 +121,7 @@ public class HashcodeValidationControllerTest {
     }
 
     @Test
-    public void emptyDataFilesListReturnsErrorResponse() throws Exception {
+    void emptyDataFilesListReturnsErrorResponse() throws Exception {
         List<Datafile> datafiles = new ArrayList<>();
         List<SignatureFile> signatureFiles = createSignatureFiles("test", datafiles);
         JSONObject request = hashcodeValidationRequest(signatureFiles);
@@ -132,7 +132,7 @@ public class HashcodeValidationControllerTest {
     }
 
     @Test
-    public void nullDataFilesListReturnsErrorResponse() throws Exception {
+    void nullDataFilesListReturnsErrorResponse() throws Exception {
         List<Datafile> datafiles = null;
         List<SignatureFile> signatureFiles = createSignatureFiles("test", datafiles);
         JSONObject request = hashcodeValidationRequest(signatureFiles);
@@ -143,7 +143,7 @@ public class HashcodeValidationControllerTest {
     }
 
     @Test
-    public void hashRequestWithNonBase64EncodedHashReturnsErroneousResponse() throws Exception {
+    void hashRequestWithNonBase64EncodedHashReturnsErroneousResponse() throws Exception {
         List<Datafile> datafiles = createDatafiles(createDatafile("test", "ÖÕ::žšPQ;ÜÜ", "SHA256"));
         List<SignatureFile> signatureFiles = createSignatureFiles("test", datafiles);
         JSONObject request = hashcodeValidationRequest(signatureFiles);
@@ -155,7 +155,7 @@ public class HashcodeValidationControllerTest {
 
     private static class HashcodeValidationProxySpy extends HashcodeValidationProxy {
 
-        public HashcodeValidationProxySpy(StatisticsService statisticsService, ApplicationContext applicationContext, Environment environment) {
+        HashcodeValidationProxySpy(StatisticsService statisticsService, ApplicationContext applicationContext, Environment environment) {
             super(statisticsService, applicationContext, environment);
         }
 

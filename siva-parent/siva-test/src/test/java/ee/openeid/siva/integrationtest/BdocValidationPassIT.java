@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
 import static ee.openeid.siva.integrationtest.TestData.*;
 
 @Tag("IntegrationTest")
-public class BdocValidationPassIT extends SiVaRestTests {
+class BdocValidationPassIT extends SiVaRestTests {
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "bdoc/live/timemark/";
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
 
@@ -49,7 +49,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
      * File: Valid_ID_sig.bdoc
      */
     @Test
-    public void validSignature() {
+    void validSignature() {
         post(validationRequestFor("Valid_ID_sig.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
@@ -79,7 +79,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
-    public void validMultipleSignatures() {
+    void validMultipleSignatures() {
         post(validationRequestFor("Valid_IDCard_MobID_signatures.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
@@ -106,8 +106,8 @@ public class BdocValidationPassIT extends SiVaRestTests {
      * File: bdoc_weak_warning_sha1.bdoc
      */
     @Test
-    @Disabled //TODO: New file needed. This one has different mimetype value in manifest.xml and signature.xml
-    public void validSignatureWithWarning() {
+    @Disabled(/*TODO:*/"New file needed. This one has different mimetype value in manifest.xml and signature.xml")
+    void validSignatureWithWarning() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("bdoc_weak_warning_sha1.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -132,7 +132,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
      * File: EE_SER-AEX-B-LT-V-30.asice
      */
     @Test
-    public void bdocDifferentCertificateCountries() {
+    void bdocDifferentCertificateCountries() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("EE_SER-AEX-B-LT-V-30.asice",null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -165,7 +165,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
      * File: 24050_short_ecdsa_correct_file_mimetype.bdoc
      */
     @Test
-    public void bdocEccSha256signature() {
+    void bdocEccSha256signature() {
         post(validationRequestFor("24050_short_ecdsa_correct_file_mimetype.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
@@ -189,7 +189,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
      * File: EE_SER-AEX-B-LT-V-49.asice
      */
     @Test
-    public void bdocBaselineLtProfileValidSignature() {
+    void bdocBaselineLtProfileValidSignature() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("EE_SER-AEX-B-LT-V-49.asice", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -213,7 +213,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
      * File: ValidLiveSignature.asice
      */
     @Test
-    public void bdocQESProfileValidSignature() {
+    void bdocQESProfileValidSignature() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("ValidLiveSignature.asice", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -238,7 +238,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
      * File: EE_SER-AEX-B-LT-V-2.asice
      */
     @Test
-    public void bdocWithEccSha256ValidSignature() {
+    void bdocWithEccSha256ValidSignature() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("EE_SER-AEX-B-LT-V-2.asice", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -262,7 +262,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
      * File: IB-4270_TS_ESTEID-SK 2015  SK OCSP RESPONDER 2011.asice
      */
     @Test
-    public void bdocSk2015CertificateChainValidSignature() {
+    void bdocSk2015CertificateChainValidSignature() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("IB-4270_TS_ESTEID-SK 2015  SK OCSP RESPONDER 2011.asice", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -287,7 +287,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
      * File: EE_SER-AEX-B-LT-V-28.asice
      */
     @Test
-    public void bdocKlass3Sk2010CertificateChainValidSignature() {
+    void bdocKlass3Sk2010CertificateChainValidSignature() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("EE_SER-AEX-B-LT-V-28.asice", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -313,7 +313,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
      * File: BDOC2.1.bdoc
      */
     @Test
-    public void bdocEsteidSk2011CertificateChainQesBaselineLtTmValidSignature() {
+    void bdocEsteidSk2011CertificateChainQesBaselineLtTmValidSignature() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("BDOC2.1.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -338,7 +338,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
      * File: Test_id_aa.asice
      */
     @Test
-    public void bdocTsValidMultipleSignatures() {
+    void bdocTsValidMultipleSignatures() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("Test_id_aa.asice",null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -363,7 +363,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
      * File: Šužlikud sõid ühe õuna ära.bdoc
      */
     @Test
-    public void bdocWithSpecialCharactersInDataFileShouldPass() {
+    void bdocWithSpecialCharactersInDataFileShouldPass() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("Šužlikud sõid ühe õuna ära.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -389,7 +389,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
      * File: BDOC2.1_content_as_sce.sce
      */
     @Test
-    public void bdocWithSceFileExtensionShouldPass() {
+    void bdocWithSceFileExtensionShouldPass() {
 
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDD4j("BDOC2.1_content_as_sce.sce", null, null))
@@ -417,7 +417,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
      * File: Nonconventionalcharacters.asice
      */
     @Test
-    public void asiceWithSpecialCharactersInDataFileShouldPass() {
+    void asiceWithSpecialCharactersInDataFileShouldPass() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("Nonconventionalcharacters.asice", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -446,7 +446,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
      * File: testECCDemo.bdoc
      */
     @Test
-    public void bdocWithEccTimeMarkShouldPass() {
+    void bdocWithEccTimeMarkShouldPass() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestFor("testECCDemo.bdoc", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -475,7 +475,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
      * File: Mac_AS0099904_EsimeneAmetlikSKTestElliptilistega_TS.asice
      */
     @Test
-    public void bdocWithEccTimeStampShouldPass() {
+    void bdocWithEccTimeStampShouldPass() {
 
         setTestFilesDirectory("bdoc/test/timestamp/");
         post(validationRequestForDD4j("Mac_AS0099904_EsimeneAmetlikSKTestElliptilistega_TS.asice", null, null))
@@ -502,7 +502,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
      * File: EE_SER-AEX-B-LT-V-33.bdoc
      */
     @Test
-    public void bdocInvalidMimeTypeCharsShouldPass() {
+    void bdocInvalidMimeTypeCharsShouldPass() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("EE_SER-AEX-B-LT-V-33.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -528,7 +528,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
      * File: 23147_weak-warning-sha1-invalid-mimetype-in-manifest.bdoc
      */
     @Test
-    public void bdocMalformedBdocWithInvalidMimetypeInManifestShouldPass() {
+    void bdocMalformedBdocWithInvalidMimetypeInManifestShouldPass() {
         post(validationRequestFor("23147_weak-warning-sha1-invalid-mimetype-in-manifest.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-E"))
@@ -553,7 +553,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
      */
 
     @Test
-    public void validSignatureTestOfOCSPResponder2020ForTimeMarkShouldPass() {
+    void validSignatureTestOfOCSPResponder2020ForTimeMarkShouldPass() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestFor("test_of_OCSP_responder_2020.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -584,7 +584,7 @@ public class BdocValidationPassIT extends SiVaRestTests {
      * File: signed-container-with-empty-datafiles.bdoc
      */
     @Test
-    public void bdocWithEmptyDataFilesShouldPass() {
+    void bdocWithEmptyDataFilesShouldPass() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestFor("signed-container-with-empty-datafiles.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)

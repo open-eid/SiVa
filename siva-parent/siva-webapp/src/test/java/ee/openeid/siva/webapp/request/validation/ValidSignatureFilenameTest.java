@@ -21,7 +21,7 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
-public class ValidSignatureFilenameTest extends AnnotationValidatorTestBase {
+class ValidSignatureFilenameTest extends AnnotationValidatorTestBase {
 
     private static final String INVALID_FILENAME = "Invalid filename";
     private static final String INVALID_SIZE = "size must be between 1 and 260";
@@ -29,7 +29,7 @@ public class ValidSignatureFilenameTest extends AnnotationValidatorTestBase {
     private static final String MUST_NOT_BE_BLANK = "must not be blank";
 
     @Test
-    public void validFilename() {
+    void validFilename() {
         validSignatureFilename("a.xml");
         validSignatureFilename(StringUtils.repeat('a', 260 - 4) + ".xml");
         validSignatureFilename("qwertyuiopüõasdfghjklöäzxcvbnm><1234567890+#$!}[]()-_.,;€ˇ~^'äöõü§@.xml");
@@ -37,7 +37,7 @@ public class ValidSignatureFilenameTest extends AnnotationValidatorTestBase {
     }
 
     @Test
-    public void invalidFilename() {
+    void invalidFilename() {
         invalidSignatureFilename("", INVALID_SIZE, INVALID_FILENAME_EXTENSION, MUST_NOT_BE_BLANK);
         invalidSignatureFilename(" ", INVALID_FILENAME_EXTENSION, MUST_NOT_BE_BLANK);
         invalidSignatureFilename(null, INVALID_FILENAME, INVALID_FILENAME_EXTENSION, MUST_NOT_BE_BLANK);

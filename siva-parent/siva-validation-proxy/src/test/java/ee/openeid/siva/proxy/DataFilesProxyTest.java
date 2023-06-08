@@ -42,7 +42,7 @@ import java.util.Collections;
 import java.util.List;
 
 @ExtendWith(SpringExtension.class)
-public class DataFilesProxyTest {
+class DataFilesProxyTest {
 
     private DataFilesProxy dataFilesProxy;
 
@@ -61,7 +61,7 @@ public class DataFilesProxyTest {
     }
 
     @Test
-    public void applicationContextHasNoBeanWithGivenNameThrowsException() {
+    void applicationContextHasNoBeanWithGivenNameThrowsException() {
         given(applicationContext.getBean(anyString())).willThrow(new NoSuchBeanDefinitionException("Bean not loaded"));
         ProxyDocument proxyDocument = mockProxyDocumentWithDocument("filename.bdoc");
 
@@ -75,7 +75,7 @@ public class DataFilesProxyTest {
     }
 
     @Test
-    public void ProxyDocumentWithDDOCDocumentTypeShouldReturnDataFilesReport() {
+    void ProxyDocumentWithDDOCDocumentTypeShouldReturnDataFilesReport() {
         when(applicationContext.getBean(DDOCDataFilesService.class.getSimpleName())).thenReturn(dataFilesServiceSpy);
 
         ProxyDocument proxyDocument = mockProxyDocumentWithDocument("filename.ddoc");
@@ -84,7 +84,7 @@ public class DataFilesProxyTest {
     }
 
     @Test
-    public void dataFilesProxyDoesNotDependOnRequestReportTypeAndAlwaysReturnsDataFilesReport() {
+    void dataFilesProxyDoesNotDependOnRequestReportTypeAndAlwaysReturnsDataFilesReport() {
         when(applicationContext.getBean(DDOCDataFilesService.class.getSimpleName())).thenReturn(dataFilesServiceSpy);
         ProxyDocument proxyDocument = mockProxyDocumentWithDocument("filename.ddoc");
 

@@ -123,7 +123,7 @@ public class RevocationFreshnessValidator {
     }
 
     private static Predicate<Date> notAfterPredicateWithSamePrecision(final Date referenceTime) {
-        return (timeToCompare) -> {
+        return timeToCompare -> {
             Instant referenceInstant = referenceTime.toInstant();
             Instant instantToCompare = timeToCompare.toInstant();
 

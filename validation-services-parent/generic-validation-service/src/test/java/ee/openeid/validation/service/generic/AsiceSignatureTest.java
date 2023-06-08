@@ -11,17 +11,23 @@ import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.stream.Stream;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 @SpringBootTest(classes = {PDFValidationServiceTest.TestConfiguration.class})
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
-public class AsiceSignatureTest {
+class AsiceSignatureTest {
 
     private static final String TEST_FILES_LOCATION = "test-files/";
 
@@ -51,7 +57,7 @@ public class AsiceSignatureTest {
     }
 
     @Test
-    public void populatesTimeAssertionMessageImprintForTMAsice() {
+    void populatesTimeAssertionMessageImprintForTMAsice() {
         SimpleReport simpleReport = validationService
                 .validateDocument(buildValidationDocument("bdoc_tm_valid_2_signatures.asice"))
                 .getSimpleReport();
@@ -62,34 +68,23 @@ public class AsiceSignatureTest {
         assertEquals("MDEwDQYJYIZIAWUDBAIBBQAEIDDnPj4HDgSwi+tj/s30GshbBf1L8Nqnt2GMK+6VnEdt", imprint2);
     }
 
-    @Test
-    public void populatesTimeAssertionMessageImprintForTSAsice() {
+    @ParameterizedTest
+    @MethodSource("getFileNameAndExpectedResult")
+    void populatesTimeAssertionMessageImprint(String fileName, String expectedResult) {
         SimpleReport simpleReport = validationService
-                .validateDocument(buildValidationDocument("TS.asice"))
+                .validateDocument(buildValidationDocument(fileName))
                 .getSimpleReport();
         String imprint = simpleReport.getValidationConclusion().getSignatures().get(0).getInfo().getTimeAssertionMessageImprint();
 
-        assertEquals("MDEwDQYJYIZIAWUDBAIBBQAEIE541TO5ZHHgKv60XxTXJX0Qg04pjs4uN8bELnDUDFp1", imprint);
+        assertEquals(expectedResult, imprint);
     }
 
-    @Test
-    public void timeAssertionMessageImprintIsEmptyForMissingTimestamp() {
-        SimpleReport simpleReport = validationService
-                .validateDocument(buildValidationDocument("asice_TS_missing_timestamp_signature.xml"))
-                .getSimpleReport();
-        String imprint = simpleReport.getValidationConclusion().getSignatures().get(0).getInfo().getTimeAssertionMessageImprint();
-
-        assertEquals("", imprint);
-    }
-
-    @Test
-    public void timeAssertionMessageImprintIsEmptyForMissingOcspData() {
-        SimpleReport simpleReport = validationService
-                .validateDocument(buildValidationDocument("asice_TM_missing_ocsp_signature.xml"))
-                .getSimpleReport();
-        String imprint = simpleReport.getValidationConclusion().getSignatures().get(0).getInfo().getTimeAssertionMessageImprint();
-
-        assertEquals("", imprint);
+    private static Stream<Arguments> getFileNameAndExpectedResult() {
+        return Stream.of(
+                arguments("TS.asice", "MDEwDQYJYIZIAWUDBAIBBQAEIE541TO5ZHHgKv60XxTXJX0Qg04pjs4uN8bELnDUDFp1"),
+                arguments("asice_TS_missing_timestamp_signature.xml", ""),
+                arguments("asice_TM_missing_ocsp_signature.xml", "")
+        );
     }
 
     static ValidationDocument buildValidationDocument(String testFile) {

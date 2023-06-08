@@ -20,12 +20,12 @@ import ee.openeid.siva.webapp.request.validation.annotations.ValidReportType;
 import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
 
-public class ValidReportTypeTest extends AnnotationValidatorTestBase {
+class ValidReportTypeTest extends AnnotationValidatorTestBase {
 
     private static final String INVALID_REPORT_TYPE = "Invalid report type";
 
     @Test
-    public void validReportTypes() {
+    void validReportTypes() {
         validReportType("simple");
         validReportType("simPLE");
         validReportType("SIMPLE");
@@ -42,7 +42,7 @@ public class ValidReportTypeTest extends AnnotationValidatorTestBase {
     }
 
     @Test
-    public void invalidReportTypes() {
+    void invalidReportTypes() {
         invalidReportType("simple1", INVALID_REPORT_TYPE);
         invalidReportType("", INVALID_REPORT_TYPE);
         invalidReportType(" ", INVALID_REPORT_TYPE);

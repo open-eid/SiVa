@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
-public class StatisticsToLogsManualIT extends SiVaRestTests {
+class StatisticsToLogsManualIT extends SiVaRestTests {
 
     @BeforeEach
     public void DirectoryBackToDefault() {
@@ -57,7 +57,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
-    public void bdocWithValidSignatures() {
+    void bdocWithValidSignatures() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "Valid_IDCard_MobID_signatures.bdoc", VALID_SIGNATURE_POLICY_3), "XAuthTest")
                 .then()
@@ -94,7 +94,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      * File: SS-4_teadmataCA.4.asice
      */
     @Test
-    public void bdocWithInvalidSignatures() {
+    void bdocWithInvalidSignatures() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("SS-4_teadmataCA.4.asice"));
         postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "SS-4_teadmataCA.4.asice", VALID_SIGNATURE_POLICY_3), "XAuthTest")
                 .then()
@@ -131,7 +131,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      */
     @Test
     @Disabled("SIVA-352 - remark 8")
-    public void bdocWithErrorResponse() {
+    void bdocWithErrorResponse() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
         post(validationRequestWithValidKeys(encodedString, "xroad-simple.bdoc", "POLv3"))
@@ -155,7 +155,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      * File: Baltic MoU digital signing_EST_LT_LV.bdoc
      */
     @Test
-    public void bdocWithSignaturesFromDifferentCountries() {
+    void bdocWithSignaturesFromDifferentCountries() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Baltic MoU digital signing_EST_LT_LV.bdoc"));
         postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "Baltic MoU digital signing_EST_LT_LV.bdoc", VALID_SIGNATURE_POLICY_3), "XAuthTest")
                 .then()
@@ -193,7 +193,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      * File: valid_XML1_3.ddoc
      */
     @Test
-    public void ddocWithValidSignatures() {
+    void ddocWithValidSignatures() {
         setTestFilesDirectory("ddoc/test/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("valid_XML1_3.ddoc"));
         postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "valid_XML1_3.ddoc", VALID_SIGNATURE_POLICY_3), "XAuthTest")
@@ -230,7 +230,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      * File: ilma_kehtivuskinnituseta.ddoc
      */
     @Test
-    public void ddocWithInvalidSignatures() {
+    void ddocWithInvalidSignatures() {
         setTestFilesDirectory("ddoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("ilma_kehtivuskinnituseta.ddoc"));
         postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "ilma_kehtivuskinnituseta.ddoc", VALID_SIGNATURE_POLICY_3), "XAuthTest")
@@ -267,7 +267,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      * File: xroad-simple.asice
      */
     @Test
-    public void ddocWithErrorResponse() {
+    void ddocWithErrorResponse() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
         post(validationRequestWithValidKeys(encodedString, "xroad-simple.ddoc", "POLv3"))
@@ -291,7 +291,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      * File: Belgia_kandeavaldus_LIV.ddoc
      */
     @Test
-    public void ddocWithSignaturesFromDifferentCountries() {
+    void ddocWithSignaturesFromDifferentCountries() {
         setTestFilesDirectory("ddoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Belgia_kandeavaldus_LIV.ddoc"));
         postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "Belgia_kandeavaldus_LIV.ddoc", VALID_SIGNATURE_POLICY_3), "XAuthTest")
@@ -329,7 +329,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      * File: pades_lt_two_valid_sig.pdf
      */
     @Test
-    public void pdfWithValidSignatures() {
+    void pdfWithValidSignatures() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades_lt_two_valid_sig.pdf"));
         postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "pades_lt_two_valid_sig.pdf", VALID_SIGNATURE_POLICY_3), "XAuthTest")
@@ -367,7 +367,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      * File: hellopades-lt1-lt2-wrongDigestValue.pdf
      */
     @Test
-    public void pdfWithInvalidSignatures() {
+    void pdfWithInvalidSignatures() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt1-lt2-wrongDigestValue.pdf"));
         postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "hellopades-lt1-lt2-wrongDigestValue.pdf", VALID_SIGNATURE_POLICY_3), "XAuthTest")
@@ -405,7 +405,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      * File: Regulatione-signedbyco-legislators.pdf
      */
     @Test
-    public void pdfWithSignaturesFromDifferentCountries() {
+    void pdfWithSignaturesFromDifferentCountries() {
         setTestFilesDirectory("pdf/signing_certifacte_test_files/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Regulatione-signedbyco-legislators.pdf"));
         postWithXAuthUsrHeader(validationRequestWithValidKeys(encodedString, "Regulatione-signedbyco-legislators.pdf", VALID_SIGNATURE_POLICY_3), "XAuthTest")
@@ -443,7 +443,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      * File: ValidBDOCinsideAsics.asics
      */
     @Test
-    public void asicsWithValidSignatures() {
+    void asicsWithValidSignatures() {
         setTestFilesDirectory("asics/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("ValidBDOCinsideAsics.asics"));
         post(validationRequestWithValidKeys(encodedString, "ValidBDOCinsideAsics.asics", "POLv4"))
@@ -476,7 +476,7 @@ public class StatisticsToLogsManualIT extends SiVaRestTests {
      * File: TwoDataFilesAsics.asics
      */
     @Test
-    public void asicWithErrorResponse() {
+    void asicWithErrorResponse() {
         setTestFilesDirectory("asics/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("TwoDataFilesAsics.asics"));
         post(validationRequestWithValidKeys(encodedString, "TwoDataFilesAsics.asics", "POLv4"))

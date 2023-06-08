@@ -42,11 +42,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 
-public class AsicContainerDataFileSizeValidatorTest {
+class AsicContainerDataFileSizeValidatorTest {
 
     @ParameterizedTest
     @MethodSource("listsOfDataFiles")
-    public void testEntryIsNeverReadIfNotDataFile(List<String> dataFiles) throws IOException {
+    void testEntryIsNeverReadIfNotDataFile(List<String> dataFiles) throws IOException {
         List<XmlMessage> signatureWarnings = new ArrayList<>();
         AsicContainerDataFileSizeValidator validator = createValidatorFor(dataFiles, Map.of("123", signatureWarnings));
         ZipEntry nonDataFileEntry = createZipEntryMockWithName("non-datafile");
@@ -69,7 +69,7 @@ public class AsicContainerDataFileSizeValidatorTest {
 
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 2, 5, 10})
-    public void testWarningsOfEmptyDataFilesAreAddedToAllSignatures(int signatureCount) throws IOException {
+    void testWarningsOfEmptyDataFilesAreAddedToAllSignatures(int signatureCount) throws IOException {
         Map<String, byte[]> dataFileMappings = new LinkedHashMap<>();
         dataFileMappings.put("data-file-1", new byte[] {0});
         dataFileMappings.put("empty-data-file-2", new byte[0]);
@@ -115,7 +115,7 @@ public class AsicContainerDataFileSizeValidatorTest {
     }
 
     @Test
-    public void testWarningOfEmptyDataFileIsAppendedToExistingWarnings() throws IOException {
+    void testWarningOfEmptyDataFileIsAppendedToExistingWarnings() throws IOException {
         List<XmlMessage> signatureWarnings = TestXmlDetailUtils.createMessageList(
                 TestXmlDetailUtils.createMessage("Key 1", "Existing warning 1"),
                 TestXmlDetailUtils.createMessage("Key 2", "Existing warning 2")

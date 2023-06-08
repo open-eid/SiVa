@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 import static ee.openeid.siva.integrationtest.TestData.*;
 
 @Tag("IntegrationTest")
-public class AsiceValidationPassIT extends SiVaRestTests {
+class AsiceValidationPassIT extends SiVaRestTests {
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "bdoc/live/timestamp/";
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
 
@@ -47,7 +47,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      * File: ValidLiveSignature.asice
      */
     @Test
-    public void validAsiceSingleSignature() {
+    void validAsiceSingleSignature() {
         post(validationRequestFor("ValidLiveSignature.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
@@ -83,7 +83,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      * File: BDOC-TS.asice
      */
     @Test
-    public void validAsiceMultipleSignatures() {
+    void validAsiceMultipleSignatures() {
         post(validationRequestFor("BDOC-TS.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
@@ -110,7 +110,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      * File: EE_SER-AEX-B-LT-V-30.asice
      */
     @Test
-    public void asiceDifferentCertificateCountries() {
+    void asiceDifferentCertificateCountries() {
         post(validationRequestFor("EE_SER-AEX-B-LT-V-30.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
@@ -148,7 +148,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      * File: EE_SER-AEX-B-LT-V-49.asice
      */
     @Test
-    public void asiceBaselineLtProfileValidSignature() {
+    void asiceBaselineLtProfileValidSignature() {
         post(validationRequestFor("EE_SER-AEX-B-LT-V-49.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
@@ -183,7 +183,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      * File: EE_SER-AEX-B-LT-V-2.asice
      */
     @Test
-    public void asiceWithEccSha256ValidSignature() {
+    void asiceWithEccSha256ValidSignature() {
         post(validationRequestFor("EE_SER-AEX-B-LT-V-2.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
@@ -207,7 +207,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      * File: IB-4270_TS_ESTEID-SK 2015  SK OCSP RESPONDER 2011.asice
      */
     @Test
-    public void asiceSk2015CertificateChainValidSignature() {
+    void asiceSk2015CertificateChainValidSignature() {
         post(validationRequestFor("IB-4270_TS_ESTEID-SK 2015  SK OCSP RESPONDER 2011.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
@@ -242,7 +242,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      * File: EE_SER-AEX-B-LT-V-28.asice
      */
     @Test
-    public void asiceKlass3Sk2010CertificateChainValidSignature() {
+    void asiceKlass3Sk2010CertificateChainValidSignature() {
         post(validationRequestFor("EE_SER-AEX-B-LT-V-28.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
@@ -283,7 +283,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      * File: ASICE_TS_LTA_content_as_sce.sce
      */
     @Test
-    public void asiceWithSceFileExtensionShouldPass() {
+    void asiceWithSceFileExtensionShouldPass() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         post(validationRequestFor("3_signatures_TM_LT_LTA.sce"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -315,7 +315,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      * File: Nonconventionalcharacters.asice
      */
     @Test
-    public void asiceWithSpecialCharactersInDataFileShouldPass() {
+    void asiceWithSpecialCharactersInDataFileShouldPass() {
         post(validationRequestFor("Nonconventionalcharacters.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
@@ -344,7 +344,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      * File: Mac_AS0099904_EsimeneAmetlikSKTestElliptilistega_TS.asice
      */
     @Test
-    public void asiceEccSignatureShouldPass() {
+    void asiceEccSignatureShouldPass() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         post(validationRequestFor("Mac_AS0099904_EsimeneAmetlikSKTestElliptilistega_TS.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -373,7 +373,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      * File: PSS-signature.asice
      */
     @Test
-    public void asicePssSignatureShouldPass() {
+    void asicePssSignatureShouldPass() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         post(validationRequestFor("PSS-signature.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -403,7 +403,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      * File: signed-container-with-empty-datafiles.asice
      */
     @Test
-    public void asiceWithEmptyDataFilesShouldPass() {
+    void asiceWithEmptyDataFilesShouldPass() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         post(validationRequestFor("signed-container-with-empty-datafiles.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -439,7 +439,7 @@ public class AsiceValidationPassIT extends SiVaRestTests {
      */
 
     @Test
-    public void validSignatureSignerCertDoNotHavePersonalNumberInCnShouldPass() {
+    void validSignatureSignerCertDoNotHavePersonalNumberInCnShouldPass() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         post(validationRequestFor("validSidSignatureWithCertWithoutPnoInCn.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)

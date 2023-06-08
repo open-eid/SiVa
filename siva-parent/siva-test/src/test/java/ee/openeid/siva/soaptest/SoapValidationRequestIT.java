@@ -29,7 +29,7 @@ import static ee.openeid.siva.integrationtest.TestData.*;
 import static org.hamcrest.Matchers.*;
 
 @Tag("IntegrationTest")
-public class SoapValidationRequestIT extends SiVaSoapTests {
+class SoapValidationRequestIT extends SiVaSoapTests {
 
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "document_format_test_files/";
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
@@ -53,7 +53,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: not relevant
      */
     @Test
-    public void soapValidationRequestEmptyInputs() {
+    void soapValidationRequestEmptyInputs() {
         post(validationRequestForDocumentExtended("", "", "", ""))
                 .then()
                 .statusCode(200)
@@ -75,7 +75,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: not relevant
      */
     @Test
-    public void soapValidationRequestNonBase64Input() {
+    void soapValidationRequestNonBase64Input() {
         String encodedString = ",:";
         post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.ddoc", "DDOC", VALID_SIGNATURE_POLICY_3))
                 .then()
@@ -98,7 +98,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
-    public void soapValidationRequestDocumentTypeShouldReturnError() {
+    void soapValidationRequestDocumentTypeShouldReturnError() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", "XROAD", VALID_SIGNATURE_POLICY_3))
                 .then()
@@ -121,7 +121,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
-    public void soapValidationRequestLongFilename() {
+    void soapValidationRequestLongFilename() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         String filename = StringUtils.repeat("a", 250) + ".bdoc";
         post(validationRequestForDocumentExtended(encodedString, filename, null, VALID_SIGNATURE_POLICY_4))
@@ -143,7 +143,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: not relevant
      */
     @Test
-    public void soapValidationRequestEmptyBody() {
+    void soapValidationRequestEmptyBody() {
         String emptyRequestBody = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
                 "   <soapenv:Header/>\n" +
                 "   <soapenv:Body>\n" +
@@ -170,7 +170,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
-    public void soapValidationRequestExtraKeyBetweenValues() {
+    void soapValidationRequestExtraKeyBetweenValues() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         String requestBody = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
                 "   <soapenv:Header/>\n" +
@@ -205,7 +205,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
-    public void soapValidationRequestExtraKeyAtTheEnd() {
+    void soapValidationRequestExtraKeyAtTheEnd() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         String requestBody = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
                 "   <soapenv:Header/>\n" +
@@ -241,7 +241,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
-    public void soapValidationRequestUnusualChars() {
+    void soapValidationRequestUnusualChars() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestForDocumentExtended(encodedString, "ÕValid_IDCard_MobID_signatures.bdocÄÖÜ", null, VALID_SIGNATURE_POLICY_3))
                 .then()
@@ -262,7 +262,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
-    public void soapValidationRequestNoPolicyKey() {
+    void soapValidationRequestNoPolicyKey() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         String requestBody = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
                 "   <soapenv:Header/>\n" +
@@ -294,7 +294,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
-    public void soapValidationRequestWithXmlExpansionAttack() {
+    void soapValidationRequestWithXmlExpansionAttack() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         String requestBody =
                 "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
@@ -338,10 +338,10 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
-    public void soapValidationRequestXmlEntityAttack() {
+    void soapValidationRequestXmlEntityAttack() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         String requestBody = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
-                "<!DOCTYPE SignaturePolicy PUBLIC \"-//VSR//PENTEST//EN\" \"http://localhost:1234/\">" +
+                "<!DOCTYPE SignaturePolicy \"-//VSR//PENTEST//EN\" \"http://localhost:1234/\">" +
                 "   <soapenv:Header/>\n" +
                 "   <soapenv:Body>\n" +
                 "      <soap:ValidateDocument>\n" +
@@ -373,7 +373,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: not relevant
      */
     @Test
-    public void soapValidationRequestWithEmptyDocument() {
+    void soapValidationRequestWithEmptyDocument() {
         post(validationRequestForDocumentExtended("", "Valid_IDCard_MobID_signatures.bdoc", null, VALID_SIGNATURE_POLICY_3))
                 .then()
                 .statusCode(200)
@@ -395,7 +395,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
-    public void soapValidationRequestWithEmptyFilename() {
+    void soapValidationRequestWithEmptyFilename() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestForDocumentExtended(encodedString, "", null, VALID_SIGNATURE_POLICY_3))
                 .then()
@@ -418,7 +418,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
-    public void soapValidationWithNotAllowedSignaturePolicyContent() {
+    void soapValidationWithNotAllowedSignaturePolicyContent() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", null, "/"))
                 .then()
@@ -442,7 +442,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
-    public void soapValidationRequestWrongSignaturePolicy() {
+    void soapValidationRequestWrongSignaturePolicy() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", null, INVALID_SIGNATURE_POLICY))
                 .then()
@@ -466,7 +466,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
-    public void soapValidationRequestTooLongSignaturePolicy() {
+    void soapValidationRequestTooLongSignaturePolicy() {
         String filename = "Valid_IDCard_MobID_signatures.bdoc";
         String encodedString = Base64.encodeBase64String(readFileFromTestResources(filename));
         String signaturePolicy = StringUtils.repeat("a", 101);
@@ -492,7 +492,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
-    public void soapValidationRequestTooShortSignaturePolicy() {
+    void soapValidationRequestTooShortSignaturePolicy() {
         String filename = "Valid_IDCard_MobID_signatures.bdoc";
         String encodedString = Base64.encodeBase64String(readFileFromTestResources(filename));
         String signaturePolicy = "";
@@ -518,7 +518,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
-    public void soapValidationRequestTooShortFilename() {
+    void soapValidationRequestTooShortFilename() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         String filename = "";
         String request = validationRequestForDocumentExtended(encodedString, filename, null, VALID_SIGNATURE_POLICY_3);
@@ -543,7 +543,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
-    public void soapValidationRequestTooLongFilename() {
+    void soapValidationRequestTooLongFilename() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         String filename = StringUtils.repeat("a", 261) + ".bdoc";
         String request = validationRequestForDocumentExtended(encodedString, filename, null, VALID_SIGNATURE_POLICY_3);
@@ -568,7 +568,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: not relevant
      */
     @Test
-    public void validationRequestRandomInputAsBdocDocument() {
+    void validationRequestRandomInputAsBdocDocument() {
         String encodedString = "ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA==";
         post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", null, VALID_SIGNATURE_POLICY_3))
                 .then()
@@ -591,7 +591,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
-    public void soapValidationRequestWrongFilename() {
+    void soapValidationRequestWrongFilename() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestForDocumentExtended(encodedString, "TotallyRandomFilename.exe", null, VALID_SIGNATURE_POLICY_3))
                 .then()
@@ -612,7 +612,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: PdfValidSingleSignature.pdf
      */
     @Test
-    public void soapBdocValidationRequestNotMatchingDocumentTypeAndActualFilePdf() {
+    void soapBdocValidationRequestNotMatchingDocumentTypeAndActualFilePdf() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
         post(validationRequestForDocumentExtended(encodedString, "PdfValidSingleSignature.bdoc", null, VALID_SIGNATURE_POLICY_3))
                 .then()
@@ -635,7 +635,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
-    public void soapBdocValidationRequestWrongSignaturePolicy() {
+    void soapBdocValidationRequestWrongSignaturePolicy() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", null, INVALID_SIGNATURE_POLICY))
                 .then()
@@ -658,7 +658,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
-    public void soapBdocValidationRequestCaseInsensitivePolicy() {
+    void soapBdocValidationRequestCaseInsensitivePolicy() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.bdoc", null, SMALL_CASE_VALID_SIGNATURE_POLICY_3))
                 .then()
@@ -679,7 +679,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File:
      */
     @Test
-    public void validationRequestRandomInputAsDdocDocument() {
+    void validationRequestRandomInputAsDdocDocument() {
         String encodedString = "ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA==";
         post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.ddoc", null, VALID_SIGNATURE_POLICY_3))
                 .then()
@@ -702,7 +702,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
-    public void validationRequestNotMatchingDocumentTypeAndActualFileDdocBdoc() {
+    void validationRequestNotMatchingDocumentTypeAndActualFileDdocBdoc() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.ddoc", null, VALID_SIGNATURE_POLICY_3))
                 .then()
@@ -725,7 +725,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
-    public void soapDdocValidationRequestNotMatchingDocumentTypeAndActualFileBdoc() {
+    void soapDdocValidationRequestNotMatchingDocumentTypeAndActualFileBdoc() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.ddoc", null, VALID_SIGNATURE_POLICY_3))
                 .then()
@@ -748,7 +748,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: PdfValidSingleSignature.pdf
      */
     @Test
-    public void soapDdocValidationRequestNotMatchingDocumentTypeAndActualFilePdf() {
+    void soapDdocValidationRequestNotMatchingDocumentTypeAndActualFilePdf() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
         post(validationRequestForDocumentExtended(encodedString, "PdfValidSingleSignature.ddoc", null, VALID_SIGNATURE_POLICY_3))
                 .then()
@@ -771,7 +771,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: igasugust1.3.ddoc
      */
     @Test
-    public void soapDdocValidationRequestWrongSignaturePolicy() {
+    void soapDdocValidationRequestWrongSignaturePolicy() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
         post(validationRequestForDocumentExtended(encodedString, "igasugust1.3.ddoc", null, INVALID_SIGNATURE_POLICY))
                 .then()
@@ -794,7 +794,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: xroad-attachment.asice
      */
     @Test
-    public void soapDdocValidationRequestNotMatchingDocumentTypeAndActualFileXroad() {
+    void soapDdocValidationRequestNotMatchingDocumentTypeAndActualFileXroad() {
         setTestFilesDirectory("xroad/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-attachment.asice"));
         post(validationRequestForDocumentExtended(encodedString, "xroad-attachment.ddoc", null, VALID_SIGNATURE_POLICY_3))
@@ -818,7 +818,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: not relevant
      */
     @Test
-    public void validationRequestRandomInputAsPdfDocument() {
+    void validationRequestRandomInputAsPdfDocument() {
         String encodedString = "ZCxTgQxDET7/lNizNZ4hrB1Ug8I0kKpVDkHEgWqNjcKFMD89LsIpdCkpUEsFBgAAAAAFAAUAPgIAAEM3AAAAAA==";
         post(validationRequestForDocumentExtended(encodedString, "Valid_IDCard_MobID_signatures.pdf", null, VALID_SIGNATURE_POLICY_3))
                 .then()
@@ -841,7 +841,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: PdfValidSingleSignature.pdf
      */
     @Test
-    public void soapPdfValidationRequestWrongSignaturePolicy() {
+    void soapPdfValidationRequestWrongSignaturePolicy() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
         post(validationRequestForDocumentExtended(encodedString, "PdfValidSingleSignature.pdf", null, INVALID_SIGNATURE_POLICY))
                 .then()
@@ -864,7 +864,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File:PdfValidSingleSignature.pdf
      */
     @Test
-    public void soapPDFValidationRequestSimpleReportType() {
+    void soapPDFValidationRequestSimpleReportType() {
         ValidatableResponse response = post(validationRequestForDocumentReportType("PdfValidSingleSignature.pdf", REPORT_TYPE_SIMPLE))
                 .then()
                 .rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
@@ -886,7 +886,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File:PdfValidSingleSignature.pdf
      */
     @Test
-    public void soapPDFValidationRequestDetailedReportType() {
+    void soapPDFValidationRequestDetailedReportType() {
         ValidatableResponse response = post(validationRequestForDocumentReportType("PdfValidSingleSignature.pdf", REPORT_TYPE_DETAILED))
                 .then()
                 .body(SOAP_VALIDATION_CONCLUSION_PREFIX + ".ValidSignaturesCount", is("1"))
@@ -909,7 +909,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File:PdfValidSingleSignature.pdf
      */
     @Test
-    public void soapPDFValidationRequestDiagnosticReportType() {
+    void soapPDFValidationRequestDiagnosticReportType() {
         ValidatableResponse response = post(validationRequestForDocumentReportType("PdfValidSingleSignature.pdf", REPORT_TYPE_DIAGNOSTIC))
                 .then()
                 .body(SOAP_VALIDATION_CONCLUSION_PREFIX + ".ValidSignaturesCount", is("1"))
@@ -931,7 +931,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: testECCDemo.bdoc
      */
     @Test
-    public void soapBDOCValidationRequestSimpleReportType() {
+    void soapBDOCValidationRequestSimpleReportType() {
         setTestFilesDirectory("bdoc/test/timemark/");
         ValidatableResponse response = post(validationRequestForDocumentReportType("testECCDemo.bdoc", REPORT_TYPE_SIMPLE))
                 .then();
@@ -952,7 +952,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: testECCDemo.bdoc
      */
     @Test
-    public void soapBDOCValidationRequestDetailedReportType() {
+    void soapBDOCValidationRequestDetailedReportType() {
         setTestFilesDirectory("bdoc/test/timemark/");
         ValidatableResponse response = post(validationRequestForDocumentReportType("testECCDemo.bdoc", REPORT_TYPE_DETAILED))
                 .then();
@@ -973,7 +973,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: testECCDemo.bdoc
      */
     @Test
-    public void soapBDOCValidationRequestDiagnosticReportType() {
+    void soapBDOCValidationRequestDiagnosticReportType() {
         setTestFilesDirectory("bdoc/test/timemark/");
         ValidatableResponse response = post(validationRequestForDocumentReportType("testECCDemo.bdoc", REPORT_TYPE_DIAGNOSTIC))
                 .then();
@@ -994,7 +994,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: igasugust1.3.ddoc
      */
     @Test
-    public void soapDDOCValidationRequestSimpleReportType() {
+    void soapDDOCValidationRequestSimpleReportType() {
         ValidatableResponse response = post(validationRequestForDocumentReportType("igasugust1.3.ddoc", REPORT_TYPE_SIMPLE))
                 .then();
         isSimpleReport(response);
@@ -1014,7 +1014,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: igasugust1.3.ddoc
      */
     @Test
-    public void soapDDOCValidationRequestDetailedReportType() {
+    void soapDDOCValidationRequestDetailedReportType() {
         ValidatableResponse response = post(validationRequestForDocumentReportType("igasugust1.3.ddoc", REPORT_TYPE_DETAILED))
                 .then();
         isSimpleReport(response);
@@ -1034,7 +1034,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: igasugust1.3.ddoc
      */
     @Test
-    public void soapDDOCValidationRequestDiagnosticReportType() {
+    void soapDDOCValidationRequestDiagnosticReportType() {
         ValidatableResponse response = post(validationRequestForDocumentReportType("igasugust1.3.ddoc", REPORT_TYPE_DIAGNOSTIC))
                 .then();
         isSimpleReport(response);
@@ -1054,7 +1054,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Mac_AS0099904_EsimeneAmetlikSKTestElliptilistega_TS.asice
      */
     @Test
-    public void soapAsicEValidationRequestSimpleReportType() {
+    void soapAsicEValidationRequestSimpleReportType() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         ValidatableResponse response = post(validationRequestForDocumentReportType("Mac_AS0099904_EsimeneAmetlikSKTestElliptilistega_TS.asice", REPORT_TYPE_SIMPLE))
                 .then();
@@ -1075,7 +1075,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Mac_AS0099904_EsimeneAmetlikSKTestElliptilistega_TS.asice
      */
     @Test
-    public void soapAsicEValidationRequestDetailedReportType() {
+    void soapAsicEValidationRequestDetailedReportType() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         ValidatableResponse response = post(validationRequestForDocumentReportType("Mac_AS0099904_EsimeneAmetlikSKTestElliptilistega_TS.asice", REPORT_TYPE_DETAILED))
                 .then();
@@ -1096,7 +1096,7 @@ public class SoapValidationRequestIT extends SiVaSoapTests {
      * File: Mac_AS0099904_EsimeneAmetlikSKTestElliptilistega_TS.asice
      */
     @Test
-    public void soapAsicEValidationRequestDiagnosticReportType() {
+    void soapAsicEValidationRequestDiagnosticReportType() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         ValidatableResponse response = post(validationRequestForDocumentReportType("Mac_AS0099904_EsimeneAmetlikSKTestElliptilistega_TS.asice", REPORT_TYPE_DIAGNOSTIC))
                 .then();

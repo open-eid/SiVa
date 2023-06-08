@@ -40,21 +40,21 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
+class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
 
     private static final String PDF_WITH_ONE_VALID_SIGNATURE = "hellopades-pades-lt-sha256-sign.pdf";
     private static final String PDF_SIGNED_WITH_UNQUALIFIED_CERTIFICATE = "hellopades-lt1-lt2-parallel3.pdf";
     private static final String PDF_WITH_CRL = "PadesProfileLtWithCrl.pdf";
 
     @Test
-    public void validatingWithValidPdfShouldReturnValidationReportPojo() {
+    void validatingWithValidPdfShouldReturnValidationReportPojo() {
         SimpleReport report = validateAndAssertReports(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE)).getSimpleReport();
         assertNotNull(report);
     }
 
     @Test
-    public void validationReportForValidPdfShouldHaveEqualSignatureCountAndValidSignatureCount() {
+    void validationReportForValidPdfShouldHaveEqualSignatureCountAndValidSignatureCount() {
         SimpleReport report = validateAndAssertReports(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE)).getSimpleReport();
         ValidationConclusion validationConclusion = report.getValidationConclusion();
@@ -64,7 +64,7 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
     }
 
     @Test
-    public void whenValidatingValidPDFThenDateTimesShouldBeCorrectlyParsed() {
+    void whenValidatingValidPDFThenDateTimesShouldBeCorrectlyParsed() {
         SimpleReport report = validateAndAssertReports(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE)).getSimpleReport();
         SignatureValidationData signature = report.getValidationConclusion().getSignatures().get(0);
@@ -73,7 +73,7 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
     }
 
     @Test
-    public void validatedSignatureShouldHaveCorrectId() {
+    void validatedSignatureShouldHaveCorrectId() {
         SimpleReport report = validateAndAssertReports(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE)).getSimpleReport();
         SignatureValidationData signature = report.getValidationConclusion().getSignatures().get(0);
@@ -81,7 +81,7 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
     }
 
     @Test
-    public void validatedSignatureShouldHaveFormatAndLevel() {
+    void validatedSignatureShouldHaveFormatAndLevel() {
         SimpleReport report = validateAndAssertReports(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE)).getSimpleReport();
         SignatureValidationData signature = report.getValidationConclusion().getSignatures().get(0);
@@ -90,7 +90,7 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
     }
 
     @Test
-    public void validationResultForValidPDFShouldHaveCorrectSignatureScopeForPDF() {
+    void validationResultForValidPDFShouldHaveCorrectSignatureScopeForPDF() {
         SimpleReport report = validateAndAssertReports(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE)).getSimpleReport();
         SignatureScope scope = report.getValidationConclusion().getSignatures().get(0).getSignatureScopes().get(0);
@@ -101,29 +101,29 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
     }
 
     @Test
-    public void validationResultForValidPDFShouldNotHaveErrorsOrWarnings() {
+    void validationResultForValidPDFShouldNotHaveErrorsOrWarnings() {
         SimpleReport report = validateAndAssertReports(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE)).getSimpleReport();
         report.getValidationConclusion().getSignatures().forEach(this::assertNoErrors);
     }
 
     @Test
-    public void validationResultForPdfShouldContainNull() {
+    void validationResultForPdfShouldContainNull() {
         SimpleReport report = validateAndAssertReports(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE)).getSimpleReport();
         assertNull(report.getValidationConclusion().getSignatureForm());
     }
 
     @Test
-    public void containerWithCrlOcspIsNull(){
+    void containerWithCrlOcspIsNull(){
         SimpleReport report = validateAndAssertReports(
                 buildValidationDocument(PDF_WITH_CRL)).getSimpleReport();
         assertNull(report.getValidationConclusion().getSignatures().get(0).getInfo().getOcspResponseCreationTime());
     }
 
     @Test
-    @Disabled //TODO: Warnings are not returned when validationLevel is set to ARCHIVAL_DATA (default level)
-    public void validatingPdfSignedWithUnqualifiedCertificateReturnsReportWithoutErrorsButWithWarning() {
+    @Disabled(/*TODO:*/"Warnings are not returned when validationLevel is set to ARCHIVAL_DATA (default level)")
+    void validatingPdfSignedWithUnqualifiedCertificateReturnsReportWithoutErrorsButWithWarning() {
         SimpleReport report = validateAndAssertReports(
                 buildValidationDocument(PDF_SIGNED_WITH_UNQUALIFIED_CERTIFICATE)).getSimpleReport();
         assertNotNull(report);
@@ -140,7 +140,7 @@ public class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
     }
 
     @Test
-    public void assertPdfSignedWithOneValidSignatureDiagnosticData() {
+    void assertPdfSignedWithOneValidSignatureDiagnosticData() {
         Date validationStartDate = new Date();
 
         ValidationDocument validationDocument = buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE);

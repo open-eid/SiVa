@@ -26,33 +26,32 @@ import java.util.List;
 import static java.util.Arrays.stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class SignaturePolicyServiceTest {
+class SignaturePolicyServiceTest {
 
     @Test
-    public void whenSignaturePolicesDoNotContainDefaultPolicyThenThrowException() {
+    void whenSignaturePolicesDoNotContainDefaultPolicyThenThrowException() {
         ValidationPolicy pol1 = createValidationPolicy("pol1", "desc1");
 
         assertThrows(
-            DefaultPolicyNotDefinedException.class, () -> createSignaturePolicyService("RANDOM_PREFIX" + "pol1", pol1).getPolicy("pol1")
+            DefaultPolicyNotDefinedException.class, () -> createSignaturePolicyService("RANDOM_PREFIX" + "pol1", pol1)
         );
     }
 
     @Test
-    public void gettingSignaturePoliciesReturnsAllPoliciesWithUniqueNames() {
+    void gettingSignaturePoliciesReturnsAllPoliciesWithUniqueNames() {
         ValidationPolicy pol1 = createValidationPolicy("pol1", "desc1");
         ValidationPolicy pol2 = createValidationPolicy("pol2", "desc2");
         ValidationPolicy pol3 = createValidationPolicy("pol2", "desc3");
         SignaturePolicyService<ValidationPolicy> signaturePolicyService = createSignaturePolicyService("pol1", pol1, pol2, pol3);
-        assertTrue(signaturePolicyService.getSignaturePolicies().size() == 2);
+        assertEquals(2, signaturePolicyService.getSignaturePolicies().size());
         assertEquals(pol1, signaturePolicyService.getSignaturePolicies().get("pol1"));
         assertEquals(pol2, signaturePolicyService.getSignaturePolicies().get("pol2"));
         assertEquals("desc2", signaturePolicyService.getSignaturePolicies().get("pol2").getDescription());
     }
 
     @Test
-    public void gettingPolicyWithoutSpecifyingNameReturnsDefaultPolicy() {
+    void gettingPolicyWithoutSpecifyingNameReturnsDefaultPolicy() {
         ValidationPolicy pol1 = createValidationPolicy("pol1", "desc1");
         ValidationPolicy pol2 = createValidationPolicy("pol2", "desc2");
         SignaturePolicyService<ValidationPolicy> signaturePolicyService = createSignaturePolicyService("pol1", pol1, pol2);

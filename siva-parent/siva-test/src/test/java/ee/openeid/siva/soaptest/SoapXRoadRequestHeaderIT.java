@@ -25,7 +25,7 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @Tag("IntegrationTest")
-public class SoapXRoadRequestHeaderIT extends SiVaSoapTests {
+class SoapXRoadRequestHeaderIT extends SiVaSoapTests {
 
     @BeforeEach
     public void DirectoryBackToDefault() {
@@ -56,7 +56,7 @@ public class SoapXRoadRequestHeaderIT extends SiVaSoapTests {
      *
      */
     @Test
-    public void soapRequestHeadersAreReturnedInValidationResponse() {
+    void soapRequestHeadersAreReturnedInValidationResponse() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
 
         String requestBody = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xrd=\"http://x-road.eu/xsd/xroad.xsd\" xmlns:id=\"http://x-road.eu/xsd/identifiers\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
@@ -125,7 +125,7 @@ public class SoapXRoadRequestHeaderIT extends SiVaSoapTests {
      *
      */
     @Test
-    public void soapRequestHeadersAreReturnedInSameOrderInValidationResponse() {
+    void soapRequestHeadersAreReturnedInSameOrderInValidationResponse() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
 
         String requestBody = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xrd=\"http://x-road.eu/xsd/xroad.xsd\" xmlns:id=\"http://x-road.eu/xsd/identifiers\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
@@ -194,7 +194,7 @@ public class SoapXRoadRequestHeaderIT extends SiVaSoapTests {
      *
      */
     @Test
-    public void soapRequestHeadersAreReturnedInFaultValidationResponse() {
+    void soapRequestHeadersAreReturnedInFaultValidationResponse() {
         String encodedString = "YmxhaA==";
 
         String requestBody = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xrd=\"http://x-road.eu/xsd/xroad.xsd\" xmlns:id=\"http://x-road.eu/xsd/identifiers\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
@@ -262,7 +262,7 @@ public class SoapXRoadRequestHeaderIT extends SiVaSoapTests {
      *
      */
     @Test
-    public void soapGetDataFilesRequestHeadersAreReturnedInResponse() {
+    void soapGetDataFilesRequestHeadersAreReturnedInResponse() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("valid_XML1_3.ddoc"));
 
         String requestBody = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xrd=\"http://x-road.eu/xsd/xroad.xsd\" xmlns:id=\"http://x-road.eu/xsd/identifiers\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
@@ -330,7 +330,7 @@ public class SoapXRoadRequestHeaderIT extends SiVaSoapTests {
      *
      */
     @Test
-    public void soapGetDataFilesRequestHeadersAreReturnedInSameOrderInResponse() {
+    void soapGetDataFilesRequestHeadersAreReturnedInSameOrderInResponse() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("valid_XML1_3.ddoc"));
 
         String requestBody = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xrd=\"http://x-road.eu/xsd/xroad.xsd\" xmlns:id=\"http://x-road.eu/xsd/identifiers\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
@@ -399,7 +399,7 @@ public class SoapXRoadRequestHeaderIT extends SiVaSoapTests {
      *
      */
     @Test
-    public void soapGetDataFilesRequestHeadersAreReturnedInFaultResponse() {
+    void soapGetDataFilesRequestHeadersAreReturnedInFaultResponse() {
         String encodedString = "YmxhaA==";
 
         String requestBody = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xrd=\"http://x-road.eu/xsd/xroad.xsd\" xmlns:id=\"http://x-road.eu/xsd/identifiers\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +

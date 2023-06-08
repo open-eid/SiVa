@@ -34,7 +34,7 @@ public class SKTimestampDataLoader extends NativeHTTPDataLoader {
 
     @Override
     public byte[] post(String url, byte[] content) {
-        LOGGER.info("Getting timestamp from " + url);
+        LOGGER.info("Getting timestamp from {}", url);
         try {
             URLConnection connection = new URL(url).openConnection();
 

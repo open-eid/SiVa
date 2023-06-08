@@ -19,41 +19,26 @@ package ee.openeid.siva.webapp.soap.transformer;
 import ee.openeid.siva.webapp.soap.SoapDataFilesRequest;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SoapDataFilesRequestToProxyDocumentTransformerTest {
+class SoapDataFilesRequestToProxyDocumentTransformerTest {
 
     private SoapDataFilesRequestToProxyDocumentTransformer transformer = new SoapDataFilesRequestToProxyDocumentTransformer();
 
     @Test
-    public void contentIsCorrectlyTransformedToBytes() {
+    void contentIsCorrectlyTransformedToBytes() {
         String documentContent = "ZmlsZWNvbnRlbnQ=";
         SoapDataFilesRequest dataFilesRequest = createSoapDataFilesRequest(documentContent, "test.ddoc");
         assertEquals(dataFilesRequest.getDocument(), Base64.encodeBase64String(transformer.transform(dataFilesRequest).getBytes()));
     }
 
-    @Test
-    public void pdfTypeIsCorrectlyTransformedToDocumentType() {
-        SoapDataFilesRequest dataFilesRequest = createSoapDataFilesRequest("Ymxh", "test.pdf");
-        assertEquals(dataFilesRequest.getFilename(), transformer.transform(dataFilesRequest).getName());
-    }
-
-    @Test
-    public void bdocTypeIsCorrectlyTransformedToDocumentType() {
-        SoapDataFilesRequest dataFilesRequest = createSoapDataFilesRequest("Ymxh", "test.bdoc");
-        assertEquals(dataFilesRequest.getFilename(), transformer.transform(dataFilesRequest).getName());
-    }
-
-    @Test
-    public void ddocTypeIsCorrectlyTransformedToDocumentType() {
-        SoapDataFilesRequest dataFilesRequest = createSoapDataFilesRequest("Ymxh", "test.ddoc");
-        assertEquals(dataFilesRequest.getFilename(), transformer.transform(dataFilesRequest).getName());
-    }
-
-    @Test
-    public void xroadTypeIsCorrectlyTransformedToDocumentType() {
-        SoapDataFilesRequest dataFilesRequest = createSoapDataFilesRequest("Ymxh", "test.xroad");
+    @ParameterizedTest
+    @ValueSource(strings = {"test.pdf", "test.bdoc", "test.ddoc", "test.xroad"})
+    void documentIsCorrectlyTransformedToDocumentType(String fileName) {
+        SoapDataFilesRequest dataFilesRequest = createSoapDataFilesRequest("Ymxh", fileName);
         assertEquals(dataFilesRequest.getFilename(), transformer.transform(dataFilesRequest).getName());
     }
 

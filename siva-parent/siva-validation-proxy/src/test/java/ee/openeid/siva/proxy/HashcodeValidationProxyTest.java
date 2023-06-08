@@ -48,7 +48,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
-public class HashcodeValidationProxyTest {
+class HashcodeValidationProxyTest {
 
     private HashcodeValidationProxy hashcodeValidationProxy;
 
@@ -71,7 +71,7 @@ public class HashcodeValidationProxyTest {
     }
 
     @Test
-    public void applicationContextHasNoBeanWithGivenNameThrowsException() {
+    void applicationContextHasNoBeanWithGivenNameThrowsException() {
         BDDMockito.given(applicationContext.getBean(anyString())).willThrow(new NoSuchBeanDefinitionException("Bean not loaded"));
         ProxyHashcodeDataSet proxyDocument = mockHashCodeDataSet();
 
@@ -85,7 +85,7 @@ public class HashcodeValidationProxyTest {
     }
 
     @Test
-    public void proxyDocumentShouldReturnValidationReport() {
+    void proxyDocumentShouldReturnValidationReport() {
         when(applicationContext.getBean("hashcodeGenericValidationService")).thenReturn(validationServiceSpy);
 
         ProxyHashcodeDataSet proxyDocument = mockHashCodeDataSet();
@@ -94,7 +94,7 @@ public class HashcodeValidationProxyTest {
     }
 
     @Test
-    public void hashcodeValidationAlwaysReturnsSimpleReport() {
+    void hashcodeValidationAlwaysReturnsSimpleReport() {
         when(applicationContext.getBean("hashcodeGenericValidationService")).thenReturn(validationServiceSpy);
         ProxyHashcodeDataSet proxyDocument = mockHashCodeDataSet();
 

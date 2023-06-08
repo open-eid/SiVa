@@ -20,6 +20,8 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static ee.openeid.siva.common.Constants.MIMETYPE_COMPRESSED_WARNING;
 import static ee.openeid.siva.common.Constants.MIMETYPE_EXTRA_FIELDS_WARNING;
@@ -34,7 +36,7 @@ import static ee.openeid.siva.integrationtest.TestData.TOTAL_PASSED;
 import static ee.openeid.siva.integrationtest.TestData.VALIDATION_CONCLUSION_PREFIX;
 
 @Tag("IntegrationTest")
-public class MimetypeValidationIT extends SiVaRestTests {
+class MimetypeValidationIT extends SiVaRestTests {
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "mimetype_validation_test_files/ValidContainers/";
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
 
@@ -57,7 +59,7 @@ public class MimetypeValidationIT extends SiVaRestTests {
      * File: AsiceContainerValidMimetype.asice
      */
     @Test
-    public void asiceValidMimetype() {
+    void asiceValidMimetype() {
         post(validationRequestFor("AsiceContainerValidMimetype.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
@@ -83,7 +85,7 @@ public class MimetypeValidationIT extends SiVaRestTests {
      * File: AsiceContainerMimetypeAsLast.asice
      */
     @Test
-    public void asiceInvalidMimetypeLocationAsLast() {
+    void asiceInvalidMimetypeLocationAsLast() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithMimetypeAsLast/");
         post(validationRequestFor("AsiceContainerMimetypeAsLast.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -110,7 +112,7 @@ public class MimetypeValidationIT extends SiVaRestTests {
      * File: AsiceContainerMimetypeIsDeflated.asice
      */
     @Test
-    public void asiceInvalidMimetypeCompressionAsDeflated() {
+    void asiceInvalidMimetypeCompressionAsDeflated() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithDeflatedMimetype/");
         post(validationRequestFor("AsiceContainerMimetypeIsDeflated.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -137,7 +139,7 @@ public class MimetypeValidationIT extends SiVaRestTests {
      * File: AsiceContainerNoMimetype.asice
      */
     @Test
-    public void asiceWithNoMimetype() {
+    void asiceWithNoMimetype() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithNoMimetype/");
         post(validationRequestFor("AsiceContainerNoMimetype.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -157,16 +159,21 @@ public class MimetypeValidationIT extends SiVaRestTests {
      *
      * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
      *
-     * Title: Invalid ASICe container mimetype filename with capital letter (Mimetype).
+     * Title: Invalid ASICe container mimetype filename.
      *
      * Expected Result: Validation report is returned with mimetype validation warning "mimetype should be the first file in the container".
      *
-     * File: AsiceContainerMimetypeWithCapitalLetter.asice
+     * Files: AsiceContainerMimetypeWithCapitalLetter.asice, AsiceContainerMimetypeFilenameWithExtraSpace.asice, AsiceContainerMimetypeWithCapitalLetter.asice
      */
-    @Test
-    public void asiceMimetypeFileNameWithCapitalLetter() {
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "AsiceContainerMimetypeWithCapitalLetter.asice",
+            "AsiceContainerMimetypeFilenameWithExtraSpace.asice",
+            "AsiceContainerMimetypeWithCapitalLetter.asice"
+    })
+    void asiceMimetypeInvalidFileName(String fileName) {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithInvalidMimetype/");
-        post(validationRequestFor("AsiceContainerMimetypeWithCapitalLetter.asice"))
+        post(validationRequestFor(fileName))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
@@ -184,60 +191,6 @@ public class MimetypeValidationIT extends SiVaRestTests {
      *
      * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
      *
-     * Title: Invalid ASICe container, where mimetype filename is with extra space in the end ("mimetype ").
-     *
-     * Expected Result: Validation report is returned with mimetype validation warning "mimetype should be the first file in the container".
-     *
-     * File: AsiceContainerMimetypeFilenameWithExtraSpace.asice
-     */
-    @Test
-    public void asiceMimetypeFilenameWithExtraSpace() {
-        setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithInvalidMimetype/");
-        post(validationRequestFor("AsiceContainerMimetypeFilenameWithExtraSpace.asice"))
-                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
-                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
-                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
-                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
-                .body("signaturesCount", Matchers.is(1))
-                .body("validSignaturesCount", Matchers.is(0))
-                .body("validationWarnings", Matchers.hasSize(2))
-                .body("validationWarnings.content", Matchers.hasItem(MIMETYPE_NOT_FIRST_WARNING));
-    }
-
-    /**
-     * TestCaseID: Asice-mimetype-validation-7
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
-     *
-     * Title: Invalid ASICe container with extra byte in the beginning of the container.
-     *
-     * Expected Result: Validation report is returned with mimetype validation warning "mimetype should be the first file in the container".
-     *
-     * File: AsiceContainerMimetypeWithCapitalLetter.asice
-     */
-    @Test
-    public void asiceContainerWithExtraByteInBeginning() {
-        setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithInvalidMimetype/");
-        post(validationRequestFor("AsiceContainerMimetypeWithCapitalLetter.asice"))
-                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
-                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
-                .body("signatures[0].signatureFormat", Matchers.is(SIGNATURE_FORMAT_XADES_LT))
-                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
-                .body("signaturesCount", Matchers.is(1))
-                .body("validSignaturesCount", Matchers.is(0))
-                .body("validationWarnings", Matchers.hasSize(2))
-                .body("validationWarnings.content", Matchers.hasItem(MIMETYPE_NOT_FIRST_WARNING));
-    }
-
-    /**
-     * TestCaseID: Asice-mimetype-validation-8
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/overview/#main-features-of-siva-validation-service
-     *
      * Title: ASICe container with invalid mimetype as "text/plain".
      *
      * Expected Result: Validation report is returned with mimetype validation warning "Container should have one of the expected mimetypes: "application/vnd.etsi.asic-e+zip", "application/vnd.etsi.asic-s+zip"".
@@ -245,7 +198,7 @@ public class MimetypeValidationIT extends SiVaRestTests {
      * File: AsiceInvalidMimetypeAsText.asice
      */
     @Test
-    public void asiceInvalidMimetypeAsText() {
+    void asiceInvalidMimetypeAsText() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithInvalidMimetype/");
         post(validationRequestFor("AsiceInvalidMimetypeAsText.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -272,7 +225,7 @@ public class MimetypeValidationIT extends SiVaRestTests {
      * File: BdocContainerValidMimetype.bdoc
      */
     @Test
-    public void bdocValidMimetype() {
+    void bdocValidMimetype() {
         post(validationRequestFor("BdocContainerValidMimetype.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
@@ -298,7 +251,7 @@ public class MimetypeValidationIT extends SiVaRestTests {
      * File: BdocContainerMimetypeAsLast.bdoc
      */
     @Test
-    public void bdocInvalidMimetypeLocationAsLast() {
+    void bdocInvalidMimetypeLocationAsLast() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithMimetypeAsLast/");
         post(validationRequestFor("BdocContainerMimetypeAsLast.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -325,7 +278,7 @@ public class MimetypeValidationIT extends SiVaRestTests {
      * File: BdocContainerMimetypeIsDeflated.bdoc
      */
     @Test
-    public void bdocInvalidMimetypeCompressionAsDeflated() {
+    void bdocInvalidMimetypeCompressionAsDeflated() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithDeflatedMimetype/");
         post(validationRequestFor("BdocContainerMimetypeIsDeflated.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -352,7 +305,7 @@ public class MimetypeValidationIT extends SiVaRestTests {
      * File: BdocContainerNoMimetype.bdoc
      */
     @Test
-    public void bdocWithNoMimetype() {
+    void bdocWithNoMimetype() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithNoMimetype/");
         post(validationRequestFor("BdocContainerNoMimetype.bdoc"))
                 .then().rootPath("requestErrors[0]")
@@ -373,7 +326,7 @@ public class MimetypeValidationIT extends SiVaRestTests {
      * File: BdocContainerMimetypeFilenameWithExtraSpace.bdoc
      */
     @Test
-    public void bdocMimetypeFilenameWithExtraSpace() {
+    void bdocMimetypeFilenameWithExtraSpace() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithInvalidMimetype/");
         post(validationRequestFor("BdocContainerMimetypeFilenameWithExtraSpace.bdoc"))
                 .then().rootPath("requestErrors[0]")
@@ -394,7 +347,7 @@ public class MimetypeValidationIT extends SiVaRestTests {
      * File: BdocInvalidMimetypeAsZip.bdoc
      */
     @Test
-    public void bdocInvalidMimetypeAsZip() {
+    void bdocInvalidMimetypeAsZip() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithInvalidMimetype/");
         post(validationRequestFor("BdocInvalidMimetypeAsZip.bdoc"))
                 .then().rootPath("requestErrors[0]")
@@ -415,7 +368,7 @@ public class MimetypeValidationIT extends SiVaRestTests {
      * File: AsicsContainerValidMimetype.asics
      */
     @Test
-    public void asicsValidMimetypeWithTmpFile() {
+    void asicsValidMimetypeWithTmpFile() {
         post(validationRequestFor("AsicsContainerValidMimetype.asics"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-S"))
@@ -441,7 +394,7 @@ public class MimetypeValidationIT extends SiVaRestTests {
      * File: Ddoc_as_AsicsContainerValidMimetype.asics
      */
     @Test
-    public void asicsValidMimetypeWithDdocContainer() {
+    void asicsValidMimetypeWithDdocContainer() {
         post(validationRequestFor("Ddoc_as_AsicsContainerValidMimetype.asics"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-S"))
@@ -467,7 +420,7 @@ public class MimetypeValidationIT extends SiVaRestTests {
      * File: AsicsContainerMimetypeAsLast.asics
      */
     @Test
-    public void asicsInvalidMimetypeLocationAsLastWithTmpFile() {
+    void asicsInvalidMimetypeLocationAsLastWithTmpFile() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithMimetypeAsLast/");
         post(validationRequestFor("AsicsContainerMimetypeAsLast.asics"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -494,7 +447,7 @@ public class MimetypeValidationIT extends SiVaRestTests {
      * File: Ddoc_as_AsicsContainerMimetypeAsLast.asics
      */
     @Test
-    public void asicsInvalidMimetypeLocationAsLastWithDdoc() {
+    void asicsInvalidMimetypeLocationAsLastWithDdoc() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithMimetypeAsLast/");
         post(validationRequestFor("Ddoc_as_AsicsContainerMimetypeAsLast.asics"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -521,7 +474,7 @@ public class MimetypeValidationIT extends SiVaRestTests {
      * File: AsicsContainerMimetypeIsDeflated.asics
      */
     @Test
-    public void asicsInvalidMimetypeCompressionAsDeflatedWithTmpFile() {
+    void asicsInvalidMimetypeCompressionAsDeflatedWithTmpFile() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithDeflatedMimetype/");
         post(validationRequestFor("AsicsContainerMimetypeIsDeflated.asics"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -548,7 +501,7 @@ public class MimetypeValidationIT extends SiVaRestTests {
      * File: Ddoc_as_AsicsContainerMimetypeIsDeflated.asics
      */
     @Test
-    public void asicsInvalidMimetypeCompressionAsDeflatedWithDdoc() {
+    void asicsInvalidMimetypeCompressionAsDeflatedWithDdoc() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithDeflatedMimetype/");
         post(validationRequestFor("Ddoc_as_AsicsContainerMimetypeIsDeflated.asics"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -575,7 +528,7 @@ public class MimetypeValidationIT extends SiVaRestTests {
      * File: AsicsContainerNoMimetype.asics
      */
     @Test
-    public void asicsContainingTmpFileWithNoMimetype() {
+    void asicsContainingTmpFileWithNoMimetype() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithNoMimetype/");
         post(validationRequestFor("AsicsContainerNoMimetype.asics"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -602,7 +555,7 @@ public class MimetypeValidationIT extends SiVaRestTests {
      * File: Ddoc_as_AsicsContainerNoMimetype.asics
      */
     @Test
-    public void asicsContainingDdocContainerWithNoMimetype() {
+    void asicsContainingDdocContainerWithNoMimetype() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithNoMimetype/");
         post(validationRequestFor("Ddoc_as_AsicsContainerNoMimetype.asics"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -629,7 +582,7 @@ public class MimetypeValidationIT extends SiVaRestTests {
      * File: AsicsContainerMimetypeFilenameWithExtraSpace.asics
      */
     @Test
-    public void asicsMimetypeFilenameWithExtraSpace() {
+    void asicsMimetypeFilenameWithExtraSpace() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithInvalidMimetype/");
         post(validationRequestFor("AsicsContainerMimetypeFilenameWithExtraSpace.asics"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -656,7 +609,7 @@ public class MimetypeValidationIT extends SiVaRestTests {
      * File: AsicsInvalidMimetypeAsXml.asics
      */
     @Test
-    public void asicsInvalidMimetypeAsXml() {
+    void asicsInvalidMimetypeAsXml() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithInvalidMimetype/");
         post(validationRequestFor("AsicsInvalidMimetypeAsXml.asics"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -683,7 +636,7 @@ public class MimetypeValidationIT extends SiVaRestTests {
      * File: EdocContainerValidMimetype.edoc
      */
     @Test
-    public void edocValidMimetype() {
+    void edocValidMimetype() {
         post(validationRequestFor("EdocContainerValidMimetype.edoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-E"))
@@ -708,7 +661,7 @@ public class MimetypeValidationIT extends SiVaRestTests {
      * File: EdocContainerValidMimetypeAsLast.edoc
      */
     @Test
-    public void edocInvalidMimetypeLocationAsLast() {
+    void edocInvalidMimetypeLocationAsLast() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithMimetypeAsLast/");
         post(validationRequestFor("EdocContainerValidMimetypeAsLast.edoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -734,7 +687,7 @@ public class MimetypeValidationIT extends SiVaRestTests {
      * File: EdocContainerNoMimetype.edoc
      */
     @Test
-    public void edocWithNoMimetype() {
+    void edocWithNoMimetype() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/ContainersWithNoMimetype/");
         post(validationRequestFor("EdocContainerNoMimetype.edoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -760,7 +713,7 @@ public class MimetypeValidationIT extends SiVaRestTests {
      * File: AdocContainerMimetypeWithExtraFields.adoc
      */
     @Test
-    public void adocMimetypeWithExtraFields() {
+    void adocMimetypeWithExtraFields() {
         setTestFilesDirectory("mimetype_validation_test_files/InvalidContainers/");
         post(validationRequestFor("AdocContainerMimetypeWithExtraFields.adoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)

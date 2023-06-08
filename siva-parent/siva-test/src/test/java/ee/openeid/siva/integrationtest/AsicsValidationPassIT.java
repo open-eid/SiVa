@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 import static ee.openeid.siva.integrationtest.TestData.VALIDATION_CONCLUSION_PREFIX;
 
 @Tag("IntegrationTest")
-public class AsicsValidationPassIT extends SiVaRestTests {
+class AsicsValidationPassIT extends SiVaRestTests {
 
     @BeforeEach
     public void DirectoryBackToDefault() {
@@ -55,7 +55,7 @@ public class AsicsValidationPassIT extends SiVaRestTests {
      * File: ddocWithRoleAndSigProductionPlace.asics
      */
     @Test
-    public void validDdocInsideValidAsics() {
+    void validDdocInsideValidAsics() {
         post(validationRequestFor("ddocWithRoleAndSigProductionPlace.asics"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-S"))
@@ -98,7 +98,7 @@ public class AsicsValidationPassIT extends SiVaRestTests {
      * File: ValidDDOCinsideAsics.scs
      */
     @Test
-    public void validDdocInsideValidAsicsScsExtension() {
+    void validDdocInsideValidAsicsScsExtension() {
         post(validationRequestFor( "ValidDDOCinsideAsics.scs"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-S"))
@@ -130,7 +130,7 @@ public class AsicsValidationPassIT extends SiVaRestTests {
      * File: ValidBDOCinsideAsics.asics
      */
     @Test
-    public void validBdocInsideValidAsics() {
+    void validBdocInsideValidAsics() {
         post(validationRequestFor("ValidBDOCinsideAsics.asics"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-S"))
@@ -171,7 +171,7 @@ public class AsicsValidationPassIT extends SiVaRestTests {
      * File: TXTinsideAsics.asics
      */
     @Test
-    public void textInsideValidAsics() {
+    void textInsideValidAsics() {
         post(validationRequestFor("TXTinsideAsics.asics"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-S"))
@@ -197,7 +197,7 @@ public class AsicsValidationPassIT extends SiVaRestTests {
      * File: ValidASICSinsideAsics.asics
      */
     @Test
-    public void asicsInsideValidAsics() {
+    void asicsInsideValidAsics() {
         post(validationRequestFor("ValidASICSinsideAsics.asics"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-S"))
@@ -221,7 +221,7 @@ public class AsicsValidationPassIT extends SiVaRestTests {
      * File: ValidDDOCinsideAsics.zip
      */
     @Test
-    public void ValidDdocInsideValidAsicsZipExtension() {
+    void ValidDdocInsideValidAsicsZipExtension() {
         post(validationRequestFor("ValidDDOCinsideAsics.zip"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-S"))
@@ -251,7 +251,7 @@ public class AsicsValidationPassIT extends SiVaRestTests {
      * File: ValidDDOCinsideAsicsWrongMime.asics
      */
     @Test
-    public void ValidDdocInsideValidAsicsWrongMimeType() {
+    void ValidDdocInsideValidAsicsWrongMimeType() {
         post(validationRequestFor("ValidDDOCinsideAsicsWrongMime.asics"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-S"))

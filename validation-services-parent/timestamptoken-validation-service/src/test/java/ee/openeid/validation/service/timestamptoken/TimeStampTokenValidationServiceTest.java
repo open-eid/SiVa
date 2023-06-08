@@ -43,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
-public class TimeStampTokenValidationServiceTest {
+class TimeStampTokenValidationServiceTest {
 
     private static final String TEST_FILES_LOCATION = "test-files/";
 
@@ -62,7 +62,7 @@ public class TimeStampTokenValidationServiceTest {
     }
 
     @Test
-    public void validTimeStampToken() {
+    void validTimeStampToken() {
         SimpleReport simpleReport = validationService.validateDocument(buildValidationDocument("timestamptoken-ddoc.asics")).getSimpleReport();
         TimeStampTokenValidationData validationData = simpleReport.getValidationConclusion().getTimeStampTokens().get(0);
         assertEquals(TimeStampTokenValidationData.Indication.TOTAL_PASSED, validationData.getIndication());
@@ -71,7 +71,7 @@ public class TimeStampTokenValidationServiceTest {
     }
 
     @Test
-    public void certificatePresent() throws Exception{
+    void certificatePresent() throws Exception{
         SimpleReport simpleReport = validationService.validateDocument(buildValidationDocument("timestamptoken-ddoc.asics")).getSimpleReport();
         TimeStampTokenValidationData timeStampTokenValidationData = simpleReport.getValidationConclusion().getTimeStampTokens().get(0);
         CertificateFactory cf = CertificateFactory.getInstance("X.509");
@@ -87,7 +87,7 @@ public class TimeStampTokenValidationServiceTest {
     }
 
     @Test
-    public void multipleDataFile() {
+    void multipleDataFile() {
         assertThrows(
             DocumentRequirementsException.class, () -> {
                 validationService.validateDocument(buildValidationDocument("timestamptoken-two-data-files.asics"));
@@ -96,7 +96,7 @@ public class TimeStampTokenValidationServiceTest {
     }
 
     @Test
-    public void notValidTstFile() {
+    void notValidTstFile() {
         assertThrows(
             MalformedDocumentException.class, () -> {
                 validationService.validateDocument(buildValidationDocument("timestamptoken-invalid.asics"));
@@ -106,19 +106,19 @@ public class TimeStampTokenValidationServiceTest {
     }
 
     @Test
-    public void dataFiledChanged() {
+    void dataFiledChanged() {
         SimpleReport simpleReport = validationService.validateDocument(buildValidationDocument("timestamptoken-datafile-changed.asics")).getSimpleReport();
         assertEquals("Signature not intact", simpleReport.getValidationConclusion().getTimeStampTokens().get(0).getError().get(0).getContent());
     }
 
     @Test
-    public void signatureNotIntact() {
+    void signatureNotIntact() {
         SimpleReport simpleReport = validationService.validateDocument(buildValidationDocument("timestamptoken-signature-modified.asics")).getSimpleReport();
         assertEquals("Signature not intact", simpleReport.getValidationConclusion().getTimeStampTokens().get(0).getError().get(0).getContent());
     }
 
     @Test
-    public void onlySimpleReportPresentInDocumentValidationResultReports() {
+    void onlySimpleReportPresentInDocumentValidationResultReports() {
         Reports reports = validationService.validateDocument(buildValidationDocument("timestamptoken-ddoc.asics"));
 
         assertNotNull(reports.getSimpleReport().getValidationConclusion());

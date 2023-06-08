@@ -76,7 +76,7 @@ public abstract class TimemarkContainerValidationReportBuilder {
     private boolean isReportSignatureEnabled;
     private Map<String, ValidationResult> signatureValidationResults;
 
-    public TimemarkContainerValidationReportBuilder(Container container, ValidationDocument validationDocument, ValidationPolicy validationPolicy, ValidationResult validationResult, boolean isReportSignatureEnabled) {
+    protected TimemarkContainerValidationReportBuilder(Container container, ValidationDocument validationDocument, ValidationPolicy validationPolicy, ValidationResult validationResult, boolean isReportSignatureEnabled) {
         this.container = container;
         this.validationDocument = validationDocument;
         this.validationPolicy = validationPolicy;
@@ -214,7 +214,7 @@ public abstract class TimemarkContainerValidationReportBuilder {
     }
 
     String removeQuotes(String subjectName) {
-        return subjectName.replaceAll("^\"|\"$", "");
+        return subjectName.replaceAll("(^\")|(\"$)", "");
     }
 
     eu.europa.esig.dss.simplereport.SimpleReport getDssSimpleReport(AsicESignature bDocSignature) {

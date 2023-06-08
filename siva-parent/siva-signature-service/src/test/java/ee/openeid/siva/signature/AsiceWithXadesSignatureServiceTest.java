@@ -26,13 +26,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class AsiceWithXadesSignatureServiceTest {
+class AsiceWithXadesSignatureServiceTest {
 
     AsiceWithXadesSignatureService asiceSignatureService;
 
@@ -52,61 +53,64 @@ public class AsiceWithXadesSignatureServiceTest {
     }
 
     @Test
-    public void AsiceSignatureServiceNotConfiguredWithProperties_shouldThrowException() {
+    void AsiceSignatureServiceNotConfiguredWithProperties_shouldThrowException() {
         asiceSignatureService = new AsiceWithXadesSignatureService(null, new TrustedListsCertificateSource());
+        byte[] dataToSign = "Hello".getBytes(StandardCharsets.UTF_8);
 
         SignatureServiceException caughtException = assertThrows(
-                SignatureServiceException.class, () -> {
-                    asiceSignatureService.getSignature("Hello".getBytes(), "hello.txt", "application/text");
-                }
+                SignatureServiceException.class, () -> asiceSignatureService.getSignature(dataToSign, "hello.txt", "application/text")
         );
         assertEquals("Signature configuration properties not set!", caughtException.getMessage());
     }
 
     @Test
-    public void AsiceSignatureServiceNotConfiguredWithPkcs12Properties_shouldThrowException() {
+    void AsiceSignatureServiceNotConfiguredWithPkcs12Properties_shouldThrowException() {
         asiceSignatureService.getProperties().setPkcs12(null);
+        byte[] dataToSign = "Hello".getBytes(StandardCharsets.UTF_8);
 
         SignatureServiceException caughtException = assertThrows(
-                SignatureServiceException.class, () -> asiceSignatureService.getSignature("Hello".getBytes(), "hello.txt", "application/text")
+                SignatureServiceException.class, () -> asiceSignatureService.getSignature(dataToSign, "hello.txt", "application/text")
         );
         assertEquals("Either Pkcs11 or Pkcs12 must be configured! Currently there is none configured..", caughtException.getMessage());
 
     }
 
     @Test
-    public void AsiceSignatureServiceConfiguredWithInvalidPkcs12Keystore_shouldThrowException() {
+    void AsiceSignatureServiceConfiguredWithInvalidPkcs12Keystore_shouldThrowException() {
         asiceSignatureService.getProperties().getPkcs12().setPath("classpath:invalid.p12");
+        byte[] dataToSign = "Hello".getBytes(StandardCharsets.UTF_8);
 
         SignatureServiceException caughtException = assertThrows(
-                SignatureServiceException.class, () -> asiceSignatureService.getSignature("Hello".getBytes(), "hello.txt", "application/text")
+                SignatureServiceException.class, () -> asiceSignatureService.getSignature(dataToSign, "hello.txt", "application/text")
         );
         assertEquals("Error reading keystore from path: classpath:invalid.p12", caughtException.getMessage());
     }
 
     @Test
-    public void AsiceSignatureServiceConfiguredWithInvalidPkcs12Password_shouldThrowException() {
+    void AsiceSignatureServiceConfiguredWithInvalidPkcs12Password_shouldThrowException() {
         asiceSignatureService.getProperties().getPkcs12().setPassword("invalid password");
+        byte[] dataToSign = "Hello".getBytes(StandardCharsets.UTF_8);
 
         DSSException caughtException = assertThrows(
-                DSSException.class, () -> asiceSignatureService.getSignature("Hello".getBytes(), "hello.txt", "application/text")
+                DSSException.class, () -> asiceSignatureService.getSignature(dataToSign, "hello.txt", "application/text")
         );
         assertEquals("Unable to instantiate KeyStoreSignatureTokenConnection", caughtException.getMessage());
     }
 
     @Test
-    public void AsiceSignatureServiceConfiguredWithInvalidSignatureLevel_shouldThrowException() {
+    void AsiceSignatureServiceConfiguredWithInvalidSignatureLevel_shouldThrowException() {
         asiceSignatureService.getProperties().setSignatureLevel("SOME_INVALID_LEVEL");
+        byte[] dataToSign = "Hello".getBytes(StandardCharsets.UTF_8);
 
         SignatureServiceException caughtException = assertThrows(
-                SignatureServiceException.class, () -> asiceSignatureService.getSignature("Hello".getBytes(), "hello.txt", "application/text")
+                SignatureServiceException.class, () -> asiceSignatureService.getSignature(dataToSign, "hello.txt", "application/text")
         );
         assertThat(caughtException.getMessage(), Matchers
                 .startsWith("Invalid signature level - 'SOME_INVALID_LEVEL'! Valid signature levels:"));
     }
 
     @Test
-    public void AsiceSignatureServiceConfiguredCorrectly_withXadesBaselineProfileB_shouldPass() throws IOException {
+    void AsiceSignatureServiceConfiguredCorrectly_withXadesBaselineProfileB_shouldPass() throws IOException {
         byte[] signature = asiceSignatureService.getSignature("Hello".getBytes(), "hello.txt", "application/text");
         assertNotNull(signature);
     }

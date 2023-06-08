@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
-public class DataFilesControllerTest {
+class DataFilesControllerTest {
 
     private DataFilesProxySpy dataFilesProxyServiceSpy = new DataFilesProxySpy();
     private DataFilesRequestToProxyDocumentTransformerSpy transformerSpy = new DataFilesRequestToProxyDocumentTransformerSpy();
@@ -48,7 +48,7 @@ public class DataFilesControllerTest {
     }
 
     @Test
-    public void validJsonIsCorrectlyMappedToPOJO() throws Exception {
+    void validJsonIsCorrectlyMappedToPOJO() throws Exception {
         mockMvc.perform(post("/getDataFiles")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(validRequest().toString().getBytes())
@@ -58,7 +58,7 @@ public class DataFilesControllerTest {
     }
 
     @Test
-    public void requestWithInvalidDocumentTypeReturnsErroneousResponse() throws Exception {
+    void requestWithInvalidDocumentTypeReturnsErroneousResponse() throws Exception {
         mockMvc.perform(post("/getDataFiles")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestWithInvalidFilename().toString().getBytes()))
@@ -66,7 +66,7 @@ public class DataFilesControllerTest {
     }
 
     @Test
-    public void requestWithNonBase64EncodedDocumentReturnsErroneousResponse() throws Exception {
+    void requestWithNonBase64EncodedDocumentReturnsErroneousResponse() throws Exception {
         mockMvc.perform(post("/getDataFiles")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestWithInvalidDocumentEncoding().toString().getBytes()))
@@ -74,7 +74,7 @@ public class DataFilesControllerTest {
     }
 
     @Test
-    public void requestWithEmptyDocumentReturnsErroneousResponse() throws Exception {
+    void requestWithEmptyDocumentReturnsErroneousResponse() throws Exception {
         mockMvc.perform(post("/getDataFiles")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestWithEmptyDocument().toString().getBytes()))
@@ -82,7 +82,7 @@ public class DataFilesControllerTest {
     }
 
     @Test
-    public void requestWithInvalidKeysShouldBeRejectedWithError() throws Exception {
+    void requestWithInvalidKeysShouldBeRejectedWithError() throws Exception {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("filename", "test.ddoc");
         jsonObject.put("Document", "QVNE");
@@ -95,7 +95,7 @@ public class DataFilesControllerTest {
     }
 
     @Test
-    public void requestWithMultipleErrorsReturnsAllErrorsInResponse() throws Exception {
+    void requestWithMultipleErrorsReturnsAllErrorsInResponse() throws Exception {
         mockMvc.perform(post("/getDataFiles")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(invalidRequest().toString().getBytes()))
@@ -103,7 +103,7 @@ public class DataFilesControllerTest {
     }
 
     @Test
-    public void aRequestWithNoRequiredKeysReturnsAllErrorsForEachMissingKey() throws Exception {
+    void aRequestWithNoRequiredKeysReturnsAllErrorsForEachMissingKey() throws Exception {
         mockMvc.perform(post("/getDataFiles")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new JSONObject().toString().getBytes()))

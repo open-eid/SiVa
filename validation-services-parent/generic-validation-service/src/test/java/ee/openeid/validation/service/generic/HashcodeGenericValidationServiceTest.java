@@ -52,7 +52,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 
 @SpringBootTest(classes = {PDFValidationServiceTest.TestConfiguration.class})
 @ExtendWith(SpringExtension.class)
-public class HashcodeGenericValidationServiceTest {
+class HashcodeGenericValidationServiceTest {
 
 
     private HashcodeGenericValidationService validationService;
@@ -77,7 +77,7 @@ public class HashcodeGenericValidationServiceTest {
     }
 
     @Test
-    public void validHashcodeRequest() throws Exception {
+    void validHashcodeRequest() throws Exception {
         Reports response = validationService.validate(getValidationDocumentSingletonList());
         SignatureScope signatureScope = response.getSimpleReport().getValidationConclusion().getSignatures().get(0).getSignatureScopes().get(0);
         assertEquals("LvhnsrgBZBK9kTQ8asbPtcsjuEhBo9s3QDdCcIxlMmo=", signatureScope.getHash());
@@ -88,7 +88,7 @@ public class HashcodeGenericValidationServiceTest {
     }
 
     @Test
-    public void validMultipleSignatures() throws Exception {
+    void validMultipleSignatures() throws Exception {
         List<ValidationDocument> validationDocuments = getValidationDocumentSingletonList();
         validationDocuments.addAll(getValidationDocumentSingletonList());
         Reports response = validationService.validate(validationDocuments);
@@ -98,7 +98,7 @@ public class HashcodeGenericValidationServiceTest {
     }
 
     @Test
-    public void validDataFromSignatureFile() throws Exception {
+    void validDataFromSignatureFile() throws Exception {
         List<ValidationDocument> validationDocuments = getValidationDocumentSingletonList();
         validationDocuments.get(0).setDatafiles(null);
         Reports response = validationService.validate(validationDocuments);
@@ -109,7 +109,7 @@ public class HashcodeGenericValidationServiceTest {
     }
 
     @Test
-    public void hashcodeValidationCertificateCorrectlyPresent() throws Exception {
+    void hashcodeValidationCertificateCorrectlyPresent() throws Exception {
         Reports response = validationService.validate(getValidationDocumentSingletonList());
         SignatureValidationData signatureValidationData = response.getSimpleReport().getValidationConclusion().getSignatures().get(0);
         CertificateFactory cf = CertificateFactory.getInstance("X.509");
@@ -135,7 +135,7 @@ public class HashcodeGenericValidationServiceTest {
     }
 
     @Test
-    public void hashcodeValidationSubjectDNCorrectlyPresent() throws Exception {
+    void hashcodeValidationSubjectDNCorrectlyPresent() throws Exception {
         Reports reports = validationService.validate(getValidationDocumentSingletonList());
 
         assertSame(1, reports.getSimpleReport().getValidationConclusion().getSignatures().size());
@@ -146,7 +146,7 @@ public class HashcodeGenericValidationServiceTest {
     }
 
     @Test
-    public void populatesSignerRole() throws IOException, URISyntaxException {
+    void populatesSignerRole() throws IOException, URISyntaxException {
         Reports reports = validationService.validate(getValidationDocumentSingletonList());
         List<SignerRole> signerRole = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getSignerRole();
         assertEquals(1, signerRole.size());
@@ -154,7 +154,7 @@ public class HashcodeGenericValidationServiceTest {
     }
 
     @Test
-    public void populatesSignatureProductionPlace() throws IOException, URISyntaxException {
+    void populatesSignatureProductionPlace() throws IOException, URISyntaxException {
         Reports reports = validationService.validate(getValidationDocumentSingletonList("test-files/signatures_with_sig_production_place.xml"));
         SignatureProductionPlace signatureProductionPlace = reports.getSimpleReport().getValidationConclusion()
                 .getSignatures().get(0).getInfo().getSignatureProductionPlace();
@@ -166,14 +166,14 @@ public class HashcodeGenericValidationServiceTest {
     }
 
     @Test
-    public void populatesSignatureMethod() throws IOException, URISyntaxException {
+    void populatesSignatureMethod() throws IOException, URISyntaxException {
         Reports reports = validationService.validate(getValidationDocumentSingletonList("test-files/signatures_with_sig_production_place.xml"));
         assertEquals("http://www.w3.org/2001/04/xmldsig-more#rsa-sha256",
                 reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getSignatureMethod());
     }
 
     @Test
-    public void populatesTimeAssertionMessageImprint() throws IOException, URISyntaxException {
+    void populatesTimeAssertionMessageImprint() throws IOException, URISyntaxException {
         Reports reports = validationService.validate(getValidationDocumentSingletonList());
         assertEquals("MDEwDQYJYIZIAWUDBAIBBQAEIBf8So+lfR/lrfzu5i+SZwguJGakhr/W+eHwrAQJ0acJ",
                 reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getTimeAssertionMessageImprint());

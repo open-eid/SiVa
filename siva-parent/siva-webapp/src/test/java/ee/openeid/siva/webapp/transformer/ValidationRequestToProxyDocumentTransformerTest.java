@@ -30,7 +30,7 @@ import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class ValidationRequestToProxyDocumentTransformerTest {
+class ValidationRequestToProxyDocumentTransformerTest {
 
     private static final String VALID_PDF_FILE = "test-files/sample.pdf";
     private ValidationRequestToProxyDocumentTransformer transformer = new ValidationRequestToProxyDocumentTransformer();
@@ -42,12 +42,12 @@ public class ValidationRequestToProxyDocumentTransformerTest {
     }
 
     @Test
-    public void filenameRemainsUnchanged() {
+    void filenameRemainsUnchanged() {
         assertEquals(validationRequest.getFilename(), transformer.transform(validationRequest).getName());
     }
 
     @Test
-    public void reportTypeIsCorrectlyTransformedToReportType() {
+    void reportTypeIsCorrectlyTransformedToReportType() {
         for (ReportType reportType : ReportType.values()) {
             validationRequest.setReportType(reportType.name());
             assertEquals(reportType, transformer.transform(validationRequest).getReportType());
@@ -55,13 +55,13 @@ public class ValidationRequestToProxyDocumentTransformerTest {
     }
 
     @Test
-    public void nullReportTypeIsTransformedToSimpleReportType() {
+    void nullReportTypeIsTransformedToSimpleReportType() {
         validationRequest.setReportType(null);
         assertEquals(ReportType.SIMPLE, transformer.transform(validationRequest).getReportType());
     }
 
     @Test
-    public void invalidReportTypeThrowsUnsupportedTypeException() {
+    void invalidReportTypeThrowsUnsupportedTypeException() {
         validationRequest.setReportType("INVALID_MISS_TYPED_OR_MISSING_REPORT_TYPE");
 
         UnsupportedTypeException caughtException = assertThrows(
@@ -73,13 +73,13 @@ public class ValidationRequestToProxyDocumentTransformerTest {
     }
 
     @Test
-    public void contentIsCorrectlyTransformedToBytes() {
+    void contentIsCorrectlyTransformedToBytes() {
         ProxyDocument proxyDocument = transformer.transform(validationRequest);
         assertEquals(validationRequest.getDocument(), Base64.encodeBase64String(proxyDocument.getBytes()));
     }
 
     @Test
-    public void signaturePolicyRemainsUnchanged() {
+    void signaturePolicyRemainsUnchanged() {
         ProxyDocument proxyDocument = transformer.transform(validationRequest);
         assertEquals(validationRequest.getSignaturePolicy(), proxyDocument.getSignaturePolicy());
     }

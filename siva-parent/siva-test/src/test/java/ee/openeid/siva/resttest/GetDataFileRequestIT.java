@@ -18,6 +18,7 @@ package ee.openeid.siva.resttest;
 import static ee.openeid.siva.resttest.ValidationRequestIT.getFailMessageForKey;
 import static ee.openeid.siva.resttest.ValidationRequestIT.getRequestErrorsCount;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import ee.openeid.siva.integrationtest.SiVaRestTests;
 
@@ -27,10 +28,16 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.stream.Stream;
 
 
 @Tag("IntegrationTest")
-public class GetDataFileRequestIT extends SiVaRestTests {
+class GetDataFileRequestIT extends SiVaRestTests {
     @BeforeEach
     public void DirectoryBackToDefault() {
         setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
@@ -59,7 +66,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      * File: not relevant
      **/
     @Test
-    public void testGetDataFileRequestEmptyInputs() {
+    void testGetDataFileRequestEmptyInputs() {
         String json = postForDataFiles(dataFilesRequestInvalidValues("", "")).asString();
         assertEquals(1, getRequestErrorsCount(json, FILENAME, INVALID_DATA_FILE_FILENAME), getFailMessageForKey(FILENAME));
         assertEquals(1, getRequestErrorsCount(json, DOCUMENT, MUST_NOT_BE_BLANK), getFailMessageForKey(DOCUMENT));
@@ -80,7 +87,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      * File: not relevant
      **/
     @Test
-    public void testGetDataFileRequestEmptyInputsEmptyBody() {
+    void testGetDataFileRequestEmptyInputsEmptyBody() {
         String response = postForDataFiles(new JSONObject().toString()).thenReturn().body().asString();
         assertEquals(1, getRequestErrorsCount(response, FILENAME, INVALID_DATA_FILE_FILENAME), getFailMessageForKey(FILENAME));
         assertEquals(1, getRequestErrorsCount(response, DOCUMENT, MUST_NOT_BE_BLANK), getFailMessageForKey(DOCUMENT));
@@ -101,7 +108,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      * File: valid_XML1_3.ddoc
      **/
     @Test
-    public void testGetDataFileRequestChangedOrderOfKeys() {
+    void testGetDataFileRequestChangedOrderOfKeys() {
         String invalidRequest = "{\"document\":\"" + Base64.encodeBase64String(readFileFromTestResources("valid_XML1_3.ddoc")) + "\",\"filename\":\"valid_XML1_3.ddoc\"}";
         postForDataFiles(invalidRequest)
                 .then()
@@ -125,7 +132,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      * File: valid_XML1_3.ddoc
      **/
     @Test
-    public void testGetDataFileRequestMoreKeysThanExpected() {
+    void testGetDataFileRequestMoreKeysThanExpected() {
         JSONObject jsonObject = new JSONObject(dataFilesRequest("valid_XML1_3.ddoc"));
         jsonObject.put("ExtraOne", "RandomValue");
         jsonObject.put("ExtraTwo", "AnotherValue");
@@ -149,7 +156,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      * File: test_fail.ddoc
      **/
     @Test
-    public void testGetDataFileRequestDuplicatedKey() {
+    void testGetDataFileRequestDuplicatedKey() {
         String invalidRequest = "{\"documentType\":\"DDOC\",\"documentType\":\"BDOC\",\"document\":\"" + Base64.encodeBase64String(readFileFromTestResources("valid_XML1_3.ddoc")) + "\"}";
         String response = postForDataFiles(invalidRequest).asString();
         assertEquals(1, getRequestErrorsCount(response, FILENAME, INVALID_DATA_FILE_FILENAME), getFailMessageForKey(FILENAME));
@@ -169,7 +176,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      * File: valid_XML1_3.ddoc
      **/
     @Test
-    public void testGetDataFileRequestDocumentElementRemoved() {
+    void testGetDataFileRequestDocumentElementRemoved() {
         JSONObject jsonObject = new JSONObject(dataFilesRequest("valid_XML1_3.ddoc"));
         jsonObject.remove("document");
         String response = postForDataFiles(jsonObject.toString()).asString();
@@ -191,7 +198,7 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      * File: valid_XML1_3.ddoc
      **/
     @Test
-    public void testGetDataFileRequestDocumentTypeLowCase() {
+    void testGetDataFileRequestDocumentTypeLowCase() {
         JSONObject jsonObject = new JSONObject(dataFilesRequest("valid_XML1_3.ddoc"));
         jsonObject.put("documentType", "ddoc");
         postForDataFiles(jsonObject.toString())
@@ -209,15 +216,16 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      *
      * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface
      *
-     * Title: Document Type is changed in request to BDOC, actual is DDOC
+     * Title: Document Type is changed in request to BDOC, PDF, JPG and XROAD formats, actual is DDOC
      *
      * Expected Result: Error is returned
      *
      * File: valid_XML1_3.ddoc
      **/
-    @Test
-    public void testGetDataFileRequestDocumentTypeSetToBdoc() {
-        String response = postForDataFiles(dataFilesRequestExtended("valid_XML1_3.ddoc", "test.BDOC")).asString();
+    @ParameterizedTest
+    @ValueSource(strings = {"test.BDOC", "test.PDF", "test.JPG", "test.XROAD"})
+    void testGetDataFileRequestDocumentTypeSetInvalid(String fileName) {
+        String response = postForDataFiles(dataFilesRequestExtended("valid_XML1_3.ddoc", fileName)).asString();
         assertEquals(1, getRequestErrorsCount(response, FILENAME, INVALID_DATA_FILE_FILENAME), getFailMessageForKey(FILENAME));
     }
 
@@ -228,114 +236,26 @@ public class GetDataFileRequestIT extends SiVaRestTests {
      *
      * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface
      *
-     * Title: Document Type is changed in request to PDF, actual is DDOC
+     * Title: Document Type is changed in request to DDOC format, actual is BDOC, PDF, PNG
      *
      * Expected Result: Error is returned
      *
-     * File: valid_XML1_3.ddoc
+     * Files: BDOC-TS.bdoc, PdfValidSingleSignature.pdf, Picture.png
      **/
-    @Test
-    public void testGetDataFileRequestDocumentTypeSetToPdf() {
-        String response = postForDataFiles(dataFilesRequestExtended("valid_XML1_3.ddoc", "test.PDF")).asString();
-        assertEquals(1, getRequestErrorsCount(response, FILENAME, INVALID_DATA_FILE_FILENAME), getFailMessageForKey(FILENAME));
-    }
-
-    /**
-     * TestCaseID: Get-Data-Files-Request-11
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface
-     *
-     * Title: Document Type is changed in request to unsupported format (JPG), actual is DDOC
-     *
-     * Expected Result: Error is returned
-     *
-     * File: valid_XML1_3.ddoc
-     **/
-    @Test
-    public void testGetDataFileRequestDocumentTypeSetToUnsupportedFormat() {
-        String response = postForDataFiles(dataFilesRequestExtended("valid_XML1_3.ddoc", "test.JPG")).asString();
-        assertEquals(1, getRequestErrorsCount(response, FILENAME, INVALID_DATA_FILE_FILENAME), getFailMessageForKey(FILENAME));
-    }
-
-    /**
-     * TestCaseID: Get-Data-Files-Request-12
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface
-     *
-     * Title: Document Type is changed in request to XROAD format, actual is DDOC
-     *
-     * Expected Result: Error is returned
-     *
-     * File: valid_XML1_3.ddoc
-     **/
-    @Test
-    public void testGetDataFileRequestDocumentTypeSetToXroad() {
-        String response = postForDataFiles(dataFilesRequestExtended("valid_XML1_3.ddoc", "test.XROAD")).asString();
-        assertEquals(1, getRequestErrorsCount(response, FILENAME, INVALID_DATA_FILE_FILENAME), getFailMessageForKey(FILENAME));
-    }
-
-    /**
-     * TestCaseID: Get-Data-Files-Request-13
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface
-     *
-     * Title: Document Type is changed in request to DDOC format, actual is BDOC
-     *
-     * Expected Result: Error is returned
-     *
-     * File: BDOC-TS.bdoc
-     **/
-    @Test
-    public void testGettDataFileRequestBdocDocumentTypeSetToDdoc() {
-        setTestFilesDirectory("bdoc/live/timestamp/");
-        String response = postForDataFiles(dataFilesRequestExtended("BDOC-TS.bdoc", "test.DDOC")).asString();
+    @ParameterizedTest
+    @MethodSource("getFileLocationAndFileName")
+    void testGetDataFileRequestInvalidDocumentTypeSetToDdoc(String fileLocation, String fileName) {
+        setTestFilesDirectory(fileLocation);
+        String response = postForDataFiles(dataFilesRequestExtended(fileName, "test.DDOC")).asString();
         assertEquals(1, getRequestErrorsCount(response, DOCUMENT, DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE), getFailMessageForKey(DOCUMENT_TYPE));
     }
 
-    /**
-     * TestCaseID: Get-Data-Files-Request-14
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface
-     *
-     * Title: Document Type is changed in request to DDOC format, actual is PDF
-     *
-     * Expected Result: Error is returned
-     *
-     * File: PdfValidSingleSignature.pdf
-     **/
-    @Test
-    public void testGetDataFileRequestPdfDocumentTypeSetToDdoc() {
-        setTestFilesDirectory("document_format_test_files/");
-        String response = postForDataFiles(dataFilesRequestExtended("PdfValidSingleSignature.pdf", "test.DDOC")).asString();
-        assertEquals(1, getRequestErrorsCount(response, DOCUMENT, DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE), getFailMessageForKey(DOCUMENT_TYPE));
-    }
-
-    /**
-     * TestCaseID: Get-Data-Files-Request-15
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface
-     *
-     * Title: For Unsupported format Document Type is changed in request to DDOC format, actual is PNG
-     *
-     * Expected Result: Error is returned
-     *
-     * File: Picture.png
-     **/
-    @Test
-    public void testGetDataFileRequestUnsupportedDocumentTypeSetToDdoc() {
-        setTestFilesDirectory("document_format_test_files/");
-        String response = postForDataFiles(dataFilesRequestExtended("Picture.png", "test.DDOC")).asString();
-        assertEquals(1, getRequestErrorsCount(response, DOCUMENT, DOCUMENT_MALFORMED_OR_NOT_MATCHING_DOCUMENT_TYPE), getFailMessageForKey(DOCUMENT_TYPE));
+    private static Stream<Arguments> getFileLocationAndFileName() {
+        return Stream.of(
+                arguments("bdoc/live/timestamp/", "BDOC-TS.bdoc"),
+                arguments("document_format_test_files/", "PdfValidSingleSignature.pdf"),
+                arguments("document_format_test_files/", "Picture.png")
+        );
     }
 
     @Override

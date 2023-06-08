@@ -60,14 +60,14 @@ public class ConstraintLoadingSignaturePolicyService extends SignaturePolicyServ
     private byte[] getContentFromPolicyPath(String policyPath) throws IOException {
         InputStream policyDataStream = null;
         if (new File(policyPath).isAbsolute()) {
-            LOGGER.info("Reading policy from absolute path: " + policyPath);
+            LOGGER.info("Reading policy from absolute path: {}", policyPath);
             try {
                 policyDataStream = new FileInputStream(new File(policyPath));
             } catch (FileNotFoundException e) {
                 LOGGER.warn(e.getMessage(), e);
             }
         } else {
-            LOGGER.info("Reading policy from classpath: " + policyPath);
+            LOGGER.info("Reading policy from classpath: {}", policyPath);
             policyDataStream = getClass().getClassLoader().getResourceAsStream(policyPath);
         }
 

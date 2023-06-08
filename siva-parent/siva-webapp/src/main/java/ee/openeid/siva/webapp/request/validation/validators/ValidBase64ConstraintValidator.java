@@ -25,6 +25,7 @@ import javax.validation.ConstraintValidatorContext;
 
 public class ValidBase64ConstraintValidator implements ConstraintValidator<ValidBase64String, String> {
 
+   @Override
    public void initialize(ValidBase64String constraint) {
    }
 

@@ -22,12 +22,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
 
 import static ee.openeid.siva.integrationtest.TestData.*;
 
 @Tag("IntegrationTest")
-public class AsiceValidationFailIT extends SiVaRestTests {
+class AsiceValidationFailIT extends SiVaRestTests {
 
     @BeforeEach
     public void DirectoryBackToDefault() {
@@ -56,7 +58,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * File: InvalidLiveSignature.asice
      */
     @Test
-    public void asiceInvalidSingleSignature() {
+    void asiceInvalidSingleSignature() {
         post(validationRequestFor("InvalidLiveSignature.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
@@ -86,7 +88,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * File: InvalidMultipleSignatures.bdoc
      */
     @Test
-    public void asiceInvalidMultipleSignatures() {
+    void asiceInvalidMultipleSignatures() {
         post(validationRequestFor("InvalidMultipleSignatures.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
@@ -117,7 +119,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * File: InvalidAndValidSignatures.asice
      */
     @Test
-    public void asiceInvalidAndValidMultipleSignatures() {
+    void asiceInvalidAndValidMultipleSignatures() {
         post(validationRequestFor("InvalidAndValidSignatures.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
@@ -146,7 +148,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * File: AsiceContainerNoSignature.asice
      */
     @Test
-    public void asiceNoSignatures() {
+    void asiceNoSignatures() {
         setTestFilesDirectory("document_format_test_files/");
 
         post(validationRequestFor("AsiceContainerNoSignature.asice"))
@@ -171,7 +173,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * File: TS-02_23634_TS_wrong_SignatureValue.asice
      */
     @Test
-    public void asiceInvalidTimeStampDontMatchSigValue() {
+    void asiceInvalidTimeStampDontMatchSigValue() {
         post(validationRequestFor("TS-02_23634_TS_wrong_SignatureValue.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
@@ -197,7 +199,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * File: EE_SER-AEX-B-LT-I-43.asice
      */
     @Test
-    public void asiceInvalidNonRepudiationKey() {
+    void asiceInvalidNonRepudiationKey() {
         post(validationRequestFor("EE_SER-AEX-B-LT-I-43.asice", VALID_SIGNATURE_POLICY_3,"Simple"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
@@ -223,7 +225,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * File: EE_SER-AEX-B-LT-I-26.asice
      */
     @Test
-    public void asiceInvalidNonRepudiationKeyNoComplianceInfo() {
+    void asiceInvalidNonRepudiationKeyNoComplianceInfo() {
         post(validationRequestFor("EE_SER-AEX-B-LT-I-26.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
@@ -249,7 +251,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * File: TM-01_bdoc21-unknown-resp.bdoc
      */
     @Test
-    public void asiceNotTrustedOcspCert() {
+    void asiceNotTrustedOcspCert() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDSS("TM-01_bdoc21-unknown-resp.bdoc", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -281,7 +283,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * File: TS-05_23634_TS_unknown_TSA.asice
      */
     @Test
-    public void asiceNotTrustedTsaCert() {
+    void asiceNotTrustedTsaCert() {
         post(validationRequestFor("TS-05_23634_TS_unknown_TSA.asice", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
@@ -314,7 +316,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * File: EE_SER-AEX-B-LT-R-25.asice
      */
     @Test
-    public void asiceTsOcspStatusRevoked() {
+    void asiceTsOcspStatusRevoked() {
         post(validationRequestFor("EE_SER-AEX-B-LT-R-25.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
@@ -340,7 +342,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * File: EE_SER-AEX-B-LT-V-20.asice
      */
     @Test
-    public void asiceOcspAndTsDifferenceOver24H() {
+    void asiceOcspAndTsDifferenceOver24H() {
         post(validationRequestFor("EE_SER-AEX-B-LT-V-20.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
@@ -365,7 +367,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * File: EE_SER-AEX-B-LT-V-34.asice
      */
     @Test
-    public void asiceUnsignedDataFiles() {
+    void asiceUnsignedDataFiles() {
         post(validationRequestFor("EE_SER-AEX-B-LT-V-34.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
@@ -389,7 +391,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * File: REF-19_bdoc21-no-sig-asn1-pref.bdoc
      */
     @Test
-    public void asiceSignatureValueDoNotCorrespondToSignedInfo() {
+    void asiceSignatureValueDoNotCorrespondToSignedInfo() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDSS("REF-19_bdoc21-no-sig-asn1-pref.bdoc", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -415,7 +417,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * File: signWithIdCard_d4j_1.0.4_BES.asice
      */
     @Test
-    public void asiceBaselineBesSignatureLevel() {
+    void asiceBaselineBesSignatureLevel() {
         post(validationRequestFor("signWithIdCard_d4j_1.0.4_BES.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
@@ -447,7 +449,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * File: TM-04_kehtivuskinnituset.4.asice
      */
     @Test
-    public void asiceBaselineEpesSignatureLevel() {
+    void asiceBaselineEpesSignatureLevel() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("TM-04_kehtivuskinnituset.4.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -479,7 +481,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * File: SS-4_teadmataCA.4.asice
      */
     @Test
-    public void asiceSignersCertNotTrusted() {
+    void asiceSignersCertNotTrusted() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("SS-4_teadmataCA.4.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -512,7 +514,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * File: TM-15_revoked.4.asice
      */
     @Test
-    public void asiceTmOcspStatusRevoked() {
+    void asiceTmOcspStatusRevoked() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("TM-15_revoked.4.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -539,7 +541,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * File: TM-16_unknown.4.asice
      */
     @Test
-    public void asiceTmOcspStatusUnknown() {
+    void asiceTmOcspStatusUnknown() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("TM-16_unknown.4.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -564,7 +566,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * File: KS-21_fileeemaldatud.4.asice
      */
     @Test
-    public void asiceSignedFileRemoved() {
+    void asiceSignedFileRemoved() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("KS-21_fileeemaldatud.4.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -590,7 +592,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * File: KS-02_tyhi.bdoc
      */
     @Test
-    public void asiceNoFilesInContainer() {
+    void asiceNoFilesInContainer() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDSS("KS-02_tyhi.bdoc", null, null))
                 .then()
@@ -612,7 +614,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * File: REF-14_filesisumuudetud.4.bdoc
      */
     @Test
-    public void asiceDataFilesDontMatchHash() {
+    void asiceDataFilesDontMatchHash() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDSS("REF-14_filesisumuudetud.4.bdoc", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -638,7 +640,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * File: TS-06_23634_TS_missing_OCSP.asice
      */
     @Test
-    public void asiceBaselineTSignature() {
+    void asiceBaselineTSignature() {
         post(validationRequestFor("TS-06_23634_TS_missing_OCSP.asice", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
@@ -669,9 +671,9 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * <p>
      * File:
      */
-    @Disabled //TODO: test file is needed where certificate expiration end is before the OCSP produced at time
+    @Disabled(/*TODO:*/"Test file is needed where certificate expiration end is before the OCSP produced at time")
     @Test
-    public void asiceCertificateValidityOutOfOcspRange() {
+    void asiceCertificateValidityOutOfOcspRange() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDSS("", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -696,7 +698,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * File: TM-invalid-sig-no-sign-cert.asice
      */
     @Test
-    public void asiceInvalidSignatureNoSigningCertificateFound() {
+    void asiceInvalidSignatureNoSigningCertificateFound() {
         setTestFilesDirectory("bdoc/test/timemark/");
         String fileName = "TM-invalid-sig-no-sign-cert.asice";
         post(validationRequestFor(fileName))
@@ -727,7 +729,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * File: IB-5987_signed_with_expired_certificate.asice
      */
     @Test
-    public void asiceSignedWithExpiredCertificate() {
+    void asiceSignedWithExpiredCertificate() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         String fileName = "IB-5987_signed_with_expired_certificate.asice";
         post(validationRequestFor(fileName))
@@ -758,7 +760,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * File: REF-03_bdoc21-TS-no-signedpropref.asice
      */
     @Test
-    public void bdocTimemarkSignedPropertiesMissing() {
+    void bdocTimemarkSignedPropertiesMissing() {
         setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
         post(validationRequestFor("REF-03_bdoc21-TS-no-signedpropref.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -783,7 +785,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * File: esteid2018signerAiaOcspLT.asice
      */
     @Test
-    public void asiceLtSignatureSignedWithExpiredAiaOCSP() {
+    void asiceLtSignatureSignedWithExpiredAiaOCSP() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         post(validationRequestFor("esteid2018signerAiaOcspLT.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -808,7 +810,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * File: esteid2018signerAiaOcspLTA.asice
      */
     @Test
-    public void asiceLtaSignatureSignedWithExpiredAiaOCSP() {
+    void asiceLtaSignatureSignedWithExpiredAiaOCSP() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         post(validationRequestFor("esteid2018signerAiaOcspLTA.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -826,18 +828,19 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      *
      * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
      *
-     * Title: Asice simple xroad document
+     * Title: Asice xroad documents (simple, batchsignature, attachment)
      *
      * Expected Result: Document should fail as xroad document validation is not supported
      *
-     * File: xroad-simple.asice
+     * Files: xroad-simple.asice, xroad-batchsignature.asice, xroad-attachment.asice
      */
-    @Test
-    public void asiceSimpleXroadDocumentShouldFail() {
+    @ParameterizedTest
+    @ValueSource(strings = {"xroad-simple.asice", "xroad-batchsignature.asice", "xroad-attachment.asice"})
+    void asiceXroadDocumentShouldFail(String fileName) {
         setTestFilesDirectory("xroad/");
 
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-simple.asice"));
-        post(validationRequestWithValidKeys(encodedString, "xroad-simple.asice", VALID_SIGNATURE_POLICY_3))
+        String encodedString = Base64.encodeBase64String(readFileFromTestResources(fileName));
+        post(validationRequestWithValidKeys(encodedString, fileName, VALID_SIGNATURE_POLICY_3))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
                 .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
@@ -856,70 +859,6 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      *
      * TestType: Automated
      *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
-     *
-     * Title: Asice batchsignature xroad document
-     *
-     * Expected Result: Document should fail as xroad document validation is not supported
-     *
-     * File: xroad-batchsignature.asice
-     */
-    @Test
-    public void asiceBatchXroadDocumentShouldFail() {
-        setTestFilesDirectory("xroad/");
-
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-batchsignature.asice"));
-        post(validationRequestWithValidKeys(encodedString, "xroad-batchsignature.asice", VALID_SIGNATURE_POLICY_3))
-                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
-                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
-                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B"))
-                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
-                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_FORMAT_FAILURE))
-                .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("70006317"))
-                .body("signatures[0].subjectDistinguishedName.commonName", Matchers.is("Riigi Infosüsteemi Amet"))
-                .body("signatures[0].errors.content", Matchers.hasItems(SIG_UNEXPECTED_FORMAT))
-                .body("validSignaturesCount", Matchers.is(0))
-                .body("signaturesCount", Matchers.is(1));
-    }
-
-    /**
-     * TestCaseID: Asice-ValidationFail-31
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4
-     *
-     * Title: Asice attachment xroad document
-     *
-     * Expected Result: Document should fail as xroad document validation is not supported
-     *
-     * File: xroad-attachment.asice
-     */
-    @Test
-    public void validatingAttachXroadDocumentShouldFail() {
-        setTestFilesDirectory("xroad/");
-
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("xroad-attachment.asice"));
-        post(validationRequestWithValidKeys(encodedString, "xroad-attachment.asice", VALID_SIGNATURE_POLICY_3))
-                .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
-                .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))
-                .body("validationLevel", Matchers.is(VALIDATION_LEVEL_ARCHIVAL_DATA))
-                .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_B"))
-                .body("signatures[0].indication", Matchers.is(TOTAL_FAILED))
-                .body("signatures[0].subIndication", Matchers.is(SUB_INDICATION_FORMAT_FAILURE))
-                .body("signatures[0].subjectDistinguishedName.serialNumber", Matchers.is("70006317"))
-                .body("signatures[0].subjectDistinguishedName.commonName", Matchers.is("Riigi Infosüsteemi Amet"))
-                .body("signatures[0].errors.content", Matchers.hasItems(SIG_UNEXPECTED_FORMAT))
-                .body("validSignaturesCount", Matchers.is(0))
-                .body("signaturesCount", Matchers.is(1));
-    }
-
-    /**
-     * TestCaseID: Asice-ValidationFail-32
-     *
-     * TestType: Automated
-     *
      * Requirement: http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
      *
      * Title: Asice Baseline-LTA file
@@ -929,7 +868,7 @@ public class AsiceValidationFailIT extends SiVaRestTests {
      * File: EE_SER-AEX-B-LTA-V-24.asice
      */
     @Test
-    public void asiceBaselineLtaProfileInvalidSignature() {
+    void asiceBaselineLtaProfileInvalidSignature() {
         post(validationRequestFor("EE_SER-AEX-B-LTA-V-24.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_ASICE))

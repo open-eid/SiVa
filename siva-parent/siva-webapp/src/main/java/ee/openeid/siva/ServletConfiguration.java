@@ -63,6 +63,7 @@ public class ServletConfiguration extends MonitoringConfiguration {
     private static final String DATAFILES_ENDPOINT = "/dataFilesWebService";
     private static final String URL_MAPPING = "/soap/*";
     private static final String SIVA_SERVICE_NAMESPACE = "http://soap.webapp.siva.openeid.ee/";
+    private static final String XROAD_ENDPOINT_PATH = "XRoad";
 
     private WsdlServiceConfigurationProperties wsdlConfProperties;
 
@@ -111,7 +112,7 @@ public class ServletConfiguration extends MonitoringConfiguration {
 
     @Bean
     public Endpoint validationXRoadEndpoint(SpringBus springBus, ValidationWebService validationWebService) {
-        return constructValidationEndpoint(springBus, validationWebService, "XRoadValidationWebService", "XRoad");
+        return constructValidationEndpoint(springBus, validationWebService, "XRoadValidationWebService", XROAD_ENDPOINT_PATH);
     }
 
     @Bean
@@ -126,7 +127,7 @@ public class ServletConfiguration extends MonitoringConfiguration {
 
     @Bean
     public Endpoint hashcodeValidationXRoadEndpoint(SpringBus springBus, HashcodeValidationWebService validationWebService) {
-        return constructHashcodeValidationEndpoint(springBus, validationWebService, "XRoadHashcodeValidationWebService", "XRoad");
+        return constructHashcodeValidationEndpoint(springBus, validationWebService, "XRoadHashcodeValidationWebService", XROAD_ENDPOINT_PATH);
     }
 
     @Bean
@@ -136,7 +137,7 @@ public class ServletConfiguration extends MonitoringConfiguration {
 
     @Bean
     public Endpoint dataFilesXRoadEndpoint(SpringBus springBus, DataFilesWebService dataFilesWebService) {
-        return constructDataFilesEndpoint(springBus, dataFilesWebService, "XRoadDataFilesWebService", "XRoad");
+        return constructDataFilesEndpoint(springBus, dataFilesWebService, "XRoadDataFilesWebService", XROAD_ENDPOINT_PATH);
     }
 
     @SuppressWarnings("squid:S2095") //False positive for AutoCloseable bean

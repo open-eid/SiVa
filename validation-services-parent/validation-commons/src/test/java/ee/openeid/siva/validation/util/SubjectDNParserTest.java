@@ -22,31 +22,31 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class SubjectDNParserTest {
+class SubjectDNParserTest {
 
     @Test
-    public void parseSerialNumberAsOID() {
+    void parseSerialNumberAsOID() {
         String subjectDN = "2.5.4.5=#130b3437313031303130303333,2.5.4.42=#0c05504552454e494d49,2.5.4.4=#0c074545534e494d49,CN=PERENIMI\\,EESNIMI\\,47101010033,OU=digital signature,O=ESTEID,C=EE";
         String parsedSerialNumber = SubjectDNParser.parse(subjectDN, SubjectDNParser.RDN.SERIALNUMBER);
         assertEquals("47101010033", parsedSerialNumber);
     }
 
     @Test
-    public void parseSerialNumberAsName() {
+    void parseSerialNumberAsName() {
         String subjectDN = "SERIALNUMBER=47101010033,SN=PERENIMI,GN=EESNIMI,CN=PERENIMI\\,EESNIMI\\,47101010033,OU=digital signature,O=ESTEID,C=EE";
         String parsedSerialNumber = SubjectDNParser.parse(subjectDN, SubjectDNParser.RDN.SERIALNUMBER);
         assertEquals("47101010033", parsedSerialNumber);
     }
 
     @Test
-    public void parsedRDNValueQuotesRemovedIfPresent() {
+    void parsedRDNValueQuotesRemovedIfPresent() {
         String subjectDN = "CN=\"47101010033\",OU=digital signature,O=ESTEID,C=EE";
         String parsedSerialNumber = SubjectDNParser.parse(subjectDN, SubjectDNParser.RDN.CN);
         assertEquals("47101010033", parsedSerialNumber);
     }
 
     @Test
-    public void searchedSubjectNameNotPresent() {
+    void searchedSubjectNameNotPresent() {
         String subjectDN = "SN=PERENIMI,GN=EESNIMI,CN=PERENIMI\\,EESNIMI\\,47101010033,OU=digital signature,O=ESTEID,C=EE";
         String parsedSerialNumber = SubjectDNParser.parse(subjectDN, SubjectDNParser.RDN.SERIALNUMBER);
         assertNull(parsedSerialNumber);

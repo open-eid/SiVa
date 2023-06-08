@@ -28,7 +28,7 @@ import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInC
 
 @Tag("IntegrationTest")
 
-public class DdocValidationReportValueVerificationIT extends SiVaRestTests {
+class DdocValidationReportValueVerificationIT extends SiVaRestTests {
 
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "ddoc/live/timemark/";
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
@@ -50,7 +50,7 @@ public class DdocValidationReportValueVerificationIT extends SiVaRestTests {
      * File: DIGIDOC-XML1.3.ddoc
      */
     @Test
-    public void ddocAllElementsArePresentValidSignature() {
+    void ddocAllElementsArePresentValidSignature() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("DIGIDOC-XML1.3.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -99,7 +99,7 @@ public class DdocValidationReportValueVerificationIT extends SiVaRestTests {
      * File: multipleInvalidSignatures.ddoc
      */
     @Test
-    public void ddocAllElementsArePresentInvalidSignature() {
+    void ddocAllElementsArePresentInvalidSignature() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("multipleInvalidSignatures.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -149,7 +149,7 @@ public class DdocValidationReportValueVerificationIT extends SiVaRestTests {
      * File: 18912.ddoc
      */
     @Test
-    public void ddocOptionalWarningElementIsPresent() {
+    void ddocOptionalWarningElementIsPresent() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("18912.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -194,7 +194,7 @@ public class DdocValidationReportValueVerificationIT extends SiVaRestTests {
      * File: DdocContainerNoSignature.ddoc
      */
     @Test
-    public void ddocNoSignature() {
+    void ddocNoSignature() {
         setTestFilesDirectory("document_format_test_files/");
         post(validationRequestFor("DdocContainerNoSignature.ddoc", VALID_SIGNATURE_POLICY_4, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -220,7 +220,7 @@ public class DdocValidationReportValueVerificationIT extends SiVaRestTests {
      * File: SK-XML1.0.ddoc
      */
     @Test
-    public void ddocCorrectValuesArePresentV1_0() {
+    void ddocCorrectValuesArePresentV1_0() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("SK-XML1.0.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -268,7 +268,7 @@ public class DdocValidationReportValueVerificationIT extends SiVaRestTests {
      * File: Igasugust1.1.ddoc
      */
     @Test
-    public void ddocCorrectValuesArePresentV1_1() {
+    void ddocCorrectValuesArePresentV1_1() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("igasugust1.1.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -316,7 +316,7 @@ public class DdocValidationReportValueVerificationIT extends SiVaRestTests {
      * File: Igasugust1.2.ddoc
      */
     @Test
-    public void ddocCorrectValuesArePresentV1_2() {
+    void ddocCorrectValuesArePresentV1_2() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("igasugust1.2.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -364,7 +364,7 @@ public class DdocValidationReportValueVerificationIT extends SiVaRestTests {
      * File: Igasugust1.3.ddoc
      */
     @Test
-    public void ddocCorrectValuesArePresentV1_3() {
+    void ddocCorrectValuesArePresentV1_3() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("igasugust1.3.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)

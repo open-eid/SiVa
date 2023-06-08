@@ -28,7 +28,7 @@ import java.io.IOException;
 import static ee.openeid.siva.integrationtest.TestData.*;
 
 @Tag("IntegrationTest")
-public class XadesHashcodeValidationPassIT extends SiVaRestTests {
+class XadesHashcodeValidationPassIT extends SiVaRestTests {
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "xades/";
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
 
@@ -51,7 +51,7 @@ public class XadesHashcodeValidationPassIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      */
     @Test
-    public void validXadesWithHashcodeFromAsice() throws IOException, SAXException, ParserConfigurationException {
+    void validXadesWithHashcodeFromAsice() throws IOException, SAXException, ParserConfigurationException {
         postHashcodeValidation(validationRequestHashcodeSimple("Valid_XAdES_LT_TS.xml", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
@@ -78,7 +78,7 @@ public class XadesHashcodeValidationPassIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TM.xml
      */
     @Test
-    public void validXadesWithHashcodeFromBdoc() {
+    void validXadesWithHashcodeFromBdoc() {
         postHashcodeValidation(validationRequestHashcodeSimple("Valid_XAdES_LT_TM.xml", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
@@ -104,7 +104,7 @@ public class XadesHashcodeValidationPassIT extends SiVaRestTests {
      * File: Valid_XADES_LT_TS_multiple_datafiles.xml
      */
     @Test
-    public void validXadesWithHashcodeWithMultipleDataFiles() throws IOException, SAXException, ParserConfigurationException {
+    void validXadesWithHashcodeWithMultipleDataFiles() throws IOException, SAXException, ParserConfigurationException {
         postHashcodeValidation(validationRequestHashcodeSimple("Valid_XAdES_LT_TS_multiple_datafiles.xml", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
@@ -128,7 +128,7 @@ public class XadesHashcodeValidationPassIT extends SiVaRestTests {
      * File: test+document.xml
      */
     @Test
-    public void validXadesWithPlusInDataFileName() {
+    void validXadesWithPlusInDataFileName() {
         postHashcodeValidation(validationRequestHashcode("test+document.xml", null, null, "test+document.txt", HASH_ALGO_SHA256, "heKN3NGQ0HttzgmfKG0L243dfG7W+6kTMO5n7YbKeS4="))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
@@ -153,7 +153,7 @@ public class XadesHashcodeValidationPassIT extends SiVaRestTests {
      * File: spacesInDatafile.xml
      */
     @Test
-    public void validXadesWithSpaceInDataFileName() {
+    void validXadesWithSpaceInDataFileName() {
         postHashcodeValidation(validationRequestHashcode("spacesInDatafile.xml", null, null, "Te st in g.txt", HASH_ALGO_SHA256, "5UxI8Rm1jUZm48+Vkdutyrsyr3L/MPu/RK1V81AeKEY="))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
@@ -178,7 +178,7 @@ public class XadesHashcodeValidationPassIT extends SiVaRestTests {
      * File: sha224_TS.xml
      */
     @Test
-    public void sha1DatafileDigestSignatureShouldPass() {
+    void sha1DatafileDigestSignatureShouldPass() {
         postHashcodeValidation(validationRequestHashcode("sha1_TM.xml", null, null, "test.txt", "SHA1", "qP3CBanxnMHHUHpgxPAbE9Edf9A="))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
@@ -201,7 +201,7 @@ public class XadesHashcodeValidationPassIT extends SiVaRestTests {
      * File: sha224_TS.xml
      */
     @Test
-    public void sha224DatafileDigestSignatureShouldPass() {
+    void sha224DatafileDigestSignatureShouldPass() {
         postHashcodeValidation(validationRequestHashcode("sha224_TS.xml", null, null, "test1.txt", HASH_ALGO_SHA224, "C7YzVACWz0f8pxd7shHKB1BzOuIuSjBysO3xgw=="))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
@@ -224,7 +224,7 @@ public class XadesHashcodeValidationPassIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      */
     @Test
-    public void sha256DatafileDigestSignatureShouldPass() {
+    void sha256DatafileDigestSignatureShouldPass() {
         postHashcodeValidation(validationRequestHashcode("Valid_XAdES_LT_TS.xml", null, null, "test.txt", HASH_ALGO_SHA256, "RnKZobNWVy8u92sDL4S2j1BUzMT5qTgt6hm90TfAGRo="))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
@@ -247,7 +247,7 @@ public class XadesHashcodeValidationPassIT extends SiVaRestTests {
      * File: sha384_TS.xml
      */
     @Test
-    public void sha384DatafileDigestSignatureShouldPass() {
+    void sha384DatafileDigestSignatureShouldPass() {
         postHashcodeValidation(validationRequestHashcode("sha384_TS.xml", null, null, "test1.txt", HASH_ALGO_SHA384, "DU5PS1Qcd2gu8U3g+4hDYldhAoT/sxEWz6YV8cEdjAaVEFMYSNOypSL+xt4KkK9k"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
@@ -270,7 +270,7 @@ public class XadesHashcodeValidationPassIT extends SiVaRestTests {
      * File: sha512_TS.xml
      */
     @Test
-    public void sha512DatafileDigestSignatureShouldPass() {
+    void sha512DatafileDigestSignatureShouldPass() {
         postHashcodeValidation(validationRequestHashcode("sha512_TS.xml", null, null, "test1.txt", HASH_ALGO_SHA512, "pA2Dh2/WoCnnxGL9PZd+DQivXUmq8dQG1nyQY3phKZPKlm/HfZZDG8yB79hTG2F4pV9LqW+6SGsETE9d+LQsRg=="))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))

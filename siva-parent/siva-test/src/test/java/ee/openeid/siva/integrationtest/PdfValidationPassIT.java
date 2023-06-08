@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 import static ee.openeid.siva.integrationtest.TestData.VALIDATION_CONCLUSION_PREFIX;
 
 @Tag("IntegrationTest")
-public class PdfValidationPassIT extends SiVaRestTests {
+class PdfValidationPassIT extends SiVaRestTests {
 
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "pdf/signing_certifacte_test_files/";
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
@@ -48,7 +48,7 @@ public class PdfValidationPassIT extends SiVaRestTests {
      * File: hellopades-lt-sha256-rsa1024-not-expired.pdf
      */
     @Test
-    public void validSignaturesRemainValidAfterSigningCertificateExpires() {
+    void validSignaturesRemainValidAfterSigningCertificateExpires() {
         post(validationRequestFor("hellopades-lt-sha256-rsa1024-not-expired.pdf", VALID_SIGNATURE_POLICY_3, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.emptyOrNullString())
@@ -75,7 +75,7 @@ public class PdfValidationPassIT extends SiVaRestTests {
      * File: hellopades-lt-sha256-rsa2048-7d.pdf
      */
     @Test
-    public void certificateExpired7DaysAfterDocumentSigningShouldPass() {
+    void certificateExpired7DaysAfterDocumentSigningShouldPass() {
         post(validationRequestFor("hellopades-lt-sha256-rsa2048-7d.pdf", VALID_SIGNATURE_POLICY_3, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.emptyOrNullString())
@@ -101,7 +101,7 @@ public class PdfValidationPassIT extends SiVaRestTests {
      * File: PdfValidSingleSignature.pdf
      */
     @Test
-    public void validSignature() {
+    void validSignature() {
         setTestFilesDirectory("document_format_test_files/");
         post(validationRequestFor("PdfValidSingleSignature.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -131,7 +131,7 @@ public class PdfValidationPassIT extends SiVaRestTests {
      * File: hellopades-lt-sha256-ocsp-15min1s.pdf
      */
     @Test
-    public void ocsp15MinutesAfterTsShouldPassWithWarning() {
+    void ocsp15MinutesAfterTsShouldPassWithWarning() {
         setTestFilesDirectory("pdf/signature_revocation_value_test_files/");
         post(validationRequestFor("hellopades-lt-sha256-ocsp-15min1s.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -161,7 +161,7 @@ public class PdfValidationPassIT extends SiVaRestTests {
      */
     //TODO SIVA-349 needs investigation why the signature is determined as PAdES_BASELINE_LTA not as PAdES_BASELINE_LT
     @Test
-    public void crlTakenDaysAfterTsShouldPass() {
+    void crlTakenDaysAfterTsShouldPass() {
         setTestFilesDirectory("pdf/signature_revocation_value_test_files/");
         post(validationRequestFor("pades-lt-CRL-taken-days-later.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)

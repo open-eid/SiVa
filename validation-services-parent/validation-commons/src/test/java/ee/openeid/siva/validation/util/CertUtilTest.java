@@ -26,7 +26,7 @@ import java.security.cert.X509Certificate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class CertUtilTest {
+class CertUtilTest {
     private static final String CERTIFICATE = "MIIEnDCCA4SgAwIBAgIQL9ObKmnMcfRSaL7iJK7tXDANBgkqhkiG9w0BAQUF\n" +
             "ADBkMQswCQYDVQQGEwJFRTEiMCAGA1UECgwZQVMgU2VydGlmaXRzZWVyaW1p\n" +
             "c2tlc2t1czEXMBUGA1UEAwwORVNURUlELVNLIDIwMTExGDAWBgkqhkiG9w0B\n" +
@@ -56,12 +56,12 @@ public class CertUtilTest {
             "IrzvrBIen9lWIwFB2xU=";
 
     @Test
-    public void validCountryFromCertificate() throws CertificateException {
+    void validCountryFromCertificate() throws CertificateException {
         assertEquals("EE", CertUtil.getCountryCode(getCertificate()));
     }
 
     @Test
-    public void validCommonNameFromCertificate() throws CertificateException {
+    void validCommonNameFromCertificate() throws CertificateException {
         assertEquals("VOLL,ANDRES,39004170346", CertUtil.getCommonName(getCertificate()));
     }
 

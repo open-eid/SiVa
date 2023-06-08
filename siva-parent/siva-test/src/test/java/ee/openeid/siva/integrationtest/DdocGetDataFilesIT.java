@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 
 
 @Tag("IntegrationTest")
-public class DdocGetDataFilesIT  extends SiVaRestTests{
+class DdocGetDataFilesIT  extends SiVaRestTests{
 
     @BeforeEach
     public void DirectoryBackToDefault() {
@@ -53,7 +53,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
      * File: 18912.ddoc
      */
     @Test
-    public void testGetDataFileFromValidDdoc(){
+    void testGetDataFileFromValidDdoc(){
         setTestFilesDirectory("ddoc/live/timemark/");
         postForDataFiles(dataFilesRequest("18912.ddoc"))
                 .then()
@@ -77,7 +77,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
      * File: OCSP nonce vale.ddoc
      */
     @Test
-    public void testGetDataFileFromInvalidDdoc(){
+    void testGetDataFileFromInvalidDdoc(){
         setTestFilesDirectory("ddoc/live/timemark/");
         postForDataFiles(dataFilesRequest("OCSP nonce vale.ddoc"))
                 .then()
@@ -101,7 +101,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
      * File: DIGIDOC-XML1.1.ddoc
      * */
     @Test
-    public void testGetDataFileFromDdocXml1_0(){
+    void testGetDataFileFromDdocXml1_0(){
         setTestFilesDirectory("ddoc/live/timemark/");
         postForDataFiles(dataFilesRequest("SK-XML1.0.ddoc"))
                 .then()
@@ -125,7 +125,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
      * File: DIGIDOC-XML1.1.ddoc
      * */
     @Test
-    public void testGetDataFileFromDdocXml1_1(){
+    void testGetDataFileFromDdocXml1_1(){
         setTestFilesDirectory("ddoc/live/timemark/");
         postForDataFiles(dataFilesRequest("DIGIDOC-XML1.1.ddoc"))
                 .then()
@@ -149,7 +149,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
      * File: DIGIDOC-XML1.2.ddoc
      * */
     @Test
-    public void testGetDataFileFromDdocXml1_2(){
+    void testGetDataFileFromDdocXml1_2(){
         setTestFilesDirectory("ddoc/live/timemark/");
         postForDataFiles(dataFilesRequest("DIGIDOC-XML1.2.ddoc"))
                 .then()
@@ -173,7 +173,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
      * File: valid_XML1_3.ddoc
      * */
     @Test
-    public void testGetDataFileFromDdocXml1_3(){
+    void testGetDataFileFromDdocXml1_3(){
         setTestFilesDirectory("ddoc/test/timemark/");
         postForDataFiles(dataFilesRequest("valid_XML1_3.ddoc"))
                 .then()
@@ -198,7 +198,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
      * */
     @Disabled("SIVA-376")
     @Test
-    public void testGetDataFileFromDdocHashcoded(){
+    void testGetDataFileFromDdocHashcoded(){
         setTestFilesDirectory("ddoc/live/timemark/");
         postForDataFiles(dataFilesRequest("DIGIDOC-XML1.3_hashcode.ddoc"))
                 .then()
@@ -222,7 +222,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
      * File: igasugust1.3.ddoc
      * */
     @Test
-    public void testGetMultipileDataFilesFromDdoc(){
+    void testGetMultipileDataFilesFromDdoc(){
         setTestFilesDirectory("ddoc/live/timemark/");
         postForDataFiles(dataFilesRequest("igasugust1.3.ddoc"))
                 .then()
@@ -290,7 +290,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
      * File: BDOC-TS.bdoc
      **/
     @Test
-    public void testGetDataFileFromBdocShouldFail(){
+    void testGetDataFileFromBdocShouldFail(){
         setTestFilesDirectory("bdoc/live/timestamp/");
         postForDataFiles(dataFilesRequest("BDOC-TS.bdoc"))
                 .then()
@@ -312,7 +312,7 @@ public class DdocGetDataFilesIT  extends SiVaRestTests{
      * File: hellopades-lt-b.pdf
      * */
     @Test
-    public void testGetDataFileFromPdfShouldFail(){
+    void testGetDataFileFromPdfShouldFail(){
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         postForDataFiles(dataFilesRequest("hellopades-lt-b.pdf"))
                 .then()

@@ -59,7 +59,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = MessageSourceAutoConfiguration.class)
-public class ValidationExceptionHandlerTest {
+class ValidationExceptionHandlerTest {
 
     private static final String VALIDATE_URL_TEMPLATE = "/validate";
     private static final String HASHCODE_VALIDATION_URL_TEMPLATE = "/validateHashcode";
@@ -96,7 +96,7 @@ public class ValidationExceptionHandlerTest {
     }
 
     @Test
-    public void testMethodArgumentNotValidExceptionOnReportTypeExceptionHandler() throws Exception{
+    void testMethodArgumentNotValidExceptionOnReportTypeExceptionHandler() throws Exception{
         mockMvc.perform(post(VALIDATE_URL_TEMPLATE)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestWithInvalidReportType().toString().getBytes()))
@@ -109,7 +109,7 @@ public class ValidationExceptionHandlerTest {
     }
 
     @Test
-    public void testMethodArgumentNotValidExceptionOnGetDataFilesExceptionHandler() throws Exception {
+    void testMethodArgumentNotValidExceptionOnGetDataFilesExceptionHandler() throws Exception {
         mockMvcDataFiles.perform(post(GET_DATA_FILES_URL_TEMPLATE)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestWithInvalidDataFileFilename().toString().getBytes()))
@@ -123,7 +123,7 @@ public class ValidationExceptionHandlerTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testMalformedDocumentExceptionOnValidationExceptionHandler() throws Exception {
+    void testMalformedDocumentExceptionOnValidationExceptionHandler() throws Exception {
         when(validationProxy.validate(any(ProxyDocument.class))).thenThrow(MalformedDocumentException.class);
         MvcResult result = mockMvc.perform(post(VALIDATE_URL_TEMPLATE)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -132,12 +132,12 @@ public class ValidationExceptionHandlerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        assertEquals(content, "{\"requestErrors\":[{\"key\":\"document\",\"message\":\"Document malformed or not matching documentType\"}]}");
+        assertEquals("{\"requestErrors\":[{\"key\":\"document\",\"message\":\"Document malformed or not matching documentType\"}]}", content);
     }
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testDocumentRequirementsExceptionOnValidationExceptionHandler() throws Exception {
+    void testDocumentRequirementsExceptionOnValidationExceptionHandler() throws Exception {
         when(validationProxy.validate(any(ProxyDocument.class))).thenThrow(DocumentRequirementsException.class);
         MvcResult result = mockMvc.perform(post(VALIDATE_URL_TEMPLATE)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -146,11 +146,11 @@ public class ValidationExceptionHandlerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        assertEquals(content, "{\"requestErrors\":[{\"key\":\"document\",\"message\":\"Document does not meet the requirements\"}]}");
+        assertEquals("{\"requestErrors\":[{\"key\":\"document\",\"message\":\"Document does not meet the requirements\"}]}", content);
     }
 
     @Test
-    public void testMalformedDocumentExceptionOnGetDataFilesExceptionHandler() throws Exception {
+    void testMalformedDocumentExceptionOnGetDataFilesExceptionHandler() throws Exception {
         when(dataFilesProxy.getDataFiles(any(ProxyDocument.class))).thenThrow(MalformedDocumentException.class);
         MvcResult result = mockMvcDataFiles.perform(post(GET_DATA_FILES_URL_TEMPLATE)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -159,12 +159,12 @@ public class ValidationExceptionHandlerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        assertEquals(content, "{\"requestErrors\":[{\"key\":\"document\",\"message\":\"Document malformed or not matching documentType\"}]}");
+        assertEquals("{\"requestErrors\":[{\"key\":\"document\",\"message\":\"Document malformed or not matching documentType\"}]}", content);
     }
 
     @SuppressWarnings("unchecked")
     @Test
-    public void givenInvalidPolicyWillReturnErrorJson() throws Exception {
+    void givenInvalidPolicyWillReturnErrorJson() throws Exception {
         when(validationProxy.validate(any(ProxyDocument.class))).thenThrow(InvalidPolicyException.class);
 
         MvcResult mvcResult = mockMvc.perform(post(VALIDATE_URL_TEMPLATE)
@@ -178,7 +178,7 @@ public class ValidationExceptionHandlerTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testValidationServiceExceptionOnValidationExceptionHandler() throws Exception {
+    void testValidationServiceExceptionOnValidationExceptionHandler() throws Exception {
         when(validationProxy.validate(any(ProxyDocument.class))).thenThrow(ValidationServiceException.class);
         MvcResult result = mockMvc.perform(post(VALIDATE_URL_TEMPLATE)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -187,12 +187,12 @@ public class ValidationExceptionHandlerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        assertEquals(content, "{\"requestErrors\":[{\"key\":\"document\",\"message\":\"Unfortunately there was an error validating your document\"}]}");
+        assertEquals("{\"requestErrors\":[{\"key\":\"document\",\"message\":\"Unfortunately there was an error validating your document\"}]}", content);
     }
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testDataFilesServiceExceptionOnValidationExceptionHandler() throws Exception {
+    void testDataFilesServiceExceptionOnValidationExceptionHandler() throws Exception {
         when(dataFilesProxy.getDataFiles(any(ProxyDocument.class))).thenThrow(ValidationServiceException.class);
         MvcResult result = mockMvcDataFiles.perform(post(GET_DATA_FILES_URL_TEMPLATE)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -201,11 +201,11 @@ public class ValidationExceptionHandlerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        assertEquals(content, "{\"requestErrors\":[{\"key\":\"document\",\"message\":\"Unfortunately there was an error validating your document\"}]}");
+        assertEquals("{\"requestErrors\":[{\"key\":\"document\",\"message\":\"Unfortunately there was an error validating your document\"}]}", content);
     }
 
     @Test
-    public void testHashcodeValidationMalformedSignatureFileExceptionHandler() throws Exception {
+    void testHashcodeValidationMalformedSignatureFileExceptionHandler() throws Exception {
         when(hashcodeValidationProxy.validate(any())).thenThrow(MalformedSignatureFileException.class);
         mockMvc.perform(post(HASHCODE_VALIDATION_URL_TEMPLATE)
                 .contentType(MediaType.APPLICATION_JSON)

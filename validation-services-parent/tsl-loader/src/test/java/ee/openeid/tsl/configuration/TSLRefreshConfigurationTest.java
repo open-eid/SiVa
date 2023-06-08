@@ -28,7 +28,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class TSLRefreshConfigurationTest {
+class TSLRefreshConfigurationTest {
 
     private static final String SCHEDULER_CRON = "0 0 3 * * ?";
 
@@ -41,7 +41,7 @@ public class TSLRefreshConfigurationTest {
     private TSLRefreshConfiguration tslRefreshConfiguration;
 
     @Test
-    public void verifySchedulerCronIsQueriedFromPropertiesWhenCreatingTSLRefreshTask() {
+    void verifySchedulerCronIsQueriedFromPropertiesWhenCreatingTSLRefreshTask() {
         when(properties.getSchedulerCron()).thenReturn(SCHEDULER_CRON);
         tslRefreshConfiguration.tslRefreshTask();
         verify(properties, VerificationModeFactory.times(1)).getSchedulerCron();

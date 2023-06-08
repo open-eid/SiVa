@@ -41,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 @ExtendWith(MockitoExtension.class)
-public class ValidationControllerTest {
+class ValidationControllerTest {
 
     private ValidationRequestToProxyDocumentTransformerSpy transformerSpy = new ValidationRequestToProxyDocumentTransformerSpy();
     @Mock
@@ -64,7 +64,7 @@ public class ValidationControllerTest {
     }
 
     @Test
-    public void validJsonIsCorrectlyMappedToPOJO() throws Exception {
+    void validJsonIsCorrectlyMappedToPOJO() throws Exception {
         mockMvc.perform(post("/validate")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(validRequest().toString().getBytes())
@@ -74,7 +74,7 @@ public class ValidationControllerTest {
     }
 
     @Test
-    public void requestWithNonBase64EncodedDocumentReturnsErroneousResponse() throws Exception {
+    void requestWithNonBase64EncodedDocumentReturnsErroneousResponse() throws Exception {
         mockMvc.perform(post("/validate")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestWithInvalidDocumentEncoding().toString().getBytes()))
@@ -82,7 +82,7 @@ public class ValidationControllerTest {
     }
 
     @Test
-    public void requestWithEmptyDocumentReturnsErroneousResponse() throws Exception {
+    void requestWithEmptyDocumentReturnsErroneousResponse() throws Exception {
         mockMvc.perform(post("/validate")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestWithEmptyDocument().toString().getBytes()))
@@ -90,7 +90,7 @@ public class ValidationControllerTest {
     }
 
     @Test
-    public void requestWithInvalidReportTypeReturnsErroneousResponse() throws Exception {
+    void requestWithInvalidReportTypeReturnsErroneousResponse() throws Exception {
         mockMvc.perform(post("/validate")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestWithInvalidReportType().toString().getBytes()))
@@ -98,7 +98,7 @@ public class ValidationControllerTest {
     }
 
     @Test
-    public void requestWithInvalidKeysShouldBeRejectedWithError() throws Exception {
+    void requestWithInvalidKeysShouldBeRejectedWithError() throws Exception {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("filename", "filename.exe");
         jsonObject.put("documentType", "BDOC");
@@ -113,7 +113,7 @@ public class ValidationControllerTest {
     }
 
     @Test
-    public void requestWithEmptyFilenameReturnsErroneousResponse() throws Exception {
+    void requestWithEmptyFilenameReturnsErroneousResponse() throws Exception {
         mockMvc.perform(post("/validate")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestWithFilename("").toString().getBytes()))
@@ -121,7 +121,7 @@ public class ValidationControllerTest {
     }
 
     @Test
-    public void requestWithUnusualButLegalCharacterInFilenameShouldBeValid() throws Exception {
+    void requestWithUnusualButLegalCharacterInFilenameShouldBeValid() throws Exception {
         mockMvc.perform(post("/validate")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestWithFilename("üõäöžš.pdf").toString().getBytes()));
@@ -129,7 +129,7 @@ public class ValidationControllerTest {
     }
 
     @Test
-    public void requestWithMultipleErrorsReturnsAllErrorsInResponse() throws Exception {
+    void requestWithMultipleErrorsReturnsAllErrorsInResponse() throws Exception {
         mockMvc.perform(post("/validate")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(invalidRequest().toString().getBytes()))
@@ -137,7 +137,7 @@ public class ValidationControllerTest {
     }
 
     @Test
-    public void aRequestWithNoRequiredKeysReturnsAllErrorsForEachMissingKey() throws Exception {
+    void aRequestWithNoRequiredKeysReturnsAllErrorsForEachMissingKey() throws Exception {
         mockMvc.perform(post("/validate")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new JSONObject().toString().getBytes()))
@@ -196,7 +196,7 @@ public class ValidationControllerTest {
 
     private static class ValidationProxySpy extends ContainerValidationProxy {
 
-        public ValidationProxySpy(
+        ValidationProxySpy(
                 StatisticsService statisticsService,
                 ApplicationContext applicationContext,
                 Environment environment,

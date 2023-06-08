@@ -34,11 +34,11 @@ import org.mockito.Mockito;
 
 import java.util.stream.Stream;
 
-public class TokenUtilsTest {
+class TokenUtilsTest {
 
     @ParameterizedTest
     @MethodSource("invalidTokenArguments")
-    public void testIsTokenSignatureIntactAndSignatureValidAndTrustedChainShouldReturnFalse(
+    void testIsTokenSignatureIntactAndSignatureValidAndTrustedChainShouldReturnFalse(
             boolean signatureIntact, boolean signatureValid, boolean trustedChain, boolean signingCertificatePresent
     ) {
         TokenProxy tokenMock = Mockito.mock(TokenProxy.class);
@@ -88,7 +88,7 @@ public class TokenUtilsTest {
     }
 
     @Test
-    public void testIsTokenSignatureIntactAndSignatureValidAndTrustedChainShouldReturnTrueWhenTokenTrustedChainIsTrue() {
+    void testIsTokenSignatureIntactAndSignatureValidAndTrustedChainShouldReturnTrueWhenTokenTrustedChainIsTrue() {
         TokenProxy tokenMock = Mockito.mock(TokenProxy.class);
         Mockito.doReturn(true).when(tokenMock).isSignatureIntact();
         Mockito.doReturn(true).when(tokenMock).isSignatureValid();
@@ -104,7 +104,7 @@ public class TokenUtilsTest {
     }
 
     @Test
-    public void testIsTokenSignatureIntactAndSignatureValidAndTrustedChainShouldReturnTrueWhenSigningCertificateTrustedChainIsTrue() {
+    void testIsTokenSignatureIntactAndSignatureValidAndTrustedChainShouldReturnTrueWhenSigningCertificateTrustedChainIsTrue() {
         TokenProxy tokenMock = Mockito.mock(TokenProxy.class);
         Mockito.doReturn(true).when(tokenMock).isSignatureIntact();
         Mockito.doReturn(true).when(tokenMock).isSignatureValid();
@@ -126,7 +126,7 @@ public class TokenUtilsTest {
 
     @ParameterizedTest
     @ValueSource(classes = {RevocationWrapper.class, RelatedRevocationWrapper.class})
-    public void testIsRevocationTokenForCertificateAndCertificateStatusGoodShouldReturnFalseWhenRevocationIsNotCertificateRevocation(
+    void testIsRevocationTokenForCertificateAndCertificateStatusGoodShouldReturnFalseWhenRevocationIsNotCertificateRevocation(
             Class<? extends RevocationWrapper> revocationTokenType
     ) {
         RevocationWrapper revocationTokenMock = Mockito.mock(revocationTokenType);
@@ -139,7 +139,7 @@ public class TokenUtilsTest {
 
     @ParameterizedTest
     @EnumSource(value = CertificateStatus.class, mode = EnumSource.Mode.EXCLUDE, names = "GOOD")
-    public void testIsRevocationTokenForCertificateAndCertificateStatusGoodShouldReturnFalseWhenCertificateStatusIsNotGood(
+    void testIsRevocationTokenForCertificateAndCertificateStatusGoodShouldReturnFalseWhenCertificateStatusIsNotGood(
             CertificateStatus certificateStatus
     ) {
         CertificateRevocationWrapper revocationTokenMock = Mockito.mock(CertificateRevocationWrapper.class);
@@ -153,7 +153,7 @@ public class TokenUtilsTest {
     }
 
     @Test
-    public void testIsRevocationTokenForCertificateAndCertificateStatusGoodShouldReturnTrue() {
+    void testIsRevocationTokenForCertificateAndCertificateStatusGoodShouldReturnTrue() {
         CertificateRevocationWrapper revocationTokenMock = Mockito.mock(CertificateRevocationWrapper.class);
         Mockito.doReturn(CertificateStatus.GOOD).when(revocationTokenMock).getStatus();
 
@@ -166,7 +166,7 @@ public class TokenUtilsTest {
 
     @ParameterizedTest
     @MethodSource("invalidTimestampTokenArguments")
-    public void testIsTimestampTokenMessageImprintDataFoundAndMessageImprintDataIntactShouldReturnFalse(
+    void testIsTimestampTokenMessageImprintDataFoundAndMessageImprintDataIntactShouldReturnFalse(
             boolean messageImprintDataFound, boolean messageImprintDataIntact
     ) {
         TimestampWrapper timestampTokenMock = Mockito.mock(TimestampWrapper.class);
@@ -193,7 +193,7 @@ public class TokenUtilsTest {
     }
 
     @Test
-    public void testIsTimestampTokenMessageImprintDataFoundAndMessageImprintDataIntactShouldReturnTrue() {
+    void testIsTimestampTokenMessageImprintDataFoundAndMessageImprintDataIntactShouldReturnTrue() {
         TimestampWrapper timestampTokenMock = Mockito.mock(TimestampWrapper.class);
         Mockito.doReturn(true).when(timestampTokenMock).isMessageImprintDataFound();
         Mockito.doReturn(true).when(timestampTokenMock).isMessageImprintDataIntact();

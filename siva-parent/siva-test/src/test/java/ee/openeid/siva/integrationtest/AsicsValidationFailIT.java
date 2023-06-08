@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 import static ee.openeid.siva.integrationtest.TestData.VALIDATION_CONCLUSION_PREFIX;
 
 @Tag("IntegrationTest")
-public class AsicsValidationFailIT extends SiVaRestTests {
+class AsicsValidationFailIT extends SiVaRestTests {
 
     @BeforeEach
     public void DirectoryBackToDefault() {
@@ -53,7 +53,7 @@ public class AsicsValidationFailIT extends SiVaRestTests {
      * File: TwoDataFilesAsics.asics
      */
     @Test
-    public void moreThanOneDataFileInAsicsShouldFail() {
+    void moreThanOneDataFileInAsicsShouldFail() {
         post(validationRequestFor("TwoDataFilesAsics.asics"))
                 .then()
                 .body("requestErrors[0].key", Matchers.is("document"))
@@ -74,7 +74,7 @@ public class AsicsValidationFailIT extends SiVaRestTests {
      * File: DataFileMissingAsics.asics
      */
     @Test
-    public void noDataFileInAsicsShouldFail() {
+    void noDataFileInAsicsShouldFail() {
         post(validationRequestFor("DataFileMissingAsics.asics"))
                 .then()
                 .body("requestErrors[0].key", Matchers.is("document"))
@@ -95,7 +95,7 @@ public class AsicsValidationFailIT extends SiVaRestTests {
      * File: FoldersInAsics.asics
      */
     @Test
-    public void additionalFoldersInAsicsShouldFail() {
+    void additionalFoldersInAsicsShouldFail() {
         post(validationRequestFor("FoldersInAsics.asics"))
                 .then()
                 .body("requestErrors[0].key", Matchers.is("document"))
@@ -116,7 +116,7 @@ public class AsicsValidationFailIT extends SiVaRestTests {
      * File: MetaInfNotInRoot.asics
      */
     @Test
-    public void metaInfFolderNotInRootAsicsShouldFail() {
+    void metaInfFolderNotInRootAsicsShouldFail() {
         post(validationRequestFor("MetaInfNotInRoot.asics"))
                 .then()
                 .body("requestErrors[0].key", Matchers.is("document"))
@@ -137,7 +137,7 @@ public class AsicsValidationFailIT extends SiVaRestTests {
      * File: signatureMixedWithTST.asics
      */
     @Test
-    public void signatureFilesInAddtionToTstAsicsShouldFail() {
+    void signatureFilesInAddtionToTstAsicsShouldFail() {
         post(validationRequestFor("signatureMixedWithTST.asics"))
                 .then()
                 .body("requestErrors[0].key", Matchers.is("document"))
@@ -159,7 +159,7 @@ public class AsicsValidationFailIT extends SiVaRestTests {
      * File: AsicsTSTsignatureModified.asics
      */
     @Test
-    public void modifiedTstShouldFail() {
+    void modifiedTstShouldFail() {
         post(validationRequestFor("AsicsTSTsignatureModified.asics"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-S"))
@@ -183,7 +183,7 @@ public class AsicsValidationFailIT extends SiVaRestTests {
      * File: AsicsTSTsignatureBroken.asics
      */
     @Test
-    public void brokenTstAsicsShouldFail() {
+    void brokenTstAsicsShouldFail() {
         post(validationRequestFor("AsicsTSTsignatureBroken.asics"))
                 .then()
                 .body("requestErrors[0].key", Matchers.is("document"))
@@ -204,7 +204,7 @@ public class AsicsValidationFailIT extends SiVaRestTests {
      * File: DatafileAlteredButStillValid.asics
      */
     @Test
-    public void dataFileChangedAsicsShouldFail() {
+    void dataFileChangedAsicsShouldFail() {
         post(validationRequestFor("DatafileAlteredButStillValid.asics"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-S"))
@@ -230,7 +230,7 @@ public class AsicsValidationFailIT extends SiVaRestTests {
      * File: evidencerecordMixedWithTST.asics
      */
     @Test
-    public void evidencereecordFilesInAddtionToTstAsicsShouldFail() {
+    void evidencereecordFilesInAddtionToTstAsicsShouldFail() {
         post(validationRequestFor("evidencerecordMixedWithTST.asics"))
                 .then()
                 .body("requestErrors[0].key", Matchers.is("document"))

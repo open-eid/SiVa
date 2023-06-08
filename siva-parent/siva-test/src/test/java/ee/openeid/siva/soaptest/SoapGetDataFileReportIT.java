@@ -24,7 +24,7 @@ import org.w3c.dom.Document;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Tag("IntegrationTest")
-public class SoapGetDataFileReportIT extends SiVaSoapTests  {
+class SoapGetDataFileReportIT extends SiVaSoapTests  {
 
     @BeforeEach
     public void DirectoryBackToDefault() {
@@ -56,7 +56,7 @@ public class SoapGetDataFileReportIT extends SiVaSoapTests  {
      *
      **/
     @Test
-    public void soapGetDataFilesCorrectValuesArePresent(){
+    void soapGetDataFilesCorrectValuesArePresent(){
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("valid_XML1_3.ddoc"));
         Document report = extractDataFilesReportDom(postDataFiles(createXMLValidationRequestForDataFiles(encodedString, "test.DDOC")).andReturn().body().asString());
         assertEquals("test.txt", getDataFilesReportFromDom(report).getDataFiles().getDataFile().get(0).getFilename(), "File name should match expected");
@@ -80,7 +80,7 @@ public class SoapGetDataFileReportIT extends SiVaSoapTests  {
      *
      **/
     @Test
-    public void soapGetDataFilesFromDdocV1_1CorrectValuesArePresent(){
+    void soapGetDataFilesFromDdocV1_1CorrectValuesArePresent(){
         setTestFilesDirectory("ddoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("DIGIDOC-XML1.1.ddoc"));
         Document report = extractDataFilesReportDom(postDataFiles(createXMLValidationRequestForDataFiles(encodedString, "test.DDOC")).andReturn().body().asString());
@@ -106,7 +106,7 @@ public class SoapGetDataFileReportIT extends SiVaSoapTests  {
      *
      **/
     @Test
-    public void soapGetDataFilesFromDdocV1_2CorrectValuesArePresent(){
+    void soapGetDataFilesFromDdocV1_2CorrectValuesArePresent(){
         setTestFilesDirectory("ddoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("DIGIDOC-XML1.2.ddoc"));
         Document report = extractDataFilesReportDom(postDataFiles(createXMLValidationRequestForDataFiles(encodedString, "test.DDOC")).andReturn().body().asString());
@@ -132,7 +132,7 @@ public class SoapGetDataFileReportIT extends SiVaSoapTests  {
      *
      **/
     @Test
-    public void soapGetDataFilesFromDdocManyFilesCorrectValuesArePresent(){
+    void soapGetDataFilesFromDdocManyFilesCorrectValuesArePresent(){
         setTestFilesDirectory("ddoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("igasugust1.3.ddoc"));
         Document report = extractDataFilesReportDom(postDataFiles(createXMLValidationRequestForDataFiles(encodedString, "igasugust1.3.ddoc")).andReturn().body().asString());

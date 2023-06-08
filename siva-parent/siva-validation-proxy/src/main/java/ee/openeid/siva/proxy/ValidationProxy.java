@@ -46,7 +46,7 @@ public abstract class ValidationProxy {
     private final Environment environment;
 
     @Autowired
-    public ValidationProxy(StatisticsService statisticsService, ApplicationContext applicationContext, Environment environment) {
+    protected ValidationProxy(StatisticsService statisticsService, ApplicationContext applicationContext, Environment environment) {
         this.statisticsService = statisticsService;
         this.applicationContext = applicationContext;
         this.environment = environment;

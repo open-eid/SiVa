@@ -30,7 +30,7 @@ import static ee.openeid.siva.monitoring.util.ApplicationInfoConstants.MANIFEST_
 import static ee.openeid.siva.monitoring.util.ApplicationInfoConstants.NOT_AVAILABLE;
 
 @ExtendWith(MockitoExtension.class)
-public class VersionEndpointTest {
+class VersionEndpointTest {
 
     private static final String TEST_VERSION = "TEST_VERSION";
 
@@ -38,7 +38,7 @@ public class VersionEndpointTest {
     private ManifestReader manifestReader;
 
     @Test
-    public void testVersionMissingInManifestFile() {
+    void testVersionMissingInManifestFile() {
         VersionEndpoint versionEndpoint = new VersionEndpoint(manifestReader);
 
         Map<String, Object> result = versionEndpoint.version();
@@ -52,7 +52,7 @@ public class VersionEndpointTest {
     }
 
     @Test
-    public void testVersionFoundInManifestFile() {
+    void testVersionFoundInManifestFile() {
         Mockito.doReturn(TEST_VERSION).when(manifestReader).readFromManifest(Mockito.anyString());
         VersionEndpoint versionEndpoint = new VersionEndpoint(manifestReader);
 

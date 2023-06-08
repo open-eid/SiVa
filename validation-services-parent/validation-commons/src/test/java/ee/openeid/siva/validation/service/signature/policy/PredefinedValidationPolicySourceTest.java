@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-public class PredefinedValidationPolicySourceTest {
+class PredefinedValidationPolicySourceTest {
 
     private static final String EXPECTED_ADES_POLICY_NAME = "POLv3";
     private static final String EXPECTED_ADES_POLICY_URL = "http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv3";
@@ -45,7 +45,7 @@ public class PredefinedValidationPolicySourceTest {
             " Validation process is based on eIDAS Article 32 and referred ETSI standards.";
 
     @Test
-    public void qesValidationPolicyShouldMatchSpecification() {
+    void qesValidationPolicyShouldMatchSpecification() {
         ValidationPolicy qesPol = PredefinedValidationPolicySource.QES_POLICY;
         assertEquals(EXPECTED_QES_POLICY_NAME, qesPol.getName());
         assertEquals(EXPECTED_QES_POLICY_URL, qesPol.getUrl());
@@ -53,7 +53,7 @@ public class PredefinedValidationPolicySourceTest {
     }
 
     @Test
-    public void adesValidationPolicyShouldMatchSpecification() {
+    void adesValidationPolicyShouldMatchSpecification() {
         ValidationPolicy noTypePol = PredefinedValidationPolicySource.ADES_POLICY;
         assertEquals(EXPECTED_ADES_POLICY_NAME, noTypePol.getName());
         assertEquals(EXPECTED_ADES_POLICY_URL, noTypePol.getUrl());

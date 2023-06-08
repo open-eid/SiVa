@@ -22,10 +22,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class AlwaysFailingOCSPSourceTest {
+class AlwaysFailingOCSPSourceTest {
 
     @Test
-    public void alwaysFailingOcspSourceShouldReturnNullInsteadOfOcspToken() {
+    void alwaysFailingOcspSourceShouldReturnNullInsteadOfOcspToken() {
         OCSPSource ocspSource = new AlwaysFailingOCSPSource();
         assertNull(ocspSource.getRevocationToken(null, null));
     }

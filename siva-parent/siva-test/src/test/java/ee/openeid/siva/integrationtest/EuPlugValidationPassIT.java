@@ -30,7 +30,7 @@ import java.nio.file.Paths;
 
 
 @Disabled
-public class EuPlugValidationPassIT extends SiVaRestTests {
+class EuPlugValidationPassIT extends SiVaRestTests {
 
     @Value("${plugtest.location}")
     private String location;
@@ -54,7 +54,7 @@ public class EuPlugValidationPassIT extends SiVaRestTests {
      * File: Signature-A-LT_MIT-1.asice
      */
     @Test
-    public void lithuaniaAsiceAdoc20ValidSignature() {
+    void lithuaniaAsiceAdoc20ValidSignature() {
         post(validationRequestForEu("Signature-A-LT_MIT-1.asice"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -78,7 +78,7 @@ public class EuPlugValidationPassIT extends SiVaRestTests {
      * File: Signature-A-LT_MIT-2.asice
      */
     @Test
-    public void lithuaniaAsiceAdoc20TwoValidSignatures() {
+    void lithuaniaAsiceAdoc20TwoValidSignatures() {
         post(validationRequestForEu("Signature-A-LT_MIT-2.asice"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -105,7 +105,7 @@ public class EuPlugValidationPassIT extends SiVaRestTests {
      * File: Signature-A-LT_MIT-5.asice"
      */
     @Test
-    public void lithuaniaAsiceAdoc20ValidSignatureWithWarning() {
+    void lithuaniaAsiceAdoc20ValidSignatureWithWarning() {
         post(validationRequestForEu("Signature-A-LT_MIT-5.asice"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -129,7 +129,7 @@ public class EuPlugValidationPassIT extends SiVaRestTests {
      * File: Signature-A-LV_EUSO-1.asice
      */
     @Test
-    public void latviaAsiceEdoc20ValidSignature() {
+    void latviaAsiceEdoc20ValidSignature() {
         post(validationRequestForEu("Signature-A-LV_EUSO-1.asice"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -153,7 +153,7 @@ public class EuPlugValidationPassIT extends SiVaRestTests {
      * File: Signature-A-LV_EUSO-2.asice
      */
     @Test //TODO: this file is actually identical to the Signature-A-LV_EUSO-1.asice
-    public void A_LV_EUSO_2Valid() {
+    void A_LV_EUSO_2Valid() {
         post(validationRequestForEu("Signature-A-LV_EUSO-2.asice"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -175,7 +175,7 @@ public class EuPlugValidationPassIT extends SiVaRestTests {
      * File: Signature-A-PL_KIR-1.asics
      */
     @Test
-    public void polandAsicsCadesValidSignatureWithWarning() {
+    void polandAsicsCadesValidSignatureWithWarning() {
         post(validationRequestForEu("Signature-A-PL_KIR-1.asics"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -200,7 +200,7 @@ public class EuPlugValidationPassIT extends SiVaRestTests {
      * File: Signature-A-PL_KIR-2.asics
      */
     @Test
-    public void polandAsicsXadesValidSignatureWithWarning() {
+    void polandAsicsXadesValidSignatureWithWarning() {
         post(validationRequestForEu("Signature-A-PL_KIR-2.asics"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -225,7 +225,7 @@ public class EuPlugValidationPassIT extends SiVaRestTests {
      * File: Signature-A-SK_DIT-3.asice
      */
     @Test //The file is not valid, revocation outside of 24h timeframe
-    public void slovakiaAsiceXadesValidSignature() {
+    void slovakiaAsiceXadesValidSignature() {
         post(validationRequestForEu("Signature-A-SK_DIT-3.asice"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -251,7 +251,7 @@ public class EuPlugValidationPassIT extends SiVaRestTests {
      * File: Signature-C-AT_SIT-1.p7m
      */
     @Test
-    public void austrianCadesValidSignature() {
+    void austrianCadesValidSignature() {
         post(validationRequestForEu("Signature-C-AT_SIT-1.p7m"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -277,7 +277,7 @@ public class EuPlugValidationPassIT extends SiVaRestTests {
      * File: Signature-C-DE_SCI-1.p7m
      */
     @Test
-    public void germanyCadesValidSignatureWithWarning() {
+    void germanyCadesValidSignatureWithWarning() {
         post(validationRequestForEu("Signature-C-DE_SCI-1.p7m"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -303,7 +303,7 @@ public class EuPlugValidationPassIT extends SiVaRestTests {
      * File: Signature-C-ES_MIN-1.p7m
      */
     @Test
-    public void spainCadesBValidSignature() {
+    void spainCadesBValidSignature() {
         post(validationRequestForEu("Signature-C-ES_MIN-1.p7m"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -329,7 +329,7 @@ public class EuPlugValidationPassIT extends SiVaRestTests {
      * File: Signature-C-ES_MIN-2.p7m
      */
     @Test
-    public void spainCadesTValidSignature() {
+    void spainCadesTValidSignature() {
         post(validationRequestForEu("Signature-C-ES_MIN-2.p7m"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -356,7 +356,7 @@ public class EuPlugValidationPassIT extends SiVaRestTests {
      * File: Signature-C-IT_BIT-5.p7m
      */
     @Test
-    public void italyCadesTwoValidSignatures() {
+    void italyCadesTwoValidSignatures() {
         post(validationRequestForEu("Signature-C-IT_BIT-5.p7m"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -386,7 +386,7 @@ public class EuPlugValidationPassIT extends SiVaRestTests {
      * File: Signature-C-PL_ADS-4.p7m
      */
     @Test
-    public void polandCadesValidSignatureWithWarning() {
+    void polandCadesValidSignatureWithWarning() {
         post(validationRequestForEu("Signature-C-PL_ADS-4.p7m"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -413,7 +413,7 @@ public class EuPlugValidationPassIT extends SiVaRestTests {
      * File: Signature-C-PL_ADS-7.p7m
      */
     @Test
-    public void polandCadesValidSignature() {
+    void polandCadesValidSignature() {
         post(validationRequestForEu("Signature-C-PL_ADS-7.p7m"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -439,7 +439,7 @@ public class EuPlugValidationPassIT extends SiVaRestTests {
      * File: Signature-P-BE_CONN-1.pdf
      */
     @Test
-    public void belgiumPadesValidSignature() {
+    void belgiumPadesValidSignature() {
         post(validationRequestForEu("Signature-P-BE_CONN-1.pdf"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -465,7 +465,7 @@ public class EuPlugValidationPassIT extends SiVaRestTests {
      * File: Signature-P-BE_CONN-7.pdf
      */
     @Test
-    public void belgiumPadesValidSignatureWithWarnings() {
+    void belgiumPadesValidSignatureWithWarnings() {
         post(validationRequestForEu("Signature-P-BE_CONN-7.pdf"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -493,7 +493,7 @@ public class EuPlugValidationPassIT extends SiVaRestTests {
      * File: Signature-P-DE_SCI-2.pdf
      */
     @Test
-    public void germanyPadesValidSignatureWithWarning() {
+    void germanyPadesValidSignatureWithWarning() {
         post(validationRequestForEu("Signature-P-DE_SCI-2.pdf"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -519,7 +519,7 @@ public class EuPlugValidationPassIT extends SiVaRestTests {
      * File: Signature-P-IT_MID-1.pdf
      */
     @Test
-    public void italyPadesValidSignature() {
+    void italyPadesValidSignature() {
         post(validationRequestForEu("Signature-P-IT_MID-1.pdf"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -544,7 +544,7 @@ public class EuPlugValidationPassIT extends SiVaRestTests {
      * File: Signature-P-LT_MIT-1.pdf
      */
     @Test
-    public void lithuaniaPadesValidSignature() {
+    void lithuaniaPadesValidSignature() {
         post(validationRequestForEu("Signature-P-LT_MIT-1.pdf"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -570,7 +570,7 @@ public class EuPlugValidationPassIT extends SiVaRestTests {
      * File: Signature-P-LT_MIT-2.pdf
      */
     @Test
-    public void lithuaniaPadesValidSignature2() {
+    void lithuaniaPadesValidSignature2() {
         post(validationRequestForEu("Signature-P-LT_MIT-2.pdf"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -596,7 +596,7 @@ public class EuPlugValidationPassIT extends SiVaRestTests {
      * File: Signature-P-LV_EUSO-1.pdf
      */
     @Test
-    public void latviaPadesValidSignature() {
+    void latviaPadesValidSignature() {
         post(validationRequestForEu("Signature-P-LV_EUSO-1.pdf"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -622,7 +622,7 @@ public class EuPlugValidationPassIT extends SiVaRestTests {
      * File: Signature-P-LV_EUSO-2.pdf
      */
     @Test //TODO: this file is identical to Signature-P-LV_EUSO-1.pdf
-    public void P_LV_EUSO_2Valid() {
+    void P_LV_EUSO_2Valid() {
         post(validationRequestForEu("Signature-P-LV_EUSO-2.pdf"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -651,7 +651,7 @@ public class EuPlugValidationPassIT extends SiVaRestTests {
      * File: Signature-P-PL_ADS-6.pdf
      */
     @Test //The file should not be valid
-    public void polandPadesValidSignatureWithWarnings() {
+    void polandPadesValidSignatureWithWarnings() {
         post(validationRequestForEu("Signature-P-PL_ADS-6.pdf"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -679,7 +679,7 @@ public class EuPlugValidationPassIT extends SiVaRestTests {
      * File: Signature-P-PL_ADS-8.pdf
      */
     @Test // This file should not be valid
-    public void polandPadesValidQesSignature() {
+    void polandPadesValidQesSignature() {
         post(validationRequestForEu("Signature-P-PL_ADS-8.pdf"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -706,7 +706,7 @@ public class EuPlugValidationPassIT extends SiVaRestTests {
      * File: Signature-A-LT_MIT-1.asice
      */
     @Test
-    public void X_AT_SIT_1Valid() {
+    void X_AT_SIT_1Valid() {
         post(validationRequestForEu("Signature-X-AT_SIT-1.xml"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -728,7 +728,7 @@ public class EuPlugValidationPassIT extends SiVaRestTests {
      * File: Signature-A-LT_MIT-1.asice
      */
     @Test
-    public void X_AT_SIT_21Valid() {
+    void X_AT_SIT_21Valid() {
         post(validationRequestForEu("Signature-X-AT_SIT-21.xml"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -750,7 +750,7 @@ public class EuPlugValidationPassIT extends SiVaRestTests {
      * File: Signature-X-BE_CONN-1.xml
      */
     @Test
-    public void belgiumXadesValidSignature() {
+    void belgiumXadesValidSignature() {
         post(validationRequestForEu("Signature-X-BE_CONN-1.xml"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))
@@ -776,7 +776,7 @@ public class EuPlugValidationPassIT extends SiVaRestTests {
      * File: Signature-X-BE_CONN-21.xml
      */
     @Test
-    public void X_BE_CONN_21Valid() {
+    void X_BE_CONN_21Valid() {
         post(validationRequestForEu("Signature-X-BE_CONN-21.xml"))
                 .then()
                 .body("validationReport.validationConclusion.signatures[0].indication", Matchers.is("TOTAL-PASSED"))

@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest(classes = {ValidationServiceTest.TestConfiguration.class})
 @ExtendWith(SpringExtension.class)
 @Slf4j
-public class ValidationServiceTest {
+class ValidationServiceTest {
 
     private static final String TEST_FILES_LOCATION = "test-files/";
 
@@ -64,7 +64,7 @@ public class ValidationServiceTest {
     }
 
     @Test
-    public void certificatePresent_asice() throws Exception {
+    void certificatePresent_asice() throws Exception {
 
         Reports reports = validationService.validateDocument(buildValidationDocument("bdoc21-TS.asice"));
         SignatureValidationData signatureValidationData = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0);
@@ -96,7 +96,7 @@ public class ValidationServiceTest {
     }
 
     @Test
-    public void certificatePresent_pdf() throws Exception {
+    void certificatePresent_pdf() throws Exception {
         Reports reports = validationService.validateDocument(buildValidationDocument("hellopades-pades-lt-sha256-sign.pdf"));
         SignatureValidationData signatureValidationData = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0);
         CertificateFactory cf = CertificateFactory.getInstance("X.509");

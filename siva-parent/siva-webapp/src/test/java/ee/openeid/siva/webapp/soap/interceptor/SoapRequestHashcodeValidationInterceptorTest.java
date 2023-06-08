@@ -33,11 +33,10 @@ import javax.xml.soap.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class SoapRequestHashcodeValidationInterceptorTest {
+class SoapRequestHashcodeValidationInterceptorTest {
 
     private static final int EXPECTED_STATUS_CODE = 400;
     private static final String EXPECTED_FAULT_CODE = "Client";
@@ -90,34 +89,34 @@ public class SoapRequestHashcodeValidationInterceptorTest {
     }
 
     @Test
-    public void validSoapMessage() {
+    void validSoapMessage() {
         Fault soapFault = handleMessageInInterceptor(message);
         assertNull(soapFault);
     }
 
     @Test
-    public void whenSoapMessageIsNull_thenFaultIsThrownWithInvalidRequestMessage() {
+    void whenSoapMessageIsNull_thenFaultIsThrownWithInvalidRequestMessage() {
         mockNullReturningSoapMessage();
         Fault soapFault = handleMessageInInterceptor(message);
         assertFaultWithExpectedMessage(soapFault, INVALID_REQUEST_MESSAGE);
     }
 
     @Test
-    public void whenSignatureNotBase64Encoded_thenFaultIsThrown() {
+    void whenSignatureNotBase64Encoded_thenFaultIsThrown() {
         mockDataFileChildNode(signatureNode, "NOT.BASE64.ENCODED.TEXT");
         Fault soapFault = handleMessageInInterceptor(message);
         assertFaultWithExpectedMessage(soapFault, SIGNATURE_FILE_INVALID_BASE64_ERROR_MESSAGE);
     }
 
     @Test
-    public void whenSignatureFileEmpty_thenNotValidated() {
+    void whenSignatureFileEmpty_thenNotValidated() {
         mockDataFileChildNode(signatureNode, null);
         Fault soapFault = handleMessageInInterceptor(message);
         assertNull(soapFault);
     }
 
     @Test
-    public void reportTypeIsCastedUpperForCaseInsensitivity() {
+    void reportTypeIsCastedUpperForCaseInsensitivity() {
         mockReportTypeNode("Simple");
         Fault soapFault = handleMessageInInterceptor(message);
         assertNull(soapFault);
@@ -126,7 +125,7 @@ public class SoapRequestHashcodeValidationInterceptorTest {
     }
 
     @Test
-    public void dataFileHashAlgorithmIsCastedUpperForCaseInsensitivity() {
+    void dataFileHashAlgorithmIsCastedUpperForCaseInsensitivity() {
         mockDataFileChildNode(dataFilesHashAlgoNode, "sha256");
         Fault soapFault = handleMessageInInterceptor(message);
         assertNull(soapFault);
@@ -135,70 +134,70 @@ public class SoapRequestHashcodeValidationInterceptorTest {
     }
 
     @Test
-    public void dataFileHashAlgoIsEmpty(){
+    void dataFileHashAlgoIsEmpty(){
         mockDataFileChildNode(dataFilesHashAlgoNode, "");
         Fault soapFault = handleMessageInInterceptor(message);
         assertFaultWithExpectedMessage(soapFault, INVALID_HASH_ALGORITHM);
     }
 
     @Test
-    public void dataFileHashAlgoIsNull(){
+    void dataFileHashAlgoIsNull(){
         mockDataFileChildNode(dataFilesHashAlgoNode, null);
         Fault soapFault = handleMessageInInterceptor(message);
         assertFaultWithExpectedMessage(soapFault, INVALID_HASH_ALGORITHM);
     }
 
     @Test
-    public void dataFileFilenameFormatIsNotValidated() {
+    void dataFileFilenameFormatIsNotValidated() {
         mockDataFileChildNode(dataFilesFilenameNode, "FILENAME_WITH_INVALID_ELEMENTS_&*:%.xml");
         Fault soapFault = handleMessageInInterceptor(message);
         assertNull(soapFault);
     }
 
     @Test
-    public void whenDataFileFilenameNull_thenNotValidated() {
+    void whenDataFileFilenameNull_thenNotValidated() {
         mockDataFileChildNode(dataFilesFilenameNode, null);
         Fault soapFault = handleMessageInInterceptor(message);
         assertFaultWithExpectedMessage(soapFault, FILENAME_INVALID_FORMAT_ERROR_MESSAGE);
     }
 
     @Test
-    public void whenDataFileFilenameEmpty_thenNotValidated() {
+    void whenDataFileFilenameEmpty_thenNotValidated() {
         mockDataFileChildNode(dataFilesFilenameNode, "");
         Fault soapFault = handleMessageInInterceptor(message);
         assertFaultWithExpectedMessage(soapFault, FILENAME_INVALID_FORMAT_ERROR_MESSAGE);
     }
 
     @Test
-    public void dataFileFilenameExtensionNotValidated() {
+    void dataFileFilenameExtensionNotValidated() {
         mockDataFileChildNode(dataFilesFilenameNode, "VALID_DATAFILE.random_extension");
         Fault soapFault = handleMessageInInterceptor(message);
         assertNull(soapFault);
     }
 
     @Test
-    public void whenDataFileHashInvalidFormat_thenFaultIsThrown() {
+    void whenDataFileHashInvalidFormat_thenFaultIsThrown() {
         mockDataFileChildNode(dataFilesHashNode, "NOT.VALID.BASE64.ENCODED.CONTENT");
         Fault soapFault = handleMessageInInterceptor(message);
         assertFaultWithExpectedMessage(soapFault, "Document is not encoded in a valid base64 string");
     }
 
     @Test
-    public void whenDataFileHashNull_thenNotValidated() {
+    void whenDataFileHashNull_thenNotValidated() {
         mockDataFileChildNode(dataFilesHashNode, null);
         Fault soapFault = handleMessageInInterceptor(message);
         assertNull(soapFault);
     }
 
     @Test
-    public void whenDataFileHashEmpty_thenNotValidated() {
+    void whenDataFileHashEmpty_thenNotValidated() {
         mockDataFileChildNode(dataFilesHashNode, "");
         Fault soapFault = handleMessageInInterceptor(message);
         assertNull(soapFault);
     }
 
     @Test
-    public void noSoapFaultIsThrownWithValidRequest() {
+    void noSoapFaultIsThrownWithValidRequest() {
         noFaultThrown(handleMessageInInterceptor(message));
     }
 
@@ -218,7 +217,7 @@ public class SoapRequestHashcodeValidationInterceptorTest {
     private void assertFaultWithExpectedMessage(Fault soapFault, String message) {
         assertNotNull(soapFault);
         assertEquals(EXPECTED_FAULT_CODE, soapFault.getFaultCode().toString());
-        assertTrue(EXPECTED_STATUS_CODE == soapFault.getStatusCode());
+        assertEquals(EXPECTED_STATUS_CODE, soapFault.getStatusCode());
         assertEquals(message, soapFault.getMessage());
     }
 

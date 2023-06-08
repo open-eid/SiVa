@@ -26,7 +26,7 @@ import static ee.openeid.siva.integrationtest.TestData.*;
 
 
 @Tag("IntegrationTest")
-public class PdfValidationFailIT extends SiVaRestTests {
+class PdfValidationFailIT extends SiVaRestTests {
 
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "pdf/signing_certifacte_test_files/";
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
@@ -50,7 +50,7 @@ public class PdfValidationFailIT extends SiVaRestTests {
      * File: hellopades-lt-rsa1024-sha1-expired.pdf
      */
     @Test
-    public void signaturesMadeWithExpiredSigningCertificatesAreInvalid() {
+    void signaturesMadeWithExpiredSigningCertificatesAreInvalid() {
         post(validationRequestFor("hellopades-lt-rsa1024-sha1-expired.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.emptyOrNullString())
@@ -77,7 +77,7 @@ public class PdfValidationFailIT extends SiVaRestTests {
      * File: pades_lt_revoked.pdf
      */
     @Test
-    public void documentSignedWithRevokedCertificateShouldFail() {
+    void documentSignedWithRevokedCertificateShouldFail() {
         post(validationRequestFor( "pades_lt_revoked.pdf", VALID_SIGNATURE_POLICY_3, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.emptyOrNullString())
@@ -108,7 +108,7 @@ public class PdfValidationFailIT extends SiVaRestTests {
      */
     //TODO SIVA-349 needs investigation why the signature level is determined as INDETERMINATE_ADESIG not as INDETERMINATE_QESIG
     @Test
-    public void signingCertificateWithoutNonRepudiationKeyUsageAttributeShouldFail() {
+    void signingCertificateWithoutNonRepudiationKeyUsageAttributeShouldFail() {
         post(validationRequestFor( "hellopades-pades-lt-sha256-auth.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.emptyOrNullString())
@@ -138,9 +138,9 @@ public class PdfValidationFailIT extends SiVaRestTests {
      *
      * File: hellopades-lt-sha256-rsa2048-expired.pdf
      */
-    @Disabled //TODO: Needs new test file
+    @Disabled(/*TODO:*/"Needs new test file")
     @Test
-    public void documentSignedWithExpiredRsa2048CertificateShouldFail() {
+    void documentSignedWithExpiredRsa2048CertificateShouldFail() {
         post(validationRequestFor( "hellopades-lt-sha256-rsa2048-expired.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.emptyOrNullString())
@@ -169,8 +169,8 @@ public class PdfValidationFailIT extends SiVaRestTests {
      * File: hellopades-lt-sha256-rsa1024-expired2.pdf
      */
     @Test
-    @Disabled //TODO: Test file needed
-    public void documentSignedWithExpiredSha256CertificateShouldFail() {
+    @Disabled(/*TODO:*/"Test file needed")
+    void documentSignedWithExpiredSha256CertificateShouldFail() {
         post(validationRequestFor("hellopades-lt-sha256-rsa1024-expired2.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.emptyOrNullString())
@@ -193,7 +193,7 @@ public class PdfValidationFailIT extends SiVaRestTests {
      * File: hellopades-lt-sha256-rsa1024-expired2.pdf
      */
     @Test
-    public void ocspTaken24hAfterTsShouldFail() {
+    void ocspTaken24hAfterTsShouldFail() {
         setTestFilesDirectory("pdf/signature_revocation_value_test_files/");
         post(validationRequestFor("hellopades-lt-sha256-ocsp-28h.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -217,7 +217,7 @@ public class PdfValidationFailIT extends SiVaRestTests {
      * File: hellopades-lt-sha256-rsa2048-ocsp-before-ts.pdf
      */
     @Test
-    public void ocspAlmost24hBeforeTsShouldFail() {
+    void ocspAlmost24hBeforeTsShouldFail() {
         setTestFilesDirectory("pdf/signature_revocation_value_test_files/");
         post(validationRequestFor("hellopades-lt-sha256-rsa2048-ocsp-before-ts.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)

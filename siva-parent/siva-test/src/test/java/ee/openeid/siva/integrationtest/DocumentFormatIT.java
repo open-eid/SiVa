@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 import static ee.openeid.siva.integrationtest.TestData.VALIDATION_CONCLUSION_PREFIX;
 
 @Tag("IntegrationTest")
-public class DocumentFormatIT extends SiVaRestTests {
+class DocumentFormatIT extends SiVaRestTests {
 
     @BeforeEach
     public void DirectoryBackToDefault() {
@@ -54,7 +54,7 @@ public class DocumentFormatIT extends SiVaRestTests {
      * File: hellopades-pades-lt-sha256-sign.pdf
      */
     @Test
-    public void PAdESDocumentShouldPass() {
+    void PAdESDocumentShouldPass() {
         post(validationRequestFor("hellopades-pades-lt-sha256-sign.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
@@ -79,7 +79,7 @@ public class DocumentFormatIT extends SiVaRestTests {
      * File: Valid_IDCard_MobID_signatures.bdoc
      */
     @Test
-    public void BdocDocumentShouldPass() {
+    void BdocDocumentShouldPass() {
         post(validationRequestFor("Valid_IDCard_MobID_signatures.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-E"))
@@ -106,7 +106,7 @@ public class DocumentFormatIT extends SiVaRestTests {
      * File: Vbdoc21-TS.asice
      */
     @Test
-    public void asiceDocumentShouldPass() {
+    void asiceDocumentShouldPass() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("bdoc21-TS.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -133,7 +133,7 @@ public class DocumentFormatIT extends SiVaRestTests {
      * File: ValidDDOCinsideAsics.asics
      */
     @Test
-    public void asicsDocumentShouldPass() {
+    void asicsDocumentShouldPass() {
         setTestFilesDirectory("asics/");
         post(validationRequestFor("ValidDDOCinsideAsics.asics"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -160,7 +160,7 @@ public class DocumentFormatIT extends SiVaRestTests {
      * File: signatures0.xml
      */
     @Test
-    public void xadesDocumentShouldPass() {
+    void xadesDocumentShouldPass() {
         postHashcodeValidation(validationRequestHashcodeSimple("signatures0.xml", "POLv4", "Simple"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
@@ -184,9 +184,9 @@ public class DocumentFormatIT extends SiVaRestTests {
      *
      * File:
      */
-    @Disabled //TODO: Test file needed
+    @Disabled(/*TODO:*/"Test file needed")
     @Test
-    public void cadesDocumentShouldPass() {
+    void cadesDocumentShouldPass() {
         post(validationRequestFor(""))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-E"))

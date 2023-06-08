@@ -30,7 +30,7 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class SoapResponseHeaderInterceptorTest {
+class SoapResponseHeaderInterceptorTest {
 
     @Mock
     private SoapMessage responseMessage;
@@ -41,12 +41,12 @@ public class SoapResponseHeaderInterceptorTest {
     private SoapResponseHeaderInterceptor soapResponseHeaderInterceptor = new SoapResponseHeaderInterceptor();
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         soapResponseHeaderInterceptor = new SoapResponseHeaderInterceptor();
     }
 
     @Test
-    public void whenSoapFaultHasNoCauseThenFaultStatusAndCodeRemainUnchanged() {
+    void whenSoapFaultHasNoCauseThenFaultStatusAndCodeRemainUnchanged() {
         SoapMessage requestMessage = mock(SoapMessage.class);
         Exchange exchange = mock(Exchange.class);
 

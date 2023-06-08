@@ -27,7 +27,7 @@ import static ee.openeid.siva.integrationtest.TestData.SOAP_VALIDATION_CONCLUSIO
 import static ee.openeid.siva.integrationtest.TestData.VALID_VALIDATION_PROCESS_ERROR_VALUE_11;
 
 @Tag("IntegrationTest")
-public class SoapValidationReportValueIT extends SiVaSoapTests {
+class SoapValidationReportValueIT extends SiVaSoapTests {
 
     @BeforeEach
     public void DirectoryBackToDefault() {
@@ -58,7 +58,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      */
     @Test
-    public void SoapBdocCorrectValuesArePresentValidLtTmSignature() {
+    void SoapBdocCorrectValuesArePresentValidLtTmSignature() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestForDocument("TwoValidTmSignaturesWithRolesAndProductionPlace.bdoc"))
                 .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
@@ -106,7 +106,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      */
     @Test
-    public void SoapBdocCorrectValuesArePresentValidLtSignature() {
+    void SoapBdocCorrectValuesArePresentValidLtSignature() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         post(validationRequestForDocument("validTsSignatureWithRolesAndProductionPlace.asice"))
                 .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
@@ -152,8 +152,8 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      */
     @Test
-    @Disabled //TODO: New testfile needed
-    public void SoapBdocCorrectValuesArePresentValidLtSignatureAdes() {
+    @Disabled(/*TODO:*/"New testfile needed")
+    void SoapBdocCorrectValuesArePresentValidLtSignatureAdes() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestForDocument("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc"))
                 .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
@@ -183,9 +183,9 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      * File: testAdesQC.bdoc
      *
      */
-    @Disabled //TODO: Testfile needed
+    @Disabled(/*TODO:*/"Testfile needed")
     @Test
-    public void SoapBdocCorrectValuesArePresentValidLtSignatureAdesqc() {
+    void SoapBdocCorrectValuesArePresentValidLtSignatureAdesqc() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDocument("testAdesQC.bdoc"))
                 .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
@@ -215,7 +215,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      */
     @Test
-    public void SoapBdocCorrectValuesArePresentInvalidLtSignatureAdesqc() {
+    void SoapBdocCorrectValuesArePresentInvalidLtSignatureAdesqc() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDocument("EE_SER-AEX-B-LTA-V-24.bdoc"))
                 .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
@@ -246,7 +246,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      */
     @Test
-    public void SoapDdocCorrectValuesArePresentV1_0() {
+    void SoapDdocCorrectValuesArePresentV1_0() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestForDocument("SK-XML1.0.ddoc"))
                 .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
@@ -288,7 +288,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      */
     @Test
-    public void SoapDdocCorrectValuesArePresentV1_1() {
+    void SoapDdocCorrectValuesArePresentV1_1() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestForDocument("igasugust1.1.ddoc"))
                 .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
@@ -333,7 +333,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      */
     @Test
-    public void SoapDdocCorrectValuesArePresentV1_2() {
+    void SoapDdocCorrectValuesArePresentV1_2() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestForDocument("igasugust1.2.ddoc"))
                 .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
@@ -376,7 +376,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      */
     @Test
-    public void SoapDdocCorrectValuesArePresentV1_3() {
+    void SoapDdocCorrectValuesArePresentV1_3() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestForDocument("igasugust1.3.ddoc"))
                 .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
@@ -419,7 +419,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      */
     @Test
-    public void SoapPdfCorrectValuesArePresentBaselineLtSignature() {
+    void SoapPdfCorrectValuesArePresentBaselineLtSignature() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         post(validationRequestForDocument("reason_and_location_Test.pdf"))
                 .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
@@ -462,7 +462,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      */
     @Test
-    public void SoapPdfCorrectValuesArePresentInvalidBaselineBSignatureV2() {
+    void SoapPdfCorrectValuesArePresentInvalidBaselineBSignatureV2() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         post(validationRequestForDocument("hellopades-pades-b-sha256-auth.pdf"))
                 .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
@@ -491,7 +491,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      */
     @Test
-    public void SoapPdfCorrectValuesArePresentBaselineLtaSignature() {
+    void SoapPdfCorrectValuesArePresentBaselineLtaSignature() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         post(validationRequestForDocument("pades-baseline-lta-live-aj.pdf"))
                 .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
@@ -540,7 +540,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      */
     @Test
-    public void SoapAsiceRoleAndPlaceValidIT() {
+    void SoapAsiceRoleAndPlaceValidIT() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         post(validationRequestForDocument("role_productionPlace.asice"))
                 .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
@@ -567,7 +567,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      */
     @Test
-    public void SoapAsiceRoleAndPlaceValidSpecialCharactersIT() {
+    void SoapAsiceRoleAndPlaceValidSpecialCharactersIT() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         post(validationRequestForDocument("role_productionPlace.asice"))
                 .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
@@ -594,7 +594,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      */
     @Test
-    public void SoapAsiceRoleAndPlaceSoapAndJsonFormatIT() {
+    void SoapAsiceRoleAndPlaceSoapAndJsonFormatIT() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         post(validationRequestForDocument("role_productionPlace.asice"))
                 .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
@@ -621,7 +621,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      */
     @Test
-    public void SoapAsiceRoleAndPlaceEmptyIT() {
+    void SoapAsiceRoleAndPlaceEmptyIT() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         post(validationRequestForDocument("role_productionPlace.asice"))
                 .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
@@ -645,7 +645,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      */
     @Test
-    public void SoapAsiceRoleAndPlaceOnlyRoleIT() {
+    void SoapAsiceRoleAndPlaceOnlyRoleIT() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         post(validationRequestForDocument("role_productionPlace.asice"))
                 .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
@@ -669,7 +669,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      */
     @Test
-    public void SoapAsiceRoleAndPlaceOnlyCityIT() {
+    void SoapAsiceRoleAndPlaceOnlyCityIT() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         post(validationRequestForDocument("role_productionPlace.asice"))
                 .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)
@@ -693,7 +693,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      */
     @Test
-    public void SoapAsiceRoleAndPlaceShortDataTypeMaxValueLengthIT() {
+    void SoapAsiceRoleAndPlaceShortDataTypeMaxValueLengthIT() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         String shortTypeValue = "32767" + StringUtils.repeat("a", 32762);
         post(validationRequestForDocument("role_productionPlace.asice"))
@@ -721,7 +721,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      */
     @Test
-    public void SoapAsiceRoleAndPlaceIntDataTypeValueLengthCityIT() {
+    void SoapAsiceRoleAndPlaceIntDataTypeValueLengthCityIT() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         String intValue = "32768" + StringUtils.repeat("a", 32763);
         post(validationRequestForDocument("role_productionPlace.asice"))
@@ -745,7 +745,7 @@ public class SoapValidationReportValueIT extends SiVaSoapTests {
      *
      */
     @Test
-    public void SoapAsiceRoleAndPlaceThreeRolesIT() {
+    void SoapAsiceRoleAndPlaceThreeRolesIT() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         post(validationRequestForDocument("role_productionPlace.asice"))
                 .then().rootPath(SOAP_VALIDATION_CONCLUSION_PREFIX)

@@ -26,7 +26,7 @@ import static ee.openeid.siva.integrationtest.TestData.VALIDATION_CONCLUSION_PRE
 import static org.hamcrest.Matchers.equalTo;
 
 @Tag("IntegrationTest")
-public class LargeFileIT extends SiVaRestTests{
+class LargeFileIT extends SiVaRestTests{
 
     @BeforeEach
     public void DirectoryBackToDefault() {
@@ -55,7 +55,7 @@ public class LargeFileIT extends SiVaRestTests{
      * File: 9MB_PDF.pdf
      */
     @Test
-    public void pdfNineMegabyteFilesWithLtSignatureAreAccepted() {
+    void pdfNineMegabyteFilesWithLtSignatureAreAccepted() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("9MB_PDF.pdf"));
         post(validationRequestWithValidKeys(encodedString, "9MB_PDF.pdf", "POLv3"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -77,7 +77,7 @@ public class LargeFileIT extends SiVaRestTests{
      * File: 9MB_BDOC-TS.bdoc
      */
     @Test
-    public void bdocTsNineMegabyteFilesValidSignatureAreAccepted() {
+    void bdocTsNineMegabyteFilesValidSignatureAreAccepted() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("9MB_BDOC-TS.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "9MB_BDOC-TS.bdoc","POLv3"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -100,7 +100,7 @@ public class LargeFileIT extends SiVaRestTests{
      * File: 9MB_BDOC-TM.bdoc
      */
     @Test
-    public void bdocTmNineMegabyteFilesValidSignatureAreAccepted() {
+    void bdocTmNineMegabyteFilesValidSignatureAreAccepted() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("9MB_BDOC-TM.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "9MB_BDOC-TM.bdoc","POLv3"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -123,7 +123,7 @@ public class LargeFileIT extends SiVaRestTests{
      * File: 9MB_DDOC.ddoc
      */
     @Test
-    public void ddocTenMegabyteFilesWithValidSignatureAreAccepted() {
+    void ddocTenMegabyteFilesWithValidSignatureAreAccepted() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("9MB_DDOC.ddoc"));
         post(validationRequestWithValidKeys(encodedString, "9MB_DDOC.ddoc", "POLv3"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -146,7 +146,7 @@ public class LargeFileIT extends SiVaRestTests{
      * File: zip-bomb-package-zip-1gb.bdoc
      */
     @Test
-    public void bdocZipBombsAreNotAccepted() {
+    void bdocZipBombsAreNotAccepted() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("zip-bomb-package-zip-1gb.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "zip-bomb-package-zip-1gb.bdoc","POLv3"))
                 .then()
@@ -168,7 +168,7 @@ public class LargeFileIT extends SiVaRestTests{
      * File: zip-bomb-package-zip-1gb.bdoc
      */
     @Test
-    public void asiceZipBombsAreNotAccepted() {
+    void asiceZipBombsAreNotAccepted() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("zip-bomb-package-zip-1gb.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "zip-bomb-package-zip-1gb.asice","POLv3"))
                 .then()
@@ -190,7 +190,7 @@ public class LargeFileIT extends SiVaRestTests{
      * File: zip-bomb-packages.asice
      */
     @Test
-    public void asiceZipBombsWithMatryoshkaAreAccepted() {
+    void asiceZipBombsWithMatryoshkaAreAccepted() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("zip-bomb-packages.asice"));
         post(validationRequestWithValidKeys(encodedString, "zip-bomb-packages.asice","POLv3"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -213,7 +213,7 @@ public class LargeFileIT extends SiVaRestTests{
      * File: zip-bomb-packages.asice
      */
     @Test
-    public void bdocZipBombsWithMatryoshkaAreAccepted() {
+    void bdocZipBombsWithMatryoshkaAreAccepted() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("zip-bomb-packages.asice"));
         post(validationRequestWithValidKeys(encodedString, "zip-bomb-packages.bdoc","POLv3"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -236,7 +236,7 @@ public class LargeFileIT extends SiVaRestTests{
      * File: zip-bomb-package-zip-1gb-asics.asics
      */
     @Test
-    public void asicsZipBombsAreNotAccepted() {
+    void asicsZipBombsAreNotAccepted() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("zip-bomb-package-zip-1gb-asics.asics"));
         post(validationRequestWithValidKeys(encodedString, "zip-bomb-package-zip-1gb.asics","POLv3"))
                 .then()

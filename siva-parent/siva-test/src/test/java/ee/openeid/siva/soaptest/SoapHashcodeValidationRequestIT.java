@@ -31,6 +31,9 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpStatus;
 
 import java.nio.charset.StandardCharsets;
@@ -39,12 +42,14 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.stream.Stream;
 
 import static ee.openeid.siva.integrationtest.TestData.*;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 @Tag("IntegrationTest")
-public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
+class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
 
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "xades/";
     private static final String VALIDATION_CONCLUSION_PREFIX = "Envelope.Body.HashcodeValidationResponse.ValidationReport.ValidationConclusion.";
@@ -71,7 +76,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: Valid_XAdES_LT_TS.xml
      */
     @Test
-    public void okHashcodeValidationWithSimpleReport() {
+    void okHashcodeValidationWithSimpleReport() {
         JSONHashcodeValidationRequest request = validRequestBody();
         ValidatableResponse response = postHashcodeValidation(request).then();
         assertSimpleReportWithSignature(response, request);
@@ -91,7 +96,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: Valid_XAdES_LT_TS.xml
      */
     @Test
-    public void okHashcodeValidationDetailedReportRequested() {
+    void okHashcodeValidationDetailedReportRequested() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.setReportType(ReportType.DETAILED.value());
         ValidatableResponse response = postHashcodeValidation(request).then();
@@ -112,7 +117,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void reportTypeMissingDefaultsToSimple() {
+    void reportTypeMissingDefaultsToSimple() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.setReportType(null);
 
@@ -134,7 +139,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void reportTypeCaseInsensitive() {
+    void reportTypeCaseInsensitive() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.setReportType("SiMpLe");
 
@@ -156,7 +161,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void reportTypeInvalid() {
+    void reportTypeInvalid() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.setReportType("INVALID_REPORT_TYPE");
 
@@ -179,7 +184,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: Valid_XAdES_LT_TS.xml
      */
     @Test
-    public void okHashcodeValidationDiagnosticReportRequested() {
+    void okHashcodeValidationDiagnosticReportRequested() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.setReportType(ReportType.DIAGNOSTIC.value());
         ValidatableResponse response = postHashcodeValidation(request).then();
@@ -200,7 +205,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void signaturePolicyPOLv3() {
+    void signaturePolicyPOLv3() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.setSignaturePolicy(SIGNATURE_POLICY_1);
 
@@ -225,7 +230,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void signaturePolicyPOLv4() {
+    void signaturePolicyPOLv4() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.setSignaturePolicy(SIGNATURE_POLICY_2);
 
@@ -250,7 +255,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void signaturePolicyMissing_defaultsToPOLv4() {
+    void signaturePolicyMissing_defaultsToPOLv4() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.setSignaturePolicy(null);
 
@@ -274,7 +279,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void signaturePolicyInvalid() {
+    void signaturePolicyInvalid() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.setSignaturePolicy("POLv2");
 
@@ -297,7 +302,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void signaturePolicyInvalidFormat() {
+    void signaturePolicyInvalidFormat() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.setSignaturePolicy("POLv2.*");
 
@@ -320,7 +325,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void signaturePolicyTooLong() {
+    void signaturePolicyTooLong() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.setSignaturePolicy(StringUtils.repeat('a', 101));
 
@@ -343,7 +348,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: Valid_XAdES_LT_TS.xml
      */
     @Test
-    public void signatureFilesMissing() {
+    void signatureFilesMissing() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.setSignatureFiles(null);
 
@@ -365,7 +370,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: Valid_XAdES_LT_TS.xml
      */
     @Test
-    public void signatureFilesEmpty() {
+    void signatureFilesEmpty() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.setSignatureFiles(new ArrayList<>());
 
@@ -387,7 +392,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: Valid_XAdES_LT_TS.xml
      */
     @Test
-    public void signatureNotBase64Encoded() {
+    void signatureNotBase64Encoded() {
         JSONHashcodeValidationRequest request = validRequestBody();
 
         request.getSignatureFiles().get(0).setSignature("NOT.BASE64.ENCODED.VALUE");
@@ -410,7 +415,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: Valid_XAdES_LT_TS.xml
      */
     @Test
-    public void signatureContentWithoutSignature() {
+    void signatureContentWithoutSignature() {
         String randomXmlFileWithoutSignature = "PD94bWwgdmVyc2lvbj0nMS4wJyAgZW5jb2Rpbmc9J1VURi04JyA/Pg0KPHRlc3Q+DQoJPGRhdGE+DQoJCTxzb21ldGhpbmc+c29tZSBkYXRhPC9zb21ldGhpbmc+DQoJPC9kYXRhPg0KPC90ZXN0Pg0K";
         JSONHashcodeValidationRequest request = validRequestBody();
         request.getSignatureFiles().get(0).setSignature(randomXmlFileWithoutSignature);
@@ -433,7 +438,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: Valid_XAdES_LT_TS.xml
      */
     @Test
-    public void signatureContentNotXML() {
+    void signatureContentNotXML() {
         String notXmlFormattedContent = Base64.encodeBase64String("NOT_XML_FORMATTED_FILE_CONTENT".getBytes(StandardCharsets.UTF_8));
         JSONHashcodeValidationRequest request = validRequestBody();
         request.getSignatureFiles().get(0).setSignature(notXmlFormattedContent);
@@ -456,7 +461,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: Valid_XAdES_LT_TS.xml
      */
     @Test
-    public void dataFilesMissing() {
+    void dataFilesMissing() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.getSignatureFiles().get(0).setDatafiles(null);
 
@@ -478,7 +483,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: Valid_XAdES_LT_TS.xml
      */
     @Test
-    public void dataFilesEmpty() {
+    void dataFilesEmpty() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.getSignatureFiles().get(0).setDatafiles(new ArrayList<>());
 
@@ -494,70 +499,24 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      *
      * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
      *
-     * Title: Request without datafile filename
+     * Title: Request without datafile filenames and empty filename
      *
      * Expected Result: Error is returned
      *
      * File: Valid_XAdES_LT_TS.xml
      */
-    @Test
-    public void dataFileFilenameMissing() {
+    @ParameterizedTest
+    @MethodSource("getFileNameAndErrorMessage")
+    void dataFileFilenameInvalid(String fileName, String errorMessage) {
         JSONHashcodeValidationRequest request = validRequestBody();
-        request.getSignatureFiles().get(0).getDatafiles().get(0).setFilename(null);
+        request.getSignatureFiles().get(0).getDatafiles().get(0).setFilename(fileName);
 
         ValidatableResponse response = postHashcodeValidation(request).then();
-        assertClientFault(response,
-                "Unmarshalling Error: cvc-complex-type.2.4.a: Invalid content was found starting with element 'HashAlgo'. One of '{Filename}' is expected. ");
+        assertClientFault(response, errorMessage);
     }
 
     /**
      * TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-4
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
-     *
-     * Title: Request with empty filename
-     *
-     * Expected Result: Error is returned
-     *
-     * File: Valid_XAdES_LT_TS.xml
-     */
-    @Test
-    public void dataFileFilenameEmpty() {
-        JSONHashcodeValidationRequest request = validRequestBody();
-        request.getSignatureFiles().get(0).getDatafiles().get(0).setFilename("");
-
-        ValidatableResponse response = postHashcodeValidation(request).then();
-        assertClientFault(response,
-                "Invalid datafile filename format");
-    }
-
-    /**
-     * TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-5
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface
-     *
-     * Title: Request without datafile filename
-     *
-     * Expected Result: Error is returned
-     *
-     * File: Valid_XAdES_LT_TS.xml
-     */
-    @Test
-    public void dataFileFilenameEmptyWhitespace() {
-        JSONHashcodeValidationRequest request = validRequestBody();
-        request.getSignatureFiles().get(0).getDatafiles().get(0).setFilename(" ");
-
-        ValidatableResponse response = postHashcodeValidation(request).then();
-        assertClientFault(response,
-                "Invalid datafile filename format");
-    }
-
-    /**
-     * TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-6
      *
      * TestType: Automated
      *
@@ -570,7 +529,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: Valid_XAdES_LT_TS.xml
      */
     @Test
-    public void dataFileFilenameTooLong() {
+    void dataFileFilenameTooLong() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.getSignatureFiles().get(0).getDatafiles().get(0).setFilename(StringUtils.repeat('a', 261));
 
@@ -580,7 +539,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
     }
 
     /**
-     * TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-7
+     * TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-5
      *
      * TestType: Automated
      *
@@ -593,7 +552,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: Valid_XAdES_LT_TS.xml
      */
     @Test
-    public void dataFileHashAlgorithmInvalid() {
+    void dataFileHashAlgorithmInvalid() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.getSignatureFiles().get(0).getDatafiles().get(0).setHashAlgo("INVALID_HASH_ALGORITHM");
 
@@ -603,7 +562,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
     }
 
     /**
-     * TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-8
+     * TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-6
      *
      * TestType: Automated
      *
@@ -616,7 +575,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: Valid_XAdES_LT_TS.xml
      */
     @Test
-    public void dataFileHashAlgorithmCaseInsensitive() {
+    void dataFileHashAlgorithmCaseInsensitive() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.getSignatureFiles().get(0).getDatafiles().get(0).setHashAlgo("sha256");
 
@@ -625,7 +584,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
     }
 
     /**
-     * TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-9
+     * TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-7
      *
      * TestType: Automated
      *
@@ -638,7 +597,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: Valid_XAdES_LT_TS.xml
      */
     @Test
-    public void dataFileHashAlgorithmDoesNotMatchWithSignatureDataFileHashAlgorithm() {
+    void dataFileHashAlgorithmDoesNotMatchWithSignatureDataFileHashAlgorithm() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.getSignatureFiles().get(0).getDatafiles().get(0).setHashAlgo(HASH_ALGO_SHA512);
 
@@ -648,7 +607,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
     }
 
     /**
-     * TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-10
+     * TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-8
      *
      * TestType: Automated
      *
@@ -661,7 +620,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: Valid_XAdES_LT_TS.xml
      */
     @Test
-    public void dataFileHashMissing() {
+    void dataFileHashMissing() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.getSignatureFiles().get(0).getDatafiles().get(0).setHash(null);
 
@@ -671,7 +630,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
     }
 
     /**
-     * TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-11
+     * TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-9
      *
      * TestType: Automated
      *
@@ -684,7 +643,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: Valid_XAdES_LT_TS.xml
      */
     @Test
-    public void dataFileHashEmpty() {
+    void dataFileHashEmpty() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.getSignatureFiles().get(0).getDatafiles().get(0).setHash("");
 
@@ -694,7 +653,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
     }
 
     /**
-     * TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-12
+     * TestCaseID: Soap-Hashcode-ValidationRequest-Datafile-10
      *
      * TestType: Automated
      *
@@ -707,7 +666,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: Valid_XAdES_LT_TS.xml
      */
     @Test
-    public void dataFileHashNotBase64Encoded() {
+    void dataFileHashNotBase64Encoded() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.getSignatureFiles().get(0).getDatafiles().get(0).setHash("NOT.BASE64.ENCODED.VALUE");
 
@@ -729,7 +688,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: Valid_XAdES_LT_TS.xml
      */
     @Test
-    public void multipleDataFiles_firstDataFileIncorrect_secondDataFileCorrect() {
+    void multipleDataFiles_firstDataFileIncorrect_secondDataFileCorrect() {
         JSONHashcodeValidationRequest request = validRequestBody();
 
         Datafile invalidDataFile = new Datafile();
@@ -765,7 +724,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: Valid_XAdES_LT_TS.xml
      */
     @Test
-    public void dataFileHashDoesNotMatchWithSignatureFile_totalFailedHashFailure() {
+    void dataFileHashDoesNotMatchWithSignatureFile_totalFailedHashFailure() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.getSignatureFiles().get(0).getDatafiles().get(0).setHash(Base64.encodeBase64String("INVALID_SIGNATURE_DIGEST".getBytes(StandardCharsets.UTF_8)));
 
@@ -788,7 +747,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: Valid_XAdES_LT_TS.xml
      */
     @Test
-    public void dataFileHashCorrectButFilenameDoesNotMatchWithSignatureFile() {
+    void dataFileHashCorrectButFilenameDoesNotMatchWithSignatureFile() {
         JSONHashcodeValidationRequest request = validRequestBody();
         String filename = "INVALID_FILE_NAME.pdf";
         request.getSignatureFiles().get(0).getDatafiles().get(0).setFilename(filename);
@@ -812,7 +771,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: Valid_XAdES_LT_TS.xml
      */
     @Test
-    public void validationRequestBodyEmpty() {
+    void validationRequestBodyEmpty() {
         String emptyRequestBody =
                 "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
                         "   <soapenv:Header/>\n" +
@@ -840,7 +799,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: test+document.xml
      */
     @Test
-    public void validXadesWithPlusInDataFileName() {
+    void validXadesWithPlusInDataFileName() {
         postHashcodeValidation(createXMLHashcodeValidationRequestSimple("test+document.xml"))
                 .then()
                 .rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -865,7 +824,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: spacesInDatafile.xml
      */
     @Test
-    public void validXadesWithSpaceInDataFileName() {
+    void validXadesWithSpaceInDataFileName() {
         postHashcodeValidation(createXMLHashcodeValidationRequestSimple("spacesInDatafile.xml"))
                 .then()
                 .rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -890,7 +849,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: test+document.xml
      */
     @Test
-    public void datafileWithPlusInFilenameRequestedThrougApi() {
+    void datafileWithPlusInFilenameRequestedThrougApi() {
         postHashcodeValidation(createXMLHashcodeValidationRequest(validRequestBody("test+document.xml", HASH_ALGO_SHA256, "test+document.txt", "heKN3NGQ0HttzgmfKG0L243dfG7W+6kTMO5n7YbKeS4=")))
                 .then()
                 .rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -915,7 +874,7 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
      * File: spacesInDatafile.xml
      */
     @Test
-    public void datafileWithSpaceInFilenameRequestedThroughApi() {
+    void datafileWithSpaceInFilenameRequestedThroughApi() {
         postHashcodeValidation(createXMLHashcodeValidationRequest(validRequestBody("spacesInDatafile.xml", HASH_ALGO_SHA256, "Te st in g.txt", "5UxI8Rm1jUZm48+Vkdutyrsyr3L/MPu/RK1V81AeKEY=")))
                 .then()
                 .rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -1069,6 +1028,14 @@ public class SoapHashcodeValidationRequestIT extends SiVaSoapTests {
         request.setSignatureFiles(Collections.singletonList(signatureFile));
 
         return request;
+    }
+
+    private static Stream<Arguments> getFileNameAndErrorMessage() {
+        return Stream.of(
+                arguments(null, "Unmarshalling Error: cvc-complex-type.2.4.a: Invalid content was found starting with element 'HashAlgo'. One of '{Filename}' is expected. "),
+                arguments("", "Invalid datafile filename format"),
+                arguments(" ", "Invalid datafile filename format")
+        );
     }
 
     @Override

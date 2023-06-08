@@ -33,7 +33,7 @@ import static org.hamcrest.Matchers.*;
 
 @Tag("IntegrationTest")
 
-public class DiagnosticReportValidationManualIT extends SiVaRestTests {
+class DiagnosticReportValidationManualIT extends SiVaRestTests {
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "pdf/signature_cryptographic_algorithm_test_files/";
     private static final String VALIDATION_ENDPOINT = "/validate";
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
@@ -66,7 +66,7 @@ public class DiagnosticReportValidationManualIT extends SiVaRestTests {
      * File: ValidLiveSignature.asice
      */
     @Test
-    public void diagnosticReportAssertValidValidationConclusionAsicE() {
+    void diagnosticReportAssertValidValidationConclusionAsicE() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         ZonedDateTime testStartDate = ZonedDateTime.now(ZoneId.of("GMT"));
 
@@ -106,7 +106,7 @@ public class DiagnosticReportValidationManualIT extends SiVaRestTests {
      * File: pades-baseline-lta-live-aj.pdf
      */
     @Test
-    public  void diagnosticReportAssertSignature(){
+     void diagnosticReportAssertSignature(){
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
 
         post(validationRequestFor("pades-baseline-lta-live-aj.pdf", null, REPORT_TYPE_DIAGNOSTIC))
@@ -152,7 +152,7 @@ public class DiagnosticReportValidationManualIT extends SiVaRestTests {
      * File: pades-baseline-lta-live-aj.pdf
      */
     @Test
-    public  void diagnosticReportAssertUsedCertificates(){
+     void diagnosticReportAssertUsedCertificates(){
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
 
         post(validationRequestFor("pades-baseline-lta-live-aj.pdf", null, REPORT_TYPE_DIAGNOSTIC ))
@@ -183,7 +183,7 @@ public class DiagnosticReportValidationManualIT extends SiVaRestTests {
      * File: TS-02_23634_TS_wrong_SignatureValue.asice
      */
     @Test
-    public  void diagnosticReportWrongSignatureValueAsice() {
+     void diagnosticReportWrongSignatureValueAsice() {
         setTestFilesDirectory("bdoc/live/timestamp/");
 
         post(validationRequestFor("TS-02_23634_TS_wrong_SignatureValue.asice", null, REPORT_TYPE_DIAGNOSTIC))

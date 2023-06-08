@@ -26,7 +26,7 @@ import org.springframework.http.HttpStatus;
 import static ee.openeid.siva.integrationtest.TestData.*;
 
 @Tag("IntegrationTest")
-public class DdocValidationFailIT extends SiVaRestTests{
+class DdocValidationFailIT extends SiVaRestTests{
 
     @BeforeEach
     public void DirectoryBackToDefault() {
@@ -55,7 +55,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * File: AndmefailiAtribuudidMuudetud.ddoc
      */
     @Test
-    public void ddocInvalidSignature() {
+    void ddocInvalidSignature() {
         post(validationRequestFor("AndmefailiAtribuudidMuudetud.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
@@ -79,7 +79,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * File: multipleInvalidSignatures.ddoc
      */
     @Test
-    public void ddocInvalidMultipleSignatures() {
+    void ddocInvalidMultipleSignatures() {
         post(validationRequestFor("multipleInvalidSignatures.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_11))
@@ -112,7 +112,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * File: multipleValidAndInvalidSignatures.ddoc
      */
     @Test
-    public void ddocInvalidAndValidMultipleSignatures() {
+    void ddocInvalidAndValidMultipleSignatures() {
         post(validationRequestFor("multipleValidAndInvalidSignatures.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_11))
@@ -147,7 +147,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * File: test-inv-sig-inf.ddoc
      */
     @Test
-    public void ddocSignatureValueChanged() {
+    void ddocSignatureValueChanged() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("test-inv-sig-inf.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -177,7 +177,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * File: AndmefailiAtribuudidMuudetud.ddoc
      */
     @Test
-    public void ddocDataFileHashMismatch() {
+    void ddocDataFileHashMismatch() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("AndmefailiAtribuudidMuudetud.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -204,7 +204,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * File: ilma_kehtivuskinnituseta.ddoc
      */
     @Test
-    public void ddocNoOCSPResponse() {
+    void ddocNoOCSPResponse() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("ilma_kehtivuskinnituseta.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -233,7 +233,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * File: test-non-repu1.ddoc
      */
     @Test
-    public void ddocNoNonRepudiationKey() {
+    void ddocNoNonRepudiationKey() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("test-non-repu1.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -260,7 +260,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * File: Belgia_kandeavaldus_LIV.ddoc
      */
     @Test
-    public void ddocSignersCertNotTrusted() {
+    void ddocSignersCertNotTrusted() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("Belgia_kandeavaldus_LIV.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -291,7 +291,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * File: Tundmatu_OCSP_responder.ddoc
      */
     @Test
-    public void ddocOCSPNotTrusted() {
+    void ddocOCSPNotTrusted() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("Tundmatu_OCSP_responder.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -318,7 +318,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * File: lisatud_andmefail.ddoc
      */
     @Test
-    public void ddocNonSignedFile() {
+    void ddocNonSignedFile() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("DIGIDOC-XML1.3_lisatud_andmefail.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -343,7 +343,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * File: faileemald1.ddoc
      */
     @Test
-    public void ddocFileRemoved() {
+    void ddocFileRemoved() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("faileemald1.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -368,7 +368,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * File: OCSP nonce vale.ddoc
      */
     @Test
-    public void ddocWrongOcspNonce() {
+    void ddocWrongOcspNonce() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("OCSP nonce vale.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -392,7 +392,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * File: xml_expansion.ddoc
      */
     @Test
-    public void ddocWithXMLEntityExpansionAttackShouldFail() {
+    void ddocWithXMLEntityExpansionAttackShouldFail() {
         setTestFilesDirectory("ddoc/test/timemark/");
         post(validationRequestFor("xml_expansion.ddoc"))
                 .then()
@@ -414,7 +414,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * File: xml_entity.ddoc
      */
     @Test
-    public void ddocWithXMLServerSideRequestForgeryAttackShouldFail() {
+    void ddocWithXMLServerSideRequestForgeryAttackShouldFail() {
         setTestFilesDirectory("ddoc/test/timemark/");
         post(validationRequestFor("xml_entity.ddoc"))
                 .then()
@@ -436,7 +436,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * File: KS-02_tyhi.ddoc
      */
     @Test
-    public void ddocNoFilesInContainer() {
+    void ddocNoFilesInContainer() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("KS-02_tyhi.ddoc"))
                 .then()
@@ -459,7 +459,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * File: 22915-bad-df-id.ddoc
      */
     @Test
-    public void ddocBadDatafileId() {
+    void ddocBadDatafileId() {
         setTestFilesDirectory("ddoc/live/timemark/");
         post(validationRequestFor("22915-bad-df-id.ddoc", VALID_SIGNATURE_POLICY_4, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -498,7 +498,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * File: cert-revoked.ddoc
      */
     @Test
-    public void ddocWithRevokedCertificateStatusFromOcspShouldFail() {
+    void ddocWithRevokedCertificateStatusFromOcspShouldFail() {
         post(validationRequestFor("cert-revoked.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
@@ -536,7 +536,7 @@ public class DdocValidationFailIT extends SiVaRestTests{
      * File: cert-unknown.ddoc
      */
     @Test
-    public void ddocWithUnknownCertificateStatusFromOcspShouldFail() {
+    void ddocWithUnknownCertificateStatusFromOcspShouldFail() {
         post(validationRequestFor("cert-unknown.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))

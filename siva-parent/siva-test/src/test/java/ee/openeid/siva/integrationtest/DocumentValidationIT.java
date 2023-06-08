@@ -27,7 +27,7 @@ import static ee.openeid.siva.integrationtest.TestData.*;
 
 
 @Tag("IntegrationTest")
-public class DocumentValidationIT extends SiVaRestTests {
+class DocumentValidationIT extends SiVaRestTests {
 
     @BeforeEach
     public void DirectoryBackToDefault() {
@@ -56,7 +56,7 @@ public class DocumentValidationIT extends SiVaRestTests {
      * File:3f_2s_1f_unsigned.bdoc
      */
     @Test
-    public void bdocWithOneUnsignedDocumentShouldFail() {
+    void bdocWithOneUnsignedDocumentShouldFail() {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("3f_2s_1f_unsigned.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "3f_2s_1f_unsigned.bdoc", "POLv3"))
@@ -93,7 +93,7 @@ public class DocumentValidationIT extends SiVaRestTests {
      * File:3f_2s_1partly_signed.bdoc
      */
     @Test
-    public void bdocWithDocumentWithOneSignatureShouldFail() {
+    void bdocWithDocumentWithOneSignatureShouldFail() {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("3f_2s_1partly_signed.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "3f_2s_1partly_signed.bdoc", "POLv3"))
@@ -124,7 +124,7 @@ public class DocumentValidationIT extends SiVaRestTests {
      */
 
     @Test
-    public void bdocWithNonOverlapingSignaturesShouldFail() {
+    void bdocWithNonOverlapingSignaturesShouldFail() {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("3f_2s_2partly_signed.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "3f_2s_2partly_signed.bdoc", "POLv3"))
@@ -156,7 +156,7 @@ public class DocumentValidationIT extends SiVaRestTests {
      */
 
     @Test
-    public void bdocWithNonOverlapingSignaturesAndOneUnsignedDocumentShouldFail() {
+    void bdocWithNonOverlapingSignaturesAndOneUnsignedDocumentShouldFail() {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("4f_2s_all_combinations.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "4f_2s_all_combinations.bdoc", "POLv3"))
@@ -193,7 +193,7 @@ public class DocumentValidationIT extends SiVaRestTests {
      */
 
     @Test  //TODO Should be re-evaluated when https://github.com/open-eid/SiVa/issues/18 is fixed
-    public void bdocWithThreeUnsignedDocumentShouldPass() {
+    void bdocWithThreeUnsignedDocumentShouldPass() {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("6f_2s_3unsigned.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "6f_2s_3unsigned.bdoc", "POLv3"))
@@ -227,7 +227,7 @@ public class DocumentValidationIT extends SiVaRestTests {
      * File:2f_2signed_1f_deleted.bdoc
      */
     @Test
-    public void bdocWithDeletedDocumentNamedInManifestShouldFail() {
+    void bdocWithDeletedDocumentNamedInManifestShouldFail() {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("2f_2signed_1f_deleted.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "2f_2signed_1f_deleted.bdoc", "POLv3"))
@@ -255,7 +255,7 @@ public class DocumentValidationIT extends SiVaRestTests {
      * File:2f_2signed_1f_totally_removed.bdoc
      */
     @Test
-    public void bdocWithRemovedDocumentDeletedFromManifestShouldFail() {
+    void bdocWithRemovedDocumentDeletedFromManifestShouldFail() {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("2f_2signed_1f_totally_removed.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "2f_2signed_1f_totally_removed.bdoc", "POLv3"))
@@ -286,7 +286,7 @@ public class DocumentValidationIT extends SiVaRestTests {
      */
 
     @Test  // TODO Should be re-evaluated when https://github.com/open-eid/SiVa/issues/18 is fixed
-    public void bdocWithOneUnsignedDocumentNamedInManifestShouldPass() {
+    void bdocWithOneUnsignedDocumentNamedInManifestShouldPass() {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("3f_2signed_1unsigned_all_in_manifest.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "3f_2signed_1unsigned_all_in_manifest.bdoc", "POLv3"))
@@ -313,7 +313,7 @@ public class DocumentValidationIT extends SiVaRestTests {
      */
 
     @Test // TODO  Should be re-evaluated when https://github.com/open-eid/SiVa/issues/18 is fixed
-    public void bdocWithOneUnsignedDocumentNotNamedInManifestShouldPass() {
+    void bdocWithOneUnsignedDocumentNotNamedInManifestShouldPass() {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("3f_2signed_1unsigned_2in_manifest.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "33f_2signed_1unsigned_2in_manifest.bdoc", "POLv3"))
@@ -338,7 +338,7 @@ public class DocumentValidationIT extends SiVaRestTests {
      * File:2f_all_signed.bdoc
      */
     @Test
-    public void bdocWithAllSignedDocumentsShouldPass() {
+    void bdocWithAllSignedDocumentsShouldPass() {
         setTestFilesDirectory("document_validation_test_files/bdoc/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("2f_all_signed.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "2f_all_signed.bdoc", "POLv3"))

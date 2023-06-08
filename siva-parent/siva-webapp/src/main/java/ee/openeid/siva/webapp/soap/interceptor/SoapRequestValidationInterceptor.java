@@ -66,10 +66,6 @@ public class SoapRequestValidationInterceptor extends AbstractRequestValidationI
     }
 
     private boolean isValidDocumentType(String inputDocumentType) {
-        if (inputDocumentType == null) {
-            return true;
-        } else {
-            return false;
-        }
+        return inputDocumentType == null;
     }
 }

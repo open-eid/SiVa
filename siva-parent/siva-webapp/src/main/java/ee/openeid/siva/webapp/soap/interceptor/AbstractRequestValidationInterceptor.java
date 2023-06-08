@@ -38,7 +38,7 @@ public abstract class AbstractRequestValidationInterceptor extends AbstractSoapI
     final ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
     private final SoapInterceptor saajIn = new SAAJInInterceptor();
 
-    public AbstractRequestValidationInterceptor() {
+    protected AbstractRequestValidationInterceptor() {
         super(Phase.POST_PROTOCOL);
         messageSource.setBasename("ValidationMessages");
     }

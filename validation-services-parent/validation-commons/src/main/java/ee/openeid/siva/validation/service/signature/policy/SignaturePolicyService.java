@@ -35,7 +35,7 @@ public class SignaturePolicyService<T extends ValidationPolicy> {
     private Map<String, T> signaturePolicies = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     public SignaturePolicyService(SignaturePolicyProperties<T> signaturePolicyProperties) {
-        LOGGER.info("Loading signature abstractPolicies for: " + signaturePolicyProperties.getClass().getSimpleName());
+        LOGGER.info("Loading signature abstractPolicies for: {}", signaturePolicyProperties.getClass().getSimpleName());
         loadSignaturePolicies(signaturePolicyProperties);
     }
 
@@ -49,12 +49,12 @@ public class SignaturePolicyService<T extends ValidationPolicy> {
 
     void loadSignaturePolicies(SignaturePolicyProperties<T> signaturePolicyProperties) {
         signaturePolicyProperties.getAbstractPolicies().forEach(policy -> {
-            LOGGER.info("Loading policy: " + policy);
+            LOGGER.info("Loading policy: {}", policy);
             ValidationPolicy existingPolicyData = signaturePolicies.putIfAbsent(policy.getName(), policy);
             if (existingPolicyData == null) {
-                LOGGER.info("Policy: " + policy + " loaded successfully");
+                LOGGER.info("Policy: {} loaded successfully", policy);
             } else {
-                LOGGER.error("Policy: " + policy + " was not loaded as it already exists");
+                LOGGER.error("Policy: {} was not loaded as it already exists", policy);
             }
         });
         loadDefaultPolicy(signaturePolicyProperties);

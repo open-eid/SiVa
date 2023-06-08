@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 import static ee.openeid.siva.integrationtest.TestData.VALIDATION_CONCLUSION_PREFIX;
 
 @Tag("IntegrationTest")
-public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
+class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
 
     @BeforeEach
     public void DirectoryBackToDefault() {
@@ -55,7 +55,7 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      * File: hellopades-lt-sha512.pdf
      */
     @Test
-    public void documentSignedWithSha512CertificateShouldPass() {
+    void documentSignedWithSha512CertificateShouldPass() {
         post(validationRequestFor("hellopades-lt-sha512.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
@@ -79,7 +79,7 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      * File: hellopades-lt-sha1.pdf
      */
     @Test
-    public void documentSignedWithSha1CertificateShouldFail() {
+    void documentSignedWithSha1CertificateShouldFail() {
         String filename = "hellopades-lt-sha1.pdf";
         String encodedString = Base64.encodeBase64String(readFileFromTestResources(filename));
 
@@ -109,7 +109,7 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      * File: hellopades-lt-sha256-ec224.pdf
      */
     @Test
-    public void documentSignedWithSha256Ec224AlgoShouldFail() {
+    void documentSignedWithSha256Ec224AlgoShouldFail() {
         post(validationRequestFor("hellopades-lt-sha256-ec224.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
@@ -134,7 +134,7 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      * File: hellopades-lt-sha256-ec256.pdf
      */
     @Test
-    public void documentSignedWithSha256Ec256AlgoShouldPass() {
+    void documentSignedWithSha256Ec256AlgoShouldPass() {
         post(validationRequestFor("hellopades-lt-sha256-ec256.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
@@ -158,7 +158,7 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      * File: hellopades-lt-sha256-rsa1024.pdf
      */
     @Test
-    public void documentSignedWithSha256Rsa1024AlgoShouldPass() {
+    void documentSignedWithSha256Rsa1024AlgoShouldPass() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt-sha256-rsa1024.pdf"));
 
         post(validationRequestWithDocumentTypeValidKeys(encodedString, "hellopades-lt-sha256-rsa1024.pdf", null, VALID_SIGNATURE_POLICY_3))
@@ -185,7 +185,7 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      * File: hellopades-lt-sha256-rsa1023.pdf
      */
     @Test
-    public void documentSignedWithRsa1023AlgoShouldFail() {
+    void documentSignedWithRsa1023AlgoShouldFail() {
         post(validationRequestFor("hellopades-lt-sha256-rsa1023.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatures[0].indication", Matchers.is("INDETERMINATE"))
@@ -207,7 +207,7 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      * File: hellopades-lt-sha256-rsa2047.pdf
      */
     @Test
-    public void documentSignedWithRsa2047AlgoShouldPass() {
+    void documentSignedWithRsa2047AlgoShouldPass() {
         post(validationRequestFor("hellopades-lt-sha256-rsa2047.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
@@ -232,7 +232,7 @@ public class PdfSignatureCryptographicAlgorithmIT extends SiVaRestTests{
      * File: PdfValidSingleSignature
      */
     @Test
-    public void documentSignedWithRsa2048AlgoShouldPass() {
+    void documentSignedWithRsa2048AlgoShouldPass() {
         setTestFilesDirectory("document_format_test_files/");
         post(validationRequestFor("PdfValidSingleSignature.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)

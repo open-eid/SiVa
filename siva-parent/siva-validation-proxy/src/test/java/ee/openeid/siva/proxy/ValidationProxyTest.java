@@ -49,6 +49,9 @@ import ee.openeid.validation.service.timestamptoken.configuration.TimeStampToken
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -66,6 +69,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -73,6 +77,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.mock;
@@ -80,7 +85,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-public class ValidationProxyTest {
+class ValidationProxyTest {
     private static final String DEFAULT_DOCUMENT_NAME = "document.";
     private static final String TEST_FILES_LOCATION = "test-files/";
     private static final String TIMEMARK_CONTAINER_VALIDATION_SERVICE_BEAN = "timemarkContainerValidationService";
@@ -112,7 +117,7 @@ public class ValidationProxyTest {
     }
 
     @Test
-    public void applicationContextHasNoBeanWithGivenNameThrowsException() {
+    void applicationContextHasNoBeanWithGivenNameThrowsException() {
         BDDMockito.given(applicationContext.getBean(anyString())).willThrow(new NoSuchBeanDefinitionException("Bean not loaded"));
         ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.PDF);
 
@@ -126,7 +131,7 @@ public class ValidationProxyTest {
     }
 
     @Test
-    public void proxyDocumentWithBDOCDocumentTypeShouldReturnValidationReport() {
+    void proxyDocumentWithBDOCDocumentTypeShouldReturnValidationReport() {
         when(applicationContext.getBean(TIMEMARK_CONTAINER_VALIDATION_SERVICE_BEAN)).thenReturn(validationServiceSpy);
 
         ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.BDOC);
@@ -135,7 +140,7 @@ public class ValidationProxyTest {
     }
 
     @Test
-    public void proxyDocumentWithPDFDocumentTypeShouldReturnValidationReport() {
+    void proxyDocumentWithPDFDocumentTypeShouldReturnValidationReport() {
         when(applicationContext.getBean(GENERIC_VALIDATION_SERVICE_BEAN)).thenReturn(validationServiceSpy);
 
         ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.PDF);
@@ -144,7 +149,7 @@ public class ValidationProxyTest {
     }
 
     @Test
-    public void proxyDocumentWithDDOCDocumentTypeShouldReturnValidationReport() {
+    void proxyDocumentWithDDOCDocumentTypeShouldReturnValidationReport() {
         when(applicationContext.getBean(TIMEMARK_CONTAINER_VALIDATION_SERVICE_BEAN)).thenReturn(validationServiceSpy);
 
         ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.DDOC);
@@ -152,14 +157,15 @@ public class ValidationProxyTest {
         assertSimpleReport(report);
     }
 
-    @Test
-    public void proxyDocumentWithAsicsExtensionShouldReturnValidationReport() throws Exception {
+    @ParameterizedTest
+    @MethodSource("getFileNameAndTestFile")
+    void proxyDocumentWithDifferentExtensionsShouldReturnValidationReport(String fileName, String testFile) throws Exception {
 
         when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(getTimeStampValidationService());
         when(applicationContext.getBean(TIMEMARK_CONTAINER_VALIDATION_SERVICE_BEAN)).thenReturn(validationServiceSpy);
 
-        ProxyDocument proxyDocument = mockProxyDocumentWithExtension("asics");
-        proxyDocument.setBytes(buildValidationDocument("timestamptoken-ddoc.asics"));
+        ProxyDocument proxyDocument = mockProxyDocumentWithExtension(fileName);
+        proxyDocument.setBytes(buildValidationDocument(testFile));
         SimpleReport report = validationProxy.validate(proxyDocument);
         TimeStampTokenValidationData timeStampTokenValidationData = report.getValidationConclusion().getTimeStampTokens().get(0);
         assertEquals(TimeStampTokenValidationData.Indication.TOTAL_PASSED, timeStampTokenValidationData.getIndication());
@@ -167,35 +173,7 @@ public class ValidationProxyTest {
     }
 
     @Test
-    public void proxyDocumentWithZipExtensionShouldReturnValidationReport() throws Exception {
-
-        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(getTimeStampValidationService());
-        when(applicationContext.getBean(TIMEMARK_CONTAINER_VALIDATION_SERVICE_BEAN)).thenReturn(validationServiceSpy);
-
-        ProxyDocument proxyDocument = mockProxyDocumentWithExtension("zip");
-        proxyDocument.setBytes(buildValidationDocument("timestamptoken-ddoc.zip"));
-        SimpleReport report = validationProxy.validate(proxyDocument);
-        TimeStampTokenValidationData timeStampTokenValidationData = report.getValidationConclusion().getTimeStampTokens().get(0);
-        assertEquals(TimeStampTokenValidationData.Indication.TOTAL_PASSED, timeStampTokenValidationData.getIndication());
-        assertSimpleReport(report);
-    }
-
-    @Test
-    public void proxyDocumentWithScsExtensionShouldReturnValidationReport() throws Exception {
-
-        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(getTimeStampValidationService());
-        when(applicationContext.getBean(TIMEMARK_CONTAINER_VALIDATION_SERVICE_BEAN)).thenReturn(validationServiceSpy);
-
-        ProxyDocument proxyDocument = mockProxyDocumentWithExtension("scs");
-        proxyDocument.setBytes(buildValidationDocument("timestamptoken-ddoc.asics"));
-        SimpleReport report = validationProxy.validate(proxyDocument);
-        TimeStampTokenValidationData timeStampTokenValidationData = report.getValidationConclusion().getTimeStampTokens().get(0);
-        assertEquals(TimeStampTokenValidationData.Indication.TOTAL_PASSED, timeStampTokenValidationData.getIndication());
-        assertSimpleReport(report);
-    }
-
-    @Test
-    public void proxyDocumentAsicsWithRandomDataFile() throws Exception {
+    void proxyDocumentAsicsWithRandomDataFile() throws Exception {
         when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(getTimeStampValidationService());
         when(applicationContext.getBean(GENERIC_VALIDATION_SERVICE_BEAN)).thenReturn(getGenericValidationService());
         ProxyDocument proxyDocument = mockProxyDocumentWithExtension("asics");
@@ -206,7 +184,7 @@ public class ValidationProxyTest {
     }
 
     @Test
-    public void proxyDocumentAsicsWithTwoDataFiles() throws Exception {
+    void proxyDocumentAsicsWithTwoDataFiles() throws Exception {
         when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(getTimeStampValidationService());
         ProxyDocument proxyDocument = mockProxyDocumentWithExtension("asics");
         proxyDocument.setBytes(buildValidationDocument("TwoDataFilesAsics.asics"));
@@ -217,7 +195,7 @@ public class ValidationProxyTest {
     }
 
     @Test
-    public void proxyDocumentAsicsWithDifferentMimeType() throws Exception {
+    void proxyDocumentAsicsWithDifferentMimeType() throws Exception {
         when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(getTimeStampValidationService());
         when(applicationContext.getBean(GENERIC_VALIDATION_SERVICE_BEAN)).thenReturn(validationServiceSpy);
         ProxyDocument proxyDocument = mockProxyDocumentWithExtension("zip");
@@ -227,7 +205,7 @@ public class ValidationProxyTest {
     }
 
     @Test
-    public void proxyDocumentAsicsNoTeraWarning() throws Exception {
+    void proxyDocumentAsicsNoTeraWarning() throws Exception {
         when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(getTimeStampValidationService());
         when(applicationContext.getBean(TIMEMARK_CONTAINER_VALIDATION_SERVICE_BEAN)).thenReturn(validationServiceSpy);
         ProxyDocument proxyDocument = mockProxyDocumentWithExtension("asics");
@@ -237,7 +215,7 @@ public class ValidationProxyTest {
     }
 
     @Test
-    public void removeUnnecessaryWarningsFromValidationConclusion() {
+    void removeUnnecessaryWarningsFromValidationConclusion() {
         ValidationConclusion validationConclusion = new ValidationConclusion();
         ValidationWarning validationWarning = new ValidationWarning();
         validationWarning.setContent(DDOCContainerValidationReportBuilder.DDOC_TIMESTAMP_WARNING);
@@ -247,7 +225,7 @@ public class ValidationProxyTest {
     }
 
     @Test
-    public void requestValidationReturnsReportInRequestedType() {
+    void requestValidationReturnsReportInRequestedType() {
         mockValidationServices();
         for (DocumentType documentType : DocumentType.values()) {
             validateRequestAndAssertExpectedReportType(mockProxyDocumentWithDocument(documentType, ReportType.SIMPLE),     SimpleReport.class);
@@ -260,20 +238,20 @@ public class ValidationProxyTest {
     }
 
     @Test
-    public void addsTestEnvironmentWarningForTestProfile() {
+    void addsTestEnvironmentWarningForTestProfile() {
         environment.setActiveProfiles("test");
         SimpleReport report = getValidationProxySpy().validate(new ProxyDocument());
         assertThat(report.getValidationConclusion().getValidationWarnings(), contains(TEST_ENV_WARNING));
     }
 
     @Test
-    public void doesNotAddTestEnvironmentWarningWhenTestProfileNotSet() {
+    void doesNotAddTestEnvironmentWarningWhenTestProfileNotSet() {
         SimpleReport report = getValidationProxySpy().validate(new ProxyDocument());
         assertNull(report.getValidationConclusion().getValidationWarnings());
     }
 
     @Test
-    public void addsTestEnvironmentWarningForTestProfile_constructsANewListWhenWarningsPresentInReport() {
+    void addsTestEnvironmentWarningForTestProfile_constructsANewListWhenWarningsPresentInReport() {
         environment.setActiveProfiles("test");
         ValidationWarning warning1 = new ValidationWarning();
         warning1.setContent("warning1");
@@ -413,6 +391,14 @@ public class ValidationProxyTest {
             policy.setPolicyUrl("http://policyUrl.com");
             return policy;
         }
+    }
+
+    private static Stream<Arguments> getFileNameAndTestFile() {
+        return Stream.of(
+                arguments("asics", "timestamptoken-ddoc.asics"),
+                arguments("zip", "timestamptoken-ddoc.zip"),
+                arguments("scs", "timestamptoken-ddoc.asics")
+        );
     }
 
     private static class ValidationProxySpy extends ValidationProxy {

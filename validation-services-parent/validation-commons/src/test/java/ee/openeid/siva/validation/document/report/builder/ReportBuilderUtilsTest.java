@@ -28,35 +28,36 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ReportBuilderUtilsTest {
+class ReportBuilderUtilsTest {
 
     private static final String QES_POLICY = "POLv4";
 
     @Test
-    public void indicationNotChangingQesigSignatureLevel() {
+    void indicationNotChangingQesigSignatureLevel() {
         ValidationConclusion validationConclusion = getDefaultValidationConclusion(SignatureQualification.QESIG);
         ReportBuilderUtils.processSignatureIndications(validationConclusion, QES_POLICY);
         assertTotalPassed(validationConclusion);
     }
 
     @Test
-    public void indicationNotChangingQesealSignatureLevel() {
+    void indicationNotChangingQesealSignatureLevel() {
         ValidationConclusion validationConclusion = getDefaultValidationConclusion(SignatureQualification.QESEAL);
         ReportBuilderUtils.processSignatureIndications(validationConclusion, QES_POLICY);
         assertTotalPassed(validationConclusion);
     }
 
     @Test
-    public void indicationNotChangingAdesealQsSignatureLevel() {
+    void indicationNotChangingAdesealQsSignatureLevel() {
         ValidationConclusion validationConclusion = getDefaultValidationConclusion(SignatureQualification.ADESEAL_QC);
         ReportBuilderUtils.processSignatureIndications(validationConclusion, QES_POLICY);
         assertTotalPassed(validationConclusion);
     }
 
     @Test
-    public void indicationToPassedWithWarningFailedAdesigQsSignatureLevel() {
+    void indicationToPassedWithWarningFailedAdesigQsSignatureLevel() {
         ValidationConclusion validationConclusion = getDefaultValidationConclusion(SignatureQualification.ADESIG_QC);
         ReportBuilderUtils.processSignatureIndications(validationConclusion, QES_POLICY);
         assertEquals("TOTAL-PASSED", validationConclusion.getSignatures().get(0).getIndication());
@@ -103,7 +104,7 @@ public class ReportBuilderUtilsTest {
 
 
     @Test
-    public void utilClassConstructorMustBePrivate() throws Exception {
+    void utilClassConstructorMustBePrivate() throws Exception {
         final Constructor<ReportBuilderUtils> constructor = ReportBuilderUtils.class.getDeclaredConstructor();
         assertThat(Modifier.isPrivate(constructor.getModifiers())).isTrue();
         constructor.setAccessible(true);
@@ -111,17 +112,17 @@ public class ReportBuilderUtilsTest {
     }
 
     @Test
-    public void givenNullValueWillReturnEmptyString() throws Exception {
-        assertThat(ReportBuilderUtils.emptyWhenNull(null)).isEqualTo("");
+    void givenNullValueWillReturnEmptyString() throws Exception {
+        assertThat(ReportBuilderUtils.emptyWhenNull(null)).isEmpty();
     }
 
     @Test
-    public void givenNotEmptyStringWillReturnItUnchanged() throws Exception {
+    void givenNotEmptyStringWillReturnItUnchanged() throws Exception {
         assertThat(ReportBuilderUtils.emptyWhenNull("random")).isEqualTo("random");
     }
 
     @Test
-    public void validValidatedDocumentReturned() {
+    void validValidatedDocumentReturned() {
         byte[] data = "testData".getBytes();
         ValidatedDocument response = ReportBuilderUtils.createValidatedDocument(true, "filename.asice", data);
         assertEquals("filename.asice", response.getFilename());
@@ -130,11 +131,11 @@ public class ReportBuilderUtilsTest {
     }
 
     @Test
-    public void validValidatedDocumentReturnedWithoutReportSignature() {
+    void validValidatedDocumentReturnedWithoutReportSignature() {
         byte[] data = "testData".getBytes();
         ValidatedDocument response = ReportBuilderUtils.createValidatedDocument(false, "filename.asice", data);
         assertEquals("filename.asice", response.getFilename());
-        assertEquals(null, response.getHashAlgo());
-        assertEquals(null, response.getFileHash());
+        assertNull(response.getHashAlgo());
+        assertNull(response.getFileHash());
     }
 }

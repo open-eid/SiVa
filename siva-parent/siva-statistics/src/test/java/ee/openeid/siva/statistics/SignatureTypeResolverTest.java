@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 import static ee.openeid.siva.statistics.SignatureTypeResolver.resolveSignatureType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SignatureTypeResolverTest {
+class SignatureTypeResolverTest {
 
     private static final String SK_XML = "SK_XML";
     private static final String DIGIDOC_XML = "DIGIDOC_XML";
@@ -34,12 +34,12 @@ public class SignatureTypeResolverTest {
     private static final String NA = "N/A";
 
     @Test
-    public void reportWithEmptySignaturesReturnsNa() {
+    void reportWithEmptySignaturesReturnsNa() {
         assertEquals(NA, resolveSignatureType(new ValidationConclusion()));
     }
 
     @Test
-    public void reportWithTstContainerTypeReturnsNa() {
+    void reportWithTstContainerTypeReturnsNa() {
         ValidationConclusion validationConclusion = new ValidationConclusionBuilder()
                 .withSignatureForm(ASIC_S)
                 .addSignatureWithFormat(XADES +  "_some_prefix")
@@ -49,37 +49,37 @@ public class SignatureTypeResolverTest {
     }
 
     @Test
-    public void skXmlSignatureFormatReturnsXades() {
+    void skXmlSignatureFormatReturnsXades() {
         assertEquals(XADES, resolveSignatureType(reportWithSignatureFormat(SK_XML + "_some_prefix")));
     }
 
     @Test
-    public void digidocXmlSignatureFormatReturnsXades() {
+    void digidocXmlSignatureFormatReturnsXades() {
         assertEquals(XADES, resolveSignatureType(reportWithSignatureFormat(DIGIDOC_XML + "_some_prefix")));
     }
 
     @Test
-    public void xadesSignatureFormatReturnsCades() {
+    void xadesSignatureFormatReturnsCades() {
         assertEquals(XADES, resolveSignatureType(reportWithSignatureFormat(XADES + "_some_prefix")));
     }
 
     @Test
-    public void cadesSignatureFormatReturnsCades() {
+    void cadesSignatureFormatReturnsCades() {
         assertEquals(CADES, resolveSignatureType(reportWithSignatureFormat(CADES + "_some_prefix")));
     }
 
     @Test
-    public void padesSignatureFormatReturnsCades() {
+    void padesSignatureFormatReturnsCades() {
         assertEquals(PADES, resolveSignatureType(reportWithSignatureFormat(PADES + "_some_prefix")));
     }
 
     @Test
-    public void unknownSignatureFormatReturnsNa() {
+    void unknownSignatureFormatReturnsNa() {
         assertEquals(NA, resolveSignatureType(reportWithSignatureFormat("unknown")));
     }
 
     @Test
-    public void usesOnlyPrefixesOfSignatureFormats() {
+    void usesOnlyPrefixesOfSignatureFormats() {
         assertEquals(NA, resolveSignatureType(reportWithSignatureFormat("b" + SK_XML + "_some_prefix")));
         assertEquals(NA, resolveSignatureType(reportWithSignatureFormat("b" + DIGIDOC_XML + "_some_prefix")));
         assertEquals(NA, resolveSignatureType(reportWithSignatureFormat("b" + XADES + "_some_prefix")));
@@ -88,7 +88,7 @@ public class SignatureTypeResolverTest {
     }
 
     @Test
-    public void usesFirstSignatureOfReport() {
+    void usesFirstSignatureOfReport() {
         ValidationConclusion validationConclusion = new ValidationConclusionBuilder()
                 .addSignatureWithFormat("unknown")
                 .addSignatureWithFormat(XADES + "_some_prefix")

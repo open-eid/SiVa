@@ -64,7 +64,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
 @Tag("IntegrationTest")
-public class HashcodeValidationRequestIT extends SiVaRestTests {
+class HashcodeValidationRequestIT extends SiVaRestTests {
 
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "xades/";
 
@@ -95,7 +95,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void okHashcodeValidationWithSimpleReport() {
+    void okHashcodeValidationWithSimpleReport() {
         JSONHashcodeValidationRequest request = validRequestBody();
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
         assertSimpleReportWithSignature(response, request);
@@ -115,7 +115,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void simpleReportIsReturnedWithDetailedReportType() {
+    void simpleReportIsReturnedWithDetailedReportType() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.setReportType(ReportType.DETAILED.getValue());
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
@@ -136,7 +136,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void reportTypeMissingDefaultsToSimple() {
+    void reportTypeMissingDefaultsToSimple() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.setReportType(null);
 
@@ -158,7 +158,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void reportTypeCaseInsensitive() {
+    void reportTypeCaseInsensitive() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.setReportType("SiMpLe");
 
@@ -180,7 +180,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void reportTypeInvalid() {
+    void reportTypeInvalid() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.setReportType("INVALID_REPORT_TYPE");
 
@@ -203,7 +203,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void simpleReportIsReturnedWithDiagnosticReportType() {
+    void simpleReportIsReturnedWithDiagnosticReportType() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.setReportType(ReportType.DIAGNOSTIC.getValue());
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
@@ -224,7 +224,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void signaturePolicyPOLv3() {
+    void signaturePolicyPOLv3() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.setSignaturePolicy(SIGNATURE_POLICY_1);
 
@@ -249,7 +249,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void signaturePolicyPOLv4() {
+    void signaturePolicyPOLv4() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.setSignaturePolicy(SIGNATURE_POLICY_2);
 
@@ -274,7 +274,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void signaturePolicyMissing_defaultsToPOLv4() {
+    void signaturePolicyMissing_defaultsToPOLv4() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.setSignaturePolicy(null);
 
@@ -299,7 +299,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void signaturePolicyInvalid() {
+    void signaturePolicyInvalid() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.setSignaturePolicy("POLv2");
 
@@ -322,7 +322,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void signaturePolicyInvalidFormat() {
+    void signaturePolicyInvalidFormat() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.setSignaturePolicy("POLv3.*");
 
@@ -345,7 +345,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void signaturePolicyEmpty() {
+    void signaturePolicyEmpty() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.setSignaturePolicy("");
 
@@ -368,7 +368,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void signaturePolicyTooLong() {
+    void signaturePolicyTooLong() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.setSignaturePolicy(StringUtils.repeat('a', 101));
 
@@ -392,7 +392,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void doubleSignaturePolicy() {
+    void doubleSignaturePolicy() {
         String file = Base64.encodeBase64String(readFileFromTestResources(TestData.MOCK_XADES_SIGNATURE_FILE));
 
         String request = "{\n" +
@@ -425,7 +425,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void signatureFileMissing() {
+    void signatureFileMissing() {
         JSONHashcodeValidationRequest request = validRequestBody();
 
         request.setSignatureFiles(null);
@@ -451,7 +451,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void signatureFileEmpty() {
+    void signatureFileEmpty() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.setSignatureFiles(Collections.emptyList());
 
@@ -475,7 +475,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void signatureFileNotBase64Encoded() {
+    void signatureFileNotBase64Encoded() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.getSignatureFiles().get(0).setSignature("NOT.BASE64.ENCODED.VALUE");
 
@@ -497,7 +497,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void signatureFileContentWithoutSignature() {
+    void signatureFileContentWithoutSignature() {
         String randomXmlFileWithoutSignature = "PD94bWwgdmVyc2lvbj0nMS4wJyAgZW5jb2Rpbmc9J1VURi04JyA/Pg0KPHRlc3Q+DQoJPGRhdGE+DQoJCTxzb21ldGhpbmc+c29tZSBkYXRhPC9zb21ldGhpbmc+DQoJPC9kYXRhPg0KPC90ZXN0Pg0K";
         JSONHashcodeValidationRequest request = validRequestBody();
         request.getSignatureFiles().get(0).setSignature(randomXmlFileWithoutSignature);
@@ -520,7 +520,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void signatureContentNotXML() {
+    void signatureContentNotXML() {
         String notXmlFormattedContent = Base64.encodeBase64String("NOT_XML_FORMATTED_FILE_CONTENT".getBytes(StandardCharsets.UTF_8));
         JSONHashcodeValidationRequest request = validRequestBody();
         request.getSignatureFiles().get(0).setSignature(notXmlFormattedContent);
@@ -545,7 +545,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void dataFilesMissing() {
+    void dataFilesMissing() {
         JSONHashcodeValidationRequest request = validRequestBodyMinimal();
 
         ValidatableResponse response = postHashcodeValidation(toRequest(request)).then();
@@ -566,7 +566,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void dataFilesEmpty() {
+    void dataFilesEmpty() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.getSignatureFiles().get(0).setDatafiles(new ArrayList<>());
 
@@ -590,7 +590,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void dataFileFilenameMissing() {
+    void dataFileFilenameMissing() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.getSignatureFiles().get(0).getDatafiles().get(0).setFilename(null);
 
@@ -615,7 +615,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void dataFileFilenameEmpty() {
+    void dataFileFilenameEmpty() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.getSignatureFiles().get(0).getDatafiles().get(0).setFilename("");
 
@@ -640,7 +640,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void dataFileFilenameTooLong() {
+    void dataFileFilenameTooLong() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.getSignatureFiles().get(0).getDatafiles().get(0).setFilename(StringUtils.repeat('a', 261));
 
@@ -664,7 +664,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void dataFileHashAlgorithmInvalid() {
+    void dataFileHashAlgorithmInvalid() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.getSignatureFiles().get(0).getDatafiles().get(0).setHashAlgo("INVALID_HASH_ALGORITHM");
 
@@ -688,7 +688,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void dataFileHashAlgorithmCaseInsensitive() {
+    void dataFileHashAlgorithmCaseInsensitive() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.getSignatureFiles().get(0).getDatafiles().get(0).setHashAlgo("sha256");
 
@@ -710,7 +710,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void dataFileHashMissing() {
+    void dataFileHashMissing() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.getSignatureFiles().get(0).getDatafiles().get(0).setHash(null);
 
@@ -735,7 +735,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void dataFileHashEmpty() {
+    void dataFileHashEmpty() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.getSignatureFiles().get(0).getDatafiles().get(0).setHash("");
 
@@ -761,7 +761,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void dataFileHashNotBase64Encoded() {
+    void dataFileHashNotBase64Encoded() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.getSignatureFiles().get(0).getDatafiles().get(0).setHash("NOT.BASE64.ENCODED.VALUE");
 
@@ -785,7 +785,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void dataFileHasTooLong() {
+    void dataFileHasTooLong() {
         JSONHashcodeValidationRequest request = validRequestBody();
         request.getSignatureFiles().get(0).getDatafiles().get(0).setHash(StringUtils.repeat('P', 1001));
 
@@ -809,7 +809,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void doubleFieldsInDatafiles() {
+    void doubleFieldsInDatafiles() {
         String file = Base64.encodeBase64String(readFileFromTestResources(TestData.MOCK_XADES_SIGNATURE_FILE));
 
         String request = "{\n" +
@@ -850,7 +850,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void multipleDataFilesOneNotInSignature() {
+    void multipleDataFilesOneNotInSignature() {
         JSONHashcodeValidationRequest request = validRequestBody();
 
         Datafile invalidDataFile = new Datafile();
@@ -886,7 +886,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: multiple files
      **/
     @Test
-    public void multipleSignatureFilesShouldPass() {
+    void multipleSignatureFilesShouldPass() {
         setTestFilesDirectory("xades/container/");
         List <String> files = returnFiles(getTestFilesDirectory());
 
@@ -915,7 +915,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: multiple files
      **/
     @Test
-    public void multipleSignatureFilesShouldPassWithDatafiles() throws IOException, SAXException, ParserConfigurationException {
+    void multipleSignatureFilesShouldPassWithDatafiles() throws IOException, SAXException, ParserConfigurationException {
         setTestFilesDirectory("xades/container/");
         postHashcodeValidation(validationRequestHashcodeMultipleFiles(returnFiles(getTestFilesDirectory()), null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -941,7 +941,7 @@ public class HashcodeValidationRequestIT extends SiVaRestTests {
      * File: multiple files
      **/
     @Test
-    public void multipleSignatureFilesOneFaulty() throws IOException, SAXException, ParserConfigurationException {
+    void multipleSignatureFilesOneFaulty() throws IOException, SAXException, ParserConfigurationException {
         setTestFilesDirectory("xades/container/");
         List<String> files = returnFiles(getTestFilesDirectory());
         JSONObject jsonObject = validationRequestHashcodeMultipleFilesReturnsObject(files, null, null);

@@ -154,8 +154,8 @@ public class TimeStampTokenValidationService implements ValidationService {
     private boolean isSignatureValid(TimeStampToken timeStampToken) {
         try {
             JcaSimpleSignerInfoVerifierBuilder sigVerifierBuilder = new JcaSimpleSignerInfoVerifierBuilder();
-            Collection certCollection = timeStampToken.getCertificates().getMatches(timeStampToken.getSID());
-            Iterator certIt = certCollection.iterator();
+            Collection<?> certCollection = timeStampToken.getCertificates().getMatches(timeStampToken.getSID());
+            Iterator<?> certIt = certCollection.iterator();
             X509CertificateHolder cert = (X509CertificateHolder) certIt.next();
             Certificate x509Cert = CertificateFactory.getInstance("X.509").generateCertificate(new ByteArrayInputStream(cert.getEncoded()));
 

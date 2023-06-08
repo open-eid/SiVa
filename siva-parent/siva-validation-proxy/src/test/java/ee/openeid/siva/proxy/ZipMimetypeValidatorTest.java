@@ -16,10 +16,10 @@ import java.nio.charset.StandardCharsets;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class ZipMimetypeValidatorTest {
+class ZipMimetypeValidatorTest {
 
     @Test
-    public void validMimetypeOfSingleExpectedValueShouldNotThrowException() {
+    void validMimetypeOfSingleExpectedValueShouldNotThrowException() {
         ZipMimetypeValidator zipMimetypeValidator = new ZipMimetypeValidator("valid-mimetype");
         ProxyDocument proxyDocument = proxyDocumentBuilder()
                 .fileContent("valid-mimetype")
@@ -29,7 +29,7 @@ public class ZipMimetypeValidatorTest {
     }
 
     @Test
-    public void validMimetypeOfMultipleExpectedValuesShouldNotThrowException() {
+    void validMimetypeOfMultipleExpectedValuesShouldNotThrowException() {
         ZipMimetypeValidator zipMimetypeValidator = new ZipMimetypeValidator("valid-mimetype1", "valid-mimetype2");
         ProxyDocument proxyDocument = proxyDocumentBuilder()
                 .fileContent("valid-mimetype2")
@@ -39,7 +39,7 @@ public class ZipMimetypeValidatorTest {
     }
 
     @Test
-    public void invalidMimetypeLengthThrowsException() {
+    void invalidMimetypeLengthThrowsException() {
         ZipMimetypeValidator zipMimetypeValidator = new ZipMimetypeValidator("valid-mimetype");
         ProxyDocument proxyDocument = proxyDocumentBuilder()
                 .fileName("mimetyp")
@@ -53,7 +53,7 @@ public class ZipMimetypeValidatorTest {
     }
 
     @Test
-    public void invalidMimetypeFileNameThrowsException() {
+    void invalidMimetypeFileNameThrowsException() {
         ZipMimetypeValidator zipMimetypeValidator = new ZipMimetypeValidator("valid-mimetype");
         ProxyDocument proxyDocument = proxyDocumentBuilder()
                 .fileName("mimetipe")
@@ -67,7 +67,7 @@ public class ZipMimetypeValidatorTest {
     }
 
     @Test
-    public void invalidMimetypeCompressionTypeThrowsException() {
+    void invalidMimetypeCompressionTypeThrowsException() {
         ZipMimetypeValidator zipMimetypeValidator = new ZipMimetypeValidator("valid-mimetype");
         ProxyDocument proxyDocument = proxyDocumentBuilder()
                 .compressed(true)
@@ -81,7 +81,7 @@ public class ZipMimetypeValidatorTest {
     }
 
     @Test
-    public void invalidMimetypeExtraFieldLengthThrowsException() {
+    void invalidMimetypeExtraFieldLengthThrowsException() {
         short invalidExtraFieldLength = 1;
         ZipMimetypeValidator zipMimetypeValidator = new ZipMimetypeValidator("valid-mimetype");
         ProxyDocument proxyDocument = proxyDocumentBuilder()
@@ -96,7 +96,7 @@ public class ZipMimetypeValidatorTest {
     }
 
     @Test
-    public void invalidMimetypeUncompressedSizeThrowsException() {
+    void invalidMimetypeUncompressedSizeThrowsException() {
         int invalidUncompressedSize = 20;
         ZipMimetypeValidator zipMimetypeValidator = new ZipMimetypeValidator("valid-mimetype");
         ProxyDocument proxyDocument = proxyDocumentBuilder()
@@ -113,7 +113,7 @@ public class ZipMimetypeValidatorTest {
     }
 
     @Test
-    public void invalidMimetypeFileContentThrowsException() {
+    void invalidMimetypeFileContentThrowsException() {
         ZipMimetypeValidator zipMimetypeValidator = new ZipMimetypeValidator("valid-mimetype");
         ProxyDocument proxyDocument = proxyDocumentBuilder()
                 .fileContent("invalid-mimetype")

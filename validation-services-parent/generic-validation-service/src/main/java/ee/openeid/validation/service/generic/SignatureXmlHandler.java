@@ -63,7 +63,7 @@ public class SignatureXmlHandler extends DefaultHandler {
     }
 
     @Override
-    public void characters(char ch[], int start, int length) {
+    public void characters(char[] ch, int start, int length) {
         if (signedInfo && reference && currentDatafile != null) {
             String characters = new String(ch, start, length).trim();
             if (StringUtils.isNotBlank(characters))

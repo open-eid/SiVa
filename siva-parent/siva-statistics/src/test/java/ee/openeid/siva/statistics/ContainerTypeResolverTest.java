@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 import static ee.openeid.siva.statistics.ContainerTypeResolver.resolveContainerType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ContainerTypeResolverTest {
+class ContainerTypeResolverTest {
 
     private static final String PADES_SIGNATURE_FORMAT_PREFIX = "PAdES_";
     private static final String ASIC_E_SIGNATURE_FORM = "ASiC-E";
@@ -37,18 +37,18 @@ public class ContainerTypeResolverTest {
     private static final String NA = "N/A";
 
     @Test
-    public void noSignatureFormAndNoSignaturesReturnsNa() {
+    void noSignatureFormAndNoSignaturesReturnsNa() {
         assertEquals(NA, resolveContainerType(new ValidationConclusion()));
     }
 
     @Test
-    public void noSignatureFormAndSignatureWithPadesPrefixReturnsPades() {
+    void noSignatureFormAndSignatureWithPadesPrefixReturnsPades() {
         assertEquals(PADES_CONTAINER_TYPE,
                 resolveContainerType(reportWithSignatureFormat(PADES_SIGNATURE_FORMAT_PREFIX + "some suffix")));
     }
 
     @Test
-    public void determiningPadesUsesFirstSignature() {
+    void determiningPadesUsesFirstSignature() {
         ValidationConclusion report = new ValidationConclusionBuilder()
                 .addSignatureWithFormat("RANDOM")
                 .addSignatureWithFormat(PADES_SIGNATURE_FORMAT_PREFIX + "some suffix")
@@ -58,45 +58,45 @@ public class ContainerTypeResolverTest {
     }
 
     @Test
-    public void signatureFormatWithPadesPrefixNotInTheBeginningReturnsNa() {
+    void signatureFormatWithPadesPrefixNotInTheBeginningReturnsNa() {
         assertEquals(NA, resolveContainerType(reportWithSignatureFormat("b" + PADES_SIGNATURE_FORMAT_PREFIX)));
         assertEquals(NA, resolveContainerType(reportWithSignatureFormat("b" + PADES_SIGNATURE_FORMAT_PREFIX + "s")));
     }
 
     @Test
-    public void nonSupportedSignatureFormReturnsNa() {
+    void nonSupportedSignatureFormReturnsNa() {
         assertEquals(NA, resolveContainerType(reportWithSignatureForm("SOMETHING")));
     }
 
     @Test
-    public void emptySignatureFormReturnsNa() {
+    void emptySignatureFormReturnsNa() {
         assertEquals(NA, resolveContainerType(reportWithSignatureForm("")));
     }
 
     @Test
-    public void asiceSignatureFormReturnsAsiceContainerType() {
+    void asiceSignatureFormReturnsAsiceContainerType() {
         assertEquals(ASIC_E_CONTAINER_TYPE, resolveContainerType(reportWithSignatureForm(ASIC_E_SIGNATURE_FORM)));
     }
 
     @Test
-    public void asicsSignatureFormReturnsAsicsContainerType(){
+    void asicsSignatureFormReturnsAsicsContainerType(){
         assertEquals(ASIC_S_CONTAINER_TYPE, resolveContainerType(reportWithSignatureForm(ASIC_S_SIGNATURE_FORM)));
     }
 
     @Test
-    public void signatureFormWithDDOCPrefixReturnsDDOCContainerType() {
+    void signatureFormWithDDOCPrefixReturnsDDOCContainerType() {
         assertEquals(DDOC_CONTAINER_TYPE,
                 resolveContainerType(reportWithSignatureForm(DDOC_SIGNATURE_FORM_PREFIX + "some suffix")));
     }
 
     @Test
-    public void signatureFormWithDDOCPrefixNotInTheBeginningReturnsNa() {
+    void signatureFormWithDDOCPrefixNotInTheBeginningReturnsNa() {
         assertEquals(NA, resolveContainerType(reportWithSignatureForm("b" + DDOC_SIGNATURE_FORM_PREFIX)));
         assertEquals(NA, resolveContainerType(reportWithSignatureForm("b" + DDOC_SIGNATURE_FORM_PREFIX + "s")));
     }
 
     @Test
-    public void signatureFormThatContainsButNotEqualsAValidSignatureFormReturnsNa() {
+    void signatureFormThatContainsButNotEqualsAValidSignatureFormReturnsNa() {
         assertEquals(NA, resolveContainerType(reportWithSignatureForm("b" + ASIC_E_SIGNATURE_FORM)));
         assertEquals(NA, resolveContainerType(reportWithSignatureForm("b" + ASIC_S_SIGNATURE_FORM)));
     }

@@ -39,30 +39,30 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class PDFWithInvalidSignaturesTest extends PDFValidationServiceTest {
+class PDFWithInvalidSignaturesTest extends PDFValidationServiceTest {
 
     private static final String PDF_WITH_ONE_BASELINE_PROFILE_B_SIGNATURE = "hellopades-pades-b-sha256-auth.pdf";
 
     @Test
-    @Disabled("java.lang.OutOfMemoryError: Java heap space may occur")
-    public void validatingPdfWithOneBaselineProfileBSignatureReturnsReportWithNoValidSignatures() {
+    @Disabled(/*TODO:*/"java.lang.OutOfMemoryError: Java heap space may occur")
+    void validatingPdfWithOneBaselineProfileBSignatureReturnsReportWithNoValidSignatures() {
         SimpleReport report = validateAndAssertReports(
                 buildValidationDocument(PDF_WITH_ONE_BASELINE_PROFILE_B_SIGNATURE)).getSimpleReport();
         assertNotNull(report);
         ValidationConclusion validationConclusion = report.getValidationConclusion();
-        assertTrue(validationConclusion.getSignaturesCount() == 1);
-        assertTrue(validationConclusion.getValidSignaturesCount() == 0);
+        assertEquals(1, (int) validationConclusion.getSignaturesCount());
+        assertEquals(0, (int) validationConclusion.getValidSignaturesCount());
     }
 
     @Disabled(/*TODO:*/"SignatureFormatConstraint outputs error node in wrong format, so error is not parsed correctly to report (VAL-197)")
     @Test
-    public void validatingPdfWithOneBaselineProfileBSignatureReturnsReportWithOneCorrectlyFormattedError() {
+    void validatingPdfWithOneBaselineProfileBSignatureReturnsReportWithOneCorrectlyFormattedError() {
         SimpleReport report = validateAndAssertReports(
                 buildValidationDocument(PDF_WITH_ONE_BASELINE_PROFILE_B_SIGNATURE)).getSimpleReport();
         System.out.println(report);
         SignatureValidationData signature = report.getValidationConclusion().getSignatures().get(0);
         assertEquals("TOTAL-FAILED", signature.getIndication());
-        assertTrue(signature.getErrors().size() == 1);
+        assertEquals(1, signature.getErrors().size());
         Error error = signature.getErrors().get(0);
 
         //check error object integrity
@@ -71,7 +71,7 @@ public class PDFWithInvalidSignaturesTest extends PDFValidationServiceTest {
     }
 
     @Test
-    public void assertPdfSignedWithInvalidSignatureDiagnosticData() {
+    void assertPdfSignedWithInvalidSignatureDiagnosticData() {
         Date validationStartDate = new Date();
 
         ValidationDocument validationDocument = buildValidationDocument(PDF_WITH_ONE_BASELINE_PROFILE_B_SIGNATURE);

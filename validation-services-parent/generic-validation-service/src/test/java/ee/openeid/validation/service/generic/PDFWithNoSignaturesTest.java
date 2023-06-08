@@ -32,12 +32,12 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class PDFWithNoSignaturesTest extends PDFValidationServiceTest {
+class PDFWithNoSignaturesTest extends PDFValidationServiceTest {
 
     private static final String PDF_WITH_NO_SIGNATURES = "no-signatures.pdf";
     private static final String VALIDATION_LEVEL = "ARCHIVAL_DATA";
     @Test
-    public void validatingPdfWithNoSignaturesReturnsReport() throws Exception {
+    void validatingPdfWithNoSignaturesReturnsReport() throws Exception {
         SimpleReport report = validateAndAssertReports(
                 buildValidationDocument(PDF_WITH_NO_SIGNATURES)).getSimpleReport();
         assertNotNull(report);
@@ -51,7 +51,7 @@ public class PDFWithNoSignaturesTest extends PDFValidationServiceTest {
     }
 
     @Test
-    public void assertPdfWithNoSignaturesDiagnosticData() {
+    void assertPdfWithNoSignaturesDiagnosticData() {
         Date validationStartDate = new Date();
 
         ValidationDocument validationDocument = buildValidationDocument(PDF_WITH_NO_SIGNATURES);
@@ -67,7 +67,7 @@ public class PDFWithNoSignaturesTest extends PDFValidationServiceTest {
     }
 
     @Test
-    public void validatingNullDocumentThrowsException() {
+    void validatingNullDocumentThrowsException() {
         assertThrows(
                 ValidationServiceException.class, () -> validationService.validateDocument(null)
         );

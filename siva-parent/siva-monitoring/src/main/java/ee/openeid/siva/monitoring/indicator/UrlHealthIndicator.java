@@ -16,12 +16,15 @@
 package ee.openeid.siva.monitoring.indicator;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.micrometer.core.lang.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.Status;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Optional;
 
 public class UrlHealthIndicator extends AbstractHealthIndicator {
 
@@ -32,26 +35,28 @@ public class UrlHealthIndicator extends AbstractHealthIndicator {
 
     private RestTemplate restTemplate;
 
-    public UrlHealthIndicator() { }
-
     @Override
     protected void doHealthCheck(Health.Builder builder) throws Exception {
         try {
             builder.withDetail(RESPONSE_PARAM_NAME, externalLink.getName());
             HealthStatus response = restTemplate.getForObject(externalLink.getUrl(), UrlHealthIndicator.HealthStatus.class);
-            LOGGER.debug(response.toString());
+            LOGGER.debug("{}", response);
             setHealtStatus(builder, response);
         } catch (Exception e) {
-            LOGGER.error("Failed to establish connection to '" + externalLink.getUrl() + "' > " + e.getMessage());
+            LOGGER.error("Failed to establish connection to '{}' > {}", externalLink.getUrl(), e.getMessage());
             builder.down();
         }
     }
 
-    private void setHealtStatus(Health.Builder builder, HealthStatus health) {
-        if (health.getStatus().equals(Status.UP.toString()))
-            builder.up();
-        else
-            builder.down();
+    private void setHealtStatus(Health.Builder builder,@Nullable HealthStatus health) {
+        Optional
+                .ofNullable(health)
+                .map(HealthStatus::getStatus)
+                .filter(Status.UP.toString()::equals)
+                .ifPresentOrElse(
+                        up -> builder.up(),
+                        builder::down
+                );
     }
 
     public void setExternalLink(ExternalLink externalLink) {

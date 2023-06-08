@@ -24,12 +24,12 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DataFilesReportSoapResponseTransformerTest {
+class DataFilesReportSoapResponseTransformerTest {
 
     DataFilesReportSoapResponseTransformer transformer = new DataFilesReportSoapResponseTransformer();
 
     @Test
-    public void vIsCorrectlyTransformedToSoapResponseReport() {
+    void vIsCorrectlyTransformedToSoapResponseReport() {
         ee.openeid.siva.validation.document.report.DataFilesReport dataFilesReport = createMockedDataFilesReport();
         DataFilesReport responseReport = transformer.toSoapResponse(dataFilesReport);
 

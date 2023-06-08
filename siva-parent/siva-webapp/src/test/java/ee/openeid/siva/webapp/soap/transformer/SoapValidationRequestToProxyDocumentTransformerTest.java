@@ -25,19 +25,19 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class SoapValidationRequestToProxyDocumentTransformerTest {
+class SoapValidationRequestToProxyDocumentTransformerTest {
 
     private SoapValidationRequestToProxyDocumentTransformer transformer = new SoapValidationRequestToProxyDocumentTransformer();
 
     @Test
-    public void contentIsCorrectlyTransformedToBytes() {
+    void contentIsCorrectlyTransformedToBytes() {
         String documentContent = "ZmlsZWNvbnRlbnQ=";
         SoapValidationRequest validationRequest = createSoapValidationRequest(documentContent, "file.bdoc", "some policy");
         assertEquals(validationRequest.getDocument(), Base64.encodeBase64String(transformer.transform(validationRequest).getBytes()));
     }
 
     @Test
-    public void reportTypeIsCorrectlyTransformed() {
+    void reportTypeIsCorrectlyTransformed() {
         for (ReportType reportType : ReportType.values()) {
             SoapValidationRequest validationRequest = createSoapValidationRequest("ZmlsZWNvbnRlbnQ=", "file.bdoc", "some policy");
             validationRequest.setReportType(reportType.getValue());
@@ -46,14 +46,14 @@ public class SoapValidationRequestToProxyDocumentTransformerTest {
     }
 
     @Test
-    public void reportTypeNullIsNotOverAssigned() {
+    void reportTypeNullIsNotOverAssigned() {
         SoapValidationRequest validationRequest = createSoapValidationRequest("ZmlsZWNvbnRlbnQ=", "file.bdoc", "some policy");
         validationRequest.setReportType(null);
         assertEquals(null, transformer.transform(validationRequest).getReportType());
     }
 
     @Test
-    public void invalidReportTypeThrowsUnsupportedTypeException() {
+    void invalidReportTypeThrowsUnsupportedTypeException() {
         String reportType = "INVALID_REPORT_TYPE";
         SoapValidationRequest validationRequest = createSoapValidationRequest("ZmlsZWNvbnRlbnQ=", "file.bdoc", "some policy");
         validationRequest.setReportType(reportType);
@@ -65,14 +65,14 @@ public class SoapValidationRequestToProxyDocumentTransformerTest {
     }
 
     @Test
-    public void filenameRemainsUnchanged() {
+    void filenameRemainsUnchanged() {
         String filename = "random file name.bdoc";
         SoapValidationRequest validationRequest = createSoapValidationRequest("Ymxh", filename, "some policy");
         assertEquals(validationRequest.getFilename(), transformer.transform(validationRequest).getName());
     }
 
     @Test
-    public void signaturePolicyRemainsUnchanged() {
+    void signaturePolicyRemainsUnchanged() {
         String policy = "policy";
         SoapValidationRequest validationRequest = createSoapValidationRequest("Ymxh", "file.bdoc", policy);
         assertEquals(validationRequest.getSignaturePolicy(), transformer.transform(validationRequest).getSignaturePolicy());

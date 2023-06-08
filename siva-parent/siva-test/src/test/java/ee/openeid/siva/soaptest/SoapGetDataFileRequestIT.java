@@ -20,11 +20,13 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
 
 
 @Tag("IntegrationTest")
-public class SoapGetDataFileRequestIT extends SiVaSoapTests {
+class SoapGetDataFileRequestIT extends SiVaSoapTests {
 
     @BeforeEach
     public void DirectoryBackToDefault() {
@@ -54,7 +56,7 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
      *
      **/
     @Test
-    public void soapGetDataFileRequestEmptyInputs() {
+    void soapGetDataFileRequestEmptyInputs() {
         postDataFiles(validationRequestForDocumentDataFilesExtended("", ""))
                 .then()
                 .statusCode(HttpStatus.OK.value())
@@ -77,7 +79,7 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
      *
      **/
     @Test
-    public void soapGetDataFileRequestEmptyBody() {
+    void soapGetDataFileRequestEmptyBody() {
         String emptyRequestBody = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
                 "   <soapenv:Header/>\n" +
                 "   <soapenv:Body>\n" +
@@ -105,7 +107,7 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
      *
      **/
     @Test
-    public void soapGetDataFileRequestDocumentTypeRemoved(){
+    void soapGetDataFileRequestDocumentTypeRemoved(){
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("valid_XML1_3.ddoc"));
         String request = validationRequestForDocumentDataFilesExtended(encodedString, "valid_XML1_3.ddoc");
         String invalidRequest = request.replace("<Filename>valid_XML1_3.ddoc</Filename>", "");
@@ -131,7 +133,7 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
      *
      **/
     @Test
-    public void soapGetDataFileRequestDocumentRemoved(){
+    void soapGetDataFileRequestDocumentRemoved(){
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("valid_XML1_3.ddoc"));
         String request = validationRequestForDocumentDataFilesExtended(encodedString, "DDOC");
         String invalidRequest = request.replace("<Document>"+encodedString+"</Document>", "");
@@ -157,7 +159,7 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
      *
      **/
     @Test
-    public void soapGetDataFileRequestDocumentTypeDuplicated(){
+    void soapGetDataFileRequestDocumentTypeDuplicated(){
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("valid_XML1_3.ddoc"));
         String request = validationRequestForDocumentDataFilesExtended(encodedString, "test_file.DDOC");
         String invalidRequest = request.replace("<Filename>test_file.DDOC</Filename", "<Filename>test.DDOC</Filename><Filename>test.BDOC</Filename>");
@@ -183,7 +185,7 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
      *
      **/
     @Test
-    public void soapGetDataFileRequestMoreKeysThanExpected() {
+    void soapGetDataFileRequestMoreKeysThanExpected() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("valid_XML1_3.ddoc"));
         String invalidRequest = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://soap.webapp.siva.openeid.ee/\">\n" +
                 "   <soapenv:Header/>\n" +
@@ -219,7 +221,7 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
      *
      **/
     @Test
-    public void soapGetDataFileRequestDocumentValueIsChanged(){
+    void soapGetDataFileRequestDocumentValueIsChanged(){
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("valid_XML1_3.ddoc"));
         String invalidEncodedString = encodedString.replace("PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZ", "AAAAAA");
         postDataFiles(validationRequestForDocumentDataFilesExtended(invalidEncodedString, "test.DDOC"))
@@ -238,101 +240,28 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
      *
      * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface
      *
-     * Title:  DocumentType was changed to BDOC when actual is DDOC
+     * Title:  DocumentType was changed to BDOC, PDF, XROAD and JPG when actual is DDOC
      *
      * Expected Result: Error is returned
      *
      * File: valid_XML1_3.ddoc
      *
      **/
-    @Test
-    public void soapGetDataFileRequestDocumentTypeChangedToBdoc() {
+    @ParameterizedTest
+    @ValueSource(strings = {"test.BDOC", "test.PDF", "test.XROAD", "test.JPG"})
+    void soapGetDataFileRequestDocumentTypeChangedToInvalidType(String fileName) {
         setTestFilesDirectory("ddoc/test/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("valid_XML1_3.ddoc"));
-        postDataFiles(validationRequestForDocumentDataFilesExtended(encodedString, "test.BDOC"))
+        postDataFiles(validationRequestForDocumentDataFilesExtended(encodedString, fileName))
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("Envelope.Body.Fault.faultcode",Matchers.is(CLIENT_FAULT))
                 .body("Envelope.Body.Fault.faultstring",Matchers.is(INVALID_DATA_FILE_FILENAME));
     }
+
     /**
      *
      * TestCaseID: Soap-Validation-Request-For-Data-Files-10
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface
-     *
-     * Title:  DocumentType was changed to PDF when actual is DDOC
-     *
-     * Expected Result: Error is returned
-     *
-     * File: valid_XML1_3.ddoc
-     *
-     **/
-    @Test
-    public void soapGetDataFileRequestDocumentTypeChangedToPdf() {
-        setTestFilesDirectory("ddoc/test/timemark/");
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("valid_XML1_3.ddoc"));
-        postDataFiles(validationRequestForDocumentDataFilesExtended(encodedString, "test.PDF"))
-                .then()
-                .statusCode(HttpStatus.OK.value())
-                .body("Envelope.Body.Fault.faultcode",Matchers.is(CLIENT_FAULT))
-                .body("Envelope.Body.Fault.faultstring",Matchers.is(INVALID_DATA_FILE_FILENAME));
-    }
-    /**
-     *
-     * TestCaseID: Soap-Validation-Request-For-Data-Files-11
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface
-     *
-     * Title:  DocumentType was changed to XROAD when actual is DDOC
-     *
-     * Expected Result: Error is returned
-     *
-     * File: valid_XML1_3.ddoc
-     *
-     **/
-    @Test
-    public void soapGetDataFileRequestDocumentTypeChangedToXROAD() {
-        setTestFilesDirectory("ddoc/test/timemark/");
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("valid_XML1_3.ddoc"));
-        postDataFiles(validationRequestForDocumentDataFilesExtended(encodedString, "test.XROAD"))
-                .then()
-                .statusCode(HttpStatus.OK.value())
-                .body("Envelope.Body.Fault.faultcode",Matchers.is(CLIENT_FAULT))
-                .body("Envelope.Body.Fault.faultstring",Matchers.is(INVALID_DATA_FILE_FILENAME));
-    }
-    /**
-     *
-     * TestCaseID: Soap-Validation-Request-For-Data-Files-12
-     *
-     * TestType: Automated
-     *
-     * Requirement: http://open-eid.github.io/SiVa/siva3/interfaces/#data-files-request-interface
-     *
-     * Title:  DocumentType was changed to unsupported format JPG when actual is DDOC
-     *
-     * Expected Result: Error is returned
-     *
-     * File: valid_XML1_3.ddoc
-     *
-     **/
-    @Test
-    public void soapGetDataFileRequestDocumentTypeChangedToUnsupported() {
-        setTestFilesDirectory("ddoc/test/timemark/");
-        String encodedString = Base64.encodeBase64String(readFileFromTestResources("valid_XML1_3.ddoc"));
-        postDataFiles(validationRequestForDocumentDataFilesExtended(encodedString, "test.JPG"))
-                .then()
-                .statusCode(HttpStatus.OK.value())
-                .body("Envelope.Body.Fault.faultcode",Matchers.is(CLIENT_FAULT))
-                .body("Envelope.Body.Fault.faultstring",Matchers.is(INVALID_DATA_FILE_FILENAME));
-    }
-    /**
-     *
-     * TestCaseID: Soap-Validation-Request-For-Data-Files-13
      *
      * TestType: Automated
      *
@@ -346,7 +275,7 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
      *
      **/
     @Test
-    public void soapGetDataFileRequestNotMatchingDocumentTypeAndActualFilePdf() {
+    void soapGetDataFileRequestNotMatchingDocumentTypeAndActualFilePdf() {
         setTestFilesDirectory("document_format_test_files/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("PdfValidSingleSignature.pdf"));
         postDataFiles(validationRequestForDocumentDataFilesExtended(encodedString, "test.DDOC"))
@@ -357,7 +286,7 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
     }
     /**
      *
-     * TestCaseID: Soap-Validation-Request-For-Data-Files-14
+     * TestCaseID: Soap-Validation-Request-For-Data-Files-11
      *
      * TestType: Automated
      *
@@ -371,7 +300,7 @@ public class SoapGetDataFileRequestIT extends SiVaSoapTests {
      *
      **/
     @Test
-    public void soapGetDataFileRequestNotMatchingDocumentTypeAndActualFileBdoc() {
+    void soapGetDataFileRequestNotMatchingDocumentTypeAndActualFileBdoc() {
         setTestFilesDirectory("document_format_test_files/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Valid_IDCard_MobID_signatures.bdoc"));
         postDataFiles(validationRequestForDocumentDataFilesExtended(encodedString, "test.DDOC"))

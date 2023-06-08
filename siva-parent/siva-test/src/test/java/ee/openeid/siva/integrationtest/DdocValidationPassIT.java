@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 import static ee.openeid.siva.integrationtest.TestData.*;
 
 @Tag("IntegrationTest")
-public class DdocValidationPassIT extends SiVaRestTests {
+class DdocValidationPassIT extends SiVaRestTests {
 
     private static final String TEST_FILES_DIRECTORY = "ddoc/live/timemark/";
 
@@ -48,7 +48,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
      * File: SK-XML1.0.ddoc
      */
     @Test
-    public void ddocValidMultipleSignaturesV1_0() {
+    void ddocValidMultipleSignaturesV1_0() {
         post(validationRequestFor("SK-XML1.0.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_10))
@@ -78,7 +78,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
      * File: DIGIDOC-XML1.1.ddoc
      */
     @Test
-    public void ddocValidSignatureV1_1() {
+    void ddocValidSignatureV1_1() {
         post(validationRequestFor("DIGIDOC-XML1.1.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_11))
@@ -104,7 +104,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
      * File: DIGIDOC-XML1.2.ddoc
      */
     @Test
-    public void ddocValidSignatureV1_2() {
+    void ddocValidSignatureV1_2() {
         post(validationRequestFor("DIGIDOC-XML1.2.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_12))
@@ -130,7 +130,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
      * File: DIGIDOC-XML1.3.ddoc
      */
     @Test
-    public void ddocValidSignatureV1_3() {
+    void ddocValidSignatureV1_3() {
         post(validationRequestFor("DIGIDOC-XML1.3.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
@@ -154,7 +154,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
      * File: susisevad1_3.ddoc
      */
     @Test
-    public void ddocSpecialCharactersInDataFileValidSignature() {
+    void ddocSpecialCharactersInDataFileValidSignature() {
         post(validationRequestFor("susisevad1_3.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
@@ -178,7 +178,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
      * File: KLASS3-SK _ KLASS3-SK OCSP RESPONDER uus.ddoc
      */
     @Test
-    public void ddocKlass3SkCertificateChainValidSignature() {
+    void ddocKlass3SkCertificateChainValidSignature() {
         post(validationRequestFor("KLASS3-SK _ KLASS3-SK OCSP RESPONDER uus.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
@@ -206,7 +206,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
      * File: KLASS3-SK 2010 _ KLASS3-SK 2010 OCSP RESPONDER.ddoc
      */
     @Test
-    public void ddocKlass3Sk2010CertificateChainValidSignature() {
+    void ddocKlass3Sk2010CertificateChainValidSignature() {
         post(validationRequestFor("KLASS3-SK 2010 _ KLASS3-SK 2010 OCSP RESPONDER.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
@@ -232,7 +232,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
      * File: vaikesed1.1.ddoc
      */
     @Test
-    public void ddocEsteidSk2007CertificateChainValidSignature() {
+    void ddocEsteidSk2007CertificateChainValidSignature() {
         post(validationRequestFor("vaikesed1.1.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_11))
@@ -260,7 +260,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
      * File: IB-4270_ESTEID-SK 2015  SK OCSP RESPONDER 2011.ddoc
      */
     @Test
-    public void ddocEsteidSk2015CertificateChainValidSignature() {
+    void ddocEsteidSk2015CertificateChainValidSignature() {
         post(validationRequestFor("IB-4270_ESTEID-SK 2015  SK OCSP RESPONDER 2011.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
@@ -286,7 +286,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
      * File: EID-SK _ EID-SK OCSP RESPONDER.ddoc
      */
     @Test
-    public void ddocEsteidSkCertificateChainValidSignature() {
+    void ddocEsteidSkCertificateChainValidSignature() {
         post(validationRequestFor("EID-SK _ EID-SK OCSP RESPONDER.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_11))
@@ -313,7 +313,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
      * File: EID-SK 2007 _ EID-SK 2007 OCSP RESPONDER 2010.ddoc
      */
     @Test
-    public void ddocEsteidSk2007Ocsp2010CertificateChainValidSignature() {
+    void ddocEsteidSk2007Ocsp2010CertificateChainValidSignature() {
         post(validationRequestFor("EID-SK 2007 _ EID-SK 2007 OCSP RESPONDER 2010.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
@@ -340,7 +340,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
      * File: EID-SK 2007 _ EID-SK 2007 OCSP RESPONDER.ddoc
      */
     @Test
-    public void ddocEsteidSk2007Ocsp2007CertificateChainValidSignature() {
+    void ddocEsteidSk2007Ocsp2007CertificateChainValidSignature() {
         post(validationRequestFor("EID-SK 2007 _ EID-SK 2007 OCSP RESPONDER.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
@@ -365,7 +365,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
      * File: EID-SK 2011 _ SK OCSP RESPONDER 2011.ddoc
      */
     @Test
-    public void ddocEsteidSk2011Ocsp2011CertificateChainValidSignature() {
+    void ddocEsteidSk2011Ocsp2011CertificateChainValidSignature() {
         post(validationRequestFor("EID-SK 2011 _ SK OCSP RESPONDER 2011.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
@@ -394,7 +394,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
      * File: 18912.ddoc
      */
     @Test
-    public void ddocWithWarningShouldPass() {
+    void ddocWithWarningShouldPass() {
         post(validationRequestFor("18912.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13))
@@ -433,7 +433,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
      * File: DdocContainerNoSignature.ddoc
      */
     @Test
-    public void ddocNoSignatures() {
+    void ddocNoSignatures() {
         setTestFilesDirectory("document_format_test_files/");
         post(validationRequestFor("DdocContainerNoSignature.ddoc", VALID_SIGNATURE_POLICY_4, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -459,7 +459,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
      * File: SK-XML1.0_hashcode.ddoc
      */
     @Test
-    public void ddocV1_0HashcodeShouldPass() {
+    void ddocV1_0HashcodeShouldPass() {
         post(validationRequestFor("SK-XML1_0_hashcode.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_10_HASHCODE))
@@ -496,7 +496,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
      * File: DIGIDOC-XML1.1_hashcode.ddoc
      */
     @Test
-    public void ddocV1_1HashcodeShouldPass() {
+    void ddocV1_1HashcodeShouldPass() {
         post(validationRequestFor("DIGIDOC-XML1.1_hashcode.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_11_HASHCODE))
@@ -531,7 +531,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
      */
 
     @Test
-    public void ddocV1_2HashcodeShouldPass() {
+    void ddocV1_2HashcodeShouldPass() {
         post(validationRequestFor("DIGIDOC-XML1.2_hashcode.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_12_HASHCODE))
@@ -567,7 +567,7 @@ public class DdocValidationPassIT extends SiVaRestTests {
      * File: DIGIDOC-XML1.3_hashcode.ddoc
      */
     @Test
-    public void ddocV1_3HashcodeShouldPass() {
+    void ddocV1_3HashcodeShouldPass() {
         post(validationRequestFor("DIGIDOC-XML1.3_hashcode.ddoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is(SIGNATURE_FORM_DDOC_13_HASHCODE))

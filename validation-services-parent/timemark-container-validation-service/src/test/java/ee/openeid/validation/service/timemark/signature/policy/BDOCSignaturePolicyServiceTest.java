@@ -39,7 +39,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 @ExtendWith(MockitoExtension.class)
-public class BDOCSignaturePolicyServiceTest {
+class BDOCSignaturePolicyServiceTest {
 
     private BDOCSignaturePolicyService bdocSignaturePolicyService;
 
@@ -56,7 +56,7 @@ public class BDOCSignaturePolicyServiceTest {
     }
 
     @Test
-    public void givenInvalidPolicyWillThrowException() {
+    void givenInvalidPolicyWillThrowException() {
         try (MockedStatic<IOUtils> ioUtils = mockStatic(IOUtils.class)) {
             ioUtils.when(() -> IOUtils.copy(any(InputStream.class), any(OutputStream.class))).thenThrow(new IOException("Copy error"));
             given(policy.getConstraintDataStream()).willReturn(new ByteArrayInputStream("hello".getBytes()));

@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 import static ee.openeid.siva.integrationtest.TestData.*;
 
 @Tag("IntegrationTest")
-public class XadesHashcodeValidationFailIT extends SiVaRestTests {
+class XadesHashcodeValidationFailIT extends SiVaRestTests {
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "xades/";
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
 
@@ -47,7 +47,7 @@ public class XadesHashcodeValidationFailIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TM.xml
      **/
     @Test
-    public void dataFileHashAlgorithmDoesNotMatchWithSignatureDataFileHashAlgorithm() {
+    void dataFileHashAlgorithmDoesNotMatchWithSignatureDataFileHashAlgorithm() {
         postHashcodeValidation(validationRequestHashcode("Valid_XAdES_LT_TM.xml", null, null, "test.txt", HASH_ALGO_SHA512, "RnKZobNWVy8u92sDL4S2j1BUzMT5qTgt6hm90TfAGRo="))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
@@ -76,7 +76,7 @@ public class XadesHashcodeValidationFailIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TM.xml
      **/
     @Test
-    public void dataFileHashDoesNotMatchWithSignatureFile() {
+    void dataFileHashDoesNotMatchWithSignatureFile() {
         postHashcodeValidation(validationRequestHashcode("Valid_XAdES_LT_TM.xml", null, null, "test.txt", HASH_ALGO_SHA256, "kl2ZobNWVy8u92sDL4S2j1BUzMT5qTgt6hm90TfAGRo="))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
@@ -102,7 +102,7 @@ public class XadesHashcodeValidationFailIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TS.xml
      **/
     @Test
-    public void dataFileFilenameDoesNotMatchWithSignatureFile() {
+    void dataFileFilenameDoesNotMatchWithSignatureFile() {
         postHashcodeValidation(validationRequestHashcode("Valid_XAdES_LT_TS.xml", null, null, "wrongDataFileName.jpg", HASH_ALGO_SHA256, "Sj/WcgsM57hpCiR5E8OycJ4jioYwdHzz3s4e5LXditA="))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT"))
@@ -130,7 +130,7 @@ public class XadesHashcodeValidationFailIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TM.xml
      **/
     @Test
-    public void invalidSignature() {
+    void invalidSignature() {
         postHashcodeValidation(validationRequestHashcode("Invalid_XAdES_LT_TM.xml", null, null, "test.txt", HASH_ALGO_SHA256, "RnKZobNWVy8u92sDL4S2j1BUzMT5qTgt6hm90TfAGRo="))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))
@@ -156,7 +156,7 @@ public class XadesHashcodeValidationFailIT extends SiVaRestTests {
      * File: Valid_XAdES_LT_TM.xml
      **/
     @Test
-    public void invalidBase64Signature() {
+    void invalidBase64Signature() {
         postHashcodeValidation(validationRequestHashcode("Invalid_base64_XAdES_LT_TM.xml", null, null, "test.txt", HASH_ALGO_SHA256, "RnKZobNWVy8u92sDL4S2j1BUzMT5qTgt6hm90TfAGRo="))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatures[0].signatureFormat", Matchers.is("XAdES_BASELINE_LT_TM"))

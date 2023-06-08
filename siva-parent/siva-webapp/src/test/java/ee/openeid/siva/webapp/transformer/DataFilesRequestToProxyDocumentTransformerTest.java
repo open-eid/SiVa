@@ -28,7 +28,7 @@ import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DataFilesRequestToProxyDocumentTransformerTest {
+class DataFilesRequestToProxyDocumentTransformerTest {
 
     private static final String VALID_DDOC_FILE = "test-files/ddoc_valid_2_signatures.ddoc";
     private DataFilesRequestToProxyDocumentTransformer transformer = new DataFilesRequestToProxyDocumentTransformer();
@@ -40,12 +40,12 @@ public class DataFilesRequestToProxyDocumentTransformerTest {
     }
 
     @Test
-    public void ddocTypeIsCorrectlyTransformedToDocumentType() {
+    void ddocTypeIsCorrectlyTransformedToDocumentType() {
         assertEquals(DocumentType.DDOC.name().toLowerCase(), transformer.transform(dataFilesRequest).getName());
     }
 
     @Test
-    public void contentIsCorrectlyTransformedToBytes() {
+    void contentIsCorrectlyTransformedToBytes() {
         ProxyDocument proxyDocument = transformer.transform(dataFilesRequest);
         assertEquals(dataFilesRequest.getDocument(), Base64.encodeBase64String(proxyDocument.getBytes()));
     }

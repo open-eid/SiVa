@@ -39,7 +39,7 @@ import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class ReportSignatureInterceptorTest {
+class ReportSignatureInterceptorTest {
 
     private ReportSignatureInterceptor reportSignatureInterceptor;
 
@@ -58,7 +58,7 @@ public class ReportSignatureInterceptorTest {
     }
 
     @Test
-    public void test() throws IOException {
+    void test() throws IOException {
         ValidationResponse validationResponse = (ValidationResponse) reportSignatureInterceptor.beforeBodyWrite(getValidationResponseMock(), null, null, null, null,null);
         assertArrayEquals(getRawSignatureMock(), Base64.decodeBase64(validationResponse.getValidationReportSignature()));
     }

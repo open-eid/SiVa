@@ -37,20 +37,20 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
-public class SoapHashcodeValidationRequestToProxyDocumentTransformerTest {
+class SoapHashcodeValidationRequestToProxyDocumentTransformerTest {
 
     private static final String SIGNATURE_FILE = "test-files/signatures0.xml";
     private SoapHashcodeValidationRequestToProxyDocumentTransformer transformer = new SoapHashcodeValidationRequestToProxyDocumentTransformer();
 
     @Test
-    public void contentIsCorrectlyTransformedToBytes() throws IOException, URISyntaxException {
+    void contentIsCorrectlyTransformedToBytes() throws IOException, URISyntaxException {
         SoapHashcodeValidationRequest validationRequest = mockValidValidationRequest();
         ProxyHashcodeDataSet proxyDocument = transformer.transform(validationRequest);
         assertEquals(validationRequest.getSignatureFiles().getSignatureFile().get(0).getSignature(), Base64.encodeBase64String(proxyDocument.getSignatureFiles().get(0).getSignature()));
     }
 
     @Test
-    public void reportTypeDefaultsToSimple() throws URISyntaxException, IOException {
+    void reportTypeDefaultsToSimple() throws URISyntaxException, IOException {
         SoapHashcodeValidationRequest validationRequest = mockValidValidationRequest();
         validationRequest.setReportType(null);
 
@@ -60,7 +60,7 @@ public class SoapHashcodeValidationRequestToProxyDocumentTransformerTest {
     }
 
     @Test
-    public void reportTypeRemainsUnchangedIfNotNull() throws URISyntaxException, IOException {
+    void reportTypeRemainsUnchangedIfNotNull() throws URISyntaxException, IOException {
         for (ee.openeid.siva.webapp.soap.ReportType reportType : ee.openeid.siva.webapp.soap.ReportType.values()) {
             SoapHashcodeValidationRequest validationRequest = mockValidValidationRequest();
             validationRequest.setReportType(reportType);
@@ -71,14 +71,14 @@ public class SoapHashcodeValidationRequestToProxyDocumentTransformerTest {
     }
 
     @Test
-    public void signaturePolicyRemainsUnchanged() throws IOException, URISyntaxException {
+    void signaturePolicyRemainsUnchanged() throws IOException, URISyntaxException {
         SoapHashcodeValidationRequest validationRequest = mockValidValidationRequest();
         ProxyHashcodeDataSet proxyDocument = transformer.transform(validationRequest);
         assertEquals(proxyDocument.getSignaturePolicy(), proxyDocument.getSignaturePolicy());
     }
 
     @Test
-    public void dataFilesTransformedCorrectlyWhileValuesRemainingUnchanged() throws URISyntaxException, IOException {
+    void dataFilesTransformedCorrectlyWhileValuesRemainingUnchanged() throws URISyntaxException, IOException {
         SoapHashcodeValidationRequest validationRequest = mockValidValidationRequest();
 
         ProxyHashcodeDataSet proxyDocument = transformer.transform(validationRequest);

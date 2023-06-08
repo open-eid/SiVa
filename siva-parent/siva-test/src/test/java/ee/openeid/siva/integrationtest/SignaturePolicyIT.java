@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 import static ee.openeid.siva.integrationtest.TestData.*;
 
 @Tag("IntegrationTest")
-public class SignaturePolicyIT extends SiVaRestTests {
+class SignaturePolicyIT extends SiVaRestTests {
 
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "pdf/signing_certifacte_test_files/";
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
@@ -48,9 +48,9 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File: soft-cert-signature.pdf
      */
-    @Disabled //TODO: New test file is needed
+    @Disabled(/*TODO:*/"New test file is needed")
     @Test
-    public void pdfDocumentAdesNonSscdCompliantShouldFailWithGivenPolicy() {
+    void pdfDocumentAdesNonSscdCompliantShouldFailWithGivenPolicy() {
         post(validationRequestFor("soft-cert-signature.pdf", VALID_SIGNATURE_POLICY_4, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("policy.policyDescription", Matchers.is(POLICY_4_DESCRIPTION))
@@ -84,9 +84,9 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File:
      */
-    @Disabled //TODO: test file needed
+    @Disabled(/*TODO:*/"Test file needed")
     @Test
-    public void bdocDocumentAdesNonSscdCompliantShouldFailWithGivenPolicy() {
+    void bdocDocumentAdesNonSscdCompliantShouldFailWithGivenPolicy() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         post(validationRequestForDD4j("", VALID_SIGNATURE_POLICY_4, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -119,9 +119,9 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File:
      */
-    @Disabled //TODO: test file needed
+    @Disabled(/*TODO:*/"Test file needed")
     @Test
-    public void bdocDocumentAdesSigShouldFail() {
+    void bdocDocumentAdesSigShouldFail() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDD4j("", VALID_SIGNATURE_POLICY_4, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -151,9 +151,9 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File:
      */
-    @Disabled //TODO: test file needed
+    @Disabled(/*TODO:*/"Test file needed")
     @Test
-    public void asiceDocumentAdesSigShouldFail() {
+    void asiceDocumentAdesSigShouldFail() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDD4j("", VALID_SIGNATURE_POLICY_4, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -183,9 +183,9 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File:
      */
-    @Disabled //TODO: test file needed
+    @Disabled(/*TODO:*/"Test file needed")
     @Test
-    public void bdocDocumentAdesSealShouldFail() {
+    void bdocDocumentAdesSealShouldFail() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDD4j("", VALID_SIGNATURE_POLICY_4, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -215,9 +215,9 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File:
      */
-    @Disabled //TODO: test file needed
+    @Disabled(/*TODO:*/"Test file needed")
     @Test
-    public void asiceDocumentAdesSealShouldFail() {
+    void asiceDocumentAdesSealShouldFail() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDD4j("", VALID_SIGNATURE_POLICY_4, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -248,7 +248,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: testAdesQC.asice
      */
     @Test
-    public void asiceDocumentAdesQcSigCompliantShouldPassWithWarning() {
+    void asiceDocumentAdesQcSigCompliantShouldPassWithWarning() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("testAdesQC.asice", VALID_SIGNATURE_POLICY_4, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -280,7 +280,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: testAdesQC.asice
      */
     @Test
-    public void bdocDocumentAdesQcSigCompliantShouldPassWithWarning() {
+    void bdocDocumentAdesQcSigCompliantShouldPassWithWarning() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("testAdesQC.asice", VALID_SIGNATURE_POLICY_4, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -311,7 +311,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: IB-4828_tempel_not_qscd_TS.asice
      */
     @Test
-    public void asiceDocumentAdesQCCompliantSealShouldPass() {
+    void asiceDocumentAdesQCCompliantSealShouldPass() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("IB-4828_tempel_not_qscd_TS.asice", VALID_SIGNATURE_POLICY_4, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -343,7 +343,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: IB-4828_tempel_not_qscd_TM.bdoc
      */
     @Test
-    public void bdocDocumentAdesQCCompliantSealShouldPass() {
+    void bdocDocumentAdesQCCompliantSealShouldPass() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("IB-4828_tempel_not_qscd_TM.bdoc", VALID_SIGNATURE_POLICY_4, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -374,9 +374,9 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File:
      */
-    @Disabled //TODO: file needed
+    @Disabled(/*TODO:*/"File needed")
     @Test
-    public void asiceDocumentAdesQCCompliantNoTypeShouldFail() {
+    void asiceDocumentAdesQCCompliantNoTypeShouldFail() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("", VALID_SIGNATURE_POLICY_4, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -407,9 +407,9 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File:
      */
-    @Disabled //TODO: file needed
+    @Disabled(/*TODO:*/"File needed")
     @Test
-    public void bdocDocumentAdesQCCompliantNoTypeShouldFail() {
+    void bdocDocumentAdesQCCompliantNoTypeShouldFail() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("", VALID_SIGNATURE_POLICY_4, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -441,7 +441,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: Valid_ID_sig.bdoc
      */
     @Test
-    public void bdocDocumentQesigShouldPassWithStrictPolicy() {
+    void bdocDocumentQesigShouldPassWithStrictPolicy() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("Valid_ID_sig.bdoc", VALID_SIGNATURE_POLICY_4, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -471,7 +471,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: ValidLiveSignature.asice
      */
     @Test
-    public void asiceDocumentQesigShouldPassWithStrictPolicy() {
+    void asiceDocumentQesigShouldPassWithStrictPolicy() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("ValidLiveSignature.asice", VALID_SIGNATURE_POLICY_4, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -501,7 +501,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: IB-4828_tempel_qscd_TM.bdoc
      */
     @Test
-    public void bdocDocumentQesealShouldPassWithStrictPolicy() {
+    void bdocDocumentQesealShouldPassWithStrictPolicy() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("IB-4828_tempel_qscd_TM.bdoc", VALID_SIGNATURE_POLICY_4, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -531,7 +531,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: IB-4828_tempel_qscd_TS.asice
      */
     @Test
-    public void asiceDocumentQesealShouldPassWithStrictPolicy() {
+    void asiceDocumentQesealShouldPassWithStrictPolicy() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("IB-4828_tempel_qscd_TS.asice", VALID_SIGNATURE_POLICY_4, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -562,7 +562,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      */
 
     @Test
-    public void bdocDocumentQesNoTypeShouldPassWithStrictPolicy() {
+    void bdocDocumentQesNoTypeShouldPassWithStrictPolicy() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestFor("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc", VALID_SIGNATURE_POLICY_4, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -592,7 +592,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: EE_SER-AEX-B-LT-V-28.asice
      */
     @Test
-    public void asiceDocumentQesNoTypeShouldPassWithStrictPolicy() {
+    void asiceDocumentQesNoTypeShouldPassWithStrictPolicy() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("EE_SER-AEX-B-LT-V-28.asice", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -622,8 +622,8 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: soft-cert-signature.pdf
      */
     @Test
-    @Disabled //TODO: New testfile is needed
-    public void pdfDocumentAdesNonSscdCompliantShouldPassWithGivenPolicy() {
+    @Disabled(/*TODO:*/"New testfile is needed")
+    void pdfDocumentAdesNonSscdCompliantShouldPassWithGivenPolicy() {
         post(validationRequestFor("soft-cert-signature.pdf", VALID_SIGNATURE_POLICY_3, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("policy.policyDescription", Matchers.is(POLICY_3_DESCRIPTION))
@@ -658,8 +658,8 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: allkiri_ades.asice
      */
     @Test
-    @Disabled //TODO: New testfile is needed
-    public void bdocDocumentAdesNonSscdCompliantShouldPassWithGivenPolicy() {
+    @Disabled(/*TODO:*/"New testfile is needed")
+    void bdocDocumentAdesNonSscdCompliantShouldPassWithGivenPolicy() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         post(validationRequestForDD4j("allkiri_ades.asice", VALID_SIGNATURE_POLICY_3, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -692,9 +692,9 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File: allkiri_ades.asice
      */
-    @Disabled //TODO: test file needed
+    @Disabled(/*TODO:*/"Test file needed")
     @Test
-    public void bdocDocumentAdesSigShouldPass() {
+    void bdocDocumentAdesSigShouldPass() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDD4j("", VALID_SIGNATURE_POLICY_3, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -724,9 +724,9 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File:
      */
-    @Disabled //TODO: test file needed
+    @Disabled(/*TODO:*/"Test file needed")
     @Test
-    public void asiceDocumentAdesSigShouldPass() {
+    void asiceDocumentAdesSigShouldPass() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDD4j("", VALID_SIGNATURE_POLICY_3, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -756,9 +756,9 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File:
      */
-    @Disabled //TODO: test file needed
+    @Disabled(/*TODO:*/"Test file needed")
     @Test
-    public void bdocDocumentAdesSealShouldPass() {
+    void bdocDocumentAdesSealShouldPass() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDD4j("", VALID_SIGNATURE_POLICY_3, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -788,9 +788,9 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File:
      */
-    @Disabled //TODO: test file needed
+    @Disabled(/*TODO:*/"Test file needed")
     @Test
-    public void asiceDocumentAdesSealShouldPass() {
+    void asiceDocumentAdesSealShouldPass() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDD4j("", VALID_SIGNATURE_POLICY_3, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -821,7 +821,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: testAdesQC.asice
      */
     @Test
-    public void asiceDocumentAdesQcSicShouldPassWithGivenPolicy() {
+    void asiceDocumentAdesQcSicShouldPassWithGivenPolicy() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("testAdesQC.asice", VALID_SIGNATURE_POLICY_3, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -853,7 +853,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: testAdesQC.asice
      */
     @Test
-    public void bdocDocumentAdesQcSigShouldPassWithGivenPolicy() {
+    void bdocDocumentAdesQcSigShouldPassWithGivenPolicy() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("testAdesQC.asice", VALID_SIGNATURE_POLICY_3, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -885,7 +885,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: IB-4828_tempel_not_qscd_TS.asice
      */
     @Test
-    public void asiceDocumentAdesQcCompliantSealShouldPassWithGivenPolicy() {
+    void asiceDocumentAdesQcCompliantSealShouldPassWithGivenPolicy() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("IB-4828_tempel_not_qscd_TS.asice", VALID_SIGNATURE_POLICY_3, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -917,7 +917,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: IB-4828_tempel_not_qscd_TM.bdoc
      */
     @Test
-    public void bdocDocumentAdesQCCompliantSealShouldPassWithGivenPolicy() {
+    void bdocDocumentAdesQCCompliantSealShouldPassWithGivenPolicy() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("IB-4828_tempel_not_qscd_TM.bdoc", VALID_SIGNATURE_POLICY_3, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -948,9 +948,9 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File:
      */
-    @Disabled //TODO: file needed
+    @Disabled(/*TODO:*/"File needed")
     @Test
-    public void asiceDocumentAdesQCCompliantNoTypeShouldPass() {
+    void asiceDocumentAdesQCCompliantNoTypeShouldPass() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("", VALID_SIGNATURE_POLICY_3, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -981,9 +981,9 @@ public class SignaturePolicyIT extends SiVaRestTests {
      *
      * File:
      */
-    @Disabled //TODO: file needed
+    @Disabled(/*TODO:*/"File needed")
     @Test
-    public void bdocDocumentAdesQCCompliantNoTypeShouldPass() {
+    void bdocDocumentAdesQCCompliantNoTypeShouldPass() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("", VALID_SIGNATURE_POLICY_3, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -1015,7 +1015,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: Valid_ID_sig.bdoc
      */
     @Test
-    public void bdocDocumentQesigShouldPassWithGivenPolicy() {
+    void bdocDocumentQesigShouldPassWithGivenPolicy() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("Valid_ID_sig.bdoc", VALID_SIGNATURE_POLICY_3, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -1045,7 +1045,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: ValidLiveSignature.asice
      */
     @Test
-    public void asiceDocumentQesigShouldPassWithGivenPolicy() {
+    void asiceDocumentQesigShouldPassWithGivenPolicy() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("ValidLiveSignature.asice", VALID_SIGNATURE_POLICY_3, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -1075,7 +1075,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: IB-4828_tempel_qscd_TM.bdoc
      */
     @Test
-    public void bdocDocumentQesealShouldPassWithGivenPolicy() {
+    void bdocDocumentQesealShouldPassWithGivenPolicy() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("IB-4828_tempel_qscd_TM.bdoc", VALID_SIGNATURE_POLICY_3, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -1105,7 +1105,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: IB-4828_tempel_qscd_TS.asice
      */
     @Test
-    public void asiceDocumentQesealShouldPassWithGivenPolicy() {
+    void asiceDocumentQesealShouldPassWithGivenPolicy() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("IB-4828_tempel_qscd_TS.asice", VALID_SIGNATURE_POLICY_3, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -1135,7 +1135,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
      */
     @Test
-    public void bdocDocumentQesNoTypeShouldPassWithGivenPolicy() {
+    void bdocDocumentQesNoTypeShouldPassWithGivenPolicy() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestForDD4j("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc", VALID_SIGNATURE_POLICY_3, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -1165,7 +1165,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: EE_SER-AEX-B-LT-V-28.asice
      */
     @Test
-    public void asiceDocumentQesNoTypeShouldPassWithGivenPolicy() {
+    void asiceDocumentQesNoTypeShouldPassWithGivenPolicy() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("EE_SER-AEX-B-LT-V-28.asice", VALID_SIGNATURE_POLICY_3, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -1195,7 +1195,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      * File: PadesProfileT.pdf
      */
     @Test
-    public void pdfDocumentWithoutRevocationInfoShouldFail() {
+    void pdfDocumentWithoutRevocationInfoShouldFail() {
         setTestFilesDirectory("signature_policy_test_files/");
         post(validationRequestFor("PadesProfileT.pdf", VALID_SIGNATURE_POLICY_4, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -1225,7 +1225,7 @@ public class SignaturePolicyIT extends SiVaRestTests {
      */
     //TODO SIVA-349 needs investigation why the signature is determined as PAdES_BASELINE_LTA not as PAdES_BASELINE_LT
     @Test
-    public void pdfDocumentWithCrlAsRevocationInfoShouldPass() {
+    void pdfDocumentWithCrlAsRevocationInfoShouldPass() {
         setTestFilesDirectory("signature_policy_test_files/");
         post(validationRequestFor("PadesProfileLtWithCrl.pdf", VALID_SIGNATURE_POLICY_4, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)

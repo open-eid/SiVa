@@ -35,13 +35,12 @@ import javax.xml.soap.SOAPPart;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.lenient;
 
 @ExtendWith(MockitoExtension.class)
-public class SoapRequestValidationInterceptorTest {
+class SoapRequestValidationInterceptorTest {
 
     private static final String INVALID_REQUEST = "Invalid request";
     private static final int EXPECTED_STATUS_CODE = 400;
@@ -77,28 +76,28 @@ public class SoapRequestValidationInterceptorTest {
     private SoapRequestValidationInterceptor validationInterceptor = new SoapRequestValidationInterceptor();
 
     @Test
-    public void whenSoapMessageIsNullThenFaultIsThrownWithInvalidRequestMessage() {
+    void whenSoapMessageIsNullThenFaultIsThrownWithInvalidRequestMessage() {
         mockNullReturningSoapMessage();
         Fault soapFault = handleMessageInInterceptor(message);
         assertFaultWithExpectedMessage(soapFault, INVALID_REQUEST);
     }
 
     @Test
-    public void whenDocumentIsInvalidThenFaultIsThrownWithInvalidDocumentMessage() throws SOAPException {
+    void whenDocumentIsInvalidThenFaultIsThrownWithInvalidDocumentMessage() throws SOAPException {
         mockSoapMessage("filename", "ÖÄÜ", "AA");
         Fault soapFault = handleMessageInInterceptor(message);
         assertFaultWithExpectedMessage(soapFault, INVALID_BASE64);
     }
 
     @Test
-    public void whenPolicyIsInvalidThenFaultIsThrownWithInvalidPolicyMessage() throws SOAPException {
+    void whenPolicyIsInvalidThenFaultIsThrownWithInvalidPolicyMessage() throws SOAPException {
         mockSoapMessage("filename", "AABBBAA", ";:::;;");
         Fault soapFault = handleMessageInInterceptor(message);
         assertFaultWithExpectedMessage(soapFault, INVALID_POLICY);
     }
 
     @Test
-    public void noSoapFaultIsThrownWithValidRequest() throws SOAPException {
+    void noSoapFaultIsThrownWithValidRequest() throws SOAPException {
         mockSoapMessage("filename", "c2Q=", "AA");
         Fault soapFault = handleMessageInInterceptor(message);
         assertNull(soapFault);
@@ -116,7 +115,7 @@ public class SoapRequestValidationInterceptorTest {
     private void assertFaultWithExpectedMessage(Fault soapFault, String message) {
         assertNotNull(soapFault);
         assertEquals(EXPECTED_FAULT_CODE, soapFault.getFaultCode().toString());
-        assertTrue(EXPECTED_STATUS_CODE == soapFault.getStatusCode());
+        assertEquals(EXPECTED_STATUS_CODE, soapFault.getStatusCode());
         assertEquals(message, soapFault.getMessage());
     }
 

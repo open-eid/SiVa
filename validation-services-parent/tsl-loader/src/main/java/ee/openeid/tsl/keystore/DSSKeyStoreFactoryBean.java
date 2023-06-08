@@ -53,7 +53,7 @@ public class DSSKeyStoreFactoryBean extends AbstractFactoryBean<KeyStoreCertific
     protected KeyStoreCertificateSource createInstance() throws Exception {
         File keystoreFile = getKeyStoreFile();
         if (keystoreFile.exists()) {
-            KEY_STORE_LOGGER.info("Keystore file found (" + keystoreFile.getAbsolutePath() + ")");
+            KEY_STORE_LOGGER.info("Keystore file found ({})", keystoreFile.getAbsolutePath());
         } else {
             KEY_STORE_LOGGER.info("Keystore file not found on server");
             KEY_STORE_LOGGER.info("Copying keystore file from the war");
@@ -84,20 +84,19 @@ public class DSSKeyStoreFactoryBean extends AbstractFactoryBean<KeyStoreCertific
         }
 
         String finalAbsoluteKeystoreFilepath = finalDataFolder + File.separatorChar + keyStoreFilename;
-        File keystoreFile = new File(finalAbsoluteKeystoreFilepath);
-        return keystoreFile;
+        return new File(finalAbsoluteKeystoreFilepath);
     }
 
     public static String getDssDataFolder() {
         String dssDataFolder = System.getProperty(ENVIRONMENT_VARIABLE_DSS_DATA_FOLDER);
         if (StringUtils.isNotEmpty(dssDataFolder)) {
-            KEY_STORE_LOGGER.info(ENVIRONMENT_VARIABLE_DSS_DATA_FOLDER + " found as system property : " + dssDataFolder);
+            KEY_STORE_LOGGER.info("{} found as system property : {}", ENVIRONMENT_VARIABLE_DSS_DATA_FOLDER, dssDataFolder);
             return dssDataFolder;
         }
 
         dssDataFolder = System.getenv(ENVIRONMENT_VARIABLE_DSS_DATA_FOLDER);
         if (StringUtils.isNotEmpty(dssDataFolder)) {
-            KEY_STORE_LOGGER.info(ENVIRONMENT_VARIABLE_DSS_DATA_FOLDER + " found as environment variable : " + dssDataFolder);
+            KEY_STORE_LOGGER.info("{} found as environment variable : {}", ENVIRONMENT_VARIABLE_DSS_DATA_FOLDER, dssDataFolder);
             return dssDataFolder;
         }
 

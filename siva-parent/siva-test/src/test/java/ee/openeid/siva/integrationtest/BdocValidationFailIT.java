@@ -28,7 +28,7 @@ import static ee.openeid.siva.integrationtest.TestData.*;
 import static org.hamcrest.Matchers.emptyOrNullString;
 
 @Tag("IntegrationTest")
-public class BdocValidationFailIT extends SiVaRestTests {
+class BdocValidationFailIT extends SiVaRestTests {
 
     @BeforeEach
     public void DirectoryBackToDefault() {
@@ -57,7 +57,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: IB-3960_bdoc2.1_TSA_SignatureValue_altered.bdoc
      */
     @Test
-    public void bdocInvalidSingleSignature() {
+    void bdocInvalidSingleSignature() {
         post(validationRequestFor("IB-3960_bdoc2.1_TSA_SignatureValue_altered.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatureForm", Matchers.is("ASiC-E"))
@@ -87,7 +87,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: BdocMultipleSignaturesInvalid.bdoc
      */
     @Test
-    public void bdocInvalidMultipleSignatures() {
+    void bdocInvalidMultipleSignatures() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestFor("BdocMultipleSignaturesInvalid.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -116,7 +116,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: BdocMultipleSignaturesMixedWithValidAndInvalid.bdoc
      */
     @Test
-    public void bdocInvalidAndValidMultipleSignatures() {
+    void bdocInvalidAndValidMultipleSignatures() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestFor("BdocMultipleSignaturesMixedWithValidAndInvalid.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -150,7 +150,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: BdocContainerNoSignature.bdoc
      */
     @Test
-    public void bdocNoSignatures() {
+    void bdocNoSignatures() {
         setTestFilesDirectory("document_format_test_files/");
         post(validationRequestFor("BdocContainerNoSignature.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -174,7 +174,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: TS-02_23634_TS_wrong_SignatureValue.asice
      */
     @Test
-    public void bdocInvalidTimeStampDontMatchSigValue() {
+    void bdocInvalidTimeStampDontMatchSigValue() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("TS-02_23634_TS_wrong_SignatureValue.asice",null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -200,7 +200,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: EE_SER-AEX-B-LT-I-43.asice
      */
     @Test
-    public void bdocInvalidNonRepudiationKey() {
+    void bdocInvalidNonRepudiationKey() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("EE_SER-AEX-B-LT-I-43.asice", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -226,7 +226,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: EE_SER-AEX-B-LT-I-26.asice
      */
     @Test
-    public void bdocInvalidNonRepudiationKeyNoComplianceInfo() {
+    void bdocInvalidNonRepudiationKeyNoComplianceInfo() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("EE_SER-AEX-B-LT-I-26.asice", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -251,7 +251,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: TM-01_bdoc21-unknown-resp.bdoc
      */
     @Test
-    public void bdocNotTrustedOcspCert() {
+    void bdocNotTrustedOcspCert() {
         setTestFilesDirectory("bdoc/live/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("TM-01_bdoc21-unknown-resp.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "TM-01_bdoc21-unknown-resp.bdoc", VALID_SIGNATURE_POLICY_3))
@@ -283,7 +283,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: TS-05_23634_TS_unknown_TSA.asice
      */
     @Test
-    public void bdocNotTrustedTsaCert() {
+    void bdocNotTrustedTsaCert() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("TS-05_23634_TS_unknown_TSA.asice", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -316,7 +316,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: EE_SER-AEX-B-LT-R-25.asice
      */
     @Test
-    public void bdocTsOcspStatusRevoked() {
+    void bdocTsOcspStatusRevoked() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("EE_SER-AEX-B-LT-R-25.asice", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -341,7 +341,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: EE_SER-AEX-B-LT-V-20.asice
      */
     @Test
-    public void bdocOcspAndTsDifferenceOver24H() {
+    void bdocOcspAndTsDifferenceOver24H() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("EE_SER-AEX-B-LT-V-20.asice", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -365,7 +365,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: 23613_TM_wrong-manifest-mimetype.bdoc
      */
     @Test
-    public void bdocDifferentDataFileInSignature() {
+    void bdocDifferentDataFileInSignature() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("23613_TM_wrong-manifest-mimetype.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -389,7 +389,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: REF-19_bdoc21-no-sig-asn1-pref.bdoc
      */
     @Test
-    public void bdocSignatureValueDoNotCorrespondToSignedInfo() {
+    void bdocSignatureValueDoNotCorrespondToSignedInfo() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("REF-19_bdoc21-no-sig-asn1-pref.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -414,7 +414,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: signWithIdCard_d4j_1.0.4_BES.asice
      */
     @Test
-    public void bdocBaselineBesSignatureLevel() {
+    void bdocBaselineBesSignatureLevel() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("signWithIdCard_d4j_1.0.4_BES.asice", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -446,7 +446,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: TM-04_kehtivuskinnituset.4.asice
      */
     @Test
-    public void bdocBaselineEpesSignatureLevel() {
+    void bdocBaselineEpesSignatureLevel() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDD4j("TM-04_kehtivuskinnituset.4.asice", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -475,7 +475,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: SS-4_teadmataCA.4.asice
      */
     @Test
-    public void bdocSignersCertNotTrusted() {
+    void bdocSignersCertNotTrusted() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDD4j("SS-4_teadmataCA.4.asice", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -506,7 +506,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: TM-15_revoked.4.asice
      */
     @Test
-    public void bdocTmOcspStatusRevoked() {
+    void bdocTmOcspStatusRevoked() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDD4j("TM-15_revoked.4.asice", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -531,7 +531,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: TM-16_unknown.4.asice
      */
     @Test
-    public void bdocTmOcspStatusUnknown() {
+    void bdocTmOcspStatusUnknown() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDD4j("TM-16_unknown.4.asice", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -555,7 +555,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: KS-21_fileeemaldatud.4.asice
      */
     @Test
-    public void bdocSignedFileRemoved() {
+    void bdocSignedFileRemoved() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestForDD4j("KS-21_fileeemaldatud.4.asice", null, null))
                 .then()
@@ -578,7 +578,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: KS-02_tyhi.bdoc
      */
     @Test
-    public void bdocNoFilesInContainer() {
+    void bdocNoFilesInContainer() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("KS-02_tyhi.bdoc"))
                 .then()
@@ -600,7 +600,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: TM-10_noncevale.4.asice
      */
     @Test
-    public void bdocWrongOcspNonce() {
+    void bdocWrongOcspNonce() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("TM-10_noncevale.4.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -624,7 +624,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: REF-14_filesisumuudetud.4.bdoc
      */
     @Test
-    public void bdocDataFilesDontMatchHash() {
+    void bdocDataFilesDontMatchHash() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("REF-14_filesisumuudetud.4.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -649,7 +649,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: TS-06_23634_TS_missing_OCSP.asice
      */
     @Test
-    public void bdocBaselineTSignature() {
+    void bdocBaselineTSignature() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("TS-06_23634_TS_missing_OCSP.asice", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -680,7 +680,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: 23608-bdoc21-TM-ocsp-bad-nonce.bdoc
      */
     @Test
-    public void bdocWrongSignersCertInOcspResponse() {
+    void bdocWrongSignersCertInOcspResponse() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("23608-bdoc21-TM-ocsp-bad-nonce.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -705,7 +705,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: 23154_test1-old-sig-sigat-OK-prodat-NOK-1.bdoc
      */
     @Test
-    public void bdocCertificateValidityOutOfOcspRange() {
+    void bdocCertificateValidityOutOfOcspRange() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("23154_test1-old-sig-sigat-OK-prodat-NOK-1.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -729,7 +729,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: BDOC-1.0.bdoc
      */
     @Test
-    public void bdocOldNotSupportedVersion() {
+    void bdocOldNotSupportedVersion() {
         setTestFilesDirectory("bdoc/live/timemark/");
         post(validationRequestFor("BDOC-1.0.bdoc"))
                 .then()
@@ -752,7 +752,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: EE_SER-AEX-B-LT-V-34.asice
      */
     @Test
-    public void asiceUnsignedDataFiles() {
+    void asiceUnsignedDataFiles() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("EE_SER-AEX-B-LT-V-34.asice", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -779,7 +779,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: REF-03_bdoc21-TM-no-signedpropref.bdoc
      */
     @Test
-    public void bdocTimemarkSignedPropertiesMissing() {
+    void bdocTimemarkSignedPropertiesMissing() {
         setTestFilesDirectory(DEFAULT_TEST_FILES_DIRECTORY);
         post(validationRequestFor("REF-03_bdoc21-TM-no-signedpropref.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -804,7 +804,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: NoOcspCertificateAnywhere.bdoc
      */
     @Test
-    public void bdocTimemarkNoOcspCertificate() {
+    void bdocTimemarkNoOcspCertificate() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestFor("NoOcspCertificateAnywhere.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -829,7 +829,7 @@ public class BdocValidationFailIT extends SiVaRestTests {
      * File: EE_SER-AEX-B-LTA-V-24.asice
      */
     @Test
-    public void bdocBaselineLtaProfileValidSignature() {
+    void bdocBaselineLtaProfileValidSignature() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestForDD4j("EE_SER-AEX-B-LTA-V-24.asice", null, null))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)

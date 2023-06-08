@@ -84,7 +84,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @ExtendWith(MockitoExtension.class)
-public class GenericValidationReportBuilderTest {
+class GenericValidationReportBuilderTest {
 
     @Mock
     TrustedListsCertificateSource trustedListsCertificateSource;
@@ -92,7 +92,7 @@ public class GenericValidationReportBuilderTest {
     private static final String TM_POLICY_OID = "1.3.6.1.4.1.10015.1000.3.2.1";
 
     @Test
-    public void totalPassedIndicationReportBuild() {
+    void totalPassedIndicationReportBuild() {
 
         ReportBuilderData reportBuilderData = getReportBuilderData(getDssReports(""));
         Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
@@ -103,7 +103,7 @@ public class GenericValidationReportBuilderTest {
     }
 
     @Test
-    public void totalPassedIndicationTimeMarkReportBuild() {
+    void totalPassedIndicationTimeMarkReportBuild() {
 
         ReportBuilderData reportBuilderData = getReportBuilderData(getDssReports(TM_POLICY_OID));
         Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
@@ -113,7 +113,7 @@ public class GenericValidationReportBuilderTest {
     }
 
     @Test
-    public void totalFailedIndicationWithAdESErrorReportBuild() {
+    void totalFailedIndicationWithAdESErrorReportBuild() {
         eu.europa.esig.dss.validation.reports.Reports dssReports = getDssReports("");
         dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).setIndication(Indication.TOTAL_FAILED);
         dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).setAdESValidationDetails(new XmlDetails());
@@ -128,7 +128,7 @@ public class GenericValidationReportBuilderTest {
     }
 
     @Test
-    public void totalFailedIndicationWithQualificationErrorReportBuild() {
+    void totalFailedIndicationWithQualificationErrorReportBuild() {
         eu.europa.esig.dss.validation.reports.Reports dssReports = getDssReports("");
         dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).setIndication(Indication.TOTAL_FAILED);
         dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).setQualificationDetails(new XmlDetails());
@@ -143,7 +143,7 @@ public class GenericValidationReportBuilderTest {
     }
 
     @Test
-    public void totalFailedIndicationWithTimestampErrorsReportBuild() {
+    void totalFailedIndicationWithTimestampErrorsReportBuild() {
         eu.europa.esig.dss.validation.reports.Reports dssReports = getDssReports("");
         dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).setIndication(Indication.TOTAL_FAILED);
         eu.europa.esig.dss.simplereport.jaxb.XmlSignature signature = (eu.europa.esig.dss.simplereport.jaxb.XmlSignature) dssReports
@@ -166,7 +166,7 @@ public class GenericValidationReportBuilderTest {
     }
 
     @Test
-    public void indeterminateIndicationReportBuild() {
+    void indeterminateIndicationReportBuild() {
         eu.europa.esig.dss.validation.reports.Reports dssReports = getDssReports("");
         dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).setIndication(Indication.INDETERMINATE);
         ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
@@ -176,7 +176,7 @@ public class GenericValidationReportBuilderTest {
     }
 
     @Test
-    public void signatureMissingSigningCertificateResultsWithEmptySubjectDN() {
+    void signatureMissingSigningCertificateResultsWithEmptySubjectDN() {
         XmlDiagnosticData diagnosticData = getDiagnosticDataJaxb("");
 
         diagnosticData.getSignatures().get(0).setSigningCertificate(null);
@@ -190,7 +190,7 @@ public class GenericValidationReportBuilderTest {
     }
 
     @Test
-    public void populatesNonEmptyClaimedRolesAsSignerRole() {
+    void populatesNonEmptyClaimedRolesAsSignerRole() {
         XmlDiagnosticData diagnosticData = getDiagnosticDataJaxb("");
 
         XmlSignerRole claimedRole = new XmlSignerRole();
@@ -219,7 +219,7 @@ public class GenericValidationReportBuilderTest {
     }
 
     @Test
-    public void noSignerRolePresentResultsWithEmptyList() {
+    void noSignerRolePresentResultsWithEmptyList() {
         XmlDiagnosticData diagnosticData = getDiagnosticDataJaxb("");
 
         diagnosticData.getSignatures().get(0).getSignerRole().clear();
@@ -233,7 +233,7 @@ public class GenericValidationReportBuilderTest {
     }
 
     @Test
-    public void populatesSignatureProductionPlace() {
+    void populatesSignatureProductionPlace() {
         XmlDiagnosticData diagnosticData = getDiagnosticDataJaxb("");
 
         XmlSignatureProductionPlace xmlSignatureProductionPlace = new XmlSignatureProductionPlace();
@@ -255,7 +255,7 @@ public class GenericValidationReportBuilderTest {
     }
 
     @Test
-    public void signatureProductionPlaceNotPresentResultsWithNull() {
+    void signatureProductionPlaceNotPresentResultsWithNull() {
         XmlDiagnosticData diagnosticData = getDiagnosticDataJaxb("");
 
         diagnosticData.getSignatures().get(0).setSignatureProductionPlace(null);
@@ -269,7 +269,7 @@ public class GenericValidationReportBuilderTest {
     }
 
     @Test
-    public void signatureProductionPlaceWithNullOrEmptyFieldsResultsWithNull() {
+    void signatureProductionPlaceWithNullOrEmptyFieldsResultsWithNull() {
         XmlDiagnosticData diagnosticData = getDiagnosticDataJaxb("");
 
         XmlSignatureProductionPlace xmlSignatureProductionPlace = new XmlSignatureProductionPlace();
@@ -285,7 +285,7 @@ public class GenericValidationReportBuilderTest {
     }
 
     @Test
-    public void populatesSignatureMethod() {
+    void populatesSignatureMethod() {
         XmlDiagnosticData diagnosticData = getDiagnosticDataJaxb("");
 
         eu.europa.esig.dss.validation.reports.Reports dssReports = new eu.europa.esig.dss.validation.reports.Reports(diagnosticData, null, getSimpleReport(), null);
@@ -297,7 +297,7 @@ public class GenericValidationReportBuilderTest {
     }
 
     @Test
-    public void timeAssertionMessageImprintIsEmptyOnTimestampParseError() {
+    void timeAssertionMessageImprintIsEmptyOnTimestampParseError() {
         XmlDiagnosticData diagnosticData = getDiagnosticDataJaxb("");
 
         XmlTimestamp xmlTimestamp = new XmlTimestamp();
@@ -316,7 +316,7 @@ public class GenericValidationReportBuilderTest {
     }
 
     @Test
-    public void timeAssertionMessageImprintIsEmptyOnOcspNonceParseError() {
+    void timeAssertionMessageImprintIsEmptyOnOcspNonceParseError() {
         XmlDiagnosticData diagnosticData = getDiagnosticDataJaxb("");
 
         XmlRevocation xmlRevocation = new XmlRevocation();
@@ -342,7 +342,7 @@ public class GenericValidationReportBuilderTest {
     }
 
     @Test
-    public void populatesTimestampCreationTime() {
+    void populatesTimestampCreationTime() {
         XmlDiagnosticData diagnosticData = getDiagnosticDataJaxb("");
 
         eu.europa.esig.dss.validation.reports.Reports dssReports = new eu.europa.esig.dss.validation.reports.Reports(diagnosticData, null, getSimpleReport(), null);
@@ -354,7 +354,7 @@ public class GenericValidationReportBuilderTest {
     }
 
     @Test
-    public void timestampCreationTimeIsEmpty() {
+    void timestampCreationTimeIsEmpty() {
         XmlDiagnosticData diagnosticData = getDiagnosticDataJaxb("");
 
         diagnosticData.getSignatures().get(0).setFoundTimestamps(new ArrayList<>());
@@ -366,7 +366,7 @@ public class GenericValidationReportBuilderTest {
     }
 
     @Test
-    public void populatesOcspResponseCreationTime(){
+    void populatesOcspResponseCreationTime(){
         XmlDiagnosticData diagnosticData = getDiagnosticDataJaxb("");
 
         eu.europa.esig.dss.validation.reports.Reports dssReports = new eu.europa.esig.dss.validation.reports.Reports(diagnosticData, null, getSimpleReport(), null);
@@ -378,7 +378,7 @@ public class GenericValidationReportBuilderTest {
     }
 
     @Test
-    public void ocspResponseIsEmpty() {
+    void ocspResponseIsEmpty() {
         XmlDiagnosticData diagnosticData = getDiagnosticDataJaxb("");
 
         diagnosticData.getSignatures().get(0).getSigningCertificate().getCertificate().setRevocations(null);
@@ -391,7 +391,7 @@ public class GenericValidationReportBuilderTest {
 
     @ParameterizedTest
     @MethodSource("earliestBestFittingTimestampTestArguments")
-    public void testInternalGetEarliestBestFittingTimestamp(
+    void testInternalGetEarliestBestFittingTimestamp(
             List<TimestampWrapper> timestamps, TimestampWrapper expectedTimestamp
     ) {
         TimestampWrapper result = GenericValidationReportBuilder.getEarliestBestFittingTimestamp(timestamps);
@@ -422,7 +422,7 @@ public class GenericValidationReportBuilderTest {
 
     @ParameterizedTest
     @MethodSource("latestBestFittingTimestampTestArguments")
-    public void testInternalGetLatestBestFittingTimestamp(
+    void testInternalGetLatestBestFittingTimestamp(
             List<TimestampWrapper> timestamps, TimestampWrapper expectedTimestamp
     ) {
         TimestampWrapper result = GenericValidationReportBuilder.getLatestBestFittingTimestamp(timestamps);
@@ -453,7 +453,7 @@ public class GenericValidationReportBuilderTest {
 
     @ParameterizedTest
     @MethodSource("bestFittingRevocationTestArguments")
-    public void testInternalGetBestFittingRevocation(
+    void testInternalGetBestFittingRevocation(
             List<CertificateRevocationWrapper> revocations, CertificateRevocationWrapper expectedResult
     ) {
         CertificateRevocationWrapper result = GenericValidationReportBuilder.getBestFittingRevocation(revocations);

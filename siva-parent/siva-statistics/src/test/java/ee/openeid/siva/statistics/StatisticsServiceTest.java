@@ -46,7 +46,7 @@ import static org.mockito.Mockito.when;
 import static org.slf4j.MarkerFactory.getMarker;
 
 @ExtendWith(MockitoExtension.class)
-public class StatisticsServiceTest {
+class StatisticsServiceTest {
 
     private static final String X_AUTHENTICATED_USER = "x-authenticated-user";
     private static final String CONTAINER_LOG_MARKER = "STATISTICS_CONTAINER_LOG";
@@ -79,7 +79,7 @@ public class StatisticsServiceTest {
     }
 
     @Test
-    public void testValidationStatisticsLoggingWhereAllSignaturesInValidationReportAreValid() {
+    void testValidationStatisticsLoggingWhereAllSignaturesInValidationReportAreValid() {
         long validationDurationInMillis = 1000L;
         String signatureForm = "ASiC-E";
         int validSignaturesCount = 1;
@@ -116,7 +116,7 @@ public class StatisticsServiceTest {
     }
 
     @Test
-    public void testValidationStatisticsLoggingWhereOneSignatureInValidationReportIsValid() {
+    void testValidationStatisticsLoggingWhereOneSignatureInValidationReportIsValid() {
         long validationDurationInMillis = 2000L;
         String signatureForm = "ASiC-E";
         int validSignaturesCount = 1;
@@ -165,7 +165,7 @@ public class StatisticsServiceTest {
     }
 
     @Test
-    public void testValidationStatisticsLoggingDoesNotLogSignatureInfoForTstTypeContainer() {
+    void testValidationStatisticsLoggingDoesNotLogSignatureInfoForTstTypeContainer() {
         long validationDurationInMillis = 1000L;
         String signatureForm = "ASiC-S";
         int validSignaturesCount = 1;

@@ -91,7 +91,7 @@ public class ReportSignatureInterceptor extends AbstractSoapInterceptor {
         return reportTypeNode != null && "Detailed".equals(reportTypeNode.getNodeValue());
     }
 
-    private byte[] getValidationReportContent(SOAPBody soapBody) throws IOException, SOAPException, TransformerException {
+    private byte[] getValidationReportContent(SOAPBody soapBody) throws TransformerException {
         Node validationReportNode = soapBody.getFirstChild().getFirstChild();
         DOMSource source = new DOMSource(validationReportNode);
         StringWriter stringWriter = new StringWriter();

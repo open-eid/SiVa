@@ -29,7 +29,7 @@ import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInC
 
 @Tag("IntegrationTest")
 
-public class AsiceValidationReportValueVerificationIT extends SiVaRestTests {
+class AsiceValidationReportValueVerificationIT extends SiVaRestTests {
 
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "bdoc/live/timemark/";
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
@@ -53,7 +53,7 @@ public class AsiceValidationReportValueVerificationIT extends SiVaRestTests {
      * File: TwoValidTmSignaturesWithRolesAndProductionPlace.bdoc
      */
     @Test
-    public void bdocCorrectValuesArePresentValidLtTmSignature() {
+    void bdocCorrectValuesArePresentValidLtTmSignature() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestFor("TwoValidTmSignaturesWithRolesAndProductionPlace.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -108,7 +108,7 @@ public class AsiceValidationReportValueVerificationIT extends SiVaRestTests {
      * File: validTsSignatureWithRolesAndProductionPlace.asice
      */
     @Test
-    public void bdocCorrectValuesArePresentValidLtSignature() {
+    void bdocCorrectValuesArePresentValidLtSignature() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         post(validationRequestFor("validTsSignatureWithRolesAndProductionPlace.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -167,7 +167,7 @@ public class AsiceValidationReportValueVerificationIT extends SiVaRestTests {
      * File: 23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc
      */
     @Test
-    public void bdocCorrectValuesArePresentValidLtSignatureAdesWarning() {
+    void bdocCorrectValuesArePresentValidLtSignatureAdesWarning() {
         setTestFilesDirectory("bdoc/test/timemark/");
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "23154_test1-old-sig-sigat-NOK-prodat-OK-1.bdoc", VALID_SIGNATURE_POLICY_3))
@@ -213,7 +213,7 @@ public class AsiceValidationReportValueVerificationIT extends SiVaRestTests {
      * File: testAdesQCInvalid.asice
      */
     @Test
-    public void bdocCorrectValuesArePresentInvalidLtSignatureAdesqc() {
+    void bdocCorrectValuesArePresentInvalidLtSignatureAdesqc() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         post(validationRequestFor("testAdesQCInvalid.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -264,7 +264,7 @@ public class AsiceValidationReportValueVerificationIT extends SiVaRestTests {
      * File: Baltic MoU digital signing_EST_LT_LV.bdoc
      */
     @Test
-    public void bdocAllElementsArePresentValidMultipleSignatures() {
+    void bdocAllElementsArePresentValidMultipleSignatures() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("Baltic MoU digital signing_EST_LT_LV.bdoc"));
         post(validationRequestWithValidKeys(encodedString, "Baltic MoU digital signing_EST_LT_LV.bdoc", VALID_SIGNATURE_POLICY_3))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -307,9 +307,9 @@ public class AsiceValidationReportValueVerificationIT extends SiVaRestTests {
      *
      * File: SS-4_teadmataCA.4.asice
      */
-    @Disabled //TODO: needs investigation why the signature is determined as XAdES_BASELINE_T not as XAdES_BASELINE_LT_TM
+    @Disabled(/*TODO:*/"Needs investigation why the signature is determined as XAdES_BASELINE_T not as XAdES_BASELINE_LT_TM")
     @Test
-    public void bdocAllElementsArePresentIndeterminateSignature() {
+    void bdocAllElementsArePresentIndeterminateSignature() {
         post(validationRequestFor("SS-4_teadmataCA.4.asice", VALID_SIGNATURE_POLICY_3, "simple"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body(matchesJsonSchemaInClasspath("SimpleReportSchema.json"))
@@ -351,7 +351,7 @@ public class AsiceValidationReportValueVerificationIT extends SiVaRestTests {
      * File:BdocContainerNoSignature.bdoc
      */
     @Test
-    public void bdocNoSignature() {
+    void bdocNoSignature() {
         setTestFilesDirectory("document_format_test_files/");
         post(validationRequestFor("BdocContainerNoSignature.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -377,7 +377,7 @@ public class AsiceValidationReportValueVerificationIT extends SiVaRestTests {
      * File: 3_signatures_TM_LT_LTA.bdoc
      */
     @Test
-    public void bdocMixedSignaturesContainerCorrectTimeAssertionMessageImprint() {
+    void bdocMixedSignaturesContainerCorrectTimeAssertionMessageImprint() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestFor("3_signatures_TM_LT_LTA.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -405,7 +405,7 @@ public class AsiceValidationReportValueVerificationIT extends SiVaRestTests {
      */
 
     @Test
-    public void asiceMixedSignaturesContainerCorrectTimeAssertionMessageImprint() {
+    void asiceMixedSignaturesContainerCorrectTimeAssertionMessageImprint() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         post(validationRequestFor("3_signatures_TM_LT_LTA.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -434,7 +434,7 @@ public class AsiceValidationReportValueVerificationIT extends SiVaRestTests {
      */
     @Disabled("SIVA-365")
     @Test
-    public void asiceMixedSignaturesSameCertificateContainerCorrectOcspResponseCreationTime() {
+    void asiceMixedSignaturesSameCertificateContainerCorrectOcspResponseCreationTime() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         post(validationRequestFor("3_signatures_TM_LT_LTA.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -461,7 +461,7 @@ public class AsiceValidationReportValueVerificationIT extends SiVaRestTests {
      * File: 3_signatures_TM_LT_LTA.bdoc
      */
     @Test
-    public void bdocMixedSignaturesSameCertificateContainerCorrectOcspResponseCreationTime() {
+    void bdocMixedSignaturesSameCertificateContainerCorrectOcspResponseCreationTime() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestFor("3_signatures_TM_LT_LTA.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -488,7 +488,7 @@ public class AsiceValidationReportValueVerificationIT extends SiVaRestTests {
      * File: 2_signatures_T_LT.asice
      */
     @Test
-    public void asiceMixedSignaturesContainerCorrectOcspResponseCreationTime() {
+    void asiceMixedSignaturesContainerCorrectOcspResponseCreationTime() {
         setTestFilesDirectory("bdoc/test/timestamp/");
         post(validationRequestFor("2_signatures_T_LT.asice"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -513,7 +513,7 @@ public class AsiceValidationReportValueVerificationIT extends SiVaRestTests {
      * File: 2_signatures_B_TM.bdoc
      */
     @Test
-    public void bdocMixedSignaturesContainerCorrectOcspResponseCreationTime() {
+    void bdocMixedSignaturesContainerCorrectOcspResponseCreationTime() {
         setTestFilesDirectory("bdoc/test/timemark/");
         post(validationRequestFor("2_signatures_B_TM.bdoc"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)

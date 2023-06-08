@@ -22,9 +22,8 @@ import ee.openeid.siva.webapp.request.JSONDataFilesRequest;
 import ee.openeid.siva.webapp.transformer.DataFilesRequestToProxyDocumentTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -35,7 +34,7 @@ public class DataFilesController {
     private DataFilesProxy dataFilesProxy;
     private DataFilesRequestToProxyDocumentTransformer transformer;
 
-    @RequestMapping(value = "/getDataFiles", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    @PostMapping(value = "/getDataFiles", produces = MediaType.APPLICATION_JSON_VALUE)
     public DataFilesReport getDataFiles(@Valid @RequestBody JSONDataFilesRequest dataFilesRequest) {
         return dataFilesProxy.getDataFiles(transformer.transform(dataFilesRequest));
     }

@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 import static ee.openeid.siva.integrationtest.TestData.*;
 
 @Tag("IntegrationTest")
-public class PdfBaselineProfileIT extends SiVaRestTests{
+class PdfBaselineProfileIT extends SiVaRestTests{
 
     @BeforeEach
     public void DirectoryBackToDefault() {
@@ -54,7 +54,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      * File: hellopades-pades-b-sha256-auth.pdf
      */
     @Test
-    public void baselineProfileBDocumentShouldFailpolv3() {
+    void baselineProfileBDocumentShouldFailpolv3() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-pades-b-sha256-auth.pdf"));
         post(validationRequestWithValidKeys(encodedString, "hellopades-pades-b-sha256-auth.pdf", VALID_SIGNATURE_POLICY_3))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -84,7 +84,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      * File: pades-baseline-t-live-aj.pdf
      */
     @Test
-    public void baselineProfileTDocumentShouldFailpolv3() {
+    void baselineProfileTDocumentShouldFailpolv3() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades-baseline-t-live-aj.pdf"));
         post(validationRequestWithValidKeys(encodedString, "pades-baseline-t-live-aj.pdf", VALID_SIGNATURE_POLICY_3))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -115,7 +115,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      * File: hellopades-pades-lt-sha256-sign.pdf
      */
     @Test
-    public void baselineProfileLTDocumentShouldPasspolv3() {
+    void baselineProfileLTDocumentShouldPasspolv3() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-pades-lt-sha256-sign.pdf"));
         post(validationRequestWithValidKeys(encodedString, "hellopades-pades-lt-sha256-sign.pdf", VALID_SIGNATURE_POLICY_3))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -147,7 +147,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      * File: hellopades-pades-lt-sha256-sign.pdf
      */
     @Test
-    public void baselineProfileLTDocumentShouldPasspolv4() {
+    void baselineProfileLTDocumentShouldPasspolv4() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-pades-lt-sha256-sign.pdf"));
         post(validationRequestWithValidKeys(encodedString, "hellopades-pades-lt-sha256-sign.pdf", VALID_SIGNATURE_POLICY_4))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -174,7 +174,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      * File: pades-baseline-lta-live-aj.pdf
      */
     @Test
-    public void baselineProfileLTADocumentShouldPasspolv3() {
+    void baselineProfileLTADocumentShouldPasspolv3() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades-baseline-lta-live-aj.pdf"));
         post(validationRequestWithValidKeys(encodedString, "pades-baseline-lta-live-aj.pdf", VALID_SIGNATURE_POLICY_3))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -207,7 +207,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      * File: pades-baseline-lta-live-aj.pdf
      */
     @Test
-    public void baselineProfileLTADocumentShouldPasspolv4() {
+    void baselineProfileLTADocumentShouldPasspolv4() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("pades-baseline-lta-live-aj.pdf"));
         post(validationRequestWithValidKeys(encodedString, "pades-baseline-lta-live-aj.pdf", VALID_SIGNATURE_POLICY_4))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -240,7 +240,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      * File: hellopades-lt-b.pdf
      */
     @Test
-    public void documentWithBaselineProfilesBAndLTSignaturesShouldFail() {
+    void documentWithBaselineProfilesBAndLTSignaturesShouldFail() {
         post(validationRequestFor( "hellopades-lt-b.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatures[0].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
@@ -270,7 +270,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      * File: hellopades-lt1-lt2-wrongDigestValue.pdf
      */
     @Test
-     public void documentMessageDigestAttributeValueDoesNotMatchCalculatedValue() {
+     void documentMessageDigestAttributeValueDoesNotMatchCalculatedValue() {
         post(validationRequestFor("hellopades-lt1-lt2-wrongDigestValue.pdf"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
                 .body("signatures[1].signatureFormat", Matchers.is("PAdES_BASELINE_LT"))
@@ -296,7 +296,7 @@ public class PdfBaselineProfileIT extends SiVaRestTests{
      * File: hellopades-lt1-lt2-Serial.pdf
      */
     @Test
-    public void documentSignedWithMultipleSignersSerialSignature() {
+    void documentSignedWithMultipleSignersSerialSignature() {
         String encodedString = Base64.encodeBase64String(readFileFromTestResources("hellopades-lt1-lt2-Serial.pdf"));
         post(validationRequestWithValidKeys(encodedString, "hellopades-lt1-lt2-Serial.pdf", "POLv3"))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)

@@ -42,7 +42,7 @@ import static io.restassured.RestAssured.given;
 
 @Tag("IntegrationTest")
 @Disabled("SIVA-196")
-public class ReportSignatureManuallT  extends SiVaSoapTests {
+class ReportSignatureManuallT  extends SiVaSoapTests {
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "pdf/signature_cryptographic_algorithm_test_files/";
     private static final String VALIDATION_ENDPOINT = "/validate";
     protected static final String VALID_SIGNATURE_POLICY_4 = "POLv4";
@@ -76,9 +76,8 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      *
      * File: hellopades-lt-sha256-rsa2048.pdf
      */
-    @Disabled
     @Test
-    public void validateDetailedReportRsaSignatureXadesBaselineLTA() {
+    void validateDetailedReportRsaSignatureXadesBaselineLTA() {
         signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_LTA");
         signatureServiceConfigurationProperties.setTspUrl("http://demo.sk.ee/tsa");
         signatureServiceConfigurationProperties.setOcspUrl("http://demo.sk.ee/ocsp");
@@ -119,9 +118,8 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      *
      * File: hellopades-lt-sha256-rsa2048.pdf
      */
-    @Disabled
     @Test
-    public void validateDetailedReportRsaSignatureXadesBaselineLT() {
+    void validateDetailedReportRsaSignatureXadesBaselineLT() {
         signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_LT");
         signatureServiceConfigurationProperties.setTspUrl("http://demo.sk.ee/tsa");
         signatureServiceConfigurationProperties.setOcspUrl("http://demo.sk.ee/ocsp");
@@ -162,9 +160,8 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      *
      * File: hellopades-lt-sha256-rsa2048.pdf
      */
-    @Disabled
     @Test
-    public void validateDetailedReportRsaSignatureXadesBaselineT() {
+    void validateDetailedReportRsaSignatureXadesBaselineT() {
         signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_T");
         signatureServiceConfigurationProperties.setTspUrl("http://demo.sk.ee/tsa");
         signatureServiceConfigurationProperties.setOcspUrl("http://demo.sk.ee/ocsp");
@@ -204,9 +201,8 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      *
      * File: hellopades-lt-sha256-rsa2048.pdf
      */
-    @Disabled
     @Test
-    public void validateDetailedReportRsaSignatureXadesBaselineB() {
+    void validateDetailedReportRsaSignatureXadesBaselineB() {
         signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_B");
         signatureServiceConfigurationProperties.setTspUrl("http://demo.sk.ee/tsa");
         signatureServiceConfigurationProperties.setOcspUrl("http://demo.sk.ee/ocsp");
@@ -246,9 +242,8 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      *
      * File: hellopades-lt-sha256-rsa2048.pdf
      */
-    @Disabled
     @Test
-    public void validateDetailedReportEccSignatureXadesBaselineLTA() {
+    void validateDetailedReportEccSignatureXadesBaselineLTA() {
         signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_LTA");
         signatureServiceConfigurationProperties.setTspUrl("http://demo.sk.ee/tsa");
         signatureServiceConfigurationProperties.setOcspUrl("http://demo.sk.ee/ocsp");
@@ -289,9 +284,8 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      *
      * File: hellopades-lt-sha256-rsa2048.pdf
      */
-    @Disabled
     @Test
-    public void validateDetailedReportEccSignatureXadesBaselineLT() {
+    void validateDetailedReportEccSignatureXadesBaselineLT() {
         signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_LT");
         signatureServiceConfigurationProperties.setTspUrl("http://demo.sk.ee/tsa");
         signatureServiceConfigurationProperties.setOcspUrl("http://demo.sk.ee/ocsp");
@@ -332,9 +326,8 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      *
      * File: hellopades-lt-sha256-rsa2048.pdf
      */
-    @Disabled
     @Test
-    public void validateDetailedReportEccSignatureXadesBaselineT() {
+    void validateDetailedReportEccSignatureXadesBaselineT() {
         signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_T");
         signatureServiceConfigurationProperties.setTspUrl("http://demo.sk.ee/tsa");
         signatureServiceConfigurationProperties.setOcspUrl("http://demo.sk.ee/ocsp");
@@ -373,9 +366,8 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      *
      * File: hellopades-lt-sha256-rsa2048.pdf
      */
-    @Disabled
     @Test
-    public void validateDetailedReportEccSignatureXadesBaselineB() {
+    void validateDetailedReportEccSignatureXadesBaselineB() {
         signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_B");
         signatureServiceConfigurationProperties.setTspUrl("http://demo.sk.ee/tsa");
         signatureServiceConfigurationProperties.setOcspUrl("http://demo.sk.ee/ocsp");
@@ -416,7 +408,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      */
 
     @Test
-    public void validateDetailedReportSignatureOcspUrlValueEmpty() {
+    void validateDetailedReportSignatureOcspUrlValueEmpty() {
         signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_LT");
         signatureServiceConfigurationProperties.setTspUrl("http://demo.sk.ee/tsa");
         signatureServiceConfigurationProperties.setOcspUrl(" ");
@@ -441,7 +433,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      * File: hellopades-lt-sha256-rsa2048.pdf
      */
     @Test
-    public void validateDetailedReportSignatureTspUrlValueEmpty() {
+    void validateDetailedReportSignatureTspUrlValueEmpty() {
         signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_LT");
         signatureServiceConfigurationProperties.setTspUrl(" ");
         signatureServiceConfigurationProperties.setOcspUrl("http://demo.sk.ee/ocsp");
@@ -465,9 +457,8 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      *
      * File: hellopades-lt-sha256-rsa2048.pdf
      */
-    @Disabled
     @Test
-    public void validateDetailedReportSignaturePkcs11WrongCert() {
+    void validateDetailedReportSignaturePkcs11WrongCert() {
         signatureServiceConfigurationProperties.setSignatureLevel("XAdES_BASELINE_LT");
         signatureServiceConfigurationProperties.setTspUrl("http://demo.sk.ee/tsa");
         signatureServiceConfigurationProperties.setOcspUrl("http://demo.sk.ee/ocsp");
@@ -508,7 +499,7 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
      */
 
     @Test
-    public void validateDetailedReportSignatureLevelEmptyValue() {
+    void validateDetailedReportSignatureLevelEmptyValue() {
         signatureServiceConfigurationProperties.setSignatureLevel(" ");
         signatureServiceConfigurationProperties.setTspUrl("http://demo.sk.ee/tsa");
         signatureServiceConfigurationProperties.setOcspUrl("http://demo.sk.ee/ocsp");
@@ -535,9 +526,8 @@ public class ReportSignatureManuallT  extends SiVaSoapTests {
     /*Testitud ja töötab RSA sertifikaatidega id-kaardiga. Ei tööta ECC kaardiga.
     Installida OpenSC
     slotIndex: 1 /Pin1 ja slotIndex: 2/Pin2*/
-    @Disabled
     @Test
-    public void validateDetailedReportSignatureLevelPkcs11() {
+    void validateDetailedReportSignatureLevelPkcs11() {
         signatureServiceConfigurationProperties.getPkcs11().setPath("C:/Windows/System32/opensc-pkcs11.dll");
         signatureServiceConfigurationProperties.getPkcs11().setPassword("PIN2");
         signatureServiceConfigurationProperties.getPkcs11().setSlotIndex(2);

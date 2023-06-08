@@ -33,7 +33,7 @@ import static org.hamcrest.Matchers.*;
 
 @Tag("IntegrationTest")
 
-public class DetailedReportValidationManualIT extends SiVaRestTests {
+class DetailedReportValidationManualIT extends SiVaRestTests {
     private static final String DEFAULT_TEST_FILES_DIRECTORY = "pdf/signature_cryptographic_algorithm_test_files/";
     private String testFilesDirectory = DEFAULT_TEST_FILES_DIRECTORY;
 
@@ -61,7 +61,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      * File: ValidLiveSignature.asice
      */
     @Test
-    public void detailedReportAssertValidValidationConclusionAsicE() {
+    void detailedReportAssertValidValidationConclusionAsicE() {
         setTestFilesDirectory("bdoc/live/timestamp/");
         ZonedDateTime testStartDate = ZonedDateTime.now(ZoneId.of("GMT"));
 
@@ -101,8 +101,8 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      * File: pades-baseline-lta-live-aj.pdf
      */
     @Test
-    @Disabled //TODO: New test LOTL is needed with correct data
-    public void detailedReportAssertValidationProcessTlanalysis() {
+    @Disabled(/*TODO:*/"New test LOTL is needed with correct data")
+    void detailedReportAssertValidationProcessTlanalysis() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
 
         post(validationRequestFor("pades-baseline-lta-live-aj.pdf", null, REPORT_TYPE_DETAILED))
@@ -167,7 +167,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      * File: hellopades-lt-sha256-ec256.pdf
      */
     @Test //TODO: This test misses validationSignatureQualification block
-    public void detailedReportForPdfValidateSignaturesElement() {
+    void detailedReportForPdfValidateSignaturesElement() {
         setTestFilesDirectory("pdf/signature_cryptographic_algorithm_test_files/");
 
         post(validationRequestFor("hellopades-lt-sha256-ec256.pdf", null, REPORT_TYPE_DETAILED))
@@ -237,7 +237,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      * File: pades-baseline-lta-live-aj.pdf
      */
     @Test
-    public void detailedReportForPdfAssertBasicBuildingBlocksTypeTimestamp() {
+    void detailedReportForPdfAssertBasicBuildingBlocksTypeTimestamp() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
 
         post(validationRequestFor("pades-baseline-lta-live-aj.pdf", null, REPORT_TYPE_DETAILED))
@@ -284,7 +284,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      * File: pades-baseline-lta-live-aj.pdf
      */
     @Test
-    public void detailedReportForPdfAssertBasicBuildingBlocksTypeRevocation() {
+    void detailedReportForPdfAssertBasicBuildingBlocksTypeRevocation() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
         post(validationRequestFor("pades-baseline-lta-live-aj.pdf", null, REPORT_TYPE_DETAILED))
                 .then().rootPath(VALIDATION_PROCESS_PREFIX)
@@ -330,7 +330,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      */
     //TODO SIVA-349 needs investigation why the signature source is determined as OTHER not as SIGNATURE
     @Test
-    public void detailedReportForPdfAssertBasicBuildingBlocksTypeSignature() {
+    void detailedReportForPdfAssertBasicBuildingBlocksTypeSignature() {
         setTestFilesDirectory("pdf/baseline_profile_test_files/");
 
         post(validationRequestFor("pades-baseline-lta-live-aj.pdf", null, REPORT_TYPE_DETAILED))
@@ -376,7 +376,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      * File: TS-02_23634_TS_wrong_SignatureValue.asice
      */
     @Test
-    public void detailedReportWrongSignatureValueAsice() {
+    void detailedReportWrongSignatureValueAsice() {
         setTestFilesDirectory("bdoc/live/timestamp/");
 
         post(validationRequestFor("TS-02_23634_TS_wrong_SignatureValue.asice", null, REPORT_TYPE_DETAILED))
@@ -445,7 +445,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      * File: WrongDataFileInManifestAsics.asics
      */
     @Test
-    public void detailedReportForAsicsWrongDataFileInManifestAsics() {
+    void detailedReportForAsicsWrongDataFileInManifestAsics() {
         setTestFilesDirectory("asics/");
         post(validationRequestFor("WrongDataFileInManifestAsics.asics", null, REPORT_TYPE_DETAILED))
                 .then().rootPath(VALIDATION_CONCLUSION_PREFIX)
@@ -472,7 +472,7 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      */
     @Test
     @Disabled("SIVA-196")
-    public void validateFileHashInDetailedReportReportSignatureEnabledTrue() {
+    void validateFileHashInDetailedReportReportSignatureEnabledTrue() {
         post(validationRequestFor("hellopades-lt-sha256-rsa2048.pdf", null, REPORT_TYPE_DETAILED))
                 .then()
                 .body("validationReport.validationConclusion.validatedDocument.filename", equalTo("hellopades-lt-sha256-rsa2048.pdf"))
@@ -494,9 +494,9 @@ public class DetailedReportValidationManualIT extends SiVaRestTests {
      *
      * File: hellopades-lt-sha256-rsa2048.pdf
      */
-    @Disabled //TODO: Needs possibility to configure report signing in tests
+    @Disabled(/*TODO:*/"Needs possibility to configure report signing in tests")
     @Test
-    public void validateFileHashInDetailedReportReportSignatureEnabledFalse() {
+    void validateFileHashInDetailedReportReportSignatureEnabledFalse() {
         post(validationRequestFor("hellopades-lt-sha256-rsa2048.pdf", null, REPORT_TYPE_DETAILED))
                 .then()
                 .body("validationReport.validationConclusion.validatedDocument.filename", equalTo("hellopades-lt-sha256-rsa2048.pdf"))

@@ -27,7 +27,7 @@ import static org.hamcrest.Matchers.emptyOrNullString;
 import static org.hamcrest.Matchers.not;
 
 @Tag("IntegrationTest")
-public class ReportSignatureIT extends SiVaSoapTests {
+class ReportSignatureIT extends SiVaSoapTests {
 
     private static final String TEST_FILES_DIRECTORY = "document_format_test_files/";
 
@@ -43,14 +43,14 @@ public class ReportSignatureIT extends SiVaSoapTests {
     }
 
     @Test
-    public void whenRequestingSimpleReport_thenValidationReportSignatureShouldNotBeInResponse() {
+    void whenRequestingSimpleReport_thenValidationReportSignatureShouldNotBeInResponse() {
         Document report = extractValidateDocumentResponseDom(post(validationRequestForDocument("hellopades-pades-lt-sha256-sign.pdf")).andReturn().body().asString());
         assertThat(getValidateDocumentResponseFromDom(report).getValidationReportSignature(), emptyOrNullString());
     }
 
     @Test
     @Disabled("SIVA-196")
-    public void whenRequestingDetailedReport_thenValidationReportSignatureShouldBeInResponse() {
+    void whenRequestingDetailedReport_thenValidationReportSignatureShouldBeInResponse() {
         Document report = extractValidateDocumentResponseDom(post(validationRequestForDocumentReportType("hellopades-pades-lt-sha256-sign.pdf", "Detailed")).andReturn().body().asString());
         assertThat(getValidateDocumentResponseFromDom(report).getValidationReportSignature(), not(emptyOrNullString()));
     }

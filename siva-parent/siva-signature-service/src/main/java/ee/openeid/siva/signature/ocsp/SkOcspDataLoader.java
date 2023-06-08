@@ -40,7 +40,7 @@ public class SkOcspDataLoader extends OCSPDataLoader {
 
     @Override
     public byte[] post(final String url, final byte[] content) throws DSSException {
-        LOGGER.info("Getting OCSP response from " + url);
+        LOGGER.info("Getting OCSP response from {}", url);
 
         HttpPost httpRequest = null;
         CloseableHttpResponse httpResponse = null;
@@ -53,17 +53,19 @@ public class SkOcspDataLoader extends OCSPDataLoader {
             // To determine the length, we cannot read the content-stream up to the end and re-use it afterwards.
             // This is because, it may not be possible to reset the stream (= go to position 0).
             // So, the solution is to cache temporarily the complete content data (as we do not expect much here) in a byte-array.
-            final ByteArrayInputStream bis = new ByteArrayInputStream(content);
+            try (
+                    final ByteArrayInputStream bis = new ByteArrayInputStream(content);
+                    final HttpEntity httpEntity = new InputStreamEntity(bis, content.length, null);
+                    final HttpEntity requestEntity = new BufferedHttpEntity(httpEntity);
+                    ) {
+                httpRequest.setEntity(requestEntity);
+                if (contentType != null) {
+                    httpRequest.setHeader(CONTENT_TYPE, contentType);
+                }
 
-            final HttpEntity httpEntity = new InputStreamEntity(bis, content.length, null);
-            final HttpEntity requestEntity = new BufferedHttpEntity(httpEntity);
-            httpRequest.setEntity(requestEntity);
-            if (contentType != null) {
-                httpRequest.setHeader(CONTENT_TYPE, contentType);
+                client = getHttpClient(url);
+                httpResponse = getHttpResponse(client, httpRequest);
             }
-
-            client = getHttpClient(url);
-            httpResponse = getHttpResponse(client, httpRequest);
 
             return readHttpResponse(httpResponse);
         } catch (IOException e) {

@@ -18,7 +18,7 @@ These tests are part of SiVa project and can also be executed using IntellJ IDEA
   * ee.openeid.siva.resttest
   * ee.openeid.siva.soaptest
 
-To run the tests in IDEA right click on package name and select "Run tests in". Its also possible to run individual tests by right clicking on specific test code and selecting "Run". 
+To run the tests in IDEA right click on package name and select "Run tests in". It's also possible to run individual tests by right clicking on specific test code and selecting "Run". 
 
 ### Execution of Automated SoapUI type of tests
 
@@ -26,7 +26,8 @@ The description how to execute the tests together with SoapUI project file to be
 
 ### Execution of Manual type of tests
 
-Most of the manual tests require that SiVa service is set up together with S[SiVa Demo Application](https://github.com/open-eid/SiVa-demo-application). The instructions how to set up SiVa are given in [System integrator's guide](http://open-eid.github.io/SiVa/siva3/systemintegrators_guide/)
+Most of the manual tests require that SiVa service is set up together with [SiVa Demo Application](https://github.com/open-eid/SiVa-demo-application). 
+The instructions how to set up SiVa are given in [System deployment guide](http://open-eid.github.io/SiVa/siva3/deployment_guide/)
 
 Execution of manual tests depends on testable area. These tests can be divided into following categories:
 
@@ -41,7 +42,7 @@ Files to use in manual tests can be found in [SiVa GitHub](https://github.com/op
 
 This section of the document gives overview of Integration Testing carried out on SiVa web service and SiVa Demo application.
 
-SiVa web service Integration Testing is using IO RestAssured library v3.3.0 to implement automatic checks for REST/SOAP based tests.
+SiVa web service Integration Testing is using IO RestAssured library to implement automatic checks for REST/SOAP based tests.
 
 The testing of the SiVa web service is divided into sections based on the software architecture and functionalities provided to the users. The sections are:
 
@@ -405,3 +406,7 @@ Following areas are covered:
 Specific test cases can be found in:
 
   * [Configuration System Test](../appendix/test_cases/#configuration-system-test)  
+
+## Performance testing
+
+More information can be found in [SiVa-perftests GitHub page](https://github.com/open-eid/SiVa-perftests/tree/master).

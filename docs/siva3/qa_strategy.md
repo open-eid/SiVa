@@ -9,7 +9,7 @@ There are different test environments for quality assurance, depending on the na
 1. GitHub Actions environment for public CI - Platform: Linux
 2. Test environment for local test and load test - Platform: Linux
 
-Instructions how to set up test enviroment and run tests together with more info can be found in [SiVa GitHub page](https://github.com/open-eid/SiVa)
+Instructions how to set up test enviroment and run tests together with more info can be found in [SiVa GitHub page](https://github.com/open-eid/SiVa).
 
 System requirements:
 
@@ -23,10 +23,11 @@ Tools used:
 * IntelliJ IDEA – is a Java integrated development environment(IDE) for developing and executing automated tests locally
 * Apache Tomcat - is an open source servlet container developed by the Apache Software Foundation.
 * Rest-Assured - is a Java DSL(Domain-specific language) for simplifying testing of REST based Services built on top of HTTP Builder.
+* Docker - is an open platform for developing, shipping, and running applications.
 
 ## Analysis
 Analysis will be tagged with identificators to enable cross-reference between requirements and corresponding tests. This includes both functional and non-functional requirements.
-See documents[(2) and (3) in References](/siva3/references/)
+See documents [(2) and (3) in References](/siva3/references/)
 
 ## Development
 ### Development process
@@ -147,4 +148,8 @@ The scope of the tests is illustrated on the image below. The goal of the test i
 Regression testing will consist of two parts:
 Running all automated tests (unit, integration and system tests)
 Manual testing of the areas that are not covered by automatic tests based on the regression test checklist
- 
+
+**Performance testing**
+
+The scope of the load testing is to determine the throughput capabilities of a single SiVa node and how it handles requests under increasing load.
+Gatling is used for load testing and the tests can be found in [SiVa-perftests GitHub page](https://github.com/open-eid/SiVa-perftests/tree/master).

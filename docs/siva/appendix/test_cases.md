@@ -1353,7 +1353,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## SignaturePolicyIT.java
-[Open file](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/java/ee/openeid/siva/integrationtest/SignaturePolicyIT.java)
+[Open file](https://github.com/open-eid/SiVa-Tree/tree/master/src/test/java/ee/openeid/siva/integrationtest/SignaturePolicyIT.java)
 
 
 **TestCaseID: Pdf-Signature-Policy-1**

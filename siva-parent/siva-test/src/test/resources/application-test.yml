@@ -1,5 +1,0 @@
-siva:
-  application-context-path:
-  hostname: localhost
-  port: 8080
-  protocol: http

@@ -123,8 +123,7 @@ To execute the tests from command line after application is built use:
 ```
 
 ### How to run integration tests
-Integration tests are disabled by default, but can be enabled with maven parameter `-DrunIntegrationTests=true`. 
-Executing integration tests requires running SiVa Web application instance.
+Integration tests can be found [here](https://github.com/open-eid/SiVa-Test), and executing them requires running SiVa Web application instance.
 
 ### How to run integration tests in docker
 Before starting the docker instances, the `docker-compose.yaml` file must be modified. Add the following under the siva-webapp service to run the docker image with the test profile:

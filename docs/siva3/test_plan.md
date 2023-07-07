@@ -36,7 +36,7 @@ Execution of manual tests depends on testable area. These tests can be divided i
   * Configuration tests - SiVa configuration files have to be modified by hand and service must be set up. Correct behavior of the service must be checked.
   * Other tests - tests are executed by loading files into SiVa Demo application and validating the results shown in the SiVa Demo application.
 
-Files to use in manual tests can be found in [SiVa GitHub](https://github.com/open-eid/SiVa/tree/master/siva-parent/siva-test/src/test/resources)
+Files to use in manual tests can be found in [SiVa GitHub](https://github.com/open-eid/SiVa-Test/tree/master/src/test/resources)
   
 ## Integration Test introduction
 

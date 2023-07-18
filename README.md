@@ -61,6 +61,7 @@ docker compose up
 ```
 
 Now SiVa itself is accessible http://siva.localhost:8080/ and siva-demo-application http://siva-demo.localhost:9000/.
+Logs for all running containers can be viewed at http://localhost:11080.
 
 ### Without docker
 

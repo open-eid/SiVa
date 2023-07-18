@@ -21,3 +21,15 @@ services:
       default:
         aliases:
           - siva.localhost
+
+  dozzle: # Web-based UI for browsing container logs
+    image: amir20/dozzle:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      default:
+        aliases:
+          - dozzle.localhost
+    ports:
+      - '11080:8080'
+    restart: unless-stopped

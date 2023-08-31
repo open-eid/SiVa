@@ -29,6 +29,7 @@ import ee.openeid.siva.validation.service.signature.policy.properties.Constraint
 import ee.openeid.siva.validation.util.DistinguishedNameUtil;
 import ee.openeid.tsl.configuration.AlwaysFailingCRLSource;
 import ee.openeid.validation.service.generic.validator.CompositeOCSPSource;
+import ee.openeid.validation.service.generic.validator.LoggingOSCPSourceWrapper;
 import ee.openeid.validation.service.generic.validator.OCSPRequestPredicate;
 import ee.openeid.validation.service.generic.validator.SecureRandom32OctetNonceSource;
 import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
@@ -175,7 +176,7 @@ public class GenericValidationService implements ValidationService {
     private CommonCertificateVerifier createCertificateVerifier() {
         CommonCertificateVerifier certificateVerifier = new CommonCertificateVerifier(true);
         certificateVerifier.setTrustedCertSources(trustedListsCertificateSource);
-        certificateVerifier.setOcspSource(new CompositeOCSPSource(createOnlineOCSPSource(), createIsOnlineOCSPSource()));
+        certificateVerifier.setOcspSource(new CompositeOCSPSource(new LoggingOSCPSourceWrapper(createOnlineOCSPSource()), createIsOnlineOCSPSource()));
         certificateVerifier.setCrlSource(new AlwaysFailingCRLSource());
 
         CommonsDataLoader dataLoader = new CommonsDataLoader();

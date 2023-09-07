@@ -24,6 +24,7 @@ import eu.europa.esig.dss.diagnostic.SignatureWrapper;
 import eu.europa.esig.dss.diagnostic.TimestampWrapper;
 import eu.europa.esig.dss.enumerations.CertificateStatus;
 import eu.europa.esig.dss.enumerations.RevocationType;
+import eu.europa.esig.dss.enumerations.SignatureLevel;
 import eu.europa.esig.dss.enumerations.TimestampType;
 import eu.europa.esig.dss.simplereport.SimpleReport;
 import eu.europa.esig.dss.simplereport.jaxb.XmlDetails;
@@ -447,6 +448,8 @@ class RevocationFreshnessValidatorTest {
         XmlDetails signatureAdESValidationDetails = new XmlDetails();
         Mockito.doReturn(signatureAdESValidationDetails).when(xmlSignatureMock).getAdESValidationDetails();
         List<XmlMessage> signatureErrors = signatureAdESValidationDetails.getError();
+        Mockito.doReturn("EE").when(certificateWrapperMock).getCountryName();
+        Mockito.doReturn(SignatureLevel.XAdES_BASELINE_LT).when(signatureWrapperMock).getSignatureFormat();
         mockSimpleReportGetSignatures(xmlSignatureMock);
 
         validator.validate();
@@ -458,7 +461,54 @@ class RevocationFreshnessValidatorTest {
                 signatureErrors
         );
         assertDiagnosticDataGetSignaturesCalled();
-        Mockito.verify(signatureWrapperMock).getSigningCertificate();
+        Mockito.verify(signatureWrapperMock, Mockito.times(2)).getSigningCertificate();
+        Mockito.verify(signatureWrapperMock).getTimestampList();
+        Mockito.verify(signatureWrapperMock).getId();
+        Mockito.verifyNoMoreInteractions(signatureWrapperMock);
+        assertValidTimestampWrapperMockInteractions(timestampWrapperMock);
+        assertValidOcspCertificateRevocationWrapperMockInteractions(ocspRevocationWrapperMock);
+        Mockito.verify(certificateWrapperMock, Mockito.times(2)).getCertificateRevocationData();
+        Mockito.verifyNoMoreInteractions(certificateWrapperMock);
+        assertSimpleReportGetSignaturesCalled();
+        Mockito.verify(xmlSignatureMock).getId();
+        Mockito.verify(xmlSignatureMock).getAdESValidationDetails();
+        Mockito.verifyNoMoreInteractions(xmlSignatureMock);
+        Mockito.verifyNoMoreInteractions(validationReports);
+    }
+
+    @ParameterizedTest
+    @MethodSource("generateCountryNameAndSignatureLevel")
+    void testOcspWithProducedAt24hAfterTimestampInSignatureFromDiagnosticDataWithNonEECountryNameAndTLevelSignatureShouldAddWarningToSignature(
+            String countryName, SignatureLevel signatureLevel
+    ) {
+        SignatureWrapper signatureWrapperMock = Mockito.mock(SignatureWrapper.class);
+        CertificateWrapper certificateWrapperMock = Mockito.mock(CertificateWrapper.class);
+        Mockito.doReturn(certificateWrapperMock).when(signatureWrapperMock).getSigningCertificate();
+        TimestampWrapper timestampWrapperMock = createValidTimestampWrapperMock(Instant.parse("2021-06-06T18:30:15Z"));
+        Mockito.doReturn(List.of(timestampWrapperMock)).when(signatureWrapperMock).getTimestampList();
+        CertificateRevocationWrapper ocspRevocationWrapperMock = createValidOcspCertificateRevocationWrapperMock(Instant.parse("2021-06-07T18:30:16Z"));
+        Mockito.doReturn(List.of(ocspRevocationWrapperMock)).when(certificateWrapperMock).getCertificateRevocationData();
+        Mockito.doReturn("S-12345").when(signatureWrapperMock).getId();
+        mockDiagnosticDataGetSignatures(signatureWrapperMock);
+        XmlSignature xmlSignatureMock = Mockito.mock(XmlSignature.class);
+        Mockito.doReturn("S-12345").when(xmlSignatureMock).getId();
+        XmlDetails signatureAdESValidationDetails = new XmlDetails();
+        Mockito.doReturn(signatureAdESValidationDetails).when(xmlSignatureMock).getAdESValidationDetails();
+        List<XmlMessage> signatureWarnings = signatureAdESValidationDetails.getWarning();
+        Mockito.doReturn(countryName).when(certificateWrapperMock).getCountryName();
+        Mockito.doReturn(signatureLevel).when(signatureWrapperMock).getSignatureFormat();
+        mockSimpleReportGetSignatures(xmlSignatureMock);
+
+        validator.validate();
+
+        TestXmlDetailUtils.assertEquals(
+                TestXmlDetailUtils.createMessageList(
+                        TestXmlDetailUtils.createMessage(null, "The revocation information is not considered as 'fresh'.")
+                ),
+                signatureWarnings
+        );
+        assertDiagnosticDataGetSignaturesCalled();
+        Mockito.verify(signatureWrapperMock, Mockito.times(2)).getSigningCertificate();
         Mockito.verify(signatureWrapperMock).getTimestampList();
         Mockito.verify(signatureWrapperMock).getId();
         Mockito.verifyNoMoreInteractions(signatureWrapperMock);
@@ -632,4 +682,11 @@ class RevocationFreshnessValidatorTest {
         Mockito.verifyNoMoreInteractions(simpleReport);
     }
 
+    private static Stream<Arguments> generateCountryNameAndSignatureLevel() {
+        return Stream.of(
+                Arguments.of("LT", SignatureLevel.XAdES_BASELINE_T),
+                Arguments.of("LV", SignatureLevel.CAdES_BASELINE_T),
+                Arguments.of("DE", SignatureLevel.PAdES_BASELINE_T)
+        );
+    }
 }

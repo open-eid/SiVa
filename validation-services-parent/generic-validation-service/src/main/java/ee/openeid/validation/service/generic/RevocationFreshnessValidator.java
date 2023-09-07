@@ -21,11 +21,13 @@ import ee.openeid.validation.service.generic.validator.report.DssSimpleReportWra
 import eu.europa.esig.dss.diagnostic.CertificateWrapper;
 import eu.europa.esig.dss.diagnostic.SignatureWrapper;
 import eu.europa.esig.dss.enumerations.RevocationType;
+import eu.europa.esig.dss.enumerations.SignatureLevel;
 import eu.europa.esig.dss.enumerations.TimestampType;
 import eu.europa.esig.dss.validation.reports.Reports;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -34,6 +36,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -45,6 +48,12 @@ public class RevocationFreshnessValidator {
 
     private static final String REVOCATION_FRESHNESS_FAULT = "The revocation information is not considered as 'fresh'.";
     private static final String TIMESTAMP_OCSP_ORDER_FAULT = "OCSP response production time is before timestamp time";
+
+    private static final Set<SignatureLevel> T_LEVEL_SIGNATURES = Set.of(
+            SignatureLevel.XAdES_BASELINE_T,
+            SignatureLevel.CAdES_BASELINE_T,
+            SignatureLevel.PAdES_BASELINE_T
+    );
 
     @NonNull
     private final Reports reports;
@@ -81,7 +90,7 @@ public class RevocationFreshnessValidator {
             Duration timestampOcspDifference = Duration.between(timestampProductionTime.toInstant(), earliestPostTimestampOcspProducedAtDate.toInstant());
             if (timestampOcspDifference.compareTo(REVOCATION_FRESHNESS_OK_LIMIT) <= 0) {
                 return; // OCSP is not taken later than the OK limit after timestamp
-            } else if (timestampOcspDifference.compareTo(REVOCATION_FRESHNESS_WARNING_LIMIT) <= 0) {
+            } else if (timestampOcspDifference.compareTo(REVOCATION_FRESHNESS_WARNING_LIMIT) <= 0 || isTLevelSignatureOfNonListedCountry(signatureWrapper)) {
                 addSignatureAdESWarning(signatureWrapper.getId(), REVOCATION_FRESHNESS_FAULT);
                 return; // OCSP is not taken later than the WARNING limit after timestamp
             }
@@ -158,4 +167,10 @@ public class RevocationFreshnessValidator {
                 .getError().add(DssSimpleReportWrapper.createXmlMessage(error));
     }
 
+    private static boolean isTLevelSignatureOfNonListedCountry(SignatureWrapper signatureWrapper) {
+        String countryName = signatureWrapper.getSigningCertificate().getCountryName();
+        SignatureLevel signatureLevel = signatureWrapper.getSignatureFormat();
+
+        return !StringUtils.equals("EE", countryName) && T_LEVEL_SIGNATURES.contains(signatureLevel);
+    }
 }

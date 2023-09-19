@@ -42,7 +42,7 @@ Run following command:
 ./mvnw clean install
 ```
 
-Or create image for Docker:
+After that, you can optionally create an image for Docker:
 
 ```bash
 ./mvnw spring-boot:build-image -pl siva-parent/siva-webapp

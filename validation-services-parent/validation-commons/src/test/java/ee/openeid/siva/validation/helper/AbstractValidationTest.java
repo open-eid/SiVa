@@ -33,7 +33,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class AbstractValidationTest {
 
     private static ValidatorFactory validatorFactory;
-
     protected Validator validator;
 
     @BeforeAll

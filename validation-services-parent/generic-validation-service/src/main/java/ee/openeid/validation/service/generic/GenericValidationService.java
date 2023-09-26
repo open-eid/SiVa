@@ -26,27 +26,20 @@ import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
-import ee.openeid.siva.validation.util.DistinguishedNameUtil;
 import ee.openeid.tsl.configuration.AlwaysFailingCRLSource;
-import ee.openeid.validation.service.generic.validator.CompositeOCSPSource;
-import ee.openeid.validation.service.generic.validator.LoggingOSCPSourceWrapper;
-import ee.openeid.validation.service.generic.validator.OCSPRequestPredicate;
-import ee.openeid.validation.service.generic.validator.SecureRandom32OctetNonceSource;
+import ee.openeid.validation.service.generic.validator.RevocationFreshnessValidatorFactory;
+import ee.openeid.validation.service.generic.validator.ocsp.OCSPSourceFactory;
 import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
 import ee.openeid.validation.service.generic.validator.report.GenericValidationReportBuilder;
 import ee.openeid.validation.service.generic.validator.report.ReportBuilderData;
 import eu.europa.esig.dss.enumerations.MimeType;
-import eu.europa.esig.dss.enumerations.DigestAlgorithm;
 import eu.europa.esig.dss.enumerations.TokenExtractionStrategy;
 import eu.europa.esig.dss.exception.IllegalInputException;
 import eu.europa.esig.dss.model.DSSDocument;
 import eu.europa.esig.dss.model.DSSException;
 import eu.europa.esig.dss.model.InMemoryDocument;
-import eu.europa.esig.dss.model.x509.CertificateToken;
 import eu.europa.esig.dss.service.http.commons.CommonsDataLoader;
-import eu.europa.esig.dss.service.http.commons.OCSPDataLoader;
 import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
-import eu.europa.esig.dss.service.ocsp.OnlineOCSPSource;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.spi.x509.aia.DefaultAIASource;
 import eu.europa.esig.dss.validation.AdvancedSignature;
@@ -61,7 +54,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.function.BiPredicate;
 
 import static ee.openeid.validation.service.generic.GenericValidationConstants.GENERIC_POLICY_SERVICE_BEAN_NAME;
 import static ee.openeid.validation.service.generic.GenericValidationConstants.GENERIC_TRUSTED_LISTS_CERTIFICATE_SOURCE_BEAN_NAME;
@@ -77,6 +69,8 @@ public class GenericValidationService implements ValidationService {
     private ReportConfigurationProperties reportConfigurationProperties;
     private ProxyConfig proxyConfig;
     private ContainerValidatorFactory containerValidatorFactory;
+    private RevocationFreshnessValidatorFactory revocationFreshnessValidatorFactory;
+    private OCSPSourceFactory ocspSourceFactory;
 
     @Override
     public Reports validateDocument(ValidationDocument validationDocument) throws DSSException {
@@ -99,7 +93,7 @@ public class GenericValidationService implements ValidationService {
             //Initialize once and use in different components to reduce response time for large PDF files validation.
             List<AdvancedSignature> signatures = validator.getSignatures();
 
-            new RevocationFreshnessValidator(reports).validate();
+            revocationFreshnessValidatorFactory.create(reports, policy).validate();
             containerValidatorFactory.create(reports, validationDocument).validate();
 
             if (LOGGER.isInfoEnabled()) {
@@ -176,7 +170,7 @@ public class GenericValidationService implements ValidationService {
     private CommonCertificateVerifier createCertificateVerifier() {
         CommonCertificateVerifier certificateVerifier = new CommonCertificateVerifier(true);
         certificateVerifier.setTrustedCertSources(trustedListsCertificateSource);
-        certificateVerifier.setOcspSource(new CompositeOCSPSource(new LoggingOSCPSourceWrapper(createOnlineOCSPSource()), createIsOnlineOCSPSource()));
+        certificateVerifier.setOcspSource(ocspSourceFactory.create());
         certificateVerifier.setCrlSource(new AlwaysFailingCRLSource());
 
         CommonsDataLoader dataLoader = new CommonsDataLoader();
@@ -186,17 +180,6 @@ public class GenericValidationService implements ValidationService {
         certificateVerifier.setAIASource(aiaSource);
 
         return certificateVerifier;
-    }
-
-    private BiPredicate<CertificateToken, CertificateToken> createIsOnlineOCSPSource() {
-        return new OCSPRequestPredicate(DistinguishedNameUtil::getSubjectDistinguishedNameValueByOid);
-    }
-
-    private OnlineOCSPSource createOnlineOCSPSource() {
-        OnlineOCSPSource onlineOCSPSource = new OnlineOCSPSource(new OCSPDataLoader());
-        onlineOCSPSource.setNonceSource(new SecureRandom32OctetNonceSource());
-        onlineOCSPSource.setCertIDDigestAlgorithm(DigestAlgorithm.SHA1);
-        return onlineOCSPSource;
     }
 
     private int getCertificatePoolSize(CommonCertificateVerifier certificateVerifier) {
@@ -237,5 +220,15 @@ public class GenericValidationService implements ValidationService {
     @Autowired
     public void setContainerValidatorFactory(ContainerValidatorFactory containerValidatorFactory) {
         this.containerValidatorFactory = containerValidatorFactory;
+    }
+
+    @Autowired
+    public void setRevocationFreshnessValidatorFactory(RevocationFreshnessValidatorFactory revocationFreshnessValidatorFactory) {
+        this.revocationFreshnessValidatorFactory = revocationFreshnessValidatorFactory;
+    }
+
+    @Autowired
+    public void setOcspSourceFactory(OCSPSourceFactory ocspSourceFactory) {
+        this.ocspSourceFactory = ocspSourceFactory;
     }
 }

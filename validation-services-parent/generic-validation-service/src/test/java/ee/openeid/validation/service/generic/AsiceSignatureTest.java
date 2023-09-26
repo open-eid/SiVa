@@ -21,8 +21,10 @@ import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
-import ee.openeid.validation.service.generic.configuration.GenericSignaturePolicyProperties;
+import ee.openeid.validation.service.generic.configuration.properties.GenericSignaturePolicyProperties;
+import ee.openeid.validation.service.generic.validator.RevocationFreshnessValidatorFactory;
 import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
+import ee.openeid.validation.service.generic.validator.ocsp.OCSPSourceFactory;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -60,6 +62,12 @@ class AsiceSignatureTest {
     @Autowired
     private ContainerValidatorFactory containerValidatorFactory;
 
+    @Autowired
+    private RevocationFreshnessValidatorFactory revocationFreshnessValidatorFactory;
+
+    @Autowired
+    private OCSPSourceFactory ocspSourceFactory;
+
     @BeforeEach
     public void setUp() {
         validationService = new GenericValidationService();
@@ -70,6 +78,8 @@ class AsiceSignatureTest {
         validationService.setReportConfigurationProperties(new ReportConfigurationProperties(true));
 
         validationService.setContainerValidatorFactory(containerValidatorFactory);
+        validationService.setRevocationFreshnessValidatorFactory(revocationFreshnessValidatorFactory);
+        validationService.setOcspSourceFactory(ocspSourceFactory);
     }
 
     @Test

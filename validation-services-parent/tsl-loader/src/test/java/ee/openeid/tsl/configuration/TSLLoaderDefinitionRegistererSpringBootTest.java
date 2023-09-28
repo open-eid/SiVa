@@ -53,7 +53,7 @@ class TSLLoaderDefinitionRegistererSpringBootTest {
     void loadApplicationContext_WhenLoadableTslBeansExist_TslLoaderBeansForEachTslAreCreated() {
         Map<String, TSLLoader> tslLoaderBeans = applicationContext.getBeansOfType(TSLLoader.class);
 
-        assertThat(tslLoaderBeans, aMapWithSize(3));
+        assertThat(tslLoaderBeans, aMapWithSize(2));
         assertThat(tslLoaderBeans, hasEntry(equalTo("tslCertificateSourceWithAnnotationLoader"), notNullValue()));
         assertThat(tslLoaderBeans.get("tslCertificateSourceWithAnnotationLoader").getTslName(), equalTo("test-tsl-name"));
         assertThat(tslLoaderBeans, hasEntry(equalTo("shortNameLoader"), notNullValue()));

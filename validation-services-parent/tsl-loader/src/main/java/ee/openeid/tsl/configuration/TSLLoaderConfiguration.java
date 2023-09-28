@@ -16,9 +16,7 @@
 
 package ee.openeid.tsl.configuration;
 
-import ee.openeid.tsl.annotation.LoadableTsl;
 import ee.openeid.tsl.keystore.DSSKeyStoreFactoryBean;
-import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -66,12 +64,6 @@ public class TSLLoaderConfiguration {
     @Bean
     public TSLLoaderConfigurationProperties tslLoaderConfigurationPropertiesProd() {
         return new TSLLoaderConfigurationProperties();
-    }
-
-    @Bean
-    @LoadableTsl(name = "generic")
-    public TrustedListsCertificateSource trustedListSource() {
-        return new TrustedListsCertificateSource();
     }
 
 }

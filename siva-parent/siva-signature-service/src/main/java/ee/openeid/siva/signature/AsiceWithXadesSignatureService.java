@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2017 - 2023 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -28,7 +28,11 @@ import eu.europa.esig.dss.enumerations.ASiCContainerType;
 import eu.europa.esig.dss.enumerations.DigestAlgorithm;
 import eu.europa.esig.dss.enumerations.SignatureLevel;
 import eu.europa.esig.dss.enumerations.SignaturePackaging;
-import eu.europa.esig.dss.model.*;
+import eu.europa.esig.dss.model.DSSDocument;
+import eu.europa.esig.dss.model.InMemoryDocument;
+import eu.europa.esig.dss.model.MimeType;
+import eu.europa.esig.dss.model.SignatureValue;
+import eu.europa.esig.dss.model.ToBeSigned;
 import eu.europa.esig.dss.service.tsp.OnlineTSPSource;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.spi.x509.revocation.ocsp.OCSPSource;
@@ -38,7 +42,9 @@ import eu.europa.esig.dss.token.DSSPrivateKeyEntry;
 import eu.europa.esig.dss.token.Pkcs11SignatureToken;
 import eu.europa.esig.dss.token.Pkcs12SignatureToken;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
+import lombok.Getter;
 import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
@@ -53,11 +59,15 @@ public class AsiceWithXadesSignatureService implements SignatureService {
 
     private static final String CLASSPATH = "classpath:";
 
-    private SignatureServiceConfigurationProperties properties;
+    @Getter
+    private final SignatureServiceConfigurationProperties properties;
 
-    private TrustedListsCertificateSource trustedListSource;
+    private final TrustedListsCertificateSource trustedListSource;
 
-    public AsiceWithXadesSignatureService(SignatureServiceConfigurationProperties properties, TrustedListsCertificateSource trustedListSource) {
+    public AsiceWithXadesSignatureService(
+            SignatureServiceConfigurationProperties properties,
+            @Qualifier("genericTrustedListsCertificateSource") TrustedListsCertificateSource trustedListSource
+    ) {
         this.properties = properties;
         this.trustedListSource = trustedListSource;
     }
@@ -101,10 +111,6 @@ public class AsiceWithXadesSignatureService implements SignatureService {
         DSSDocument signedDocument = service.signDocument(documentToBeSigned, parameters, signatureValue);
 
         return IOUtils.toByteArray(signedDocument.openStream());
-    }
-
-    public SignatureServiceConfigurationProperties getProperties() {
-        return properties;
     }
 
     private AbstractSignatureTokenConnection getSignatureToken(SignatureServiceConfigurationProperties configurationProperties) {

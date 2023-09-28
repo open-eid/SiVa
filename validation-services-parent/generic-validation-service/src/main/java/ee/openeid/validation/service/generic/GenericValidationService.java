@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 - 2022 Riigi Infosüsteemi Amet
+ * Copyright 2016 - 2023 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -52,6 +52,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static ee.openeid.validation.service.generic.GenericValidationConstants.GENERIC_POLICY_SERVICE_BEAN_NAME;
+import static ee.openeid.validation.service.generic.GenericValidationConstants.GENERIC_TRUSTED_LISTS_CERTIFICATE_SOURCE_BEAN_NAME;
 
 @Service
 public class GenericValidationService implements ValidationService {
@@ -193,12 +196,13 @@ public class GenericValidationService implements ValidationService {
     }
 
     @Autowired
-    @Qualifier(value = "GenericPolicyService")
+    @Qualifier(value = GENERIC_POLICY_SERVICE_BEAN_NAME)
     public void setSignaturePolicyService(ConstraintLoadingSignaturePolicyService signaturePolicyService) {
         this.signaturePolicyService = signaturePolicyService;
     }
 
     @Autowired
+    @Qualifier(value = GENERIC_TRUSTED_LISTS_CERTIFICATE_SOURCE_BEAN_NAME)
     public void setTrustedListsCertificateSource(TrustedListsCertificateSource trustedListsCertificateSource) {
         this.trustedListsCertificateSource = trustedListsCertificateSource;
     }

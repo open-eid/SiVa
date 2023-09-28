@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 - 2021 Riigi Infosüsteemi Amet
+ * Copyright 2016 - 2023 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -17,12 +17,14 @@
 package ee.openeid.validation.service.generic.configuration;
 
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
+import ee.openeid.tsl.annotation.LoadableTsl;
+import ee.openeid.validation.service.generic.validator.container.AsicContainerDataFileSizeValidator;
 import ee.openeid.validation.service.generic.validator.container.ContainerValidator;
 import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
-import ee.openeid.validation.service.generic.validator.container.AsicContainerDataFileSizeValidator;
 import ee.openeid.validation.service.generic.validator.container.ZipBasedContainerValidator;
 import eu.europa.esig.dss.diagnostic.DiagnosticData;
 import eu.europa.esig.dss.enumerations.ASiCContainerType;
+import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.validation.reports.AbstractReports;
 import eu.europa.esig.dss.validation.reports.Reports;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -31,13 +33,23 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.Optional;
 
+import static ee.openeid.validation.service.generic.GenericValidationConstants.GENERIC_POLICY_SERVICE_BEAN_NAME;
+import static ee.openeid.validation.service.generic.GenericValidationConstants.GENERIC_TRUSTED_LISTS_CERTIFICATE_SOURCE_BEAN_NAME;
+import static ee.openeid.validation.service.generic.GenericValidationConstants.GENERIC_TSL_NAME;
+
 @Configuration
 @EnableConfigurationProperties(GenericSignaturePolicyProperties.class)
 public class GenericValidationServiceConfiguration {
 
-    @Bean(name = "GenericPolicyService")
+    @Bean(name = GENERIC_POLICY_SERVICE_BEAN_NAME)
     public ConstraintLoadingSignaturePolicyService signaturePolicyService(GenericSignaturePolicyProperties properties) {
         return new ConstraintLoadingSignaturePolicyService(properties);
+    }
+
+    @LoadableTsl(name = GENERIC_TSL_NAME)
+    @Bean(name = GENERIC_TRUSTED_LISTS_CERTIFICATE_SOURCE_BEAN_NAME)
+    public TrustedListsCertificateSource genericTrustedListsCertificateSource() {
+        return new TrustedListsCertificateSource();
     }
 
     @Bean

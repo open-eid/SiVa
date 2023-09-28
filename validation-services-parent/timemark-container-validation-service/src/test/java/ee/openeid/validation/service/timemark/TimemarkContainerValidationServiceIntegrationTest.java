@@ -18,17 +18,29 @@ package ee.openeid.validation.service.timemark;
 
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
-import ee.openeid.siva.validation.document.report.*;
+import ee.openeid.siva.validation.document.report.CertificateType;
+import ee.openeid.siva.validation.document.report.Policy;
+import ee.openeid.siva.validation.document.report.Reports;
+import ee.openeid.siva.validation.document.report.SignatureScope;
+import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.document.report.SimpleReport;
+import ee.openeid.siva.validation.document.report.SubjectDistinguishedName;
+import ee.openeid.siva.validation.document.report.ValidationConclusion;
+import ee.openeid.siva.validation.document.report.ValidationWarning;
+import ee.openeid.siva.validation.document.report.Warning;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource;
 import ee.openeid.siva.validation.util.CertUtil;
+import ee.openeid.tsl.TSLRefresher;
 import ee.openeid.tsl.TSLValidationJobFactory;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
+import ee.openeid.tsl.configuration.TSLLoaderDefinitionRegisterer;
 import ee.openeid.validation.service.timemark.configuration.TimemarkContainerValidationServiceConfiguration;
 import ee.openeid.validation.service.timemark.signature.policy.BDOCConfigurationService;
 import ee.openeid.validation.service.timemark.signature.policy.BDOCSignaturePolicyService;
+import ee.openeid.validation.service.timemark.tsl.TimemarkTrustedListsCertificateSource;
 import eu.europa.esig.dss.model.x509.CertificateToken;
 import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
 import eu.europa.esig.dss.spi.tsl.ConditionForQualifiers;
@@ -51,11 +63,23 @@ import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.List;
 
-import static ee.openeid.validation.service.timemark.BDOCTestUtils.*;
-import static org.hamcrest.Matchers.*;
-import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
+import static ee.openeid.validation.service.timemark.BDOCTestUtils.ASICE_CRL_ONLY;
+import static ee.openeid.validation.service.timemark.BDOCTestUtils.BDOC_TEST_FILE_ALL_SIGNED;
+import static ee.openeid.validation.service.timemark.BDOCTestUtils.BDOC_TEST_FILE_UNSIGNED;
+import static ee.openeid.validation.service.timemark.BDOCTestUtils.BDOC_TEST_OF_KLASS3_CHAIN;
+import static ee.openeid.validation.service.timemark.BDOCTestUtils.VALID_ASICE;
+import static ee.openeid.validation.service.timemark.BDOCTestUtils.VALID_BALTIC_EST_LT;
+import static ee.openeid.validation.service.timemark.BDOCTestUtils.VALID_BDOC_TM_2_SIGNATURES;
+import static ee.openeid.validation.service.timemark.BDOCTestUtils.VALID_ID_CARD_MOB_ID;
+import static ee.openeid.validation.service.timemark.BDOCTestUtils.buildValidationDocument;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.emptyOrNullString;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -65,7 +89,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
         TSLLoaderConfiguration.class,
+        TSLLoaderDefinitionRegisterer.class,
+        TSLRefresher.class,
         TSLValidationJobFactory.class,
+        TimemarkTrustedListsCertificateSource.class,
         TimemarkContainerValidationServiceConfiguration.class,
         TimemarkContainerValidationService.class,
         BDOCSignaturePolicyService.class,
@@ -81,10 +108,10 @@ class TimemarkContainerValidationServiceIntegrationTest {
     private static final String QC_STATEMENT = "http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/QCStatement";
     private static final String QC_FOR_ESIG = "http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/QCForESig";
     private static final String TEST_OF_KLASS3_SK_2010 = "TEST of KLASS3-SK 2010";
-    private static String POL_V3 = "POLv3";
-    private static String POL_V4 = "POLv4";
+    private static final String POL_V3 = "POLv3";
+    private static final String POL_V4 = "POLv4";
 
-    private static String DOCUMENT_MALFORMED_MESSAGE = "Document malformed or not matching documentType";
+    private static final String DOCUMENT_MALFORMED_MESSAGE = "Document malformed or not matching documentType";
     @Autowired
     private TimemarkContainerValidationService timemarkContainerValidationService;
     @Autowired
@@ -94,7 +121,7 @@ class TimemarkContainerValidationServiceIntegrationTest {
 
 
     @Test
-    void vShouldHaveSignatureWarnings() {
+    void validationReportShouldHaveSignatureWarnings() {
         SimpleReport validationResult = timemarkContainerValidationService.validateDocument(buildValidationDocument(BDOC_TEST_FILE_UNSIGNED)).getSimpleReport();
         List<Warning> signatureValidationData = validationResult.getValidationConclusion().getSignatures().get(0).getWarnings();
         assertThat(signatureValidationData, hasSize(1));
@@ -104,7 +131,7 @@ class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     @Test
-    void vShouldNotHaveValidationWarnings() {
+    void validationReportShouldNotHaveValidationWarnings() {
         SimpleReport validationResult = timemarkContainerValidationService.validateDocument(buildValidationDocument(BDOC_TEST_FILE_ALL_SIGNED)).getSimpleReport();
         List<ValidationWarning> validationWarnings = validationResult.getValidationConclusion().getValidationWarnings();
         assertThat(validationWarnings, hasSize(0));
@@ -132,21 +159,21 @@ class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     @Test
-    void bdocValidationResultShouldIncludeValidationReportPOJO() throws Exception {
+    void bdocValidationResultShouldIncludeValidationReportPOJO() {
         SimpleReport validationResult2Signatures = timemarkContainerValidationService.validateDocument(bdocValid2Signatures()).getSimpleReport();
         assertNotNull(validationResult2Signatures);
     }
 
     @Test
-    void vShouldIncludeRequiredFields() throws Exception {
+    void validationReportShouldIncludeRequiredFields() {
         SimpleReport validationResult2Signatures = timemarkContainerValidationService.validateDocument(bdocValid2Signatures()).getSimpleReport();
         ValidationConclusion validationConclusion = validationResult2Signatures.getValidationConclusion();
         assertNotNull(validationConclusion.getPolicy());
         assertNotNull(validationConclusion.getValidationTime());
         assertEquals(VALID_BDOC_TM_2_SIGNATURES, validationConclusion.getValidatedDocument().getFilename());
-        assertTrue(validationConclusion.getSignatures().size() == 2);
-        assertTrue(validationConclusion.getValidSignaturesCount() == 2);
-        assertTrue(validationConclusion.getSignaturesCount() == 2);
+        assertThat(validationConclusion.getSignatures(), hasSize(2));
+        assertEquals(2, validationConclusion.getValidSignaturesCount());
+        assertEquals(2, validationConclusion.getSignaturesCount());
     }
 
     @Test
@@ -158,22 +185,22 @@ class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     private void assertContainsScope(SignatureValidationData signature, String filename) {
-        assertTrue(signature.getSignatureScopes()
+        assertThat(signature.getSignatureScopes()
                 .stream()
                 .map(SignatureScope::getName)
                 .filter(name -> StringUtils.equals(filename, name))
-                .count() > 0);
+                .count(), greaterThan(0L));
     }
 
     @Test
-    void vShouldHaveCorrectSignatureValidationDataForSignature1() throws Exception {
+    void validationReportShouldHaveCorrectSignatureValidationDataForSignature1() {
 
         SimpleReport validationResult2Signatures = timemarkContainerValidationService.validateDocument(bdocValid2Signatures()).getSimpleReport();
         SignatureValidationData sig1 = validationResult2Signatures.getValidationConclusion().getSignatures()
                 .stream()
                 .filter(sig -> sig.getId().equals("id-7b7180a5265f919bc0ac65bd02e4b46a"))
                 .findFirst()
-                .get();
+                .orElseThrow();
 
         assertEquals("XAdES_BASELINE_LT_TM", sig1.getSignatureFormat());
         assertEquals("http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256", sig1.getSignatureMethod());
@@ -182,10 +209,10 @@ class TimemarkContainerValidationServiceIntegrationTest {
         assertEquals("JÕEORG,JAAK-KRISTJAN,38001085718", sig1.getSubjectDistinguishedName().getCommonName());
         assertEquals("PNOEE-38001085718", sig1.getSubjectDistinguishedName().getSerialNumber());
         assertEquals(SignatureValidationData.Indication.TOTAL_PASSED.toString(), sig1.getIndication());
-        assertTrue(StringUtils.isEmpty(sig1.getSubIndication()));
-        assertTrue(sig1.getErrors().size() == 0);
-        assertTrue(sig1.getWarnings().size() == 0);
-        assertTrue(sig1.getSignatureScopes().size() == 1);
+        assertThat(sig1.getSubIndication(), emptyOrNullString());
+        assertThat(sig1.getErrors(), empty());
+        assertThat(sig1.getWarnings(), empty());
+        assertThat(sig1.getSignatureScopes(), hasSize(1));
         SignatureScope scope = sig1.getSignatureScopes().get(0);
         assertEquals("test.txt", scope.getName());
         assertEquals("Digest of the document content", scope.getContent());
@@ -198,13 +225,13 @@ class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     @Test
-    void vShouldHaveCorrectSignatureValidationDataForSignature2() throws Exception {
+    void validationReportShouldHaveCorrectSignatureValidationDataForSignature2() {
         SimpleReport validationResult2Signatures = timemarkContainerValidationService.validateDocument(bdocValid2Signatures()).getSimpleReport();
         SignatureValidationData sig2 = validationResult2Signatures.getValidationConclusion().getSignatures()
                 .stream()
                 .filter(sig -> sig.getId().equals("id-c71904f656e45af0c9b0ce644fc9287d"))
                 .findFirst()
-                .get();
+                .orElseThrow();
 
         assertEquals("XAdES_BASELINE_LT_TM", sig2.getSignatureFormat());
         assertEquals("http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256", sig2.getSignatureMethod());
@@ -213,10 +240,10 @@ class TimemarkContainerValidationServiceIntegrationTest {
         assertEquals("MÄNNIK,MARI-LIIS,47101010033", sig2.getSubjectDistinguishedName().getCommonName());
         assertEquals("47101010033", sig2.getSubjectDistinguishedName().getSerialNumber());
         assertEquals(SignatureValidationData.Indication.TOTAL_PASSED.toString(), sig2.getIndication());
-        assertTrue(StringUtils.isEmpty(sig2.getSubIndication()));
-        assertTrue(sig2.getErrors().size() == 0);
-        assertTrue(sig2.getWarnings().size() == 0);
-        assertTrue(sig2.getSignatureScopes().size() == 1);
+        assertThat(sig2.getSubIndication(), emptyOrNullString());
+        assertThat(sig2.getErrors(), empty());
+        assertThat(sig2.getWarnings(), empty());
+        assertThat(sig2.getSignatureScopes(), hasSize(1));
         SignatureScope scope = sig2.getSignatureScopes().get(0);
         assertEquals("test.txt", scope.getName());
         assertEquals("Digest of the document content", scope.getContent());
@@ -233,13 +260,13 @@ class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     @Test
-    void reportForBdocValidationShouldIncludeCorrectAsiceSignatureForm() throws Exception {
+    void reportForBdocValidationShouldIncludeCorrectAsiceSignatureForm() {
         SimpleReport report = timemarkContainerValidationService.validateDocument(bdocValid2Signatures()).getSimpleReport();
         assertEquals("ASiC-E", report.getValidationConclusion().getSignatureForm());
     }
 
     @Test
-    void bestSignatureTimeInQualifiedBdocReportShouldNotBeBlank() throws Exception {
+    void bestSignatureTimeInQualifiedBdocReportShouldNotBeBlank() {
         SimpleReport report = timemarkContainerValidationService.validateDocument(bdocValidIdCardAndMobIdSignatures()).getSimpleReport();
         ValidationConclusion validationConclusion = report.getValidationConclusion();
         String bestSignatureTime1 = validationConclusion.getSignatures().get(0).getInfo().getBestSignatureTime();
@@ -249,13 +276,13 @@ class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     @Test
-    void bdocWithCRLRevocationDataOnlyShouldFail() throws Exception {
+    void bdocWithCRLRevocationDataOnlyShouldFail() {
         SimpleReport report = timemarkContainerValidationService.validateDocument(bdocCRLRevocationOnly()).getSimpleReport();
-        assertTrue(report.getValidationConclusion().getValidSignaturesCount() == 0);
+        assertEquals(0, report.getValidationConclusion().getValidSignaturesCount());
     }
 
     @Test
-    void validationReportShouldContainDefaultPolicyWhenPolicyIsNotExplicitlyGiven() throws Exception {
+    void validationReportShouldContainDefaultPolicyWhenPolicyIsNotExplicitlyGiven() {
         Policy policy = validateWithPolicy("").getValidationConclusion().getPolicy();
         assertEquals(PredefinedValidationPolicySource.QES_POLICY.getName(), policy.getPolicyName());
         assertEquals(PredefinedValidationPolicySource.QES_POLICY.getDescription(), policy.getPolicyDescription());
@@ -263,7 +290,7 @@ class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     @Test
-    void validationReportShouldContainAdesPolicyWhenAdesPolicyIsGivenToValidator() throws Exception {
+    void validationReportShouldContainAdesPolicyWhenAdesPolicyIsGivenToValidator() {
         Policy policy = validateWithPolicy(POL_V3).getValidationConclusion().getPolicy();
         assertEquals(PredefinedValidationPolicySource.ADES_POLICY.getName(), policy.getPolicyName());
         assertEquals(PredefinedValidationPolicySource.ADES_POLICY.getDescription(), policy.getPolicyDescription());
@@ -271,7 +298,7 @@ class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     @Test
-    void validationReportShouldContainQESPolicyWhenQESPolicyIsGivenToValidator() throws Exception {
+    void validationReportShouldContainQESPolicyWhenQESPolicyIsGivenToValidator() {
         Policy policy = validateWithPolicy(POL_V4).getValidationConclusion().getPolicy();
         assertEquals(PredefinedValidationPolicySource.QES_POLICY.getName(), policy.getPolicyName());
         assertEquals(PredefinedValidationPolicySource.QES_POLICY.getDescription(), policy.getPolicyDescription());
@@ -281,25 +308,25 @@ class TimemarkContainerValidationServiceIntegrationTest {
     @Test
     void whenNonExistingPolicyIsGivenThenValidatorShouldThrowException() {
         assertThrows(
-                InvalidPolicyException.class, () -> validateWithPolicy("non-existing-policy").getValidationConclusion().getPolicy()
+                InvalidPolicyException.class, () -> validateWithPolicy("non-existing-policy")
         );
     }
 
     @Test
     @Disabled("fails because of DSS bug: https://esig-dss.atlassian.net/browse/DSS-915")
-    void WhenAllQualifiersAreSetInServiceInfoThenSignatureLevelShouldBeQESAndValidWithPOLv4() throws Exception {
+    void WhenAllQualifiersAreSetInServiceInfoThenSignatureLevelShouldBeQESAndValidWithPOLv4() {
         testWithAllQualifiersSet(POL_V4);
     }
 
     @Test
     @Disabled("fails because of DSS bug: https://esig-dss.atlassian.net/browse/DSS-915")
-    void WhenAllQualifiersAreSetInServiceInfoThenSignatureLevelShouldBeQESAndValidWithPOLv3() throws Exception {
+    void WhenAllQualifiersAreSetInServiceInfoThenSignatureLevelShouldBeQESAndValidWithPOLv3() {
         testWithAllQualifiersSet(POL_V3);
     }
 
     @Test
     @Disabled("fails because of DSS bug: https://esig-dss.atlassian.net/browse/DSS-915")
-    void whenQCWithQSCDQualifierIsNotSetThenSignatureLevelShouldBeAdesQCAndInvalidWithPOLv4() throws Exception {
+    void whenQCWithQSCDQualifierIsNotSetThenSignatureLevelShouldBeAdesQCAndInvalidWithPOLv4() {
         String policy = POL_V4;
         TrustProperties trustProperties = getServiceInfoForService(TEST_OF_KLASS3_SK_2010, policy);
         removeQcConditions(trustProperties, QC_WITH_QSCD);
@@ -311,7 +338,7 @@ class TimemarkContainerValidationServiceIntegrationTest {
 
     @Test
     @Disabled("fails because of DSS bug: https://esig-dss.atlassian.net/browse/DSS-915")
-    void whenQCWithQSCDQualifierIsNotSetThenSignatureLevelShouldBeAdesQCAndValidWithPOLv3() throws Exception {
+    void whenQCWithQSCDQualifierIsNotSetThenSignatureLevelShouldBeAdesQCAndValidWithPOLv3() {
         String policy = POL_V3;
         TrustProperties trustProperties = getServiceInfoForService(TEST_OF_KLASS3_SK_2010, policy);
         removeQcConditions(trustProperties, QC_WITH_QSCD);
@@ -323,7 +350,7 @@ class TimemarkContainerValidationServiceIntegrationTest {
 
     @Test
     @Disabled("fails because of DSS bug: https://esig-dss.atlassian.net/browse/DSS-915")
-    void whenQCWithQSCDAndQCStatementQualifierIsNotSetThenSignatureLevelShouldBeAdesAndInvalidWithPOLv4() throws Exception {
+    void whenQCWithQSCDAndQCStatementQualifierIsNotSetThenSignatureLevelShouldBeAdesAndInvalidWithPOLv4() {
         String policy = POL_V4;
         TrustProperties trustProperties = getServiceInfoForService(TEST_OF_KLASS3_SK_2010, policy);
         removeQcConditions(trustProperties, QC_WITH_QSCD, QC_STATEMENT);
@@ -335,7 +362,7 @@ class TimemarkContainerValidationServiceIntegrationTest {
 
     @Disabled("fails because of DSS bug: https://esig-dss.atlassian.net/browse/DSS-915")
     @Test
-    void whenQCWithQSCDAndQCStatementQualifierIsNotSetThenSignatureLevelShouldBeAdesAndValidWithPOLv3() throws Exception {
+    void whenQCWithQSCDAndQCStatementQualifierIsNotSetThenSignatureLevelShouldBeAdesAndValidWithPOLv3() {
         String policy = POL_V3;
         TrustProperties trustProperties = getServiceInfoForService(TEST_OF_KLASS3_SK_2010, policy);
         removeQcConditions(trustProperties, QC_WITH_QSCD, QC_STATEMENT);
@@ -465,7 +492,7 @@ class TimemarkContainerValidationServiceIntegrationTest {
                 .stream()
                 .map(certificateToken -> getTrustProperties(tslCertificateSource, certificateToken))
                 .filter(si -> serviceMatchesServiceName(si, serviceName))
-                .findFirst().get();
+                .findFirst().orElseThrow();
     }
 
     private void assertServiceHasQualifiers(TrustProperties trustProperties, String... qualifiers) {

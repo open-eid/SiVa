@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 - 2022 Riigi Infosüsteemide Amet
+ * Copyright 2017 - 2023 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -17,13 +17,12 @@
 package ee.openeid.validation.service.timemark.configuration;
 
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
-import ee.openeid.tsl.configuration.TSLLoaderConfigurationProperties;
-import ee.openeid.tsl.configuration.TSLValidationKeystoreProperties;
-import ee.openeid.tsl.keystore.DSSKeyStoreFactoryBean;
+import ee.openeid.validation.service.timemark.tsl.TimemarkTrustedListsCertificateSource;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.Configuration;
-import org.digidoc4j.ExternalConnectionType;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -31,8 +30,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
 
-import java.io.File;
+import static ee.openeid.validation.service.timemark.TimemarkValidationConstants.TM_POLICY_SERVICE_BEAN_NAME;
+import static ee.openeid.validation.service.timemark.TimemarkValidationConstants.TM_TRUSTED_LISTS_CERTIFICATE_SOURCE_BEAN_NAME;
 
+@RequiredArgsConstructor
 @SpringBootConfiguration
 @EnableAutoConfiguration
 @EnableConfigurationProperties({
@@ -41,53 +42,32 @@ import java.io.File;
 })
 public class TimemarkContainerValidationServiceConfiguration {
 
-    private final TSLLoaderConfigurationProperties tslLoaderConfigurationProperties;
-    private final BDOCValidationServiceProperties bdocValidationServiceProperties;
-    private final TSLValidationKeystoreProperties tslValidationKeystoreProperties;
+    private final @NonNull BDOCValidationServiceProperties bdocValidationServiceProperties;
 
-    @Autowired
-    public TimemarkContainerValidationServiceConfiguration(TSLLoaderConfigurationProperties tslLoaderConfigurationProperties,
-                                                           BDOCValidationServiceProperties bdocValidationServiceProperties,
-                                                           TSLValidationKeystoreProperties tslValidationKeystoreProperties) {
-        this.tslLoaderConfigurationProperties = tslLoaderConfigurationProperties;
-        this.bdocValidationServiceProperties = bdocValidationServiceProperties;
-        this.tslValidationKeystoreProperties = tslValidationKeystoreProperties;
-    }
-
-    @Bean(name = "timemarkPolicyService")
+    @Bean(name = TM_POLICY_SERVICE_BEAN_NAME)
     public ConstraintLoadingSignaturePolicyService timemarkSignaturePolicyService(BDOCSignaturePolicyProperties properties) {
         return new ConstraintLoadingSignaturePolicyService(properties);
     }
 
     @Bean
     @Profile("test")
-    public Configuration testDigiDoc4JConfiguration() {
-        Configuration configuration = createConfiguration(Configuration.Mode.TEST);
+    public Configuration testDigiDoc4JConfiguration(
+            @Qualifier(TM_TRUSTED_LISTS_CERTIFICATE_SOURCE_BEAN_NAME) TimemarkTrustedListsCertificateSource trustedListsCertificateSource
+    ) {
+        Configuration configuration = Configuration.of(Configuration.Mode.TEST);
         configuration.loadConfiguration(getAdditionalConfigurationFilePath("/siva-digidoc4j-test.yaml"), true);
-        configuration.setTrustedTerritories();
+        configuration.setTSL(trustedListsCertificateSource);
         return configuration;
     }
 
     @Bean
     @Profile("!test")
-    public Configuration prodDigiDoc4JConfiguration() {
-        Configuration configuration = createConfiguration(Configuration.Mode.PROD);
+    public Configuration prodDigiDoc4JConfiguration(
+            @Qualifier(TM_TRUSTED_LISTS_CERTIFICATE_SOURCE_BEAN_NAME) TimemarkTrustedListsCertificateSource trustedListsCertificateSource
+    ) {
+        Configuration configuration = Configuration.of(Configuration.Mode.PROD);
         configuration.loadConfiguration(getAdditionalConfigurationFilePath("/siva-digidoc4j.yaml"), true);
-        configuration.setTrustedTerritories(tslLoaderConfigurationProperties.getTrustedTerritories().toArray(String[]::new));
-        return configuration;
-    }
-
-    private Configuration createConfiguration(Configuration.Mode mode) {
-        Configuration configuration = new Configuration(mode);
-        configuration.setSslTruststorePathFor(ExternalConnectionType.TSL, tslLoaderConfigurationProperties.getSslTruststorePath());
-        configuration.setSslTruststorePasswordFor(ExternalConnectionType.TSL, tslLoaderConfigurationProperties.getSslTruststorePassword());
-        configuration.setSslTruststoreTypeFor(ExternalConnectionType.TSL, tslLoaderConfigurationProperties.getSslTruststoreType());
-        configuration.setLotlLocation(tslLoaderConfigurationProperties.getUrl());
-        configuration.setLotlPivotSupportEnabled(tslLoaderConfigurationProperties.isLotlPivotSupportEnabled());
-        String sivaLotlTruststorePath = DSSKeyStoreFactoryBean.getDssDataFolder() + File.separatorChar + tslValidationKeystoreProperties.getFilename();
-        configuration.setLotlTruststorePath(sivaLotlTruststorePath);
-        configuration.setLotlTruststorePassword(tslValidationKeystoreProperties.getPassword());
-        configuration.setLotlTruststoreType(tslValidationKeystoreProperties.getType());
+        configuration.setTSL(trustedListsCertificateSource);
         return configuration;
     }
 

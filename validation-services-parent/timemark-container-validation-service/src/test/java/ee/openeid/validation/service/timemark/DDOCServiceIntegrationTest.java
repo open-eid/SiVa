@@ -20,25 +20,34 @@ import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.DataFilesDocument;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
-import ee.openeid.siva.validation.document.report.*;
+import ee.openeid.siva.validation.document.report.CertificateType;
+import ee.openeid.siva.validation.document.report.DataFileData;
+import ee.openeid.siva.validation.document.report.DataFilesReport;
+import ee.openeid.siva.validation.document.report.Policy;
+import ee.openeid.siva.validation.document.report.SignatureScope;
+import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.document.report.SimpleReport;
+import ee.openeid.siva.validation.document.report.SubjectDistinguishedName;
+import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource;
 import ee.openeid.siva.validation.util.CertUtil;
+import ee.openeid.tsl.TSLRefresher;
 import ee.openeid.tsl.TSLValidationJobFactory;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
+import ee.openeid.tsl.configuration.TSLLoaderDefinitionRegisterer;
 import ee.openeid.validation.service.timemark.configuration.TimemarkContainerValidationServiceConfiguration;
 import ee.openeid.validation.service.timemark.signature.policy.BDOCConfigurationService;
 import ee.openeid.validation.service.timemark.signature.policy.BDOCSignaturePolicyService;
+import ee.openeid.validation.service.timemark.tsl.TimemarkTrustedListsCertificateSource;
 import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.util.encoders.Base64;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -46,15 +55,17 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.InputStream;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.List;
+import java.util.Objects;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.emptyOrNullString;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -64,7 +75,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
         TSLLoaderConfiguration.class,
+        TSLLoaderDefinitionRegisterer.class,
+        TSLRefresher.class,
         TSLValidationJobFactory.class,
+        TimemarkTrustedListsCertificateSource.class,
         TimemarkContainerValidationServiceConfiguration.class,
         TimemarkContainerValidationService.class,
         DDOCDataFilesService.class,
@@ -140,42 +154,42 @@ class DDOCServiceIntegrationTest {
     }
 
     @Test
-    void vShouldIncludeSignatureFormWithCorrectPrefixAndVersion() {
+    void validationReportShouldIncludeSignatureFormWithCorrectPrefixAndVersion() {
         SimpleReport validationResult2Signatures = timemarkContainerValidationService.validateDocument(buildValidationDocument(VALID_DDOC_2_SIGNATURES)).getSimpleReport();
         assertEquals("DIGIDOC_XML_1.3", validationResult2Signatures.getValidationConclusion().getSignatureForm());
     }
 
     @Test
-    void vShouldIncludeRequiredFields() {
+    void validationReportShouldIncludeRequiredFields() {
         SimpleReport validationResult2Signatures = timemarkContainerValidationService.validateDocument(buildValidationDocument(VALID_DDOC_2_SIGNATURES)).getSimpleReport();
         ValidationConclusion validationConclusion = validationResult2Signatures.getValidationConclusion();
         assertNotNull(validationConclusion.getPolicy());
         assertNotNull(validationConclusion.getValidationTime());
         assertEquals(VALID_DDOC_2_SIGNATURES, validationConclusion.getValidatedDocument().getFilename());
-        assertTrue(validationConclusion.getSignatures().size() == 2);
-        assertTrue(validationConclusion.getValidSignaturesCount() == 2);
-        assertTrue(validationConclusion.getSignaturesCount() == 2);
+        assertThat(validationConclusion.getSignatures(), hasSize(2));
+        assertEquals(2, validationConclusion.getValidSignaturesCount());
+        assertEquals(2, validationConclusion.getSignaturesCount());
     }
 
     @Test
-    void vShouldHaveCorrectSignatureValidationDataForSignature1() {
+    void validationReportShouldHaveCorrectSignatureValidationDataForSignature1() {
         SimpleReport validationResult2Signatures = timemarkContainerValidationService.validateDocument(buildValidationDocument(VALID_DDOC_2_SIGNATURES)).getSimpleReport();
         SignatureValidationData sig1 = validationResult2Signatures.getValidationConclusion().getSignatures()
                 .stream()
                 .filter(sig -> sig.getId().equals("S0"))
                 .findFirst()
-                .get();
+                .orElseThrow();
 
         assertEquals("DIGIDOC_XML_1.3", sig1.getSignatureFormat());
         assertEquals("http://www.w3.org/2000/09/xmldsig#rsa-sha1", sig1.getSignatureMethod());
-        assertTrue(StringUtils.isEmpty(sig1.getSignatureLevel()));
+        assertThat(sig1.getSignatureLevel(), emptyOrNullString());
         assertEquals("KESKEL,URMO,38002240232", sig1.getSignedBy());
         assertEquals("KESKEL,URMO,38002240232", sig1.getSubjectDistinguishedName().getCommonName());
         assertEquals("38002240232", sig1.getSubjectDistinguishedName().getSerialNumber());
         assertEquals(SignatureValidationData.Indication.TOTAL_PASSED.toString(), sig1.getIndication());
-        assertTrue(sig1.getErrors().size() == 0);
-        assertTrue(sig1.getWarnings().isEmpty());
-        assertTrue(sig1.getSignatureScopes().size() == 1);
+        assertThat(sig1.getErrors(), empty());
+        assertThat(sig1.getWarnings(), empty());
+        assertThat(sig1.getSignatureScopes(), hasSize(1));
         SignatureScope scope = sig1.getSignatureScopes().get(0);
         assertEquals("Šužlikud sõid ühe õuna ära.txt", scope.getName());
         assertEquals("2005-02-11T16:23:43Z", sig1.getInfo().getBestSignatureTime());
@@ -192,13 +206,13 @@ class DDOCServiceIntegrationTest {
     }
 
     @Test
-    void vShouldHaveCorrectSignatureValidationDataForSignature2() {
+    void validationReportShouldHaveCorrectSignatureValidationDataForSignature2() {
         SimpleReport validationResult2Signatures = timemarkContainerValidationService.validateDocument(buildValidationDocument(VALID_DDOC_2_SIGNATURES)).getSimpleReport();
         SignatureValidationData sig2 = validationResult2Signatures.getValidationConclusion().getSignatures()
                 .stream()
                 .filter(sig -> sig.getId().equals("S1"))
                 .findFirst()
-                .get();
+                .orElseThrow();
 
         assertEquals("DIGIDOC_XML_1.3", sig2.getSignatureFormat());
         assertEquals("http://www.w3.org/2000/09/xmldsig#rsa-sha1", sig2.getSignatureMethod());
@@ -207,9 +221,9 @@ class DDOCServiceIntegrationTest {
         assertEquals("JALUKSE,KRISTJAN,38003080336", sig2.getSubjectDistinguishedName().getCommonName());
         assertEquals("38003080336", sig2.getSubjectDistinguishedName().getSerialNumber());
         assertEquals(SignatureValidationData.Indication.TOTAL_PASSED.toString(), sig2.getIndication());
-        assertTrue(sig2.getErrors().size() == 0);
-        assertTrue(sig2.getWarnings().isEmpty());
-        assertTrue(sig2.getSignatureScopes().size() == 1);
+        assertThat(sig2.getErrors(), empty());
+        assertThat(sig2.getWarnings(), empty());
+        assertThat(sig2.getSignatureScopes(), hasSize(1));
         SignatureScope scope = sig2.getSignatureScopes().get(0);
         assertEquals("Šužlikud sõid ühe õuna ära.txt", scope.getName());
         assertEquals("Digest of the document content", scope.getContent());
@@ -230,8 +244,8 @@ class DDOCServiceIntegrationTest {
         ValidationConclusion validationConclusion = report.getValidationConclusion();
         assertEquals(validationConclusion.getSignaturesCount(), validationConclusion.getValidSignaturesCount());
         SignatureValidationData signature = validationConclusion.getSignatures().get(0);
-        assertTrue(signature.getErrors().isEmpty());
-        assertTrue(signature.getWarnings().size() == 1);
+        assertThat(signature.getErrors(), empty());
+        assertThat(signature.getWarnings(), hasSize(1));
         assertEquals("Bad digest for DataFile: D0 alternate digest matches!", signature.getWarnings().get(0).getContent());
     }
 
@@ -378,9 +392,8 @@ class DDOCServiceIntegrationTest {
     }
 
     static class DummyDataFilesDocumentBuilder {
-        private static final Logger LOGGER = LoggerFactory.getLogger(DummyDataFilesDocumentBuilder.class);
 
-        private DataFilesDocument dataFilesDocument;
+        private final DataFilesDocument dataFilesDocument;
 
         private DummyDataFilesDocumentBuilder() {
             dataFilesDocument = new DataFilesDocument();
@@ -391,13 +404,10 @@ class DDOCServiceIntegrationTest {
         }
 
         DummyDataFilesDocumentBuilder withDocument(String filePath) {
-            try {
-                Path documentPath = Paths.get(getClass().getClassLoader().getResource(filePath).toURI());
-                dataFilesDocument.setBytes(Files.readAllBytes(documentPath));
+            try (InputStream in = Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(filePath))) {
+                dataFilesDocument.setBytes(in.readAllBytes());
             } catch (IOException e) {
-                LOGGER.warn("FAiled to load dummy data files document with error: {}", e.getMessage(), e);
-            } catch (URISyntaxException e) {
-                LOGGER.warn("Dummy document URL is invalid and ended with error: {}", e.getMessage(), e);
+                throw new IllegalStateException("Failed to load dummy data files document", e);
             }
 
             return this;
@@ -408,7 +418,7 @@ class DDOCServiceIntegrationTest {
         }
     }
 
-    private SimpleReport validateWithPolicy(String policyName) throws Exception {
+    private SimpleReport validateWithPolicy(String policyName) {
         ValidationDocument validationDocument = buildValidationDocument(VALID_DDOC_2_SIGNATURES);
         validationDocument.setSignaturePolicy(policyName);
         return timemarkContainerValidationService.validateDocument(validationDocument).getSimpleReport();

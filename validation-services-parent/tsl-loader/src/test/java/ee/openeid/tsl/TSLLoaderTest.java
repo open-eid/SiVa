@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2017 - 2023 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -17,6 +17,7 @@
 package ee.openeid.tsl;
 
 import ee.openeid.tsl.configuration.TSLLoaderConfigurationProperties;
+import eu.europa.esig.dss.spi.client.http.DSSFileLoader;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.spi.x509.KeyStoreCertificateSource;
 import eu.europa.esig.dss.tsl.job.TLValidationJob;
@@ -30,13 +31,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class TSLLoaderTest {
 
     private static final String TSL_URL = "url";
-    private static final String TSL_CODE = "CO";
     private static final String TSL_OJ_URL = "ojUrl";
     private static final String TSL_INFO_URL = "infoUrl";
 
@@ -51,47 +55,55 @@ class TSLLoaderTest {
     private KeyStoreCertificateSource keyStoreCertificateSource;
 
     @InjectMocks
-    private TSLLoader tslLoader;
+    private TSLLoader tslLoader = new TSLLoader("testName");
 
     @BeforeEach
     public void setUp() throws Exception {
         when(tslValidationJobFactory.createValidationJob()).thenReturn(tslValidationJob);
-        lenient().doNothing().when(tslValidationJob).offlineRefresh();
-        lenient().doNothing().when(tslValidationJob).onlineRefresh();
     }
 
-    private void initCacheLoadingConfigurationProperties() {
-        tslLoader.setTslLoaderConfigurationProperties(createConfigurationProperties(true, TSL_URL, TSL_CODE));
+    @Test
+    void loadTSL_WhenLoadFromCacheIsTrue_OfflineDataLoaderIsUsed() {
+        tslLoader.setTslLoaderConfigurationProperties(createConfigurationProperties(true));
         tslLoader.init();
+
+        tslLoader.loadTSL();
+
+        verify(tslValidationJobFactory).createValidationJob();
+        verify(tslValidationJob).setOfflineDataLoader(any(DSSFileLoader.class));
+        verify(tslValidationJob).setTrustedListCertificateSource(trustedListSource);
+        verify(tslValidationJob).setListOfTrustedListSources(any());
+        verify(tslValidationJob).setSynchronizationStrategy(any());
+        verify(tslValidationJob).offlineRefresh();
+        verifyNoMoreInteractions(tslValidationJobFactory, tslValidationJob);
+        verifyNoInteractions(trustedListSource, keyStoreCertificateSource);
     }
 
-    private void initOnlineLoadingConfigurationProperties() {
-        tslLoader.setTslLoaderConfigurationProperties(createConfigurationProperties(false, TSL_URL, TSL_CODE));
+    @Test
+    void loadTSL_WhenLoadFromCacheIsFalse_OnlineDataLoaderIsUsed() {
+        tslLoader.setTslLoaderConfigurationProperties(createConfigurationProperties(false));
         tslLoader.init();
+
+        tslLoader.loadTSL();
+
+        verify(tslValidationJobFactory).createValidationJob();
+        verify(tslValidationJob).setOnlineDataLoader(any(DSSFileLoader.class));
+        verify(tslValidationJob).setTrustedListCertificateSource(trustedListSource);
+        verify(tslValidationJob).setListOfTrustedListSources(any());
+        verify(tslValidationJob).setSynchronizationStrategy(any());
+        verify(tslValidationJob).onlineRefresh();
+        verifyNoMoreInteractions(tslValidationJobFactory, tslValidationJob);
+        verifyNoInteractions(trustedListSource, keyStoreCertificateSource);
     }
 
-    private TSLLoaderConfigurationProperties createConfigurationProperties(boolean loadFromCache, String url, String code) {
+    private static TSLLoaderConfigurationProperties createConfigurationProperties(boolean loadFromCache) {
         TSLLoaderConfigurationProperties props = new TSLLoaderConfigurationProperties();
-        props.setUrl(url);
+        props.setUrl(TSL_URL);
         props.setOjUrl(TSL_OJ_URL);
         props.setLotlRootSchemeInfoUri(TSL_INFO_URL);
         props.setLoadFromCache(loadFromCache);
         props.setTrustedTerritories(DEFAULT_TRUSTED_TERRITORIES);
         return props;
-    }
-
-    @Test
-    void whenLoadFromCacheIsNotSetInPropertiesThenTSLShouldNotBeRefreshed() {
-        initCacheLoadingConfigurationProperties();
-        verify(tslValidationJob).offlineRefresh();
-        verify(tslValidationJob, never()).onlineRefresh();
-    }
-
-    @Test
-    void whenLoadFromCacheIsSetInPropertiesThenTSLShouldBeRefreshed() {
-        initOnlineLoadingConfigurationProperties();
-        verify(tslValidationJob).onlineRefresh();
-        verify(tslValidationJob, never()).offlineRefresh();
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 - 2021 Riigi Infosüsteemi Amet
+ * Copyright 2016 - 2023 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -34,22 +34,26 @@ import eu.europa.esig.dss.tsl.function.XMLOtherTSLPointer;
 import eu.europa.esig.dss.tsl.job.TLValidationJob;
 import eu.europa.esig.dss.tsl.source.LOTLSource;
 import eu.europa.esig.dss.tsl.sync.ExpirationAndSignatureCheckStrategy;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.digidoc4j.utils.ResourceUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.time.Duration;
 import java.util.HashSet;
 import java.util.Set;
 
-@Component("tslLoader")
+@Slf4j
+@RequiredArgsConstructor
 public class TSLLoader {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TSLLoader.class);
+    @Getter
+    private final @NonNull String tslName;
+
     private TSLValidationJobFactory tslValidationJobFactory;
     private TLValidationJob tslValidationJob;
     private TSLLoaderConfigurationProperties configurationProperties;
@@ -57,14 +61,8 @@ public class TSLLoader {
     private KeyStoreCertificateSource keyStoreCertificateSource;
     private ProxyConfig proxyConfig;
 
-
     @PostConstruct
     public void init() {
-        initTslValidationJob();
-        loadTSL();
-    }
-
-    private void initTslValidationJob() {
         tslValidationJob = tslValidationJobFactory.createValidationJob();
         if (configurationProperties.isLoadFromCache()) {
             tslValidationJob.setOfflineDataLoader(offlineLoader());
@@ -78,13 +76,13 @@ public class TSLLoader {
 
     void loadTSL() {
         if (configurationProperties.isLoadFromCache()) {
-            LOGGER.info("Loading TSL from cache");
+            log.info("Loading '{}' TSL from cache", tslName);
             tslValidationJob.offlineRefresh();
-            LOGGER.info("Finished loading TSL from cache");
+            log.info("Finished loading '{}' TSL from cache", tslName);
         } else {
-            LOGGER.info("Loading TSL over the network");
+            log.info("Loading '{}' TSL over the network", tslName);
             tslValidationJob.onlineRefresh();
-            LOGGER.info("Finished loading TSL over the network");
+            log.info("Finished loading '{}' TSL over the network", tslName);
         }
     }
 
@@ -162,6 +160,5 @@ public class TSLLoader {
     public void setTrustedListsCertificateSource(TrustedListsCertificateSource trustedListSource) {
         this.trustedListSource = trustedListSource;
     }
-
 
 }

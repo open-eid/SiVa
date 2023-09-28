@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2017 - 2023 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -16,9 +16,9 @@
 
 package ee.openeid.tsl.configuration;
 
+import ee.openeid.tsl.annotation.LoadableTsl;
 import ee.openeid.tsl.keystore.DSSKeyStoreFactoryBean;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
-import eu.europa.esig.dss.spi.x509.KeyStoreCertificateSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -69,7 +69,8 @@ public class TSLLoaderConfiguration {
     }
 
     @Bean
-    public TrustedListsCertificateSource trustedListSource(KeyStoreCertificateSource keyStoreCertificateSource) {
+    @LoadableTsl(name = "generic")
+    public TrustedListsCertificateSource trustedListSource() {
         return new TrustedListsCertificateSource();
     }
 

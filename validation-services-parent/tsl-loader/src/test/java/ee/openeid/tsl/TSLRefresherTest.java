@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2017 - 2023 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -16,11 +16,13 @@
 
 package ee.openeid.tsl;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Set;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -29,15 +31,34 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 class TSLRefresherTest {
 
     @Mock
-    private TSLLoader tslLoader;
+    private TSLLoader tslLoader1;
+    @Mock
+    private TSLLoader tslLoader2;
 
-    @InjectMocks
     private TSLRefresher tslRefresher;
 
-    @Test
-    void runningTslRefresherShouldLoadTSL() {
-        tslRefresher.run();
-        verify(tslLoader).loadTSL();
-        verifyNoMoreInteractions(tslLoader);
+    @BeforeEach
+    void setUp() {
+        tslRefresher = new TSLRefresher();
+        tslRefresher.setLoaders(Set.of(tslLoader1, tslLoader2));
     }
+
+    @Test
+    void init_WhenTslLoadersSet_AllTslLoadersAreRefreshed() {
+        tslRefresher.init();
+
+        verify(tslLoader1).loadTSL();
+        verify(tslLoader2).loadTSL();
+        verifyNoMoreInteractions(tslLoader1, tslLoader2);
+    }
+
+    @Test
+    void run_WhenTslLoadersSet_AllTslLoadersAreRefreshed() {
+        tslRefresher.run();
+
+        verify(tslLoader1).loadTSL();
+        verify(tslLoader2).loadTSL();
+        verifyNoMoreInteractions(tslLoader1, tslLoader2);
+    }
+
 }

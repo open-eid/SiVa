@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2017 - 2023 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -16,28 +16,34 @@
 
 package ee.openeid.tsl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import java.util.Set;
+
+@Slf4j
 @Component
 public class TSLRefresher implements Runnable {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TSLRefresher.class);
 
-    private TSLLoader loader;
+    private Set<TSLLoader> loaders;
+
+    @PostConstruct
+    public void init() {
+        run();
+    }
 
     @Override
     public void run() {
-        LOGGER.info("Started TSL refresh process...");
-        loader.loadTSL();
-        LOGGER.info("Finished TSL refresh process...");
+        log.info("Started TSL refresh process...");
+        loaders.forEach(TSLLoader::loadTSL);
+        log.info("Finished TSL refresh process...");
     }
 
     @Autowired
-    @Qualifier("tslLoader")
-    public void setLoader(TSLLoader loader) {
-        this.loader = loader;
+    public void setLoaders(Set<TSLLoader> loaders) {
+        this.loaders = loaders;
     }
+
 }

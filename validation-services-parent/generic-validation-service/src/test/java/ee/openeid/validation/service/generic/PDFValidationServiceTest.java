@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 - 2022 Riigi Infosüsteemi Amet
+ * Copyright 2016 - 2023 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -27,6 +27,7 @@ import ee.openeid.siva.validation.document.report.SubjectDistinguishedName;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.tsl.TSLLoader;
+import ee.openeid.tsl.TSLRefresher;
 import ee.openeid.tsl.TSLValidationJobFactory;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
 import ee.openeid.validation.service.generic.configuration.GenericSignaturePolicyProperties;
@@ -180,7 +181,12 @@ class PDFValidationServiceTest {
         }
         @Bean
         public TSLLoader tslLoader() {
-            return new TSLLoader();        }
+            return new TSLLoader("testName");
+        }
+        @Bean
+        public TSLRefresher tslRefresher() {
+            return new TSLRefresher();
+        }
         @Bean
         public TSLValidationJobFactory tslValidationJobFactory() {
             return new TSLValidationJobFactory();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Riigi Infosüsteemide Amet
+ * Copyright 2017 - 2023 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -18,10 +18,9 @@ package ee.openeid.validation.service.timemark.signature.policy;
 
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import ee.openeid.validation.service.timemark.configuration.BDOCSignaturePolicyProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.Configuration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,9 +28,9 @@ import javax.annotation.PostConstruct;
 import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 
+@Slf4j
 @Component
 public class BDOCConfigurationService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BDOCConfigurationService.class);
 
     private final BDOCSignaturePolicyProperties properties;
     private final BDOCSignaturePolicyService policyService;
@@ -52,8 +51,9 @@ public class BDOCConfigurationService {
     protected void loadAllBDOCConfigurations() {
         properties.getAbstractPolicies().forEach(policy -> {
             Configuration tempConfiguration = configuration.copy();
+            tempConfiguration.setTSL(configuration.getTSL()); // Use TSL from the central configuration bean
             tempConfiguration.setValidationPolicy(policyService.getAbsolutePath(policy.getName()));
-            LOGGER.info("Adding BDOC validation policy: {}", policy.getName());
+            log.info("Adding BDOC validation policy: {}", policy.getName());
             policyList.putIfAbsent(policy.getName(), new PolicyConfigurationWrapper(tempConfiguration, policy));
         });
     }

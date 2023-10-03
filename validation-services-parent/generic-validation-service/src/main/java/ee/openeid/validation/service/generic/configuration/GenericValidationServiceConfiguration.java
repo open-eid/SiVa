@@ -18,6 +18,7 @@ package ee.openeid.validation.service.generic.configuration;
 
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.siva.validation.util.DistinguishedNameUtil;
+import ee.openeid.tsl.annotation.LoadableTsl;
 import ee.openeid.tsl.configuration.AlwaysFailingOCSPSource;
 import ee.openeid.validation.service.generic.configuration.properties.GenericSignaturePolicyProperties;
 import ee.openeid.validation.service.generic.configuration.properties.TLevelSignatureFilterProperties;
@@ -25,8 +26,6 @@ import ee.openeid.validation.service.generic.validator.RevocationFreshnessValida
 import ee.openeid.validation.service.generic.validator.RevocationFreshnessValidatorFactory;
 import ee.openeid.validation.service.generic.validator.SecureRandom32OctetNonceSource;
 import ee.openeid.validation.service.generic.validator.TLevelSignatureOfNonListedCountryPredicate;
-import ee.openeid.validation.service.generic.validator.container.AsicContainerDataFileSizeValidator;
-import ee.openeid.tsl.annotation.LoadableTsl;
 import ee.openeid.validation.service.generic.validator.container.AsicContainerDataFileSizeValidator;
 import ee.openeid.validation.service.generic.validator.container.ContainerValidator;
 import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
@@ -45,8 +44,8 @@ import eu.europa.esig.dss.enumerations.DigestAlgorithm;
 import eu.europa.esig.dss.model.x509.CertificateToken;
 import eu.europa.esig.dss.service.http.commons.OCSPDataLoader;
 import eu.europa.esig.dss.service.ocsp.OnlineOCSPSource;
-import eu.europa.esig.dss.spi.x509.revocation.ocsp.OCSPSource;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
+import eu.europa.esig.dss.spi.x509.revocation.ocsp.OCSPSource;
 import eu.europa.esig.dss.validation.reports.AbstractReports;
 import eu.europa.esig.dss.validation.reports.Reports;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,11 +59,10 @@ import java.util.Optional;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
-import static ee.openeid.validation.service.generic.PolicyUtil.getTLevelSignatures;
-
 import static ee.openeid.validation.service.generic.GenericValidationConstants.GENERIC_POLICY_SERVICE_BEAN_NAME;
 import static ee.openeid.validation.service.generic.GenericValidationConstants.GENERIC_TRUSTED_LISTS_CERTIFICATE_SOURCE_BEAN_NAME;
 import static ee.openeid.validation.service.generic.GenericValidationConstants.GENERIC_TSL_NAME;
+import static ee.openeid.validation.service.generic.PolicyUtil.getTLevelSignatures;
 
 @Configuration
 @EnableConfigurationProperties(GenericSignaturePolicyProperties.class)

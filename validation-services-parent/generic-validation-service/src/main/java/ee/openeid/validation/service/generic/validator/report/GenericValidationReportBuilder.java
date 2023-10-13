@@ -61,6 +61,7 @@ import eu.europa.esig.dss.simplereport.jaxb.XmlDetails;
 import eu.europa.esig.dss.simplereport.jaxb.XmlMessage;
 import eu.europa.esig.dss.simplereport.jaxb.XmlToken;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
+import eu.europa.esig.dss.spi.x509.revocation.RevocationToken;
 import eu.europa.esig.dss.validation.AdvancedSignature;
 import eu.europa.esig.dss.validation.executor.ValidationLevel;
 import eu.europa.esig.dss.validation.reports.AbstractReports;
@@ -153,6 +154,14 @@ public class GenericValidationReportBuilder {
                         for (TimestampToken timestampToken : advancedSignature.getAllTimestamps()) {
                             certificates.addAll(timestampToken.getCertificates());
                         }
+
+                        advancedSignature.getCompleteOCSPSource().getSources().stream()
+                                .flatMap(revocationSource -> revocationSource.getAllRevocationTokens().stream())
+                                .filter(Objects::nonNull)
+                                .map(RevocationToken::getIssuerCertificateToken)
+                                .filter(Objects::nonNull)
+                                .forEach(certificates::add);
+
                         Optional<CertificateToken> optionalCertSource = certificates.stream()
                                 .filter(cert -> cert.getDSSIdAsString().equals(usedCertificate.getId())).findFirst();
 

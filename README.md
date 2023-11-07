@@ -26,7 +26,7 @@ Below is list of Java libraries used for validation:
 These are minimum requirements to build and develop SiVa project:
 
 * **git** - to easily download and update code. You can [download git here](https://git-scm.com/)
-* **Java JDK 11** - to compile and run SiVa applications.
+* **Java JDK 17** - to compile and run SiVa applications.
 * **IDE** - to develop SiVa. We recommend to use [JetBrains IntelliJ](https://www.jetbrains.com/idea/)
 * **2 GB of RAM** the RAM requirement is here because when building the project the integration tests take up a lot of memory
 * Optionally You can also install **Maven** but it is not needed because SiVa project uses Maven wrapper to install maven

@@ -22,7 +22,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Node;
 
-import javax.xml.soap.SOAPBody;
+import jakarta.xml.soap.SOAPBody;
 
 public class SoapRequestDataFilesInterceptor extends AbstractRequestValidationInterceptor {
 

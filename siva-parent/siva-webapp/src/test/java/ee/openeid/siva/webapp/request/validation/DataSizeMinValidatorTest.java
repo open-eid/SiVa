@@ -27,7 +27,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.util.unit.DataSize;
 import org.springframework.util.unit.DataUnit;
 
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidatorContext;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;

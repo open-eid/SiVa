@@ -27,7 +27,7 @@ import org.apache.cxf.annotations.SchemaValidation;
 import org.apache.cxf.interceptor.OutFaultInterceptors;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.xml.ws.Holder;
+import jakarta.xml.ws.Holder;
 
 @OutFaultInterceptors(interceptors = {"ee.openeid.siva.webapp.soap.interceptor.SoapFaultResponseInterceptor", "ee.openeid.siva.webapp.soap.interceptor.SoapResponseHeaderInterceptor"})
 @SchemaValidation(type = SchemaValidation.SchemaValidationType.IN)

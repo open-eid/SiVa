@@ -20,8 +20,8 @@ import ee.openeid.siva.proxy.document.DocumentType;
 import ee.openeid.siva.webapp.request.validation.annotations.ValidDataFileFilename;
 import org.apache.commons.io.FilenameUtils;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 public class ValidDataFileFilenameConstraintValidator implements ConstraintValidator<ValidDataFileFilename, String> {
 

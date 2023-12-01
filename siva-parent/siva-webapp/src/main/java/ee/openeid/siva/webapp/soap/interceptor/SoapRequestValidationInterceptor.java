@@ -20,7 +20,7 @@ import ee.openeid.siva.webapp.request.validation.annotations.ValidSignaturePolic
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.xml.soap.SOAPBody;
+import jakarta.xml.soap.SOAPBody;
 import java.util.regex.Pattern;
 
 public class SoapRequestValidationInterceptor extends AbstractRequestValidationInterceptor {

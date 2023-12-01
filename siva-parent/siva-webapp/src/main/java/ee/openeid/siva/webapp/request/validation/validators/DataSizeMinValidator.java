@@ -19,8 +19,8 @@ package ee.openeid.siva.webapp.request.validation.validators;
 import ee.openeid.siva.webapp.request.validation.annotations.DataSizeMin;
 import org.springframework.util.unit.DataSize;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 public class DataSizeMinValidator implements ConstraintValidator<DataSizeMin, DataSize> {
 

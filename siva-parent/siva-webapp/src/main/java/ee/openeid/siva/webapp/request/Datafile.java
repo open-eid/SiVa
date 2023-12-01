@@ -21,7 +21,7 @@ import ee.openeid.siva.webapp.request.validation.annotations.ValidFilename;
 import ee.openeid.siva.webapp.request.validation.annotations.ValidHashAlgo;
 import lombok.Data;
 
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.Size;
 
 @Data
 public class Datafile {

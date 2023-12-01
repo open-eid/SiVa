@@ -191,9 +191,9 @@
             </plugin>
 
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
+                <groupId>com.sun.xml.ws</groupId>
                 <artifactId>jaxws-maven-plugin</artifactId>
-                <version>2.6</version>
+                <version>4.0.2</version>
                 <executions>
                     <execution>
                         <id>wsimport</id>

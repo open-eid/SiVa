@@ -18,10 +18,10 @@ package ee.openeid.siva.webapp.request.validation.annotations;
 
 import ee.openeid.siva.webapp.request.validation.validators.ValidSignatureFilenameConstraintValidator;
 
-import javax.validation.Constraint;
-import javax.validation.Payload;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

@@ -27,8 +27,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.SOAPMessage;
+import jakarta.xml.soap.MessageFactory;
+import jakarta.xml.soap.SOAPMessage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 

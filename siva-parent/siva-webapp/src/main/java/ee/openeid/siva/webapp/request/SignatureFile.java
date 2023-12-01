@@ -20,7 +20,7 @@ import ee.openeid.siva.webapp.request.validation.annotations.NullOrNotEmpty;
 import ee.openeid.siva.webapp.request.validation.annotations.ValidBase64String;
 import lombok.Data;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 @Data

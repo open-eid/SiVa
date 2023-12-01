@@ -42,7 +42,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.digidoc4j.utils.ResourceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.time.Duration;
 import java.util.HashSet;
 import java.util.Set;

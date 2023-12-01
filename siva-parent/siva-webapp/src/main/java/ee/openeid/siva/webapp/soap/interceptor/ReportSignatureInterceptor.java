@@ -29,10 +29,10 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Node;
 
 import javax.xml.XMLConstants;
-import javax.xml.soap.SOAPBody;
-import javax.xml.soap.SOAPElement;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPMessage;
+import jakarta.xml.soap.SOAPBody;
+import jakarta.xml.soap.SOAPElement;
+import jakarta.xml.soap.SOAPException;
+import jakarta.xml.soap.SOAPMessage;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -44,9 +44,9 @@ import java.io.StringWriter;
 
 /**
  * Alters the SOAP response by creating a signature from the existing response's SOAP body and adding the signature
- * into the SOAP body. {@link javax.xml.soap.SOAPMessage} is used in order to achieve the described behaviour.
+ * into the SOAP body. {@link jakarta.xml.soap.SOAPMessage} is used in order to achieve the described behaviour.
  * This means that {@link org.apache.cxf.binding.soap.saaj.SAAJOutInterceptor SAAJOutInterceptor} needs to be added into the outbound interceptor chain
- * otherwise {@link javax.xml.soap.SOAPMessage} never will be created
+ * otherwise {@link jakarta.xml.soap.SOAPMessage} never will be created
  */
 @Component("SoapReportSignatureInterceptor")
 public class ReportSignatureInterceptor extends AbstractSoapInterceptor {

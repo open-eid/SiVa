@@ -20,8 +20,8 @@ import ee.openeid.siva.webapp.request.validation.annotations.ValidSignatureFilen
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 @Slf4j
 public class ValidSignatureFilenameConstraintValidator implements ConstraintValidator<ValidSignatureFilename, String> {

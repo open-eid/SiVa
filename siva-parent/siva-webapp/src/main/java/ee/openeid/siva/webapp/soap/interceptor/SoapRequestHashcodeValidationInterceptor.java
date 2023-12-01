@@ -21,7 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import javax.xml.soap.SOAPBody;
+import jakarta.xml.soap.SOAPBody;
 
 public class SoapRequestHashcodeValidationInterceptor extends AbstractRequestValidationInterceptor {
 

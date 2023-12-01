@@ -49,7 +49,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import javax.xml.namespace.QName;
-import javax.xml.ws.Endpoint;
+import jakarta.xml.ws.Endpoint;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;

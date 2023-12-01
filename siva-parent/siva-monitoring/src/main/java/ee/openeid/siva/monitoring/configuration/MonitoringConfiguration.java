@@ -24,7 +24,7 @@ import org.springframework.boot.actuate.autoconfigure.endpoint.condition.Conditi
 import org.springframework.boot.actuate.health.HealthEndpoint;
 import org.springframework.context.annotation.Bean;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 public abstract class MonitoringConfiguration {
 
@@ -32,8 +32,8 @@ public abstract class MonitoringConfiguration {
     public static final int DEFAULT_TIMEOUT = 10000;
 
     @Bean
-    public ManifestReader manifestReader(ServletContext servletContext) {
-        return new ManifestReader(servletContext);
+    public ManifestReader manifestReader() {
+        return new ManifestReader();
     }
 
     @Bean

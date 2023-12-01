@@ -28,12 +28,21 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import javax.xml.soap.*;
+import jakarta.xml.soap.SOAPMessage;
+import jakarta.xml.soap.SOAPBody;
+import jakarta.xml.soap.SOAPPart;
+import jakarta.xml.soap.SOAPEnvelope;
+import jakarta.xml.soap.SOAPException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class SoapRequestHashcodeValidationInterceptorTest {

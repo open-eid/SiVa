@@ -234,6 +234,24 @@
                 <artifactId>logback-core</artifactId>
                 <version>${logback.version}</version>
             </dependency>
+
+            <!-- Override vulnerable dependencies that are pulled in via Spring boot -->
+            <!-- TODO: Remove when Spring Boot includes embedded Tomcat >=9.0.83, >=10.1.16 or >=11.0.0-M11 -->
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-websocket</artifactId>
+                <version>9.0.83</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-core</artifactId>
+                <version>9.0.83</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-el</artifactId>
+                <version>9.0.83</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

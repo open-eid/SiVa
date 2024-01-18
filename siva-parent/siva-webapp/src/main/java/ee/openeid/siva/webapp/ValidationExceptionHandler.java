@@ -21,6 +21,7 @@ import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.exception.MalformedSignatureFileException;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
+import ee.openeid.siva.webapp.request.limitation.RequestSizeLimitExceededException;
 import ee.openeid.siva.webapp.response.erroneus.RequestValidationError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -82,6 +83,14 @@ public class ValidationExceptionHandler {
     public RequestValidationError handleInvalidPolicyException(InvalidPolicyException e) {
         RequestValidationError requestValidationError = new RequestValidationError();
         requestValidationError.addFieldError("signaturePolicy", e.getMessage());
+        return requestValidationError;
+    }
+
+    @ExceptionHandler(RequestSizeLimitExceededException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public RequestValidationError handleRequestSizeLimitExceededException(RequestSizeLimitExceededException e) {
+        RequestValidationError requestValidationError = new RequestValidationError();
+        requestValidationError.addFieldError("request", e.getMessage());
         return requestValidationError;
     }
 

@@ -123,6 +123,14 @@
             <artifactId>json</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>ee.openid.siva</groupId>
+            <artifactId>validation-commons</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+            <type>test-jar</type>
+        </dependency>
     </dependencies>
 
     <build>

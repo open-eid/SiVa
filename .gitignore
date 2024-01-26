@@ -6,6 +6,7 @@ dependency-reduced-pom.xml
 !.mvn
 *.iml
 .idea
+.mvn/wrapper/maven-wrapper.jar
 target
 dss-demo-webapp/dss-debug.log
 dss-demo-webapp/log.out

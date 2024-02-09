@@ -82,10 +82,9 @@ public class TSLLoaderDefinitionRegisterer implements BeanDefinitionRegistryPost
     }
 
     private static Map<String, Object> getAttributesIfLoadableTslBeanDefinition(BeanDefinition beanDefinition) {
-        if (beanDefinition instanceof AnnotatedBeanDefinition) {
-            AnnotatedBeanDefinition annotatedBeanDefinition = (AnnotatedBeanDefinition) beanDefinition;
-            if (annotatedBeanDefinition.getFactoryMethodMetadata() != null) {
-                MethodMetadata factoryMethodMetadata = annotatedBeanDefinition.getFactoryMethodMetadata();
+        if (beanDefinition instanceof AnnotatedBeanDefinition annotatedBeanDefinition) {
+            MethodMetadata factoryMethodMetadata = annotatedBeanDefinition.getFactoryMethodMetadata();
+            if (factoryMethodMetadata != null) {
                 if (factoryMethodMetadata.isAnnotated(ANNOTATION_NAME)) {
                     return factoryMethodMetadata.getAnnotationAttributes(ANNOTATION_NAME);
                 }

@@ -31,7 +31,7 @@ import eu.europa.esig.dss.validation.diagnostic.AbstractToken;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.xml.bind.annotation.XmlIDREF;
+import jakarta.xml.bind.annotation.XmlIDREF;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;

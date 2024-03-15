@@ -19,7 +19,7 @@ package ee.openeid.siva.webapp.soap.transformer.report;
 import eu.europa.esig.dss.diagnostic.DiagnosticDataXmlDefiner;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlDiagnosticData;
 
-import javax.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBElement;
 
 public class DiagnosticDataTransformer
         extends ReportTransformer<

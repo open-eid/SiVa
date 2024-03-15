@@ -21,13 +21,12 @@ import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.exception.MalformedSignatureFileException;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import eu.europa.esig.dss.model.DSSException;
+import jakarta.xml.bind.UnmarshalException;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.binding.soap.interceptor.AbstractSoapInterceptor;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.phase.Phase;
-import org.springframework.http.HttpStatus;
 
-import javax.xml.bind.UnmarshalException;
 import javax.xml.namespace.QName;
 
 public class SoapFaultResponseInterceptor extends AbstractSoapInterceptor {

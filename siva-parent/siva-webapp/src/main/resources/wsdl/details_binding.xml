@@ -1,6 +1,5 @@
-<?xml version="1.0"?>
-<jaxb:bindings xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" version="2.1"
-               jaxb:extensionBindingPrefixes="xjc">
+<jaxb:bindings xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jaxb="https://jakarta.ee/xml/ns/jaxb"
+               xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" version="3.0">
 
     <jaxb:bindings schemaLocation="DetailedReport.xsd" node="/xs:schema">
 
@@ -57,6 +56,24 @@
                            parseMethod="eu.europa.esig.dss.jaxb.parsers.RevocationReasonParser.parseShortName"
                            printMethod="eu.europa.esig.dss.jaxb.parsers.RevocationReasonParser.printShortName" />
         </jaxb:bindings>
+
+
+        <jaxb:bindings node="//xs:complexType[@name='Signature']//xs:element[@name='Timestamp']">
+            <jaxb:property name="Timestamps" />
+        </jaxb:bindings>
+        <jaxb:bindings node="//xs:complexType[@name='Signature']//xs:element[@name='EvidenceRecord']">
+            <jaxb:property name="EvidenceRecords" />
+        </jaxb:bindings>
+        <jaxb:bindings node="//xs:complexType[@name='EvidenceRecord']//xs:element[@name='Timestamp']">
+            <jaxb:property name="Timestamps" />
+        </jaxb:bindings>
+        <jaxb:bindings node="//xs:complexType[@name='SubXCV']//xs:element[@name='CrossCertificate']">
+            <jaxb:property name="CrossCertificates" />
+        </jaxb:bindings>
+        <jaxb:bindings node="//xs:complexType[@name='SubXCV']//xs:element[@name='EquivalentCertificate']">
+            <jaxb:property name="EquivalentCertificates" />
+        </jaxb:bindings>
+
     </jaxb:bindings>
 
 </jaxb:bindings>

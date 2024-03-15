@@ -27,6 +27,7 @@ import eu.europa.esig.dss.enumerations.SignatureLevel;
 import eu.europa.esig.dss.model.Digest;
 import eu.europa.esig.dss.model.SignaturePolicyStore;
 import eu.europa.esig.dss.model.identifier.EncapsulatedRevocationTokenIdentifier;
+import eu.europa.esig.dss.model.scope.SignatureScope;
 import eu.europa.esig.dss.model.x509.CertificateToken;
 import eu.europa.esig.dss.model.x509.revocation.crl.CRL;
 import eu.europa.esig.dss.model.x509.revocation.ocsp.OCSP;
@@ -41,15 +42,15 @@ import eu.europa.esig.dss.validation.AdvancedSignature;
 import eu.europa.esig.dss.validation.BaselineRequirementsChecker;
 import eu.europa.esig.dss.validation.CommitmentTypeIndication;
 import eu.europa.esig.dss.validation.DefaultAdvancedSignature;
-import eu.europa.esig.dss.validation.ReferenceValidation;
-import eu.europa.esig.dss.validation.SignatureCertificateSource;
+import eu.europa.esig.dss.model.ReferenceValidation;
+import eu.europa.esig.dss.spi.SignatureCertificateSource;
 import eu.europa.esig.dss.validation.SignatureDigestReference;
 import eu.europa.esig.dss.validation.SignatureIdentifierBuilder;
 import eu.europa.esig.dss.validation.SignaturePolicy;
 import eu.europa.esig.dss.validation.SignatureProductionPlace;
 import eu.europa.esig.dss.validation.SignerRole;
 import eu.europa.esig.dss.validation.timestamp.TimestampSource;
-import eu.europa.esig.dss.validation.timestamp.TimestampToken;
+import eu.europa.esig.dss.spi.x509.tsp.TimestampToken;
 import lombok.SneakyThrows;
 import org.bouncycastle.cert.ocsp.BasicOCSPResp;
 import org.bouncycastle.cert.ocsp.SingleResp;
@@ -86,6 +87,11 @@ public class MockSignature extends DefaultAdvancedSignature {
     @Override
     public List<CertificateToken> getCertificates() {
         return Collections.singletonList(new MockCertificateToken());
+    }
+
+    @Override
+    protected List<SignatureScope> findSignatureScopes() {
+        return null;
     }
 
     @Override

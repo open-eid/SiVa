@@ -43,7 +43,7 @@ public class SkOcspDataLoader extends OCSPDataLoader {
         LOGGER.info("Getting OCSP response from {}", url);
 
         HttpPost httpRequest = null;
-        CloseableHttpResponse httpResponse = null;
+        byte[] httpResponse = null;
         CloseableHttpClient client = null;
         try {
             final URI uri = URI.create(url.trim());
@@ -64,14 +64,14 @@ public class SkOcspDataLoader extends OCSPDataLoader {
                 }
 
                 client = getHttpClient(url);
-                httpResponse = getHttpResponse(client, httpRequest);
+                httpResponse = execute(client, httpRequest);
             }
 
-            return readHttpResponse(httpResponse);
+            return httpResponse;
         } catch (IOException e) {
             throw new DSSExternalResourceException(String.format("Unable to process POST call for url [%s]. Reason : [%s]", url, e.getMessage()) , e);
         } finally {
-            closeQuietly(httpRequest, httpResponse, client);
+            closeQuietly(httpRequest, client);
         }
     }
 }

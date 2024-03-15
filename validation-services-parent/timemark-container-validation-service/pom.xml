@@ -47,16 +47,6 @@
             <groupId>org.digidoc4j.dss</groupId>
             <artifactId>dss-utils-apache-commons</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-        </dependency>
         <!-- Override vulnerable version of transitive DigiDoc4J dependency -->
         <dependency>
             <groupId>org.apache.pdfbox</groupId>

@@ -125,7 +125,7 @@ public class TSLLoader {
             commonsDataLoader.setSslTruststore(truststore);
         }
         commonsDataLoader.setSslTruststoreType(configurationProperties.getSslTruststoreType());
-        commonsDataLoader.setSslTruststorePassword(configurationProperties.getSslTruststorePassword());
+        commonsDataLoader.setSslTruststorePassword(configurationProperties.getSslTruststorePassword().toCharArray());
         return commonsDataLoader;
     }
 

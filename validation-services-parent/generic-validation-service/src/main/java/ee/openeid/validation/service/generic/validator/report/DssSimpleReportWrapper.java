@@ -46,7 +46,7 @@ public class DssSimpleReportWrapper {
     }
 
     public XmlSignature getXmlSignature(String signatureId) {
-        final List<XmlToken> xmlTokens = getXmlSimpleReport().getSignatureOrTimestamp();
+        final List<XmlToken> xmlTokens = getXmlSimpleReport().getSignatureOrTimestampOrEvidenceRecord();
 
         if (CollectionUtils.isNotEmpty(xmlTokens)) {
             for (XmlToken xmlToken : xmlTokens) {

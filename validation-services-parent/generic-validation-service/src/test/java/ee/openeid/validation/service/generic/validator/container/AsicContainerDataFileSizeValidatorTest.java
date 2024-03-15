@@ -148,7 +148,7 @@ class AsicContainerDataFileSizeValidatorTest {
         mappingsOfSignatureIdToWarningList.forEach((signatureId, signatureWarningList) -> {
             XmlSignature simpleReportSignature = Mockito.mock(XmlSignature.class);
             Mockito.doReturn(signatureId).when(simpleReportSignature).getId();
-            simpleReport.getSignatureOrTimestamp().add(simpleReportSignature);
+            simpleReport.getSignatureOrTimestampOrEvidenceRecord().add(simpleReportSignature);
 
             XmlDetails signatureAdESValidationDetails = Mockito.mock(XmlDetails.class);
             Mockito.doReturn(signatureWarningList).when(signatureAdESValidationDetails).getWarning();

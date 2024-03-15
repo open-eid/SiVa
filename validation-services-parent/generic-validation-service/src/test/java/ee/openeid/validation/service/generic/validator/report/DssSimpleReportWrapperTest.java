@@ -90,7 +90,7 @@ class DssSimpleReportWrapperTest {
 
         Assertions.assertNull(result);
         verifySimpleReportGetJaxbModelCalled();
-        Mockito.verify(xmlSimpleReport).getSignatureOrTimestamp();
+        Mockito.verify(xmlSimpleReport).getSignatureOrTimestampOrEvidenceRecord();
         Mockito.verifyNoMoreInteractions(xmlSimpleReport);
     }
 
@@ -104,7 +104,7 @@ class DssSimpleReportWrapperTest {
 
         Assertions.assertNull(result);
         verifySimpleReportGetJaxbModelCalled();
-        Mockito.verify(xmlSimpleReport).getSignatureOrTimestamp();
+        Mockito.verify(xmlSimpleReport).getSignatureOrTimestampOrEvidenceRecord();
         Mockito.verify(signatureMock).getId();
         Mockito.verifyNoMoreInteractions(xmlSimpleReport, signatureMock);
     }
@@ -119,7 +119,7 @@ class DssSimpleReportWrapperTest {
 
         Assertions.assertSame(signatureMock, result);
         verifySimpleReportGetJaxbModelCalled();
-        Mockito.verify(xmlSimpleReport).getSignatureOrTimestamp();
+        Mockito.verify(xmlSimpleReport).getSignatureOrTimestampOrEvidenceRecord();
         Mockito.verify(signatureMock).getId();
         Mockito.verifyNoMoreInteractions(xmlSimpleReport, signatureMock);
     }
@@ -136,7 +136,7 @@ class DssSimpleReportWrapperTest {
 
         Assertions.assertSame(signatureMock2, result);
         verifySimpleReportGetJaxbModelCalled();
-        Mockito.verify(xmlSimpleReport).getSignatureOrTimestamp();
+        Mockito.verify(xmlSimpleReport).getSignatureOrTimestampOrEvidenceRecord();
         Mockito.verify(signatureMock1).getId();
         Mockito.verify(signatureMock2).getId();
         Mockito.verifyNoMoreInteractions(xmlSimpleReport, signatureMock1, signatureMock2);
@@ -153,7 +153,7 @@ class DssSimpleReportWrapperTest {
 
         Assertions.assertNull(result);
         verifySimpleReportGetJaxbModelCalled();
-        Mockito.verify(xmlSimpleReport).getSignatureOrTimestamp();
+        Mockito.verify(xmlSimpleReport).getSignatureOrTimestampOrEvidenceRecord();
         Mockito.verifyNoMoreInteractions(xmlSimpleReport);
     }
 
@@ -168,7 +168,7 @@ class DssSimpleReportWrapperTest {
 
         Assertions.assertNull(result);
         verifySimpleReportGetJaxbModelCalled();
-        Mockito.verify(xmlSimpleReport).getSignatureOrTimestamp();
+        Mockito.verify(xmlSimpleReport).getSignatureOrTimestampOrEvidenceRecord();
         Mockito.verify(signatureMock).getId();
         Mockito.verifyNoMoreInteractions(xmlSimpleReport, signatureMock);
     }
@@ -194,7 +194,7 @@ class DssSimpleReportWrapperTest {
 
         Assertions.assertSame(adESValidationDetailsMock, result);
         verifySimpleReportGetJaxbModelCalled();
-        Mockito.verify(xmlSimpleReport).getSignatureOrTimestamp();
+        Mockito.verify(xmlSimpleReport).getSignatureOrTimestampOrEvidenceRecord();
         Mockito.verify(signatureMock1).getId();
         Mockito.verify(signatureMock2).getId();
         Mockito.verify(signatureMock2).getAdESValidationDetails();
@@ -216,7 +216,7 @@ class DssSimpleReportWrapperTest {
 
         Assertions.assertSame(qualificationDetailsMock, result);
         verifySimpleReportGetJaxbModelCalled();
-        Mockito.verify(xmlSimpleReport).getSignatureOrTimestamp();
+        Mockito.verify(xmlSimpleReport).getSignatureOrTimestampOrEvidenceRecord();
         Mockito.verify(signatureMock1).getId();
         Mockito.verify(signatureMock2).getId();
         Mockito.verify(signatureMock2).getQualificationDetails();
@@ -237,7 +237,7 @@ class DssSimpleReportWrapperTest {
 
         Assertions.assertNotNull(result);
         verifySimpleReportGetJaxbModelCalled();
-        Mockito.verify(xmlSimpleReport).getSignatureOrTimestamp();
+        Mockito.verify(xmlSimpleReport).getSignatureOrTimestampOrEvidenceRecord();
         Mockito.verify(signatureMock1).getId();
         Mockito.verify(signatureMock2).getId();
         Mockito.verify(signatureMock2).getAdESValidationDetails();
@@ -259,7 +259,7 @@ class DssSimpleReportWrapperTest {
 
         Assertions.assertNotNull(result);
         verifySimpleReportGetJaxbModelCalled();
-        Mockito.verify(xmlSimpleReport).getSignatureOrTimestamp();
+        Mockito.verify(xmlSimpleReport).getSignatureOrTimestampOrEvidenceRecord();
         Mockito.verify(signatureMock1).getId();
         Mockito.verify(signatureMock2).getId();
         Mockito.verify(signatureMock2).getQualificationDetails();
@@ -297,7 +297,7 @@ class DssSimpleReportWrapperTest {
     }
 
     private void mockXmlSimpleReportGetSignatureOrTimestamp(List<XmlToken> tokens) {
-        Mockito.doReturn(tokens).when(xmlSimpleReport).getSignatureOrTimestamp();
+        Mockito.doReturn(tokens).when(xmlSimpleReport).getSignatureOrTimestampOrEvidenceRecord();
     }
 
     private void mockXmlSimpleReportGetSignatureOrTimestamp(XmlToken... tokens) {

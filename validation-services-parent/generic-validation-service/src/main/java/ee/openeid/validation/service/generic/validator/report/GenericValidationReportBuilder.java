@@ -65,7 +65,7 @@ import eu.europa.esig.dss.spi.x509.revocation.RevocationToken;
 import eu.europa.esig.dss.validation.AdvancedSignature;
 import eu.europa.esig.dss.validation.executor.ValidationLevel;
 import eu.europa.esig.dss.validation.reports.AbstractReports;
-import eu.europa.esig.dss.validation.timestamp.TimestampToken;
+import eu.europa.esig.dss.spi.x509.tsp.TimestampToken;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;

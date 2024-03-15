@@ -19,7 +19,7 @@ package ee.openeid.siva.webapp.soap.transformer.report;
 import eu.europa.esig.dss.detailedreport.DetailedReportXmlDefiner;
 import eu.europa.esig.dss.detailedreport.jaxb.XmlDetailedReport;
 
-import javax.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBElement;
 
 public class DetailedReportTransformer
         extends ReportTransformer<
@@ -39,7 +39,7 @@ public class DetailedReportTransformer
     ee.openeid.siva.webapp.soap.response.DetailedReport transformReport(eu.europa.esig.dss.validation.detailed_report.DetailedReport dssDetailReport) {
         ee.openeid.siva.webapp.soap.response.DetailedReport detailedReport = new ee.openeid.siva.webapp.soap.response.DetailedReport();
         detailedReport.getTLAnalysis().addAll(dssDetailReport.getTLAnalysis());
-        detailedReport.getSignatureOrTimestampOrCertificate().addAll(dssDetailReport.getSignatureOrTimestampOrCertificate());
+        detailedReport.getSignatureOrTimestampOrEvidenceRecord().addAll(dssDetailReport.getSignatureOrTimestampOrEvidenceRecord());
         detailedReport.getBasicBuildingBlocks().addAll(dssDetailReport.getBasicBuildingBlocks());
         return detailedReport;
     }

@@ -611,7 +611,7 @@ class RevocationFreshnessValidatorTest {
 
     private void mockSimpleReportGetSignatures(List<XmlSignature> signatures) {
         XmlSimpleReport xmlSimpleReport = new XmlSimpleReport();
-        xmlSimpleReport.getSignatureOrTimestamp().addAll(signatures);
+        xmlSimpleReport.getSignatureOrTimestampOrEvidenceRecord().addAll(signatures);
         Mockito.doReturn(simpleReport).when(validationReports).getSimpleReport();
         Mockito.doReturn(xmlSimpleReport).when(simpleReport).getJaxbModel();
     }

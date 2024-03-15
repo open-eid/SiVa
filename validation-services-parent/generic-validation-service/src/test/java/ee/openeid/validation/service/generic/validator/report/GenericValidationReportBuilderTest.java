@@ -115,9 +115,9 @@ class GenericValidationReportBuilderTest {
     @Test
     void totalFailedIndicationWithAdESErrorReportBuild() {
         eu.europa.esig.dss.validation.reports.Reports dssReports = getDssReports("");
-        dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).setIndication(Indication.TOTAL_FAILED);
-        dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).setAdESValidationDetails(new XmlDetails());
-        dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).getAdESValidationDetails().getError()
+        dssReports.getSimpleReportJaxb().getSignatureOrTimestampOrEvidenceRecord().get(0).setIndication(Indication.TOTAL_FAILED);
+        dssReports.getSimpleReportJaxb().getSignatureOrTimestampOrEvidenceRecord().get(0).setAdESValidationDetails(new XmlDetails());
+        dssReports.getSimpleReportJaxb().getSignatureOrTimestampOrEvidenceRecord().get(0).getAdESValidationDetails().getError()
                 .add(TestXmlDetailUtils.createMessage(null, "Something is wrong"));
 
         ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
@@ -130,9 +130,9 @@ class GenericValidationReportBuilderTest {
     @Test
     void totalFailedIndicationWithQualificationErrorReportBuild() {
         eu.europa.esig.dss.validation.reports.Reports dssReports = getDssReports("");
-        dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).setIndication(Indication.TOTAL_FAILED);
-        dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).setQualificationDetails(new XmlDetails());
-        dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).getQualificationDetails().getError()
+        dssReports.getSimpleReportJaxb().getSignatureOrTimestampOrEvidenceRecord().get(0).setIndication(Indication.TOTAL_FAILED);
+        dssReports.getSimpleReportJaxb().getSignatureOrTimestampOrEvidenceRecord().get(0).setQualificationDetails(new XmlDetails());
+        dssReports.getSimpleReportJaxb().getSignatureOrTimestampOrEvidenceRecord().get(0).getQualificationDetails().getError()
                 .add(TestXmlDetailUtils.createMessage(null, "Something is wrong"));
 
         ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
@@ -145,9 +145,9 @@ class GenericValidationReportBuilderTest {
     @Test
     void totalFailedIndicationWithTimestampErrorsReportBuild() {
         eu.europa.esig.dss.validation.reports.Reports dssReports = getDssReports("");
-        dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).setIndication(Indication.TOTAL_FAILED);
+        dssReports.getSimpleReportJaxb().getSignatureOrTimestampOrEvidenceRecord().get(0).setIndication(Indication.TOTAL_FAILED);
         eu.europa.esig.dss.simplereport.jaxb.XmlSignature signature = (eu.europa.esig.dss.simplereport.jaxb.XmlSignature) dssReports
-                .getSimpleReportJaxb().getSignatureOrTimestamp().get(0);
+                .getSimpleReportJaxb().getSignatureOrTimestampOrEvidenceRecord().get(0);
         signature.setTimestamps(new XmlTimestamps());
         signature.getTimestamps().getTimestamp().add(new eu.europa.esig.dss.simplereport.jaxb.XmlTimestamp());
         signature.getTimestamps().getTimestamp().get(0).setAdESValidationDetails(new XmlDetails());
@@ -168,7 +168,7 @@ class GenericValidationReportBuilderTest {
     @Test
     void indeterminateIndicationReportBuild() {
         eu.europa.esig.dss.validation.reports.Reports dssReports = getDssReports("");
-        dssReports.getSimpleReportJaxb().getSignatureOrTimestamp().get(0).setIndication(Indication.INDETERMINATE);
+        dssReports.getSimpleReportJaxb().getSignatureOrTimestampOrEvidenceRecord().get(0).setIndication(Indication.INDETERMINATE);
         ReportBuilderData reportBuilderData = getReportBuilderData(dssReports);
         Reports reports = new GenericValidationReportBuilder(reportBuilderData).build();
         Assertions.assertEquals(Integer.valueOf(0), reports.getSimpleReport().getValidationConclusion().getValidSignaturesCount());
@@ -587,7 +587,7 @@ class GenericValidationReportBuilderTest {
         xmlSignature.setId("SIG-id");
         xmlSignature.setIndication(Indication.TOTAL_PASSED);
         xmlSignature.setSignatureFormat(SignatureLevel.XAdES_BASELINE_LT);
-        simpleReport.getSignatureOrTimestamp().add(xmlSignature);
+        simpleReport.getSignatureOrTimestampOrEvidenceRecord().add(xmlSignature);
         return simpleReport;
     }
 

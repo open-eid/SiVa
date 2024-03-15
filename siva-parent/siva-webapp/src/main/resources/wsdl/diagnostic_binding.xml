@@ -1,11 +1,11 @@
-﻿<?xml version="1.0"?>
-<jaxb:bindings
+﻿<jaxb:bindings
 		xmlns:xs="http://www.w3.org/2001/XMLSchema"
-		xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+		xmlns:jaxb="https://jakarta.ee/xml/ns/jaxb"
 		xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
-		version="2.1" jaxb:extensionBindingPrefixes="xjc">
+		version="3.0">
 	<jaxb:bindings schemaLocation="DiagnosticData.xsd" node="/xs:schema">
 		<jaxb:schemaBindings>
+<!--			<jaxb:package name="eu.europa.esig.dss.diagnostic.jaxb"/>-->
 <!--			<jaxb:nameXmlTransform>-->
 <!--				<jaxb:typeName prefix="Xml"/>-->
 <!--				<jaxb:anonymousTypeName prefix="Xml"/>-->
@@ -90,7 +90,7 @@
 						   printMethod="eu.europa.esig.dss.jaxb.parsers.RevocationReasonParser.printShortName" />
 		</jaxb:bindings>
 
-		<jaxb:bindings node="//xs:simpleType[@name='KeyUsage']">
+		<jaxb:bindings node="//xs:simpleType[@name='KeyUsageBit']">
 			<jaxb:javaType name="eu.europa.esig.dss.enumerations.KeyUsageBit"
 						   parseMethod="eu.europa.esig.dss.jaxb.parsers.KeyUsageBitParser.parse"
 						   printMethod="eu.europa.esig.dss.jaxb.parsers.KeyUsageBitParser.print" />
@@ -100,6 +100,12 @@
 			<jaxb:javaType name="eu.europa.esig.dss.enumerations.EndorsementType"
 						   parseMethod="eu.europa.esig.dss.jaxb.parsers.EndorsementTypeParser.parse"
 						   printMethod="eu.europa.esig.dss.jaxb.parsers.EndorsementTypeParser.print" />
+		</jaxb:bindings>
+
+		<jaxb:bindings node="//xs:simpleType[@name='EvidenceRecordType']">
+			<jaxb:javaType name="eu.europa.esig.dss.enumerations.EvidenceRecordTypeEnum"
+						   parseMethod="eu.europa.esig.dss.jaxb.parsers.EvidenceRecordTypeEnumParser.parse"
+						   printMethod="eu.europa.esig.dss.jaxb.parsers.EvidenceRecordTypeEnumParser.print" />
 		</jaxb:bindings>
 
 		<jaxb:bindings node="//xs:complexType[@name='BasicSignature']//xs:element[@name='EncryptionAlgoUsedToSignThisToken']">
@@ -150,18 +156,42 @@
 						   printMethod="eu.europa.esig.dss.jaxb.parsers.SignatureFormatParser.print" />
 		</jaxb:bindings>
 
+		<jaxb:bindings node="//xs:simpleType[@name='ObjectModificationType']">
+			<jaxb:javaType name="eu.europa.esig.dss.enumerations.PdfObjectModificationType"
+						   parseMethod="eu.europa.esig.dss.jaxb.parsers.PdfObjectModificationTypeParser.parse"
+						   printMethod="eu.europa.esig.dss.jaxb.parsers.PdfObjectModificationTypeParser.print" />
+		</jaxb:bindings>
+
+		<jaxb:bindings node="//xs:simpleType[@name='PDFLockAction']">
+			<jaxb:javaType name="eu.europa.esig.dss.enumerations.PdfLockAction"
+						   parseMethod="eu.europa.esig.dss.jaxb.parsers.PdfLockActionParser.parse"
+						   printMethod="eu.europa.esig.dss.jaxb.parsers.PdfLockActionParser.print" />
+		</jaxb:bindings>
+
+		<jaxb:bindings node="//xs:simpleType[@name='CertificationPermission']">
+			<jaxb:javaType name="eu.europa.esig.dss.enumerations.CertificationPermission"
+						   parseMethod="eu.europa.esig.dss.jaxb.parsers.CertificationPermissionParser.parse"
+						   printMethod="eu.europa.esig.dss.jaxb.parsers.CertificationPermissionParser.print" />
+		</jaxb:bindings>
+
+		<jaxb:bindings node="//xs:simpleType[@name='GeneralNameType']">
+			<jaxb:javaType name="eu.europa.esig.dss.enumerations.GeneralNameType"
+						   parseMethod="eu.europa.esig.dss.jaxb.parsers.GeneralNameTypeParser.parse"
+						   printMethod="eu.europa.esig.dss.jaxb.parsers.GeneralNameTypeParser.print" />
+		</jaxb:bindings>
+
 		<jaxb:bindings node="//xs:complexType[@name='FoundCertificates']//xs:element[@name='RelatedCertificate']">
 			<jaxb:property name="RelatedCertificates" />
 		</jaxb:bindings>
-		<jaxb:bindings node="//xs:complexType[@name='FoundCertificates']//xs:element[@name='OrphanCertificate']">
-			<jaxb:property name="OrphanCertificates" />
-		</jaxb:bindings>
+<!--		<jaxb:bindings node="//xs:complexType[@name='FoundCertificates']//xs:element[@name='OrphanCertificate']">-->
+<!--			<jaxb:property name="OrphanCertificates" />-->
+<!--		</jaxb:bindings>-->
 		<jaxb:bindings node="//xs:complexType[@name='FoundRevocations']//xs:element[@name='RelatedRevocation']">
 			<jaxb:property name="RelatedRevocations" />
 		</jaxb:bindings>
-		<jaxb:bindings node="//xs:complexType[@name='FoundRevocations']//xs:element[@name='OrphanRevocation']">
-			<jaxb:property name="OrphanRevocations" />
-		</jaxb:bindings>
+<!--		<jaxb:bindings node="//xs:complexType[@name='FoundRevocations']//xs:element[@name='OrphanRevocation']">-->
+<!--			<jaxb:property name="OrphanRevocations" />-->
+<!--		</jaxb:bindings>-->
 		<jaxb:bindings node="//xs:complexType[@name='FoundCertificate']//xs:element[@name='Origin']">
 			<jaxb:property name="Origins" />
 		</jaxb:bindings>
@@ -188,6 +218,30 @@
 <!--		</jaxb:bindings>-->
 		<jaxb:bindings node="//xs:complexType[@name='StructuralValidation']//xs:element[@name='Message']">
 			<jaxb:property name="Messages" />
+		</jaxb:bindings>
+		<jaxb:bindings node="//xs:complexType[@name='PDFRevision']//xs:element[@name='SignatureField']">
+			<jaxb:property name="Fields" />
+		</jaxb:bindings>
+		<jaxb:bindings node="//xs:complexType[@name='PDFLockDictionary']//xs:element[@name='Field']">
+			<jaxb:property name="Fields" />
+		</jaxb:bindings>
+		<jaxb:bindings node="//xs:complexType[@name='ObjectModifications']//xs:element[@name='ExtensionChange']">
+			<jaxb:property name="ExtensionChanges" />
+		</jaxb:bindings>
+		<jaxb:bindings node="//xs:complexType[@name='ObjectModifications']//xs:element[@name='AnnotationChange']">
+			<jaxb:property name="AnnotationChanges" />
+		</jaxb:bindings>
+		<jaxb:bindings node="//xs:complexType[@name='AuthorityInformationAccess']//xs:element[@name='caIssuersUrl']">
+			<jaxb:property name="caIssuersUrls" />
+		</jaxb:bindings>
+		<jaxb:bindings node="//xs:complexType[@name='AuthorityInformationAccess']//xs:element[@name='ocspUrl']">
+			<jaxb:property name="ocspUrls" />
+		</jaxb:bindings>
+		<jaxb:bindings node="//xs:complexType[@name='NameConstraints']//xs:element[@name='PermittedSubtree']">
+			<jaxb:property name="PermittedSubtrees" />
+		</jaxb:bindings>
+		<jaxb:bindings node="//xs:complexType[@name='NameConstraints']//xs:element[@name='ExcludedSubtree']">
+			<jaxb:property name="ExcludedSubtrees" />
 		</jaxb:bindings>
 
 		<jaxb:bindings node="//xs:complexType[@name='Signature']//xs:attribute[@name='Parent']">
@@ -235,6 +289,11 @@
 				<jaxb:baseType name="eu.europa.esig.dss.validation.diagnostic.Timestamp" />
 			</jaxb:property>
 		</jaxb:bindings>
+		<jaxb:bindings node="//xs:complexType[@name='FoundEvidenceRecord']//xs:attribute[@name='EvidenceRecord']">
+			<jaxb:property>
+				<jaxb:baseType name="eu.europa.esig.dss.validation.diagnostic.EvidenceRecord" />
+			</jaxb:property>
+		</jaxb:bindings>
 		<jaxb:bindings node="//xs:complexType[@name='SignatureScope']//xs:attribute[@name='SignerData']">
 			<jaxb:property>
 				<jaxb:baseType name="eu.europa.esig.dss.validation.diagnostic.SignerData" />
@@ -247,17 +306,17 @@
 			</jaxb:property>
 		</jaxb:bindings>
 
-		<jaxb:bindings node="//xs:complexType[@name='TrustedService']//xs:attribute[@name='ServiceDigitalIdentifier']">
+		<jaxb:bindings node="//xs:complexType[@name='TrustService']//xs:attribute[@name='ServiceDigitalIdentifier']">
 			<jaxb:property>
 				<jaxb:baseType name="eu.europa.esig.dss.validation.diagnostic.Certificate" />
 			</jaxb:property>
 		</jaxb:bindings>
-		<jaxb:bindings node="//xs:complexType[@name='TrustedServiceProvider']//xs:attribute[@name='TL']">
+		<jaxb:bindings node="//xs:complexType[@name='TrustServiceProvider']//xs:attribute[@name='TL']">
 			<jaxb:property>
 				<jaxb:baseType name="eu.europa.esig.dss.validation.diagnostic.TrustedList" />
 			</jaxb:property>
 		</jaxb:bindings>
-		<jaxb:bindings node="//xs:complexType[@name='TrustedServiceProvider']//xs:attribute[@name='LOTL']">
+		<jaxb:bindings node="//xs:complexType[@name='TrustServiceProvider']//xs:attribute[@name='LOTL']">
 			<jaxb:property>
 				<jaxb:baseType name="eu.europa.esig.dss.validation.diagnostic.TrustedList" />
 			</jaxb:property>

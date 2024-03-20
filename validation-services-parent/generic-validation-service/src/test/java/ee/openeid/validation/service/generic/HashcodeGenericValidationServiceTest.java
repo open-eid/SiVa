@@ -19,7 +19,12 @@ package ee.openeid.validation.service.generic;
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.Datafile;
 import ee.openeid.siva.validation.document.ValidationDocument;
-import ee.openeid.siva.validation.document.report.*;
+import ee.openeid.siva.validation.document.report.CertificateType;
+import ee.openeid.siva.validation.document.report.Reports;
+import ee.openeid.siva.validation.document.report.SignatureProductionPlace;
+import ee.openeid.siva.validation.document.report.SignatureScope;
+import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.document.report.SignerRole;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.siva.validation.util.CertUtil;
 import ee.openeid.validation.service.generic.configuration.GenericSignaturePolicyProperties;
@@ -27,7 +32,6 @@ import ee.openeid.validation.service.generic.validator.container.ContainerValida
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import org.bouncycastle.util.encoders.Base64;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +82,6 @@ class HashcodeGenericValidationServiceTest {
     }
 
     @Test
-    @Disabled("The certificate is not related to a granted status at time-stamp lowest POE time!")
     void validHashcodeRequest() throws Exception {
         Reports response = validationService.validate(getValidationDocumentSingletonList());
         SignatureScope signatureScope = response.getSimpleReport().getValidationConclusion().getSignatures().get(0).getSignatureScopes().get(0);
@@ -90,7 +93,6 @@ class HashcodeGenericValidationServiceTest {
     }
 
     @Test
-    @Disabled("The certificate is not related to a granted status at time-stamp lowest POE time!")
     void validMultipleSignatures() throws Exception {
         List<ValidationDocument> validationDocuments = getValidationDocumentSingletonList();
         validationDocuments.addAll(getValidationDocumentSingletonList());

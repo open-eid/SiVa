@@ -31,12 +31,12 @@ import ee.openeid.tsl.configuration.AlwaysFailingOCSPSource;
 import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
 import ee.openeid.validation.service.generic.validator.report.GenericValidationReportBuilder;
 import ee.openeid.validation.service.generic.validator.report.ReportBuilderData;
+import eu.europa.esig.dss.enumerations.MimeType;
 import eu.europa.esig.dss.enumerations.TokenExtractionStrategy;
 import eu.europa.esig.dss.exception.IllegalInputException;
 import eu.europa.esig.dss.model.DSSDocument;
 import eu.europa.esig.dss.model.DSSException;
 import eu.europa.esig.dss.model.InMemoryDocument;
-import eu.europa.esig.dss.enumerations.MimeType;
 import eu.europa.esig.dss.service.http.commons.CommonsDataLoader;
 import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
@@ -45,6 +45,7 @@ import eu.europa.esig.dss.validation.AdvancedSignature;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import eu.europa.esig.dss.validation.SignedDocumentValidator;
 import eu.europa.esig.dss.validation.executor.ValidationLevel;
+import org.digidoc4j.impl.asic.xades.XadesValidationReportProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,6 +84,7 @@ public class GenericValidationService implements ValidationService {
             final ConstraintDefinedPolicy policy = signaturePolicyService.getPolicy(validationDocument.getSignaturePolicy());
 
             final eu.europa.esig.dss.validation.reports.Reports reports = validator.validateDocument(policy.getConstraintDataStream());
+            XadesValidationReportProcessor.process(reports);
 
             //For large PDF files the getSignatures() method is currently expensive.
             //Initialize once and use in different components to reduce response time for large PDF files validation.

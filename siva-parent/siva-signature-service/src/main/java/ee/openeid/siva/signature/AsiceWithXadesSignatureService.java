@@ -26,14 +26,12 @@ import eu.europa.esig.dss.asic.xades.ASiCWithXAdESSignatureParameters;
 import eu.europa.esig.dss.asic.xades.signature.ASiCWithXAdESService;
 import eu.europa.esig.dss.enumerations.ASiCContainerType;
 import eu.europa.esig.dss.enumerations.DigestAlgorithm;
+import eu.europa.esig.dss.enumerations.MimeType;
 import eu.europa.esig.dss.enumerations.MimeTypeEnum;
-import eu.europa.esig.dss.enumerations.MimeTypeEnumLoader;
-import eu.europa.esig.dss.enumerations.MimeTypeLoader;
 import eu.europa.esig.dss.enumerations.SignatureLevel;
 import eu.europa.esig.dss.enumerations.SignaturePackaging;
 import eu.europa.esig.dss.model.DSSDocument;
 import eu.europa.esig.dss.model.InMemoryDocument;
-import eu.europa.esig.dss.enumerations.MimeType;
 import eu.europa.esig.dss.model.SignatureValue;
 import eu.europa.esig.dss.model.ToBeSigned;
 import eu.europa.esig.dss.service.tsp.OnlineTSPSource;
@@ -105,8 +103,7 @@ public class AsiceWithXadesSignatureService implements SignatureService {
         service.setTspSource(tspSource);
 
         DSSDocument documentToBeSigned = new InMemoryDocument(dataToSign, dataName);
-        MimeTypeLoader mimeTypeLoader = new MimeTypeEnumLoader();
-        MimeType mimeType = mimeTypeLoader.fromMimeTypeString(mimeTypeString);
+        MimeType mimeType = MimeType.fromMimeTypeString(mimeTypeString);
         documentToBeSigned.setMimeType(mimeType);
 
         ToBeSigned toBeSigned = service.getDataToSign(documentToBeSigned, parameters);

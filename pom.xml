@@ -125,7 +125,6 @@
         <lombok.version>1.18.30</lombok.version>
         <snakeyaml.version>2.0</snakeyaml.version>
         <spring.boot.version>3.2.0</spring.boot.version>
-        <xmlsec.version>2.3.3</xmlsec.version>
 
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>

@@ -34,7 +34,7 @@
     </modules>
 
     <properties>
-        <digidoc4j.version>5.3.0-SNAPSHOT</digidoc4j.version>
+        <digidoc4j.version>5.3.0</digidoc4j.version>
     </properties>
 
     <dependencyManagement>
@@ -111,11 +111,6 @@
                 <groupId>org.cryptacular</groupId>
                 <artifactId>cryptacular</artifactId>
                 <version>1.2.5</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.santuario</groupId>
-                <artifactId>xmlsec</artifactId>
-                <version>${xmlsec.version}</version>
             </dependency>
             <!-- Override vulnerable version-->
             <dependency>

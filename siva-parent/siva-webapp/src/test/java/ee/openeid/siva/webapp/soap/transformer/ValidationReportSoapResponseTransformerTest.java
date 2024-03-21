@@ -92,7 +92,6 @@ class ValidationReportSoapResponseTransformerTest {
     private ValidationReportSoapResponseTransformer transformer = new ValidationReportSoapResponseTransformer();
 
     @Test
-    @Disabled
     void qualifiedSimpleReportIsCorrectlyTransformedToSoapResponseReport() {
         ee.openeid.siva.validation.document.report.ValidationConclusion validationConclusion = createMockedValidationConclusion();
         SimpleReport simpleReport = new SimpleReport();

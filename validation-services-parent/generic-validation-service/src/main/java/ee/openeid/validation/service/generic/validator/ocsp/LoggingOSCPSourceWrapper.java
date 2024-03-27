@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Riigi Infosüsteemi Amet
+ * Copyright 2023 - 2024 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -17,9 +17,6 @@
 package ee.openeid.validation.service.generic.validator.ocsp;
 
 import eu.europa.esig.dss.model.x509.CertificateToken;
-import eu.europa.esig.dss.model.x509.revocation.ocsp.OCSP;
-import eu.europa.esig.dss.spi.x509.revocation.OnlineRevocationSource;
-import eu.europa.esig.dss.spi.x509.revocation.RevocationToken;
 import eu.europa.esig.dss.spi.x509.revocation.ocsp.OCSPSource;
 import eu.europa.esig.dss.spi.x509.revocation.ocsp.OCSPToken;
 import lombok.NonNull;
@@ -30,15 +27,15 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class LoggingOSCPSourceWrapper implements OCSPSource {
     @NonNull
-    private final OnlineRevocationSource<OCSP> ocspOnlineRevocationSource;
+    private final OCSPSource ocspSource;
 
     @Override
     public OCSPToken getRevocationToken(CertificateToken certificateToken, CertificateToken issuerCertificateToken) {
 
-        OnlineRevocationSource.RevocationTokenAndUrl<OCSP> ocspTokenAndUrl;
+        OCSPToken ocspToken;
 
         try {
-            ocspTokenAndUrl = ocspOnlineRevocationSource.getRevocationTokenAndUrl(certificateToken, issuerCertificateToken);
+            ocspToken = ocspSource.getRevocationToken(certificateToken, issuerCertificateToken);
         } catch (Exception e) {
             log.warn(
                     "Failed to perform OCSP request for certificate token '{}': {}",
@@ -48,24 +45,22 @@ public class LoggingOSCPSourceWrapper implements OCSPSource {
             return null;
         }
 
-        if (ocspTokenAndUrl != null) {
-            return processOcspToken(ocspTokenAndUrl, certificateToken);
+        if (ocspToken != null) {
+            return processOcspToken(ocspToken, certificateToken);
         } else {
             return handleMissingOcspToken(certificateToken);
         }
     }
 
-    private OCSPToken processOcspToken(OnlineRevocationSource.RevocationTokenAndUrl<OCSP> ocspTokenAndUrl, CertificateToken certificateToken) {
-        RevocationToken<OCSP> revocationToken = ocspTokenAndUrl.getRevocationToken();
-
+    private OCSPToken processOcspToken(OCSPToken ocspToken, CertificateToken certificateToken) {
         log.info(
                 "Performed OCSP request for certificate token '{}' from '{}', status: '{}'",
                 certificateToken.getDSSIdAsString(),
-                ocspTokenAndUrl.getUrlString(),
-                revocationToken.getStatus()
+                ocspToken.getSourceURL(),
+                ocspToken.getStatus()
         );
 
-        return (OCSPToken) revocationToken;
+        return ocspToken;
     }
 
     private OCSPToken handleMissingOcspToken(CertificateToken certificateToken) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Riigi Infosüsteemi Amet
+ * Copyright 2023 - 2024 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -19,8 +19,7 @@ package ee.openeid.validation.service.generic.validator.ocsp;
 import ee.openeid.siva.validation.helper.TestLog;
 import eu.europa.esig.dss.enumerations.CertificateStatus;
 import eu.europa.esig.dss.model.x509.CertificateToken;
-import eu.europa.esig.dss.model.x509.revocation.ocsp.OCSP;
-import eu.europa.esig.dss.spi.x509.revocation.OnlineRevocationSource;
+import eu.europa.esig.dss.spi.x509.revocation.ocsp.OCSPSource;
 import eu.europa.esig.dss.spi.x509.revocation.ocsp.OCSPToken;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,7 +43,7 @@ class LoggingOSCPSourceWrapperTest {
 
     private TestLog testLog;
     @Mock
-    private OnlineRevocationSource<OCSP> ocspOnlineRevocationSource;
+    private OCSPSource ocspSource;
     @InjectMocks
     private LoggingOSCPSourceWrapper loggingOSCPSourceWrapper;
     @Mock
@@ -60,8 +59,8 @@ class LoggingOSCPSourceWrapperTest {
     @Test
     void getRevocationToken_WhenOnlineRevocationSourceThrowsException_LogsWarningAndReturnsNull() {
         Exception exception = new RuntimeException("Test exception message");
-        doThrow(exception).when(ocspOnlineRevocationSource)
-                .getRevocationTokenAndUrl(certificateToken, issuerCertificateToken);
+        doThrow(exception).when(ocspSource)
+                .getRevocationToken(certificateToken, issuerCertificateToken);
         doReturn("test id").when(certificateToken)
                 .getDSSIdAsString();
 
@@ -71,14 +70,14 @@ class LoggingOSCPSourceWrapperTest {
         testLog.verifyLogInOrder(Matchers.equalTo(
                 "Failed to perform OCSP request for certificate token 'test id': Test exception message"
         ));
-        verifyNoMoreInteractions(ocspOnlineRevocationSource, certificateToken);
+        verifyNoMoreInteractions(ocspSource, certificateToken);
         verifyNoInteractions(issuerCertificateToken);
     }
 
     @Test
     void getRevocationToken_WhenOnlineRevocationSourceReturnsNull_LogsWarningAndReturnsNull() {
-        doReturn(null).when(ocspOnlineRevocationSource)
-                .getRevocationTokenAndUrl(certificateToken, issuerCertificateToken);
+        doReturn(null).when(ocspSource)
+                .getRevocationToken(certificateToken, issuerCertificateToken);
         doReturn("test id").when(certificateToken)
                 .getDSSIdAsString();
 
@@ -86,7 +85,7 @@ class LoggingOSCPSourceWrapperTest {
 
         assertNull(result);
         testLog.verifyLogInOrder(Matchers.equalTo("No OCSP token found for certificate token 'test id'"));
-        verifyNoMoreInteractions(ocspOnlineRevocationSource, certificateToken);
+        verifyNoMoreInteractions(ocspSource, certificateToken);
         verifyNoInteractions(issuerCertificateToken);
     }
 
@@ -96,22 +95,23 @@ class LoggingOSCPSourceWrapperTest {
             CertificateStatus status
     ) {
         OCSPToken ocspToken = Mockito.mock(OCSPToken.class);
-        OnlineRevocationSource.RevocationTokenAndUrl<OCSP> ocspTokenAndUrl = new OnlineRevocationSource.RevocationTokenAndUrl<>("test url", ocspToken);
 
-        doReturn(ocspTokenAndUrl).when(ocspOnlineRevocationSource)
-                .getRevocationTokenAndUrl(certificateToken, issuerCertificateToken);
+        doReturn(ocspToken).when(ocspSource)
+                .getRevocationToken(certificateToken, issuerCertificateToken);
         doReturn("test id").when(certificateToken)
                 .getDSSIdAsString();
+        doReturn(null).when(ocspToken)
+                        .getSourceURL();
         doReturn(status).when(ocspToken)
                 .getStatus();
 
         loggingOSCPSourceWrapper.getRevocationToken(certificateToken, issuerCertificateToken);
 
         testLog.verifyLogInOrder(Matchers.equalTo(
-                "Performed OCSP request for certificate token 'test id' from 'test url', status: '" +
+                "Performed OCSP request for certificate token 'test id' from 'null', status: '" +
                         status.name() + "'"
         ));
-        verifyNoMoreInteractions(ocspOnlineRevocationSource, ocspToken, certificateToken);
+        verifyNoMoreInteractions(ocspSource, ocspToken, certificateToken);
         verifyNoInteractions(issuerCertificateToken);
     }
 

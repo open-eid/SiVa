@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Riigi Infosüsteemi Amet
+ * Copyright 2023 - 2024 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -20,15 +20,17 @@ import ee.openeid.siva.validation.service.signature.policy.properties.Constraint
 import eu.europa.esig.dss.exception.IllegalInputException;
 import eu.europa.esig.dss.policy.ValidationPolicy;
 import eu.europa.esig.dss.policy.ValidationPolicyFacade;
+import jakarta.xml.bind.JAXBException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.xml.sax.SAXException;
 
-import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static eu.europa.esig.dss.policy.ValidationPolicyFacade.newFacade;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class PolicyUtil {
@@ -42,7 +44,7 @@ public final class PolicyUtil {
     }
 
     public static ValidationPolicy getValidationPolicy(ConstraintDefinedPolicy policy) {
-        ValidationPolicyFacade validationPolicyFacade = new ValidationPolicyFacade();
+        ValidationPolicyFacade validationPolicyFacade = newFacade();
         try {
             return validationPolicyFacade.getValidationPolicy(policy.getConstraintDataStream());
         } catch (JAXBException | XMLStreamException | IOException | SAXException e) {

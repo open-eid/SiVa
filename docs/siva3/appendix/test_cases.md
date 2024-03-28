@@ -2,13 +2,13 @@ Test Case Descriptions
 ==================
 
 ## Introduction
-This document gives overview of the test cases. This page is partially generated using a script, more info about the script can be found in [SiVa GitHub](https://github.com/open-eid/SiVa/tree/master/test-helpers).
+This document gives overview of the test cases. This page is partially generated using a script, more info about the script can be found in [SiVa-Test GitHub](https://github.com/open-eid/SiVa-Test/tree/develop/docs).
 
-The structure and elements of test case is described in [QA Strategy](http://open-eid.github.io/SiVa/siva2/qa_strategy/#testing) document.
-All the files used in the tests can be found in [SiVa GitHub](https://github.com/open-eid/SiVa-Test/tree/master/src/test/resources).
+The structure and elements of test case is described in [QA Strategy](https://open-eid.github.io/SiVa/siva3/qa_strategy/#testing) document.
+All the files used in the tests can be found in [SiVa-Test GitHub](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/resources).
 
 ## AsiceValidationFailIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/integrationtest/AsiceValidationFailIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/integrationtest/AsiceValidationFailIT.java)
 
 
 **TestCaseID: Asice-ValidationFail-1**
@@ -302,7 +302,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## AsiceValidationPassIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/integrationtest/AsiceValidationPassIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/integrationtest/AsiceValidationPassIT.java)
 
 
 **TestCaseID: Asice-ValidationPass-1**
@@ -372,7 +372,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 * TestType: Automated
 * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
-* Title:*.sce file with TimeStamp
+* Title: *.sce file with TimeStamp
 * Expected Result: The document should pass the validation
 * File: ASICE_TS_LTA_content_as_sce.sce
 
@@ -423,7 +423,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## AsicsValidationFailIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/integrationtest/AsicsValidationFailIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/integrationtest/AsicsValidationFailIT.java)
 
 
 **TestCaseID: Asics-ValidationFail-1**
@@ -508,7 +508,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## AsicsValidationPassIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/integrationtest/AsicsValidationPassIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/integrationtest/AsicsValidationPassIT.java)
 
 
 **TestCaseID: Asics-ValidationPass-1**
@@ -575,7 +575,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## BdocValidationFailIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/integrationtest/BdocValidationFailIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/integrationtest/BdocValidationFailIT.java)
 
 
 **TestCaseID: Bdoc-ValidationFail-1**
@@ -849,7 +849,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## BdocValidationPassIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/integrationtest/BdocValidationPassIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/integrationtest/BdocValidationPassIT.java)
 
 
 **TestCaseID: Bdoc-ValidationPass-1**
@@ -975,7 +975,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 * TestType: Automated
 * Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#common_POLv3_POLv4)
-* Title:*.sce file with TimeMark
+* Title: *.sce file with TimeMark
 * Expected Result: The document should pass the validation
 * File: BDOC2.1_content_as_sce.sce
 
@@ -1044,7 +1044,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## DdocGetDataFilesIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/integrationtest/DdocGetDataFilesIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/integrationtest/DdocGetDataFilesIT.java)
 
 
 **TestCaseID:  Ddoc-Get-Data-Files-1**
@@ -1140,7 +1140,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## DdocValidationFailIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/integrationtest/DdocValidationFailIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/integrationtest/DdocValidationFailIT.java)
 
 
 **TestCaseID: Ddoc-ValidationFail-1**
@@ -1306,7 +1306,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## DdocValidationPassIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/integrationtest/DdocValidationPassIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/integrationtest/DdocValidationPassIT.java)
 
 
 **TestCaseID: Ddoc-ValidationPass-2**
@@ -1481,7 +1481,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## DocumentFormatIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/integrationtest/DocumentFormatIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/integrationtest/DocumentFormatIT.java)
 
 
 **TestCaseID: DocumentFormat-1**
@@ -1541,7 +1541,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## DocumentValidationIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/integrationtest/DocumentValidationIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/integrationtest/DocumentValidationIT.java)
 
 
 **TestCaseID: Document-Validation-1**
@@ -1633,11 +1633,10 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 * Expected Result: The document should pass the validation without warning.
 * File:2f_all_signed.bdoc
 
-**Attention! This test is disabled:
-
+**Attention!** Following testclass is disabled: ("SIVA-469")
 
 ## EuPlugValidationPassIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/integrationtest/EuPlugValidationPassIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/integrationtest/EuPlugValidationPassIT.java)
 
 
 **TestCaseID: EuPlug-ValidationPass-1**
@@ -1902,7 +1901,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## LargeFileIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/integrationtest/LargeFileIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/integrationtest/LargeFileIT.java)
 
 
 **TestCaseID: PDF-LargeFiles-1**
@@ -1987,7 +1986,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## MimetypeValidationIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/integrationtest/MimetypeValidationIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/integrationtest/MimetypeValidationIT.java)
 
 
 **TestCaseID: Asice-mimetype-validation-1**
@@ -2243,7 +2242,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## MonitoringIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/integrationtest/MonitoringIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/integrationtest/MonitoringIT.java)
 
 
 **TestCaseID: WebApp-Monitoring-1**
@@ -2274,7 +2273,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## PdfBaselineProfileIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/integrationtest/PdfBaselineProfileIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/integrationtest/PdfBaselineProfileIT.java)
 
 
 **TestCaseID: PDF-BaselineProfile-1**
@@ -2359,7 +2358,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## PdfSignatureCryptographicAlgorithmIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/integrationtest/PdfSignatureCryptographicAlgorithmIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/integrationtest/PdfSignatureCryptographicAlgorithmIT.java)
 
 
 **TestCaseID: PDF-SigCryptoAlg-1**
@@ -2435,7 +2434,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## PdfValidationFailIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/integrationtest/PdfValidationFailIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/integrationtest/PdfValidationFailIT.java)
 
 
 **TestCaseID: PDF-ValidationFail-1**
@@ -2506,7 +2505,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## PdfValidationPassIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/integrationtest/PdfValidationPassIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/integrationtest/PdfValidationPassIT.java)
 
 
 **TestCaseID: PDF-ValidationPass-1**
@@ -2553,11 +2552,10 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 * Expected Result: Validation should pass
 * File: pades-lt-CRL-taken-days-later.pdf
 
-**Attention! This test is disabled: ("SIVA-196")
-
+**Attention!** Following testclass is disabled: ("SIVA-196")
 
 ## ReportSignatureIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/integrationtest/ReportSignatureIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/integrationtest/ReportSignatureIT.java)
 
 
 **TestCaseID: Detailed-Report-Signature-1**
@@ -2608,7 +2606,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## SignaturePolicyIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/integrationtest/SignaturePolicyIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/integrationtest/SignaturePolicyIT.java)
 
 
 **TestCaseID: POLv4-Signature-Policy-1**
@@ -2986,7 +2984,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## XadesHashcodeValidationFailIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/integrationtest/XadesHashcodeValidationFailIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/integrationtest/XadesHashcodeValidationFailIT.java)
 
 
 **TestCaseID: Xades-Hashcode-Validation-Fail-1**
@@ -3035,7 +3033,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## XadesHashcodeValidationPassIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/integrationtest/XadesHashcodeValidationPassIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/integrationtest/XadesHashcodeValidationPassIT.java)
 
 
 **TestCaseID: Xades-Hashcode-Validation-Pass-1**
@@ -3129,7 +3127,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## DetailedReportValidationManualIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/manualtest/DetailedReportValidationManualIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/manualtest/DetailedReportValidationManualIT.java)
 
 
 **TestCaseID: Detailed-Report-Validation-1**
@@ -3159,6 +3157,8 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 * Title: Signatures element
 * Expected Result: Detailed report includes signatures element and its sub-elements and its values
 * File: hellopades-lt-sha256-ec256.pdf
+
+**Attention! This test is disabled: ("SIVA-499")
 
 
 **TestCaseID: Detailed-Report-Validation-4**
@@ -3228,8 +3228,26 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 **Attention! This test is disabled: Needs possibility to configure report signing in tests
 
 
+**TestCaseID: Detailed-Report-Validation-11**
+
+* TestType: Automatic
+* Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
+* Title: Warning "The trusted certificate does not match the trust service!" in Detailed Report
+* Expected Result: Warning "The trusted certificate does not match the trust service!" is not filtered out and is present in Detailed Report
+* File: validTsSignatureWithRolesAndProductionPlace.asice
+
+
+**TestCaseID: Detailed-Report-Validation-12**
+
+* TestType: Automatic
+* Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
+* Title: Error "The certificate is not related to a granted status at time-stamp lowest POE time!" in Detailed Report
+* Expected Result: Error "The certificate is not related to a granted status at time-stamp lowest POE time!" is displayed in Detailed Report and signature is TOTAL-PASSED
+* File: IB-4183_3.4kaart_RSA2047_TS.asice
+
+
 ## DiagnosticReportValidationManualIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/manualtest/DiagnosticReportValidationManualIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/manualtest/DiagnosticReportValidationManualIT.java)
 
 
 **TestCaseID: Diagnostic-Report-Validation-1**
@@ -3249,6 +3267,8 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 * Expected Result: Diagnostic report includes tlanalysis element and its values
 * File: pades-baseline-lta-live-aj.pdf
 
+**Attention! This test is disabled: ("SIVA-499")
+
 
 **TestCaseID: Diagnostic-Report-Validation-5**
 
@@ -3257,6 +3277,8 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 * Title: Used Certificates
 * Expected Result: Diagnostic report includes used certificates element and its values
 * File: pades-baseline-lta-live-aj.pdf
+
+**Attention! This test is disabled: ("SIVA-499")
 
 
 **TestCaseID: Diagnostic-Report-Validation-6**
@@ -3267,11 +3289,10 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 * Expected Result: Diagnostic report includes wrong signature value
 * File: TS-02_23634_TS_wrong_SignatureValue.asice
 
-**Attention! This test is disabled: ("SIVA-196")
-
+**Attention!** Following testclass is disabled: ("SIVA-196")
 
 ## ReportSignatureManuallT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/manualtest/ReportSignatureManuallT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/manualtest/ReportSignatureManuallT.java)
 
 
 **TestCaseID: Detailed-Report-Signatures-2**
@@ -3537,7 +3558,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## AsiceValidationReportValueVerificationIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/resttest/AsiceValidationReportValueVerificationIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/resttest/AsiceValidationReportValueVerificationIT.java)
 
 
 **TestCaseID: Bdoc-ValidationReportVerification-1**
@@ -3661,8 +3682,24 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 * File: 2_signatures_B_TM.bdoc
 
 
+**TestCaseID: Bdoc-ValidationReportVerification-15**
+
+* TestType: Automated
+* Title: Filtering out warning "The trusted certificate does not match the trust service!" in Simple Report
+* Expected Result: Warning "The trusted certificate does not match the trust service!" is not displayed in Simple Report
+* File: validTsSignatureWithRolesAndProductionPlace.asice
+
+
+**TestCaseID: Bdoc-ValidationReportVerification-16**
+
+* TestType: Automated
+* Title: Filtering out warning "The certificate is not related to a granted status at time-stamp lowest POE time!" in Simple Report
+* Expected Result: Error "The certificate is not related to a granted status at time-stamp lowest POE time!" is not displayed in Simple Report
+* File: IB-4183_3.4kaart_RSA2047_TS.asice
+
+
 ## DdocValidationReportValueVerificationIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/resttest/DdocValidationReportValueVerificationIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/resttest/DdocValidationReportValueVerificationIT.java)
 
 
 **TestCaseID: Ddoc-ValidationReportVerification-1**
@@ -3738,7 +3775,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## GetDataFileRequestIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/resttest/GetDataFileRequestIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/resttest/GetDataFileRequestIT.java)
 
 
 **TestCaseID: Get-Data-Files-Request-1**
@@ -3867,8 +3904,17 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 * File: Picture.png
 
 
+**TestCaseID: Request-Size-Limit-Pass-GetDataFiles**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/deployment_guide/#configuration-parameters](http://open-eid.github.io/SiVa/siva3/deployment_guide/#configuration-parameters)
+* Title: Datafiles request with request body of limit length
+* Expected Result: The data file is returned
+* File: valid_XML1_3.ddoc
+
+
 ## HashcodeValidationRequestIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/resttest/HashcodeValidationRequestIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/resttest/HashcodeValidationRequestIT.java)
 
 
 **TestCaseID: Hascode-Validation-Request-Report-Type-1**
@@ -4186,8 +4232,17 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 * File: multiple files
 
 
+**TestCaseID: Request-Size-Limit-Pass-ValidateHashcode**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/deployment_guide/#configuration-parameters](http://open-eid.github.io/SiVa/siva3/deployment_guide/#configuration-parameters)
+* Title: Hashcode validation request with request body of limit length
+* Expected Result: Validation report is returned
+* File: Valid_XAdES_LT_TS.xml
+
+
 ## PdfValidationReportValueVerificationIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/resttest/PdfValidationReportValueVerificationIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/resttest/PdfValidationReportValueVerificationIT.java)
 
 
 **TestCaseID: Pdf-ValidationReportVerification-1**
@@ -4256,7 +4311,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## ValidationRequestIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/resttest/ValidationRequestIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/resttest/ValidationRequestIT.java)
 
 
 **TestCaseID: ValidationRequest-Parameters-1**
@@ -4565,8 +4620,52 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 * File: not relevant
 
 
+**TestCaseID: Request-Size-Limit-Pass-Validate**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/deployment_guide/#configuration-parameters](http://open-eid.github.io/SiVa/siva3/deployment_guide/#configuration-parameters)
+* Title: Validation request with request body of limit length
+* Expected Result: Validation report is returned
+* File: singleValidSignatureTS.asice
+
+
+**TestCaseID: Request-Size-Limit-Fail-Validate**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/deployment_guide/#configuration-parameters](http://open-eid.github.io/SiVa/siva3/deployment_guide/#configuration-parameters)
+* Title: Validation request with request body length over limit
+* Expected Result: The document should fail the validation
+* File: singleValidSignatureTS.asice
+
+**Attention! This test is disabled: ("SIVA-641")
+
+
+## ReportSignatureIT.java
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/soaptest/ReportSignatureIT.java)
+
+
+**TestCaseID: Soap-Detailed-Report-Signature-1**
+
+* TestType: Auto
+* Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
+* Title: Simple report signature should not be in response
+* Expected Result: Simple report response should not contain signature
+* File: hellopades-pades-lt-sha256-sign.pdf
+
+
+**TestCaseID: Soap-Detailed-Report-Signature-2**
+
+* TestType: Auto
+* Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
+* Title: Detailed report signature should be in response
+* Expected Result: Detailed report response should contain signature
+* File: hellopades-pades-lt-sha256-sign.pdf
+
+**Attention! This test is disabled: ("SIVA-196")
+
+
 ## SoapGetDataFileReportIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/soaptest/SoapGetDataFileReportIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/soaptest/SoapGetDataFileReportIT.java)
 
 
 **TestCaseID: SoapGetDataFile-Report-1**
@@ -4606,7 +4705,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## SoapGetDataFileRequestIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/soaptest/SoapGetDataFileRequestIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/soaptest/SoapGetDataFileRequestIT.java)
 
 
 **TestCaseID: Soap-Validation-Request-For-Data-Files-1**
@@ -4727,7 +4826,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## SoapHashcodeValidationRequestIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/soaptest/SoapHashcodeValidationRequestIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/soaptest/SoapHashcodeValidationRequestIT.java)
 
 
 **TestCaseID: Soap-Hashcode-Validation-Report-Type-1**
@@ -5064,7 +5163,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## SoapValidationReportValueIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/soaptest/SoapValidationReportValueIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/soaptest/SoapValidationReportValueIT.java)
 
 
 **TestCaseID: Bdoc-SoapValidationReportValue-1**
@@ -5260,8 +5359,46 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 * File: role_productionPlace.asice
 
 
+## SoapValidationReportVerificationIT.java
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/soaptest/SoapValidationReportVerificationIT.java)
+
+
+**TestCaseID: Soap-ValidationSimpleReportVerification-1**
+
+* TestType: Automated
+* Title: Filtering out warning "The trusted certificate does not match the trust service!" in Simple Report
+* Expected Result: Warning "The trusted certificate does not match the trust service!" is not displayed in Simple Report
+* File: validTsSignatureWithRolesAndProductionPlace.asice
+
+
+**TestCaseID: Soap-ValidationSimpleReportVerification-2**
+
+* TestType: Automated
+* Title: Filtering out warning "The certificate is not related to a granted status at time-stamp lowest POE time!" in Simple Report
+* Expected Result: Error "The certificate is not related to a granted status at time-stamp lowest POE time!" is not present in Simple Report
+* File: IB-4183_3.4kaart_RSA2047_TS.asice
+
+
+**TestCaseID: Soap-ValidationDetailedReportVerification-1**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
+* Title: Warning "The trusted certificate does not match the trust service!" in Detailed Report
+* Expected Result: Warning "The trusted certificate does not match the trust service!" is not filtered out and is present in Detailed Report
+* File: validTsSignatureWithRolesAndProductionPlace.asice
+
+
+**TestCaseID: Soap-ValidationDetailedReportVerification-2**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
+* Title: Error "The certificate is not related to a granted status at time-stamp lowest POE time!" in Detailed Report
+* Expected Result: Error "The certificate is not related to a granted status at time-stamp lowest POE time!" is displayed in Detailed Report and signature is TOTAL-PASSED
+* File: IB-4183_3.4kaart_RSA2047_TS.asice
+
+
 ## SoapValidationRequestIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/soaptest/SoapValidationRequestIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/soaptest/SoapValidationRequestIT.java)
 
 
 **TestCaseID: Soap-ValidationRequest-1**
@@ -5661,7 +5798,7 @@ All the files used in the tests can be found in [SiVa GitHub](https://github.com
 
 
 ## SoapXRoadRequestHeaderIT.java
-[Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/soaptest/SoapXRoadRequestHeaderIT.java)
+[Open file](https://github.com/open-eid/SiVa-Test/tree/develop/src/test/java/ee/openeid/siva/soaptest/SoapXRoadRequestHeaderIT.java)
 
 
 **TestCaseID: XroadSoap-RequestVerification-1**

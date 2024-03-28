@@ -25,6 +25,8 @@ Both Ubuntu and Mac OS X come `python` already installed (the version depends on
 2. Install `mkdocs` using [pip](https://pip.pypa.io/en/stable/): `pip install mkdocs`
 3.  Install material theme `pip install mkdocs-material`
 
+PS! There can be a need to add the directory, were `mkdocs` and `mkdocs-material` were installed, manually to the PATH.
+
 Editing content
 ---------------
 
@@ -36,5 +38,5 @@ Deploying changes to GitHub pages
 ---------------------------------
 
 1.  Generate the static site `mkdocs build`
-2.  Deploy the generated site to GitHub Pages: `mkdocs gh-deploy` 
+2.  Deploy the generated site to GitHub Pages: `mkdocs gh-deploy`
 3.  You are done and can go check the updated documentation at: <http://open-eid.github.io/SiVa>

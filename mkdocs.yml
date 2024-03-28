@@ -1,4 +1,4 @@
-site_name: SiVa 3.7 - Signature Validation Service Documentation
+site_name: SiVa 3.8 - Signature Validation Service Documentation
 theme:
     name: material
     include_sidebar: false

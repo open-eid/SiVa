@@ -24,7 +24,6 @@ import ee.openeid.validation.service.generic.configuration.properties.GenericSig
 import ee.openeid.validation.service.generic.configuration.properties.TLevelSignatureFilterProperties;
 import ee.openeid.validation.service.generic.validator.RevocationFreshnessValidator;
 import ee.openeid.validation.service.generic.validator.RevocationFreshnessValidatorFactory;
-import ee.openeid.validation.service.generic.validator.SecureRandom32OctetNonceSource;
 import ee.openeid.validation.service.generic.validator.TLevelSignatureOfNonListedCountryPredicate;
 import ee.openeid.validation.service.generic.validator.container.AsicContainerDataFileSizeValidator;
 import ee.openeid.validation.service.generic.validator.container.ContainerValidator;
@@ -42,6 +41,7 @@ import eu.europa.esig.dss.diagnostic.SignatureWrapper;
 import eu.europa.esig.dss.enumerations.ASiCContainerType;
 import eu.europa.esig.dss.enumerations.DigestAlgorithm;
 import eu.europa.esig.dss.model.x509.CertificateToken;
+import eu.europa.esig.dss.service.SecureRandomNonceSource;
 import eu.europa.esig.dss.service.http.commons.OCSPDataLoader;
 import eu.europa.esig.dss.service.ocsp.OnlineOCSPSource;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
@@ -139,7 +139,7 @@ public class GenericValidationServiceConfiguration {
 
     private static OnlineOCSPSource createOnlineOCSPSource() {
         OnlineOCSPSource onlineOCSPSource = new OnlineOCSPSource(new OCSPDataLoader());
-        onlineOCSPSource.setNonceSource(new SecureRandom32OctetNonceSource());
+        onlineOCSPSource.setNonceSource(new SecureRandomNonceSource());
         onlineOCSPSource.setCertIDDigestAlgorithm(DigestAlgorithm.SHA1);
         return onlineOCSPSource;
     }

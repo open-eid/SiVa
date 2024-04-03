@@ -5,7 +5,7 @@ spring.http.encoding.force: true # Force the encoding to the configured charset 
 siva:
   http:
     request:
-      max-request-size-limit: 26MB # 20 MB + base64 overhead (ceil(10MB / 3) * 4)
+      max-request-size-limit: 27MB # 20 MB + base64 overhead (ceil(20MB / 3) * 4) rounded up
 
 management:
   health:

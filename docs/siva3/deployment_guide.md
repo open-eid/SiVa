@@ -420,9 +420,9 @@ For example, to configure the embedded Tomcat web server inside a fat jar to run
 server.port=8080
 ```
 
-Or to increase or modify the default http request limit, override the **server.max-http-post-size** property:
+Or to increase or modify the default http request limit, override the **siva.http.request.max-request-size-limit** property:
 ```bash
-server.max-http-post-size: 13981016
+siva.http.request.max-request-size-limit: 15MB
 ```
 
 See the reference list of all common [application properties](http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html) provided by Spring boot

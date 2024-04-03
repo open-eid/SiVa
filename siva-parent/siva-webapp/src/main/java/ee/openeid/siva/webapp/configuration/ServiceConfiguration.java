@@ -17,7 +17,9 @@
 package ee.openeid.siva.webapp.configuration;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.StreamReadConstraints;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -42,6 +44,7 @@ public class ServiceConfiguration {
 
     @Bean
     public ObjectMapper objectMapper() {
+
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
         objectMapper.configure(SerializationFeature.WRITE_ENUMS_USING_TO_STRING, true);
@@ -53,7 +56,16 @@ public class ServiceConfiguration {
         dateSerializationModule.addSerializer(Date.class, new DateAsIsoInstantSerializer());
         objectMapper.registerModule(dateSerializationModule);
 
+        objectMapper.getFactory().setStreamReadConstraints(getStreamReadConstraintsWithMaxStringLength());
+
         return objectMapper;
+    }
+
+    private static StreamReadConstraints getStreamReadConstraintsWithMaxStringLength() {
+
+        return StreamReadConstraints.builder()
+                .maxStringLength(Integer.MAX_VALUE)
+                .build();
     }
 
     /**

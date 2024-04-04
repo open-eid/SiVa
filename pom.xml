@@ -116,15 +116,14 @@
 
         <bouncycastle.version>1.76</bouncycastle.version>
         <dss.version>6.0.d4j.1</dss.version>
-        <commons.codec.version>1.15</commons.codec.version>
+        <commons.codec.version>1.16.1</commons.codec.version>
         <commons.collections.version>4.4</commons.collections.version>
-        <commons.io.version>2.11.0</commons.io.version>
-        <jackson.version>2.13.5</jackson.version>
-        <json.version>20230227</json.version>
-        <logback.version>1.4.14</logback.version>
-        <lombok.version>1.18.30</lombok.version>
-        <snakeyaml.version>2.0</snakeyaml.version>
-        <spring.boot.version>3.2.0</spring.boot.version>
+        <commons.io.version>2.16.0</commons.io.version>
+        <json.version>20240303</json.version>
+        <logback.version>1.5.3</logback.version>
+        <lombok.version>1.18.32</lombok.version>
+        <snakeyaml.version>2.2</snakeyaml.version>
+        <spring.boot.version>3.2.4</spring.boot.version>
 
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
@@ -147,7 +146,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-pmd-plugin</artifactId>
-                <version>3.20.0</version>
+                <version>3.21.2</version>
             </plugin>
         </plugins>
     </reporting>
@@ -165,7 +164,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.10.1</version>
+                <version>3.13.0</version>
                 <configuration>
                     <forceJavacCompilerUse>true</forceJavacCompilerUse>
                     <source>${language.level}</source>
@@ -184,7 +183,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.9</version>
+                <version>0.8.12</version>
                 <configuration>
                     <excludes>
                         <exclude>**/*Application.*</exclude>
@@ -208,12 +207,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>3.0.0-M5</version>
+                <version>3.0.1</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M5</version>
+                <version>3.2.5</version>
                 <configuration>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                     <argLine>${argLine} -Dfile.encoding=UTF-8 -Xmx1024m</argLine>

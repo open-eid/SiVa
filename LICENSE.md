@@ -113,7 +113,8 @@ This licence shall be governed by the Belgian law if:
 
 ## Appendix
 “Compatible Licences” according to article 5 EUPL are:
-- *GNU General Public License (GNU GPL) v. 2 - Open Software License (OSL) v. 2.1, v. 3.0*
+- *GNU General Public License (GNU GPL) v. 2*
+- *Open Software License (OSL) v. 2.1, v. 3.0*
 - *Common Public License v. 1.0*
 - *Eclipse Public License v. 1.0*
 - *Cecill v. 2.0*,

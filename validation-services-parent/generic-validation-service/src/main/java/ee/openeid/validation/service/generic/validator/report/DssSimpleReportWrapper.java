@@ -24,21 +24,21 @@ import eu.europa.esig.dss.simplereport.jaxb.XmlSimpleReport;
 import eu.europa.esig.dss.simplereport.jaxb.XmlToken;
 import eu.europa.esig.dss.validation.reports.Reports;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
-import java.util.Objects;
 
 @Getter
 @RequiredArgsConstructor
 public class DssSimpleReportWrapper {
 
-    private final SimpleReport dssSimpleReport;
+    private final @NonNull SimpleReport dssSimpleReport;
 
-    public DssSimpleReportWrapper(Reports dssReports) {
-        this(Objects.requireNonNull(dssReports).getSimpleReport());
+    public DssSimpleReportWrapper(@NonNull Reports dssReports) {
+        this(dssReports.getSimpleReport());
     }
 
     public XmlSimpleReport getXmlSimpleReport() {

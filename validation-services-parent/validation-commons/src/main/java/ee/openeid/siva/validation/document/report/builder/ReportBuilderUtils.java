@@ -17,9 +17,12 @@
 package ee.openeid.siva.validation.document.report.builder;
 
 import ee.openeid.siva.validation.document.report.Error;
-import ee.openeid.siva.validation.document.report.*;
+import ee.openeid.siva.validation.document.report.Policy;
+import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.document.report.ValidatedDocument;
+import ee.openeid.siva.validation.document.report.ValidationConclusion;
+import ee.openeid.siva.validation.document.report.Warning;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
-
 import eu.europa.esig.dss.diagnostic.TimestampWrapper;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlDigestMatcher;
 import eu.europa.esig.dss.enumerations.SignatureQualification;
@@ -121,8 +124,18 @@ public final class ReportBuilderUtils {
         }
     }
 
+    public static boolean isSignatureLevelAdjustmentEligible(String policyName) {
+        return QES_POLICY.equals(policyName);
+    }
+
     public static String getValidationTime() {
         return getFormattedTimeValue(ZonedDateTime.now(ZoneId.of("GMT")));
+    }
+
+    public static Warning createValidationWarning(String content) {
+        Warning warning = new Warning();
+        warning.setContent(content);
+        return warning;
     }
 
     private static Error getSignatureLevelNotAcceptedError() {
@@ -132,9 +145,7 @@ public final class ReportBuilderUtils {
     }
 
     private static Warning getSignatureLevelWarning() {
-        Warning warning = new Warning();
-        warning.setContent(SIGNATURE_LEVEL_WARNING);
-        return warning;
+        return createValidationWarning(SIGNATURE_LEVEL_WARNING);
     }
 
     private static String getFormattedTimeValue(ZonedDateTime zonedDateTime) {

@@ -34,6 +34,7 @@ import ee.openeid.siva.validation.document.report.SubjectDistinguishedName;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.document.report.Warning;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
+import ee.openeid.siva.validation.document.report.builder.SignatureValidationDataProcessor;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import ee.openeid.siva.validation.util.CertUtil;
 import ee.openeid.siva.validation.util.DistinguishedNameUtil;
@@ -62,10 +63,10 @@ import eu.europa.esig.dss.simplereport.jaxb.XmlMessage;
 import eu.europa.esig.dss.simplereport.jaxb.XmlToken;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.spi.x509.revocation.RevocationToken;
+import eu.europa.esig.dss.spi.x509.tsp.TimestampToken;
 import eu.europa.esig.dss.validation.AdvancedSignature;
 import eu.europa.esig.dss.validation.executor.ValidationLevel;
 import eu.europa.esig.dss.validation.reports.AbstractReports;
-import eu.europa.esig.dss.spi.x509.tsp.TimestampToken;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -96,6 +97,7 @@ import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUt
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.processSignatureIndications;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.valueNotKnown;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.valueNotPresent;
+import static ee.openeid.validation.service.generic.validator.report.GenericReportBuilderUtils.createSignatureLevelAdjuster;
 
 public class GenericValidationReportBuilder {
 
@@ -114,6 +116,7 @@ public class GenericValidationReportBuilder {
     private final boolean isReportSignatureEnabled;
     private final TrustedListsCertificateSource trustedListsCertificateSource;
     private final List<AdvancedSignature> signatures;
+    private final SignatureValidationDataProcessor<String> signatureLevelAdjuster;
 
     private List<CertificateToken> usedCertificates;
 
@@ -125,6 +128,7 @@ public class GenericValidationReportBuilder {
         this.isReportSignatureEnabled = reportData.isReportSignatureEnabled();
         this.trustedListsCertificateSource = reportData.getTrustedListsCertificateSource();
         this.signatures = reportData.getSignatures();
+        this.signatureLevelAdjuster = createSignatureLevelAdjuster(reportData);
     }
 
     public Reports build() {
@@ -223,6 +227,7 @@ public class GenericValidationReportBuilder {
         signatureValidationData.setIndication(parseIndication(signatureId, signatureValidationData.getErrors()));
         signatureValidationData.setSubIndication(parseSubIndication(signatureId, signatureValidationData.getErrors()));
         signatureValidationData.setCertificates(getCertificateList(signatureId));
+        signatureLevelAdjuster.process(signatureValidationData, signatureId);
         return signatureValidationData;
     }
 

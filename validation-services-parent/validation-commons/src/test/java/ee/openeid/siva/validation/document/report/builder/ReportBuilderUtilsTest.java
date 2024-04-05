@@ -17,9 +17,16 @@
 package ee.openeid.siva.validation.document.report.builder;
 
 import ee.openeid.siva.validation.document.report.Error;
-import ee.openeid.siva.validation.document.report.*;
+import ee.openeid.siva.validation.document.report.Policy;
+import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.document.report.ValidatedDocument;
+import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import eu.europa.esig.dss.enumerations.SignatureQualification;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
@@ -28,6 +35,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -64,6 +72,31 @@ class ReportBuilderUtilsTest {
         assertEquals(1, validationConclusion.getSignatures().get(0).getWarnings().size());
         assertTrue(validationConclusion.getSignatures().get(0).getErrors().isEmpty());
         assertEquals("The signature is not in the Qualified Electronic Signature level", validationConclusion.getSignatures().get(0).getWarnings().get(0).getContent());
+    }
+
+    @ParameterizedTest
+    @EnumSource(
+            value = SignatureQualification.class,
+            mode = EnumSource.Mode.EXCLUDE,
+            names = {"ADESEAL_QC", "QESIG", "QESEAL", "ADESIG_QC"}
+    )
+    void processSignatureIndications_WhenSignatureLevelIsNotAcceptedByQesPolicy_IndicationIsChangedToTotalFailed(
+            SignatureQualification initialSignatureQualification
+    ) {
+        ValidationConclusion validationConclusion = getDefaultValidationConclusion(initialSignatureQualification);
+        ReportBuilderUtils.processSignatureIndications(validationConclusion, QES_POLICY);
+        assertTotalFailed(validationConclusion);
+    }
+
+    @Test
+    void isSignatureLevelAdjustmentEligible_WhenPolicyNameIsPolV4_ReturnsTrue() {
+        assertTrue(ReportBuilderUtils.isSignatureLevelAdjustmentEligible("POLv4"));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {StringUtils.EMPTY, StringUtils.SPACE, "unrelated", "POLv3"})
+    void isSignatureLevelAdjustmentEligible_WhenPolicyNameIsNotPolV4_ReturnsFalse(String policyName) {
+        assertFalse(ReportBuilderUtils.isSignatureLevelAdjustmentEligible(policyName));
     }
 
     private void assertTotalPassed(ValidationConclusion validationConclusion) {

@@ -17,10 +17,14 @@ services:
     image: siva-webapp:latest
     ports:
       - "8080:8080"
+    environment:
+      - logging.config=/etc/siva-webapp/logback.xml
     networks:
       default:
         aliases:
           - siva.localhost
+    volumes:
+      - ./docker/logback.xml:/etc/siva-webapp/logback.xml
 
   dozzle: # Web-based UI for browsing container logs
     image: amir20/dozzle:latest

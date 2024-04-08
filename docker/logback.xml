@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
-    ​
-    <property name="COMMON_LOG_FILE" value="${BUILD_FOLDER:-logs}/siva-common.log"/>​
-    <property name="STATISTICS_CONTAINER_LOG_FILE" value="${BUILD_FOLDER:-logs}/siva-statistics-container.log"/>​
-    <property name="STATISTICS_SIGNATURE_LOG_FILE" value="${BUILD_FOLDER:-logs}/siva-statistics-signature.log"/>​
+    <property name="COMMON_LOG_FILE" value="${BUILD_FOLDER:-logs}/siva-common.log"/>
+    <property name="STATISTICS_CONTAINER_LOG_FILE" value="${BUILD_FOLDER:-logs}/siva-statistics-container.log"/>
+    <property name="STATISTICS_SIGNATURE_LOG_FILE" value="${BUILD_FOLDER:-logs}/siva-statistics-signature.log"/>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">

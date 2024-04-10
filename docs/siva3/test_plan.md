@@ -74,6 +74,7 @@ Following areas are tested on input:
   * Inconsistencies on stated parameters and actual data (wrong document type)
   * Case insensitivity on parameter names
   * Empty request
+  * Request body size limit
 
 
 In all of the negative cases correctness of returned error message is checked.
@@ -95,6 +96,7 @@ Following areas are tested on input:
   * Changed order of parameters
   * Case insensitivity on parameter names
   * Inconsistencies on stated parameters and actual data
+  * Request body size limit
 
 In all of the negative cases correctness of returned error message is checked.
 
@@ -198,7 +200,7 @@ The testing of DDOC signatures consists of following main cases:
 
   * Containers with valid signature(s) are validated.
   * Containers with invalid signature(s) or no signature are validated
-  * Containers sizes near maximum are validated
+  * Containers with sizes up to 9MB are validated
   * Containers with DDOC v1.0 - 1.3 are validated
 
 Specific test cases and input files can be found in:
@@ -219,7 +221,7 @@ The testing of BDOC container signatures consists of following main cases:
 
   * Containers with valid signature(s) are validated
   * Containers with invalid signature(s) or no signature are validated
-  * Containers sizes near maximum are validated
+  * Containers with sizes up to 9MB are validated
   * Containers with baseline B, T, LT, LT_TM and LTA profile (files with BDOC extension)
 
 Specific test cases and input files can be found in:
@@ -259,7 +261,7 @@ The testing of ASIC-S container signatures consists of following main cases:
 
   * Containers with valid signature(s) are validated
   * Containers with invalid signature(s) or no signature are validated
-  * Containers sizes near maximum are validated
+  * Containers with sizes up to 9MB are validated
 
 Specific test cases and input files can be found in:
 
@@ -292,13 +294,13 @@ Specific test cases and input files can be found in:
 
 ## Testing of PDF signature validation
 
-Portion of the validation rules for PDF documents are implemented in SiVa web apllication itself. Therefor different test area selection is used for PDF compared to other containers.
+Portion of the validation rules for PDF documents are implemented in SiVa web application itself. Therefor different test area selection is used for PDF compared to other containers.
 
 The testing of PDF signatures consists of following main cases:
 
   * Containers with invalid signature(s) (different reasons for failure) are validated
   * Containers with no signature are validated
-  * Containers sizes near maximum are validated
+  * Containers with sizes up to 9MB are validated
   * Containers with different baseline profiles are validated
   * Containers with serial and parallel signatures are validated
   * Containers with different signature cryptocaphic algorithms are validated

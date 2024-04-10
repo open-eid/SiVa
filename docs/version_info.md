@@ -19,3 +19,4 @@
 | 1.13               | 07.11.2022      | Aare Nurm                                             | SIVA 3.6 documentation additions. Removal of xroad-validation-service         |
 | 1.14               | 08.05.2023      | Ivo Mattus, Heiti Tobi                                | SIVA 3.7 documentation additions.                                             |
 | 1.15               | 25.03.2024      | Heiti Tobi                                            | Roadmap updated.                                                              |
+| 1.16               | 10.04.2024      | Ivo Mattus, Raido Raagmaa                             | Request size limit configuration and tests descriptions update                |

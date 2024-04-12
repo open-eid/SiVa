@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 
 public class DDOCContainerValidationReportBuilder extends TimemarkContainerValidationReportBuilder {
 
-    public static final String DDOC_TIMESTAMP_WARNING = "Please add Time-Stamp to the file for long term DDOC validation. This can be done with Time-Stamping application TeRa";
+    public static final String DDOC_TIMESTAMP_WARNING = "The algorithm SHA1 used in DDOC is no longer considered reliable for signature creation!";
 
     public DDOCContainerValidationReportBuilder(Container container, ValidationDocument validationDocument, ValidationPolicy validationPolicy, ValidationResult validationResult, boolean isReportSignatureEnabled) {
         super(container, validationDocument, validationPolicy, validationResult, isReportSignatureEnabled);

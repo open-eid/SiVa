@@ -84,6 +84,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
@@ -262,7 +263,7 @@ class ValidationReportSoapResponseTransformerTest {
         assertEquals(dssSignature.getSignatureFilename(), signature.getSignatureFilename());
         assertEquals(dssSignature.getSignatureFormat(), signature.getSignatureFormat());
         assertEquals(dssSignature.getPolicy().getId(), signature.getPolicy().getId());
-        assertEquals(dssSignature.getPolicy().getUserNotice(), signature.getPolicy().getUserNotice());
+        assertUserNoticesEqual(dssSignature, signature);
         assertEquals(dssSignature.getPolicy().getProcessingError(), signature.getPolicy().getProcessingError());
         assertEquals(dssSignature.getPolicy().getUrl(), signature.getPolicy().getUrl());
         assertArrayEquals(dssSignature.getPolicy().getDigestAlgoAndValue().getDigestValue(), signature.getPolicy().getDigestAlgoAndValue().getDigestValue());
@@ -717,5 +718,16 @@ class ValidationReportSoapResponseTransformerTest {
 
         xmlFoundTimestamp.setTimestamp(timestamp);
         return xmlFoundTimestamp;
+    }
+
+    private static void assertUserNoticesEqual(XmlSignature dssSignature, Signature signature) {
+        if (dssSignature.getPolicy().getUserNotice() != null) {
+            assertNotNull(signature.getPolicy().getUserNotice());
+            assertEquals(dssSignature.getPolicy().getUserNotice().getOrganization(), signature.getPolicy().getUserNotice().getOrganization());
+            assertEquals(dssSignature.getPolicy().getUserNotice().getNoticeNumbers(), signature.getPolicy().getUserNotice().getNoticeNumbers());
+            assertEquals(dssSignature.getPolicy().getUserNotice().getExplicitText(), signature.getPolicy().getUserNotice().getExplicitText());
+        } else {
+            assertNull(signature.getPolicy().getUserNotice());
+        }
     }
 }

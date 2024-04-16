@@ -118,9 +118,9 @@
         <dss.version>6.0.d4j.1</dss.version>
         <commons.codec.version>1.16.1</commons.codec.version>
         <commons.collections.version>4.4</commons.collections.version>
-        <commons.io.version>2.16.0</commons.io.version>
+        <commons.io.version>2.16.1</commons.io.version>
         <json.version>20240303</json.version>
-        <logback.version>1.5.3</logback.version>
+        <logback.version>1.5.5</logback.version>
         <lombok.version>1.18.32</lombok.version>
         <snakeyaml.version>2.2</snakeyaml.version>
         <spring.boot.version>3.2.4</spring.boot.version>
@@ -232,7 +232,7 @@
                     <plugin>
                         <groupId>org.owasp</groupId>
                         <artifactId>dependency-check-maven</artifactId>
-                        <version>7.2.1</version>
+                        <version>9.1.0</version>
                         <configuration>
                             <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
                             <failOnError>false</failOnError>
@@ -255,7 +255,7 @@
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.8.10</version>
+                        <version>0.8.12</version>
                         <executions>
                             <execution>
                                 <id>prepare-agent</id>

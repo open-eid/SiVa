@@ -48,7 +48,7 @@ public final class SubjectDNParser {
         return null;
     }
 
-    private static String removeQuotes(String value) {
+    public static String removeQuotes(String value) {
         return value.replaceAll("(^\")|(\"$)", "");
     }
 

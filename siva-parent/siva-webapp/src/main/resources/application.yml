@@ -7,11 +7,6 @@ siva:
     request:
       max-request-size-limit: 27MB # 20 MB + base64 overhead (ceil(20MB / 3) * 4) rounded up
 
-t-level-signature-filter:
-  filter-type: ALLOWED_COUNTRIES
-  countries:
-    - LV
-
 management:
   health:
     diskspace:

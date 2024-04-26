@@ -120,10 +120,10 @@
         <commons.collections.version>4.4</commons.collections.version>
         <commons.io.version>2.16.1</commons.io.version>
         <json.version>20240303</json.version>
-        <logback.version>1.5.5</logback.version>
+        <logback.version>1.5.6</logback.version>
         <lombok.version>1.18.32</lombok.version>
         <snakeyaml.version>2.2</snakeyaml.version>
-        <spring.boot.version>3.2.4</spring.boot.version>
+        <spring.boot.version>3.2.5</spring.boot.version>
 
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
@@ -146,7 +146,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-pmd-plugin</artifactId>
-                <version>3.21.2</version>
+                <version>3.22.0</version>
             </plugin>
         </plugins>
     </reporting>

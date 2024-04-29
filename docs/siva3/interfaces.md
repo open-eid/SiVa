@@ -475,6 +475,15 @@ Structure of validationConclusion block
 </soap:Envelope>
 ```
 
+#### Warning/error messages filtered out in Simple Report
+
+From Simple Report following messages, that are considered false-positive in Estonian context, are filtered out:
+* Warning: _The organization name is missing in the trusted certificate!_
+* Warning: _The trusted certificate does not match the trust service!_
+* Error: _The certificate is not related to a granted status at time-stamp lowest POE time!_
+
+Above messages are filtered out only in Simple Report.
+
 ### Validation response parameters Detailed Report (successful scenario)
 
 General structure of validation response.

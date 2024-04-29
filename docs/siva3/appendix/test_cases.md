@@ -2787,6 +2787,17 @@ All the files used in the tests can be found in [SiVa-Test GitHub](https://githu
 * File: EE_SER-AEX-B-LT-V-28.asice
 
 
+**TestCaseID: POLv4-Signature-Policy-19**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-4-polv4)
+* Title: Signature level re-evaluation
+* Expected Result: Signatures is valid according to policy, warning is returned about signature level re-evaluation.
+* File: Needs new test file.
+
+**Attention! This test is disabled: ("SIVA-662") // TODO: Test to be completed. Missing test file.
+
+
 **TestCaseID: POLv3-Signature-Policy-1**
 
 * TestType: Automated
@@ -2963,6 +2974,17 @@ All the files used in the tests can be found in [SiVa-Test GitHub](https://githu
 * Title: The asice is QES level
 * Expected Result: Signatures are valid according to policy
 * File: EE_SER-AEX-B-LT-V-28.asice
+
+
+**TestCaseID: POLv3-Signature-Policy-19**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3](http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#siva-signature-validation-policy-version-3-polv3)
+* Title: Signature level not re-evaluated in POLv3
+* Expected Result: Signatures is valid according to policy, no warning is returned about signature level re-evaluation.
+* File: Needs new test file.
+
+**Attention! This test is disabled: ("SIVA-662") // TODO: Test to be completed. Missing test file.
 
 
 **TestCaseID: Revocation-Signature-Policy-1**
@@ -4241,6 +4263,28 @@ All the files used in the tests can be found in [SiVa-Test GitHub](https://githu
 * File: Valid_XAdES_LT_TS.xml
 
 
+**TestCaseID: Signature-Level-Re-Evaluation**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
+* Title: Signature level re-evaluation
+* Expected Result: Signatures is valid according to policy, warning is returned about signature level re-evaluation.
+* File: Needs new test file. For manual testing a file from SIVA-605 can be used.
+
+**Attention! This test is disabled: ("SIVA-662") // TODO: Missing test file. For manual testing a file from SIVA-605 can be used.
+
+
+**TestCaseID: Signature-Level-Re-Evaluation-2**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-request-interface)
+* Title: Signature level not re-evaluated in POLv3
+* Expected Result: Signatures is valid according to policy, no warning is returned about signature level re-evaluation.
+* File: Needs new test file. For manual testing a file from SIVA-605 can be used.
+
+**Attention! This test is disabled: ("SIVA-662") // TODO: Missing test file. For manual testing a file from SIVA-605 can be used.
+
+
 ## PdfValidationReportValueVerificationIT.java
 [Open file](https://github.com/open-eid/SiVa-Test/tree/master/src/test/java/ee/openeid/siva/resttest/PdfValidationReportValueVerificationIT.java)
 
@@ -5249,6 +5293,15 @@ All the files used in the tests can be found in [SiVa-Test GitHub](https://githu
 * Title: Verification of values in Validation Report, xml v1.3, checks for missing info
 * Expected Result: All required elements are present and meet the expected values and other values are empty as expected.
 * File: Igasugust1.3.ddoc
+
+
+**TestCaseID: Ddoc-SoapValidationReportValue-5**
+
+* TestType: Automated
+* Requirement: [http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface](http://open-eid.github.io/SiVa/siva3/interfaces/#validation-response-interface)
+* Title: Check for optional warning element
+* Expected Result: Warning element is present
+* File: SK-XML1.0.ddoc
 
 
 **TestCaseID: Pdf-SoapValidationReportValue-1**

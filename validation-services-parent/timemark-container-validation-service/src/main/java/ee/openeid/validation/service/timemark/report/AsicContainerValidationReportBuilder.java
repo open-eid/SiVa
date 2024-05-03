@@ -23,27 +23,24 @@ import ee.openeid.siva.validation.document.report.SignatureScope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.document.report.ValidationWarning;
-import ee.openeid.siva.validation.document.report.Warning;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import eu.europa.esig.dss.enumerations.SignatureQualification;
 import eu.europa.esig.dss.enumerations.SubIndication;
 import org.digidoc4j.Container;
-import org.digidoc4j.DataFile;
 import org.digidoc4j.Signature;
 import org.digidoc4j.SignatureProfile;
 import org.digidoc4j.ValidationResult;
+import org.digidoc4j.impl.asic.AsicSignature;
 import org.digidoc4j.impl.asic.asice.AsicESignature;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.security.cert.X509Certificate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import static org.digidoc4j.X509Cert.SubjectName.CN;
+import static ee.openeid.validation.service.timemark.util.SignatureScopeParser.getAsicSignatureScopes;
+import static ee.openeid.validation.service.timemark.util.SignatureCertificateParser.getCertificate;
 
 public class AsicContainerValidationReportBuilder extends TimemarkContainerValidationReportBuilder {
     public AsicContainerValidationReportBuilder(Container container, ValidationDocument validationDocument, ValidationPolicy validationPolicy, ValidationResult validationResult, boolean isReportSignatureEnabled) {
@@ -77,7 +74,6 @@ public class AsicContainerValidationReportBuilder extends TimemarkContainerValid
     protected String getSignatureLevel(Signature signature) {
         SignatureQualification signatureLevel = getDssSimpleReport((AsicESignature) signature).getSignatureQualification(signature.getUniqueId());
         return signatureLevel != null ? signatureLevel.name() : "";
-
     }
 
     @Override
@@ -102,13 +98,7 @@ public class AsicContainerValidationReportBuilder extends TimemarkContainerValid
 
     @Override
     List<SignatureScope> getSignatureScopes(Signature signature, List<String> dataFilenames) {
-        AsicESignature bDocSignature = (AsicESignature) signature;
-        return bDocSignature.getOrigin().getReferences()
-                .stream()
-                .map(r -> decodeUriIfPossible(r.getURI()))
-                .filter(dataFilenames::contains) //filters out Signed Properties
-                .map(AsicContainerValidationReportBuilder::createFullSignatureScopeForDataFile)
-                .collect(Collectors.toList());
+        return getAsicSignatureScopes((AsicSignature) signature, dataFilenames);
     }
 
     @Override
@@ -120,22 +110,4 @@ public class AsicContainerValidationReportBuilder extends TimemarkContainerValid
     String getSignatureFormat(SignatureProfile profile) {
         return XADES_FORMAT_PREFIX + profile.toString();
     }
-
-    private static SignatureScope createFullSignatureScopeForDataFile(String filename) {
-        SignatureScope signatureScope = new SignatureScope();
-        signatureScope.setName(filename);
-        signatureScope.setScope(FULL_SIGNATURE_SCOPE);
-        signatureScope.setContent(FULL_DOCUMENT);
-        return signatureScope;
-    }
-
-    private String decodeUriIfPossible(String uri) {
-        try {
-            return URLDecoder.decode(uri, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            LOGGER.warn("datafile " + uri + " has unsupported encoding", e);
-            return uri;
-        }
-    }
-
 }

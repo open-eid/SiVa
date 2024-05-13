@@ -73,15 +73,15 @@ Required:
 
 | Component | Description |
 |------------------------------|--------------------------------------------------------|
-| **Policies and constraints** | (Optional) By default, two policies are supported and integrated into SiVa - see [SiVa Validation Policy](/siva3/appendix/validation_policy). However, it is possible to customize the validation policies and their constraints. Configuration is validation service specific. See the [overriding configuration](/siva3/systemintegrators_guide/#configuration-parameters) section for details. |
-| **Externalized configuration** | Application specific configuration (property files, command line variables, etc) that allow overriding the default values set within the webapp. |
+| **Policies and constraints** | (Optional) By default, two policies are supported and integrated into SiVa - see [SiVa Validation Policy](../siva3/appendix/validation_policy.md). However, it is possible to customize the validation policies and their constraints. Configuration is validation service specific. See the [overriding configuration](../siva3/deployment_guide.md/#configuration-parameters) section for details. |
+| **Externalized configuration** | Application specific configuration (property files, command line variables, etc) that allow overriding the default values set within the webapp.                                                                                                                                                                                                                                               |
 
 ## External subsystems
 
 | Component | Description |
 |------------------------------|--------------------------------------------------------|
-| **Digidoc3 client** | DigiDoc3 client is a program that can be used to sign digitally with ID-card and Mobile-ID, check the validity of digital signatures and open and save documents inside the signature container. See the github [project](https://github.com/open-eid/qdigidoc) for further details. |
-| **XROAD security server** | A client subsystem that, once connected, allows SiVa to be integrated into the [X-Road data exchange layer](https://www.ria.ee/en/state-information-system/data-exchange-platforms/data-exchange-layer-x-tee) |
-| **EU TSL provider** | A subsystem that provides SiVa with a current TSL. An HTTPS endpoint, that provides an XML formatted file that lists all trusted service providers along with their certificates. |
-| **Monitoring** | (Optional) A subsystem that tracks the health and uptime of SiVa webapps</li></ul> |
+| **Digidoc3 client** | DigiDoc4 client is a program that can be used to sign digitally with ID-card and Mobile-ID, check the validity of digital signatures and open and save documents inside the signature container. See the github [project](https://github.com/open-eid/DigiDoc4-Client) for further details. |
+| **XROAD security server** | A client subsystem that, once connected, allows SiVa to be integrated into the [X-Road data exchange layer](https://www.ria.ee/en/state-information-system/data-exchange-platforms/data-exchange-layer-x-tee)                                                                     |
+| **EU TSL provider** | A subsystem that provides SiVa with a current TSL. An HTTPS endpoint, that provides an XML formatted file that lists all trusted service providers along with their certificates.                                                                                                 |
+| **Monitoring** | (Optional) A subsystem that tracks the health and uptime of SiVa webapps</li></ul>                                                                                                                                                                                                |
 

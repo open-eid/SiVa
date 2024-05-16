@@ -311,7 +311,7 @@ The testing of PDF signatures consists of following main cases:
 Specific test cases and input files can be found in:
 
   * [PdfBaselineProfileIT.java](../appendix/test_cases/#pdfbaselineprofileitjava)
-  * [PdfSignatureCryptographicAlgorithmIT.java](../siva/appendix/test_cases/#pdfsignaturecryptographicalgorithmitjava)
+  * [PdfSignatureCryptographicAlgorithmIT.java](../appendix/test_cases/#pdfsignaturecryptographicalgorithmitjava)
   * [PdfValidationFailIT.java](../appendix/test_cases/#pdfvalidationfailitjava)
   * [PdfValidationPassIT.java](../appendix/test_cases/#pdfvalidationpassitjava)
   * [LargeFileIT.java](../appendix/test_cases/#largefileitjava)

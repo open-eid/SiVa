@@ -301,7 +301,7 @@ SiVa webapps provide endpoints for external monitoring tools to periodically che
 !!! note
     Note that this endpoint is not exposed by default.
 
-The url for accessing JSON formatted health information with HTTP GET is `/monitoring/health` . See the [Interfaces section](/siva/v3/interfaces.md#service-health-monitoring) for response structure and details.
+The url for accessing JSON formatted health information with HTTP GET is `/monitoring/health` . See the [Interfaces section](../siva3/interfaces.md#service-health-monitoring) for response structure and details.
 
 * **Exposing the health monitoring endpoint**
 
@@ -325,7 +325,7 @@ These links to dependent web services have been preconfigured. For example, the 
 !!! note
     Note that this endpoint requires the health endpoint to be enabled and exposed in order to function.
 
-The url for accessing JSON formatted heartbeat information with HTTP GET is `/monitoring/heartbeat`. See the [Interfaces section](/siva/v3/interfaces.md#simplified-health-monitoring) for response structure and details.
+The url for accessing JSON formatted heartbeat information with HTTP GET is `/monitoring/heartbeat`. See the [Interfaces section](../siva3/interfaces.md#simplified-health-monitoring) for response structure and details.
 
 * **Enabling and exposing the heartbeat monitoring endpoint**
 
@@ -344,7 +344,7 @@ The endpoint is implemented by polling the health information directly from the 
 !!! note
     Note that this endpoint is not enabled nor exposed by default.
 
-The url for accessing JSON formatted version information with HTTP GET is `/monitoring/version`. See the [Interfaces section](/siva/v3/interfaces.md#version-information) for response structure and details.
+The url for accessing JSON formatted version information with HTTP GET is `/monitoring/version`. See the [Interfaces section](../siva3/interfaces.md#version-information) for response structure and details.
 
 * **Enabling and exposing the version information endpoint**
 

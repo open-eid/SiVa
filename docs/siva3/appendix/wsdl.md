@@ -1,6 +1,6 @@
 <!--# WSDL of SOAP interface-->
 
-See also [Interfaces](/siva3/interfaces) for more information about the SOAP interfaces.
+See also [Interfaces](../interfaces.md) for more information about the SOAP interfaces.
 
 ## Validation web service wsdl
 

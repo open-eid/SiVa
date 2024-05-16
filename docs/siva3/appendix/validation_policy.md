@@ -103,7 +103,7 @@ http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
 	* [XAdES](http://www.etsi.org/deliver/etsi_en/319100_319199/31913201/01.01.01_60/en_31913201v010101p.pdf) signatures
 	* [CAdES](http://www.etsi.org/deliver/etsi_en/319100_319199/31912201/01.01.01_60/en_31912201v010101p.pdf) signatures
 	* [DIGIDOC-XML](https://www.id.ee/wp-content/uploads/2020/08/digidoc_format_1.3.pdf)  1.0, 1.1, 1.2, 1.3 signatures
-	* DIGIDOC-XML 1.0, 1.1, 1.2 and 1.3 signatures in [hashcode format](https://open-eid.github.io/allkirjastamisteenus/dds-api/#hashcode)
+	* DIGIDOC-XML 1.0, 1.1, 1.2 and 1.3 signatures in [hashcode format](https://open-eid.github.io/allkirjastamisteenus/json-technical-description/#hashcode-container-form)
 
 ### Base libraries' constraints
 <a name="common_libraries"></a>

@@ -20,7 +20,7 @@
     
     
       
-        <title>4. INTERFACES - SiVa 3.7 - Signature Validation Service Documentation</title>
+        <title>4. INTERFACES - SiVa 3.8 - Signature Validation Service Documentation</title>
       
     
     
@@ -80,7 +80,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="SiVa 3.7 - Signature Validation Service Documentation" class="md-header__button md-logo" aria-label="SiVa 3.7 - Signature Validation Service Documentation" data-md-component="logo">
+    <a href="../.." title="SiVa 3.8 - Signature Validation Service Documentation" class="md-header__button md-logo" aria-label="SiVa 3.8 - Signature Validation Service Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
@@ -94,7 +94,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            SiVa 3.7 - Signature Validation Service Documentation
+            SiVa 3.8 - Signature Validation Service Documentation
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -187,13 +187,13 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="SiVa 3.7 - Signature Validation Service Documentation" class="md-nav__button md-logo" aria-label="SiVa 3.7 - Signature Validation Service Documentation" data-md-component="logo">
+    <a href="../.." title="SiVa 3.8 - Signature Validation Service Documentation" class="md-nav__button md-logo" aria-label="SiVa 3.8 - Signature Validation Service Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
 
     </a>
-    SiVa 3.7 - Signature Validation Service Documentation
+    SiVa 3.8 - Signature Validation Service Documentation
   </label>
   
     <div class="md-nav__source">
@@ -566,6 +566,15 @@
   <a href="#sample-soap-response-simple-report-successful-scenario" class="md-nav__link">
     <span class="md-ellipsis">
       Sample SOAP response Simple Report (successful scenario)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#warningerror-messages-filtered-out-in-simple-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      Warning/error messages filtered out in Simple Report
     </span>
   </a>
   
@@ -2454,6 +2463,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#warningerror-messages-filtered-out-in-simple-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      Warning/error messages filtered out in Simple Report
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2828,7 +2846,7 @@
 
 <!--# Interface description-->
 
-<p>In this section the SiVa external interfaces are described. For information of internal components and their interfaces, please refer to <a href="/siva3/structure_and_activities"><strong>Structure and activities</strong></a>.</p>
+<p>In this section the SiVa external interfaces are described. For information of internal components and their interfaces, please refer to <a href="../structure_and_activities/"><strong>Structure and activities</strong></a>.</p>
 <p>SiVa service provides <strong>REST JSON</strong> and <strong>SOAP</strong> interfaces that enable the service users to:</p>
 <ul>
 <li>Request validation of signatures in a digitally signed document (i.e. signature container like BDOC,ASiC-E/PDF/...);</li>
@@ -2851,7 +2869,7 @@
 </code></pre></div>
 
 <h3 id="validation-request-parameters">Validation request parameters</h3>
-<p>Validation request parameters for JSON and SOAP interfaces are described in the table below. Data types of SOAP parameters are defined in the <a href="/siva3/appendix/wsdl">SiVa WSDL document</a>.</p>
+<p>Validation request parameters for JSON and SOAP interfaces are described in the table below. Data types of SOAP parameters are defined in the <a href="../appendix/wsdl/">SiVa WSDL document</a>.</p>
 <table>
 <thead>
 <tr>
@@ -2882,7 +2900,7 @@
 <td>SignaturePolicy</td>
 <td>-</td>
 <td>String</td>
-<td>Can be used to change the default signature validation policy that is used by the service. <br> See also <a href="/siva3/appendix/validation_policy">SiVa Validation Policy</a> for more detailed information on given policy constraints.<br><strong>Possible values:</strong> <br> POLv3 - signatures with all legal levels are accepted (i.e. QES, AdESqc and AdES, according to Regulation (EU) No 910/2014.) <br> POLv4 - the default policy. Accepted signatures depend on their type (i.e. signature, seal or unknown) and legal level (i.e. QES, AdESqc and Ades)</td>
+<td>Can be used to change the default signature validation policy that is used by the service. <br> See also <a href="../appendix/validation_policy/">SiVa Validation Policy</a> for more detailed information on given policy constraints.<br><strong>Possible values:</strong> <br> POLv3 - signatures with all legal levels are accepted (i.e. QES, AdESqc and AdES, according to Regulation (EU) No 910/2014.) <br> POLv4 - the default policy. Accepted signatures depend on their type (i.e. signature, seal or unknown) and legal level (i.e. QES, AdESqc and Ades)</td>
 </tr>
 <tr>
 <td>reportType</td>
@@ -3294,7 +3312,7 @@
 <td>SignatureForm</td>
 <td>-</td>
 <td>String</td>
-<td>Format (and optionally version) of the digitally signed document container. <br> In case of documents in <a href="https://www.id.ee/wp-content/uploads/2020/08/digidoc_format_1.3.pdf">DIGIDOC-XML</a> (DDOC) format, the "hashcode" suffix is used to denote that the container was validated in <a href="http://sertkeskus.github.io/dds-documentation/api/api_docs/#ddoc-format-and-hashcode">hashcode mode</a>, i.e. without original data files. <br> <strong>Possible values:</strong>  <br> DIGIDOC_XML_1.0 <br> DIGIDOC_XML_1.0_hashcode <br> DIGIDOC_XML_1.1 <br> DIGIDOC_XML_1.1_hashcode <br> DIGIDOC_XML_1.2 <br> DIGIDOC_XML_1.2_hashcode <br> DIGIDOC_XML_1.3 <br> DIGIDOC_XML_1.3_hashcode <br> ASiC_E - used in case of all ASIC-E (<a href="https://www.id.ee/wp-content/uploads/2021/06/bdoc-spec212-eng.pdf">BDOC</a>) documents <br> ASiC_S - used in case of all ASIC-S documents</td>
+<td>Format (and optionally version) of the digitally signed document container. <br> In case of documents in <a href="https://www.id.ee/wp-content/uploads/2020/08/digidoc_format_1.3.pdf">DIGIDOC-XML</a> (DDOC) format, the "hashcode" suffix is used to denote that the container was validated in <a href="https://open-eid.github.io/allkirjastamisteenus/json-technical-description/#hashcode-container-form">hashcode mode</a>, i.e. without original data files. <br> <strong>Possible values:</strong>  <br> DIGIDOC_XML_1.0 <br> DIGIDOC_XML_1.0_hashcode <br> DIGIDOC_XML_1.1 <br> DIGIDOC_XML_1.1_hashcode <br> DIGIDOC_XML_1.2 <br> DIGIDOC_XML_1.2_hashcode <br> DIGIDOC_XML_1.3 <br> DIGIDOC_XML_1.3_hashcode <br> ASiC_E - used in case of all ASIC-E (<a href="https://www.id.ee/wp-content/uploads/2021/06/bdoc-spec212-eng.pdf">BDOC</a>) documents <br> ASiC_S - used in case of all ASIC-S documents</td>
 </tr>
 <tr>
 <td>signatures</td>
@@ -3462,7 +3480,7 @@
 <td>Signature. SignatureFormat</td>
 <td>+</td>
 <td>String</td>
-<td>Format and profile (according to Baseline Profile) of the signature. See <a href="http://www.etsi.org/deliver/etsi_ts/103100_103199/103171/02.01.01_60/ts_103171v020101p.pdf">XAdES Baseline Profile</a>, <a href="http://www.etsi.org/deliver/etsi_ts/103100_103199/103173/02.02.01_60/ts_103173v020201p.pdf">CAdES Baseline Profile</a> and <a href="http://www.etsi.org/deliver/etsi_ts/103100_103199/103172/02.02.02_60/ts_103172v020202p.pdf">PAdES Baseline Profile</a> for detailed description of the Baseline Profile levels. Levels that are accepted in SiVa validation policy are described in <a href="/siva3/appendix/validation_policy">SiVa signature validation policy</a> <br><strong>Possible values:</strong>  <br> XAdES_BASELINE_B <br> XAdES_BASELINE_B_BES <br> XAdES_BASELINE_B_EPES <br> XAdES_BASELINE_T <br> XAdES_BASELINE_LT - long-term level XAdES signature where time-stamp is used as a assertion of trusted signing time<br> XAdES_BASELINE_LT_TM - long-term level XAdES signature where time-mark is used as a assertion of trusted signing time. Used in case of <a href="https://www.id.ee/wp-content/uploads/2021/06/bdoc-spec212-eng.pdf">BDOC</a> signatures with time-mark profile and <a href="https://www.id.ee/wp-content/uploads/2020/08/digidoc_format_1.3.pdf">DIGIDOC-XML</a> (DDOC) signatures.<br>  XAdES_BASELINE_LTA <br> CAdES_BASELINE_B <br> CAdES_BASELINE_T <br> CAdES_BASELINE_LT <br> CAdES_BASELINE_LTA<br> PAdES_BASELINE_B <br> PAdES_BASELINE_T <br> PAdES_BASELINE_LT <br> PAdES_BASELINE_LTA</td>
+<td>Format and profile (according to Baseline Profile) of the signature. See <a href="http://www.etsi.org/deliver/etsi_ts/103100_103199/103171/02.01.01_60/ts_103171v020101p.pdf">XAdES Baseline Profile</a>, <a href="http://www.etsi.org/deliver/etsi_ts/103100_103199/103173/02.02.01_60/ts_103173v020201p.pdf">CAdES Baseline Profile</a> and <a href="http://www.etsi.org/deliver/etsi_ts/103100_103199/103172/02.02.02_60/ts_103172v020202p.pdf">PAdES Baseline Profile</a> for detailed description of the Baseline Profile levels. Levels that are accepted in SiVa validation policy are described in <a href="../appendix/validation_policy/">SiVa signature validation policy</a> <br><strong>Possible values:</strong>  <br> XAdES_BASELINE_B <br> XAdES_BASELINE_B_BES <br> XAdES_BASELINE_B_EPES <br> XAdES_BASELINE_T <br> XAdES_BASELINE_LT - long-term level XAdES signature where time-stamp is used as a assertion of trusted signing time<br> XAdES_BASELINE_LT_TM - long-term level XAdES signature where time-mark is used as a assertion of trusted signing time. Used in case of <a href="https://www.id.ee/wp-content/uploads/2021/06/bdoc-spec212-eng.pdf">BDOC</a> signatures with time-mark profile and <a href="https://www.id.ee/wp-content/uploads/2020/08/digidoc_format_1.3.pdf">DIGIDOC-XML</a> (DDOC) signatures.<br>  XAdES_BASELINE_LTA <br> CAdES_BASELINE_B <br> CAdES_BASELINE_T <br> CAdES_BASELINE_LT <br> CAdES_BASELINE_LTA<br> PAdES_BASELINE_B <br> PAdES_BASELINE_T <br> PAdES_BASELINE_LT <br> PAdES_BASELINE_LTA</td>
 </tr>
 <tr>
 <td>signatures[0]. signatureMethod</td>
@@ -3476,7 +3494,7 @@
 <td>Signature. SignatureLevel</td>
 <td>-</td>
 <td>String</td>
-<td>Legal level of the signature, according to Regulation (EU) No 910/2014. <br> - <strong>Possible values on positive validation result:</strong><br> QESIG <br> QESEAL <br> QES <br> ADESIG_QC <br> ADESEAL_QC <br> ADES_QC <br> ADESIG <br> ADESEAL <br> ADES <br> - <strong>Possible values on indeterminate validation result:</strong><br> prefix INDETERMINATE is added to the level described in positive result. For example  INDETERMINATE_QESIG <br> - <strong>Possible values on negative validation result:</strong><br>In addition to abovementioned<br> NOT_ADES_QC_QSCD <br> NOT_ADES_QC <br> NOT_ADES <br> NA <br> - In case of DIGIDOC-XML 1.0..1.3 formats, value is missing as the signature level is not checked by the JDigiDoc base library that is used for validation. However, the signatures can be indirectly regarded as QES level signatures, see also <a href="/siva3/appendix/validation_policy">SiVa Validation Policy</a><br></td>
+<td>Legal level of the signature, according to Regulation (EU) No 910/2014. <br> - <strong>Possible values on positive validation result:</strong><br> QESIG <br> QESEAL <br> QES <br> ADESIG_QC <br> ADESEAL_QC <br> ADES_QC <br> ADESIG <br> ADESEAL <br> ADES <br> - <strong>Possible values on indeterminate validation result:</strong><br> prefix INDETERMINATE is added to the level described in positive result. For example  INDETERMINATE_QESIG <br> - <strong>Possible values on negative validation result:</strong><br>In addition to abovementioned<br> NOT_ADES_QC_QSCD <br> NOT_ADES_QC <br> NOT_ADES <br> NA <br> - In case of DIGIDOC-XML 1.0..1.3 formats, value is missing as the signature level is not checked by the JDigiDoc base library that is used for validation. However, the signatures can be indirectly regarded as QES level signatures, see also <a href="/siva3/appendix/validation_policy.md">SiVa Validation Policy</a><br></td>
 </tr>
 <tr>
 <td>signatures[0].signedBy</td>
@@ -3819,6 +3837,12 @@
 <span class="nt">&lt;/soap:Envelope&gt;</span>
 </code></pre></div>
 
+<h4 id="warningerror-messages-filtered-out-in-simple-report">Warning/error messages filtered out in Simple Report</h4>
+<p>From Simple Report following messages, that are considered false-positive in Estonian context, are filtered out:
+* Warning: <em>The organization name is missing in the trusted certificate!</em>
+* Warning: <em>The trusted certificate does not match the trust service!</em>
+* Error: <em>The certificate is not related to a granted status at time-stamp lowest POE time!</em></p>
+<p>Above messages are filtered out only in Simple Report.</p>
 <h3 id="validation-response-parameters-detailed-report-successful-scenario">Validation response parameters Detailed Report (successful scenario)</h3>
 <p>General structure of validation response.</p>
 <table>
@@ -3851,7 +3875,7 @@
 <td>ValidationReport. ValidationProcess</td>
 <td>-</td>
 <td>Object</td>
-<td>Object containing information of the validation process. This block is present only on DSS library based validations and is built on DSS detailed report. For more information visit <a href="https://github.com/esig/dss/blob/develop/dss-cookbook/src/main/asciidoc/dss-documentation.adoc#validation-process">DSS documentation</a>.</td>
+<td>Object containing information of the validation process. This block is present only on DSS library based validations and is built on DSS detailed report. For more information visit <a href="https://github.com/esig/dss/blob/develop/dss-cookbook/src/main/asciidoc/_chapters/signature-validation.adoc">DSS documentation</a>.</td>
 </tr>
 <tr>
 <td>validationReportSignature</td>
@@ -3932,7 +3956,7 @@
 </code></pre></div>
 
 <h3 id="data-files-request-parameters">Data files request parameters</h3>
-<p>Data files request parameters for JSON and SOAP interfaces are described in the table below. Data types of SOAP parameters are defined in the <a href="/siva3/appendix/wsdl">SiVa WSDL document</a>.</p>
+<p>Data files request parameters for JSON and SOAP interfaces are described in the table below. Data types of SOAP parameters are defined in the <a href="../appendix/wsdl/">SiVa WSDL document</a>.</p>
 <table>
 <thead>
 <tr>
@@ -3983,7 +4007,7 @@
 
 <h2 id="data-files-response-interface">Data files response interface</h2>
 <h3 id="data-files-response-parameters-successful-scenario">Data files response parameters (successful scenario)</h3>
-<p>The data file extraction report (i.e. the data files response) for JSON and SOAP interfaces is described in the table below. Data types of SOAP parameters are defined in the <a href="/siva3/appendix/wsdl">SiVa WSDL document</a>.
+<p>The data file extraction report (i.e. the data files response) for JSON and SOAP interfaces is described in the table below. Data types of SOAP parameters are defined in the <a href="../appendix/wsdl/">SiVa WSDL document</a>.
 SiVa returns all data files as they are extracted by JDigiDoc library in an as is form. No extra operations or validations are done.</p>
 <table>
 <thead>

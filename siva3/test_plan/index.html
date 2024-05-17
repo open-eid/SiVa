@@ -20,7 +20,7 @@
     
     
       
-        <title>6.2 Test Plan - SiVa 3.7 - Signature Validation Service Documentation</title>
+        <title>6.2 Test Plan - SiVa 3.8 - Signature Validation Service Documentation</title>
       
     
     
@@ -80,7 +80,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="SiVa 3.7 - Signature Validation Service Documentation" class="md-header__button md-logo" aria-label="SiVa 3.7 - Signature Validation Service Documentation" data-md-component="logo">
+    <a href="../.." title="SiVa 3.8 - Signature Validation Service Documentation" class="md-header__button md-logo" aria-label="SiVa 3.8 - Signature Validation Service Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
@@ -94,7 +94,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            SiVa 3.7 - Signature Validation Service Documentation
+            SiVa 3.8 - Signature Validation Service Documentation
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -187,13 +187,13 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="SiVa 3.7 - Signature Validation Service Documentation" class="md-nav__button md-logo" aria-label="SiVa 3.7 - Signature Validation Service Documentation" data-md-component="logo">
+    <a href="../.." title="SiVa 3.8 - Signature Validation Service Documentation" class="md-nav__button md-logo" aria-label="SiVa 3.8 - Signature Validation Service Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
 
     </a>
-    SiVa 3.7 - Signature Validation Service Documentation
+    SiVa 3.8 - Signature Validation Service Documentation
   </label>
   
     <div class="md-nav__source">
@@ -2403,6 +2403,7 @@ The instructions how to set up SiVa are given in <a href="http://open-eid.github
 <li>Inconsistencies on stated parameters and actual data (wrong document type)</li>
 <li>Case insensitivity on parameter names</li>
 <li>Empty request</li>
+<li>Request body size limit</li>
 </ul>
 <p>In all of the negative cases correctness of returned error message is checked.</p>
 <p>Specific test cases and input files can be found in:</p>
@@ -2421,6 +2422,7 @@ The instructions how to set up SiVa are given in <a href="http://open-eid.github
 <li>Changed order of parameters</li>
 <li>Case insensitivity on parameter names</li>
 <li>Inconsistencies on stated parameters and actual data</li>
+<li>Request body size limit</li>
 </ul>
 <p>In all of the negative cases correctness of returned error message is checked.</p>
 <p>Specific test cases and input files can be found in:</p>
@@ -2509,7 +2511,7 @@ Compatibility with X-Road security server is out of scope for these tests and wi
 <ul>
 <li>Containers with valid signature(s) are validated.</li>
 <li>Containers with invalid signature(s) or no signature are validated</li>
-<li>Containers sizes near maximum are validated</li>
+<li>Containers with sizes up to 9MB are validated</li>
 <li>Containers with DDOC v1.0 - 1.3 are validated</li>
 </ul>
 <p>Specific test cases and input files can be found in:</p>
@@ -2528,7 +2530,7 @@ Compatibility with X-Road security server is out of scope for these tests and wi
 <ul>
 <li>Containers with valid signature(s) are validated</li>
 <li>Containers with invalid signature(s) or no signature are validated</li>
-<li>Containers sizes near maximum are validated</li>
+<li>Containers with sizes up to 9MB are validated</li>
 <li>Containers with baseline B, T, LT, LT_TM and LTA profile (files with BDOC extension)</li>
 </ul>
 <p>Specific test cases and input files can be found in:</p>
@@ -2564,7 +2566,7 @@ Compatibility with X-Road security server is out of scope for these tests and wi
 <ul>
 <li>Containers with valid signature(s) are validated</li>
 <li>Containers with invalid signature(s) or no signature are validated</li>
-<li>Containers sizes near maximum are validated</li>
+<li>Containers with sizes up to 9MB are validated</li>
 </ul>
 <p>Specific test cases and input files can be found in:</p>
 <ul>
@@ -2594,12 +2596,12 @@ Compatibility with X-Road security server is out of scope for these tests and wi
 <li>Verification of different causes in container for invalid result is out of scope.</li>
 </ul>
 <h2 id="testing-of-pdf-signature-validation">Testing of PDF signature validation</h2>
-<p>Portion of the validation rules for PDF documents are implemented in SiVa web apllication itself. Therefor different test area selection is used for PDF compared to other containers.</p>
+<p>Portion of the validation rules for PDF documents are implemented in SiVa web application itself. Therefor different test area selection is used for PDF compared to other containers.</p>
 <p>The testing of PDF signatures consists of following main cases:</p>
 <ul>
 <li>Containers with invalid signature(s) (different reasons for failure) are validated</li>
 <li>Containers with no signature are validated</li>
-<li>Containers sizes near maximum are validated</li>
+<li>Containers with sizes up to 9MB are validated</li>
 <li>Containers with different baseline profiles are validated</li>
 <li>Containers with serial and parallel signatures are validated</li>
 <li>Containers with different signature cryptocaphic algorithms are validated</li>
@@ -2609,7 +2611,7 @@ Compatibility with X-Road security server is out of scope for these tests and wi
 <p>Specific test cases and input files can be found in:</p>
 <ul>
 <li><a href="../appendix/test_cases/#pdfbaselineprofileitjava">PdfBaselineProfileIT.java</a></li>
-<li><a href="../siva/appendix/test_cases/#pdfsignaturecryptographicalgorithmitjava">PdfSignatureCryptographicAlgorithmIT.java</a></li>
+<li><a href="../appendix/test_cases/#pdfsignaturecryptographicalgorithmitjava">PdfSignatureCryptographicAlgorithmIT.java</a></li>
 <li><a href="../appendix/test_cases/#pdfvalidationfailitjava">PdfValidationFailIT.java</a></li>
 <li><a href="../appendix/test_cases/#pdfvalidationpassitjava">PdfValidationPassIT.java</a></li>
 <li><a href="../appendix/test_cases/#largefileitjava">LargeFileIT.java</a></li>

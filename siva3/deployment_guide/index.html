@@ -20,7 +20,7 @@
     
     
       
-        <title>5.2 Deployment guide - SiVa 3.7 - Signature Validation Service Documentation</title>
+        <title>5.2 Deployment guide - SiVa 3.8 - Signature Validation Service Documentation</title>
       
     
     
@@ -80,7 +80,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="SiVa 3.7 - Signature Validation Service Documentation" class="md-header__button md-logo" aria-label="SiVa 3.7 - Signature Validation Service Documentation" data-md-component="logo">
+    <a href="../.." title="SiVa 3.8 - Signature Validation Service Documentation" class="md-header__button md-logo" aria-label="SiVa 3.8 - Signature Validation Service Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
@@ -94,7 +94,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            SiVa 3.7 - Signature Validation Service Documentation
+            SiVa 3.8 - Signature Validation Service Documentation
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -187,13 +187,13 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="SiVa 3.7 - Signature Validation Service Documentation" class="md-nav__button md-logo" aria-label="SiVa 3.7 - Signature Validation Service Documentation" data-md-component="logo">
+    <a href="../.." title="SiVa 3.8 - Signature Validation Service Documentation" class="md-nav__button md-logo" aria-label="SiVa 3.8 - Signature Validation Service Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
 
     </a>
-    SiVa 3.7 - Signature Validation Service Documentation
+    SiVa 3.8 - Signature Validation Service Documentation
   </label>
   
     <div class="md-nav__source">
@@ -2516,7 +2516,7 @@ the command below.</p>
 <p class="admonition-title">Note</p>
 <p>Note that this endpoint is not exposed by default.</p>
 </div>
-<p>The url for accessing JSON formatted health information with HTTP GET is <code>/monitoring/health</code> . See the <a href="/siva/v3/interfaces.md#service-health-monitoring">Interfaces section</a> for response structure and details.</p>
+<p>The url for accessing JSON formatted health information with HTTP GET is <code>/monitoring/health</code> . See the <a href="../interfaces/#service-health-monitoring">Interfaces section</a> for response structure and details.</p>
 <ul>
 <li><strong>Exposing the health monitoring endpoint</strong></li>
 </ul>
@@ -2539,7 +2539,7 @@ These links to dependent web services have been preconfigured. For example, the 
 <p class="admonition-title">Note</p>
 <p>Note that this endpoint requires the health endpoint to be enabled and exposed in order to function.</p>
 </div>
-<p>The url for accessing JSON formatted heartbeat information with HTTP GET is <code>/monitoring/heartbeat</code>. See the <a href="/siva/v3/interfaces.md#simplified-health-monitoring">Interfaces section</a> for response structure and details.</p>
+<p>The url for accessing JSON formatted heartbeat information with HTTP GET is <code>/monitoring/heartbeat</code>. See the <a href="../interfaces/#simplified-health-monitoring">Interfaces section</a> for response structure and details.</p>
 <ul>
 <li><strong>Enabling and exposing the heartbeat monitoring endpoint</strong></li>
 </ul>
@@ -2557,7 +2557,7 @@ management.endpoint.heartbeat.enabled<span class="o">=</span><span class="nb">tr
 <p class="admonition-title">Note</p>
 <p>Note that this endpoint is not enabled nor exposed by default.</p>
 </div>
-<p>The url for accessing JSON formatted version information with HTTP GET is <code>/monitoring/version</code>. See the <a href="/siva/v3/interfaces.md#version-information">Interfaces section</a> for response structure and details.</p>
+<p>The url for accessing JSON formatted version information with HTTP GET is <code>/monitoring/version</code>. See the <a href="../interfaces/#version-information">Interfaces section</a> for response structure and details.</p>
 <ul>
 <li><strong>Enabling and exposing the version information endpoint</strong></li>
 </ul>
@@ -2657,8 +2657,8 @@ Default configuration parameters can be overridden by providing custom applicati
 <div class="codehilite"><pre><span></span><code>server.port<span class="o">=</span><span class="m">8080</span>
 </code></pre></div>
 
-<p>Or to increase or modify the default http request limit, override the <strong>server.max-http-post-size</strong> property:</p>
-<div class="codehilite"><pre><span></span><code>server.max-http-post-size:<span class="w"> </span><span class="m">13981016</span>
+<p>Or to increase or modify the default http request limit, override the <strong>siva.http.request.max-request-size-limit</strong> property:</p>
+<div class="codehilite"><pre><span></span><code>siva.http.request.max-request-size-limit:<span class="w"> </span>15MB
 </code></pre></div>
 
 <p>See the reference list of all common <a href="http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html">application properties</a> provided by Spring boot</p>
@@ -2676,7 +2676,7 @@ Default configuration parameters can be overridden by providing custom applicati
 <tbody>
 <tr>
 <td><strong>siva.tsl.loader.loadFromCache</strong></td>
-<td>A boolean value that determines, whether the TSL disk cache is updated by downloading a new TSL in a predetermined interval<br/><br/>Note that the cache is by default stored in a system temporary folder (can be set with system property <code>java.io.tmpdir</code>) in a subdirectory named <code>dss_cache_tsl</code><ul><li>When set to <strong>false</strong> the cache is refreshed periodically by SiVa in a predetermined interval specified by <code>siva.tsl.loader.schedulerCron</code> using <code>siva.tsl.loader.url</code></li><li>When set to <strong>true</strong> the siva uses existing cache as it's TSL. No direct polling for updates are performed. </li><li>Default: <strong>false</strong></li></ul></td>
+<td>A boolean value that determines whether the TSL is loaded from disk cache instead of by downloading a new TSL in a predetermined interval.<br/><br/>Note that the cache files are by default stored in a system temporary folder (can be set with system property <code>java.io.tmpdir</code>; make sure the application has both read and write permissions in that folder).<ul><li>When set to <strong>false</strong>, the cache is refreshed periodically by SiVa in a predetermined interval specified by <code>siva.tsl.loader.schedulerCron</code> using <code>siva.tsl.loader.url</code>.</li><li>When set to <strong>true</strong>, SiVa uses existing cache as it's TSL. No direct polling for updates is performed, so all the files (LOTL and TSL files) must be present in system temporary directory. The cache files must have the same filenames as their URLs, but special characters need to be replaced with underscores. For example, the file downloaded from https://sr.riik.ee/tsl/estonian-tsl.xml must be named <code>https___sr_riik_ee_tsl_estonian_tsl_xml</code></li><li>Default: <strong>false</strong></li></ul></td>
 </tr>
 <tr>
 <td><strong>siva.tsl.loader.onlineCacheExpirationTime</strong></td>
@@ -2877,6 +2877,39 @@ siva.europe.signaturePolicy.policies[1].constraintPath=generic_constraint_qes.xm
 <p class="admonition-title">Note</p>
 <p>Default policy configuration is lost when policy detail properties (name, description, url or constraintPath) are overridden or new custom policies added in custom configuration files (in this case, the existing default policies must be redefined in configuration files explicitly)</p>
 </div>
+<ul>
+<li>Configure SiVa to request revocation status for T level signatures</li>
+</ul>
+<p>By default, T level signatures do not contain revocation data.
+It is possible to configure SiVa to use OnlineOCSPSource in order to request revocation status during the validation process for T level signatures.</p>
+<p>An example of configuring SiVa to request an OCSP response only for certificates issued by Latvian and Lithuanian service providers:</p>
+<div class="codehilite"><pre><span></span><code>t-level-signature-filter.filter-type = ALLOWED_COUNTRIES
+t-level-signature-filter.countries[0] = LV
+t-level-signature-filter.countries[1] = LT
+</code></pre></div>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If enabled, the revocation request is made for every signature level for given countries, not only T level signatures.</p>
+</div>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>t-level-signature-filter.filter-type</strong></td>
+<td>A string value that determines, which filter is being used. There are two available options: ALLOWED_COUNTRIES or NOT_ALLOWED_COUNTRIES <ul><li>When set to <strong>ALLOWED_COUNTRIES</strong> SiVa uses OnlineOCSPSource to request revocation status for the list of provided countries. If the list of countries is left empty, no OCSP requests are made</li><li>When set to <strong>NOT_ALLOWED_COUNTRIES</strong> SiVa uses OnlineOCSPSource to request revocation status for all the countries that are not on the list. If the list of countries is left empty, it makes an OCSP request for every country</li><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+<tr>
+<td><strong>t-level-signature-filter.countries</strong></td>
+<td>A list of countries to be provided to the filter. For example: EE, LV, BE <ul><li>Default: <strong>N/A</strong></li></ul></td>
+</tr>
+</tbody>
+</table>
 <h3 id="demo-webapp-parameters">Demo webapp parameters</h3>
 <ul>
 <li>Linking to SiVa webapp</li>

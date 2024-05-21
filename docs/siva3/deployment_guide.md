@@ -459,12 +459,6 @@ See the reference list of all common [application properties](http://docs.spring
     TSL is currently used only by Generic and BDOC validators
 
 
-* Configure SOAP services endpoint URL-s displayed in WSDL
-
-| Property | Description |
-| ------ | ----------- |
-| **siva.wsdl.endpoint-url** | SOAP services endpoint URL to what specific service name is added within the application. Must contain only scheme, host and/or port and optional path. Service name must not be added to the url.  |
-
 * TimeMark validation - customizing policies
 
 | Property | Description |
@@ -549,8 +543,6 @@ t-level-signature-filter.countries[1] = LT
 | -------- | ----------- |
 |**siva.service.serviceHost**| An HTTP URL link to the Siva webapp <ul><li>Default: **http://localhost:8080**</li></ul> |
 |**siva.service.jsonServicePath**| Service path in Siva webapp to access the REST/JSON API<ul><li>Default: **/validate**</li></ul> |
-|**siva.service.soapServicePath**| Service path in Siva webapp to access the SOAP API <ul><li>Default: **/soap/validationWebService/validateDocument**</li></ul> |
 |**siva.service.jsonDataFilesServicePath**| Data file service path in Siva webapp to access the REST/JSON API<ul><li>Default: **/getDataFiles**</li></ul> |
-|**siva.service.soapDataFilesServicePath**| Data file service path in Siva webapp to access the SOAP API <ul><li>Default: **/soap/dataFilesWebService/getDocumentDataFiles**</li></ul> |
 |**siva.service.trustStore**| Path to Siva webapp truststore on classpath <ul><li>Default: **siva_server_truststore.p12**</li></ul> |
 |**siva.service.trustStorePassword**| Siva webapp truststore password <ul><li>Default: **password**</li></ul> |

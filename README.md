@@ -5,7 +5,7 @@
 [![SiVa CI with Maven](https://github.com/open-eid/siva/actions/workflows/siva-verify.yml/badge.svg?branch=master)](https://github.com/open-eid/siva/actions/workflows/siva-verify.yml)
 [![GitHub license](https://img.shields.io/badge/license-EUPLv1.1-blue.svg)](https://raw.githubusercontent.com/open-eid/SiVa/develop/LICENSE.md)
 
-SiVa is digital signature validation web service that provides JSON and SOAP API to validate following file types:
+SiVa is digital signature validation web service that provides JSON API to validate following file types:
 
 * Estonian DDOC containers
 * Estonian BDOC containers with TimeMark and TimeStamp signatures
@@ -68,7 +68,7 @@ Logs for all running containers can be viewed at http://localhost:11080.
 SiVa project compiles **2 fat executable JAR** files that You can run after successfully building the
 project by issuing below command:
 
-**Starting the SiVa REST and SOAP webservice. NB! X.X.X denotes the version you are running.**
+**Starting the SiVa REST webservice. NB! X.X.X denotes the version you are running.**
 
 ```bash
 java -jar siva-parent/siva-webapp/target/siva-webapp-X.X.X-exec.jar

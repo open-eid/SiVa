@@ -74,24 +74,10 @@
             <artifactId>lombok</artifactId>
         </dependency>
         <dependency>
-            <groupId>jakarta.xml.ws</groupId>
-            <artifactId>jakarta.xml.ws-api</artifactId>
-            <version>4.0.1</version>
-        </dependency>
-        <dependency>
             <groupId>com.sun.xml.ws</groupId>
             <artifactId>jaxws-ri</artifactId>
             <version>4.0.2</version>
             <type>pom</type>
-        </dependency>
-        <!-- Apache CXF -->
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-frontend-jaxws</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-transports-http</artifactId>
         </dependency>
 
         <dependency>
@@ -179,50 +165,6 @@
                             <sources>
                                 <source>target/generated-sources/wsdlimport/siva</source>
                             </sources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>com.sun.xml.ws</groupId>
-                <artifactId>jaxws-maven-plugin</artifactId>
-                <version>4.0.2</version>
-                <executions>
-                    <execution>
-                        <id>wsimport</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>wsimport</goal>
-                        </goals>
-                        <configuration>
-
-                            <wsdlUrls>
-                                <wsdlUrl>src/main/resources/wsdl/siva.wsdl</wsdlUrl>
-                                <wsdlUrl>src/main/resources/wsdl/siva-hashcode-validation.wsdl</wsdlUrl>
-                            </wsdlUrls>
-                            <bindingDirectory>src/main/resources/wsdl/</bindingDirectory>
-                            <bindingFiles>diagnostic_binding.xml,details_binding.xml</bindingFiles>
-                            <sourceDestDir>target/generated-sources/wsdlimport/siva</sourceDestDir>
-                            <vmArgs>
-                                <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
-                            </vmArgs>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>wsimport2</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>wsimport</goal>
-                        </goals>
-                        <configuration>
-                            <wsdlUrls>
-                                <wsdlUrl>src/main/resources/wsdl/siva-datafiles.wsdl</wsdlUrl>
-                            </wsdlUrls>
-                            <sourceDestDir>target/generated-sources/wsdlimport/siva</sourceDestDir>
-                            <vmArgs>
-                                <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
-                            </vmArgs>
                         </configuration>
                     </execution>
                 </executions>

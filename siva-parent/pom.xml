@@ -37,10 +37,6 @@
         <module>siva-signature-service</module>
     </modules>
 
-    <properties>
-        <cxf.version>4.0.4</cxf.version>
-    </properties>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -78,18 +74,6 @@
                 <version>${spring.boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>
-
-            <!-- Apache CXF -->
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-frontend-jaxws</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-transports-http</artifactId>
-                <version>${cxf.version}</version>
             </dependency>
 
             <dependency>

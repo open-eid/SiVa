@@ -2,13 +2,13 @@
 
 In this section the SiVa external interfaces are described. For information of internal components and their interfaces, please refer to [**Structure and activities**](../siva3/structure_and_activities.md).
 
-SiVa service provides **REST JSON** and **SOAP** interfaces that enable the service users to:
+SiVa service provides **REST JSON** interface that enable the service users to:
 
 * Request validation of signatures in a digitally signed document (i.e. signature container like BDOC,ASiC-E/PDF/...);
 * Request validation of XAdES signature without datafiles.
 * Request datafiles inside of DDOC container
 
-SiVa service SOAP interface supports X-Road v6. However, it is optional whether to integrate SiVa service using X-Road or using "plain" SOAP interface. This document only describes the SiVa service part of the interface, for the X-Road specifics visit Riigi Infosüsteemi Amet [webpage](https://www.ria.ee/en/state-information-system/data-exchange-platforms/data-exchange-layer-x-tee).
+SiVa service REST JSON interface supports X-Road v6. However, it is optional whether to integrate SiVa service using X-Road or using "plain" REST interface. This document only describes the SiVa service part of the interface, for the X-Road specifics visit Riigi Infosüsteemi Amet [webpage](https://www.ria.ee/en/state-information-system/data-exchange-platforms/data-exchange-layer-x-tee).
 
 In the following subsections, the SiVa validation request and response interfaces are described in detail. 
 
@@ -21,26 +21,16 @@ In the following subsections, the SiVa validation request and response interface
 POST https://<server url>/validate
 ```
 
-** SOAP Endpoint **
-```
-POST https://<server url>/soap/validationWebService/validateDocument
-```
-
-** SOAP WSDL **
-```
-POST https://<server url>/soap/validationWebService/validateDocument?wsdl
-```
-
 ### Validation request parameters
 
-Validation request parameters for JSON and SOAP interfaces are described in the table below. Data types of SOAP parameters are defined in the [SiVa WSDL document](../siva3/appendix/wsdl.md).
+Validation request parameters for JSON interface are described in the table below.
 
-| JSON parameter | SOAP parameter | Mandatory | JSON data type | Description |
-|----------------|----------------|-----------|-------------|----------------|
-| document | Document | + |  String | Base64 encoded string of digitally signed document to be validated |
-| filename | Filename | + |  String | File name of the digitally signed document (i.e. sample.bdoc), max length 255 characters. |
-| signaturePolicy | SignaturePolicy | - |  String | Can be used to change the default signature validation policy that is used by the service. <br> See also [SiVa Validation Policy](../siva3/appendix/validation_policy.md) for more detailed information on given policy constraints.<br>**Possible values:** <br> POLv3 - signatures with all legal levels are accepted (i.e. QES, AdESqc and AdES, according to Regulation (EU) No 910/2014.) <br> POLv4 - the default policy. Accepted signatures depend on their type (i.e. signature, seal or unknown) and legal level (i.e. QES, AdESqc and Ades) |
-| reportType | ReportType | - | String | Can be used to change the default returned report type. <br>**Possible values:** <br> Simple - default report type. Returns overall validation result (validationConclusion block)<br> Detailed -  returns detailed information about the signatures and their validation results (validationConclusion, validationProcess and validationReportSignature. Two later ones are optionally present). <br> Diagnostic -  returns diagnostic data about the information contained in the signature itself, it's revocation data and mathematical validity (validationConclusion, diagnosticData block) |
+| JSON parameter | Mandatory | JSON data type | Description |
+|----------------|-----------|-------------|----------------|
+| document | + |  String | Base64 encoded string of digitally signed document to be validated |
+| filename | + |  String | File name of the digitally signed document (i.e. sample.bdoc), max length 255 characters. |
+| signaturePolicy | - |  String | Can be used to change the default signature validation policy that is used by the service. <br> See also [SiVa Validation Policy](../siva3/appendix/validation_policy.md) for more detailed information on given policy constraints.<br>**Possible values:** <br> POLv3 - signatures with all legal levels are accepted (i.e. QES, AdESqc and AdES, according to Regulation (EU) No 910/2014.) <br> POLv4 - the default policy. Accepted signatures depend on their type (i.e. signature, seal or unknown) and legal level (i.e. QES, AdESqc and Ades) |
+| reportType | - | String | Can be used to change the default returned report type. <br>**Possible values:** <br> Simple - default report type. Returns overall validation result (validationConclusion block)<br> Detailed -  returns detailed information about the signatures and their validation results (validationConclusion, validationProcess and validationReportSignature. Two later ones are optionally present). <br> Diagnostic -  returns diagnostic data about the information contained in the signature itself, it's revocation data and mathematical validity (validationConclusion, diagnosticData block) |
 
 ### Sample JSON request with mandatory parameters
 
@@ -61,42 +51,14 @@ Validation request parameters for JSON and SOAP interfaces are described in the 
 }
 ```
 
-### Sample SOAP request
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-  <soap:Body>
-    <ns2:ValidateDocument xmlns:ns2="http://soap.webapp.siva.openeid.ee/">
-      <ns2:ValidationRequest>
-        <Document>PD94bWwgdmVyc2lvbj0iMS4....</Document>
-        <Filename>sample.asice</Filename>
-        <SignaturePolicy>POLv3</SignaturePolicy>
-        <ReportType>Detailed</ReportType>
-      </ns2:ValidationRequest>
-    </ns2:ValidateDocument>
-  </soap:Body>
-</soap:Envelope>
-```
-
 ## Validation request interface for hashcode
 
-Hashcode XAdES validation is supported for **REST JSON** and **SOAP** interfaces.
+Hashcode XAdES validation is supported for **REST JSON** interface.
 
 ** REST JSON Endpoint **
 
 ```
 POST https://<server url>/validateHashcode
-```
-
-** SOAP Endpoint **
-```
-POST https://<server url>/soap/hashcodeValidationWebService
-```
-
-** SOAP WSDL **
-```
-POST https://<server url>/soap/hashcodeValidationWebService?wsdl
 ```
 
 ### Validation request parameters
@@ -107,18 +69,18 @@ Two different use cases are supported for the hashcode validation.
 
 Validation request parameters for JSON interface are described in the table below.
 
-| JSON parameter | SOAP parameter | Mandatory | JSON data type | Description |
-|----------------|----------------|-----------|----------------|-------------|
-| signatureFiles | SignatureFiles | + |  Array | Array containing the signature objects. |
-| signatureFiles[0] | SignatureFiles.SignatureFile | + |  Object | Object containing one signature file. |
-| signatureFiles[0].signature | SignatureFiles.SignatureFile.Signature | + |  String | Base64 encoded string of signature file |
-| signatureFiles[0].datafiles | SignatureFiles.SignatureFile.Signature.DataFiles | - |  Array | Array containing the information for datafiles that signature is covering |
-| signatureFiles[0].datafiles[0] | SignatureFiles.SignatureFile.Signature.DataFiles.DataFile | + | Object | Object containing data file information |
-| signatureFiles[0].datafiles[0].filename | SignatureFiles.SignatureFile.Signature.DataFiles.DataFile.Filename | + |  String | File name of the hashed data file, max length 255 characters. |
-| signatureFiles[0].datafiles[0].hashAlgo | SignatureFiles.SignatureFile.Signature.DataFiles.DataFile.HashAlgo | + |  String | Hash algorithm used for hashing the data file (must match with algorithm in signature file). Accepted values are dependant of validation policy |
-| signatureFiles[0].datafiles[0].hash | SignatureFiles.SignatureFile.Signature.DataFiles.DataFile.Hash | + |  String | Data file hash in Base64 encoded format. |
-| signaturePolicy | SignaturePolicy | - |  String | Can be used to change the default signature validation policy that is used by the service. <br> See also [SiVa Validation Policy](https://open-eid.github.io/SiVa/siva3/appendix/validation_policy) for more detailed information on given policy constraints.<br>**Possible values:** <br> POLv3 - signatures with all legal levels are accepted (i.e. QES, AdESqc and AdES, according to Regulation (EU) No 910/2014.) <br> POLv4 - the default policy. Accepted signatures depend on their type (i.e. signature, seal or unknown) and legal level (i.e. QES, AdESqc and Ades) |
-| reportType | ReportType | - | String | <br>**Possible values:** <br> Simple - default report type. Returns overall validation result (validationConclusion block)<br> Detailed -  returns detailed information about the signatures and their validation results (validationConclusion, validationProcess and validationReportSignature. Two later ones are not supported for hashcode). <br> Diagnostic -  returns diagnostic data about the information contained in the signature itself, it's revocation data and mathematical validity (validationConclusion, diagnosticData block. Last one is not support for hashcode) |
+| JSON parameter | Mandatory | JSON data type | Description |
+|----------------|-----------|----------------|-------------|
+| signatureFiles | + |  Array | Array containing the signature objects. |
+| signatureFiles[0] | + |  Object | Object containing one signature file. |
+| signatureFiles[0].signature | + |  String | Base64 encoded string of signature file |
+| signatureFiles[0].datafiles | - |  Array | Array containing the information for datafiles that signature is covering |
+| signatureFiles[0].datafiles[0] | + | Object | Object containing data file information |
+| signatureFiles[0].datafiles[0].filename | + |  String | File name of the hashed data file, max length 255 characters. |
+| signatureFiles[0].datafiles[0].hashAlgo | + |  String | Hash algorithm used for hashing the data file (must match with algorithm in signature file). Accepted values are dependant of validation policy |
+| signatureFiles[0].datafiles[0].hash | + |  String | Data file hash in Base64 encoded format. |
+| signaturePolicy | - |  String | Can be used to change the default signature validation policy that is used by the service. <br> See also [SiVa Validation Policy](https://open-eid.github.io/SiVa/siva3/appendix/validation_policy) for more detailed information on given policy constraints.<br>**Possible values:** <br> POLv3 - signatures with all legal levels are accepted (i.e. QES, AdESqc and AdES, according to Regulation (EU) No 910/2014.) <br> POLv4 - the default policy. Accepted signatures depend on their type (i.e. signature, seal or unknown) and legal level (i.e. QES, AdESqc and Ades) |
+| reportType | - | String | <br>**Possible values:** <br> Simple - default report type. Returns overall validation result (validationConclusion block)<br> Detailed -  returns detailed information about the signatures and their validation results (validationConclusion, validationProcess and validationReportSignature. Two later ones are not supported for hashcode). <br> Diagnostic -  returns diagnostic data about the information contained in the signature itself, it's revocation data and mathematical validity (validationConclusion, diagnosticData block. Last one is not support for hashcode) |
 
 ### Sample JSON request with mandatory parameters (datafile hashcode match verification done on integrators side)
 
@@ -175,158 +137,92 @@ Validation request parameters for JSON interface are described in the table belo
 }
 ```
 
-### Sample SOAP request with mandatory parameters
-
-```xml
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soap="http://soap.webapp.siva.openeid.ee/">
-   <soapenv:Body>
-      <soap:HashcodeValidationDocument>
-         <soap:HashcodeValidationRequest>
-			<SignatureFiles>
-				<SignatureFile>
-					<Signature>PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGlu...</Signature>
-				</SignatureFile>
-				<SignatureFile>
-					<Signature>PD94bW2lvbj0wgdmVyciMS4wIvZG2lvbj0lu...</Signature>
-				</SignatureFile>
-			</SignatureFiles>
-         </soap:HashcodeValidationRequest>
-      </soap:HashcodeValidationDocument>
-   </soapenv:Body>
-</soapenv:Envelope>
-```
-### Sample SOAP request with all parameters and multiple datafiles
-
-```xml
-
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soap="http://soap.webapp.siva.openeid.ee/">
-   <soapenv:Body>
-      <soap:HashcodeValidationDocument>
-         <soap:HashcodeValidationRequest>
-			<SignatureFiles>
-				<SignatureFile>
-					<Signature>PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGlu...</Signature>
-					<DataFiles>
-						<DataFile>
-						  <Filename>test.pdf</Filename>
-						  <HashAlgo>SHA256</HashAlgo>
-						  <Hash>IucjUcbRo9Rke0bZLiHcwiIiplP9pSrSPr7LKln1EiI=</Hash>
-					   </DataFile>
-					   <DataFile>
-						  <Filename>test2.pdf</Filename>
-						  <HashAlgo>SHA256</HashAlgo>
-						  <Hash>IucjUcbRo9Rke0bZLiHcwiIiplP9pSrSPr7LKln1EiI=</Hash>
-					   </DataFile>
-					</DataFiles>
-  				</SignatureFile>
-				<SignatureFile>
-					<Signature>PiBlbmNvZD94bWwgdmVyc2lvbj0PD94bWwGlu...</Signature>
-					<DataFiles>
-						<DataFile>
-						  <Filename>test.pdf</Filename>
-						  <HashAlgo>SHA256</HashAlgo>
-						  <Hash>IucjUcbRo9Rke0bZLiHcwiIiplP9pSrSPr7LKln1EiI=</Hash>
-					   </DataFile>
-					   <DataFile>
-						  <Filename>test2.pdf</Filename>
-						  <HashAlgo>SHA256</HashAlgo>
-						  <Hash>IucjUcbRo9Rke0bZLiHcwiIiplP9pSrSPr7LKln1EiI=</Hash>
-					   </DataFile>
-					</DataFiles>
-  				</SignatureFile>
-			</SignatureFiles>
-         </soap:HashcodeValidationRequest>
-      </soap:HashcodeValidationDocument>
-   </soapenv:Body>
-</soapenv:Envelope>
-```
-
 ## Validation response interface
-The signature validation report (i.e. the validation response) for JSON and SOAP interfaces depends on what type of validation report was requested.  Data types of SOAP parameters are defined in the [SiVa WSDL document](https://open-eid.github.io/SiVa/siva3/appendix/wsdl/).
+The signature validation report (i.e. the validation response) for JSON interface depends on what type of validation report was requested.
 
 ### Validation response parameters Simple Report (successful scenario)
 
 General structure of validation response.
 
-| JSON parameter | SOAP parameter | Mandatory |  JSON data type | Description |
-|----------------|----------------|-----------|-----------------|-------------|
-| validationReport | ValidationReport |  + | Object | Object containing SIVA validation report |
-| validationReport. validationConclusion | ValidationReport. ValidationConclusion |  + | Object | Object containing information of the validation conclusion |
+| JSON parameter | Mandatory |  JSON data type | Description |
+|----------------|-----------|-----------------|-------------|
+| validationReport |  + | Object | Object containing SIVA validation report |
+| validationReport. validationConclusion |  + | Object | Object containing information of the validation conclusion |
 
 Structure of validationConclusion block
 
-| JSON parameter | SOAP parameter                                           | Mandatory |  JSON data type | Description |
-|----------------|----------------------------------------------------------|-----------|-----------------|-------------|
-| policy | Policy                                                   | + |  Object | Object containing information of the SiVa signature validation policy that was used for validation. |
-| policy.policyName | Policy.PolicyName                                        | + | String | Name of the validation policy |
-| policy. policyDescription | Policy. PolicyDescription                                | + | String | Short description of the validation policy. |
-| policy.policyUrl | Policy.PolicyUrl                                         | + | String | URL where the signature validation policy document can be downloaded. The validation policy document shall include information about validation of all the document formats, including the different validation policies that are used in case of different file formats and base libraries. |
-| signaturesCount | SignaturesCount                                          | + | Number | Number of signatures found inside digitally signed file. |
-| validSignaturesCount | ValidSignaturesCount                                     | + | Number | Signatures count that have validated to `TOTAL-PASSED`. See also `Signature.Indication` field. |
-| validationLevel | ValidationLevel                                          | - | Date | Validation process against what the document is validated, only applicable on DSS based validations. <br>**Possible values:** <br> ARCHIVAL_DATA|
-| validationTime | ValidationTime                                           | + | Date | Time of validating the signature by the service. |
-| validationWarnings | ValidationWarnings                                       | - | Array | Array of SiVa validation warnings that do not affect the overall validation result. See also `signatures.warnings` parameter. |
-| validationWarnings[0] | ValidationWarning                                        | + | Object | Object containing the warning. |
-| validationWarnings[0]. content | ValidationWarning. Content                               | + | String | Description of the warning. |
-| validatedDocument | ValidatedDocument                                        | - | Object | Object containing information about validated document. |
-| validatedDocument. filename | ValidatedDocument. Filename                              | - | String | Digitally signed document's file name. Not present for hashcode validation. |
-| validatedDocument. fileHash | ValidatedDocument. FileHash                              | - | String | Calculated hash for validated document in Base64. Present when report signing is enabled. |
-| validatedDocument. hashAlgo | ValidatedDocument. HashAlgo                              | - | String | Hash algorithm used. Present when report signing is enabled. |
-| signatureForm | SignatureForm                                            | - | String | Format (and optionally version) of the digitally signed document container. <br> In case of documents in [DIGIDOC-XML](https://www.id.ee/wp-content/uploads/2020/08/digidoc_format_1.3.pdf) (DDOC) format, the "hashcode" suffix is used to denote that the container was validated in [hashcode mode](https://open-eid.github.io/allkirjastamisteenus/json-technical-description/#hashcode-container-form), i.e. without original data files. <br> **Possible values:**  <br> DIGIDOC_XML_1.0 <br> DIGIDOC_XML_1.0_hashcode <br> DIGIDOC_XML_1.1 <br> DIGIDOC_XML_1.1_hashcode <br> DIGIDOC_XML_1.2 <br> DIGIDOC_XML_1.2_hashcode <br> DIGIDOC_XML_1.3 <br> DIGIDOC_XML_1.3_hashcode <br> ASiC_E - used in case of all ASIC-E ([BDOC](https://www.id.ee/wp-content/uploads/2021/06/bdoc-spec212-eng.pdf)) documents <br> ASiC_S - used in case of all ASIC-S documents |
-| signatures | Signatures                                               | - | Array | Collection of signatures found in digitally signed document |
-| signatures[0] | Signature                                                | + | Object | Signature information object |
-| signatures[0]. claimedSigningTime | Signature. ClaimedSigningTime                            | + | Date | Claimed signing time, i.e. signer's computer time during signature creation |
-| signatures[0].id | Signature.Id                                             | + | String | Signature ID attribute  |
-| signatures[0].indication | Signature.Indication                                     | + | String | Overall result of the signature's validation process, according to [ETSI EN 319 102-1](http://www.etsi.org/deliver/etsi_en/319100_319199/31910201/01.01.01_60/en_31910201v010101p.pdf) "Table 5: Status indications of the signature validation process". <br> Note that the validation results of different signatures in one signed document (signature container) may vary. <br> See also `validSignaturesCount` and `SignaturesCount` fields. <br>**Possible values:** <br> TOTAL-PASSED <br> TOTAL-FAILED <br> INDETERMINATE |
-| signatures[0]. subIndication | Signature. SubIndication                                 | - | String | Additional subindication in case of failed or indeterminate validation result, according to [ETSI EN 319 102-1](http://www.etsi.org/deliver/etsi_en/319100_319199/31910201/01.01.01_60/en_31910201v010101p.pdf) "Table 6: Validation Report Structure and Semantics" |
-| signatures[0].errors | Signature.Errors                                         | - | Array | Information about validation error(s), array of error messages.  |
-| signatures[0].errors[0] | Signature.Errors. Error                                  | + | Object | Object containing the error |
-| signatures[0].errors[0].  content | Signature.Errors. Error.Content                          | + | String | Error message, as returned by the base library that was used for signature validation. |
-| signatures[0].info | Signature.Info                                           | - | Object | Object containing trusted signing time information and user added additional signing info. |
-| signatures[0].info. bestSignatureTime | Signature.Info. BestSignatureTime                        | + | Date | Time value that is regarded as trusted signing time, denoting the earliest time when it can be trusted by the validation application (because proven by some Proof-of-Existence present in the signature) that a signature has existed.<br>The source of the value depends on the signature profile (see also `SignatureFormat` parameter):<br>- Signature with time-mark (LT_TM level) - the producedAt value of the earliest valid time-mark (OCSP confirmation of the signer's certificate) in the signature.<br>- Signature with time-stamp (LT or LTA level) - the genTime value of the earliest valid signature time-stamp token in the signature. <br> - Signature with BES or EPES level - the value is empty, i.e. there is no trusted signing time value available. |
-| signatures[0].info. timeAssertionMessageImprint | Signature.Info. TimeAssertionMessageImprint              | - | String | Base64 encoded value of message imprint retrieved from time assertion. In case of LT_TM (TimeMark) signatures, OCSP nonce value is returned. In case of T, LT or LTA (TimeStamp) signatures, TimeStamp message imprint is returned. |
-| signatures[0].info. ocspResponseCreationTime | Signatures.Info. OcspResponseCreationTime                | - | Date | Time value that is regarded as the original OCSP response creation time. |
-| signatures[0].info. timestampCreationTime | Signatures.Info. TimestampCreationTime                   | - | Date | Time value of the timestamp creation |
-| signatures[0].info. signerRole | Signature.Info. SignerRole                               | - | Array | Array of roles attached to the signature. |
-| signatures[0].info. signerRole[0] | Signature.Info. SignerRole[0]                            | + | Object | Object containing claimed roles. |
-| signatures[0].info. signerRole[0]. claimedRole | Signature.Info. SignerRole[0].ClaimedRole                | + | String | Role stated by signer on signing. |
-| signatures[0].info. signatureProductionPlace | Signature.Info. SignatureProductionPlace                 | - | Object | Object containing stated signing location info. |
-| signatures[0].info. signatureProductionPlace.countryName | Signature.Info. SignatureProductionPlace.CountryName     | - | String | Stated signing country. |
-| signatures[0].info. signatureProductionPlace.stateOrProvince | Signature.Info. SignatureProductionPlace.StateOrProvince | - | String | Stated state or province. |
-| signatures[0].info. signatureProductionPlace.city | Signature.Info. SignatureProductionPlace.City            | - | String | Stated city. |
-| signatures[0].info. signatureProductionPlace.postalCode | Signature.Info. SignatureProductionPlace.PostalCode      | - | String | Stated postal code. |
-| signatures[0].info. signingReason | Signature.Info SigningReason                             | - | String | Free text field for PAdES type signatures for stating the signing reason |
-| signatures[0]. signatureFormat | Signature. SignatureFormat                               | + | String | Format and profile (according to Baseline Profile) of the signature. See [XAdES Baseline Profile](http://www.etsi.org/deliver/etsi_ts/103100_103199/103171/02.01.01_60/ts_103171v020101p.pdf), [CAdES Baseline Profile](http://www.etsi.org/deliver/etsi_ts/103100_103199/103173/02.02.01_60/ts_103173v020201p.pdf) and [PAdES Baseline Profile](http://www.etsi.org/deliver/etsi_ts/103100_103199/103172/02.02.02_60/ts_103172v020202p.pdf) for detailed description of the Baseline Profile levels. Levels that are accepted in SiVa validation policy are described in [SiVa signature validation policy](../siva3/appendix/validation_policy.md) <br>**Possible values:**  <br> XAdES_BASELINE_B <br> XAdES_BASELINE_B_BES <br> XAdES_BASELINE_B_EPES <br> XAdES_BASELINE_T <br> XAdES_BASELINE_LT - long-term level XAdES signature where time-stamp is used as a assertion of trusted signing time<br> XAdES_BASELINE_LT_TM - long-term level XAdES signature where time-mark is used as a assertion of trusted signing time. Used in case of [BDOC](https://www.id.ee/wp-content/uploads/2021/06/bdoc-spec212-eng.pdf) signatures with time-mark profile and [DIGIDOC-XML](https://www.id.ee/wp-content/uploads/2020/08/digidoc_format_1.3.pdf) (DDOC) signatures.<br>  XAdES_BASELINE_LTA <br> CAdES_BASELINE_B <br> CAdES_BASELINE_T <br> CAdES_BASELINE_LT <br> CAdES_BASELINE_LTA<br> PAdES_BASELINE_B <br> PAdES_BASELINE_T <br> PAdES_BASELINE_LT <br> PAdES_BASELINE_LTA |
-| signatures[0]. signatureMethod | Signature. SignatureMethod                               | + | String | Signature method specification URI used in signature creation. |
-| signatures[0]. signatureLevel | Signature. SignatureLevel                                | - |String | Legal level of the signature, according to Regulation (EU) No 910/2014. <br> - **Possible values on positive validation result:**<br> QESIG <br> QESEAL <br> QES <br> ADESIG_QC <br> ADESEAL_QC <br> ADES_QC <br> ADESIG <br> ADESEAL <br> ADES <br> - **Possible values on indeterminate validation result:**<br> prefix INDETERMINATE is added to the level described in positive result. For example  INDETERMINATE_QESIG <br> - **Possible values on negative validation result:**<br>In addition to abovementioned<br> NOT_ADES_QC_QSCD <br> NOT_ADES_QC <br> NOT_ADES <br> NA <br> - In case of DIGIDOC-XML 1.0..1.3 formats, value is missing as the signature level is not checked by the JDigiDoc base library that is used for validation. However, the signatures can be indirectly regarded as QES level signatures, see also [SiVa Validation Policy](/siva3/appendix/validation_policy.md)<br>|
-| signatures[0].signedBy | Signature.SignedBy                                       | + | String | In format of "surname, givenName, serialNumber" if  these fields are present in subject distinguished name field. In other cases, value of common name field. |
-| signatures[0].subjectDistinguishedName.serialNumber | Signature.SubjectDistinguishedName.SerialNumber          | - | String | SERIALNUMBER value portion in signer's certificate's subject distinguished name |
-| signatures[0].subjectDistinguishedName.commonName | Signature.SubjectDistinguishedName.CommonName            | - | String | CN (common name) value portion in signer's certificate's subject distinguished name |
-| signatures[0].subjectDistinguishedName.givenName | Signature.SubjectDistinguishedName.GivenName             | - | String | Given name value portion in signer's certificate's subject distinguished name |
-| signatures[0].subjectDistinguishedName.surname | Signature.SubjectDistinguishedName.Surname               | - | String | Surname value portion in signer's certificate's subject distinguished name |
-| signatures[0]. signatureScopes | Signature. SignatureScopes                               | - | Array | Contains information of the original data that is covered by the signature. |
-| signatures[0]. signatureScopes[0]. name | Signature. SignatureScopes.  SignatureScope.Name         | + | String | Name of the signature scope. |
-| signatures[0]. signatureScopes[0]. scope | Signature. SignatureScopes.  SignatureScope. Scope       | + | String | Type of the signature scope. |
-| signatures[0]. signatureScopes[0]. content | Signature. SignatureScopes.  SignatureScope. Content     | + | String | Description of the scope. |
-| signatures[0]. signatureScopes[0]. hashAlgo | Signature. SignatureScopes.  SignatureScope. HashAlgo    | - | String | Hash algorithm used for datafile hash calculation. Present for hashcode validation. |
-| signatures[0]. signatureScopes[0]. hash | Signature. SignatureScopes.  SignatureScope. Hash        | - | String | Hash of data file encoded in Base64. Present for hashcode validation. |
-| signatures[0]. warnings | Signature.Warnings                                       | - | Array | Block of validation warnings that do not affect the overall validation result. |
-| signatures[0]. warnings[0] | Signature.Warnings. Warning                              | + | Object | Object containing the warning |
-| signatures[0]. warnings[0]. content | Signature.Warnings. Warning.Description                  | + | String | Warning description, as retuned by the base library that was used for validation. |
-| signatures[0].certificates | Signature.Certificates                                   | - | Array | Array containing certificates that are present in the signature or can be fetched from TSL. |
-| signatures[0].certificates[0] | Signature.Certificates.Certificate                       | + | Object | Object containinig certificate type, common name and certificate. Minimal object is signer certificate. If present contains certificates for TimeStamps and OCSP as well. |
-| signatures[0].certificates[0].commonName | Signature.Certificates.Certificate.CommonName            | + | String | CN (common name) value in certificate. |
-| signatures[0].certificates[0].type | Signature.Certificates.Certificate.Type                  | + | String | Type of the certificate. Can be SIGNING, REVOCATION, SIGNATURE_TIMESTAMP, ARCHIVE_TIMESTAMP or CONTENT_TIMESTAMP. |
-| signatures[0].certificates[0].content | Signature.Certificates.Certificate.Content               | + | String | DER encoded X.509 certificate in Base64. |
-| signatures[0].certificates[0].issuer | Signature.Certificates.Certificate.Issuer                | + | String | Object containing issuer certificate information. Can create chain til the trust anchor. |
-| timeStampTokens | TimeStampTokens                                          | - | Array | Array containing the time stamp tokens |
-| timeStampTokens[0]. | TimeStampToken                                           | + | Object | Object containing the time stamp token (TST) |
-| timeStampTokens[0]. indication | TimeStampToken. Indication                               | + | String | Result of the time stamp token validation. <br>**Possible values:** <br> TOTAL-PASSED <br> TOTAL-FAILED |
-| timeStampTokens[0]. signedBy | TimeStampToken. SignedBy                                 | + | String | Signer of the time stamp token. |
-| timeStampTokens[0]. signedTime | TimeStampToken. SignedTime                               | + | String | Time when the time stamp token was given. |
-| timeStampTokens[0]. error | TimeStampToken. Errors                                   | - | Array | Errors returned in time stamp token validation. |
-| timeStampTokens[0]. error[0] | Errors. Error                                            | + | Object | Object containing the error. |
-| timeStampTokens[0]. error[0]. content | Error. Content                                           | + | String | Error description. |
+| JSON parameter | Mandatory |  JSON data type | Description |
+|----------------|-----------|-----------------|-------------|
+| policy | + |  Object | Object containing information of the SiVa signature validation policy that was used for validation. |
+| policy.policyName | + | String | Name of the validation policy |
+| policy. policyDescription | + | String | Short description of the validation policy. |
+| policy.policyUrl | + | String | URL where the signature validation policy document can be downloaded. The validation policy document shall include information about validation of all the document formats, including the different validation policies that are used in case of different file formats and base libraries. |
+| signaturesCount | + | Number | Number of signatures found inside digitally signed file. |
+| validSignaturesCount | + | Number | Signatures count that have validated to `TOTAL-PASSED`. See also `Signature.Indication` field. |
+| validationLevel | - | Date | Validation process against what the document is validated, only applicable on DSS based validations. <br>**Possible values:** <br> ARCHIVAL_DATA|
+| validationTime | + | Date | Time of validating the signature by the service. |
+| validationWarnings | - | Array | Array of SiVa validation warnings that do not affect the overall validation result. See also `signatures.warnings` parameter. |
+| validationWarnings[0] | + | Object | Object containing the warning. |
+| validationWarnings[0]. content | + | String | Description of the warning. |
+| validatedDocument | - | Object | Object containing information about validated document. |
+| validatedDocument. filename | - | String | Digitally signed document's file name. Not present for hashcode validation. |
+| validatedDocument. fileHash | - | String | Calculated hash for validated document in Base64. Present when report signing is enabled. |
+| validatedDocument. hashAlgo | - | String | Hash algorithm used. Present when report signing is enabled. |
+| signatureForm | - | String | Format (and optionally version) of the digitally signed document container. <br> In case of documents in [DIGIDOC-XML](https://www.id.ee/wp-content/uploads/2020/08/digidoc_format_1.3.pdf) (DDOC) format, the "hashcode" suffix is used to denote that the container was validated in [hashcode mode](https://open-eid.github.io/allkirjastamisteenus/json-technical-description/#hashcode-container-form), i.e. without original data files. <br> **Possible values:**  <br> DIGIDOC_XML_1.0 <br> DIGIDOC_XML_1.0_hashcode <br> DIGIDOC_XML_1.1 <br> DIGIDOC_XML_1.1_hashcode <br> DIGIDOC_XML_1.2 <br> DIGIDOC_XML_1.2_hashcode <br> DIGIDOC_XML_1.3 <br> DIGIDOC_XML_1.3_hashcode <br> ASiC_E - used in case of all ASIC-E ([BDOC](https://www.id.ee/wp-content/uploads/2021/06/bdoc-spec212-eng.pdf)) documents <br> ASiC_S - used in case of all ASIC-S documents |
+| signatures | - | Array | Collection of signatures found in digitally signed document |
+| signatures[0] | + | Object | Signature information object |
+| signatures[0]. claimedSigningTime | + | Date | Claimed signing time, i.e. signer's computer time during signature creation |
+| signatures[0].id | + | String | Signature ID attribute  |
+| signatures[0].indication | + | String | Overall result of the signature's validation process, according to [ETSI EN 319 102-1](http://www.etsi.org/deliver/etsi_en/319100_319199/31910201/01.01.01_60/en_31910201v010101p.pdf) "Table 5: Status indications of the signature validation process". <br> Note that the validation results of different signatures in one signed document (signature container) may vary. <br> See also `validSignaturesCount` and `SignaturesCount` fields. <br>**Possible values:** <br> TOTAL-PASSED <br> TOTAL-FAILED <br> INDETERMINATE |
+| signatures[0]. subIndication | - | String | Additional subindication in case of failed or indeterminate validation result, according to [ETSI EN 319 102-1](http://www.etsi.org/deliver/etsi_en/319100_319199/31910201/01.01.01_60/en_31910201v010101p.pdf) "Table 6: Validation Report Structure and Semantics" |
+| signatures[0].errors | - | Array | Information about validation error(s), array of error messages.  |
+| signatures[0].errors[0] | + | Object | Object containing the error |
+| signatures[0].errors[0].  content | + | String | Error message, as returned by the base library that was used for signature validation. |
+| signatures[0].info | - | Object | Object containing trusted signing time information and user added additional signing info. |
+| signatures[0].info. bestSignatureTime | + | Date | Time value that is regarded as trusted signing time, denoting the earliest time when it can be trusted by the validation application (because proven by some Proof-of-Existence present in the signature) that a signature has existed.<br>The source of the value depends on the signature profile (see also `SignatureFormat` parameter):<br>- Signature with time-mark (LT_TM level) - the producedAt value of the earliest valid time-mark (OCSP confirmation of the signer's certificate) in the signature.<br>- Signature with time-stamp (LT or LTA level) - the genTime value of the earliest valid signature time-stamp token in the signature. <br> - Signature with BES or EPES level - the value is empty, i.e. there is no trusted signing time value available. |
+| signatures[0].info. timeAssertionMessageImprint | - | String | Base64 encoded value of message imprint retrieved from time assertion. In case of LT_TM (TimeMark) signatures, OCSP nonce value is returned. In case of T, LT or LTA (TimeStamp) signatures, TimeStamp message imprint is returned. |
+| signatures[0].info. ocspResponseCreationTime | - | Date | Time value that is regarded as the original OCSP response creation time. |
+| signatures[0].info. timestampCreationTime | - | Date | Time value of the timestamp creation |
+| signatures[0].info. signerRole | - | Array | Array of roles attached to the signature. |
+| signatures[0].info. signerRole[0] | + | Object | Object containing claimed roles. |
+| signatures[0].info. signerRole[0]. claimedRole | + | String | Role stated by signer on signing. |
+| signatures[0].info. signatureProductionPlace | - | Object | Object containing stated signing location info. |
+| signatures[0].info. signatureProductionPlace.countryName | - | String | Stated signing country. |
+| signatures[0].info. signatureProductionPlace.stateOrProvince | - | String | Stated state or province. |
+| signatures[0].info. signatureProductionPlace.city | - | String | Stated city. |
+| signatures[0].info. signatureProductionPlace.postalCode | - | String | Stated postal code. |
+| signatures[0].info. signingReason | - | String | Free text field for PAdES type signatures for stating the signing reason |
+| signatures[0]. signatureFormat | + | String | Format and profile (according to Baseline Profile) of the signature. See [XAdES Baseline Profile](http://www.etsi.org/deliver/etsi_ts/103100_103199/103171/02.01.01_60/ts_103171v020101p.pdf), [CAdES Baseline Profile](http://www.etsi.org/deliver/etsi_ts/103100_103199/103173/02.02.01_60/ts_103173v020201p.pdf) and [PAdES Baseline Profile](http://www.etsi.org/deliver/etsi_ts/103100_103199/103172/02.02.02_60/ts_103172v020202p.pdf) for detailed description of the Baseline Profile levels. Levels that are accepted in SiVa validation policy are described in [SiVa signature validation policy](../siva3/appendix/validation_policy.md) <br>**Possible values:**  <br> XAdES_BASELINE_B <br> XAdES_BASELINE_B_BES <br> XAdES_BASELINE_B_EPES <br> XAdES_BASELINE_T <br> XAdES_BASELINE_LT - long-term level XAdES signature where time-stamp is used as a assertion of trusted signing time<br> XAdES_BASELINE_LT_TM - long-term level XAdES signature where time-mark is used as a assertion of trusted signing time. Used in case of [BDOC](https://www.id.ee/wp-content/uploads/2021/06/bdoc-spec212-eng.pdf) signatures with time-mark profile and [DIGIDOC-XML](https://www.id.ee/wp-content/uploads/2020/08/digidoc_format_1.3.pdf) (DDOC) signatures.<br>  XAdES_BASELINE_LTA <br> CAdES_BASELINE_B <br> CAdES_BASELINE_T <br> CAdES_BASELINE_LT <br> CAdES_BASELINE_LTA<br> PAdES_BASELINE_B <br> PAdES_BASELINE_T <br> PAdES_BASELINE_LT <br> PAdES_BASELINE_LTA |
+| signatures[0]. signatureMethod | + | String | Signature method specification URI used in signature creation. |
+| signatures[0]. signatureLevel | - |String | Legal level of the signature, according to Regulation (EU) No 910/2014. <br> - **Possible values on positive validation result:**<br> QESIG <br> QESEAL <br> QES <br> ADESIG_QC <br> ADESEAL_QC <br> ADES_QC <br> ADESIG <br> ADESEAL <br> ADES <br> - **Possible values on indeterminate validation result:**<br> prefix INDETERMINATE is added to the level described in positive result. For example  INDETERMINATE_QESIG <br> - **Possible values on negative validation result:**<br>In addition to abovementioned<br> NOT_ADES_QC_QSCD <br> NOT_ADES_QC <br> NOT_ADES <br> NA <br> - In case of DIGIDOC-XML 1.0..1.3 formats, value is missing as the signature level is not checked by the JDigiDoc base library that is used for validation. However, the signatures can be indirectly regarded as QES level signatures, see also [SiVa Validation Policy](/siva3/appendix/validation_policy.md)<br>|
+| signatures[0].signedBy | + | String | In format of "surname, givenName, serialNumber" if  these fields are present in subject distinguished name field. In other cases, value of common name field. |
+| signatures[0].subjectDistinguishedName.serialNumber | - | String | SERIALNUMBER value portion in signer's certificate's subject distinguished name |
+| signatures[0].subjectDistinguishedName.commonName | - | String | CN (common name) value portion in signer's certificate's subject distinguished name |
+| signatures[0].subjectDistinguishedName.givenName | - | String | Given name value portion in signer's certificate's subject distinguished name |
+| signatures[0].subjectDistinguishedName.surname | - | String | Surname value portion in signer's certificate's subject distinguished name |
+| signatures[0]. signatureScopes | - | Array | Contains information of the original data that is covered by the signature. |
+| signatures[0]. signatureScopes[0]. name | + | String | Name of the signature scope. |
+| signatures[0]. signatureScopes[0]. scope | + | String | Type of the signature scope. |
+| signatures[0]. signatureScopes[0]. content | + | String | Description of the scope. |
+| signatures[0]. signatureScopes[0]. hashAlgo | - | String | Hash algorithm used for datafile hash calculation. Present for hashcode validation. |
+| signatures[0]. signatureScopes[0]. hash | - | String | Hash of data file encoded in Base64. Present for hashcode validation. |
+| signatures[0]. warnings | - | Array | Block of validation warnings that do not affect the overall validation result. |
+| signatures[0]. warnings[0] | + | Object | Object containing the warning |
+| signatures[0]. warnings[0]. content | + | String | Warning description, as retuned by the base library that was used for validation. |
+| signatures[0].certificates | - | Array | Array containing certificates that are present in the signature or can be fetched from TSL. |
+| signatures[0].certificates[0] | + | Object | Object containinig certificate type, common name and certificate. Minimal object is signer certificate. If present contains certificates for TimeStamps and OCSP as well. |
+| signatures[0].certificates[0].commonName | + | String | CN (common name) value in certificate. |
+| signatures[0].certificates[0].type | + | String | Type of the certificate. Can be SIGNING, REVOCATION, SIGNATURE_TIMESTAMP, ARCHIVE_TIMESTAMP or CONTENT_TIMESTAMP. |
+| signatures[0].certificates[0].content | + | String | DER encoded X.509 certificate in Base64. |
+| signatures[0].certificates[0].issuer | + | String | Object containing issuer certificate information. Can create chain til the trust anchor. |
+| timeStampTokens | - | Array | Array containing the time stamp tokens |
+| timeStampTokens[0]. | + | Object | Object containing the time stamp token (TST) |
+| timeStampTokens[0]. indication | + | String | Result of the time stamp token validation. <br>**Possible values:** <br> TOTAL-PASSED <br> TOTAL-FAILED |
+| timeStampTokens[0]. signedBy | + | String | Signer of the time stamp token. |
+| timeStampTokens[0]. signedTime | + | String | Time when the time stamp token was given. |
+| timeStampTokens[0]. error | - | Array | Errors returned in time stamp token validation. |
+| timeStampTokens[0]. error[0] | + | Object | Object containing the error. |
+| timeStampTokens[0]. error[0]. content | + | String | Error description. |
 
 #### Sample JSON response Simple Report (successful scenario)
 
@@ -391,90 +287,6 @@ Structure of validationConclusion block
 }}}
 ```
 
-#### Sample SOAP response Simple Report (successful scenario)
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-  <soap:Body>
-    <ns2:ValidateDocumentResponse xmlns:ns2="http://soap.webapp.siva.openeid.ee/" xmlns:ns3="http://soap.webapp.siva.openeid.ee/response/" xmlns:ns4="http://dss.esig.europa.eu/validation/detailed-report" xmlns:ns5="http://dss.esig.europa.eu/validation/diagnostic" xmlns:ns6="http://x-road.eu/xsd/identifiers" xmlns:ns7="http://x-road.eu/xsd/xroad.xsd">
-      <ns3:ValidationReport>
-        <ns3:ValidationConclusion>
-          <ns3:Policy>
-            <ns3:PolicyDescription>Policy according most common requirements of Estonian Public Administration, to validate Qualified Electronic Signatures and Electronic Seals with Qualified Certificates (according to Regulation (EU) No 910/2014, aka eIDAS). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result, with exception for seals, where AdES/QC and above will produce positive result. Signatures and Seals which are not compliant with ETSI standards (referred by eIDAS) may produce unknown or invalid validation result. Validation process is based on eIDAS Article 32 and referred ETSI standards.</ns3:PolicyDescription>
-            <ns3:PolicyName>POLv4</ns3:PolicyName>
-            <ns3:PolicyUrl>http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4</ns3:PolicyUrl>
-          </ns3:Policy>
-          <ns3:ValidationTime>2020-06-15T11:45:52Z</ns3:ValidationTime>
-          <ns3:ValidatedDocument>
-            <ns3:Filename>singleValidSignatureTS.asice</ns3:Filename>
-          </ns3:ValidatedDocument>
-          <ns3:ValidationLevel>ARCHIVAL_DATA</ns3:ValidationLevel>
-          <ns3:ValidationWarnings/>
-          <ns3:SignatureForm>ASiC-E</ns3:SignatureForm>
-          <ns3:Signatures>
-            <ns3:Signature>
-              <ns3:Id>id-a9ce7f66cff1d17ddaab37c46a88f5f4</ns3:Id>
-              <ns3:SignatureFormat>XAdES_BASELINE_LT</ns3:SignatureFormat>
-              <ns3:SignatureMethod>http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256</ns3:SignatureMethod>
-              <ns3:SignatureLevel>QESIG</ns3:SignatureLevel>
-              <ns3:SignedBy>JÕEORG,JAAK-KRISTJAN,38001085718</ns3:SignedBy>
-              <ns3:SubjectDistinguishedName>
-                <ns3:SerialNumber>PNOEE-38001085718</ns3:SerialNumber>
-                <ns3:CommonName>JÕEORG,JAAK-KRISTJAN,38001085718</ns3:CommonName>
-                <ns3:GivenName>JAAK-KRISTJAN</ns3:GivenName>
-                <ns3:Surname>JÕEORG</ns3:Surname>
-              </ns3:SubjectDistinguishedName>
-              <ns3:Certificates>
-                <ns3:Certificate>
-                  <ns3:Content>MIIE...</ns3:Content>
-                  <ns3:CommonName>DEMO of SK TSA 2014</ns3:CommonName>
-                  <ns3:Type>SIGNATURE_TIMESTAMP</ns3:Type>
-                </ns3:Certificate>
-                <ns3:Certificate>
-                  <ns3:Content>MIIE...</ns3:Content>
-                  <ns3:CommonName>JÕEORG,JAAK-KRISTJAN,38001085718</ns3:CommonName>
-                  <ns3:Issuer>
-                    <ns3:Content>MIIE...</ns3:Content>
-                    <ns3:CommonName>TEST of ESTEID2018</ns3:CommonName>
-                  </ns3:Issuer>
-                  <ns3:Type>SIGNING</ns3:Type>
-                </ns3:Certificate>
-                <ns3:Certificate>
-                  <ns3:Content>MIIE...</ns3:Content>
-                  <ns3:CommonName>TEST of SK OCSP RESPONDER 2011</ns3:CommonName>
-                  <ns3:Type>REVOCATION</ns3:Type>
-                </ns3:Certificate>
-              </ns3:Certificates>
-              <ns3:Indication>TOTAL-PASSED</ns3:Indication>
-              <ns3:SubIndication/>
-              <ns3:Errors/>
-              <ns3:SignatureScopes>
-                <ns3:SignatureScope>
-                  <ns3:Name>test.txt</ns3:Name>
-                  <ns3:Scope>FULL</ns3:Scope>
-                  <ns3:Content>Full document</ns3:Content>
-                </ns3:SignatureScope>
-              </ns3:SignatureScopes>
-              <ns3:ClaimedSigningTime>2020-05-21T13:56:52Z</ns3:ClaimedSigningTime>
-              <ns3:Warnings/>
-              <ns3:Info>
-                <ns3:OcspResponseCreationTime>2020-05-21T13:56:49Z</ns3:OcspResponseCreationTime>
-		        <ns3:TimestampCreationTime>2020-05-21T13:56:48Z</ns3:TimestampCreationTime>
-                <ns3:BestSignatureTime>2020-05-21T13:56:48Z</ns3:BestSignatureTime>
-                <ns3:TimeAssertionMessageImprint>MDEwDQYJYIZIAWUDBAIBBQAEID3j1ceryQp4ZNP8iVfd50l/0JXvpry+XS+ajiAUA+Su</ns3:TimeAssertionMessageImprint>
-              </ns3:Info>
-            </ns3:Signature>
-          </ns3:Signatures>
-          <ns3:ValidSignaturesCount>1</ns3:ValidSignaturesCount>
-          <ns3:SignaturesCount>1</ns3:SignaturesCount>
-        </ns3:ValidationConclusion>
-      </ns3:ValidationReport>
-    </ns2:ValidateDocumentResponse>
-  </soap:Body>
-</soap:Envelope>
-```
-
 #### Warning/error messages filtered out in Simple Report
 
 From Simple Report following messages, that are considered false-positive in Estonian context, are filtered out:
@@ -488,22 +300,22 @@ Above messages are filtered out only in Simple Report.
 
 General structure of validation response.
 
-| JSON parameter | SOAP parameter | Mandatory |  JSON data type | Description |
-|----------------|----------------|-----------|-----------------|-------------|
-| validationReport | ValidationReport |  + | Object | Object containing SIVA validation report. |
-| validationReport. validationConclusion | ValidationReport. ValidationConclusion |  + | Object | Object containing information of the validation conclusion. The same object that is present in Simple Report. |
-| validationReport. validationProcess | ValidationReport. ValidationProcess | - | Object | Object containing information of the validation process. This block is present only on DSS library based validations and is built on DSS detailed report. For more information visit [DSS documentation](https://github.com/esig/dss/blob/develop/dss-cookbook/src/main/asciidoc/_chapters/signature-validation.adoc).  |
-| validationReportSignature | ValidationReportSignature |  - | String | Base64 string of ASIC-E container that includes the detailed report and is signed by the validation service provider |
+| JSON parameter | Mandatory |  JSON data type | Description |
+|----------------|-----------|-----------------|-------------|
+| validationReport |  + | Object | Object containing SIVA validation report. |
+| validationReport. validationConclusion |  + | Object | Object containing information of the validation conclusion. The same object that is present in Simple Report. |
+| validationReport. validationProcess | - | Object | Object containing information of the validation process. This block is present only on DSS library based validations and is built on DSS detailed report. For more information visit [DSS documentation](https://github.com/esig/dss/blob/develop/dss-cookbook/src/main/asciidoc/_chapters/signature-validation.adoc).  |
+| validationReportSignature |  - | String | Base64 string of ASIC-E container that includes the detailed report and is signed by the validation service provider |
 
 ### Validation response parameters for Diagnostic Data Report (successful scenario)
 
 General structure of validation response.
 
-| JSON parameter | SOAP parameter | Mandatory |  JSON data type | Description |
-|----------------|----------------|-----------|-----------------|-------------|
-| validationReport | ValidationReport |  + | Object | Object containing SIVA validation report. |
-| validationReport. validationConclusion | ValidationReport. ValidationConclusion |  + | Object | Object containing information of the validation conclusion. The same object that is present in Simple Report and Detailed Report. |
-| validationReport. diagnosticData | ValidationReport. DiagnosticData | - | Object | Object containing diagnostic data about the information contained in the signature itself, it's revocation data and mathematical validity. This block is present only on DSS library based validations (excluding hashcode validation) and is built on DSS diagnostic data. For more information visit [DSS documentation](https://github.com/esig/dss/blob/develop/dss-cookbook/src/main/asciidoc/dss-documentation.adoc#validation-process).  |
+| JSON parameter | Mandatory |  JSON data type | Description |
+|----------------|-----------|-----------------|-------------|
+| validationReport |  + | Object | Object containing SIVA validation report. |
+| validationReport. validationConclusion |  + | Object | Object containing information of the validation conclusion. The same object that is present in Simple Report and Detailed Report. |
+| validationReport. diagnosticData | - | Object | Object containing diagnostic data about the information contained in the signature itself, it's revocation data and mathematical validity. This block is present only on DSS library based validations (excluding hashcode validation) and is built on DSS diagnostic data. For more information visit [DSS documentation](https://github.com/esig/dss/blob/develop/dss-cookbook/src/main/asciidoc/dss-documentation.adoc#validation-process).  |
 
 ### Sample JSON response (error situation)
 In case of error (when validation report is not returned) status code 400 is returned together with following message body:
@@ -515,20 +327,6 @@ In case of error (when validation report is not returned) status code 400 is ret
 }]}
 ```
 
-### Sample SOAP response (error situation)
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-  <soap:Body>
-    <soap:Fault>
-      <faultcode>soap:Server</faultcode>
-      <faultstring>Document malformed or not matching documentType</faultstring>
-    </soap:Fault>
-  </soap:Body>
-</soap:Envelope>
-```
-
 ## Data files request interface
 
 
@@ -538,24 +336,14 @@ In case of error (when validation report is not returned) status code 400 is ret
 POST https://<server url>/getDataFiles
 ```
 
-** SOAP Endpoint **
-```
-POST https://<server url>/soap/dataFilesWebService/getDocumentDataFiles
-```
-
-** SOAP WSDL **
-```
-POST https://<server url>/soap/dataFilesWebService/getDocumentDataFiles?wsdl
-```
-
 ### Data files request parameters
 
-Data files request parameters for JSON and SOAP interfaces are described in the table below. Data types of SOAP parameters are defined in the [SiVa WSDL document](../siva3/appendix/wsdl.md).
+Data files request parameters for JSON interface are described in the table below.
 
-| JSON parameter | SOAP parameter | Mandatory | JSON data type | Description |
-|----------------|----------------|-----------|----------------|-------------|
-| document | Document | + |  String | Base64 encoded string of digitally signed DDOC document |
-| filename | Filename | + |  String | File name of the digitally signed document (i.e. sample.ddoc), max length 255 characters. Currently only DDOC file format is supported for this operation|
+| JSON parameter | Mandatory | JSON data type | Description |
+|----------------|-----------|----------------|-------------|
+| document | + |  String | Base64 encoded string of digitally signed DDOC document |
+| filename | + |  String | File name of the digitally signed document (i.e. sample.ddoc), max length 255 characters. Currently only DDOC file format is supported for this operation|
 
 ### Sample JSON request
 
@@ -566,39 +354,21 @@ Data files request parameters for JSON and SOAP interfaces are described in the 
 }
 ```
 
-
-### Sample SOAP request
-
-```xml
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soap="http://soap.webapp.siva.openeid.ee/">
-  <soapenv:Header/>
-  <soapenv:Body>
-    <soap:GetDocumentDataFiles>
-      <soap:DataFilesRequest>
-        <Document>PD94bWwgdmVyc2lvbj0iMS4wI...</Document>
-        <Filename>sample.ddoc</Filename>
-      </soap:DataFilesRequest>
-    </soap:GetDocumentDataFiles>
-  </soapenv:Body>
-</soapenv:Envelope>
-```
-
-
 ## Data files response interface
 
 ### Data files response parameters (successful scenario)
 
-The data file extraction report (i.e. the data files response) for JSON and SOAP interfaces is described in the table below. Data types of SOAP parameters are defined in the [SiVa WSDL document](../siva3/appendix/wsdl.md).
+The data file extraction report (i.e. the data files response) for JSON interface is described in the table below.
 SiVa returns all data files as they are extracted by JDigiDoc library in an as is form. No extra operations or validations are done.
 
-| JSON parameter | SOAP parameter | Mandatory | JSON data type | Description |
-|----------------|----------------|-----------|----------------|-------------|
-| dataFiles | DataFiles | - |  Array | Collection of data files found in digitally signed document |
-| dataFiles[0] | DataFile | + | Object | Extracted data file object |
-| dataFiles[0].fileName | DataFile.FileName | - |  String | File name of the extracted data file |
-| dataFiles[0].size | DataFile.Size | - | Long | Extracted data file size in bytes |
-| dataFiles[0].base64 | DataFile.Base64 | - |String | Base64 encoded string of extracted data file |
-| dataFiles[0].mimeType | DataFile.MimeType |  - | String | MIME type of the extracted data file  |
+| JSON parameter | Mandatory | JSON data type | Description |
+|----------------|-----------|----------------|-------------|
+| dataFiles | - |  Array | Collection of data files found in digitally signed document |
+| dataFiles[0] | + | Object | Extracted data file object |
+| dataFiles[0].fileName | - |  String | File name of the extracted data file |
+| dataFiles[0].size | - | Long | Extracted data file size in bytes |
+| dataFiles[0].base64 | - |String | Base64 encoded string of extracted data file |
+| dataFiles[0].mimeType |  - | String | MIME type of the extracted data file  |
 
 ### Sample JSON response (successful scenario)
 
@@ -612,28 +382,6 @@ SiVa returns all data files as they are extracted by JDigiDoc library in an as i
 }
 ```
 
-### Sample SOAP response (successful scenario)
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-  <soap:Body>
-    <ns2:GetDocumentDataFilesResponse xmlns:ns2="http://soap.webapp.siva.openeid.ee/" xmlns:ns3="http://x-road.eu/xsd/identifiers" xmlns:ns4="http://x-road.eu/xsd/xroad.xsd">
-      <ns2:DataFilesReport>
-       <DataFiles>
-         <DataFile>
-           <Base64>UCgUCgUCgUCgUCgUCgUCgUCgUCgUCgUCgUH...</Base64>
-           <FileName>Glitter-rock-4_gallery.jpg</FileName>
-           <MimeType>application/octet-stream</MimeType>
-           <Size>41114</Size>
-         </DataFile>
-       </DataFiles>
-     </ns2:DataFilesReport>
-   </ns2:GetDocumentDataFilesResponse>
-  </soap:Body>
-</soap:Envelope>
-```
-
 ### Sample JSON response (error situation)
 In case of error (when datafiles are not returned) status code 400 is returned together with following message body:
 
@@ -642,20 +390,6 @@ In case of error (when datafiles are not returned) status code 400 is returned t
     "message": "Invalid document type. Can only return data files for DDOC type containers.",
     "key": "documentType"
 }]}
-```
-
-### Sample SOAP response (error situation)
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-  <soap:Body>
-    <soap:Fault>
-      <faultcode>soap:Client</faultcode>
-      <faultstring>Invalid document type. Can only return data files for DDOC type containers.</faultstring>
-    </soap:Fault>
-  </soap:Body>
-</soap:Envelope>
 ```
 
 

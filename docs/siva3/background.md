@@ -2,7 +2,7 @@
 
 ## What is SiVa?
 
-SiVa (Signature Validation) web service provides JSON and SOAP based API web interface to validate digital signatures.
+SiVa (Signature Validation) web service provides JSON based API web interface to validate digital signatures.
 Please take a look in [Validation Policy](../appendix/validation_policy/) section for supported formats and applied constraints.
 
 SiVa uses following Java libraries and command line utilities:
@@ -34,7 +34,7 @@ SiVa will use the following functionality of DigiDoc4J:
 
 ## Main features of SiVa validation service:
 
-- SOAP and REST/JSON API to validate signatures.
-- SOAP and REST/JSON API to retrieve data files from DDOC containers.
-- SOAP API is compatible with X-Road v6.
+- REST/JSON API to validate signatures.
+- REST/JSON API to retrieve data files from DDOC containers.
+- REST/JSON API is compatible with X-Road v6.
 - Signing of validation report.

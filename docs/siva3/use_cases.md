@@ -15,7 +15,7 @@ is handled by validation services underlying libraries.
 
 We will log following failure cases:<br>
 When file upload fails (request started but was not completed successfully)<br>
-When request validation (JSON or SOAP) fails<br>
+When request validation fails<br>
 When signature validation fails<br>
 
 ![Hashcode validation process](../img/siva/siva_hashcode_validation_process.png)
@@ -26,7 +26,7 @@ is handled by validation services underlying libraries.
 
 We will log following failure cases:<br>
 When file upload fails (request started but was not completed successfully)<br>
-When request validation (JSON or SOAP) fails<br>
+When request validation fails<br>
 When signatures validation fails<br>
 
 ## Certificate loading process
@@ -43,18 +43,6 @@ service to update currently in memory loaded certificates.
 
 This process should run after TSL loader has completed updating
 SiVa local copy of certificates.
-
-## X-Road 6 security server SOAP request process
-
-X-Road validation process is brought out because we skip authentication
-process for X-Road security server interface and use XML SOAP
-as input source.
-
-![X-Road SOAP validation request](../img/siva/siva_x_road_server_diagram.png)
-
-Validation of SOAP request XML is done in the SiVa web application module.
-Document validation process is described in detail in [Digitally signed document validation process](#digitally-signed-document-validation-process)
-Validation report output id described in [Interface description](../siva3/interfaces.md)
 
 ## TSL loading use case
 
@@ -78,4 +66,4 @@ underlying JDigiDoc library.
 
 We will log following failure cases:
 When file upload fails (request started but was not completed successfully)
-When request validation (JSON or SOAP) fails.
+When request validation fails.

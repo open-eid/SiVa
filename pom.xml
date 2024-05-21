@@ -190,7 +190,6 @@
                         <exclude>**/*Configuration.*</exclude>
                         <exclude>**/extra-jars/**</exclude>
                         <exclude>**/ext-lib/**</exclude>
-                        <exclude>**/ee/openeid/siva/webapp/soap/*.class</exclude>
                         <exclude>**/eu/x_road/xsd/**</exclude>
                         <exclude>**/eu/europa/**</exclude>
                     </excludes>

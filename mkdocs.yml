@@ -35,8 +35,7 @@ nav:
 - 8. APPENDICES:
       - Appendix 1 - Validation Policy: siva3/appendix/validation_policy.md
       - Appendix 2 - Test Case Descriptions: siva3/appendix/test_cases.md
-      - Appendix 3 - WSDL/XSD of SOAP Interface : siva3/appendix/wsdl.md
-      - Appendix 4 - Known Issues : siva3/appendix/known_issues.md
+      - Appendix 3 - Known Issues : siva3/appendix/known_issues.md
 - 9. SIVA 2.0 (Deprecated):
       - 9.1. DEFINITIONS: siva2/definitions.md
       - 9.2. BACKGROUND: siva2/background.md
@@ -55,7 +54,7 @@ nav:
            - Appendix 1 - Validation Policy: siva2/appendix/validation_policy.md
            - Appendix 2 - Test Case Descriptions: siva2/appendix/test_cases.md
            - Appendix 3 - WSDL/XSD of SOAP Interface : siva2/appendix/wsdl.md
-           - Appendix 4 - Known Issues : siva2/appendix/known_issues.md      
+           - Appendix 4 - Known Issues : siva2/appendix/known_issues.md
 - 10. SIVA 1.1 (Deprecated):
       - 10.1. DEFINITIONS: siva/definitions.md
       - 10.2. BACKGROUND: siva/background.md

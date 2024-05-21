@@ -9,7 +9,7 @@ Libraries license information was obtained using the following command:
 ./mvnw license:aggregate-add-third-party
 ```
 
-Lists of 47 third-party dependencies.
+Lists of 44 third-party dependencies.
      (The Apache Software License, Version 2.0) co.elastic.logging:logback-ecs-encoder (co.elastic.logging:logback-ecs-encoder:1.6.0 - https://github.com/elastic/ecs-logging-java/logback-ecs-encoder)
      (Apache License, Version 2.0) Guava: Google Core Libraries for Java (com.google.guava:guava:33.1.0-jre - https://github.com/google/guava)
      (3-Clause BSD License) jcabi-manifests (com.jcabi:jcabi-manifests:2.1.0 - https://www.jcabi.com/jcabi-manifests)
@@ -26,9 +26,6 @@ Lists of 47 third-party dependencies.
      (European Union Public License 1.1) TimeStampToken Validation Service (ee.openid.siva:timestamptoken-validation-service:3.7.0 - https://github.com/open-eid/SiVa/validation-services-parent/timestamptoken-validation-service)
      (European Union Public License 1.1) tsl-loader (ee.openid.siva:tsl-loader:3.7.0 - https://github.com/open-eid/SiVa/validation-services-parent/tsl-loader)
      (European Union Public License 1.1) validation-commons (ee.openid.siva:validation-commons:3.7.0 - https://github.com/open-eid/SiVa/validation-services-parent/validation-commons)
-     (Eclipse Distribution License - v 1.0) Jakarta XML Web Services API (jakarta.xml.ws:jakarta.xml.ws-api:4.0.1 - https://github.com/jakartaee/jax-ws-api)
-     (Apache-2.0) Apache CXF Runtime JAX-WS Frontend (org.apache.cxf:cxf-rt-frontend-jaxws:4.0.4 - https://cxf.apache.org)
-     (Apache-2.0) Apache CXF Runtime HTTP Transport (org.apache.cxf:cxf-rt-transports-http:4.0.4 - https://cxf.apache.org)
      (Apache License, Version 2.0) Apache PDFBox (org.apache.pdfbox:pdfbox:2.0.31 - https://www.apache.org/pdfbox-parent/pdfbox/)
      (Bouncy Castle Licence) Bouncy Castle PKIX, CMS, EAC, TSP, PKCS, OCSP, CMP, and CRMF APIs (org.bouncycastle:bcpkix-jdk18on:1.76 - https://www.bouncycastle.org/java.html)
      (Bouncy Castle Licence) Bouncy Castle Provider (org.bouncycastle:bcprov-jdk18on:1.76 - https://www.bouncycastle.org/java.html)

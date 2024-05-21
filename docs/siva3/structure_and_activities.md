@@ -11,7 +11,7 @@ library is described in each of the validation service section.
 
 | Component | Description |
 |------------------------------|--------------------------------------------------------|
-| **Web gateway service** | Web gateway service is a single access point to the whole SiVa webapp application. Web service is implemented as a standard Spring Boot Web application module, that accepts valid JSON or SOAP requests (see the [Interfaces section](../siva3/interfaces.md)) sent by the client systems. Web service module is responsible for basic request and response handling. This includes basic validation of incoming requests (existence of required fields, permitted values, etc) and unmarshaling the request to a Java object before passing it to the next component – the Proxy service. Response from the proxy service is marshalled and sent back to the client according to respective API. |
+| **Web gateway service** | Web gateway service is a single access point to the whole SiVa webapp application. Web service is implemented as a standard Spring Boot Web application module, that accepts valid JSON requests (see the [Interfaces section](../siva3/interfaces.md)) sent by the client systems. Web service module is responsible for basic request and response handling. This includes basic validation of incoming requests (existence of required fields, permitted values, etc) and unmarshaling the request to a Java object before passing it to the next component – the Proxy service. Response from the proxy service is marshalled and sent back to the client according to respective API. |
 | **Report signing service**   | Provides signing services for report. Supported interfaces for signature creation: PKCS11, PKCS12.|
 | **Validation proxy service** | Acts as a router for the request and response. It is responsible for selecting the appropriate validation service for incoming document.<br>- Proxy service accepts an in memory representation of a document and finds a matching validation service based on document type. The incoming request is converted to validation request and forwarded to the specific validation service.<br>- The report returned by the specific validation service is passed to the statistics service before returning it to Web service. |
 | **Hashcode validation proxy service** | Acts as a router for the request and response. It is responsible for selecting the appropriate hashcode validation service for incoming document.<br>- The incoming request is converted to validation request and forwarded to the specific validation service.<br>- The report returned by the specific validation service is passed to the statistics service before returning it to Web service. |
@@ -34,16 +34,10 @@ Provided:
 
 * Validation service REST interface - interface for handling validation queries.
     * JSON formatted POST requests
-* Validation service SOAP interface - interface for handling validation queries
-    * X-Road compliant and non-compliant SOAP requests (without the X-Road required headers)
 * Hashcode validation service REST interface - interface for handling hashcode validation queries.
     * JSON formatted POST requests
-* Hashcode validation service SOAP interface - interface for handling hashcode validation queries
-    * X-Road compliant and non-compliant SOAP requests (without the X-Road required headers)    
 * Data file service REST interface - interface for handling data file extraction queries.
     * JSON formatted POST requests
-* Data file service SOAP interface - interface for handling data file extraction queries
-    * X-Road compliant and non-compliant SOAP requests (without the X-Road required headers)
 * Monitoring service REST interface - interface for retrieving the webapp's health information
     * HTTP GET that returns JSON formatted respónses
 
@@ -67,7 +61,6 @@ Provided:
 Required:
 
 * Siva webapp REST interface
-* Siva webapp SOAP interface
 
 ### External configuration
 

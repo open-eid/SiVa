@@ -20,3 +20,4 @@
 | 1.14               | 08.05.2023      | Ivo Mattus, Heiti Tobi                                | SIVA 3.7 documentation additions.                                             |
 | 1.15               | 25.03.2024      | Heiti Tobi                                            | Roadmap updated.                                                              |
 | 1.16               | 29.04.2024      | Ivo Mattus, Raido Raagmaa, Heiti Tobi                 | Request size limit configuration and test cases update                        |
+| 1.17               | 19.06.2024      | Jevgeni Krutov                                        | SOAP interface removed                                                        |

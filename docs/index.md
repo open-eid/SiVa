@@ -4,7 +4,7 @@
     <img src="img/siva/eu_logo.svg" />
 </div>
 
-SiVa is digital signature validation web service that provides SOAP and JSON
+SiVa is digital signature validation web service that provides JSON
 API to validate following file types:
 
  * Estonian DDOC containers
@@ -28,7 +28,7 @@ SiVa architecture document will cover:
   main SiVa subsystems and base validation Java libraries
   used for different validation services
 * [**Interfaces**](siva3/interfaces) - Description of SiVa
-   SOAP and JSON API request and response
+  JSON API request and response
 * [**Deployment**](siva3/deployment) - gives general overview of
   servers required when deploying SiVa validation web service
   into production

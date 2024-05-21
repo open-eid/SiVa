@@ -17,7 +17,6 @@
 package ee.openeid.siva.webapp.configuration;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.StreamReadConstraints;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -29,7 +28,6 @@ import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlAbstractToken;
-import eu.europa.esig.dss.validation.diagnostic.AbstractToken;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -80,7 +78,6 @@ public class ServiceConfiguration {
 
         static {
             Map<Class<?>, Class<?>> typeToSerializerMap = new HashMap<>();
-            typeToSerializerMap.put(AbstractToken.class, AbstractTokenIdSerializer.class);
             typeToSerializerMap.put(XmlAbstractToken.class, XmlAbstractTokenIdSerializer.class);
             TYPE_TO_SERIALIZER_MAPPINGS = typeToSerializerMap.entrySet().stream().toArray(Map.Entry[]::new);
         }
@@ -107,19 +104,6 @@ public class ServiceConfiguration {
 
         @Override
         public void serialize(XmlAbstractToken value, JsonGenerator generator, SerializerProvider provider) throws IOException {
-            generator.writeString(value.getId());
-        }
-
-    }
-
-    static class AbstractTokenIdSerializer extends StdSerializer<AbstractToken> {
-
-        public AbstractTokenIdSerializer() {
-            super(AbstractToken.class);
-        }
-
-        @Override
-        public void serialize(AbstractToken value, JsonGenerator generator, SerializerProvider provider) throws IOException {
             generator.writeString(value.getId());
         }
 

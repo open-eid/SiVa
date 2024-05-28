@@ -1,3 +1,4 @@
 spring.http.encoding.charset: UTF-8 # Charset of HTTP requests and responses. Added to the "Content-Type" header if not set explicitly.
 spring.http.encoding.enabled: true # Enable http encoding support.
 spring.http.encoding.force: true # Force the encoding to the configured charset on HTTP requests and responses.
+spring.autoconfigure.exclude: org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration # Disable /error endpoint mapping and logging

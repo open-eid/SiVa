@@ -31,7 +31,7 @@ The following validation policy versions are marked as obsolete in SiVa 2.0 serv
     * Validation rules defined by base libraries used in SiVa that implement the supported digital signature formats, i.e. the validation constraints that are imposed by the source code implementation or configuration of the base libraries (described in [Base libraries' constraints](#common_libraries) section).
 
 !!! note
-	When no specific validation rule is set in the present document, the requirements and rules from the abovementioned implicit sources for validation requirements shall apply in their entirety. When specific requirements and rules are set in the present validation policy document, they shall prevail over the corresponding requirements set in the implicit resources.
+	When no specific validation rule is set in the present document, the requirements and rules from the aforementioned implicit sources for validation requirements shall apply in their entirety. When specific requirements and rules are set in the present validation policy document, they shall prevail over the corresponding requirements set in the implicit resources.
 
 
 ## SiVA Signature Validation Policy - Version 3 (POLv3)
@@ -91,7 +91,7 @@ http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
 ### General constraints
 
 1. The validation result returned by SiVa determines whether a signature is technically valid and depending of a container type also conforms to a set of validation constraints that are specific to Estonian legislation and local practices of digital signing. **The policy may not be suitable for signatures created in other territories.**
-2.  The validation result returned by SiVa comprises validation results of all the signatures in a single signature container (in case of detached signatures) or all signatures in a signed document (in case of enveloped or enveloping signatures). I.e. in case of multiple detached/enveloped/enveloping signatures, overall validation result correspoinding to the collection of signatures is not determined.
+2. The validation result returned by SiVa comprises validation results of all the signatures in a single signature container (in case of detached signatures) or all signatures in a signed document (in case of enveloped or enveloping signatures). I.e. in case of multiple detached/enveloped/enveloping signatures, overall validation result corresponding to the collection of signatures is not determined.
 
 ### Signature format constraints
 <a name="common_format"></a>
@@ -144,9 +144,9 @@ Legend:
 ### Cryptographic algorithm constraints
 1. Hash algorithm constraints:
 	* In case of BDOC format: when validating a signature where SHA-1 function has been used then a validation warning about weak digest method is returned.
-2. Asymmetric cryptographic algorithm contraints:
+2. Asymmetric cryptographic algorithm constraints:
 	* RSA and ECC cryptographic algorithms are supported
-	* In case of PAdES/XAdES(also BDOC)/CAdES formats, the RSA key lenght must be at least 1024 bits and ECC key length at least 192 bits.
+	* In case of PAdES/XAdES(also BDOC)/CAdES formats, the RSA key length must be at least 1024 bits and ECC key length at least 192 bits.
 
 ### Trust anchor constraints
 1. The signature must contain the certificate of the trust anchor and all certificates necessary for the signature validator to build a certification path up to the trust anchor. This applies to the signer’s certificate and the certificates of trust service providers that have issued the time-stamp token and revocation data that are incorporated in the signature.
@@ -167,7 +167,7 @@ Legend:
 ### Signer certificate's revocation freshness constraints
 1. In case of BDOC and DIGIDOC-XML 1.0...1.3 BASELINE_LT_TM signatures with time-mark: revocation data is always considered fresh as the revocation data is issued at the trusted signing time.
 2. In case of XAdES/CAdES/PAdES BASELINE_LT and BASELINE_LTA signatures with signature time-stamp: revocation data freshness is checked according to the following rules:
-	* In case of OCSP responce if difference between signature time-stamp's production time (genTime field) and signer certificate OCSP confirmation’s production time (producedAt field) is more than 24 hours then the signature is considered invalid. If the difference is more than 15 minutes  and less then 24h then a validation warning is returned.
+	* In case of OCSP response if difference between signature time-stamp's production time (genTime field) and signer certificate OCSP confirmation’s production time (producedAt field) is more than 24 hours then the signature is considered invalid. If the difference is more than 15 minutes and less than 24h then a validation warning is returned.
 	* In case of Certificate Revocation List the signature time-stamp's production time (genTime field) must be within validity range of the CRL (between thisUpdate and nextUpdate)
 
 
@@ -178,7 +178,7 @@ Legend:
 	* In case of basic signature (BASELINE_B) - the trusted signing time value cannot be determined as there is no Proof-of-Existence of the signature.
 
 
-### BDOC container spceific requirements
+### BDOC container specific requirements
 The BDOC container must conform with [BDOC 2.1](https://www.id.ee/wp-content/uploads/2021/06/bdoc-spec212-eng.pdf) standard.
 1.	File extension
 	* ".bdoc" file extension is supported during signature validation.
@@ -189,12 +189,12 @@ The BDOC container must conform with [BDOC 2.1](https://www.id.ee/wp-content/upl
 6. Only relative file paths are supported, for example "META-INF/signatures.xml" and "document.txt" instead of "/META-INF/signatures.xml" and "/document.txt".
 7. "META-INF/manifest.xml" file shall be conformant to OASIS Open Document Format version [1.0](http://docs.oasis-open.org/office/v1.0/OpenDocument-v1.0-os.pdf) or [1.2](http://docs.oasis-open.org/office/v1.2/OpenDocument-v1.2-part3.pdf).
 
-### ASICE container spceific requirements
+### ASICE container specific requirements
 The ASICE container must conform with [ETSI EN 319 162-1](http://www.etsi.org/deliver/etsi_en/319100_319199/31916201/01.01.01_60/en_31916201v010101p.pdf) standard.
 1. Warning is returned when signatures in the container do not sign all of the data files.
 2. Manifest file must be present.
 
-### ASICS container spceific requirements
+### ASICS container specific requirements
 The service supports both signature and Time Stamp Token (TST) based ASIC-S containers. Evidence record based containers are not supported. The ASIC-S container must conform with [ETSI EN 319 162-1](http://www.etsi.org/deliver/etsi_en/319100_319199/31916201/01.01.01_60/en_31916201v010101p.pdf) and [ETSI EN 319 162-2](http://www.etsi.org/deliver/etsi_en/319100_319199/31916202/01.01.01_60/en_31916202v010101p.pdf) standards.
 
 1. Manifest file can not be present in case of signature based ASIC-S containers.

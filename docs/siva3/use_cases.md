@@ -47,7 +47,7 @@ SiVa local copy of certificates.
 ## X-Road 6 security server SOAP request process
 
 X-Road validation process is brought out because we skip authentication
-process for X-Road security server interface and and use XML SOAP
+process for X-Road security server interface and use XML SOAP
 as input source.
 
 ![X-Road SOAP validation request](../img/siva/siva_x_road_server_diagram.png)
@@ -58,12 +58,10 @@ Validation report output id described in [Interface description](../siva3/interf
 
 ## TSL loading use case
 
-TSL implementd in seprate module. The process is executed in two ways.
+TSL implemented in separate module. The process is executed in two ways.
 
 * When SiVa application is started
 * As scheduled job
-
-Loading process is required action when ASiCE (BDOC) or
 
 ![TSL loading process](../img/siva/siva_tsl_loading_process.png)
 

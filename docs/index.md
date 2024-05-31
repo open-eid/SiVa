@@ -21,11 +21,11 @@ Main purpose of this documentation is to give overview what SiVa is, how it is b
 Below list will give You an overview of what each section of the
 SiVa architecture document will cover:
 
-* [**Definitions**](siva3/definitions) - defines and explines most common concepts used in SiVa documentation
-* [**Overview**](siva3/overview) - gives overview what SiVa is and
+* [**Definitions**](siva3/definitions) - defines and explains most common concepts used in SiVa documentation
+* [**Background**](siva3/background) - gives overview what SiVa is and
   it's main features.
 * [**Structure and activities**](siva3/structure_and_activities) - gives overview of
-  main SiVa subsystems and and and base validation Java libraries
+  main SiVa subsystems and base validation Java libraries
   used for different validation services
 * [**Interfaces**](siva3/interfaces) - Description of SiVa
    SOAP and JSON API request and response

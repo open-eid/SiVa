@@ -93,11 +93,11 @@ For that we first need to create service file:
 vim siva-webapp.service
 ```
 
-Inside it we need to paste below text. You need to change few things in service setup file.
+Inside it, we need to paste below text. You need to change few things in service setup file.
 
 * First you **must not** run service as `root`. So it's strongly recommended to change line `User=root`
 * Second You can change Java JVM options by modifying the `JAVA_OPTS` inside the `siva-webapp.service` file.
-* Also You can change the SiVa application configuration options by modifying `RUN_ARGS` section in file
+* Also, You can change the SiVa application configuration options by modifying `RUN_ARGS` section in file
 
 ```ini
 [Unit]
@@ -197,7 +197,7 @@ cp siva-parent/siva-webapp/target/siva-webapp-X.X.X.war apache-tomcat-8.5.24/web
 ./apache-tomcat-7.0.77/bin/catalina.sh run
 ```
 
-> **IMPORTANT** siva-webapp on startup creates `etc` directory where it copies the TSL validaiton certificates
+> **IMPORTANT** siva-webapp on startup creates `etc` directory where it copies the TSL validation certificates
 > `siva-keystore.jks`. Default location for this directory is application root or `$CATALINA_HOME`. To change
 > this default behavior you should set environment variable `DSS_DATA_FOLDER`. 
 
@@ -206,7 +206,7 @@ cp siva-parent/siva-webapp/target/siva-webapp-X.X.X.war apache-tomcat-8.5.24/web
 
 ### How-to set WAR deployed SiVa `application.properties`
 
-SiVa override properties can be set using `application.properties` file. The file can locate anywhare in the host system.
+SiVa override properties can be set using `application.properties` file. The file can locate anywhere in the host system.
 To make properties file accessible for SiVa you need to create or edit `setenv.sh` placed inside `bin` directory.
 
 Contents of the `setenv.sh` file should look like:
@@ -219,7 +219,7 @@ export CATALINA_OPTS="-Dspring.config.location=file:/path/to/application.propert
 ### Smoke testing your deployed system
 
 **Step 1**. Install HTTPIE
-`httpie` is more user friendly version of `curl` and we will use to verify that SiVa was installed
+`httpie` is more user-friendly version of `curl` and we will use to verify that SiVa was installed
 and started correctly on our server.
 
 If you have Python and its package manager `pip` installed. Then You can issue below command:

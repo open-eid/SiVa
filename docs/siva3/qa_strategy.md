@@ -9,7 +9,7 @@ There are different test environments for quality assurance, depending on the na
 1. GitHub Actions environment for public CI - Platform: Linux
 2. Test environment for local test and load test - Platform: Linux
 
-Instructions how to set up test enviroment and run tests together with more info can be found in [SiVa GitHub page](https://github.com/open-eid/SiVa).
+Instructions how to set up test environment and run tests together with more info can be found in [SiVa GitHub page](https://github.com/open-eid/SiVa).
 
 System requirements:
 
@@ -27,13 +27,12 @@ Tools used:
 
 ## Analysis
 Analysis will be tagged with identificators to enable cross-reference between requirements and corresponding tests. This includes both functional and non-functional requirements.
-See documents [(2) and (3) in References](/siva3/references/)
 
 ## Development
 ### Development process
 Customized process based on Kanban is used in the development. The process consists of following elements:
 
-* Product backlog is maintained JIRA
+* Product backlog is maintained in JIRA
 * Tasks are maintained through JIRA Kanban board
 * Daily team stand-ups are held
 * Tasks marked done are developed, tested and ready to be shipped
@@ -66,11 +65,10 @@ Unit tests are also automatically executed on each build, if the unit tests do n
 **Static testing/code reviews**
 
 All changes (including changes in unit test code) are reviewed by another development team member using GitHub. The code must pass review before it is submitted to testing.
-SonarLint is used to validate code automatically. It integrates both suggested tools mentioned in reference document [(3) References](/siva3/references/)
+SonarLint is used to validate code automatically.
 
 ## Testing
 ### Approach
-Testing follows the principles described in reference document [(1) in References](/siva3/references/)
 The goal is to automate as much of the testing process as possible, however some aspects of the testing will be carried out manually.
 As the development is carried out by the backlog priority the testing follows the same principle. After each feature release test cases, test automation code and test results will be available through GitHub.
 ![Testing schedule](../img/siva/qa_strategy/siva3/testingFlow.png)
@@ -135,12 +133,12 @@ The report will have at least the following elements:
 ### Test levels
 **Integration testing**
 
-The scope of the tests is illustrated on the image below. The goal is to test the SiVA application API (both X-Road and REST/JSON) and to test the independent module capability for validation of specific type of file. Both valid and invalid inputs are tested. More info about testing specifics can be found in Test Plan [Integration testing](/siva/test_plan/#integration-test-introduction) section.
+The scope of the tests is illustrated on the image below. The goal is to test the SiVA application API (both X-Road and REST/JSON) and to test the independent module capability for validation of specific type of file. Both valid and invalid inputs are tested. More info about testing specifics can be found in Test Plan [Integration testing](/siva3/test_plan/#integration-test-introduction/) section.
 ![Integration testing](../img/siva/qa_strategy/siva3/integrationTest.png)
 
 **System testing**
 
-The scope of the tests is illustrated on the image below. The goal of the test is to test the entire length of signature validation process and to test supportive functions. In addition Demo application is tested. More info about testing specifics can be found in Test Plan [System testing](/siva/test_plan/#system-test-introduction) section.
+The scope of the tests is illustrated on the image below. The goal of the test is to test the entire length of signature validation process and to test supportive functions. In addition Demo application is tested. More info about testing specifics can be found in Test Plan [System testing](/siva3/test_plan/#system-test-introduction/) section.
 ![System testing](../img/siva/qa_strategy/siva3/systemTest.png)
 
 **Regression testing**

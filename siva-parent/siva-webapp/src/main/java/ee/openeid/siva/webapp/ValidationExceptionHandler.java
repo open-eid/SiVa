@@ -26,11 +26,14 @@ import ee.openeid.siva.webapp.response.erroneus.RequestValidationError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 @RestControllerAdvice
 public class ValidationExceptionHandler {
@@ -91,6 +94,38 @@ public class ValidationExceptionHandler {
     public RequestValidationError handleRequestSizeLimitExceededException(RequestSizeLimitExceededException e) {
         RequestValidationError requestValidationError = new RequestValidationError();
         requestValidationError.addFieldError("request", e.getMessage());
+        return requestValidationError;
+    }
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public RequestValidationError handleNoHandlerFoundException(NoHandlerFoundException e) {
+        RequestValidationError requestValidationError = new RequestValidationError();
+        requestValidationError.addFieldError("EndpointNotFound", e.getMessage());
+        return requestValidationError;
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    @ResponseStatus(value = HttpStatus.METHOD_NOT_ALLOWED)
+    public RequestValidationError handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
+        RequestValidationError requestValidationError = new RequestValidationError();
+        requestValidationError.addFieldError("MethodNotAllowed", e.getMessage());
+        return requestValidationError;
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public RequestValidationError handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        RequestValidationError requestValidationError = new RequestValidationError();
+        requestValidationError.addFieldError("RequestBodyNotReadable", e.getMessage());
+        return requestValidationError;
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public RequestValidationError handleAllOtherExceptions(Exception e) {
+        RequestValidationError requestValidationError = new RequestValidationError();
+        requestValidationError.addFieldError("UnexpectedError", e.getMessage());
         return requestValidationError;
     }
 

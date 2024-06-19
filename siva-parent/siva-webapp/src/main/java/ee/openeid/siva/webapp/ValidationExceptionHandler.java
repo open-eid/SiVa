@@ -23,15 +23,21 @@ import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import ee.openeid.siva.webapp.request.limitation.RequestSizeLimitExceededException;
 import ee.openeid.siva.webapp.response.erroneus.RequestValidationError;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
+@Slf4j
 @RestControllerAdvice
 public class ValidationExceptionHandler {
 
@@ -91,6 +97,47 @@ public class ValidationExceptionHandler {
     public RequestValidationError handleRequestSizeLimitExceededException(RequestSizeLimitExceededException e) {
         RequestValidationError requestValidationError = new RequestValidationError();
         requestValidationError.addFieldError("request", e.getMessage());
+        return requestValidationError;
+    }
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public RequestValidationError handleNoHandlerFoundException(NoHandlerFoundException e) {
+        RequestValidationError requestValidationError = new RequestValidationError();
+        requestValidationError.addFieldError("endpointNotFound", "Endpoint not found");
+        return requestValidationError;
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    @ResponseStatus(value = HttpStatus.METHOD_NOT_ALLOWED)
+    public RequestValidationError handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
+        RequestValidationError requestValidationError = new RequestValidationError();
+        requestValidationError.addFieldError("methodNotAllowed", "Request method " + e.getMethod() + " is not supported");
+        return requestValidationError;
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public RequestValidationError handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        RequestValidationError requestValidationError = new RequestValidationError();
+        requestValidationError.addFieldError("requestBodyNotReadable", "Request body is malformed and cannot be read");
+        return requestValidationError;
+    }
+
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    @ResponseStatus(value = HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+    public RequestValidationError handleHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException e) {
+        RequestValidationError requestValidationError = new RequestValidationError();
+        requestValidationError.addFieldError("contentTypeNotSupported", "Content-Type " + e.getContentType() + " is not supported");
+        return requestValidationError;
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public RequestValidationError handleAllOtherExceptions(Exception e) {
+        RequestValidationError requestValidationError = new RequestValidationError();
+        requestValidationError.addFieldError("unexpectedError", "An unexpected error has occurred");
+        log.error("Unexpected error: {}", e.getMessage());
         return requestValidationError;
     }
 

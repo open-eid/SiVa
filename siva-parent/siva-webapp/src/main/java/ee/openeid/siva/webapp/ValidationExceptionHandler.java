@@ -103,7 +103,7 @@ public class ValidationExceptionHandler {
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public RequestValidationError handleNoHandlerFoundException(NoHandlerFoundException e) {
         RequestValidationError requestValidationError = new RequestValidationError();
-        requestValidationError.addFieldError("endpointNotFound", e.getMessage());
+        requestValidationError.addFieldError("endpointNotFound", "Endpoint not found");
         return requestValidationError;
     }
 
@@ -111,7 +111,7 @@ public class ValidationExceptionHandler {
     @ResponseStatus(value = HttpStatus.METHOD_NOT_ALLOWED)
     public RequestValidationError handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         RequestValidationError requestValidationError = new RequestValidationError();
-        requestValidationError.addFieldError("methodNotAllowed", e.getMessage());
+        requestValidationError.addFieldError("methodNotAllowed", "Request method " + e.getMethod() + " is not supported");
         return requestValidationError;
     }
 
@@ -119,7 +119,7 @@ public class ValidationExceptionHandler {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public RequestValidationError handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
         RequestValidationError requestValidationError = new RequestValidationError();
-        requestValidationError.addFieldError("requestBodyNotReadable", e.getMessage());
+        requestValidationError.addFieldError("requestBodyNotReadable", "Request body is malformed and cannot be read");
         return requestValidationError;
     }
 

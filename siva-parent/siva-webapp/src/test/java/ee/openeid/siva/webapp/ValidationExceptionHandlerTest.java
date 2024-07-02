@@ -229,7 +229,7 @@ class ValidationExceptionHandlerTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"/asd", "/!@#", "/", "/012", "/你好"})
-    void testNoHandlerFoundExceptionOnValidationExceptionHandler(String endpoint) throws Exception{
+    void performPostRequest_WhenEndpointIsInvalid_ThrowsNoHandlerFoundException(String endpoint) throws Exception {
         mockMvc.perform(post(endpoint)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(request().toString().getBytes()))
@@ -242,9 +242,9 @@ class ValidationExceptionHandlerTest {
     }
 
     @ParameterizedTest
-    @MethodSource("provideHttpMethods")
-    void testHttpRequestMethodNotSupportedExceptionOnValidationExceptionHandler(HttpMethod httpMethod, String requestErrorMessage) throws Exception{
-        mockMvc.perform(MockMvcRequestBuilders.request(httpMethod, VALIDATE_URL_TEMPLATE)
+    @MethodSource("provideHttpMethodsAndEndpoints")
+    void performRequest_WhenEndpointIsSetToValidateOrHashcodeAndHttpMethodIsInvalid_ThrowsHttpRequestMethodNotSupportedException(HttpMethod httpMethod, String endpoint, String requestErrorMessage) throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.request(httpMethod, endpoint)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(request().toString().getBytes()))
                 .andExpect(MockMvcResultMatchers.status().isMethodNotAllowed())
@@ -256,9 +256,23 @@ class ValidationExceptionHandlerTest {
     }
 
     @ParameterizedTest
-    @MethodSource("provideInvalidJsonContent")
-    void testHttpMessageNotReadableExceptionOnValidationExceptionHandler(String invalidJsonContent) throws Exception{
-        mockMvc.perform(post(VALIDATE_URL_TEMPLATE)
+    @MethodSource("provideHttpMethods")
+    void performRequest_WhenEndpointIsSetToGetDataFilesAndHttpMethodIsInvalid_ThrowsHttpRequestMethodNotSupportedException(HttpMethod httpMethod, String requestErrorMessage) throws Exception {
+        mockMvcDataFiles.perform(MockMvcRequestBuilders.request(httpMethod, GET_DATA_FILES_URL_TEMPLATE)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(dataFileRequest().toString().getBytes()))
+                .andExpect(MockMvcResultMatchers.status().isMethodNotAllowed())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors", hasSize(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].key", is("methodNotAllowed")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].message", containsString(requestErrorMessage)))
+                .andReturn();
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideInvalidJsonContentAndEndpoints")
+    void performPostRequest_WhenEndpointIsSetToValidateOrHashcodeAndJsonContentIsInvalid_ThrowsHttpMessageNotReadableException(String endpoint, String invalidJsonContent) throws Exception {
+        mockMvc.perform(post(endpoint)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(invalidJsonContent.getBytes()))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
@@ -269,10 +283,80 @@ class ValidationExceptionHandlerTest {
                 .andReturn();
     }
 
-    @Test
-    void testAllOtherExceptionsOnValidationExceptionHandler() throws Exception{
-        mockMvc.perform(post(VALIDATE_URL_TEMPLATE)
+    @ParameterizedTest
+    @MethodSource("provideInvalidJsonContent")
+    void performPostRequest_WhenEndpointIsSetToGetDataFilesAndJsonContentIsInvalid_ThrowsHttpMessageNotReadableException(String invalidJsonContent) throws Exception {
+        mockMvcDataFiles.perform(post(GET_DATA_FILES_URL_TEMPLATE)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(invalidJsonContent.getBytes()))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors", hasSize(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].key", is("requestBodyNotReadable")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].message", containsString("Request body is malformed and cannot be read")))
+                .andReturn();
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideUnsupportedMediaTypesAndEndpoints")
+    void performPostRequest_WhenEndpointIsSetToValidateOrHashcodeAndContentTypeIsInvalid_ThrowsHttpMediaTypeNotSupportedException(String endpoint, String mediaType, String requestErrorMessage) throws Exception {
+        mockMvc.perform(post(endpoint)
+                .contentType(mediaType)
                 .content(request().toString().getBytes()))
+                .andExpect(MockMvcResultMatchers.status().isUnsupportedMediaType())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors", hasSize(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].key", is("contentTypeNotSupported")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].message", containsString(requestErrorMessage)))
+                .andReturn();
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideUnsupportedMediaTypes")
+    void performPostRequest_WhenEndpointIsSetToGetDataFilesAndContentTypeIsInvalid_ThrowsHttpMediaTypeNotSupportedException(String mediaType, String requestErrorMessage) throws Exception {
+        mockMvcDataFiles.perform(post(GET_DATA_FILES_URL_TEMPLATE)
+                .contentType(mediaType)
+                .content(dataFileRequest().toString().getBytes()))
+                .andExpect(MockMvcResultMatchers.status().isUnsupportedMediaType())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors", hasSize(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].key", is("contentTypeNotSupported")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].message", containsString(requestErrorMessage)))
+                .andReturn();
+    }
+
+    @Test
+    void performPostRequest_WhenValidationProxyThrowsNewRuntimeException_ThrowsException() throws Exception {
+        when(validationProxy.validate(any())).thenThrow(new RuntimeException("Unexpected error"));
+        mockMvc.perform(post(VALIDATE_URL_TEMPLATE)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request().toString().getBytes()))
+                .andExpect(MockMvcResultMatchers.status().isInternalServerError())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors", hasSize(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].key", is("unexpectedError")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].message", containsString("An unexpected error has occurred")))
+                .andReturn();
+    }
+
+    @Test
+    void performPostRequest_WhenHashcodeValidationProxyThrowsNewRuntimeException_ThrowsException() throws Exception {
+        when(hashcodeValidationProxy.validate(any())).thenThrow(new RuntimeException("Unexpected error"));
+        mockMvc.perform(post(HASHCODE_VALIDATION_URL_TEMPLATE)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestWithInvalidFormatSignatureFile().toString().getBytes()))
+                .andExpect(MockMvcResultMatchers.status().isInternalServerError())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors", hasSize(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].key", is("unexpectedError")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].message", containsString("An unexpected error has occurred")))
+                .andReturn();
+    }
+
+    @Test
+    void performPostRequest_WhenDataFilesProxyThrowsNewRuntimeException_ThrowsException() throws Exception {
+        when(dataFilesProxy.getDataFiles(any(ProxyDocument.class))).thenThrow(new RuntimeException("Unexpected error"));
+        mockMvcDataFiles.perform(post(GET_DATA_FILES_URL_TEMPLATE)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(dataFileRequest().toString().getBytes()))
                 .andExpect(MockMvcResultMatchers.status().isInternalServerError())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors", hasSize(1)))
@@ -329,6 +413,15 @@ class ValidationExceptionHandlerTest {
         return jsonObject;
     }
 
+    private static Stream<Arguments> provideHttpMethodsAndEndpoints() {
+        String[] endpoints = {VALIDATE_URL_TEMPLATE, HASHCODE_VALIDATION_URL_TEMPLATE};
+        HttpMethod[] methods = {HttpMethod.GET, HttpMethod.PUT, HttpMethod.DELETE, HttpMethod.PATCH, HttpMethod.HEAD};
+
+        return Stream.of(endpoints)
+                .flatMap(endpoint -> Stream.of(methods)
+                .map(method -> Arguments.of(method, endpoint, "Request method " + method.name() + " is not supported")));
+    }
+
     private static Stream<Arguments> provideHttpMethods() {
         return Stream.of(
                 Arguments.of(HttpMethod.GET, "Request method GET is not supported"),
@@ -337,6 +430,27 @@ class ValidationExceptionHandlerTest {
                 Arguments.of(HttpMethod.PATCH, "Request method PATCH is not supported"),
                 Arguments.of(HttpMethod.HEAD, "Request method HEAD is not supported")
         );
+    }
+
+    private static Stream<Arguments> provideInvalidJsonContentAndEndpoints() {
+        String[] endpoints = {VALIDATE_URL_TEMPLATE, HASHCODE_VALIDATION_URL_TEMPLATE};
+        String[] invalidJsonContents = {
+                "",
+                "{filename: \"\"}",
+                "{\"filename\": ",
+                "{\"filename\": \"file\"",
+                "{\"filename\": \"file\", ",
+                "{\"filename\": \"file\" \"reportType\": simple}",
+                "{\"filename\": \"file\", \"reportType\": simple",
+                "{\"filename\": \"file\", \"reportType\": simple, ",
+                "{filename: \"file\", \"reportType\": simple}",
+                "{\"filename\": \"file\", \"reportType\": }",
+                "{\"filename\": \"file\", \"reportType\": simple, \"document\": }"
+        };
+
+        return Stream.of(endpoints)
+                .flatMap(endpoint -> Stream.of(invalidJsonContents)
+                .map(invalidJsonContent -> Arguments.of(endpoint, invalidJsonContent)));
     }
 
     private static Stream<Arguments> provideInvalidJsonContent() {
@@ -352,6 +466,31 @@ class ValidationExceptionHandlerTest {
                 Arguments.of("{filename: \"file\", \"reportType\": simple}"),
                 Arguments.of("{\"filename\": \"file\", \"reportType\": }"),
                 Arguments.of("{\"filename\": \"file\", \"reportType\": simple, \"document\": }")
+        );
+    }
+
+    private static Stream<Arguments> provideUnsupportedMediaTypesAndEndpoints() {
+        String[] endpoints = {VALIDATE_URL_TEMPLATE, HASHCODE_VALIDATION_URL_TEMPLATE};
+        String[][] mediaTypesAndMessages = {
+                {MediaType.APPLICATION_XML_VALUE, "Content-Type application/xml is not supported"},
+                {MediaType.TEXT_PLAIN_VALUE, "Content-Type text/plain is not supported"},
+                {"application/x-yaml", "Content-Type application/x-yaml is not supported"},
+                {MediaType.TEXT_HTML_VALUE, "Content-Type text/html is not supported"},
+                {"", "Content-Type application/octet-stream is not supported"}
+        };
+
+        return Stream.of(endpoints)
+                .flatMap(endpoint -> Stream.of(mediaTypesAndMessages)
+                .map(mediaTypeAndMessage -> Arguments.of(endpoint, mediaTypeAndMessage[0], mediaTypeAndMessage[1])));
+    }
+
+    private static Stream<Arguments> provideUnsupportedMediaTypes() {
+        return Stream.of(
+                Arguments.of(MediaType.APPLICATION_XML_VALUE, "Content-Type application/xml is not supported"),
+                Arguments.of(MediaType.TEXT_PLAIN_VALUE, "Content-Type text/plain is not supported"),
+                Arguments.of("application/x-yaml", "Content-Type application/x-yaml is not supported"),
+                Arguments.of(MediaType.TEXT_HTML_VALUE, "Content-Type text/html is not supported"),
+                Arguments.of("", "Content-Type application/octet-stream is not supported")
         );
     }
 }

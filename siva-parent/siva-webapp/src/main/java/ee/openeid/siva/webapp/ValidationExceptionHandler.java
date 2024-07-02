@@ -29,6 +29,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -120,6 +121,14 @@ public class ValidationExceptionHandler {
     public RequestValidationError handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
         RequestValidationError requestValidationError = new RequestValidationError();
         requestValidationError.addFieldError("requestBodyNotReadable", "Request body is malformed and cannot be read");
+        return requestValidationError;
+    }
+
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    @ResponseStatus(value = HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+    public RequestValidationError handleHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException e) {
+        RequestValidationError requestValidationError = new RequestValidationError();
+        requestValidationError.addFieldError("contentTypeNotSupported", "Content-Type " + e.getContentType() + " is not supported");
         return requestValidationError;
     }
 

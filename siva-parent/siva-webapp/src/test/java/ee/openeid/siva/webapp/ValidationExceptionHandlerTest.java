@@ -242,7 +242,7 @@ class ValidationExceptionHandlerTest {
     }
 
     @ParameterizedTest
-    @MethodSource("provideHttpMethodsAndEndpoints")
+    @MethodSource("provideHttpMethodsAndValidationEndpoints")
     void performRequest_WhenEndpointIsSetToValidateOrHashcodeAndHttpMethodIsInvalid_ThrowsHttpRequestMethodNotSupportedException(HttpMethod httpMethod, String endpoint, String requestErrorMessage) throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.request(httpMethod, endpoint)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -270,7 +270,7 @@ class ValidationExceptionHandlerTest {
     }
 
     @ParameterizedTest
-    @MethodSource("provideInvalidJsonContentAndEndpoints")
+    @MethodSource("provideInvalidJsonContentAndValidationEndpoints")
     void performPostRequest_WhenEndpointIsSetToValidateOrHashcodeAndJsonContentIsInvalid_ThrowsHttpMessageNotReadableException(String endpoint, String invalidJsonContent) throws Exception {
         mockMvc.perform(post(endpoint)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -298,7 +298,7 @@ class ValidationExceptionHandlerTest {
     }
 
     @ParameterizedTest
-    @MethodSource("provideUnsupportedMediaTypesAndEndpoints")
+    @MethodSource("provideUnsupportedMediaTypesAndValidationEndpoints")
     void performPostRequest_WhenEndpointIsSetToValidateOrHashcodeAndContentTypeIsInvalid_ThrowsHttpMediaTypeNotSupportedException(String endpoint, String mediaType, String requestErrorMessage) throws Exception {
         mockMvc.perform(post(endpoint)
                 .contentType(mediaType)
@@ -413,13 +413,10 @@ class ValidationExceptionHandlerTest {
         return jsonObject;
     }
 
-    private static Stream<Arguments> provideHttpMethodsAndEndpoints() {
-        String[] endpoints = {VALIDATE_URL_TEMPLATE, HASHCODE_VALIDATION_URL_TEMPLATE};
-        HttpMethod[] methods = {HttpMethod.GET, HttpMethod.PUT, HttpMethod.DELETE, HttpMethod.PATCH, HttpMethod.HEAD};
-
-        return Stream.of(endpoints)
-                .flatMap(endpoint -> Stream.of(methods)
-                .map(method -> Arguments.of(method, endpoint, "Request method " + method.name() + " is not supported")));
+    private static Stream<Arguments> provideHttpMethodsAndValidationEndpoints() {
+        return provideValidationEndpoints()
+                .flatMap(endpoint -> provideHttpMethods()
+                .map(args -> Arguments.of(args.get()[0], endpoint, "Request method " + ((HttpMethod) args.get()[0]).name() + " is not supported")));
     }
 
     private static Stream<Arguments> provideHttpMethods() {
@@ -432,9 +429,14 @@ class ValidationExceptionHandlerTest {
         );
     }
 
-    private static Stream<Arguments> provideInvalidJsonContentAndEndpoints() {
-        String[] endpoints = {VALIDATE_URL_TEMPLATE, HASHCODE_VALIDATION_URL_TEMPLATE};
-        String[] invalidJsonContents = {
+    private static Stream<Arguments> provideInvalidJsonContentAndValidationEndpoints() {
+        return provideValidationEndpoints()
+                .flatMap(endpoint -> provideInvalidJsonContent()
+                .map(invalidJsonContent -> Arguments.of(endpoint, invalidJsonContent)));
+    }
+
+    private static Stream<String> provideInvalidJsonContent() {
+        return Stream.of(
                 "",
                 "{filename: \"\"}",
                 "{\"filename\": ",
@@ -446,42 +448,14 @@ class ValidationExceptionHandlerTest {
                 "{filename: \"file\", \"reportType\": simple}",
                 "{\"filename\": \"file\", \"reportType\": }",
                 "{\"filename\": \"file\", \"reportType\": simple, \"document\": }"
-        };
-
-        return Stream.of(endpoints)
-                .flatMap(endpoint -> Stream.of(invalidJsonContents)
-                .map(invalidJsonContent -> Arguments.of(endpoint, invalidJsonContent)));
-    }
-
-    private static Stream<Arguments> provideInvalidJsonContent() {
-        return Stream.of(
-                Arguments.of(""),
-                Arguments.of("{filename: \"\"}"),
-                Arguments.of("{\"filename\": "),
-                Arguments.of("{\"filename\": \"file\""),
-                Arguments.of("{\"filename\": \"file\", "),
-                Arguments.of("{\"filename\": \"file\" \"reportType\": simple}"),
-                Arguments.of("{\"filename\": \"file\", \"reportType\": simple"),
-                Arguments.of("{\"filename\": \"file\", \"reportType\": simple, "),
-                Arguments.of("{filename: \"file\", \"reportType\": simple}"),
-                Arguments.of("{\"filename\": \"file\", \"reportType\": }"),
-                Arguments.of("{\"filename\": \"file\", \"reportType\": simple, \"document\": }")
         );
     }
 
-    private static Stream<Arguments> provideUnsupportedMediaTypesAndEndpoints() {
-        String[] endpoints = {VALIDATE_URL_TEMPLATE, HASHCODE_VALIDATION_URL_TEMPLATE};
-        String[][] mediaTypesAndMessages = {
-                {MediaType.APPLICATION_XML_VALUE, "Content-Type application/xml is not supported"},
-                {MediaType.TEXT_PLAIN_VALUE, "Content-Type text/plain is not supported"},
-                {"application/x-yaml", "Content-Type application/x-yaml is not supported"},
-                {MediaType.TEXT_HTML_VALUE, "Content-Type text/html is not supported"},
-                {"", "Content-Type application/octet-stream is not supported"}
-        };
-
-        return Stream.of(endpoints)
-                .flatMap(endpoint -> Stream.of(mediaTypesAndMessages)
-                .map(mediaTypeAndMessage -> Arguments.of(endpoint, mediaTypeAndMessage[0], mediaTypeAndMessage[1])));
+    private static Stream<Arguments> provideUnsupportedMediaTypesAndValidationEndpoints() {
+        return provideValidationEndpoints()
+                .map(Arguments::of)
+                .flatMap(endpointArgs -> provideUnsupportedMediaTypes()
+                        .map(mediaTypeArgs -> appendArguments(endpointArgs, mediaTypeArgs)));
     }
 
     private static Stream<Arguments> provideUnsupportedMediaTypes() {
@@ -492,5 +466,15 @@ class ValidationExceptionHandlerTest {
                 Arguments.of(MediaType.TEXT_HTML_VALUE, "Content-Type text/html is not supported"),
                 Arguments.of("", "Content-Type application/octet-stream is not supported")
         );
+    }
+
+    private static Stream<String> provideValidationEndpoints() {
+        return Stream.of(VALIDATE_URL_TEMPLATE, HASHCODE_VALIDATION_URL_TEMPLATE);
+    }
+
+    private static Arguments appendArguments(Arguments... arguments) {
+        return Arguments.of(Stream.of(arguments)
+                .flatMap(args -> Stream.of(args.get()))
+                .toArray());
     }
 }

@@ -243,7 +243,7 @@ class ValidationExceptionHandlerTest {
 
     @ParameterizedTest
     @MethodSource("provideHttpMethodsAndValidationEndpoints")
-    void performRequest_WhenEndpointIsSetToValidateOrHashcodeAndHttpMethodIsInvalid_ThrowsHttpRequestMethodNotSupportedException(HttpMethod httpMethod, String endpoint, String requestErrorMessage) throws Exception {
+    void performRequest_WhenEndpointIsSetToValidateOrHashcodeAndHttpMethodIsInvalid_ThrowsHttpRequestMethodNotSupportedException(HttpMethod httpMethod, String endpoint) throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.request(httpMethod, endpoint)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(request().toString().getBytes()))
@@ -251,13 +251,13 @@ class ValidationExceptionHandlerTest {
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors", hasSize(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].key", is("methodNotAllowed")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].message", containsString(requestErrorMessage)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].message", containsString("Only the following request methods are supported: POST")))
                 .andReturn();
     }
 
     @ParameterizedTest
     @MethodSource("provideHttpMethods")
-    void performRequest_WhenEndpointIsSetToGetDataFilesAndHttpMethodIsInvalid_ThrowsHttpRequestMethodNotSupportedException(HttpMethod httpMethod, String requestErrorMessage) throws Exception {
+    void performRequest_WhenEndpointIsSetToGetDataFilesAndHttpMethodIsInvalid_ThrowsHttpRequestMethodNotSupportedException(HttpMethod httpMethod) throws Exception {
         mockMvcDataFiles.perform(MockMvcRequestBuilders.request(httpMethod, GET_DATA_FILES_URL_TEMPLATE)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(dataFileRequest().toString().getBytes()))
@@ -265,7 +265,7 @@ class ValidationExceptionHandlerTest {
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors", hasSize(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].key", is("methodNotAllowed")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].message", containsString(requestErrorMessage)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].message", containsString("Only the following request methods are supported: POST")))
                 .andReturn();
     }
 
@@ -299,27 +299,27 @@ class ValidationExceptionHandlerTest {
 
     @ParameterizedTest
     @MethodSource("provideUnsupportedMediaTypesAndValidationEndpoints")
-    void performPostRequest_WhenEndpointIsSetToValidateOrHashcodeAndContentTypeIsInvalid_ThrowsHttpMediaTypeNotSupportedException(String endpoint, String mediaType, String requestErrorMessage) throws Exception {
+    void performPostRequest_WhenEndpointIsSetToValidateOrHashcodeAndContentTypeIsInvalid_ThrowsHttpMediaTypeNotSupportedException(String mediaType, String endpoint) throws Exception {
         mockMvc.perform(post(endpoint)
                 .contentType(mediaType)
                 .content(request().toString().getBytes()))
                 .andExpect(MockMvcResultMatchers.status().isUnsupportedMediaType())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors", hasSize(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].key", is("contentTypeNotSupported")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].message", containsString(requestErrorMessage)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].message", containsString("Only the following content types are supported: application/json, application/*+json")))
                 .andReturn();
     }
 
     @ParameterizedTest
     @MethodSource("provideUnsupportedMediaTypes")
-    void performPostRequest_WhenEndpointIsSetToGetDataFilesAndContentTypeIsInvalid_ThrowsHttpMediaTypeNotSupportedException(String mediaType, String requestErrorMessage) throws Exception {
+    void performPostRequest_WhenEndpointIsSetToGetDataFilesAndContentTypeIsInvalid_ThrowsHttpMediaTypeNotSupportedException(String mediaType) throws Exception {
         mockMvcDataFiles.perform(post(GET_DATA_FILES_URL_TEMPLATE)
                 .contentType(mediaType)
                 .content(dataFileRequest().toString().getBytes()))
                 .andExpect(MockMvcResultMatchers.status().isUnsupportedMediaType())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors", hasSize(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].key", is("contentTypeNotSupported")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].message", containsString(requestErrorMessage)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors[0].message", containsString("Only the following content types are supported: application/json, application/*+json")))
                 .andReturn();
     }
 
@@ -414,18 +414,18 @@ class ValidationExceptionHandlerTest {
     }
 
     private static Stream<Arguments> provideHttpMethodsAndValidationEndpoints() {
-        return provideValidationEndpoints()
-                .flatMap(endpoint -> provideHttpMethods()
-                .map(args -> Arguments.of(args.get()[0], endpoint, "Request method " + ((HttpMethod) args.get()[0]).name() + " is not supported")));
+        return provideHttpMethods()
+                .flatMap(httpMethod -> provideValidationEndpoints()
+                .map(endpoint -> Arguments.of(httpMethod, endpoint)));
     }
 
-    private static Stream<Arguments> provideHttpMethods() {
+    private static Stream<HttpMethod> provideHttpMethods() {
         return Stream.of(
-                Arguments.of(HttpMethod.GET, "Request method GET is not supported"),
-                Arguments.of(HttpMethod.PUT, "Request method PUT is not supported"),
-                Arguments.of(HttpMethod.DELETE, "Request method DELETE is not supported"),
-                Arguments.of(HttpMethod.PATCH, "Request method PATCH is not supported"),
-                Arguments.of(HttpMethod.HEAD, "Request method HEAD is not supported")
+                HttpMethod.GET,
+                HttpMethod.PUT,
+                HttpMethod.DELETE,
+                HttpMethod.PATCH,
+                HttpMethod.HEAD
         );
     }
 
@@ -452,19 +452,18 @@ class ValidationExceptionHandlerTest {
     }
 
     private static Stream<Arguments> provideUnsupportedMediaTypesAndValidationEndpoints() {
-        return provideValidationEndpoints()
-                .map(Arguments::of)
-                .flatMap(endpointArgs -> provideUnsupportedMediaTypes()
-                        .map(mediaTypeArgs -> appendArguments(endpointArgs, mediaTypeArgs)));
+        return provideUnsupportedMediaTypes()
+                .flatMap(mediaType -> provideValidationEndpoints()
+                .map(endpoint -> Arguments.of(mediaType, endpoint)));
     }
 
-    private static Stream<Arguments> provideUnsupportedMediaTypes() {
+    private static Stream<String> provideUnsupportedMediaTypes() {
         return Stream.of(
-                Arguments.of(MediaType.APPLICATION_XML_VALUE, "Content-Type application/xml is not supported"),
-                Arguments.of(MediaType.TEXT_PLAIN_VALUE, "Content-Type text/plain is not supported"),
-                Arguments.of("application/x-yaml", "Content-Type application/x-yaml is not supported"),
-                Arguments.of(MediaType.TEXT_HTML_VALUE, "Content-Type text/html is not supported"),
-                Arguments.of("", "Content-Type application/octet-stream is not supported")
+                MediaType.APPLICATION_XML_VALUE,
+                MediaType.TEXT_PLAIN_VALUE,
+                "application/x-yaml",
+                MediaType.TEXT_HTML_VALUE,
+                ""
         );
     }
 
@@ -472,9 +471,4 @@ class ValidationExceptionHandlerTest {
         return Stream.of(VALIDATE_URL_TEMPLATE, HASHCODE_VALIDATION_URL_TEMPLATE);
     }
 
-    private static Arguments appendArguments(Arguments... arguments) {
-        return Arguments.of(Stream.of(arguments)
-                .flatMap(args -> Stream.of(args.get()))
-                .toArray());
-    }
 }

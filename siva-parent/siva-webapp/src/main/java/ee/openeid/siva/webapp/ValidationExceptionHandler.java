@@ -26,8 +26,10 @@ import ee.openeid.siva.webapp.response.erroneus.RequestValidationError;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.util.MimeType;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -36,6 +38,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestControllerAdvice
@@ -112,7 +120,8 @@ public class ValidationExceptionHandler {
     @ResponseStatus(value = HttpStatus.METHOD_NOT_ALLOWED)
     public RequestValidationError handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         RequestValidationError requestValidationError = new RequestValidationError();
-        requestValidationError.addFieldError("methodNotAllowed", "Request method " + e.getMethod() + " is not supported");
+        requestValidationError.addFieldError("methodNotAllowed", "Only the following request methods are supported: "
+                + asCommaSeparatedList(e.getSupportedHttpMethods(), HttpMethod::name));
         return requestValidationError;
     }
 
@@ -128,7 +137,8 @@ public class ValidationExceptionHandler {
     @ResponseStatus(value = HttpStatus.UNSUPPORTED_MEDIA_TYPE)
     public RequestValidationError handleHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException e) {
         RequestValidationError requestValidationError = new RequestValidationError();
-        requestValidationError.addFieldError("contentTypeNotSupported", "Content-Type " + e.getContentType() + " is not supported");
+        requestValidationError.addFieldError("contentTypeNotSupported", "Only the following content types are supported: "
+                + asCommaSeparatedList(e.getSupportedMediaTypes(), MimeType::toString));
         return requestValidationError;
     }
 
@@ -149,6 +159,15 @@ public class ValidationExceptionHandler {
     @Autowired
     public void setMessageSource(MessageSource messageSource) {
         this.messageSource = messageSource;
+    }
+
+    private static <T> String asCommaSeparatedList(Collection<T> elements, Function<T, String> mapper) {
+        List<String> mappedElements = Optional
+                .ofNullable(elements).stream().flatMap(Collection::stream)
+                .map(mapper)
+                .collect(Collectors.toList());
+
+        return String.join(", ", mappedElements);
     }
 
 }

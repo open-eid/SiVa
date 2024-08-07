@@ -167,7 +167,7 @@ Legend:
 ### Signer certificate's revocation freshness constraints
 1. In case of BDOC and DIGIDOC-XML 1.0...1.3 BASELINE_LT_TM signatures with time-mark: revocation data is always considered fresh as the revocation data is issued at the trusted signing time.
 2. In case of XAdES/CAdES/PAdES BASELINE_LT and BASELINE_LTA signatures with signature time-stamp: revocation data freshness is checked according to the following rules:
-	* In case of OCSP response if difference between signature time-stamp's production time (genTime field) and signer certificate OCSP confirmation’s production time (producedAt field) is more than 24 hours then the signature is considered invalid. If the difference is more than 15 minutes and less than 24h then a validation warning is returned.
+	* In case of Estonian signature's OCSP response, if the difference between signature's time-stamp's production time (genTime field) and signer certificate's OCSP confirmation’s production time (producedAt field) is more than 24 hours, then the signature is considered invalid. If the difference is more than 15 minutes and less than 24h, then a validation warning is returned.
 	* In case of Certificate Revocation List the signature time-stamp's production time (genTime field) must be within validity range of the CRL (between thisUpdate and nextUpdate)
 
 

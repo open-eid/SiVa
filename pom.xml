@@ -258,7 +258,7 @@
                     <plugin>
                         <groupId>org.owasp</groupId>
                         <artifactId>dependency-check-maven</artifactId>
-                        <version>9.1.0</version>
+                        <version>8.4.3</version>
                         <configuration>
                             <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
                             <failOnError>false</failOnError>

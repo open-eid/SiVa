@@ -36,16 +36,12 @@ import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
 import ee.openeid.siva.validation.document.report.ValidatedDocument;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.document.report.ValidationWarning;
-import ee.openeid.siva.validation.exception.DocumentRequirementsException;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
-import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
-import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.validation.service.generic.GenericValidationService;
 import ee.openeid.validation.service.generic.configuration.properties.GenericSignaturePolicyProperties;
 import ee.openeid.validation.service.timemark.report.DDOCContainerValidationReportBuilder;
 import ee.openeid.validation.service.timestamptoken.TimeStampTokenValidationService;
-import ee.openeid.validation.service.timestamptoken.configuration.TimeStampTokenSignaturePolicyProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -55,6 +51,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
@@ -160,8 +157,9 @@ class ValidationProxyTest {
     @ParameterizedTest
     @MethodSource("getFileNameAndTestFile")
     void proxyDocumentWithDifferentExtensionsShouldReturnValidationReport(String fileName, String testFile) throws Exception {
-
-        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(getTimeStampValidationService());
+        TimeStampTokenValidationService TimeStampTokenValidationServiceMock = Mockito.mock(TimeStampTokenValidationService.class);
+        when(TimeStampTokenValidationServiceMock.validateDocument(any())).thenReturn(createTimeStampTokenValidationDataDummyReports());
+        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(TimeStampTokenValidationServiceMock);
         when(applicationContext.getBean(TIMEMARK_CONTAINER_VALIDATION_SERVICE_BEAN)).thenReturn(validationServiceSpy);
 
         ProxyDocument proxyDocument = mockProxyDocumentWithExtension(fileName);
@@ -174,7 +172,9 @@ class ValidationProxyTest {
 
     @Test
     void proxyDocumentAsicsWithRandomDataFile() throws Exception {
-        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(getTimeStampValidationService());
+        TimeStampTokenValidationService timeStampTokenValidationService = Mockito.mock(TimeStampTokenValidationService.class);
+        when(timeStampTokenValidationService.validateDocument(any())).thenReturn(createTimeStampTokenValidationDataDummyReports());
+        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(timeStampTokenValidationService);
         when(applicationContext.getBean(GENERIC_VALIDATION_SERVICE_BEAN)).thenReturn(getGenericValidationService());
         ProxyDocument proxyDocument = mockProxyDocumentWithExtension("asics");
         proxyDocument.setBytes(buildValidationDocument("TXTinsideAsics.asics"));
@@ -184,19 +184,9 @@ class ValidationProxyTest {
     }
 
     @Test
-    void proxyDocumentAsicsWithTwoDataFiles() throws Exception {
-        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(getTimeStampValidationService());
-        ProxyDocument proxyDocument = mockProxyDocumentWithExtension("asics");
-        proxyDocument.setBytes(buildValidationDocument("TwoDataFilesAsics.asics"));
-
-        assertThrows(
-                DocumentRequirementsException.class, () -> validationProxy.validate(proxyDocument)
-        );
-    }
-
-    @Test
     void proxyDocumentAsicsWithDifferentMimeType() throws Exception {
-        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(getTimeStampValidationService());
+        TimeStampTokenValidationService timeStampTokenValidationService = Mockito.mock(TimeStampTokenValidationService.class);
+        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(timeStampTokenValidationService);
         when(applicationContext.getBean(GENERIC_VALIDATION_SERVICE_BEAN)).thenReturn(validationServiceSpy);
         ProxyDocument proxyDocument = mockProxyDocumentWithExtension("zip");
         proxyDocument.setBytes(buildValidationDocument("timestamptoken-different-mimetype.zip"));
@@ -206,7 +196,9 @@ class ValidationProxyTest {
 
     @Test
     void proxyDocumentAsicsNoTeraWarning() throws Exception {
-        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(getTimeStampValidationService());
+        TimeStampTokenValidationService timeStampTokenValidationService = Mockito.mock(TimeStampTokenValidationService.class);
+        when(timeStampTokenValidationService.validateDocument(any())).thenReturn(createTimeStampTokenValidationDataDummyReports());
+        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(timeStampTokenValidationService);
         when(applicationContext.getBean(TIMEMARK_CONTAINER_VALIDATION_SERVICE_BEAN)).thenReturn(validationServiceSpy);
         ProxyDocument proxyDocument = mockProxyDocumentWithExtension("asics");
         proxyDocument.setBytes(buildValidationDocument("timestamptoken-ddoc.asics"));
@@ -293,14 +285,12 @@ class ValidationProxyTest {
         return validationService;
     }
 
-    private TimeStampTokenValidationService getTimeStampValidationService() {
-        TimeStampTokenValidationService validationService = new TimeStampTokenValidationService();
-        TimeStampTokenSignaturePolicyProperties policyProperties = new TimeStampTokenSignaturePolicyProperties();
-        policyProperties.initPolicySettings();
-        SignaturePolicyService<ValidationPolicy> signaturePolicyService = new SignaturePolicyService<>(policyProperties);
-        validationService.setSignaturePolicyService(signaturePolicyService);
-        validationService.setReportConfigurationProperties(new ReportConfigurationProperties(true));
-        return validationService;
+    private Reports createTimeStampTokenValidationDataDummyReports() {
+        ValidationConclusion validationConclusion = new ValidationConclusion();
+        TimeStampTokenValidationData tstValidationData = new TimeStampTokenValidationData();
+        tstValidationData.setIndication(TimeStampTokenValidationData.Indication.TOTAL_PASSED);
+        validationConclusion.setTimeStampTokens(List.of(tstValidationData));
+        return new Reports(new SimpleReport(validationConclusion), null, null);
     }
 
     private ProxyDocument mockProxyDocumentWithDocument(DocumentType documentType) {

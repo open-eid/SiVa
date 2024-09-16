@@ -16,6 +16,8 @@
 
 package ee.openeid.siva.webapp;
 
+import ee.openeid.siva.proxy.HasBdocTimemarkPolicyService;
+import ee.openeid.siva.proxy.HashcodeValidationMapper;
 import ee.openeid.siva.proxy.HashcodeValidationProxy;
 import ee.openeid.siva.proxy.ProxyRequest;
 import ee.openeid.siva.proxy.document.ProxyHashcodeDataSet;
@@ -25,12 +27,11 @@ import ee.openeid.siva.webapp.request.Datafile;
 import ee.openeid.siva.webapp.request.HashcodeValidationRequest;
 import ee.openeid.siva.webapp.request.SignatureFile;
 import ee.openeid.siva.webapp.transformer.HashcodeValidationRequestToProxyDocumentTransformer;
+import ee.openeid.validation.service.generic.HashcodeGenericValidationService;
+import ee.openeid.validation.service.timemark.TimemarkHashcodeValidationService;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
@@ -43,30 +44,37 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
-@ExtendWith(MockitoExtension.class)
 class HashcodeValidationControllerTest {
 
     private HashcodeValidationRequestToProxyDocumentTransformerSpy hashRequestTransformerSpy = new HashcodeValidationRequestToProxyDocumentTransformerSpy();
 
-    @Mock
-    private StatisticsService statisticsService;
-
-    @Mock
-    private ApplicationContext applicationContext;
-
-    @Mock
-    private Environment environment;
+    private final StatisticsService statisticsService = mock(StatisticsService.class);
+    private final ApplicationContext applicationContext = mock(ApplicationContext.class);
+    private final Environment environment = mock(Environment.class);
+    private final HasBdocTimemarkPolicyService hasBdocTimemarkPolicyService = mock(HasBdocTimemarkPolicyService.class);
+    private final HashcodeValidationMapper hashcodeValidationMapper = mock(HashcodeValidationMapper.class);
+    private final HashcodeGenericValidationService hashcodeGenericValidationService = mock(HashcodeGenericValidationService.class);
+    private final TimemarkHashcodeValidationService timemarkHashcodeValidationService = mock(TimemarkHashcodeValidationService.class);
 
     private MockMvc mockMvc;
 
     @BeforeEach
     public void setUp() {
         ValidationController validationController = new ValidationController();
-        HashcodeValidationProxySpy validationProxySpy = new HashcodeValidationProxySpy(statisticsService, applicationContext, environment);
+        HashcodeValidationProxySpy validationProxySpy = new HashcodeValidationProxySpy(
+          statisticsService,
+          applicationContext,
+          environment,
+          hasBdocTimemarkPolicyService,
+          hashcodeValidationMapper,
+          hashcodeGenericValidationService,
+          timemarkHashcodeValidationService
+        );
         validationController.setHashRequestTransformer(hashRequestTransformerSpy);
         validationController.setHashcodeValidationProxy(validationProxySpy);
         mockMvc = standaloneSetup(validationController).build();
@@ -155,8 +163,22 @@ class HashcodeValidationControllerTest {
 
     private static class HashcodeValidationProxySpy extends HashcodeValidationProxy {
 
-        HashcodeValidationProxySpy(StatisticsService statisticsService, ApplicationContext applicationContext, Environment environment) {
-            super(statisticsService, applicationContext, environment);
+        HashcodeValidationProxySpy(StatisticsService statisticsService,
+                                   ApplicationContext applicationContext,
+                                   Environment environment,
+                                   HasBdocTimemarkPolicyService hasBdocTimemarkPolicyService,
+                                   HashcodeValidationMapper hashcodeValidationMapper,
+                                   HashcodeGenericValidationService hashcodeGenericValidationService,
+                                   TimemarkHashcodeValidationService timemarkHashcodeValidationService) {
+            super(
+              statisticsService,
+              applicationContext,
+              environment,
+              hasBdocTimemarkPolicyService,
+              hashcodeValidationMapper,
+              hashcodeGenericValidationService,
+              timemarkHashcodeValidationService
+            );
         }
 
         @Override

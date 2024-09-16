@@ -21,8 +21,8 @@ import ee.openeid.siva.validation.document.report.SignatureScope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.document.report.ValidationWarning;
-import ee.openeid.siva.validation.document.report.Warning;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
+import ee.openeid.validation.service.timemark.util.SignatureScopeParser;
 import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.Container;
 import org.digidoc4j.DigestDataFile;
@@ -35,7 +35,6 @@ import org.digidoc4j.impl.ddoc.DDocFacade;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class DDOCContainerValidationReportBuilder extends TimemarkContainerValidationReportBuilder {
 
@@ -79,10 +78,9 @@ public class DDOCContainerValidationReportBuilder extends TimemarkContainerValid
 
     @Override
     List<SignatureScope> getSignatureScopes(Signature signature, List<String> dataFilenames) {
-        return dataFilenames
-                .stream()
-                .map(this::mapDataFile)
-                .collect(Collectors.toList());
+        return dataFilenames.stream()
+          .map(SignatureScopeParser::createFullSignatureScopeForDataFile)
+          .toList();
     }
 
     @Override
@@ -94,14 +92,6 @@ public class DDOCContainerValidationReportBuilder extends TimemarkContainerValid
     String getSignatureFormat(SignatureProfile profile) {
         DDocFacade dDocFacade = ((DDocContainer) container).getDDoc4JFacade();
         return dDocFacade.getFormat().replaceAll("-", "_") + "_" + dDocFacade.getVersion();
-    }
-
-    private SignatureScope mapDataFile(String filename) {
-        SignatureScope signatureScope = new SignatureScope();
-        signatureScope.setName(filename);
-        signatureScope.setContent(FULL_DOCUMENT);
-        signatureScope.setScope(FULL_SIGNATURE_SCOPE);
-        return signatureScope;
     }
 
     private String getDigidocXmlSignatureForm() {

@@ -18,10 +18,7 @@ package ee.openeid.validation.service.generic;
 
 import ee.openeid.siva.validation.document.Datafile;
 import ee.openeid.siva.validation.document.ValidationDocument;
-import ee.openeid.siva.validation.document.report.Reports;
-import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.exception.MalformedSignatureFileException;
-import ee.openeid.siva.validation.security.SecureSAXParsers;
 import eu.europa.esig.dss.enumerations.DigestAlgorithm;
 import eu.europa.esig.dss.model.DSSDocument;
 import eu.europa.esig.dss.model.DigestDocument;
@@ -30,44 +27,17 @@ import eu.europa.esig.dss.validation.SignedDocumentValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import javax.xml.parsers.SAXParser;
-import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class HashcodeGenericValidationService extends GenericValidationService {
-
-    public Reports validate(List<ValidationDocument> validationDocuments) {
-        List<Reports> reports = validationDocuments.stream().map(validationDocument -> validateDocument(validationDocument)).collect(Collectors.toList());
-        return mergeReportsToOne(reports);
-    }
-
     @Override
     protected SignedDocumentValidator createValidatorFromDocument(final ValidationDocument validationDocument) {
-        List<Datafile> datafiles = getDataFileInfoIfNeeded(validationDocument);
-        if(!CollectionUtils.isEmpty(datafiles)){
-            validationDocument.setDatafiles(datafiles);
-        }
         SignedDocumentValidator validator = super.createValidatorFromDocument(validationDocument);
         List<DSSDocument> detachedContents = createDetachedContents(validationDocument.getDatafiles());
         validator.setDetachedContents(detachedContents);
         return validator;
-    }
-
-    private List<Datafile> getDataFileInfoIfNeeded(ValidationDocument validationDocument) {
-        if (!CollectionUtils.isEmpty(validationDocument.getDatafiles())) {
-            return null;
-        } else {
-            try {
-                SAXParser saxParser = SecureSAXParsers.createParser();
-                SignatureXmlHandler handler = new SignatureXmlHandler();
-                saxParser.parse(new ByteArrayInputStream(validationDocument.getBytes()), handler);
-                return handler.getDatafiles();
-            } catch (Exception e) {
-                throw constructMalformedDocumentException(new RuntimeException(e));
-            }
-        }
     }
 
     @Override
@@ -101,28 +71,4 @@ public class HashcodeGenericValidationService extends GenericValidationService {
 
         return digestDocument;
     }
-
-    private Reports mergeReportsToOne(List<Reports> reportsList) {
-        int signaturesCount = 0;
-        int validSignaturesCount = 0;
-        Reports response = null;
-        for (Reports reports : reportsList) {
-            ValidationConclusion validationConclusion = reports.getSimpleReport().getValidationConclusion();
-            if (signaturesCount == 0) {
-                response = reports;
-                validSignaturesCount = validationConclusion.getValidSignaturesCount();
-            } else {
-                response.getSimpleReport().getValidationConclusion().getSignatures().addAll(validationConclusion.getSignatures());
-                validSignaturesCount = validSignaturesCount + validationConclusion.getValidSignaturesCount();
-            }
-            signaturesCount = signaturesCount + validationConclusion.getSignaturesCount();
-        }
-        if (response != null) {
-            ValidationConclusion validationConclusion = response.getSimpleReport().getValidationConclusion();
-            validationConclusion.setSignaturesCount(signaturesCount);
-            validationConclusion.setValidSignaturesCount(validSignaturesCount);
-        }
-        return response;
-    }
-
 }

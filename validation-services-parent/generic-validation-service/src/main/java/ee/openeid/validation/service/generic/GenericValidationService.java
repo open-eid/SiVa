@@ -54,6 +54,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 import static ee.openeid.validation.service.generic.GenericValidationConstants.GENERIC_POLICY_SERVICE_BEAN_NAME;
 import static ee.openeid.validation.service.generic.GenericValidationConstants.GENERIC_TRUSTED_LISTS_CERTIFICATE_SOURCE_BEAN_NAME;
@@ -140,6 +141,7 @@ public class GenericValidationService implements ValidationService {
         LOGGER.debug("Certificate pool size: {}", getCertificatePoolSize(certificateVerifier));
         validator.setCertificateVerifier(certificateVerifier);
         validator.setValidationLevel(VALIDATION_LEVEL);
+        Optional.ofNullable(validationDocument.getValidationTime()).ifPresent(validator::setValidationTime);
 
         validator.setTokenExtractionStrategy(TokenExtractionStrategy.EXTRACT_TIMESTAMPS_AND_REVOCATION_DATA);
         return validator;

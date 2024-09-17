@@ -34,13 +34,17 @@ import ee.openeid.tsl.TSLValidationJobFactory;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
 import ee.openeid.validation.service.generic.configuration.GenericValidationServiceConfiguration;
 import ee.openeid.validation.service.timestamptoken.configuration.TimeStampTokenSignaturePolicyProperties;
+import eu.europa.esig.dss.asic.cades.validation.ASiCContainerWithCAdESValidator;
 import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
+import eu.europa.esig.dss.simplereport.jaxb.XmlSimpleReport;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
+import lombok.Setter;
 import org.bouncycastle.util.encoders.Base64;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
@@ -51,12 +55,17 @@ import java.io.ByteArrayInputStream;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = {TimeStampTokenValidationServiceTest.TestConfiguration.class})
 @ExtendWith(SpringExtension.class)
@@ -159,6 +168,53 @@ class TimeStampTokenValidationServiceTest {
 
         assertNull(reports.getDetailedReport().getValidationProcess());
         assertNull(reports.getDiagnosticReport().getDiagnosticData());
+    }
+
+    @Test
+    void validateDocument_ValidationTimeProvided_ValidationTimeSetForValidator() {
+        ValidationDocument validationDocument = buildValidationDocument("timestamptoken-ddoc.asics");
+        Date validationTime = new Date();
+        validationDocument.setValidationTime(validationTime);
+        ASiCContainerWithCAdESValidator validatorMock = Mockito.mock(ASiCContainerWithCAdESValidator.class);
+
+        createServiceFake(validatorMock).validateDocument(validationDocument);
+
+        verify(validatorMock).setValidationTime(validationTime);
+    }
+
+    @Test
+    void validateDocument_ValidationTimeNotProvided_ValidationTimeNotSetForValidator() {
+        ValidationDocument validationDocument = buildValidationDocument("timestamptoken-ddoc.asics");
+        ASiCContainerWithCAdESValidator validatorMock = Mockito.mock(ASiCContainerWithCAdESValidator.class);
+
+        createServiceFake(validatorMock).validateDocument(validationDocument);
+
+        verify(validatorMock, never()).setValidationTime(any(Date.class));
+    }
+
+    private TimeStampTokenValidationServiceFake createServiceFake(ASiCContainerWithCAdESValidator validatorMock) {
+        TimeStampTokenValidationServiceFake validationServiceFake = new TimeStampTokenValidationServiceFake();
+        when(validatorMock.validateDocument()).thenReturn(
+            new eu.europa.esig.dss.validation.reports.Reports(null, null, new XmlSimpleReport(), null)
+        );
+        validationServiceFake.setValidator(validatorMock);
+
+        validationServiceFake.setSignaturePolicyService(new SignaturePolicyService<>(policyProperties));
+        validationServiceFake.setTrustedListsCertificateSource(trustedListsCertificateSource);
+        validationServiceFake.setReportConfigurationProperties(new ReportConfigurationProperties(true));
+
+        return validationServiceFake;
+    }
+
+    private static class TimeStampTokenValidationServiceFake extends TimeStampTokenValidationService {
+
+        @Setter
+        private ASiCContainerWithCAdESValidator validator;
+
+        @Override
+        protected ASiCContainerWithCAdESValidator createValidatorFromDocument(final ValidationDocument validationDocument) {
+            return validator;
+        }
     }
 
     private ValidationDocument buildValidationDocument(String testFile) {

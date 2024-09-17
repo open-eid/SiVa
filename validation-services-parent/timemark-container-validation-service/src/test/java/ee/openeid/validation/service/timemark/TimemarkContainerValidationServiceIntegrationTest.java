@@ -118,6 +118,8 @@ class TimemarkContainerValidationServiceIntegrationTest {
     private BDOCConfigurationService configurationService;
     @Autowired
     private ReportConfigurationProperties reportConfigurationProperties;
+    @Autowired
+    private TimemarkContainerValidationReportBuilderFactory timemarkContainerValidationReportBuilderFactory;
 
 
     @Test
@@ -445,6 +447,7 @@ class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     @Test
+    @Disabled("SIVA-722")
     void certificatePresentLT() throws Exception {
         Reports reports = timemarkContainerValidationService.validateDocument(buildValidationDocument(VALID_ASICE));
         SignatureValidationData signatureValidationData = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0);

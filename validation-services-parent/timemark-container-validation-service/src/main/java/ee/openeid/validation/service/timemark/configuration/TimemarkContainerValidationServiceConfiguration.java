@@ -17,6 +17,7 @@
 package ee.openeid.validation.service.timemark.configuration;
 
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
+import ee.openeid.validation.service.timemark.TimemarkContainerValidationReportBuilderFactory;
 import ee.openeid.validation.service.timemark.tsl.TimemarkTrustedListsCertificateSource;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +48,11 @@ public class TimemarkContainerValidationServiceConfiguration {
     @Bean(name = TM_POLICY_SERVICE_BEAN_NAME)
     public ConstraintLoadingSignaturePolicyService timemarkSignaturePolicyService(BDOCSignaturePolicyProperties properties) {
         return new ConstraintLoadingSignaturePolicyService(properties);
+    }
+
+    @Bean
+    public TimemarkContainerValidationReportBuilderFactory timemarkContainerValidationReportBuilderFactory() {
+        return new TimemarkContainerValidationReportBuilderFactory();
     }
 
     @Bean

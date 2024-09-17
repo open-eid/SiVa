@@ -49,6 +49,8 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.Security;
+import java.util.Date;
+import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -82,6 +84,8 @@ public class TimeStampTokenValidationService implements ValidationService {
 
         try {
             ASiCContainerWithCAdESValidator validator = createValidatorFromDocument(validationDocument);
+            setValidationTimeIfNeeded(validator, validationDocument.getValidationTime());
+
             ValidationPolicy policy = signaturePolicyService.getPolicy(validationDocument.getSignaturePolicy());
             final eu.europa.esig.dss.validation.reports.Reports reports = validator.validateDocument();//TODO SIVA-716
 
@@ -115,6 +119,10 @@ public class TimeStampTokenValidationService implements ValidationService {
         validator.setTokenExtractionStrategy(TokenExtractionStrategy.EXTRACT_TIMESTAMPS_AND_REVOCATION_DATA);
 
         return validator;
+    }
+
+    private void setValidationTimeIfNeeded(ASiCContainerWithCAdESValidator validator, Date validationTime) {
+        Optional.ofNullable(validationTime).ifPresent(validator::setValidationTime);
     }
 
     private static DSSDocument createDssDocument(final ValidationDocument validationDocument) {

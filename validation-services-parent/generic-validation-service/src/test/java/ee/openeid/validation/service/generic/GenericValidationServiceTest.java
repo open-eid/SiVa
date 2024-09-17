@@ -34,13 +34,17 @@ import ee.openeid.validation.service.generic.configuration.GenericValidationServ
 import ee.openeid.validation.service.generic.validator.RevocationFreshnessValidatorFactory;
 import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
 import ee.openeid.validation.service.generic.validator.ocsp.OCSPSourceFactory;
+import eu.europa.esig.dss.model.DSSDocument;
 import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
+import eu.europa.esig.dss.validation.SignedDocumentValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.util.encoders.Base64;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
@@ -50,8 +54,12 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.io.ByteArrayInputStream;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 @SpringBootTest(classes = {GenericValidationServiceTest.TestConfiguration.class})
 @ExtendWith(SpringExtension.class)
@@ -90,7 +98,6 @@ class GenericValidationServiceTest {
 
     @Test
     void certificatePresent_asice() throws Exception {
-
         Reports reports = validationService.validateDocument(buildValidationDocument("bdoc21-TS.asice"));
         SignatureValidationData signatureValidationData = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0);
         CertificateFactory cf = CertificateFactory.getInstance("X.509");
@@ -145,6 +152,34 @@ class GenericValidationServiceTest {
         assertEquals("SK OCSP RESPONDER 2011", revocationCertificate.getCommonName());
         java.security.cert.Certificate revocationX509Certificate = cf.generateCertificate(new ByteArrayInputStream(Base64.decode(revocationCertificate.getContent().getBytes())));
         assertEquals("SK OCSP RESPONDER 2011", CertUtil.getCommonName((X509Certificate) revocationX509Certificate));
+    }
+
+    @Test
+    void createValidatorFromDocument_ValidationTimeProvided_SignedDocumentValidatorInstantiatedWithValidationTimeSet() {
+        try (MockedStatic<SignedDocumentValidator> mockedStaticSignedDocumentValidator = Mockito.mockStatic(SignedDocumentValidator.class)) {
+            SignedDocumentValidator validatorMock = Mockito.mock(SignedDocumentValidator.class);
+            mockedStaticSignedDocumentValidator.when(() -> SignedDocumentValidator.fromDocument(any(DSSDocument.class))).thenReturn(validatorMock);
+
+            ValidationDocument validationDocument = buildValidationDocument("bdoc21-TS.asice");
+            Date validationTime = new Date();
+            validationDocument.setValidationTime(validationTime);
+
+            validationService.createValidatorFromDocument(validationDocument);
+
+            verify(validatorMock).setValidationTime(validationTime);
+        }
+    }
+
+    @Test
+    void createValidatorFromDocument_ValidationTimeNotProvided_SignedDocumentValidatorInstantiatedWithoutValidationTimeSet() {
+        try (MockedStatic<SignedDocumentValidator> mockedStaticSignedDocumentValidator = Mockito.mockStatic(SignedDocumentValidator.class)) {
+            SignedDocumentValidator validatorMock = Mockito.mock(SignedDocumentValidator.class);
+            mockedStaticSignedDocumentValidator.when(() -> SignedDocumentValidator.fromDocument(any(DSSDocument.class))).thenReturn(validatorMock);
+
+            validationService.createValidatorFromDocument(buildValidationDocument("bdoc21-TS.asice"));
+
+            verify(validatorMock, never()).setValidationTime(any(Date.class));
+        }
     }
 
     ValidationDocument buildValidationDocument(String testFile) {

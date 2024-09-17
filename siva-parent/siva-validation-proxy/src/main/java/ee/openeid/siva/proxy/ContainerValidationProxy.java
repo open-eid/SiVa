@@ -46,9 +46,12 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -89,10 +92,20 @@ public class ContainerValidationProxy extends ValidationProxy {
         ValidationService validationService = getServiceForType(proxyRequest);
         reports = validate(validationService, proxyRequest);
         report = chooseReport(reports, proxyRequest.getReportType());
-        if (validationService instanceof TimeStampTokenValidationService
-                && report.getValidationConclusion().getTimeStampTokens().stream()
-                .allMatch(token -> token.getIndication() == TimeStampTokenValidationData.Indication.TOTAL_PASSED)) {
-            report = generateDataFileReport(proxyRequest, report);
+        if (validationService instanceof TimeStampTokenValidationService) {
+            Date validationTime = report.getValidationConclusion()
+                .getTimeStampTokens()
+                .stream()
+                .filter(token -> token.getIndication() == TimeStampTokenValidationData.Indication.TOTAL_PASSED)
+                .map(TimeStampTokenValidationData::getSignedTime)
+                .filter(Objects::nonNull)
+                .map(Instant::parse)
+                .min(Instant::compareTo)
+                .map(Date::from)
+                .orElse(null);
+            if (validationTime != null) {//TODO SIVA-718
+                report = generateDataFileReport(proxyRequest, report, validationTime);
+            }
         }
         try {
             zipMimetypeValidator.validateZipContainerMimetype((ProxyDocument) proxyRequest);
@@ -103,13 +116,17 @@ public class ContainerValidationProxy extends ValidationProxy {
         return report;
     }
 
-    SimpleReport generateDataFileReport(ProxyRequest proxyRequest, SimpleReport report) {
+    private SimpleReport generateDataFileReport(ProxyRequest proxyRequest, SimpleReport report, Date validationTime) {
         ProxyDocument proxyDocument = (ProxyDocument) proxyRequest;
         ProxyDocument dataFileProxyDocument = generateDataFileProxyDocument(proxyDocument);
         ValidationService dataFileValidationService = getServiceForType(dataFileProxyDocument);
         SimpleReport dataFileReport = null;
         try {
-            dataFileReport = chooseReport(dataFileValidationService.validateDocument(createValidationDocument(dataFileProxyDocument)), proxyDocument.getReportType());
+            ValidationDocument validationDocument = createValidationDocument(dataFileProxyDocument, validationTime);
+            dataFileReport = chooseReport(
+                dataFileValidationService.validateDocument(validationDocument),
+                proxyDocument.getReportType()
+            );
             removeUnnecessaryWarning(dataFileReport.getValidationConclusion());
         } catch (MalformedDocumentException e) {
             if (e.getCause() == null || !DOCUMENT_FORMAT_NOT_RECOGNIZED.equalsIgnoreCase(e.getCause().getMessage())) {
@@ -135,7 +152,13 @@ public class ContainerValidationProxy extends ValidationProxy {
         return GENERIC_SERVICE + SERVICE_BEAN_NAME_POSTFIX;
     }
 
-    ValidationDocument createValidationDocument(ProxyRequest proxyRequest) {
+    private ValidationDocument createValidationDocument(ProxyRequest proxyRequest, Date validationTime) {
+        ValidationDocument validationDocument = createValidationDocument(proxyRequest);
+        validationDocument.setValidationTime(validationTime);
+        return validationDocument;
+    }
+
+    private ValidationDocument createValidationDocument(ProxyRequest proxyRequest) {
         ValidationDocument validationDocument = new ValidationDocument();
         ProxyDocument proxyDocument = (ProxyDocument) proxyRequest;
         validationDocument.setName(proxyDocument.getName());
@@ -149,6 +172,7 @@ public class ContainerValidationProxy extends ValidationProxy {
             dataFileReport.getValidationConclusion().setTimeStampTokens(timeStampTokenReport.getValidationConclusion().getTimeStampTokens());
             dataFileReport.getValidationConclusion().setSignatureForm(timeStampTokenReport.getValidationConclusion().getSignatureForm());
             dataFileReport.getValidationConclusion().setValidatedDocument(timeStampTokenReport.getValidationConclusion().getValidatedDocument());
+            dataFileReport.getValidationConclusion().setValidationTime(timeStampTokenReport.getValidationConclusion().getValidationTime());
             return dataFileReport;
         }
         return timeStampTokenReport;

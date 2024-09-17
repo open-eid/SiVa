@@ -26,12 +26,12 @@ import ee.openeid.validation.service.timemark.signature.policy.BDOCConfiguration
 import ee.openeid.validation.service.timemark.signature.policy.PolicyConfigurationWrapper;
 import eu.europa.esig.dss.model.DSSException;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.Configuration;
 import org.digidoc4j.Container;
 import org.digidoc4j.ContainerBuilder;
 import org.digidoc4j.ValidationResult;
 import org.digidoc4j.exceptions.DigiDoc4JException;
+import org.digidoc4j.impl.ValidatableContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +46,7 @@ public class TimemarkContainerValidationService implements ValidationService {
 
     private ReportConfigurationProperties reportConfigurationProperties;
     private BDOCConfigurationService bdocConfigurationService;
+    private TimemarkContainerValidationReportBuilderFactory timemarkContainerValidationReportBuilderFactory;
     private static final String DDOC_FORMAT = "DDOC";
 
     @Override
@@ -63,10 +64,18 @@ public class TimemarkContainerValidationService implements ValidationService {
         }
 
         try {
-            ValidationResult validationResult = container.validate();
-            TimemarkContainerValidationReportBuilderFactory reportBuilderFactory = new TimemarkContainerValidationReportBuilderFactory();
-            return reportBuilderFactory.getReportBuilder(container, validationDocument, policyConfiguration.getPolicy(),
-                    validationResult, reportConfigurationProperties.isReportSignatureEnabled()).build();
+            ValidationResult validationResult =
+                (validationDocument.getValidationTime() != null && container instanceof ValidatableContainer)
+                ? ((ValidatableContainer) container).validateAt(validationDocument.getValidationTime())
+                : container.validate();
+
+            return timemarkContainerValidationReportBuilderFactory.getReportBuilder(
+                container,
+                validationDocument,
+                policyConfiguration.getPolicy(),
+                validationResult,
+                reportConfigurationProperties.isReportSignatureEnabled()
+            ).build();
         } catch (DigiDoc4JException e) {
             throw new MalformedDocumentException(e);
         } catch (Exception e) {
@@ -91,6 +100,13 @@ public class TimemarkContainerValidationService implements ValidationService {
     @Autowired
     public void setReportConfigurationProperties(ReportConfigurationProperties reportConfigurationProperties) {
         this.reportConfigurationProperties = reportConfigurationProperties;
+    }
+
+    @Autowired
+    public void setTimemarkContainerValidationReportBuilderFactory(
+        TimemarkContainerValidationReportBuilderFactory timemarkContainerValidationReportBuilderFactory
+    ) {
+        this.timemarkContainerValidationReportBuilderFactory = timemarkContainerValidationReportBuilderFactory;
     }
 
 }

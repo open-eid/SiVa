@@ -23,9 +23,9 @@ import ee.openeid.siva.validation.exception.DocumentRequirementsException;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.ValidationService;
+import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
-import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
-import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
+import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import ee.openeid.tsl.configuration.AlwaysFailingCRLSource;
 import ee.openeid.tsl.configuration.AlwaysFailingOCSPSource;
 import ee.openeid.validation.service.timestamptoken.validator.report.TimeStampTokenValidationReportBuilder;
@@ -73,7 +73,7 @@ public class TimeStampTokenValidationService implements ValidationService {
     private static final String EVIDENCE_RECORD_FILE_EXTENSION_XML = "EVIDENCERECORD.XML";
     private static final String SIGNATURE_FILE_EXTENSION_XML = "SIGNATURES.XML";
 
-    private SignaturePolicyService<ValidationPolicy> signaturePolicyService;
+    private ConstraintLoadingSignaturePolicyService signaturePolicyService;
     private TrustedListsCertificateSource trustedListsCertificateSource;
     private ReportConfigurationProperties reportConfigurationProperties;
 
@@ -86,8 +86,8 @@ public class TimeStampTokenValidationService implements ValidationService {
             ASiCContainerWithCAdESValidator validator = createValidatorFromDocument(validationDocument);
             setValidationTimeIfNeeded(validator, validationDocument.getValidationTime());
 
-            ValidationPolicy policy = signaturePolicyService.getPolicy(validationDocument.getSignaturePolicy());
-            final eu.europa.esig.dss.validation.reports.Reports reports = validator.validateDocument();//TODO SIVA-716
+            final ConstraintDefinedPolicy policy = signaturePolicyService.getPolicy(validationDocument.getSignaturePolicy());
+            final eu.europa.esig.dss.validation.reports.Reports reports = validator.validateDocument(policy.getConstraintDataStream());
 
             return new TimeStampTokenValidationReportBuilder(
                 reports,
@@ -193,7 +193,7 @@ public class TimeStampTokenValidationService implements ValidationService {
 
     @Autowired
     @Qualifier("timestampPolicyService")
-    public void setSignaturePolicyService(SignaturePolicyService<ValidationPolicy> signaturePolicyService) {
+    public void setSignaturePolicyService(ConstraintLoadingSignaturePolicyService signaturePolicyService) {
         this.signaturePolicyService = signaturePolicyService;
     }
 

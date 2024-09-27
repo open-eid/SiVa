@@ -16,6 +16,7 @@
 
 package ee.openeid.validation.service.timestamptoken.configuration;
 
+import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import ee.openeid.siva.validation.service.signature.policy.properties.SignaturePolicyProperties;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import lombok.Getter;
@@ -24,10 +25,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import jakarta.annotation.PostConstruct;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.ADES_POLICY;
 import static ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource.QES_POLICY;
@@ -36,30 +34,42 @@ import static ee.openeid.siva.validation.service.signature.policy.PredefinedVali
 @Getter
 @Setter
 @ConfigurationProperties(prefix = "siva.timestamp.signature-policy")
-public class TimeStampTokenSignaturePolicyProperties extends SignaturePolicyProperties<ValidationPolicy> {
+public class TimeStampTokenSignaturePolicyProperties extends SignaturePolicyProperties<ConstraintDefinedPolicy> {
+
+    private static final String TST_QES_CONSTRAINT = "tst_constraint_qes.xml";
+    private static final String TST_ADES_CONSTRAINT = "tst_constraint_ades.xml";
 
     private String defaultPolicy;
-    private List<ValidationPolicy> policies = new ArrayList<>();
+    private List<ConstraintDefinedPolicy> policies = new ArrayList<>();
 
     @PostConstruct
     public void initPolicySettings() {
-        setPolicyValue();
-        setPoliciesValue();
+        if (defaultPolicy == null) {
+            setDefaultPolicy(QES_POLICY.getName());
+        }
+        if (policies.isEmpty()) {
+            setPolicies(getDefaultTimeStampPolicies());
+        }
+        setAbstractDefaultPolicy(getDefaultPolicy());
+        setAbstractPolicies(getPolicies());
     }
 
-    private void setPoliciesValue() {
-        List<ValidationPolicy> abstractPolicies = getDefaultTimeStampPolicies();
-        setAbstractPolicies(abstractPolicies);
+    private List<ConstraintDefinedPolicy> getDefaultTimeStampPolicies() {
+        return List.of(getAdesPolicy(), getQesPolicy());
     }
 
-    private List<ValidationPolicy> getDefaultTimeStampPolicies() {
-        return Collections.unmodifiableList(Stream.of(ADES_POLICY, QES_POLICY).collect(Collectors.toList()));
+    private ConstraintDefinedPolicy getQesPolicy() {
+        return createConstraintDefinedPolicy(QES_POLICY, TST_QES_CONSTRAINT);
     }
 
-    private void setPolicyValue() {
-        final String policyName = defaultPolicy == null ? QES_POLICY.getName() : defaultPolicy;
-        setAbstractDefaultPolicy(policyName);
+    private ConstraintDefinedPolicy getAdesPolicy() {
+        return createConstraintDefinedPolicy(ADES_POLICY, TST_ADES_CONSTRAINT);
     }
 
+    private ConstraintDefinedPolicy createConstraintDefinedPolicy(ValidationPolicy validationPolicy, String constraintPath) {
+        ConstraintDefinedPolicy constraintDefinedPolicy = new ConstraintDefinedPolicy(validationPolicy);
+        constraintDefinedPolicy.setConstraintPath(constraintPath);
+        return constraintDefinedPolicy;
+    }
 
 }

@@ -25,8 +25,7 @@ import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
 import ee.openeid.siva.validation.exception.DocumentRequirementsException;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
-import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
-import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
+import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.siva.validation.util.CertUtil;
 import ee.openeid.tsl.TSLLoader;
 import ee.openeid.tsl.TSLRefresher;
@@ -52,6 +51,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
@@ -83,7 +83,7 @@ class TimeStampTokenValidationServiceTest {
     public void setUp() {
         validationService = new TimeStampTokenValidationService();
         policyProperties.initPolicySettings();
-        SignaturePolicyService<ValidationPolicy> signaturePolicyService = new SignaturePolicyService<>(policyProperties);
+        ConstraintLoadingSignaturePolicyService signaturePolicyService = new ConstraintLoadingSignaturePolicyService(policyProperties);
         validationService.setSignaturePolicyService(signaturePolicyService);
         validationService.setTrustedListsCertificateSource(trustedListsCertificateSource);
         ReportConfigurationProperties reportConfigurationProperties = new ReportConfigurationProperties(true);
@@ -194,12 +194,12 @@ class TimeStampTokenValidationServiceTest {
 
     private TimeStampTokenValidationServiceFake createServiceFake(ASiCContainerWithCAdESValidator validatorMock) {
         TimeStampTokenValidationServiceFake validationServiceFake = new TimeStampTokenValidationServiceFake();
-        when(validatorMock.validateDocument()).thenReturn(
+        when(validatorMock.validateDocument(any(InputStream.class))).thenReturn(
             new eu.europa.esig.dss.validation.reports.Reports(null, null, new XmlSimpleReport(), null)
         );
         validationServiceFake.setValidator(validatorMock);
 
-        validationServiceFake.setSignaturePolicyService(new SignaturePolicyService<>(policyProperties));
+        validationServiceFake.setSignaturePolicyService(new ConstraintLoadingSignaturePolicyService(policyProperties));
         validationServiceFake.setTrustedListsCertificateSource(trustedListsCertificateSource);
         validationServiceFake.setReportConfigurationProperties(new ReportConfigurationProperties(true));
 

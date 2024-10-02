@@ -20,12 +20,16 @@ import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
 import ee.openeid.siva.validation.document.report.CertificateType;
+import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.Reports;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
+import ee.openeid.siva.validation.document.report.Warning;
 import ee.openeid.siva.validation.exception.DocumentRequirementsException;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
+import ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource;
+import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import ee.openeid.siva.validation.util.CertUtil;
 import ee.openeid.tsl.TSLLoader;
 import ee.openeid.tsl.TSLRefresher;
@@ -48,6 +52,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.ByteArrayInputStream;
@@ -57,9 +62,18 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.anyOf;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -69,6 +83,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = {TimeStampTokenValidationServiceTest.TestConfiguration.class})
 @ExtendWith(SpringExtension.class)
+@ActiveProfiles("test")
 class TimeStampTokenValidationServiceTest {
 
     private static final String TEST_FILES_LOCATION = "test-files/";
@@ -104,28 +119,77 @@ class TimeStampTokenValidationServiceTest {
     @Test
     void certificatePresent() throws Exception{
         SimpleReport simpleReport = validationService.validateDocument(buildValidationDocument("timestamptoken-ddoc.asics")).getSimpleReport();
-        assertEquals(1, simpleReport.getValidationConclusion().getTimeStampTokens().size());
+        assertThat(simpleReport.getValidationConclusion().getTimeStampTokens().size(), equalTo(1));
         TimeStampTokenValidationData timeStampTokenValidationData = simpleReport.getValidationConclusion().getTimeStampTokens().get(0);
         CertificateFactory cf = CertificateFactory.getInstance("X.509");
 
-        assertEquals(1, timeStampTokenValidationData.getCertificates().size());
+        assertThat(timeStampTokenValidationData.getCertificates().size(), equalTo(1));
 
         ee.openeid.siva.validation.document.report.Certificate certificate = timeStampTokenValidationData.getCertificates().get(0);
-        assertEquals(CertificateType.CONTENT_TIMESTAMP, certificate.getType());
-        assertEquals("SK TIMESTAMPING AUTHORITY", certificate.getCommonName());
+        assertThat(certificate.getType(), equalTo(CertificateType.CONTENT_TIMESTAMP));
+        assertThat(certificate.getCommonName(), equalTo("SK TIMESTAMPING AUTHORITY"));
         Certificate timeStampCertificate = cf.generateCertificate(new ByteArrayInputStream(Base64.decode(certificate.getContent().getBytes())));
-        assertEquals("SK TIMESTAMPING AUTHORITY", CertUtil.getCommonName((X509Certificate) timeStampCertificate));
+        assertThat(CertUtil.getCommonName((X509Certificate) timeStampCertificate), equalTo("SK TIMESTAMPING AUTHORITY"));
     }
 
     @Test
-    void multipleTimestamps() {
+    void validateDocument_ContainerWithMultipleTimestamps_BothTimestampsDataPresentInReport() {
         SimpleReport simpleReport = validationService.validateDocument(buildValidationDocument("2xTST-valid-bdoc-data-file.asics")).getSimpleReport();
+
         List<TimeStampTokenValidationData> tokens = simpleReport.getValidationConclusion().getTimeStampTokens();
-        assertEquals(2, tokens.size());
-        assertEquals("DEMO SK TIMESTAMPING AUTHORITY 2023E", tokens.get(0).getSignedBy());
-        assertEquals("2024-03-27T12:42:57Z", tokens.get(0).getSignedTime());
-        assertEquals("DEMO SK TIMESTAMPING AUTHORITY 2023R", tokens.get(1).getSignedBy());
-        assertEquals("2024-08-26T13:31:34Z", tokens.get(1).getSignedTime());
+        assertThat(tokens.size(), equalTo(2));
+
+        TimeStampTokenValidationData tokenOne = tokens.get(0);
+        assertThat(tokenOne.getSignedBy(), equalTo("DEMO SK TIMESTAMPING AUTHORITY 2023E"));
+        assertThat(tokenOne.getSignedTime(), equalTo("2024-03-27T12:42:57Z"));
+        assertThat(tokenOne.getSubIndication(), nullValue());
+        assertThat(tokenOne.getTimestampLevel(), equalTo("QTSA"));
+        assertThat(tokenOne.getCertificates(), hasSize(3));
+        assertThat(tokenOne.getWarning(), empty());
+        assertThat(tokenOne.getError(), anyOf(nullValue(), empty()));
+
+        TimeStampTokenValidationData tokenTwo = tokens.get(1);
+        assertThat(tokenTwo.getSignedBy(), equalTo("DEMO SK TIMESTAMPING AUTHORITY 2023R"));
+        assertThat(tokenTwo.getSignedTime(), equalTo("2024-08-26T13:31:34Z"));
+        assertThat(tokenTwo.getSubIndication(), nullValue());
+        assertThat(tokenTwo.getTimestampLevel(), equalTo("QTSA"));
+        assertThat(tokenTwo.getCertificates().size(), equalTo(2));
+        assertThat(tokenTwo.getWarning(), anyOf(nullValue(), empty()));
+        assertThat(tokenTwo.getError(), anyOf(nullValue(), empty()));
+    }
+
+    @Test
+    void validateDocument_NotValidDocument_ReportFieldsArePresent() {
+        SimpleReport simpleReport = validationService.validateDocument(buildValidationDocument("1xTST-valid-bdoc-data-file-hash-failure-in-tst.asics")).getSimpleReport();
+
+        List<TimeStampTokenValidationData> tokens = simpleReport.getValidationConclusion().getTimeStampTokens();
+        assertThat(tokens.size(), equalTo(1));
+
+        TimeStampTokenValidationData token = tokens.get(0);
+        assertThat(token.getIndication().toString(), equalTo("TOTAL-FAILED"));
+        assertThat(token.getSignedBy(), equalTo("DEMO SK TIMESTAMPING AUTHORITY 2023E"));
+        assertThat(token.getSignedTime(), equalTo("2024-03-27T12:42:57Z"));
+        assertThat(token.getSubIndication(), equalTo("HASH_FAILURE"));
+        assertThat(token.getTimestampLevel(), equalTo("QTSA"));
+        assertThat(token.getWarning(), empty());
+        assertThat(token.getError().stream().map(Error::getContent).collect(Collectors.toList()), containsInAnyOrder(
+            "The time-stamp message imprint is not intact!"
+        ));
+        assertThat(token.getCertificates().size(), equalTo(2));
+    }
+
+    @Test
+    void validateDocument_NotValidDocument_ReportWarningssArePresent() {
+        setUpCustomValidationPolicy("tst_constraint_qes_for_test.xml"); // custom policy is needed here to produce Warnings
+
+        SimpleReport simpleReport = validationService.validateDocument(buildValidationDocument("1xTST-valid-bdoc-data-file-hash-failure-in-tst.asics")).getSimpleReport();
+
+        assertThat(
+            simpleReport.getValidationConclusion().getTimeStampTokens().get(0).getWarning().stream().map(Warning::getContent).collect(Collectors.toList()),
+            containsInAnyOrder(
+                "The time-stamp message imprint is not intact!",
+                "The computed message-imprint does not match the value extracted from the time-stamp!"
+            ));
     }
 
     @Test
@@ -147,27 +211,22 @@ class TimeStampTokenValidationServiceTest {
     }
 
     @Test
-    void dataFiledChanged() {
-        SimpleReport simpleReport = validationService.validateDocument(buildValidationDocument("timestamptoken-datafile-changed.asics")).getSimpleReport();
-        assertEquals("The time-stamp message imprint is not intact!", simpleReport.getValidationConclusion().getTimeStampTokens().get(0).getError().get(0).getContent());
-    }
-
-    @Test
     void signatureNotIntact() {
-        SimpleReport simpleReport = validationService.validateDocument(buildValidationDocument("timestamptoken-signature-modified.asics")).getSimpleReport();
-        assertEquals("The signature is not intact!", simpleReport.getValidationConclusion().getTimeStampTokens().get(0).getError().get(0).getContent());
+        SimpleReport simpleReport = validationService.validateDocument(buildValidationDocument("1xTST-valid-bdoc-data-file-invalid-signature-in-tst.asics")).getSimpleReport();
+
+        assertThat(simpleReport.getValidationConclusion().getTimeStampTokens().get(0).getError().get(0).getContent(), equalTo("The signature is not intact!"));
     }
 
     @Test
     void onlySimpleReportPresentInDocumentValidationResultReports() {
         Reports reports = validationService.validateDocument(buildValidationDocument("timestamptoken-ddoc.asics"));
 
-        assertNotNull(reports.getSimpleReport().getValidationConclusion());
-        assertNotNull(reports.getDetailedReport().getValidationConclusion());
-        assertNotNull(reports.getDiagnosticReport().getValidationConclusion());
+        assertThat(reports.getSimpleReport().getValidationConclusion(), notNullValue());
+        assertThat(reports.getDetailedReport().getValidationConclusion(), notNullValue());
+        assertThat(reports.getDiagnosticReport().getValidationConclusion(), notNullValue());
 
-        assertNull(reports.getDetailedReport().getValidationProcess());
-        assertNull(reports.getDiagnosticReport().getDiagnosticData());
+        assertThat(reports.getDetailedReport().getValidationProcess(), nullValue());
+        assertThat(reports.getDiagnosticReport().getDiagnosticData(), nullValue());
     }
 
     @Test
@@ -190,6 +249,23 @@ class TimeStampTokenValidationServiceTest {
         createServiceFake(validatorMock).validateDocument(validationDocument);
 
         verify(validatorMock, never()).setValidationTime(any(Date.class));
+    }
+
+    private void setUpCustomValidationPolicy(String xmlPath) {
+        ConstraintDefinedPolicy constraintDefinedPolicy = new ConstraintDefinedPolicy(PredefinedValidationPolicySource.QES_POLICY);
+        constraintDefinedPolicy.setConstraintPath(xmlPath);
+        constraintDefinedPolicy.setName("custom_policy_for_testing");
+        constraintDefinedPolicy.setDescription("a custom policy for unit tests");
+
+        TimeStampTokenSignaturePolicyProperties policyProperties = new TimeStampTokenSignaturePolicyProperties();
+        policyProperties.setDefaultPolicy(constraintDefinedPolicy.getName());
+        policyProperties.setPolicies(List.of(constraintDefinedPolicy));
+        policyProperties.initPolicySettings();
+
+        ConstraintLoadingSignaturePolicyService signaturePolicyService = new ConstraintLoadingSignaturePolicyService(policyProperties);
+        signaturePolicyService.setSignaturePolicies(Map.of(constraintDefinedPolicy.getName(), constraintDefinedPolicy));
+
+        validationService.setSignaturePolicyService(signaturePolicyService);
     }
 
     private TimeStampTokenValidationServiceFake createServiceFake(ASiCContainerWithCAdESValidator validatorMock) {

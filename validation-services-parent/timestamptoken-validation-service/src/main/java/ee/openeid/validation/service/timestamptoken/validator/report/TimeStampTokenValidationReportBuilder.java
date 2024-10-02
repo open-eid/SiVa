@@ -25,6 +25,8 @@ import ee.openeid.siva.validation.util.CertUtil;
 import eu.europa.esig.dss.diagnostic.CertificateWrapper;
 import eu.europa.esig.dss.diagnostic.TimestampWrapper;
 import eu.europa.esig.dss.enumerations.Indication;
+import eu.europa.esig.dss.enumerations.SubIndication;
+import eu.europa.esig.dss.enumerations.TimestampQualification;
 import eu.europa.esig.dss.model.x509.CertificateToken;
 import eu.europa.esig.dss.simplereport.jaxb.XmlDetails;
 import eu.europa.esig.dss.simplereport.jaxb.XmlMessage;
@@ -99,6 +101,9 @@ public class TimeStampTokenValidationReportBuilder {
             timeStampTokenValidationData.setSignedBy(ts.getSigningCertificate().getCommonName());
             timeStampTokenValidationData.setSignedTime(getDateFormatterWithGMTZone().format(ts.getProductionTime()));
             timeStampTokenValidationData.setCertificates(getCertificateList(ts));
+            Optional.ofNullable(dssReports.getSimpleReport().getTimestampQualification(timestampId))
+                .map(TimestampQualification::name)
+                .ifPresent(timeStampTokenValidationData::setTimestampLevel);
             Indication dssIndication = dssReports.getSimpleReport().getIndication(timestampId);
             List<Error> errors = parseTimestampErrors(timestampId);
             if (errors.isEmpty() && Objects.equals(dssIndication, Indication.PASSED)) {
@@ -106,7 +111,11 @@ public class TimeStampTokenValidationReportBuilder {
             } else {
                 timeStampTokenValidationData.setError(errors);
                 timeStampTokenValidationData.setIndication(TimeStampTokenValidationData.Indication.TOTAL_FAILED);
+                Optional.ofNullable(dssReports.getSimpleReport().getSubIndication(timestampId))
+                    .map(SubIndication::name)
+                    .ifPresent(timeStampTokenValidationData::setSubIndication);
             }
+            timeStampTokenValidationData.setWarning(parseTimestampWarnings(timestampId));
 
             timeStampTokenValidationDataList.add(timeStampTokenValidationData);
         }
@@ -117,6 +126,13 @@ public class TimeStampTokenValidationReportBuilder {
     private List<String> getTimestampIds() {
         return dssReports.getSimpleReport()
             .getTimestampIdList();
+    }
+
+    private List<Warning> parseTimestampWarnings(String timestampId) {
+        return parseTimestampMessages(timestampId, XmlDetails::getWarning)
+            .map(TimeStampTokenValidationReportBuilder::mapDssXmlMessage)
+            .map(TimeStampTokenValidationReportBuilder::mapDssWarning)
+            .collect(Collectors.toList());
     }
 
     private List<Error> parseTimestampErrors(String timestampId) {
@@ -155,6 +171,12 @@ public class TimeStampTokenValidationReportBuilder {
             )
             .map(detailMessagesExtractor)
             .flatMap(List::stream);
+    }
+
+    private static Warning mapDssWarning(String dssWarning) {
+        Warning warning = new Warning();
+        warning.setContent(emptyWhenNull(dssWarning));
+        return warning;
     }
 
     private static String mapDssXmlMessage(XmlMessage dssXmlMessage) {

@@ -75,6 +75,7 @@ import org.bouncycastle.asn1.x509.Extension;
 import org.bouncycastle.cert.ocsp.BasicOCSPResp;
 import org.bouncycastle.cert.ocsp.OCSPException;
 import org.bouncycastle.cert.ocsp.OCSPResp;
+import org.digidoc4j.impl.asic.TmSignaturePolicyType;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
@@ -90,7 +91,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.FORMAT_NOT_FOUND;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.ERROR_MSG_FORMAT_NOT_FOUND;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.ERROR_MSG_INVALID_SIGNATURE_FORMAT_FOR_BDOC_POLICY;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.getValidationTime;
@@ -107,7 +109,6 @@ public class GenericValidationReportBuilder {
     private static final String BASELINE_SIGNATURE_FORMAT_SUFFIX = "B";
     private static final String LT_TM_XAdES_SIGNATURE_FORMAT = "XAdES_BASELINE_LT_TM";
     private static final String LT_XAdES_SIGNATURE_FORMAT = "XAdES-BASELINE-LT";
-    private static final String TM_POLICY_OID = "1.3.6.1.4.1.10015.1000.3.2.1";
 
     private final eu.europa.esig.dss.validation.reports.Reports dssReports;
     private final ValidationDocument validationDocument;
@@ -415,13 +416,19 @@ public class GenericValidationReportBuilder {
     }
 
     private String changeAndValidateSignatureFormat(String signatureFormat, String signatureId) {
-        if (TM_POLICY_OID.equals(dssReports.getDiagnosticData().getSignatureById(signatureId).getPolicyId())) {
-            signatureFormat = signatureFormat.replace(LT_XAdES_SIGNATURE_FORMAT, LT_TM_XAdES_SIGNATURE_FORMAT);
+        String policyId = dssReports.getDiagnosticData().getSignatureById(signatureId).getPolicyId();
+        if (TmSignaturePolicyType.isTmPolicyOid(policyId)) {
+            if (LT_XAdES_SIGNATURE_FORMAT.equals(signatureFormat)) {
+                signatureFormat = LT_TM_XAdES_SIGNATURE_FORMAT;
+            } else {
+                new DssSimpleReportWrapper(dssReports).getSignatureAdESValidationXmlDetails(signatureId)
+                    .getError().add(DssSimpleReportWrapper.createXmlMessage(ERROR_MSG_INVALID_SIGNATURE_FORMAT_FOR_BDOC_POLICY));
+            }
         }
         if (isInvalidFormat(signatureFormat, signatureId)) {
             signatureFormat = signatureFormat.replace(LT_SIGNATURE_FORMAT_SUFFIX, BASELINE_SIGNATURE_FORMAT_SUFFIX);
             new DssSimpleReportWrapper(dssReports).getSignatureAdESValidationXmlDetails(signatureId)
-                    .getError().add(DssSimpleReportWrapper.createXmlMessage(FORMAT_NOT_FOUND));
+                    .getError().add(DssSimpleReportWrapper.createXmlMessage(ERROR_MSG_FORMAT_NOT_FOUND));
         }
         signatureFormat = signatureFormat.replace("-", "_");
         return signatureFormat;

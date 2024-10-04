@@ -47,6 +47,9 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor(access = PRIVATE)
 public final class ReportBuilderUtils {
 
+    public static final String ERROR_MSG_FORMAT_NOT_FOUND = "The expected format is not found! Expected minimal format LT";
+    public static final String ERROR_MSG_INVALID_SIGNATURE_FORMAT_FOR_BDOC_POLICY = "Invalid signature format for BDOC policy";
+
     private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final String GREENWICH_MEAN_TIME = "Etc/GMT";
     private static final String DIGEST_ALGO = "SHA256";
@@ -54,7 +57,6 @@ public final class ReportBuilderUtils {
     private static final String QES_POLICY = "POLv4";
     private static final String SIGNATURE_LEVEL_ERROR = "Signature/seal level do not meet the minimal level required by applied policy";
     private static final String SIGNATURE_LEVEL_WARNING = "The signature is not in the Qualified Electronic Signature level";
-    public static final String FORMAT_NOT_FOUND = "The expected format is not found! Expected minimal format LT";
 
     public static String emptyWhenNull(String value) {
         return value != null ? value : valueNotPresent();

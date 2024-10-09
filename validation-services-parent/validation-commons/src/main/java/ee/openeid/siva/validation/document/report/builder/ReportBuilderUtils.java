@@ -49,6 +49,7 @@ public final class ReportBuilderUtils {
 
     public static final String ERROR_MSG_FORMAT_NOT_FOUND = "The expected format is not found! Expected minimal format LT";
     public static final String ERROR_MSG_INVALID_SIGNATURE_FORMAT_FOR_BDOC_POLICY = "Invalid signature format for BDOC policy";
+    public static final String WARNING_MSG_DATAFILE_NOT_COVERED_BY_TS = "The time-stamp token does not cover container datafile!";
 
     private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final String GREENWICH_MEAN_TIME = "Etc/GMT";

@@ -23,6 +23,7 @@ import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.siva.validation.util.CertUtil;
 import eu.europa.esig.dss.diagnostic.CertificateWrapper;
+import eu.europa.esig.dss.diagnostic.SignerDataWrapper;
 import eu.europa.esig.dss.diagnostic.TimestampWrapper;
 import eu.europa.esig.dss.enumerations.Indication;
 import eu.europa.esig.dss.enumerations.SubIndication;
@@ -53,6 +54,7 @@ public class TimeStampTokenValidationReportBuilder {
 
     private final eu.europa.esig.dss.validation.reports.Reports dssReports;
     private final List<TimestampToken> timestamps;
+    private final String dataFileName;
     private final ValidationDocument validationDocument;
     private final ValidationPolicy validationPolicy;
     private final TrustedListsCertificateSource trustedListsCertificateSource;
@@ -62,12 +64,14 @@ public class TimeStampTokenValidationReportBuilder {
         eu.europa.esig.dss.validation.reports.Reports dssReports,
         List<TimestampToken> timestamps,
         ValidationDocument validationDocument,
+        String dataFileName,
         ValidationPolicy validationPolicy,
         TrustedListsCertificateSource trustedListsCertificateSource,
         boolean isReportSignatureEnabled) {
         this.dssReports = dssReports;
         this.timestamps = timestamps;
         this.validationDocument = validationDocument;
+        this.dataFileName = dataFileName;
         this.validationPolicy = validationPolicy;
         this.trustedListsCertificateSource = trustedListsCertificateSource;
         this.isReportSignatureEnabled = isReportSignatureEnabled;
@@ -117,10 +121,30 @@ public class TimeStampTokenValidationReportBuilder {
             }
             timeStampTokenValidationData.setWarning(parseTimestampWarnings(timestampId));
 
+            if (TimeStampTokenValidationData.Indication.TOTAL_PASSED.equals(timeStampTokenValidationData.getIndication())) {
+                if (!isDataFileCovered(ts)) {
+                    addWarningTo(timeStampTokenValidationData, WARNING_MSG_DATAFILE_NOT_COVERED_BY_TS);
+                }
+            }
+
             timeStampTokenValidationDataList.add(timeStampTokenValidationData);
         }
 
         return timeStampTokenValidationDataList;
+    }
+
+    private static void addWarningTo(TimeStampTokenValidationData timeStampTokenValidationData, String warningMessage) {
+        List<Warning> warnings = timeStampTokenValidationData.getWarning();
+        if (warnings == null) {
+            timeStampTokenValidationData.setWarning(warnings = new ArrayList<>());
+        }
+        warnings.add(new Warning(warningMessage));
+    }
+
+    private boolean isDataFileCovered(TimestampWrapper ts) {
+        return ts.getTimestampedSignedData().stream()
+            .map(SignerDataWrapper::getReferencedName)
+            .anyMatch(n -> StringUtils.equals(dataFileName, n));
     }
 
     private List<String> getTimestampIds() {

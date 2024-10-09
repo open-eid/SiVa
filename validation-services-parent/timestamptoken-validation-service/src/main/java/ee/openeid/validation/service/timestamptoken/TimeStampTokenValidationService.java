@@ -80,7 +80,7 @@ public class TimeStampTokenValidationService implements ValidationService {
 
     @Override
     public Reports validateDocument(ValidationDocument validationDocument) {
-        validateContainer(validationDocument);
+        String datafileName = validateContainerAndGetDatafileName(validationDocument);
 
         try {
             ASiCContainerWithCAdESValidator validator = createValidatorFromDocument(validationDocument);
@@ -93,6 +93,7 @@ public class TimeStampTokenValidationService implements ValidationService {
                 reports,
                 validator.getDetachedTimestamps(),
                 validationDocument,
+                datafileName,
                 policy,
                 trustedListsCertificateSource,
                 reportConfigurationProperties.isReportSignatureEnabled()
@@ -145,7 +146,9 @@ public class TimeStampTokenValidationService implements ValidationService {
         return certificateVerifier;
     }
 
-    private static void validateContainer(ValidationDocument validationDocument) {
+    private String validateContainerAndGetDatafileName(ValidationDocument validationDocument) {
+        String dataFileName = null;
+
         try (ZipInputStream zipStream = new ZipInputStream(new ByteArrayInputStream(validationDocument.getBytes()))) {
             long dataFileCount = 0;
             long timeStampCount = 0;
@@ -176,6 +179,7 @@ public class TimeStampTokenValidationService implements ValidationService {
                     if (++dataFileCount > 1) {
                         throw new DocumentRequirementsException();
                     }
+                    dataFileName = n;
                 }
             }
 
@@ -185,6 +189,7 @@ public class TimeStampTokenValidationService implements ValidationService {
         } catch (IOException e) {
             throw new MalformedDocumentException(e);
         }
+        return dataFileName;
     }
 
     private static String getFileFromFullPath(String path) {

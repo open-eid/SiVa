@@ -137,7 +137,7 @@ public class GenericValidationService implements ValidationService {
         SignedDocumentValidator validator = createSignedDocumentValidator(dssDocument);
         CommonCertificateVerifier certificateVerifier = createCertificateVerifier();
 
-        LOGGER.info("Certificate pool size: {}", getCertificatePoolSize(certificateVerifier));
+        LOGGER.debug("Certificate pool size: {}", getCertificatePoolSize(certificateVerifier));
         validator.setCertificateVerifier(certificateVerifier);
         validator.setValidationLevel(VALIDATION_LEVEL);
 

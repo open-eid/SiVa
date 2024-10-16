@@ -30,6 +30,7 @@ import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.document.report.ValidationWarning;
+import ee.openeid.siva.validation.document.report.Warning;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.validation.service.generic.GenericValidationService;
@@ -66,17 +67,21 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.WARNING_MSG_DATAFILE_NOT_COVERED_BY_TS;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
@@ -132,7 +137,7 @@ class ValidationProxyTest {
 
         SimpleReport report = validationProxy.validate(proxyDocument);
 
-        assertEquals(dummyReports.getSimpleReport(), report);
+        assertSame(dummyReports.getSimpleReport(), report);
         assertEquals(VALIDATION_TIME_NOW, report.getValidationConclusion().getValidationTime());
     }
 
@@ -147,7 +152,7 @@ class ValidationProxyTest {
 
         SimpleReport report = validationProxy.validate(proxyDocument);
 
-        assertEquals(dummyReports.getSimpleReport(), report);
+        assertSame(dummyReports.getSimpleReport(), report);
         assertEquals(VALIDATION_TIME_NOW, report.getValidationConclusion().getValidationTime());
     }
 
@@ -162,7 +167,7 @@ class ValidationProxyTest {
 
         SimpleReport report = validationProxy.validate(proxyDocument);
 
-        assertEquals(dummyReports.getSimpleReport(), report);
+        assertSame(dummyReports.getSimpleReport(), report);
         assertEquals(VALIDATION_TIME_NOW, report.getValidationConclusion().getValidationTime());
     }
 
@@ -183,7 +188,7 @@ class ValidationProxyTest {
 
         SimpleReport report = validationProxy.validate(proxyDocument);
 
-        assertEquals(dummyReports.getSimpleReport(), report);
+        assertSame(dummyReports.getSimpleReport(), report);
         assertEquals(VALIDATION_TIME_NOW, report.getValidationConclusion().getValidationTime());
 
         ArgumentCaptor<ValidationDocument> validationDocumentArgumentCaptor = ArgumentCaptor.forClass(ValidationDocument.class);
@@ -208,7 +213,7 @@ class ValidationProxyTest {
 
         SimpleReport report = validationProxy.validate(proxyDocument);
 
-        assertEquals(dummyReports.getSimpleReport(), report);
+        assertSame(dummyReports.getSimpleReport(), report);
         assertEquals(VALIDATION_TIME_NOW, report.getValidationConclusion().getValidationTime());
 
         ArgumentCaptor<ValidationDocument> validationDocumentArgumentCaptor = ArgumentCaptor.forClass(ValidationDocument.class);
@@ -232,7 +237,7 @@ class ValidationProxyTest {
 
         SimpleReport report = validationProxy.validate(proxyDocument);
 
-        assertEquals(dummyReports.getSimpleReport(), report);
+        assertSame(dummyReports.getSimpleReport(), report);
         assertEquals(VALIDATION_TIME_NOW, report.getValidationConclusion().getValidationTime());
     }
 
@@ -252,13 +257,60 @@ class ValidationProxyTest {
 
         SimpleReport report = validationProxy.validate(proxyDocument);
 
-        assertEquals(dummyReports.getSimpleReport(), report);
+        assertSame(dummyReports.getSimpleReport(), report);
         assertEquals(VALIDATION_TIME_NOW, report.getValidationConclusion().getValidationTime());
 
         ArgumentCaptor<ValidationDocument> validationDocumentArgumentCaptor = ArgumentCaptor.forClass(ValidationDocument.class);
         verify(timemarkContainerValidationServiceMock).validateDocument(validationDocumentArgumentCaptor.capture());
         verifyNoMoreInteractions(timemarkContainerValidationServiceMock);
         assertEquals(Date.from(MAY), validationDocumentArgumentCaptor.getValue().getValidationTime());
+    }
+
+    @Test
+    void validate_TSTWithPassedValidationAndDatafileNotCoveredWarning_ValidateDocumentNotInvoked() throws Exception {
+        TimeStampTokenValidationService timeStampTokenValidationService = Mockito.mock(TimeStampTokenValidationService.class);
+        when(timeStampTokenValidationService.validateDocument(any())).thenReturn(
+            createDummyReportsWith1PassedTSTValidationAndDatafileNotCoveredWarning()
+        );
+        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(timeStampTokenValidationService);
+
+        GenericValidationService genericValidationServiceMock = Mockito.mock(GenericValidationService.class);
+        when(applicationContext.getBean(GENERIC_VALIDATION_SERVICE_BEAN)).thenReturn(genericValidationServiceMock);
+
+        ProxyDocument proxyDocument = mockProxyDocumentWithExtension("asics");
+        proxyDocument.setBytes(buildValidationDocument("TXTinsideAsics.asics"));
+
+        validationProxy.validate(proxyDocument);
+
+        verify(genericValidationServiceMock, never()).validateDocument(any());
+        verifyNoInteractions(genericValidationServiceMock);
+    }
+
+    @Test
+    void validate_TwoPassedTSTsFirstWithDatafileNotCoveredWarning_ValidateDocumentInvokedAccordingToTSTWithoutWarningDate() throws Exception {
+        TimeStampTokenValidationService timeStampTokenValidationService = Mockito.mock(TimeStampTokenValidationService.class);
+        when(timeStampTokenValidationService.validateDocument(any())).thenReturn(
+            createDummyReportsWith1PassedTSTValidationAndDatafileNotCoveredWarningAnd1WithoutWarning()
+        );
+        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(timeStampTokenValidationService);
+
+        GenericValidationService genericValidationServiceMock = Mockito.mock(GenericValidationService.class);
+        Reports dummyReports = createDummyReports();
+        when(genericValidationServiceMock.validateDocument(any())).thenReturn(dummyReports);
+        when(applicationContext.getBean(GENERIC_VALIDATION_SERVICE_BEAN)).thenReturn(genericValidationServiceMock);
+
+        ProxyDocument proxyDocument = mockProxyDocumentWithExtension("asics");
+        proxyDocument.setBytes(buildValidationDocument("TXTinsideAsics.asics"));
+
+        SimpleReport report = validationProxy.validate(proxyDocument);
+
+        assertSame(dummyReports.getSimpleReport(), report);
+        assertEquals(VALIDATION_TIME_NOW, report.getValidationConclusion().getValidationTime());
+
+        ArgumentCaptor<ValidationDocument> validationDocumentArgumentCaptor = ArgumentCaptor.forClass(ValidationDocument.class);
+        verify(genericValidationServiceMock).validateDocument(validationDocumentArgumentCaptor.capture());
+        verifyNoMoreInteractions(genericValidationServiceMock);
+        assertEquals(Date.from(JUNE), validationDocumentArgumentCaptor.getValue().getValidationTime());
     }
 
     @Test
@@ -341,6 +393,30 @@ class ValidationProxyTest {
             createTimeStampTokenValidationData(TimeStampTokenValidationData.Indication.TOTAL_PASSED, null),
             createTimeStampTokenValidationData(TimeStampTokenValidationData.Indication.TOTAL_PASSED, MAY)
         ));
+        validationConclusion.setValidationTime(VALIDATION_TIME_NOW);
+        return new Reports(new SimpleReport(validationConclusion), null, null);
+    }
+
+    private Reports createDummyReportsWith1PassedTSTValidationAndDatafileNotCoveredWarning() {
+        ValidationConclusion validationConclusion = new ValidationConclusion();
+
+        TimeStampTokenValidationData validationData = createTimeStampTokenValidationData(TimeStampTokenValidationData.Indication.TOTAL_PASSED, MAY);
+        validationData.setWarning(List.of(new Warning(WARNING_MSG_DATAFILE_NOT_COVERED_BY_TS)));
+
+        validationConclusion.setTimeStampTokens(List.of(validationData));
+        validationConclusion.setValidationTime(VALIDATION_TIME_NOW);
+        return new Reports(new SimpleReport(validationConclusion), null, null);
+    }
+
+    private Reports createDummyReportsWith1PassedTSTValidationAndDatafileNotCoveredWarningAnd1WithoutWarning() {
+        ValidationConclusion validationConclusion = new ValidationConclusion();
+
+        TimeStampTokenValidationData validationDataWithWarning = createTimeStampTokenValidationData(TimeStampTokenValidationData.Indication.TOTAL_PASSED, MAY);
+        validationDataWithWarning.setWarning(List.of(new Warning(WARNING_MSG_DATAFILE_NOT_COVERED_BY_TS)));
+
+        TimeStampTokenValidationData validationDataWithoutWarning = createTimeStampTokenValidationData(TimeStampTokenValidationData.Indication.TOTAL_PASSED, JUNE);
+
+        validationConclusion.setTimeStampTokens(List.of(validationDataWithWarning, validationDataWithoutWarning));
         validationConclusion.setValidationTime(VALIDATION_TIME_NOW);
         return new Reports(new SimpleReport(validationConclusion), null, null);
     }

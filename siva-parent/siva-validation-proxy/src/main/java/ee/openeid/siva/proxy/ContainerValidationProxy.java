@@ -26,6 +26,7 @@ import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.document.report.ValidationWarning;
+import ee.openeid.siva.validation.document.report.Warning;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.validation.service.timemark.report.DDOCContainerValidationReportBuilder;
@@ -35,6 +36,7 @@ import eu.europa.esig.dss.exception.IllegalInputException;
 import eu.europa.esig.dss.model.DSSDocument;
 import eu.europa.esig.dss.model.DSSException;
 import eu.europa.esig.dss.model.InMemoryDocument;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +58,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import static ee.openeid.siva.validation.constant.AsicContainerConstants.ASICS_MIME_TYPE;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.WARNING_MSG_DATAFILE_NOT_COVERED_BY_TS;
 import static eu.europa.esig.dss.asic.common.ASiCUtils.META_INF_FOLDER;
 import static eu.europa.esig.dss.asic.common.ASiCUtils.MIME_TYPE;
 
@@ -96,14 +99,14 @@ public class ContainerValidationProxy extends ValidationProxy {
             Date validationTime = report.getValidationConclusion()
                 .getTimeStampTokens()
                 .stream()
-                .filter(token -> token.getIndication() == TimeStampTokenValidationData.Indication.TOTAL_PASSED)
+                .filter(this::isIndicationTotalPassedAndMissingWarningAboutUncoveredDatafile)
                 .map(TimeStampTokenValidationData::getSignedTime)
                 .filter(Objects::nonNull)
                 .map(Instant::parse)
                 .min(Instant::compareTo)
                 .map(Date::from)
                 .orElse(null);
-            if (validationTime != null) {//TODO SIVA-718
+            if (validationTime != null) {
                 report = generateDataFileReport(proxyRequest, report, validationTime);
             }
         }
@@ -134,6 +137,19 @@ public class ContainerValidationProxy extends ValidationProxy {
             }
         }
         return mergeReports(report, dataFileReport);
+    }
+
+    private boolean isIndicationTotalPassedAndMissingWarningAboutUncoveredDatafile(
+        TimeStampTokenValidationData token
+    ) {
+        if (token.getIndication() != TimeStampTokenValidationData.Indication.TOTAL_PASSED) {
+            return false;
+        } else if (CollectionUtils.isEmpty(token.getWarning())) {
+            return true;
+        }
+        return token.getWarning().stream()
+            .map(Warning::getContent)
+            .noneMatch(WARNING_MSG_DATAFILE_NOT_COVERED_BY_TS::equals);
     }
 
     @Override

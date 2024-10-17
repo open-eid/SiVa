@@ -168,7 +168,7 @@ Structure of validationConclusion block
 | validatedDocument. filename | - | String | Digitally signed document's file name. Not present for hashcode validation. |
 | validatedDocument. fileHash | - | String | Calculated hash for validated document in Base64. Present when report signing is enabled. |
 | validatedDocument. hashAlgo | - | String | Hash algorithm used. Present when report signing is enabled. |
-| signatureForm | - | String | Format (and optionally version) of the digitally signed document container. <br> In case of documents in [DIGIDOC-XML](https://www.id.ee/wp-content/uploads/2020/08/digidoc_format_1.3.pdf) (DDOC) format, the "hashcode" suffix is used to denote that the container was validated in [hashcode mode](https://open-eid.github.io/allkirjastamisteenus/json-technical-description/#hashcode-container-form), i.e. without original data files. <br> **Possible values:**  <br> DIGIDOC_XML_1.0 <br> DIGIDOC_XML_1.0_hashcode <br> DIGIDOC_XML_1.1 <br> DIGIDOC_XML_1.1_hashcode <br> DIGIDOC_XML_1.2 <br> DIGIDOC_XML_1.2_hashcode <br> DIGIDOC_XML_1.3 <br> DIGIDOC_XML_1.3_hashcode <br> ASiC_E - used in case of all ASIC-E ([BDOC](https://www.id.ee/wp-content/uploads/2021/06/bdoc-spec212-eng.pdf)) documents <br> ASiC_S - used in case of all ASIC-S documents |
+| signatureForm | - | String | Format (and optionally version) of the digitally signed document container. <br> In case of documents in [DIGIDOC-XML](https://www.id.ee/wp-content/uploads/2020/08/digidoc_format_1.3.pdf) (DDOC) format, the "hashcode" suffix is used to denote that the container was validated in [hashcode mode](https://open-eid.github.io/allkirjastamisteenus/json-technical-description/#hashcode-container-form), i.e. without original data files. <br> **Possible values:**  <br> DIGIDOC_XML_1.0 <br> DIGIDOC_XML_1.0_hashcode <br> DIGIDOC_XML_1.1 <br> DIGIDOC_XML_1.1_hashcode <br> DIGIDOC_XML_1.2 <br> DIGIDOC_XML_1.2_hashcode <br> DIGIDOC_XML_1.3 <br> DIGIDOC_XML_1.3_hashcode <br> ASiC-E - used in case of all ASiC-E (and [BDOC](https://www.id.ee/wp-content/uploads/2021/06/bdoc-spec212-eng.pdf)) documents <br> ASiC-S - used in case of all ASiC-S documents |
 | signatures | - | Array | Collection of signatures found in digitally signed document |
 | signatures[0] | + | Object | Signature information object |
 | signatures[0]. claimedSigningTime | + | Date | Claimed signing time, i.e. signer's computer time during signature creation |
@@ -196,10 +196,11 @@ Structure of validationConclusion block
 | signatures[0]. signatureMethod | + | String | Signature method specification URI used in signature creation. |
 | signatures[0]. signatureLevel | - |String | Legal level of the signature, according to Regulation (EU) No 910/2014. <br> - **Possible values on positive validation result:**<br> QESIG <br> QESEAL <br> QES <br> ADESIG_QC <br> ADESEAL_QC <br> ADES_QC <br> ADESIG <br> ADESEAL <br> ADES <br> - **Possible values on indeterminate validation result:**<br> prefix INDETERMINATE is added to the level described in positive result. For example  INDETERMINATE_QESIG <br> - **Possible values on negative validation result:**<br>In addition to abovementioned<br> NOT_ADES_QC_QSCD <br> NOT_ADES_QC <br> NOT_ADES <br> NA <br> - In case of DIGIDOC-XML 1.0..1.3 formats, value is missing as the signature level is not checked by the JDigiDoc base library that is used for validation. However, the signatures can be indirectly regarded as QES level signatures, see also [SiVa Validation Policy](/siva3/appendix/validation_policy.md)<br>|
 | signatures[0].signedBy | + | String | In format of "surname, givenName, serialNumber" if  these fields are present in subject distinguished name field. In other cases, value of common name field. |
-| signatures[0].subjectDistinguishedName.serialNumber | - | String | SERIALNUMBER value portion in signer's certificate's subject distinguished name |
-| signatures[0].subjectDistinguishedName.commonName | - | String | CN (common name) value portion in signer's certificate's subject distinguished name |
-| signatures[0].subjectDistinguishedName.givenName | - | String | Given name value portion in signer's certificate's subject distinguished name |
-| signatures[0].subjectDistinguishedName.surname | - | String | Surname value portion in signer's certificate's subject distinguished name |
+| signatures[0]. subjectDistinguishedName | - | Object | Object containing subject's distinguished name information. |
+| signatures[0]. subjectDistinguishedName .serialNumber | - | String | SERIALNUMBER value portion in signer's certificate's subject distinguished name |
+| signatures[0]. subjectDistinguishedName .commonName | - | String | CN (common name) value portion in signer's certificate's subject distinguished name |
+| signatures[0]. subjectDistinguishedName .givenName | - | String | Given name value portion in signer's certificate's subject distinguished name |
+| signatures[0]. subjectDistinguishedName .surname | - | String | Surname value portion in signer's certificate's subject distinguished name |
 | signatures[0]. signatureScopes | - | Array | Contains information of the original data that is covered by the signature. |
 | signatures[0]. signatureScopes[0]. name | + | String | Name of the signature scope. |
 | signatures[0]. signatureScopes[0]. scope | + | String | Type of the signature scope. |
@@ -208,15 +209,15 @@ Structure of validationConclusion block
 | signatures[0]. signatureScopes[0]. hash | - | String | Hash of data file encoded in Base64. Present for hashcode validation. |
 | signatures[0]. warnings | - | Array | Block of validation warnings that do not affect the overall validation result. |
 | signatures[0]. warnings[0] | + | Object | Object containing the warning |
-| signatures[0]. warnings[0]. content | + | String | Warning description, as retuned by the base library that was used for validation. |
-| signatures[0].certificates | - | Array | Array containing certificates that are present in the signature or can be fetched from TSL. |
-| signatures[0].certificates[0] | + | Object | Object containinig certificate type, common name and certificate. Minimal object is signer certificate. If present contains certificates for TimeStamps and OCSP as well. |
-| signatures[0].certificates[0].commonName | + | String | CN (common name) value in certificate. |
-| signatures[0].certificates[0].type | + | String | Type of the certificate. Can be SIGNING, REVOCATION, SIGNATURE_TIMESTAMP, ARCHIVE_TIMESTAMP or CONTENT_TIMESTAMP. |
-| signatures[0].certificates[0].content | + | String | DER encoded X.509 certificate in Base64. |
-| signatures[0].certificates[0].issuer | + | String | Object containing issuer certificate information. Can create chain til the trust anchor. |
+| signatures[0]. warnings[0]. content | + | String | Warning description, as returned by the base library that was used for validation. |
+| signatures[0]. certificates | - | Array | Array containing certificates that are present in the signature or can be fetched from TSL. |
+| signatures[0]. certificates[0] | + | Object | Object containing certificate type, common name and certificate. Minimal object is signer certificate. If present contains certificates for TimeStamps and OCSP as well. |
+| signatures[0]. certificates[0].commonName | + | String | CN (common name) value in certificate. |
+| signatures[0]. certificates[0].type | + | String | Type of the certificate. Can be SIGNING, REVOCATION, SIGNATURE_TIMESTAMP, ARCHIVE_TIMESTAMP or CONTENT_TIMESTAMP. |
+| signatures[0]. certificates[0].content | + | String | DER encoded X.509 certificate in Base64. |
+| signatures[0]. certificates[0].issuer | + | String | Object containing issuer certificate information. Can create chain til the trust anchor. |
 | timeStampTokens | - | Array | Array containing the time stamp tokens |
-| timeStampTokens[0]. | + | Object | Object containing the time stamp token (TST) |
+| timeStampTokens[0] | + | Object | Object containing the time stamp token (TST) |
 | timeStampTokens[0]. indication | + | String | Result of the time stamp token validation. <br>**Possible values:** <br> TOTAL-PASSED <br> TOTAL-FAILED |
 | timeStampTokens[0]. signedBy | + | String | Signer of the time stamp token. |
 | timeStampTokens[0]. signedTime | + | String | Time when the time stamp token was given. |

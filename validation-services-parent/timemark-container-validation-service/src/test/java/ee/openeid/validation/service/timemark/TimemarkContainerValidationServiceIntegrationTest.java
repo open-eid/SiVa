@@ -65,6 +65,8 @@ import java.util.List;
 
 import static ee.openeid.validation.service.timemark.BDOCTestUtils.ASICE_CRL_ONLY;
 import static ee.openeid.validation.service.timemark.BDOCTestUtils.BDOC_TEST_FILE_ALL_SIGNED;
+import static ee.openeid.validation.service.timemark.BDOCTestUtils.ASICE_TEST_FILE_LTA_LEVEL_SIGNATURE;
+import static ee.openeid.validation.service.timemark.BDOCTestUtils.BDOC_TEST_FILE_T_LEVEL_SIGNATURE;
 import static ee.openeid.validation.service.timemark.BDOCTestUtils.BDOC_TEST_FILE_UNSIGNED;
 import static ee.openeid.validation.service.timemark.BDOCTestUtils.BDOC_TEST_OF_KLASS3_CHAIN;
 import static ee.openeid.validation.service.timemark.BDOCTestUtils.VALID_ASICE;
@@ -72,6 +74,7 @@ import static ee.openeid.validation.service.timemark.BDOCTestUtils.VALID_BALTIC_
 import static ee.openeid.validation.service.timemark.BDOCTestUtils.VALID_BDOC_TM_2_SIGNATURES;
 import static ee.openeid.validation.service.timemark.BDOCTestUtils.VALID_ID_CARD_MOB_ID;
 import static ee.openeid.validation.service.timemark.BDOCTestUtils.buildValidationDocument;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -79,6 +82,7 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.emptyOrNullString;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -469,6 +473,24 @@ class TimemarkContainerValidationServiceIntegrationTest {
         Certificate timestampX509Certificate = cf.generateCertificate(new ByteArrayInputStream(Base64.decode(timestampCertificate.getContent().getBytes())));
         assertEquals("SK TIMESTAMPING AUTHORITY", CertUtil.getCommonName((X509Certificate) timestampX509Certificate));
         assertEquals("SK TIMESTAMPING AUTHORITY", timestampCertificate.getCommonName());
+    }
+
+    @Test
+    void validateDocument_ProfileLevelIsT_TimestampCreationTimeIsPresent() {
+        SimpleReport validationResult = timemarkContainerValidationService.validateDocument(buildValidationDocument(BDOC_TEST_FILE_T_LEVEL_SIGNATURE)).getSimpleReport();
+
+        String tsCreationTime = validationResult.getValidationConclusion().getSignatures().get(0).getInfo().getTimestampCreationTime();
+        assertThat(tsCreationTime, notNullValue());
+        assertThat(tsCreationTime, equalTo("2014-05-19T10:45:19Z"));
+    }
+
+    @Test
+    void validateDocument_ProfileLevelIsLTA_TimestampCreationTimeIsPresent() {
+        SimpleReport validationResult = timemarkContainerValidationService.validateDocument(buildValidationDocument(ASICE_TEST_FILE_LTA_LEVEL_SIGNATURE)).getSimpleReport();
+
+        String tsCreationTime = validationResult.getValidationConclusion().getSignatures().get(0).getInfo().getTimestampCreationTime();
+        assertThat(tsCreationTime, notNullValue());
+        assertThat(tsCreationTime, equalTo("2018-11-23T12:24:04Z"));
     }
 
     private void assertSubjectDNPresent(SignatureValidationData signature, String serialNumber, String

@@ -224,7 +224,7 @@ public abstract class TimemarkContainerValidationReportBuilder {
     private Info getInfo(Signature signature) {
         Info info = new Info();
         info.setBestSignatureTime(getBestSignatureTime(signature));
-        if (signature.getProfile() == SignatureProfile.LT) {
+        if (List.of(SignatureProfile.T, SignatureProfile.LT, SignatureProfile.LTA).contains(signature.getProfile())) {
             info.setTimestampCreationTime(getTimestampTime(signature));
         }
         info.setOcspResponseCreationTime(getOcspTime(signature));

@@ -21,7 +21,6 @@ import ee.openeid.siva.validation.document.report.SignatureScope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.document.report.ValidationWarning;
-import ee.openeid.siva.validation.document.report.Warning;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.Container;
@@ -32,7 +31,7 @@ import org.digidoc4j.ValidationResult;
 import org.digidoc4j.impl.ddoc.DDocContainer;
 import org.digidoc4j.impl.ddoc.DDocFacade;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -72,9 +71,7 @@ public class DDOCContainerValidationReportBuilder extends TimemarkContainerValid
 
     @Override
     List<ValidationWarning> getExtraValidationWarnings() {
-        ValidationWarning timestampValidationWarning = new ValidationWarning();
-        timestampValidationWarning.setContent(DDOC_TIMESTAMP_WARNING);
-        return Collections.singletonList(timestampValidationWarning);
+        return new ArrayList<>(List.of(new ValidationWarning(DDOC_TIMESTAMP_WARNING)));
     }
 
     @Override

@@ -16,9 +16,13 @@
 
 package ee.openeid.siva.validation.document.report;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ValidationWarning {
     private String content;
 }

@@ -188,7 +188,7 @@ public class GenericValidationReportBuilder {
         if (containerType != null) {
             validationConclusion.setSignatureForm(containerType.toString());
         }
-        validationConclusion.setValidationWarnings(Collections.emptyList());
+        validationConclusion.setValidationWarnings(new ArrayList<>());
         validationConclusion.setSignatures(buildSignatureValidationDataList());
         validationConclusion.setSignaturesCount(validationConclusion.getSignatures().size());
         validationConclusion.setValidatedDocument(ReportBuilderUtils.createValidatedDocument(isReportSignatureEnabled, validationDocument.getName(), validationDocument.getBytes()));

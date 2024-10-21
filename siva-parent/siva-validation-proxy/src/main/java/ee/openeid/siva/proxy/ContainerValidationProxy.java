@@ -266,11 +266,10 @@ public class ContainerValidationProxy extends ValidationProxy {
 
     private static void addWarningToReport(SimpleReport report, String message) {
         List<ValidationWarning> warnings = report.getValidationConclusion().getValidationWarnings();
-        List<ValidationWarning> newList = new ArrayList<>(warnings);
-        ValidationWarning validationWarning = new ValidationWarning();
-        validationWarning.setContent(message);
-        newList.add(validationWarning);
-        report.getValidationConclusion().setValidationWarnings(newList);
+        if (warnings == null) {
+            report.getValidationConclusion().setValidationWarnings(warnings = new ArrayList<>());
+        }
+        warnings.add(new ValidationWarning(message));
     }
 
     private static boolean isAsicsMimeType(DSSDocument entry) {

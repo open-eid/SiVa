@@ -19,6 +19,7 @@ package ee.openeid.siva.proxy;
 import ee.openeid.siva.proxy.document.DocumentType;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.document.ReportType;
+import ee.openeid.siva.proxy.exception.ContainerMimetypeFileException;
 import ee.openeid.siva.proxy.exception.ValidatonServiceNotFoundException;
 import ee.openeid.siva.proxy.validation.ZipMimetypeValidator;
 import ee.openeid.siva.statistics.StatisticsService;
@@ -65,6 +66,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.WARNING_MSG_DATAFILE_NOT_COVERED_BY_TS;
@@ -78,6 +80,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -365,6 +368,25 @@ class ValidationProxyTest {
         assertThat(report.getValidationConclusion().getValidationWarnings(), contains(TEST_ENV_WARNING, warning1, warning2));
     }
 
+    @Test
+    void validate_AsicsWithoutMimetype_ThrowsContainerMimetypeFileException() throws Exception {
+        String errorMessage = "some exception message";
+        doThrow(new ContainerMimetypeFileException(errorMessage)).when(zipMimetypeValidator).validateZipContainerMimetype(any());
+        TimeStampTokenValidationService timeStampTokenValidationService = Mockito.mock(TimeStampTokenValidationService.class);
+        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(timeStampTokenValidationService);
+        when(timeStampTokenValidationService.validateDocument(any())).thenReturn(createDummyReports());
+
+        ProxyDocument proxyDocument = mockProxyDocumentWithExtension("asics");
+        proxyDocument.setBytes(buildValidationDocument("TXTinsideAsics.asics"));
+
+        SimpleReport report = validationProxy.validate(proxyDocument);
+
+        assertThat(
+            report.getValidationConclusion().getValidationWarnings().stream().map(ValidationWarning::getContent).collect(Collectors.toList()),
+            contains(errorMessage)
+        );
+    }
+
     private void mockValidationServices() {
         Reports mockReports = mockReports();
         ValidationService validationServiceMock = mock(ValidationService.class);
@@ -455,6 +477,7 @@ class ValidationProxyTest {
         ValidationConclusion vc = new ValidationConclusion();
         vc.setValidationLevel("DUMMY");
         vc.setValidationTime(VALIDATION_TIME_NOW);
+        vc.setTimeStampTokens(Collections.emptyList());
         return new Reports(new SimpleReport(vc), null, null);
     }
 

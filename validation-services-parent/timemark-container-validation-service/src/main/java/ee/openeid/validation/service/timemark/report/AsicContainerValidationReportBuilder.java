@@ -20,17 +20,15 @@ import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Certificate;
 import ee.openeid.siva.validation.document.report.CertificateType;
 import ee.openeid.siva.validation.document.report.SignatureScope;
-import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.document.report.ValidationWarning;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import eu.europa.esig.dss.enumerations.SignatureQualification;
-import eu.europa.esig.dss.enumerations.SubIndication;
 import org.digidoc4j.Container;
+import org.digidoc4j.ContainerValidationResult;
 import org.digidoc4j.Signature;
 import org.digidoc4j.SignatureProfile;
-import org.digidoc4j.ValidationResult;
 import org.digidoc4j.impl.asic.asice.AsicESignature;
 
 import java.io.UnsupportedEncodingException;
@@ -38,35 +36,18 @@ import java.net.URLDecoder;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class AsicContainerValidationReportBuilder extends TimemarkContainerValidationReportBuilder {
-    public AsicContainerValidationReportBuilder(Container container, ValidationDocument validationDocument, ValidationPolicy validationPolicy, ValidationResult validationResult, boolean isReportSignatureEnabled) {
+
+    public AsicContainerValidationReportBuilder(
+        Container container,
+        ValidationDocument validationDocument,
+        ValidationPolicy validationPolicy,
+        ContainerValidationResult validationResult,
+        boolean isReportSignatureEnabled
+    ) {
         super(container, validationDocument, validationPolicy, validationResult, isReportSignatureEnabled);
-    }
-
-    @Override
-    protected SignatureValidationData.Indication getIndication(Signature signature, Map<String, ValidationResult> signatureValidationResults) {
-        ValidationResult signatureValidationResult = signatureValidationResults.get(signature.getUniqueId());
-        if (signatureValidationResult.isValid() && validationResult.getErrors().isEmpty()) {
-            return SignatureValidationData.Indication.TOTAL_PASSED;
-        } else if (REPORT_INDICATION_INDETERMINATE.equals(getDssSimpleReport((AsicESignature) signature).getIndication(signature.getUniqueId()).name())
-                && validationResult.getErrors().isEmpty()) {
-            return SignatureValidationData.Indication.INDETERMINATE;
-        } else {
-            return SignatureValidationData.Indication.TOTAL_FAILED;
-        }
-    }
-
-    @Override
-    protected String getSubIndication(Signature signature, Map<String, ValidationResult> signatureValidationResults) {
-        if (getIndication(signature, signatureValidationResults) == SignatureValidationData.Indication.TOTAL_PASSED) {
-            return "";
-        }
-        SubIndication subindication = getDssSimpleReport((AsicESignature) signature).getSubIndication(signature.getUniqueId());
-        return subindication != null ? subindication.name() : "";
-
     }
 
     @Override

@@ -26,30 +26,32 @@ import ee.openeid.siva.validation.util.DistinguishedNameUtil;
 import eu.europa.esig.dss.diagnostic.DiagnosticData;
 import eu.europa.esig.dss.diagnostic.SignatureWrapper;
 import eu.europa.esig.dss.diagnostic.TimestampWrapper;
+import eu.europa.esig.dss.enumerations.Indication;
+import eu.europa.esig.dss.enumerations.SubIndication;
 import eu.europa.esig.dss.enumerations.TimestampType;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.Container;
+import org.digidoc4j.ContainerValidationResult;
 import org.digidoc4j.DataFile;
 import org.digidoc4j.Signature;
 import org.digidoc4j.SignatureProfile;
-import org.digidoc4j.ValidationResult;
 import org.digidoc4j.X509Cert;
 import org.digidoc4j.exceptions.CertificateNotFoundException;
 import org.digidoc4j.exceptions.DigiDoc4JException;
 import org.digidoc4j.impl.asic.asice.AsicESignature;
+import org.digidoc4j.impl.asic.report.SignatureValidationReport;
 import org.slf4j.LoggerFactory;
 
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -63,7 +65,6 @@ public abstract class TimemarkContainerValidationReportBuilder {
     protected static final String FULL_SIGNATURE_SCOPE = "FullSignatureScope";
     protected static final String FULL_DOCUMENT = "Digest of the document content";
     protected static final String XADES_FORMAT_PREFIX = "XAdES_BASELINE_";
-    protected static final String REPORT_INDICATION_INDETERMINATE = "INDETERMINATE";
     protected static final String BDOC_SIGNATURE_FORM = "ASiC-E";
     protected static final String DDOC_SIGNATURE_FORM_PREFIX = "DIGIDOC_XML_";
     protected static final String DDOC_HASHCODE_SIGNATURE_FORM_SUFFIX = "_hashcode";
@@ -72,39 +73,22 @@ public abstract class TimemarkContainerValidationReportBuilder {
     Container container;
     private ValidationDocument validationDocument;
     private ValidationPolicy validationPolicy;
-    ValidationResult validationResult;
+    private ContainerValidationResult validationResult;
     private boolean isReportSignatureEnabled;
-    private Map<String, ValidationResult> signatureValidationResults;
+    private Map<String, SignatureValidationReport> signatureValidationResults;
 
-    protected TimemarkContainerValidationReportBuilder(Container container, ValidationDocument validationDocument, ValidationPolicy validationPolicy, ValidationResult validationResult, boolean isReportSignatureEnabled) {
+    protected TimemarkContainerValidationReportBuilder(Container container, ValidationDocument validationDocument, ValidationPolicy validationPolicy, ContainerValidationResult validationResult, boolean isReportSignatureEnabled) {
         this.container = container;
         this.validationDocument = validationDocument;
         this.validationPolicy = validationPolicy;
-        this.signatureValidationResults = validateAllSignatures(container);
-        removeSignatureResults(validationResult);
         this.validationResult = validationResult;
         this.isReportSignatureEnabled = isReportSignatureEnabled;
     }
 
-    static Warning createWarning(String content) {
-        Warning warning = new Warning();
-        warning.setContent(emptyWhenNull(content));
-        return warning;
-    }
-
-    private static Warning mapDigidoc4JWarning(DigiDoc4JException digiDoc4JException) {
-        Warning warning = new Warning();
-        warning.setContent(emptyWhenNull(digiDoc4JException.getMessage()));
-        return warning;
-    }
-
-    private static Error mapDigidoc4JException(DigiDoc4JException digiDoc4JException) {
-        Error error = new Error();
-        error.setContent(emptyWhenNull(digiDoc4JException.getMessage()));
-        return error;
-    }
-
     public Reports build() {
+        signatureValidationResults = validationResult.getSignatureReports().stream()
+            .collect(Collectors.toMap(SignatureValidationReport::getUniqueId, Function.identity()));
+
         ValidationConclusion validationConclusion = getValidationConclusion();
         processSignatureIndications(validationConclusion, validationPolicy.getName());
 
@@ -112,31 +96,6 @@ public abstract class TimemarkContainerValidationReportBuilder {
         DetailedReport detailedReport = new DetailedReport(validationConclusion, null);
         DiagnosticReport diagnosticReport = new DiagnosticReport(validationConclusion, null);
         return new Reports(simpleReport, detailedReport, diagnosticReport);
-    }
-
-    private void removeSignatureResults(ValidationResult validationResult) {
-        removeSignatureErrors(validationResult);
-        removeSignatureWarning(validationResult);
-    }
-
-    private void removeSignatureErrors(ValidationResult validationResult) {
-        validationResult.getErrors().removeIf(exception -> signatureValidationResults.values().stream()
-                .anyMatch(sigResult -> sigResult.getErrors().stream()
-                        .anyMatch(e -> e.getMessage().equals(exception.getMessage()))));
-    }
-
-    private void removeSignatureWarning(ValidationResult validationResult) {
-        validationResult.getWarnings().removeIf(exception -> signatureValidationResults.values().stream()
-                .anyMatch(sigResult -> sigResult.getWarnings().stream()
-                        .anyMatch(e -> e.getMessage().equals(exception.getMessage()))));
-    }
-
-    private Map<String, ValidationResult> validateAllSignatures(Container container) {
-        Map<String, ValidationResult> results = new HashMap<>();
-        for (Signature signature : container.getSignatures()) {
-            results.put(signature.getUniqueId(), signature.validateSignature());
-        }
-        return results;
     }
 
     private ValidationConclusion getValidationConclusion() {
@@ -180,8 +139,12 @@ public abstract class TimemarkContainerValidationReportBuilder {
         signatureValidationData.setClaimedSigningTime(ReportBuilderUtils.getDateFormatterWithGMTZone().format(signature.getClaimedSigningTime()));
         signatureValidationData.setWarnings(getWarnings(signature));
         signatureValidationData.setInfo(getInfo(signature));
-        signatureValidationData.setIndication(getIndication(signature, signatureValidationResults));
-        signatureValidationData.setSubIndication(getSubIndication(signature, signatureValidationResults));
+        if (signatureValidationResults.get(signature.getId()) != null) {//TODO
+            signatureValidationData.setIndication(getIndication(signature));
+            signatureValidationData.setSubIndication(getSubIndication(signature));
+        } else {
+            signatureValidationData.setIndication(SignatureValidationData.Indication.TOTAL_PASSED);
+        }
         signatureValidationData.setCountryCode(getCountryCode(signature));
         signatureValidationData.setCertificates(getCertificateList(signature));
 
@@ -314,21 +277,29 @@ public abstract class TimemarkContainerValidationReportBuilder {
     }
 
     private List<Warning> getWarnings(Signature signature) {
-        ValidationResult signatureValidationResult = signatureValidationResults.get(signature.getUniqueId());
-        return Stream.of(signatureValidationResult.getWarnings(), this.validationResult.getWarnings())
-                .flatMap(Collection::stream)
-                .distinct()
-                .map(TimemarkContainerValidationReportBuilder::mapDigidoc4JWarning)
-                .collect(Collectors.toList());
+        Stream<String> signatureWarns = Optional.ofNullable(signatureValidationResults.get(signature.getUniqueId()))
+            .map(SignatureValidationReport::getWarnings)
+            .orElse(Collections.emptyList()).stream();
+        Stream<String> commonWarns = validationResult.getWarnings().stream()
+            .map(DigiDoc4JException::getMessage);
+        return Stream.concat(signatureWarns, commonWarns)
+            .map(ReportBuilderUtils::emptyWhenNull)
+            .distinct()
+            .map(Warning::new)
+            .collect(Collectors.toList());
     }
 
     private List<Error> getErrors(Signature signature) {
-        ValidationResult signatureValidationResult = signatureValidationResults.get(signature.getUniqueId());
-        return Stream.of(signatureValidationResult.getErrors(), this.validationResult.getErrors())
-                .flatMap(Collection::stream)
-                .distinct()
-                .map(TimemarkContainerValidationReportBuilder::mapDigidoc4JException)
-                .collect(Collectors.toList());
+        Stream<String> signatureErrs = Optional.ofNullable(signatureValidationResults.get(signature.getUniqueId()))
+            .map(SignatureValidationReport::getErrors)
+            .orElse(Collections.emptyList()).stream();
+        Stream<String> commonErrs = validationResult.getErrors().stream()
+            .map(DigiDoc4JException::getMessage);
+        return Stream.concat(signatureErrs, commonErrs)
+            .map(ReportBuilderUtils::emptyWhenNull)
+            .distinct()
+            .map(Error::new)
+            .collect(Collectors.toList());
     }
 
     private String getCountryCode(Signature signature) {
@@ -367,11 +338,23 @@ public abstract class TimemarkContainerValidationReportBuilder {
         return certificate;
     }
 
+    private SignatureValidationData.Indication getIndication(Signature signature) {
+        Indication indication = signatureValidationResults.get(signature.getId()).getIndication();
+
+        return Optional.ofNullable(indication)
+            .map(i -> SignatureValidationData.Indication.valueOf(indication.name()))
+            .orElse(null);
+    }
+
+    private String getSubIndication(Signature signature) {
+        SubIndication subIndication = signatureValidationResults.get(signature.getId()).getSubIndication();
+
+        return Optional.ofNullable(subIndication)
+            .map(SubIndication::name)
+            .orElse(null);
+    }
+
     abstract void processSignatureIndications(ValidationConclusion validationConclusion, String policyName);
-
-    abstract SignatureValidationData.Indication getIndication(Signature signature, Map<String, ValidationResult> signatureValidationResults);
-
-    abstract String getSubIndication(Signature signature, Map<String, ValidationResult> signatureValidationResults);
 
     abstract String getSignatureLevel(Signature signature);
 

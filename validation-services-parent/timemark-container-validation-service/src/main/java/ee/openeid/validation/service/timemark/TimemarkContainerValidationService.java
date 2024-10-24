@@ -29,7 +29,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.digidoc4j.Configuration;
 import org.digidoc4j.Container;
 import org.digidoc4j.ContainerBuilder;
-import org.digidoc4j.ValidationResult;
+import org.digidoc4j.ContainerValidationResult;
 import org.digidoc4j.exceptions.DigiDoc4JException;
 import org.digidoc4j.impl.ValidatableContainer;
 import org.slf4j.Logger;
@@ -64,7 +64,7 @@ public class TimemarkContainerValidationService implements ValidationService {
         }
 
         try {
-            ValidationResult validationResult =
+            ContainerValidationResult validationResult =
                 (validationDocument.getValidationTime() != null && container instanceof ValidatableContainer)
                 ? ((ValidatableContainer) container).validateAt(validationDocument.getValidationTime())
                 : container.validate();

@@ -28,6 +28,7 @@ import ee.openeid.siva.validation.service.signature.policy.properties.Validation
 import eu.europa.esig.dss.enumerations.SignatureQualification;
 import eu.europa.esig.dss.enumerations.SubIndication;
 import org.digidoc4j.Container;
+import org.digidoc4j.ContainerValidationResult;
 import org.digidoc4j.Signature;
 import org.digidoc4j.SignatureProfile;
 import org.digidoc4j.ValidationResult;
@@ -38,21 +39,29 @@ import java.net.URLDecoder;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class AsicContainerValidationReportBuilder extends TimemarkContainerValidationReportBuilder {
-    public AsicContainerValidationReportBuilder(Container container, ValidationDocument validationDocument, ValidationPolicy validationPolicy, ValidationResult validationResult, boolean isReportSignatureEnabled) {
+
+    public AsicContainerValidationReportBuilder(
+        Container container,
+        ValidationDocument validationDocument,
+        ValidationPolicy validationPolicy,
+        ContainerValidationResult validationResult,
+        boolean isReportSignatureEnabled
+    ) {
         super(container, validationDocument, validationPolicy, validationResult, isReportSignatureEnabled);
     }
 
     @Override
-    protected SignatureValidationData.Indication getIndication(Signature signature, Map<String, ValidationResult> signatureValidationResults) {
-        ValidationResult signatureValidationResult = signatureValidationResults.get(signature.getUniqueId());
-        if (signatureValidationResult.isValid() && validationResult.getErrors().isEmpty()) {
+    protected SignatureValidationData.Indication getIndication(Signature signature) {
+        boolean isSignatureValid = getSignatureValidationResult(signature.getUniqueId())
+            .map(ValidationResult::isValid)
+            .orElse(false);
+        if (isSignatureValid && validationResult.getErrors().isEmpty()) {
             return SignatureValidationData.Indication.TOTAL_PASSED;
         } else if (REPORT_INDICATION_INDETERMINATE.equals(getDssSimpleReport((AsicESignature) signature).getIndication(signature.getUniqueId()).name())
-                && validationResult.getErrors().isEmpty()) {
+            && validationResult.getErrors().isEmpty()) {
             return SignatureValidationData.Indication.INDETERMINATE;
         } else {
             return SignatureValidationData.Indication.TOTAL_FAILED;
@@ -60,13 +69,12 @@ public class AsicContainerValidationReportBuilder extends TimemarkContainerValid
     }
 
     @Override
-    protected String getSubIndication(Signature signature, Map<String, ValidationResult> signatureValidationResults) {
-        if (getIndication(signature, signatureValidationResults) == SignatureValidationData.Indication.TOTAL_PASSED) {
+    protected String getSubIndication(Signature signature) {
+        if (getIndication(signature) == SignatureValidationData.Indication.TOTAL_PASSED) {
             return "";
         }
         SubIndication subindication = getDssSimpleReport((AsicESignature) signature).getSubIndication(signature.getUniqueId());
         return subindication != null ? subindication.name() : "";
-
     }
 
     @Override

@@ -27,9 +27,11 @@ import eu.europa.esig.dss.diagnostic.DiagnosticData;
 import eu.europa.esig.dss.diagnostic.SignatureWrapper;
 import eu.europa.esig.dss.diagnostic.TimestampWrapper;
 import eu.europa.esig.dss.enumerations.TimestampType;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.Container;
+import org.digidoc4j.ContainerValidationResult;
 import org.digidoc4j.DataFile;
 import org.digidoc4j.Signature;
 import org.digidoc4j.SignatureProfile;
@@ -56,6 +58,7 @@ import java.util.stream.Stream;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.*;
 import static org.digidoc4j.X509Cert.SubjectName.CN;
 
+@Slf4j
 public abstract class TimemarkContainerValidationReportBuilder {
 
     protected static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(TimemarkContainerValidationReportBuilder.class);
@@ -69,27 +72,27 @@ public abstract class TimemarkContainerValidationReportBuilder {
     protected static final String DDOC_HASHCODE_SIGNATURE_FORM_SUFFIX = "_hashcode";
     protected static final String HASHCODE_CONTENT_TYPE = "HASHCODE";
 
-    Container container;
-    private ValidationDocument validationDocument;
-    private ValidationPolicy validationPolicy;
-    ValidationResult validationResult;
-    private boolean isReportSignatureEnabled;
-    private Map<String, ValidationResult> signatureValidationResults;
+    protected final Container container;
+    private final ValidationDocument validationDocument;
+    private final ValidationPolicy validationPolicy;
+    protected final ContainerValidationResult validationResult;
+    private final boolean isReportSignatureEnabled;
+    private final Map<String, ValidationResult> signatureValidationResults;
 
-    protected TimemarkContainerValidationReportBuilder(Container container, ValidationDocument validationDocument, ValidationPolicy validationPolicy, ValidationResult validationResult, boolean isReportSignatureEnabled) {
+    protected TimemarkContainerValidationReportBuilder(
+        Container container,
+        ValidationDocument validationDocument,
+        ValidationPolicy validationPolicy,
+        ContainerValidationResult validationResult,
+        boolean isReportSignatureEnabled
+    ) {
         this.container = container;
         this.validationDocument = validationDocument;
         this.validationPolicy = validationPolicy;
-        this.signatureValidationResults = validateAllSignatures(container);
-        removeSignatureResults(validationResult);
         this.validationResult = validationResult;
+        this.signatureValidationResults = getSignatureValidationResults();
+        removeSignatureResults();
         this.isReportSignatureEnabled = isReportSignatureEnabled;
-    }
-
-    static Warning createWarning(String content) {
-        Warning warning = new Warning();
-        warning.setContent(emptyWhenNull(content));
-        return warning;
     }
 
     private static Warning mapDigidoc4JWarning(DigiDoc4JException digiDoc4JException) {
@@ -114,27 +117,35 @@ public abstract class TimemarkContainerValidationReportBuilder {
         return new Reports(simpleReport, detailedReport, diagnosticReport);
     }
 
-    private void removeSignatureResults(ValidationResult validationResult) {
+    private void removeSignatureResults() {
         removeSignatureErrors(validationResult);
         removeSignatureWarning(validationResult);
     }
 
     private void removeSignatureErrors(ValidationResult validationResult) {
         validationResult.getErrors().removeIf(exception -> signatureValidationResults.values().stream()
-                .anyMatch(sigResult -> sigResult.getErrors().stream()
-                        .anyMatch(e -> e.getMessage().equals(exception.getMessage()))));
+            .anyMatch(sigResult -> sigResult.getErrors().stream()
+                .anyMatch(e -> e.getMessage().equals(exception.getMessage()))));
     }
 
     private void removeSignatureWarning(ValidationResult validationResult) {
         validationResult.getWarnings().removeIf(exception -> signatureValidationResults.values().stream()
-                .anyMatch(sigResult -> sigResult.getWarnings().stream()
-                        .anyMatch(e -> e.getMessage().equals(exception.getMessage()))));
+            .anyMatch(sigResult -> sigResult.getWarnings().stream()
+                .anyMatch(e -> e.getMessage().equals(exception.getMessage()))));
     }
 
-    private Map<String, ValidationResult> validateAllSignatures(Container container) {
+    private Map<String, ValidationResult> getSignatureValidationResults() {
         Map<String, ValidationResult> results = new HashMap<>();
+
         for (Signature signature : container.getSignatures()) {
-            results.put(signature.getUniqueId(), signature.validateSignature());
+            String uniqueId = signature.getUniqueId();
+            Optional.ofNullable(validationResult.getValidationResult(uniqueId)).ifPresent(signatureValidationResult -> {
+                if (results.containsKey(uniqueId)) {
+                    log.warn("Signature unique ID collision detected, mapping '{}' to first matching result", uniqueId);
+                } else {
+                    results.put(uniqueId, signatureValidationResult);
+                }
+            });
         }
         return results;
     }
@@ -180,8 +191,8 @@ public abstract class TimemarkContainerValidationReportBuilder {
         signatureValidationData.setClaimedSigningTime(ReportBuilderUtils.getDateFormatterWithGMTZone().format(signature.getClaimedSigningTime()));
         signatureValidationData.setWarnings(getWarnings(signature));
         signatureValidationData.setInfo(getInfo(signature));
-        signatureValidationData.setIndication(getIndication(signature, signatureValidationResults));
-        signatureValidationData.setSubIndication(getSubIndication(signature, signatureValidationResults));
+        signatureValidationData.setIndication(getIndication(signature));
+        signatureValidationData.setSubIndication(getSubIndication(signature));
         signatureValidationData.setCountryCode(getCountryCode(signature));
         signatureValidationData.setCertificates(getCertificateList(signature));
 
@@ -314,21 +325,25 @@ public abstract class TimemarkContainerValidationReportBuilder {
     }
 
     private List<Warning> getWarnings(Signature signature) {
-        ValidationResult signatureValidationResult = signatureValidationResults.get(signature.getUniqueId());
-        return Stream.of(signatureValidationResult.getWarnings(), this.validationResult.getWarnings())
-                .flatMap(Collection::stream)
-                .distinct()
-                .map(TimemarkContainerValidationReportBuilder::mapDigidoc4JWarning)
-                .collect(Collectors.toList());
+        return Stream.of(
+                getSignatureValidationResult(signature.getUniqueId()).map(ValidationResult::getWarnings).orElseGet(Collections::emptyList),
+                validationResult.getWarnings()
+            )
+            .flatMap(Collection::stream)
+            .distinct()
+            .map(TimemarkContainerValidationReportBuilder::mapDigidoc4JWarning)
+            .collect(Collectors.toList());
     }
 
     private List<Error> getErrors(Signature signature) {
-        ValidationResult signatureValidationResult = signatureValidationResults.get(signature.getUniqueId());
-        return Stream.of(signatureValidationResult.getErrors(), this.validationResult.getErrors())
-                .flatMap(Collection::stream)
-                .distinct()
-                .map(TimemarkContainerValidationReportBuilder::mapDigidoc4JException)
-                .collect(Collectors.toList());
+        return Stream.of(
+                getSignatureValidationResult(signature.getUniqueId()).map(ValidationResult::getErrors).orElseGet(Collections::emptyList),
+                validationResult.getErrors()
+            )
+            .flatMap(Collection::stream)
+            .distinct()
+            .map(TimemarkContainerValidationReportBuilder::mapDigidoc4JException)
+            .collect(Collectors.toList());
     }
 
     private String getCountryCode(Signature signature) {
@@ -367,11 +382,15 @@ public abstract class TimemarkContainerValidationReportBuilder {
         return certificate;
     }
 
+    protected Optional<ValidationResult> getSignatureValidationResult(String uniqueId) {
+        return Optional.ofNullable(signatureValidationResults.get(uniqueId));
+    }
+
     abstract void processSignatureIndications(ValidationConclusion validationConclusion, String policyName);
 
-    abstract SignatureValidationData.Indication getIndication(Signature signature, Map<String, ValidationResult> signatureValidationResults);
+    abstract SignatureValidationData.Indication getIndication(Signature signature);
 
-    abstract String getSubIndication(Signature signature, Map<String, ValidationResult> signatureValidationResults);
+    abstract String getSubIndication(Signature signature);
 
     abstract String getSignatureLevel(Signature signature);
 

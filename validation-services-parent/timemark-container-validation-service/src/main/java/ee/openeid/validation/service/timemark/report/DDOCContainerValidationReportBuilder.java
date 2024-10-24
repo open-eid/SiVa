@@ -24,6 +24,7 @@ import ee.openeid.siva.validation.document.report.ValidationWarning;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.Container;
+import org.digidoc4j.ContainerValidationResult;
 import org.digidoc4j.DigestDataFile;
 import org.digidoc4j.Signature;
 import org.digidoc4j.SignatureProfile;
@@ -33,14 +34,19 @@ import org.digidoc4j.impl.ddoc.DDocFacade;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class DDOCContainerValidationReportBuilder extends TimemarkContainerValidationReportBuilder {
 
     public static final String DDOC_TIMESTAMP_WARNING = "The algorithm SHA1 used in DDOC is no longer considered reliable for signature creation!";
 
-    public DDOCContainerValidationReportBuilder(Container container, ValidationDocument validationDocument, ValidationPolicy validationPolicy, ValidationResult validationResult, boolean isReportSignatureEnabled) {
+    public DDOCContainerValidationReportBuilder(
+        Container container,
+        ValidationDocument validationDocument,
+        ValidationPolicy validationPolicy,
+        ContainerValidationResult validationResult,
+        boolean isReportSignatureEnabled
+    ) {
         super(container, validationDocument, validationPolicy, validationResult, isReportSignatureEnabled);
     }
 
@@ -50,9 +56,11 @@ public class DDOCContainerValidationReportBuilder extends TimemarkContainerValid
     }
 
     @Override
-    SignatureValidationData.Indication getIndication(Signature signature, Map<String, ValidationResult> signatureValidationResults) {
-        ValidationResult signatureValidationResult = signatureValidationResults.get(signature.getUniqueId());
-        if (signatureValidationResult.isValid() && validationResult.getErrors().isEmpty()) {
+    SignatureValidationData.Indication getIndication(Signature signature) {
+        boolean isSignatureValid = getSignatureValidationResult(signature.getUniqueId())
+            .map(ValidationResult::isValid)
+            .orElse(false);
+        if (isSignatureValid && validationResult.getErrors().isEmpty()) {
             return SignatureValidationData.Indication.TOTAL_PASSED;
         } else {
             return SignatureValidationData.Indication.TOTAL_FAILED;
@@ -60,7 +68,7 @@ public class DDOCContainerValidationReportBuilder extends TimemarkContainerValid
     }
 
     @Override
-    String getSubIndication(Signature signature, Map<String, ValidationResult> signatureValidationResults) {
+    String getSubIndication(Signature signature) {
         return "";
     }
 

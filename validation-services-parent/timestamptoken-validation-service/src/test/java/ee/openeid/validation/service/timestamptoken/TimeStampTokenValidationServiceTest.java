@@ -22,6 +22,7 @@ import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilde
 import ee.openeid.siva.validation.document.report.CertificateType;
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.Reports;
+import ee.openeid.siva.validation.document.report.Scope;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
 import ee.openeid.siva.validation.document.report.Warning;
@@ -63,6 +64,7 @@ import java.security.cert.X509Certificate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -147,6 +149,7 @@ class TimeStampTokenValidationServiceTest {
         assertThat(tokenOne.getCertificates(), hasSize(3));
         assertThat(tokenOne.getWarning(), empty());
         assertThat(tokenOne.getError(), anyOf(nullValue(), empty()));
+        assertThat(tokenOne.getTimestampScopes(), hasSize(5));
 
         TimeStampTokenValidationData tokenTwo = tokens.get(1);
         assertThat(tokenTwo.getSignedBy(), equalTo("DEMO SK TIMESTAMPING AUTHORITY 2023R"));
@@ -156,6 +159,7 @@ class TimeStampTokenValidationServiceTest {
         assertThat(tokenTwo.getCertificates().size(), equalTo(2));
         assertThat(tokenTwo.getWarning(), anyOf(nullValue(), empty()));
         assertThat(tokenTwo.getError(), anyOf(nullValue(), empty()));
+        assertThat(tokenTwo.getTimestampScopes(), hasSize(7));
     }
 
     @Test
@@ -176,6 +180,61 @@ class TimeStampTokenValidationServiceTest {
             "The time-stamp message imprint is not intact!"
         ));
         assertThat(token.getCertificates().size(), equalTo(2));
+        assertThat(token.getTimestampScopes(), hasSize(0));
+    }
+
+    @Test
+    void validateDocument_NestedContainer_NestedContainerFilesAreEnlistedAsScopes() {
+        SimpleReport simpleReport = validationService.validateDocument(buildValidationDocument("1xTST-valid-bdoc-data-file.asics")).getSimpleReport();
+
+        List<TimeStampTokenValidationData> tokens = simpleReport.getValidationConclusion().getTimeStampTokens();
+        assertThat(tokens.size(), equalTo(1));
+
+        TimeStampTokenValidationData token = tokens.get(0);
+        assertThat(token.getTimestampScopes(), hasSize(5));
+
+        assertScope(token.getTimestampScopes().get(0), "valid-bdoc-tm.bdoc","FULL","ASiCS archive");
+        assertScope(token.getTimestampScopes().get(1), "mimetype","ARCHIVED","ASiCS archive content");
+        assertScope(token.getTimestampScopes().get(2), "META-INF/manifest.xml","ARCHIVED","ASiCS archive content");
+        assertScope(token.getTimestampScopes().get(3), "test.txt","ARCHIVED","ASiCS archive content");
+        assertScope(token.getTimestampScopes().get(4), "META-INF/signatures0.xml","ARCHIVED","ASiCS archive content");
+        assertThat(token.getTimestampScopes().stream().map(Scope::getHashAlgo).filter(Objects::nonNull).collect(Collectors.toList()), empty());
+        assertThat(token.getTimestampScopes().stream().map(Scope::getHash).filter(Objects::nonNull).collect(Collectors.toList()), empty());
+    }
+
+    @Test
+    void validateDocument_ContainerWith3TSTs_ScopesOfNextTSTsContainFilesOfPreviousTSTs() {
+        SimpleReport simpleReport = validationService.validateDocument(buildValidationDocument("3xTST-text-data-file.asics")).getSimpleReport();
+
+        List<TimeStampTokenValidationData> tokens = simpleReport.getValidationConclusion().getTimeStampTokens();
+        assertThat(tokens.size(), equalTo(3));
+
+        TimeStampTokenValidationData tokenOne = tokens.get(0);
+        assertThat(tokenOne.getTimestampScopes(), hasSize(1));
+
+        assertScope(tokenOne.getTimestampScopes().get(0), "test.txt","FULL","Full document");
+        assertThat(tokenOne.getTimestampScopes().stream().map(Scope::getHashAlgo).filter(Objects::nonNull).collect(Collectors.toList()), empty());
+        assertThat(tokenOne.getTimestampScopes().stream().map(Scope::getHash).filter(Objects::nonNull).collect(Collectors.toList()), empty());
+
+        TimeStampTokenValidationData tokenTwo = tokens.get(1);
+        assertThat(tokenTwo.getTimestampScopes(), hasSize(3));
+
+        assertScope(tokenTwo.getTimestampScopes().get(0), "META-INF/ASiCArchiveManifest001.xml","FULL","Manifest document");
+        assertScope(tokenTwo.getTimestampScopes().get(1), "META-INF/timestamp.tst","FULL","Full document");
+        assertScope(tokenTwo.getTimestampScopes().get(2), "test.txt","FULL","Full document");
+        assertThat(tokenTwo.getTimestampScopes().stream().map(Scope::getHashAlgo).filter(Objects::nonNull).collect(Collectors.toList()), empty());
+        assertThat(tokenTwo.getTimestampScopes().stream().map(Scope::getHash).filter(Objects::nonNull).collect(Collectors.toList()), empty());
+
+        TimeStampTokenValidationData tokenThree = tokens.get(2);
+        assertThat(tokenThree.getTimestampScopes(), hasSize(5));
+
+        assertScope(tokenThree.getTimestampScopes().get(0), "META-INF/ASiCArchiveManifest.xml","FULL","Manifest document");
+        assertScope(tokenThree.getTimestampScopes().get(1), "META-INF/timestamp.tst","FULL","Full document");
+        assertScope(tokenThree.getTimestampScopes().get(2), "META-INF/timestamp002.tst","FULL","Full document");
+        assertScope(tokenThree.getTimestampScopes().get(3), "META-INF/ASiCArchiveManifest001.xml","FULL","Full document");
+        assertScope(tokenThree.getTimestampScopes().get(4), "test.txt","FULL","Full document");
+        assertThat(tokenThree.getTimestampScopes().stream().map(Scope::getHashAlgo).filter(Objects::nonNull).collect(Collectors.toList()), empty());
+        assertThat(tokenThree.getTimestampScopes().stream().map(Scope::getHash).filter(Objects::nonNull).collect(Collectors.toList()), empty());
     }
 
     @Test
@@ -280,6 +339,12 @@ class TimeStampTokenValidationServiceTest {
         createServiceFake(validatorMock).validateDocument(validationDocument);
 
         verify(validatorMock, never()).setValidationTime(any(Date.class));
+    }
+
+    private void assertScope(Scope scope, String expectedName, String expectedScope, String expectedContent) {
+        assertThat(scope.getName(), equalTo(expectedName));
+        assertThat(scope.getScope(), equalTo(expectedScope));
+        assertThat(scope.getContent(), equalTo(expectedContent));
     }
 
     private void setUpCustomValidationPolicy(String xmlPath) {

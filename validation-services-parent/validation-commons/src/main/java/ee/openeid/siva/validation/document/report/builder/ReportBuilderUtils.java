@@ -16,8 +16,10 @@
 
 package ee.openeid.siva.validation.document.report.builder;
 
+import ee.openeid.siva.validation.document.Datafile;
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.Policy;
+import ee.openeid.siva.validation.document.report.Scope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.ValidatedDocument;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
@@ -25,9 +27,11 @@ import ee.openeid.siva.validation.document.report.Warning;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import eu.europa.esig.dss.diagnostic.TimestampWrapper;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlDigestMatcher;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlSignatureScope;
 import eu.europa.esig.dss.enumerations.SignatureQualification;
 import eu.europa.esig.dss.spi.DSSASN1Utils;
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.asn1.tsp.MessageImprint;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
@@ -40,6 +44,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
+import java.util.List;
 import java.util.TimeZone;
 
 import static lombok.AccessLevel.PRIVATE;
@@ -164,5 +169,25 @@ public final class ReportBuilderUtils {
         AlgorithmIdentifier algorithm = DSSASN1Utils.getAlgorithmIdentifier(messageImprint.getDigestMethod());
         byte[] nonce = new MessageImprint(algorithm, messageImprint.getDigestValue()).getEncoded();
         return StringUtils.defaultString(org.apache.tomcat.util.codec.binary.Base64.encodeBase64String(nonce));
+    }
+
+    public static Scope parseScope(XmlSignatureScope dssScope, List<Datafile> datafiles) {
+        Scope scope = new Scope();
+
+        scope.setContent(emptyWhenNull(dssScope.getDescription()));
+        scope.setName(emptyWhenNull(dssScope.getName()));
+        if (dssScope.getScope() != null) {
+            scope.setScope(emptyWhenNull(dssScope.getScope().name()));
+        }
+        if (CollectionUtils.isNotEmpty(datafiles)) {
+            datafiles.stream()
+                .filter(datafile -> datafile.getFilename().equals(dssScope.getName()))
+                .findFirst()
+                .ifPresent(dataFile -> {
+                    scope.setHash(dataFile.getHash());
+                    scope.setHashAlgo(dataFile.getHashAlgo().toUpperCase());
+                });
+        }
+        return scope;
     }
 }

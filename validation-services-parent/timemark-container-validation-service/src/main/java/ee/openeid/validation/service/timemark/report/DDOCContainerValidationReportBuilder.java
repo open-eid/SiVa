@@ -17,7 +17,7 @@
 package ee.openeid.validation.service.timemark.report;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
-import ee.openeid.siva.validation.document.report.SignatureScope;
+import ee.openeid.siva.validation.document.report.Scope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.document.report.ValidationWarning;
@@ -83,7 +83,7 @@ public class DDOCContainerValidationReportBuilder extends TimemarkContainerValid
     }
 
     @Override
-    List<SignatureScope> getSignatureScopes(Signature signature, List<String> dataFilenames) {
+    List<Scope> getSignatureScopes(Signature signature, List<String> dataFilenames) {
         return dataFilenames
                 .stream()
                 .map(this::mapDataFile)
@@ -101,8 +101,8 @@ public class DDOCContainerValidationReportBuilder extends TimemarkContainerValid
         return dDocFacade.getFormat().replaceAll("-", "_") + "_" + dDocFacade.getVersion();
     }
 
-    private SignatureScope mapDataFile(String filename) {
-        SignatureScope signatureScope = new SignatureScope();
+    private Scope mapDataFile(String filename) {
+        Scope signatureScope = new Scope();
         signatureScope.setName(filename);
         signatureScope.setContent(FULL_DOCUMENT);
         signatureScope.setScope(FULL_SIGNATURE_SCOPE);

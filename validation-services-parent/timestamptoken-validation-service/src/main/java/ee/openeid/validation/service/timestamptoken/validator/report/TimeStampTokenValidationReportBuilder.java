@@ -105,6 +105,7 @@ public class TimeStampTokenValidationReportBuilder {
             timeStampTokenValidationData.setSignedBy(ts.getSigningCertificate().getCommonName());
             timeStampTokenValidationData.setSignedTime(getDateFormatterWithGMTZone().format(ts.getProductionTime()));
             timeStampTokenValidationData.setCertificates(getCertificateList(ts));
+            timeStampTokenValidationData.setTimestampScopes(getTimestampScopes(ts));
             Optional.ofNullable(dssReports.getSimpleReport().getTimestampQualification(timestampId))
                 .map(TimestampQualification::name)
                 .ifPresent(timeStampTokenValidationData::setTimestampLevel);
@@ -131,6 +132,13 @@ public class TimeStampTokenValidationReportBuilder {
         }
 
         return timeStampTokenValidationDataList;
+    }
+
+    private List<Scope> getTimestampScopes(TimestampWrapper ts) {
+        return dssReports.getDiagnosticData().getTimestampById(ts.getId()).getTimestampScopes()
+            .stream()
+            .map(s -> ReportBuilderUtils.parseScope(s, validationDocument.getDatafiles()))
+            .collect(Collectors.toList());
     }
 
     private static void addWarningTo(TimeStampTokenValidationData timeStampTokenValidationData, String warningMessage) {

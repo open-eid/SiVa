@@ -19,7 +19,7 @@ package ee.openeid.siva.validation.document.report;
 import lombok.Data;
 
 @Data
-public class SignatureScope {
+public class Scope {
 
     private String name;
 

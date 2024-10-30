@@ -16,7 +16,6 @@
 
 package ee.openeid.validation.service.generic.validator.report;
 
-import ee.openeid.siva.validation.document.Datafile;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Certificate;
 import ee.openeid.siva.validation.document.report.CertificateType;
@@ -26,7 +25,7 @@ import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.Info;
 import ee.openeid.siva.validation.document.report.Reports;
 import ee.openeid.siva.validation.document.report.SignatureProductionPlace;
-import ee.openeid.siva.validation.document.report.SignatureScope;
+import ee.openeid.siva.validation.document.report.Scope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.SignerRole;
 import ee.openeid.siva.validation.document.report.SimpleReport;
@@ -46,7 +45,6 @@ import eu.europa.esig.dss.diagnostic.SignatureWrapper;
 import eu.europa.esig.dss.diagnostic.TimestampWrapper;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlRevocation;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlSignature;
-import eu.europa.esig.dss.diagnostic.jaxb.XmlSignatureScope;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlSignerRole;
 import eu.europa.esig.dss.enumerations.ASiCContainerType;
 import eu.europa.esig.dss.enumerations.DigestAlgorithm;
@@ -638,30 +636,11 @@ public class GenericValidationReportBuilder {
                 .orElse(null);
     }
 
-    private List<SignatureScope> parseSignatureScopes(String signatureId) {
+    private List<Scope> parseSignatureScopes(String signatureId) {
         return dssReports.getDiagnosticData().getSignatureById(signatureId).getSignatureScopes()
                 .stream()
-                .map(this::parseSignatureScope)
+                .map(s -> ReportBuilderUtils.parseScope(s, validationDocument.getDatafiles()))
                 .collect(Collectors.toList());
-    }
-
-    private SignatureScope parseSignatureScope(XmlSignatureScope dssSignatureScope) {
-        SignatureScope signatureScope = new SignatureScope();
-        signatureScope.setContent(emptyWhenNull(dssSignatureScope.getDescription()));
-        signatureScope.setName(emptyWhenNull(dssSignatureScope.getName()));
-        if (dssSignatureScope.getScope() != null)
-            signatureScope.setScope(emptyWhenNull(dssSignatureScope.getScope().name()));
-        if (CollectionUtils.isNotEmpty(validationDocument.getDatafiles())) {
-            Optional<Datafile> dataFile = validationDocument.getDatafiles()
-                    .stream()
-                    .filter(datafile -> datafile.getFilename().equals(dssSignatureScope.getName()))
-                    .findFirst();
-            if (dataFile.isPresent()) {
-                signatureScope.setHash(dataFile.get().getHash());
-                signatureScope.setHashAlgo(dataFile.get().getHashAlgo().toUpperCase());
-            }
-        }
-        return signatureScope;
     }
 
     private String parseClaimedSigningTime(String signatureId) {

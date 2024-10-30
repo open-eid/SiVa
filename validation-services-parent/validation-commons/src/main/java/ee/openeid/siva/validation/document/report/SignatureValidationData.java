@@ -44,7 +44,7 @@ public class SignatureValidationData {
 
     private List<Error> errors;
 
-    private List<SignatureScope> signatureScopes;
+    private List<Scope> signatureScopes;
 
     private String claimedSigningTime;
 

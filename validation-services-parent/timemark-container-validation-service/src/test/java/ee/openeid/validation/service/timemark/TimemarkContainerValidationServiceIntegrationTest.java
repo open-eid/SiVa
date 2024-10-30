@@ -21,7 +21,7 @@ import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.CertificateType;
 import ee.openeid.siva.validation.document.report.Policy;
 import ee.openeid.siva.validation.document.report.Reports;
-import ee.openeid.siva.validation.document.report.SignatureScope;
+import ee.openeid.siva.validation.document.report.Scope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.SubjectDistinguishedName;
@@ -193,7 +193,7 @@ class TimemarkContainerValidationServiceIntegrationTest {
     private void assertContainsScope(SignatureValidationData signature, String filename) {
         assertThat(signature.getSignatureScopes()
                 .stream()
-                .map(SignatureScope::getName)
+                .map(Scope::getName)
                 .filter(name -> StringUtils.equals(filename, name))
                 .count(), greaterThan(0L));
     }
@@ -219,7 +219,7 @@ class TimemarkContainerValidationServiceIntegrationTest {
         assertThat(sig1.getErrors(), empty());
         assertThat(sig1.getWarnings(), empty());
         assertThat(sig1.getSignatureScopes(), hasSize(1));
-        SignatureScope scope = sig1.getSignatureScopes().get(0);
+        Scope scope = sig1.getSignatureScopes().get(0);
         assertEquals("test.txt", scope.getName());
         assertEquals("Digest of the document content", scope.getContent());
         assertEquals("FullSignatureScope", scope.getScope());
@@ -250,7 +250,7 @@ class TimemarkContainerValidationServiceIntegrationTest {
         assertThat(sig2.getErrors(), empty());
         assertThat(sig2.getWarnings(), empty());
         assertThat(sig2.getSignatureScopes(), hasSize(1));
-        SignatureScope scope = sig2.getSignatureScopes().get(0);
+        Scope scope = sig2.getSignatureScopes().get(0);
         assertEquals("test.txt", scope.getName());
         assertEquals("Digest of the document content", scope.getContent());
         assertEquals("FullSignatureScope", scope.getScope());

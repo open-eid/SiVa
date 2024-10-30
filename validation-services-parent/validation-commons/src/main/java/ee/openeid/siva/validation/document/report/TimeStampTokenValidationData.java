@@ -31,6 +31,7 @@ public class TimeStampTokenValidationData {
     private List<Error> error;
     private List<Warning> warning;
     private List<Certificate> certificates;
+    private List<Scope> timestampScopes;
 
 
     public enum Indication {

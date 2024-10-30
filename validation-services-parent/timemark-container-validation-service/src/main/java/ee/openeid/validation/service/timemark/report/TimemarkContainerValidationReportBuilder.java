@@ -396,7 +396,7 @@ public abstract class TimemarkContainerValidationReportBuilder {
 
     abstract List<ValidationWarning> getExtraValidationWarnings();
 
-    abstract List<SignatureScope> getSignatureScopes(Signature signature, List<String> dataFilenames);
+    abstract List<Scope> getSignatureScopes(Signature signature, List<String> dataFilenames);
 
     abstract String getSignatureForm();
 

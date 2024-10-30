@@ -19,7 +19,7 @@ package ee.openeid.validation.service.timemark.report;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Certificate;
 import ee.openeid.siva.validation.document.report.CertificateType;
-import ee.openeid.siva.validation.document.report.SignatureScope;
+import ee.openeid.siva.validation.document.report.Scope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.document.report.ValidationWarning;
@@ -105,7 +105,7 @@ public class AsicContainerValidationReportBuilder extends TimemarkContainerValid
     }
 
     @Override
-    List<SignatureScope> getSignatureScopes(Signature signature, List<String> dataFilenames) {
+    List<Scope> getSignatureScopes(Signature signature, List<String> dataFilenames) {
         AsicESignature bDocSignature = (AsicESignature) signature;
         return bDocSignature.getOrigin().getReferences()
                 .stream()
@@ -125,8 +125,8 @@ public class AsicContainerValidationReportBuilder extends TimemarkContainerValid
         return XADES_FORMAT_PREFIX + profile.toString();
     }
 
-    private static SignatureScope createFullSignatureScopeForDataFile(String filename) {
-        SignatureScope signatureScope = new SignatureScope();
+    private static Scope createFullSignatureScopeForDataFile(String filename) {
+        Scope signatureScope = new Scope();
         signatureScope.setName(filename);
         signatureScope.setScope(FULL_SIGNATURE_SCOPE);
         signatureScope.setContent(FULL_DOCUMENT);

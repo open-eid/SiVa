@@ -226,11 +226,20 @@ Structure of validationConclusion block
 | timeStampTokens | - | Array | Array containing the time stamp tokens |
 | timeStampTokens[0] | + | Object | Object containing the time stamp token (TST) |
 | timeStampTokens[0]. indication | + | String | Result of the time stamp token validation. <br>**Possible values:** <br> TOTAL-PASSED <br> TOTAL-FAILED |
+| timeStampTokens[0]. subIndication | - | String | Additional subindication in case of failed or indeterminate validation result, according to [ETSI EN 319 102-1](http://www.etsi.org/deliver/etsi_en/319100_319199/31910201/01.01.01_60/en_31910201v010101p.pdf) "Table 6: Validation Report Structure and Semantics". |
 | timeStampTokens[0]. signedBy | + | String | Signer of the time stamp token. |
 | timeStampTokens[0]. signedTime | + | String | Time when the time stamp token was given. |
 | timeStampTokens[0]. error | - | Array | Errors returned in time stamp token validation. |
 | timeStampTokens[0]. error[0] | + | Object | Object containing the error. |
 | timeStampTokens[0]. error[0]. content | + | String | Error description. |
+| timeStampTokens[0]. warning | - | Array | Block of validation warnings that do not affect the overall validation result.<br><br> Aside from warnings produced by DSS, an additional warning may be issued if a timestamp token does not cover the datafile (`The time-stamp token does not cover container datafile!`). |
+| timeStampTokens[0]. warning[0] | + | Object | Object containing the warning. |
+| timeStampTokens[0]. warning[0]. content | + | String | Warning description. |
+| timeStampTokens[0]. timestampScopes | - | Array | Contains information of the original data that is covered by the timestamp. |
+| timeStampTokens[0]. timestampScopes[0]. name | + | String | Name of the timestamp scope. |
+| timeStampTokens[0]. timestampScopes[0]. scope | + | String | Type of the timestamp scope. |
+| timeStampTokens[0]. timestampScopes[0]. content | + | String | Description of the timestamp scope. |
+| timeStampTokens[0]. timestampLevel | - |String | Legal level of the timestamp. <br> - **Possible values:**<br> QTSA <br> TSA <br> N/A <br>|
 
 #### Sample JSON response Simple Report (successful scenario)
 
@@ -292,6 +301,86 @@ Structure of validationConclusion block
         "policyName": "POLv4"
     },
     "signatureForm": "ASiC-E"
+}}}
+```
+
+#### Sample JSON response Simple Report (ASiC-S with 2 timestamps)
+
+```json
+{"validationReport": {"validationConclusion": {
+    "validationTime": "2024-10-31T11:37:06Z",
+    "signaturesCount": 0,
+    "validatedDocument": {"filename": "2xTST-valid-bdoc-data-file-1st-tst-invalid-2nd-tst-no-coverage.asics"},
+    "validSignaturesCount": 0,
+    "timeStampTokens": [
+        {
+            "signedTime": "2024-03-27T12:42:57Z",
+            "certificates": [
+                {
+                    "commonName": "DEMO SK TIMESTAMPING AUTHORITY 2023E",
+                    "type": "CONTENT_TIMESTAMP",
+                    "content": "MII..."
+                },
+                {
+                    "commonName": "TEST of SK TSA CA 2023E",
+                    "type": "CONTENT_TIMESTAMP",
+                    "content": "MII..."
+                },
+                {
+                    "commonName": "TEST of SK ID Solutions ROOT G1E",
+                    "type": "CONTENT_TIMESTAMP",
+                    "content": "MII..."
+                }
+            ],
+            "signedBy": "DEMO SK TIMESTAMPING AUTHORITY 2023E",
+            "indication": "TOTAL-FAILED",
+            "error": [{"content": "The time-stamp message imprint is not intact!"}],
+            "subIndication": "HASH_FAILURE",
+            "timestampLevel": "QTSA"
+        },
+        {
+            "signedTime": "2024-09-11T06:03:34Z",
+            "certificates": [
+                {
+                    "commonName": "DEMO SK TIMESTAMPING AUTHORITY 2023E",
+                    "type": "CONTENT_TIMESTAMP",
+                    "content": "MII..."
+                },
+                {
+                    "commonName": "TEST of SK TSA CA 2023E",
+                    "type": "CONTENT_TIMESTAMP",
+                    "content": "MII..."
+                },
+                {
+                    "commonName": "TEST of SK ID Solutions ROOT G1E",
+                    "type": "CONTENT_TIMESTAMP",
+                    "content": "MII..."
+                }
+            ],
+            "signedBy": "DEMO SK TIMESTAMPING AUTHORITY 2023E",
+            "warning": [{"content": "The time-stamp token does not cover container datafile!"}],
+            "indication": "TOTAL-PASSED",
+            "timestampScopes": [
+                {
+                    "scope": "FULL",
+                    "name": "META-INF/ASiCArchiveManifest.xml",
+                    "content": "Manifest document"
+                },
+                {
+                    "scope": "FULL",
+                    "name": "META-INF/timestamp.tst",
+                    "content": "Full document"
+                }
+            ],
+            "timestampLevel": "QTSA"
+        }
+    ],
+    "policy": {
+        "policyDescription": "Policy according most common requirements of Estonian Public Administration, to validate Qualified Electronic Signatures and Electronic Seals with Qualified Certificates (according to Regulation (EU) No 910/2014, aka eIDAS). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result, with exception for seals, where AdES/QC and above will produce positive result. Signatures and Seals which are not compliant with ETSI standards (referred by eIDAS) may produce unknown or invalid validation result. Validation process is based on eIDAS Article 32 and referred ETSI standards.",
+        "policyUrl": "http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4",
+        "policyName": "POLv4"
+    },
+    "signatureForm": "ASiC-S"
 }}}
 ```
 
@@ -512,6 +601,40 @@ Sample response:
 }
 ```
 
+## Changes in API compared to V3 v3.8.1
+
+- SOAP interface removed. Discontinued support for following endpoints (incl. respective WSDL definitions):
+```
+https://<server url>/soap/validationWebService/validateDocument
+https://<server url>/soap/hashcodeValidationWebService
+https://<server url>/soap/dataFilesWebService/getDocumentDataFiles
+
+https://<server url>/soap/validationWebService/validateDocument?wsdl
+https://<server url>/soap/hashcodeValidationWebService?wsdl
+https://<server url>/soap/dataFilesWebService/getDocumentDataFiles?wsdl
+```
+- Logic for ASiC-S container timestamp token validation is removed and delegated to DSS.
+- POE time is taken into account during validation of the time-stamped ASiC-S nested container.
+  - Added support for defining custom constraint files to be used for validation.
+- ASiC-S nested container validation is now triggered when at least one valid timestamp is present.
+- Added new fields into ASiC-S container validation response (see next section).
+
+### Changes in response (non-breaking additions to protocol)
+
+Changes are described using notation from REST endpoint.
+
+| Report | Parameter | Change | Link | Comment |
+|---------------|-----------|--------|------|---------|
+| validationConclusion | timeStampTokens[0]. subIndication | Parameter added |  [Link](#sample-json-response-simple-report-asic-s-with-2-timestamps) | Additional subindication in case of failed or indeterminate validation result. |
+| validationConclusion | timeStampTokens[0]. warning | Parameter block added |  [Link](#sample-json-response-simple-report-asic-s-with-2-timestamps) | Block of validation warnings. |
+| validationConclusion | timeStampTokens[0]. warning[0] | Parameter added |  [Link](#sample-json-response-simple-report-asic-s-with-2-timestamps) | Object containing the warning. |
+| validationConclusion | timeStampTokens[0]. warning[0]. content | Parameter added | [Link](#sample-json-response-simple-report-asic-s-with-2-timestamps) | Warning description. |
+| validationConclusion | timeStampTokens[0]. timestampScopes | Parameter block added |  [Link](#sample-json-response-simple-report-asic-s-with-2-timestamps) | Object containing information of the original data that is covered by the timestamp. |
+| validationConclusion | timeStampTokens[0]. timestampScopes[0]. name | Parameter added |  [Link](#sample-json-response-simple-report-asic-s-with-2-timestamps) | Name of the timestamp scope. |
+| validationConclusion | timeStampTokens[0]. timestampScopes[0]. scope | Parameter added |  [Link](#sample-json-response-simple-report-asic-s-with-2-timestamps) | Type of the timestamp scope. |
+| validationConclusion | timeStampTokens[0]. timestampScopes[0]. content | Parameter added |  [Link](#sample-json-response-simple-report-asic-s-with-2-timestamps) | Description of the timestamp scope. |
+| validationConclusion | timeStampTokens[0]. timestampLevel | Parameter added |  [Link](#sample-json-response-simple-report-asic-s-with-2-timestamps) | Legal level of the timestamp. |
+
 ## Changes in API compared to V3 v3.4.0
 
 Changes are described using notation from REST endpoint.
@@ -536,7 +659,7 @@ Changes are described using notation from REST endpoint.
 | validationConclusion | signatures[0].info.ocspResponseCreationTime | Parameter added |  [Link](../interfaces/#validation-response-parameters-simple-report-successful-scenario) | Date containing OCSP response creation time added |
 | validationConclusion | signatures[0].info.signingReason | Parameter added |  [Link](../interfaces/#validation-response-parameters-simple-report-successful-scenario) | String containing signing reason for PAdES added |
 
-## Changes in API compared to V3 v3.2.0 (non breaking additions to protocol)
+## Changes in API compared to V3 v3.2.0 (non-breaking additions to protocol)
 
 Changes are described using notation from REST endpoint.
 

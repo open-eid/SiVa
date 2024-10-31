@@ -35,7 +35,7 @@ Lists of 49 third-party dependencies.
      (Bouncy Castle Licence) Bouncy Castle PKIX, CMS, EAC, TSP, PKCS, OCSP, CMP, and CRMF APIs (org.bouncycastle:bcpkix-jdk18on:1.78.1 - https://www.bouncycastle.org/java.html)
      (Bouncy Castle Licence) Bouncy Castle Provider (org.bouncycastle:bcprov-jdk18on:1.78.1 - https://www.bouncycastle.org/java.html)
      (Bouncy Castle Licence) Bouncy Castle ASN.1 Extension and Utility APIs (org.bouncycastle:bcutil-jdk18on:1.78.1 - https://www.bouncycastle.org/java.html)
-     (GNU Lesser General Public License, Version 2.1) DigiDoc4j (org.digidoc4j:digidoc4j:5.3.1 - https://github.com/open-eid/digidoc4j)
+     (GNU Lesser General Public License, Version 2.1) DigiDoc4j (org.digidoc4j:digidoc4j:5.4.0 - https://github.com/open-eid/digidoc4j)
      (GNU Lesser General Public License) DSS ASiC Common (org.digidoc4j.dss:dss-asic-common:6.0.d4j.1 - https://github.com/open-eid/sd-dss/dss-asic-common)
      (GNU Lesser General Public License) DSS ASiC with XAdES signature(s) (org.digidoc4j.dss:dss-asic-xades:6.0.d4j.1 - https://github.com/open-eid/sd-dss/dss-asic-xades)
      (GNU Lesser General Public License) DSS CRL Parser with X509CRL object (org.digidoc4j.dss:dss-crl-parser-x509crl:6.0.d4j.1 - https://github.com/open-eid/sd-dss/dss-crl-parser-x509crl)

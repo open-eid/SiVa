@@ -19,21 +19,24 @@ package ee.openeid.validation.service.generic;
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
+import ee.openeid.siva.validation.document.report.ArchiveTimeStamp;
 import ee.openeid.siva.validation.document.report.Certificate;
 import ee.openeid.siva.validation.document.report.CertificateType;
 import ee.openeid.siva.validation.document.report.Reports;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.siva.validation.util.CertUtil;
 import ee.openeid.tsl.TSLLoader;
 import ee.openeid.tsl.TSLRefresher;
 import ee.openeid.tsl.TSLValidationJobFactory;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
-import ee.openeid.validation.service.generic.configuration.properties.GenericSignaturePolicyProperties;
 import ee.openeid.validation.service.generic.configuration.GenericValidationServiceConfiguration;
+import ee.openeid.validation.service.generic.configuration.properties.GenericSignaturePolicyProperties;
 import ee.openeid.validation.service.generic.validator.RevocationFreshnessValidatorFactory;
 import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
 import ee.openeid.validation.service.generic.validator.ocsp.OCSPSourceFactory;
+import eu.europa.esig.dss.enumerations.Indication;
 import eu.europa.esig.dss.model.DSSDocument;
 import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
@@ -49,14 +52,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Date;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -64,6 +79,7 @@ import static org.mockito.Mockito.verify;
 @SpringBootTest(classes = {GenericValidationServiceTest.TestConfiguration.class})
 @ExtendWith(SpringExtension.class)
 @Slf4j
+@ActiveProfiles("test")
 class GenericValidationServiceTest {
 
     private static final String TEST_FILES_LOCATION = "test-files/";
@@ -125,33 +141,35 @@ class GenericValidationServiceTest {
         byte[] encodedRevocationCertificate = revocationCertificate.getContent().getBytes();
         java.security.cert.Certificate revocationX509Certificate = cf.generateCertificate(new ByteArrayInputStream(Base64.decode(encodedRevocationCertificate)));
         assertEquals("SK OCSP RESPONDER 2011", CertUtil.getCommonName((X509Certificate) revocationX509Certificate));
+
+        assertNull(reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getArchiveTimeStamps());
     }
 
     @Test
     void certificatePresent_pdf() throws Exception {
-        Reports reports = validationService.validateDocument(buildValidationDocument("hellopades-pades-lt-sha256-sign.pdf"));
+        Reports reports = validationService.validateDocument(buildValidationDocument("TEST_ESTEID2018_PAdES_LT_enveloped.pdf"));
         SignatureValidationData signatureValidationData = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0);
         CertificateFactory cf = CertificateFactory.getInstance("X.509");
 
         assertEquals(3, signatureValidationData.getCertificates().size());
 
         Certificate signerCertificate = signatureValidationData.getCertificatesByType(CertificateType.SIGNING).get(0);
-        assertEquals("SINIVEE,VEIKO,36706020210", signerCertificate.getCommonName());
+        assertEquals("JÕEORG,JAAK-KRISTJAN,38001085718", signerCertificate.getCommonName());
         java.security.cert.Certificate signerX509Certificate = cf.generateCertificate(new ByteArrayInputStream(Base64.decode(signerCertificate.getContent().getBytes())));
-        assertEquals("SINIVEE,VEIKO,36706020210", CertUtil.getCommonName((X509Certificate) signerX509Certificate));
+        assertEquals("JÕEORG,JAAK-KRISTJAN,38001085718", CertUtil.getCommonName((X509Certificate) signerX509Certificate));
 
-        assertEquals("ESTEID-SK 2011", signerCertificate.getIssuer().getCommonName());
+        assertEquals("TEST of ESTEID2018", signerCertificate.getIssuer().getCommonName());
 
 
         Certificate timestampCertificate = signatureValidationData.getCertificatesByType(CertificateType.SIGNATURE_TIMESTAMP).get(0);
-        assertEquals("SK TIMESTAMPING AUTHORITY", timestampCertificate.getCommonName());
+        assertEquals("DEMO SK TIMESTAMPING AUTHORITY 2023E", timestampCertificate.getCommonName());
         java.security.cert.Certificate timestampX509Certificate = cf.generateCertificate(new ByteArrayInputStream(Base64.decode(timestampCertificate.getContent().getBytes())));
-        assertEquals("SK TIMESTAMPING AUTHORITY", CertUtil.getCommonName((X509Certificate) timestampX509Certificate));
+        assertEquals("DEMO SK TIMESTAMPING AUTHORITY 2023E", CertUtil.getCommonName((X509Certificate) timestampX509Certificate));
 
         Certificate revocationCertificate = signatureValidationData.getCertificatesByType(CertificateType.REVOCATION).get(0);
-        assertEquals("SK OCSP RESPONDER 2011", revocationCertificate.getCommonName());
+        assertEquals("DEMO of ESTEID-SK 2018 AIA OCSP RESPONDER 2018", revocationCertificate.getCommonName());
         java.security.cert.Certificate revocationX509Certificate = cf.generateCertificate(new ByteArrayInputStream(Base64.decode(revocationCertificate.getContent().getBytes())));
-        assertEquals("SK OCSP RESPONDER 2011", CertUtil.getCommonName((X509Certificate) revocationX509Certificate));
+        assertEquals("DEMO of ESTEID-SK 2018 AIA OCSP RESPONDER 2018", CertUtil.getCommonName((X509Certificate) revocationX509Certificate));
     }
 
     @Test
@@ -179,6 +197,33 @@ class GenericValidationServiceTest {
             validationService.createValidatorFromDocument(buildValidationDocument("bdoc21-TS.asice"));
 
             verify(validatorMock, never()).setValidationTime(any(Date.class));
+        }
+    }
+
+    @Test
+    void validateAsiceContainer_ProfileLevelIsLTA_ArchiveTimestampsBlockIsPresent() {
+        Reports reports = validationService.validateDocument(buildValidationDocument("valid_asice_lta.asice"));
+        ValidationConclusion validationConclusion = reports.getSimpleReport().getValidationConclusion();
+
+        assertThat(validationConclusion.getSignatures().get(0).getInfo().getArchiveTimeStamps(), notNullValue());
+        assertThat(validationConclusion.getSignatures().get(0).getInfo().getArchiveTimeStamps(), hasSize(1));
+
+        {
+            ArchiveTimeStamp archiveTimeStamp = validationConclusion.getSignatures().get(0).getInfo().getArchiveTimeStamps().get(0);
+            assertThat(archiveTimeStamp.getSignedTime(), equalTo("2024-11-13T08:21:07Z"));
+            assertThat(archiveTimeStamp.getIndication(), sameInstance(Indication.PASSED));
+            assertThat(archiveTimeStamp.getSubIndication(), nullValue());
+            assertThat(archiveTimeStamp.getSignedBy(), equalTo("DEMO SK TIMESTAMPING AUTHORITY 2023E"));
+            assertThat(archiveTimeStamp.getCountry(), equalTo("EE"));
+            assertThat(archiveTimeStamp.getContent(), equalTo(loadTimestampContent("timestamp_content.txt")));
+        }
+    }
+
+    private static String loadTimestampContent(String filename) {
+        try {
+            return Files.readString(Path.of("src/test/resources/test-files/" + filename));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
         }
     }
 

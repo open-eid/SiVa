@@ -17,6 +17,7 @@
 package ee.openeid.validation.service.generic.validator.report;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
+import ee.openeid.siva.validation.document.report.ArchiveTimeStamp;
 import ee.openeid.siva.validation.document.report.Certificate;
 import ee.openeid.siva.validation.document.report.CertificateType;
 import ee.openeid.siva.validation.document.report.DetailedReport;
@@ -24,8 +25,8 @@ import ee.openeid.siva.validation.document.report.DiagnosticReport;
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.Info;
 import ee.openeid.siva.validation.document.report.Reports;
-import ee.openeid.siva.validation.document.report.SignatureProductionPlace;
 import ee.openeid.siva.validation.document.report.Scope;
+import ee.openeid.siva.validation.document.report.SignatureProductionPlace;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.SignerRole;
 import ee.openeid.siva.validation.document.report.SimpleReport;
@@ -93,6 +94,7 @@ import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUt
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.ERROR_MSG_INVALID_SIGNATURE_FORMAT_FOR_BDOC_POLICY;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.getDateFormatterWithGMTZone;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.getValidationTime;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.processSignatureIndications;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.valueNotKnown;
@@ -455,6 +457,7 @@ public class GenericValidationReportBuilder {
         info.setSignerRole(parseSignerRole(signatureId));
         info.setSignatureProductionPlace(parseSignatureProductionPlace(signatureId));
         info.setSigningReason(parseReason(signatureId));
+        info.setArchiveTimeStamps(getArchiveTimestamps(signatureId));
         return info;
     }
 
@@ -492,6 +495,35 @@ public class GenericValidationReportBuilder {
         List<TimestampWrapper> timestamps = dssReports.getDiagnosticData().getSignatureById(signatureId)
                 .getTimestampListByType(TimestampType.SIGNATURE_TIMESTAMP);
         return timestamps.isEmpty() ? null : Collections.min(timestamps, Comparator.comparing(TimestampWrapper::getProductionTime));
+    }
+
+    private List<ArchiveTimeStamp> getArchiveTimestamps(String signatureId) {
+        return Optional
+                .ofNullable(dssReports.getDiagnosticData().getSignatureById(signatureId).getALevelTimestamps())
+                .filter(CollectionUtils::isNotEmpty)
+                .map(this::generateArchiveTimestamps)
+                .orElse(null);
+    }
+
+    private List<ArchiveTimeStamp> generateArchiveTimestamps(List<TimestampWrapper> timestamps) {
+        List<ArchiveTimeStamp> archiveTimestamps = new ArrayList<>();
+
+        for (TimestampWrapper timestampWrapper : timestamps) {
+            ArchiveTimeStamp archiveTimeStamp = new ArchiveTimeStamp();
+
+            archiveTimeStamp.setSignedTime(getDateFormatterWithGMTZone().format(timestampWrapper.getProductionTime()));
+            archiveTimeStamp.setIndication(dssReports.getSimpleReport().getIndication(timestampWrapper.getId()));
+            Optional.ofNullable(dssReports.getSimpleReport().getSubIndication(timestampWrapper.getId()))
+                    .map(SubIndication::name)
+                    .ifPresent(archiveTimeStamp::setSubIndication);
+            archiveTimeStamp.setSignedBy(timestampWrapper.getSigningCertificate().getCommonName());
+            archiveTimeStamp.setCountry(timestampWrapper.getSigningCertificate().getCountryName());
+            archiveTimeStamp.setContent(Base64.encodeBase64String(timestampWrapper.getBinaries()));
+
+            archiveTimestamps.add(archiveTimeStamp);
+        }
+
+        return archiveTimestamps;
     }
 
     private String parseTimeAssertionMessageImprint(String signatureFormat, String signatureId) {

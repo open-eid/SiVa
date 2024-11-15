@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 - 2024 Riigi Infosüsteemi Amet
+ * Copyright 2024 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -16,20 +16,16 @@
 
 package ee.openeid.siva.validation.document.report;
 
+import eu.europa.esig.dss.enumerations.Indication;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
-public class Info {
+public class ArchiveTimeStamp {
 
-    private String bestSignatureTime;
-    private String ocspResponseCreationTime;
-    private String timestampCreationTime;
-    private String timeAssertionMessageImprint;
-    private String signingReason;
-    private List<SignerRole> signerRole;
-    private SignatureProductionPlace signatureProductionPlace;
-    private List<ArchiveTimeStamp> archiveTimeStamps;
-
+    private String signedTime;
+    private Indication indication;
+    private String subIndication;
+    private String signedBy;
+    private String country;
+    private String content;
 }

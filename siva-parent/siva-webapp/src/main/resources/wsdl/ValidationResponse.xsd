@@ -170,12 +170,24 @@
             <xs:element name="SignerRole" minOccurs="0" maxOccurs="unbounded" type="tns:SignerRole"/>
             <xs:element minOccurs="0" name="SignatureProductionPlace" type="tns:SignatureProductionPlace"/>
             <xs:element minOccurs="0" name="SigningReason" type="xs:string"/>
+            <xs:element name="ArchiveTimeStamps" minOccurs="0" maxOccurs="unbounded" type="tns:ArchiveTimeStamp"/>
         </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="SignerRole">
         <xs:sequence>
             <xs:element name="ClaimedRole" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ArchiveTimeStamp">
+        <xs:sequence>
+            <xs:element name="SignedTime" type="xs:string"/>
+            <xs:element name="Indication" type="tns:Indication"/>
+            <xs:element name="SubIndication" type="xs:string"/>
+            <xs:element name="SignedBy" type="xs:string"/>
+            <xs:element name="Country" type="xs:string"/>
+            <xs:element name="Content" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 

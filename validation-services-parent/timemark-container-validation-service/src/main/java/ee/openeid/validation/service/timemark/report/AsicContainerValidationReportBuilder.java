@@ -17,6 +17,7 @@
 package ee.openeid.validation.service.timemark.report;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
+import ee.openeid.siva.validation.document.report.ArchiveTimeStamp;
 import ee.openeid.siva.validation.document.report.Certificate;
 import ee.openeid.siva.validation.document.report.CertificateType;
 import ee.openeid.siva.validation.document.report.Scope;
@@ -25,13 +26,18 @@ import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.document.report.ValidationWarning;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
+import eu.europa.esig.dss.diagnostic.DiagnosticData;
+import eu.europa.esig.dss.diagnostic.TimestampWrapper;
 import eu.europa.esig.dss.enumerations.SignatureQualification;
 import eu.europa.esig.dss.enumerations.SubIndication;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.collections4.CollectionUtils;
 import org.digidoc4j.Container;
 import org.digidoc4j.ContainerValidationResult;
 import org.digidoc4j.Signature;
 import org.digidoc4j.SignatureProfile;
 import org.digidoc4j.ValidationResult;
+import org.digidoc4j.impl.asic.AsicSignature;
 import org.digidoc4j.impl.asic.asice.AsicESignature;
 
 import java.io.UnsupportedEncodingException;
@@ -39,7 +45,10 @@ import java.net.URLDecoder;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.getDateFormatterWithGMTZone;
 
 public class AsicContainerValidationReportBuilder extends TimemarkContainerValidationReportBuilder {
 
@@ -125,6 +134,18 @@ public class AsicContainerValidationReportBuilder extends TimemarkContainerValid
         return XADES_FORMAT_PREFIX + profile.toString();
     }
 
+    @Override
+    List<ArchiveTimeStamp> getArchiveTimestamps(Signature signature) {
+        String signatureId = signature.getUniqueId();
+        DiagnosticData diagnosticData = ((AsicSignature) signature).getDssValidationReport().getReports().getDiagnosticData();
+
+        return Optional
+                .ofNullable(diagnosticData.getSignatureById(signatureId).getALevelTimestamps())
+                .filter(CollectionUtils::isNotEmpty)
+                .map(timestamps -> generateArchiveTimestamps(timestamps, signature))
+                .orElse(null);
+    }
+
     private static Scope createFullSignatureScopeForDataFile(String filename) {
         Scope signatureScope = new Scope();
         signatureScope.setName(filename);
@@ -140,6 +161,29 @@ public class AsicContainerValidationReportBuilder extends TimemarkContainerValid
             LOGGER.warn("datafile " + uri + " has unsupported encoding", e);
             return uri;
         }
+    }
+
+    private List<ArchiveTimeStamp> generateArchiveTimestamps(List<TimestampWrapper> timestamps, Signature signature) {
+        List<ArchiveTimeStamp> archiveTimestamps = new ArrayList<>();
+
+        for (TimestampWrapper timestampWrapper : timestamps) {
+            ArchiveTimeStamp archiveTimeStamp = new ArchiveTimeStamp();
+            eu.europa.esig.dss.simplereport.SimpleReport simpleReport = ((AsicSignature) signature).getDssValidationReport()
+                    .getReports().getSimpleReport();
+
+            archiveTimeStamp.setSignedTime(getDateFormatterWithGMTZone().format(timestampWrapper.getProductionTime()));
+            archiveTimeStamp.setIndication(simpleReport.getIndication(timestampWrapper.getId()));
+            Optional.ofNullable(simpleReport.getSubIndication(timestampWrapper.getId()))
+                    .map(SubIndication::name)
+                    .ifPresent(archiveTimeStamp::setSubIndication);
+            archiveTimeStamp.setSignedBy(timestampWrapper.getSigningCertificate().getCommonName());
+            archiveTimeStamp.setCountry(timestampWrapper.getSigningCertificate().getCountryName());
+            archiveTimeStamp.setContent(Base64.encodeBase64String(timestampWrapper.getBinaries()));
+
+            archiveTimestamps.add(archiveTimeStamp);
+        }
+
+        return archiveTimestamps;
     }
 
 }

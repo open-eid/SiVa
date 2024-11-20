@@ -17,8 +17,23 @@
 package ee.openeid.validation.service.timemark.report;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
+import ee.openeid.siva.validation.document.report.ArchiveTimeStamp;
+import ee.openeid.siva.validation.document.report.Certificate;
+import ee.openeid.siva.validation.document.report.CertificateType;
+import ee.openeid.siva.validation.document.report.DetailedReport;
+import ee.openeid.siva.validation.document.report.DiagnosticReport;
 import ee.openeid.siva.validation.document.report.Error;
-import ee.openeid.siva.validation.document.report.*;
+import ee.openeid.siva.validation.document.report.Info;
+import ee.openeid.siva.validation.document.report.Reports;
+import ee.openeid.siva.validation.document.report.Scope;
+import ee.openeid.siva.validation.document.report.SignatureProductionPlace;
+import ee.openeid.siva.validation.document.report.SignatureValidationData;
+import ee.openeid.siva.validation.document.report.SignerRole;
+import ee.openeid.siva.validation.document.report.SimpleReport;
+import ee.openeid.siva.validation.document.report.SubjectDistinguishedName;
+import ee.openeid.siva.validation.document.report.ValidationConclusion;
+import ee.openeid.siva.validation.document.report.ValidationWarning;
+import ee.openeid.siva.validation.document.report.Warning;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.siva.validation.util.CertUtil;
@@ -55,7 +70,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.*;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.getValidationTime;
 import static org.digidoc4j.X509Cert.SubjectName.CN;
 
 @Slf4j
@@ -242,6 +259,7 @@ public abstract class TimemarkContainerValidationReportBuilder {
         info.setTimeAssertionMessageImprint(getTimeAssertionMessageImprint(signature));
         info.setSignerRole(getSignerRole(signature));
         info.setSignatureProductionPlace(getSignatureProductionPlace(signature));
+        info.setArchiveTimeStamps(getArchiveTimestamps(signature));
         return info;
     }
 
@@ -401,5 +419,7 @@ public abstract class TimemarkContainerValidationReportBuilder {
     abstract String getSignatureForm();
 
     abstract String getSignatureFormat(SignatureProfile profile);
+
+    abstract List<ArchiveTimeStamp> getArchiveTimestamps(Signature signature);
 
 }

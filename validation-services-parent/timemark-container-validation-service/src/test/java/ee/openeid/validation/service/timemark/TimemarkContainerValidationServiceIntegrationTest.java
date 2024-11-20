@@ -18,6 +18,7 @@ package ee.openeid.validation.service.timemark;
 
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
+import ee.openeid.siva.validation.document.report.ArchiveTimeStamp;
 import ee.openeid.siva.validation.document.report.CertificateType;
 import ee.openeid.siva.validation.document.report.Policy;
 import ee.openeid.siva.validation.document.report.Reports;
@@ -41,6 +42,7 @@ import ee.openeid.validation.service.timemark.configuration.TimemarkContainerVal
 import ee.openeid.validation.service.timemark.signature.policy.BDOCConfigurationService;
 import ee.openeid.validation.service.timemark.signature.policy.BDOCSignaturePolicyService;
 import ee.openeid.validation.service.timemark.tsl.TimemarkTrustedListsCertificateSource;
+import eu.europa.esig.dss.enumerations.Indication;
 import eu.europa.esig.dss.model.x509.CertificateToken;
 import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
 import eu.europa.esig.dss.spi.tsl.ConditionForQualifiers;
@@ -48,6 +50,7 @@ import eu.europa.esig.dss.spi.tsl.TrustProperties;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.util.encoders.Base64;
 import org.digidoc4j.TSLCertificateSource;
+import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -64,8 +67,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static ee.openeid.validation.service.timemark.BDOCTestUtils.ASICE_CRL_ONLY;
-import static ee.openeid.validation.service.timemark.BDOCTestUtils.BDOC_TEST_FILE_ALL_SIGNED;
 import static ee.openeid.validation.service.timemark.BDOCTestUtils.ASICE_TEST_FILE_LTA_LEVEL_SIGNATURE;
+import static ee.openeid.validation.service.timemark.BDOCTestUtils.BDOC_TEST_FILE_ALL_SIGNED;
 import static ee.openeid.validation.service.timemark.BDOCTestUtils.BDOC_TEST_FILE_T_LEVEL_SIGNATURE;
 import static ee.openeid.validation.service.timemark.BDOCTestUtils.BDOC_TEST_FILE_UNSIGNED;
 import static ee.openeid.validation.service.timemark.BDOCTestUtils.BDOC_TEST_OF_KLASS3_CHAIN;
@@ -76,6 +79,8 @@ import static ee.openeid.validation.service.timemark.BDOCTestUtils.VALID_ID_CARD
 import static ee.openeid.validation.service.timemark.BDOCTestUtils.buildValidationDocument;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
@@ -448,6 +453,8 @@ class TimemarkContainerValidationServiceIntegrationTest {
         Certificate revocationX509Certificate = cf.generateCertificate(new ByteArrayInputStream(Base64.decode(revocationCertificate.getContent().getBytes())));
         assertEquals("SK OCSP RESPONDER 2011", CertUtil.getCommonName((X509Certificate) revocationX509Certificate));
         assertEquals("SK OCSP RESPONDER 2011", revocationCertificate.getCommonName());
+
+        assertNull(reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getArchiveTimeStamps());
     }
 
     @Test
@@ -491,6 +498,25 @@ class TimemarkContainerValidationServiceIntegrationTest {
         String tsCreationTime = validationResult.getValidationConclusion().getSignatures().get(0).getInfo().getTimestampCreationTime();
         assertThat(tsCreationTime, notNullValue());
         assertThat(tsCreationTime, equalTo("2018-11-23T12:24:04Z"));
+    }
+
+    @Test
+    void validateAsiceContainer_ProfileLevelIsLTA_ArchiveTimestampsBlockIsPresent() {
+        Reports reports = timemarkContainerValidationService.validateDocument(buildValidationDocument(ASICE_TEST_FILE_LTA_LEVEL_SIGNATURE));
+        ValidationConclusion validationConclusion = reports.getSimpleReport().getValidationConclusion();
+
+        assertThat(validationConclusion.getSignatures().get(0).getInfo().getArchiveTimeStamps(), CoreMatchers.notNullValue());
+        assertThat(validationConclusion.getSignatures().get(0).getInfo().getArchiveTimeStamps(), hasSize(1));
+
+        {
+            ArchiveTimeStamp archiveTimeStamp = validationConclusion.getSignatures().get(0).getInfo().getArchiveTimeStamps().get(0);
+            assertThat(archiveTimeStamp.getSignedTime(), equalTo("2024-03-14T11:22:54Z"));
+            assertThat(archiveTimeStamp.getIndication(), sameInstance(Indication.PASSED));
+            assertThat(archiveTimeStamp.getSubIndication(), nullValue());
+            assertThat(archiveTimeStamp.getSignedBy(), equalTo("DEMO SK TIMESTAMPING AUTHORITY 2023E"));
+            assertThat(archiveTimeStamp.getCountry(), equalTo("EE"));
+            assertThat(archiveTimeStamp.getContent(), nullValue());
+        }
     }
 
     private void assertSubjectDNPresent(SignatureValidationData signature, String serialNumber, String

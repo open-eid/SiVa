@@ -17,6 +17,7 @@
 package ee.openeid.validation.service.timemark.report;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
+import ee.openeid.siva.validation.document.report.ArchiveTimeStamp;
 import ee.openeid.siva.validation.document.report.Scope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
@@ -99,6 +100,11 @@ public class DDOCContainerValidationReportBuilder extends TimemarkContainerValid
     String getSignatureFormat(SignatureProfile profile) {
         DDocFacade dDocFacade = ((DDocContainer) container).getDDoc4JFacade();
         return dDocFacade.getFormat().replaceAll("-", "_") + "_" + dDocFacade.getVersion();
+    }
+
+    @Override
+    List<ArchiveTimeStamp> getArchiveTimestamps(Signature signature) {
+        return null;
     }
 
     private Scope mapDataFile(String filename) {

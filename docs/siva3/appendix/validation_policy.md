@@ -180,26 +180,32 @@ Legend:
 
 ### BDOC container specific requirements
 The BDOC container must conform with [BDOC 2.1](https://www.id.ee/wp-content/uploads/2021/06/bdoc-spec212-eng.pdf) standard.
-1.	File extension
-	* ".bdoc" file extension is supported during signature validation.
-2. Only one signature shall be stored in one signatures.xml file.
+
+1. File extension `.bdoc` file extension is supported during signature validation.
+2. Only one signature shall be stored in one `signatures.xml` file.
 3. All signatures in the container must sign all of the data files.
-4. All data files in the container must be signed, i.e. all files in the container, except of "mimetype" file and the files in META-INF/ folder, must be signed.
+4. All data files in the container must be signed, i.e. all files in the container, except of `mimetype` file and the files in `META-INF/` folder, must be signed.
 5. Two data files with the same name and same path shall not be allowed in the container as the signed data file must be uniquely identifiable in the container. To avoid conflicts in some operating system environments, file names shall be case insensitive.
-6. Only relative file paths are supported, for example "META-INF/signatures.xml" and "document.txt" instead of "/META-INF/signatures.xml" and "/document.txt".
-7. "META-INF/manifest.xml" file shall be conformant to OASIS Open Document Format version [1.0](http://docs.oasis-open.org/office/v1.0/OpenDocument-v1.0-os.pdf) or [1.2](http://docs.oasis-open.org/office/v1.2/OpenDocument-v1.2-part3.pdf).
+6. Only relative file paths are supported, for example `META-INF/signatures.xml` and `document.txt` instead of `/META-INF/signatures.xml` and `/document.txt`.
+7. `META-INF/manifest.xml` file shall be conformant to OASIS Open Document Format version [1.0](http://docs.oasis-open.org/office/v1.0/OpenDocument-v1.0-os.pdf) or [1.2](http://docs.oasis-open.org/office/v1.2/OpenDocument-v1.2-part3.pdf).
 
 ### ASICE container specific requirements
 The ASICE container must conform with [ETSI EN 319 162-1](http://www.etsi.org/deliver/etsi_en/319100_319199/31916201/01.01.01_60/en_31916201v010101p.pdf) standard.
+
 1. Warning is returned when signatures in the container do not sign all of the data files.
 2. Manifest file must be present.
 
 ### ASICS container specific requirements
-The service supports both signature and Time Stamp Token (TST) based ASIC-S containers. Evidence record based containers are not supported. The ASIC-S container must conform with [ETSI EN 319 162-1](http://www.etsi.org/deliver/etsi_en/319100_319199/31916201/01.01.01_60/en_31916201v010101p.pdf) and [ETSI EN 319 162-2](http://www.etsi.org/deliver/etsi_en/319100_319199/31916202/01.01.01_60/en_31916202v010101p.pdf) standards.
+The service supports both signature and time-stamp token (TST) based ASiC-S containers. Evidence record based containers are not supported. The ASiC-S container must conform with [ETSI EN 319 162-1](http://www.etsi.org/deliver/etsi_en/319100_319199/31916201/01.01.01_60/en_31916201v010101p.pdf) and [ETSI EN 319 162-2](http://www.etsi.org/deliver/etsi_en/319100_319199/31916202/01.01.01_60/en_31916202v010101p.pdf) standards.
 
-1. Manifest file can not be present in case of signature based ASIC-S containers.
-2. Only one TimeStampToken per container is supported. No AsicArchiveManifest.xml support.
-3. No TSL based verification of certificates is done in case of TimeStampToken based containers.
-
-
-
+1. Manifest file can not be present in case of signature based ASiC-S containers.
+2. Only one datafile is present in ASiC-S container. 
+2. One or more time-stamp tokens per container is supported:
+   3. Only one "META-INF/timestamp.tst" can be present.
+   4. In case multiple timestamps each following time-stamp token must have unique name (e.g. "timestamp001.tst").
+5. There must not be any following files in ASiC-S container:
+   6. "META-INF/signature.p7s"
+   7. "META-INF/signatures.xml"
+   8. "META-INF/evidencerecord.ers"
+   9. "META-INF/evidencerecord.xml"
+10. Time-stamp tokens of ASiC-S containers are validated via DSS (TSL verification is done).

@@ -159,7 +159,7 @@ Structure of validationConclusion block
 | policy.policyUrl | + | String | URL where the signature validation policy document can be downloaded. The validation policy document shall include information about validation of all the document formats, including the different validation policies that are used in case of different file formats and base libraries. |
 | signaturesCount | + | Number | Number of signatures found inside digitally signed file. |
 | validSignaturesCount | + | Number | Signatures count that have validated to `TOTAL-PASSED`. See also `Signature.Indication` field. |
-| validationLevel | - | Date | Validation process against what the document is validated, only applicable on DSS based validations. <br>**Possible values:** <br> ARCHIVAL_DATA|
+| validationLevel | - | String | Validation process against what the document is validated, only applicable on DSS based validations. <br>**Possible values:** <br> ARCHIVAL_DATA|
 | validationTime | + | Date | Time of validating the signature by the service. |
 | validationWarnings | - | Array | Array of SiVa validation warnings that do not affect the overall validation result. See also `signatures.warnings` parameter. |
 | validationWarnings[0] | + | Object | Object containing the warning. |
@@ -229,6 +229,11 @@ Structure of validationConclusion block
 | timeStampTokens[0]. subIndication | - | String | Additional subindication in case of failed or indeterminate validation result, according to [ETSI EN 319 102-1](http://www.etsi.org/deliver/etsi_en/319100_319199/31910201/01.01.01_60/en_31910201v010101p.pdf) "Table 6: Validation Report Structure and Semantics". |
 | timeStampTokens[0]. signedBy | + | String | Signer of the time stamp token. |
 | timeStampTokens[0]. signedTime | + | String | Time when the time stamp token was given. |
+| timeStampTokens[0]. certificates | + | Array | Array containing certificates that are present in the timestamp. |
+| timeStampTokens[0]. certificates[0] | + | Object | Object containing certificate type, common name and certificate. |
+| timeStampTokens[0]. certificates[0].commonName | + | String | CN (common name) value in certificate. |
+| timeStampTokens[0]. certificates[0].type | + | String | Type of the certificate. Possible value is CONTENT_TIMESTAMP. |
+| timeStampTokens[0]. certificates[0].content | + | String | DER encoded X.509 certificate in Base64. |
 | timeStampTokens[0]. error | - | Array | Errors returned in time stamp token validation. |
 | timeStampTokens[0]. error[0] | + | Object | Object containing the error. |
 | timeStampTokens[0]. error[0]. content | + | String | Error description. |
@@ -603,7 +608,8 @@ Sample response:
 
 ## Changes in API compared to V3 v3.8.1
 
-- SOAP interface removed. Discontinued support for following endpoints (incl. respective WSDL definitions):
+#### SOAP interface removed. 
+Discontinued support for following endpoints (incl. respective WSDL definitions):
 ```
 https://<server url>/soap/validationWebService/validateDocument
 https://<server url>/soap/hashcodeValidationWebService
@@ -613,18 +619,24 @@ https://<server url>/soap/validationWebService/validateDocument?wsdl
 https://<server url>/soap/hashcodeValidationWebService?wsdl
 https://<server url>/soap/dataFilesWebService/getDocumentDataFiles?wsdl
 ```
+#### Changes in validating ASiC-S containers
 - Logic for ASiC-S container timestamp token validation is removed and delegated to DSS.
 - POE time is taken into account during validation of the time-stamped ASiC-S nested container.
   - Added support for defining custom constraint files to be used for validation.
 - ASiC-S nested container validation is now triggered when at least one valid timestamp is present.
 - Added new fields into ASiC-S container validation response (see next section).
 
-### Changes in response (non-breaking additions to protocol)
+### Changes in validation response (non-breaking additions to protocol)
 
 Changes are described using notation from REST endpoint.
 
 | Report | Parameter | Change | Link | Comment |
 |---------------|-----------|--------|------|---------|
+| validationConclusion | timeStampTokens[0]. certificates | Parameter block added | [Link](#sample-json-response-simple-report-asic-s-with-2-timestamps) | Array containing certificates that are present in the timestamp. |
+| validationConclusion | timeStampTokens[0]. certificates[0] | Parameter added | [Link](#sample-json-response-simple-report-asic-s-with-2-timestamps) | Object containing certificate type, common name and certificate. |
+| validationConclusion | timeStampTokens[0]. certificates[0].commonName | Parameter added | [Link](#sample-json-response-simple-report-asic-s-with-2-timestamps) | CN (common name) value in certificate. |
+| validationConclusion | timeStampTokens[0]. certificates[0].type | Parameter added | [Link](#sample-json-response-simple-report-asic-s-with-2-timestamps) | Type of the certificate. Can be CONTENT_TIMESTAMP or ARCHIVE_TIMESTAMP. |
+| validationConclusion | timeStampTokens[0]. certificates[0].content | Parameter added | [Link](#sample-json-response-simple-report-asic-s-with-2-timestamps) | DER encoded X.509 certificate in Base64. |
 | validationConclusion | timeStampTokens[0]. subIndication | Parameter added |  [Link](#sample-json-response-simple-report-asic-s-with-2-timestamps) | Additional subindication in case of failed or indeterminate validation result. |
 | validationConclusion | timeStampTokens[0]. warning | Parameter block added |  [Link](#sample-json-response-simple-report-asic-s-with-2-timestamps) | Block of validation warnings. |
 | validationConclusion | timeStampTokens[0]. warning[0] | Parameter added |  [Link](#sample-json-response-simple-report-asic-s-with-2-timestamps) | Object containing the warning. |

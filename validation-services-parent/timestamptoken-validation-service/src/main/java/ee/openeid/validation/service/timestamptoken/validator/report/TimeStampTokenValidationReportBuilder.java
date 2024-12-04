@@ -17,11 +17,22 @@
 package ee.openeid.validation.service.timestamptoken.validator.report;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
+import ee.openeid.siva.validation.document.report.Certificate;
+import ee.openeid.siva.validation.document.report.CertificateType;
+import ee.openeid.siva.validation.document.report.DetailedReport;
+import ee.openeid.siva.validation.document.report.DiagnosticReport;
 import ee.openeid.siva.validation.document.report.Error;
-import ee.openeid.siva.validation.document.report.*;
+import ee.openeid.siva.validation.document.report.Reports;
+import ee.openeid.siva.validation.document.report.Scope;
+import ee.openeid.siva.validation.document.report.SimpleReport;
+import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
+import ee.openeid.siva.validation.document.report.ValidationConclusion;
+import ee.openeid.siva.validation.document.report.ValidationWarning;
+import ee.openeid.siva.validation.document.report.Warning;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.siva.validation.util.CertUtil;
+import ee.openeid.validation.service.timestamptoken.util.TimestampNotGrantedValidationUtils;
 import eu.europa.esig.dss.diagnostic.CertificateWrapper;
 import eu.europa.esig.dss.diagnostic.SignerDataWrapper;
 import eu.europa.esig.dss.diagnostic.TimestampWrapper;
@@ -46,7 +57,11 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.*;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.WARNING_MSG_DATAFILE_NOT_COVERED_BY_TS;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.getDateFormatterWithGMTZone;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.getValidationTime;
 
 public class TimeStampTokenValidationReportBuilder {
 
@@ -92,6 +107,7 @@ public class TimeStampTokenValidationReportBuilder {
         validationConclusion.setSignatureForm(ASICS_SIGNATURE_FORMAT);
         validationConclusion.setTimeStampTokens(generateTimeStampTokenData());
         validationConclusion.setValidatedDocument(ReportBuilderUtils.createValidatedDocument(isReportSignatureEnabled, validationDocument.getName(), validationDocument.getBytes()));
+        validationConclusion.setValidationWarnings(addValidationWarningsIfNotGrantedTimestampExists(validationConclusion.getTimeStampTokens()));
         return validationConclusion;
     }
 
@@ -132,6 +148,16 @@ public class TimeStampTokenValidationReportBuilder {
         }
 
         return timeStampTokenValidationDataList;
+    }
+
+    private List<ValidationWarning> addValidationWarningsIfNotGrantedTimestampExists(List<TimeStampTokenValidationData> validationDataList) {
+        return validationDataList.stream()
+                .map(TimeStampTokenValidationData::getWarning)
+                .map(TimestampNotGrantedValidationUtils::getValidationWarningIfNotGrantedTimestampExists)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .map(warning -> new ArrayList<>(List.of(warning)))
+                .orElse(null);
     }
 
     private List<Scope> getTimestampScopes(TimestampWrapper ts) {

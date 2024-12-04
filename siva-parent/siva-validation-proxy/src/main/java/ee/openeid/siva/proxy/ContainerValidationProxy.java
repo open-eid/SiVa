@@ -189,6 +189,7 @@ public class ContainerValidationProxy extends ValidationProxy {
             dataFileReport.getValidationConclusion().setSignatureForm(timeStampTokenReport.getValidationConclusion().getSignatureForm());
             dataFileReport.getValidationConclusion().setValidatedDocument(timeStampTokenReport.getValidationConclusion().getValidatedDocument());
             dataFileReport.getValidationConclusion().setValidationTime(timeStampTokenReport.getValidationConclusion().getValidationTime());
+            dataFileReport.getValidationConclusion().setValidationWarnings(timeStampTokenReport.getValidationConclusion().getValidationWarnings());
             return dataFileReport;
         }
         return timeStampTokenReport;

@@ -28,6 +28,7 @@ import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyExceptio
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import ee.openeid.tsl.configuration.AlwaysFailingCRLSource;
 import ee.openeid.tsl.configuration.AlwaysFailingOCSPSource;
+import ee.openeid.validation.service.timestamptoken.util.TimestampNotGrantedValidationUtils;
 import ee.openeid.validation.service.timestamptoken.validator.report.TimeStampTokenValidationReportBuilder;
 import eu.europa.esig.dss.asic.cades.validation.ASiCContainerWithCAdESValidator;
 import eu.europa.esig.dss.enumerations.MimeType;
@@ -88,6 +89,7 @@ public class TimeStampTokenValidationService implements ValidationService {
 
             final ConstraintDefinedPolicy policy = signaturePolicyService.getPolicy(validationDocument.getSignaturePolicy());
             final eu.europa.esig.dss.validation.reports.Reports reports = validator.validateDocument(policy.getConstraintDataStream());
+            TimestampNotGrantedValidationUtils.convertNotGrantedErrorsToWarnings(reports);
 
             return new TimeStampTokenValidationReportBuilder(
                 reports,

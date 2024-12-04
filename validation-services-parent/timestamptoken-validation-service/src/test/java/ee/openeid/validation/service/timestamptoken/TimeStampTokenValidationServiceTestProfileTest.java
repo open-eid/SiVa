@@ -18,7 +18,6 @@ package ee.openeid.validation.service.timestamptoken;
 
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
-import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
 import ee.openeid.siva.validation.document.report.CertificateType;
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.Reports;
@@ -32,27 +31,15 @@ import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSign
 import ee.openeid.siva.validation.service.signature.policy.PredefinedValidationPolicySource;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import ee.openeid.siva.validation.util.CertUtil;
-import ee.openeid.tsl.TSLLoader;
-import ee.openeid.tsl.TSLRefresher;
-import ee.openeid.tsl.TSLValidationJobFactory;
-import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
-import ee.openeid.validation.service.generic.configuration.GenericValidationServiceConfiguration;
 import ee.openeid.validation.service.timestamptoken.configuration.TimeStampTokenSignaturePolicyProperties;
 import eu.europa.esig.dss.asic.cades.validation.ASiCContainerWithCAdESValidator;
-import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
 import eu.europa.esig.dss.simplereport.jaxb.XmlSimpleReport;
-import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import lombok.Setter;
 import org.bouncycastle.util.encoders.Base64;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -83,29 +70,9 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(classes = {TimeStampTokenValidationServiceTest.TestConfiguration.class})
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
-class TimeStampTokenValidationServiceTest {
-
-    private static final String TEST_FILES_LOCATION = "test-files/";
-
-    private TimeStampTokenValidationService validationService;
-    private final TimeStampTokenSignaturePolicyProperties policyProperties = new TimeStampTokenSignaturePolicyProperties();
-
-    @Autowired
-    private TrustedListsCertificateSource trustedListsCertificateSource;
-
-    @BeforeEach
-    public void setUp() {
-        validationService = new TimeStampTokenValidationService();
-        policyProperties.initPolicySettings();
-        ConstraintLoadingSignaturePolicyService signaturePolicyService = new ConstraintLoadingSignaturePolicyService(policyProperties);
-        validationService.setSignaturePolicyService(signaturePolicyService);
-        validationService.setTrustedListsCertificateSource(trustedListsCertificateSource);
-        ReportConfigurationProperties reportConfigurationProperties = new ReportConfigurationProperties(true);
-        validationService.setReportConfigurationProperties(reportConfigurationProperties);
-    }
+class TimeStampTokenValidationServiceTestProfileTest extends BaseTimeStampTokenValidationServiceTest {
 
     @Test
     @Disabled("SIVA-719")
@@ -254,8 +221,7 @@ class TimeStampTokenValidationServiceTest {
 
     @Test
     void validateDocument_DataFileCoveredByTS_ValidationNoWarnings() {
-        SimpleReport simpleReport = validationService.validateDocument(
-            buildValidationDocument("2xTST-valid-bdoc-data-file.asics")
+        SimpleReport simpleReport = validationService.validateDocument(buildValidationDocument("2xTST-valid-bdoc-data-file.asics")
         ).getSimpleReport();
 
         TimeStampTokenValidationData tokenOne = simpleReport.getValidationConclusion().getTimeStampTokens().get(0);
@@ -269,8 +235,7 @@ class TimeStampTokenValidationServiceTest {
 
     @Test
     void validateDocument_DataFileNotCoveredByTS_ValidationPassedWithWarningThatDatafileNotCoveredByTS() {
-        SimpleReport simpleReport = validationService.validateDocument(
-            buildValidationDocument("2xTST-valid-bdoc-data-file-1st-tst-invalid-2nd-tst-no-coverage.asics")
+        SimpleReport simpleReport = validationService.validateDocument(buildValidationDocument("2xTST-valid-bdoc-data-file-1st-tst-invalid-2nd-tst-no-coverage.asics")
         ).getSimpleReport();
 
         TimeStampTokenValidationData token = simpleReport.getValidationConclusion().getTimeStampTokens().get(1);
@@ -386,41 +351,6 @@ class TimeStampTokenValidationServiceTest {
         @Override
         protected ASiCContainerWithCAdESValidator createValidatorFromDocument(final ValidationDocument validationDocument) {
             return validator;
-        }
-    }
-
-    private ValidationDocument buildValidationDocument(String testFile) {
-        return DummyValidationDocumentBuilder
-                .aValidationDocument()
-                .withDocument(TEST_FILES_LOCATION + testFile)
-                .withName(testFile)
-                .build();
-    }
-
-    @Import({
-        TSLLoaderConfiguration.class,
-        GenericValidationServiceConfiguration.class
-    })
-    public static class TestConfiguration {
-
-        @Bean
-        public ProxyConfig proxyConfig() {
-            return new ProxyConfig();
-        }
-
-        @Bean
-        public TSLLoader tslLoader() {
-            return new TSLLoader("testName");
-        }
-
-        @Bean
-        public TSLRefresher tslRefresher() {
-            return new TSLRefresher();
-        }
-
-        @Bean
-        public TSLValidationJobFactory tslValidationJobFactory() {
-            return new TSLValidationJobFactory();
         }
     }
 }

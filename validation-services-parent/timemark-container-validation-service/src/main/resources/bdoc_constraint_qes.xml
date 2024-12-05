@@ -166,6 +166,9 @@
             <ReferenceDataIntact Level="FAIL"/>
             <SignatureIntact Level="FAIL"/>
             <ProspectiveCertificateChain Level="FAIL"/>
+            <TrustServiceTypeIdentifier Level="FAIL">
+                <Id>http://uri.etsi.org/TrstSvc/Svctype/TSA/QTST</Id>
+            </TrustServiceTypeIdentifier>
             <SigningCertificate>
                 <Recognition Level="FAIL"/>
                 <Signature Level="FAIL"/>

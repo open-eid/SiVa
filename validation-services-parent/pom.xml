@@ -34,7 +34,7 @@
     </modules>
 
     <properties>
-        <digidoc4j.version>6.0.0-RC.1-SNAPSHOT</digidoc4j.version>
+        <digidoc4j.version>6.0.0-RC.1</digidoc4j.version>
     </properties>
 
     <dependencyManagement>

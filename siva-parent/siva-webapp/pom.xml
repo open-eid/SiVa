@@ -26,11 +26,6 @@
     <artifactId>siva-webapp</artifactId>
     <packaging>${packaging.type}</packaging>
 
-    <properties>
-        <spring-boot.build-image.builder>paketobuildpacks/builder:tiny</spring-boot.build-image.builder>
-        <spring-boot.build-image.imageName>${project.artifactId}:latest</spring-boot.build-image.imageName><!-- Use "latest" tag instead of version tag. -->
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>ee.openid.siva</groupId>
@@ -76,7 +71,7 @@
         <dependency>
             <groupId>com.sun.xml.ws</groupId>
             <artifactId>jaxws-ri</artifactId>
-            <version>4.0.2</version>
+            <version>4.0.3</version>
             <type>pom</type>
         </dependency>
 
@@ -121,6 +116,9 @@
                 <version>${spring.boot.version}</version>
                 <configuration>
                     <executable>true</executable>
+                    <image>
+                        <name>${project.artifactId}:latest</name>
+                    </image>
                 </configuration>
                 <executions>
                     <execution>
@@ -138,7 +136,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.4.1</version>
+                <version>3.4.2</version>
                 <configuration>
                     <archive>
                         <manifestEntries>
@@ -153,7 +151,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.5.0</version>
+                <version>3.6.0</version>
                 <executions>
                     <execution>
                         <id>add-source</id>
@@ -208,7 +206,6 @@
                 <plugins>
                     <plugin>
                         <artifactId>maven-war-plugin</artifactId>
-                        <version>3.4.0</version>
                         <configuration>
                             <archive>
                                 <manifestEntries>

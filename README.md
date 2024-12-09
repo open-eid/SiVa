@@ -45,7 +45,7 @@ Run following command:
 After that, you can optionally create an image for Docker:
 
 ```bash
-./mvnw spring-boot:build-image -pl siva-parent/siva-webapp
+./mvnw spring-boot:build-image -pl siva-parent/siva-webapp -DskipTests
 ```
 
 ## How-to run

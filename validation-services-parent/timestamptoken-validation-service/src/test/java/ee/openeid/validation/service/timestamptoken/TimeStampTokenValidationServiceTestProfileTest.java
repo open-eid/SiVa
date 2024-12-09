@@ -75,13 +75,12 @@ import static org.mockito.Mockito.when;
 class TimeStampTokenValidationServiceTestProfileTest extends BaseTimeStampTokenValidationServiceTest {
 
     @Test
-    @Disabled("SIVA-719")
     void validTimeStampToken() {
-        SimpleReport simpleReport = validationService.validateDocument(buildValidationDocument("timestamptoken-ddoc.asics")).getSimpleReport();
+        SimpleReport simpleReport = validationService.validateDocument(buildValidationDocument("testtimestamp.asics")).getSimpleReport();
         assertEquals(1, simpleReport.getValidationConclusion().getTimeStampTokens().size());
         TimeStampTokenValidationData validationData = simpleReport.getValidationConclusion().getTimeStampTokens().get(0);
         assertEquals(TimeStampTokenValidationData.Indication.TOTAL_PASSED, validationData.getIndication());
-        assertEquals("SK TIMESTAMPING AUTHORITY", validationData.getSignedBy());
+        assertEquals("DEMO of SK TSA 2014", validationData.getSignedBy());
         assertNull(validationData.getError());
     }
 

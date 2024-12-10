@@ -123,7 +123,7 @@ http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
 
 | Signature format | BASELINE_B | BASELINE_T | BASELINE_LT | BASELINE_LT_TM | BASELINE_LTA |
 |--|--|--|--|--|--|
-|**BDOC** | NOK | NOK| **OK** | **OK** | **OK** |
+|**BDOC** | NOK | NOK| NOK | **OK** | NOK |
 |**PAdES** | NOK | NOK | **OK** | NOK | **OK** |
 |**XAdES** | NOK | NOK | **OK** | NOK | **OK** |
 |**CAdES** | NOK | NOK | **OK** | NOK | **OK** |
@@ -176,12 +176,13 @@ Legend:
 	* In case of signature with time-mark (BASELINE_LT_TM level) - the producedAt value of the earliest valid time-mark (OCSP confirmation of the signer's certificate) in the signature.
 	* In case of signature with time-stamp (BASELINE_T, BASELINE_LT or BASELINE_LTA level) - the genTime value of the earliest valid signature time-stamp token in the signature.
 	* In case of basic signature (BASELINE_B) - the trusted signing time value cannot be determined as there is no Proof-of-Existence of the signature.
+2. In case of QES signature with (archive) time-stamp or ASiC-S with time stamp token, only qualified time-stamps are allowed (TSA/QTST services only).
 
 
 ### BDOC container specific requirements
 The BDOC container must conform with [BDOC 2.1](https://www.id.ee/wp-content/uploads/2021/06/bdoc-spec212-eng.pdf) standard.
 
-1. File extension `.bdoc` file extension is supported during signature validation.
+1. File extension `.bdoc` is supported during signature validation.
 2. Only one signature shall be stored in one `signatures.xml` file.
 3. All signatures in the container must sign all of the data files.
 4. All data files in the container must be signed, i.e. all files in the container, except of `mimetype` file and the files in `META-INF/` folder, must be signed.
@@ -198,14 +199,14 @@ The ASICE container must conform with [ETSI EN 319 162-1](http://www.etsi.org/de
 ### ASICS container specific requirements
 The service supports both signature and time-stamp token (TST) based ASiC-S containers. Evidence record based containers are not supported. The ASiC-S container must conform with [ETSI EN 319 162-1](http://www.etsi.org/deliver/etsi_en/319100_319199/31916201/01.01.01_60/en_31916201v010101p.pdf) and [ETSI EN 319 162-2](http://www.etsi.org/deliver/etsi_en/319100_319199/31916202/01.01.01_60/en_31916202v010101p.pdf) standards.
 
-1. Manifest file can not be present in case of signature based ASiC-S containers.
-2. Only one datafile is present in ASiC-S container. 
-2. One or more time-stamp tokens per container is supported:
-   3. Only one "META-INF/timestamp.tst" can be present.
-   4. In case multiple timestamps each following time-stamp token must have unique name (e.g. "timestamp001.tst").
-5. There must not be any following files in ASiC-S container:
-   6. "META-INF/signature.p7s"
-   7. "META-INF/signatures.xml"
-   8. "META-INF/evidencerecord.ers"
-   9. "META-INF/evidencerecord.xml"
-10. Time-stamp tokens of ASiC-S containers are validated via DSS (TSL verification is done).
+1. Manifest file can not be present in case of signature-based ASiC-S containers.
+2. Only one data file is present in an ASiC-S container.
+3. One or more time-stamp tokens per container is supported:
+	- Only one `META-INF/timestamp.tst` can be present.
+	- In case of multiple timestamps, each following time-stamp token must have a unique name (e.g., `timestamp001.tst`).
+4. There must not be any of the following files in the ASiC-S container:
+	- `META-INF/signature.p7s`
+	- `META-INF/signatures.xml`
+	- `META-INF/evidencerecord.ers`
+	- `META-INF/evidencerecord.xml`
+5. Time-stamp tokens of ASiC-S containers are validated via DSS (TSL verification is performed).

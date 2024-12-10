@@ -4,9 +4,10 @@ In this section the SiVa external interfaces are described. For information of i
 
 SiVa service provides **REST JSON** interface that enable the service users to:
 
-* Request validation of signatures in a digitally signed document (i.e. signature container like BDOC,ASiC-E/PDF/...);
+* Request validation of signatures in a digitally signed document (i.e. signature container like BDOC,ASiC-E/PDF/...).
+* Request validation of ASiC-S containers with time stamp tokens (i.e. Estonian ASiC-S with encapsulated container inside)
 * Request validation of XAdES signature without datafiles.
-* Request datafiles inside of DDOC container
+* Request datafiles inside of DDOC container.
 
 SiVa service REST JSON interface supports X-Road v6. However, it is optional whether to integrate SiVa service using X-Road or using "plain" REST interface. This document only describes the SiVa service part of the interface, for the X-Road specifics visit Riigi Infosüsteemi Amet [webpage](https://www.ria.ee/en/state-information-system/data-exchange-platforms/data-exchange-layer-x-tee).
 
@@ -226,7 +227,7 @@ Structure of validationConclusion block
 | timeStampTokens | - | Array | Array containing the time stamp tokens |
 | timeStampTokens[0] | + | Object | Object containing the time stamp token (TST) |
 | timeStampTokens[0]. indication | + | String | Result of the time stamp token validation. <br>**Possible values:** <br> TOTAL-PASSED <br> TOTAL-FAILED |
-| timeStampTokens[0]. subIndication | - | String | Additional subindication in case of failed or indeterminate validation result, according to [ETSI EN 319 102-1](http://www.etsi.org/deliver/etsi_en/319100_319199/31910201/01.01.01_60/en_31910201v010101p.pdf) "Table 6: Validation Report Structure and Semantics". |
+| timeStampTokens[0]. subIndication | - | String | Additional subindication in case of failed validation result, according to [ETSI EN 319 102-1](http://www.etsi.org/deliver/etsi_en/319100_319199/31910201/01.01.01_60/en_31910201v010101p.pdf) "Table 6: Validation Report Structure and Semantics". |
 | timeStampTokens[0]. signedBy | + | String | Signer of the time stamp token. |
 | timeStampTokens[0]. signedTime | + | String | Time when the time stamp token was given. |
 | timeStampTokens[0]. certificates | + | Array | Array containing certificates that are present in the timestamp. |
@@ -394,7 +395,9 @@ Structure of validationConclusion block
 From Simple Report following messages, that are considered false-positive in Estonian context, are filtered out:
 * Warning: _The organization name is missing in the trusted certificate!_
 * Warning: _The trusted certificate does not match the trust service!_
-* Error: _The certificate is not related to a granted status at time-stamp lowest POE time!_
+* Error: _The certificate is not related to a granted status at time-stamp lowest POE time!_ (only in case of signatures)
+  * In case of time stamp token in ASiC-S, the error is moved under warnings and additional warning is added:
+    * "_Found a timestamp token not related to granted status. If not yet covered with a fresh timestamp token, this container might become invalid in the future._" 
 
 Above messages are filtered out only in Simple Report.
 

@@ -458,7 +458,6 @@ class TimemarkContainerValidationServiceIntegrationTest {
     }
 
     @Test
-    @Disabled("SIVA-722")
     void certificatePresentLT() throws Exception {
         Reports reports = timemarkContainerValidationService.validateDocument(buildValidationDocument(VALID_ASICE));
         SignatureValidationData signatureValidationData = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0);
@@ -468,18 +467,18 @@ class TimemarkContainerValidationServiceIntegrationTest {
 
         ee.openeid.siva.validation.document.report.Certificate signerCertificate = signatureValidationData.getCertificatesByType(CertificateType.SIGNING).get(0);
         Certificate signerX509Certificate = cf.generateCertificate(new ByteArrayInputStream(Base64.decode(signerCertificate.getContent().getBytes())));
-        assertEquals("SINIVEE,VEIKO,36706020210", CertUtil.getCommonName((X509Certificate) signerX509Certificate));
-        assertEquals("SINIVEE,VEIKO,36706020210", signerCertificate.getCommonName());
+        assertEquals("ŽÕRINÜWŠKY,MÄRÜ-LÖÖZ,11404176865", CertUtil.getCommonName((X509Certificate) signerX509Certificate));
+        assertEquals("ŽÕRINÜWŠKY,MÄRÜ-LÖÖZ,11404176865", signerCertificate.getCommonName());
 
         ee.openeid.siva.validation.document.report.Certificate revocationCertificate = signatureValidationData.getCertificatesByType(CertificateType.REVOCATION).get(0);
         Certificate revocationX509Certificate = cf.generateCertificate(new ByteArrayInputStream(Base64.decode(revocationCertificate.getContent().getBytes())));
-        assertEquals("SK OCSP RESPONDER 2011", CertUtil.getCommonName((X509Certificate) revocationX509Certificate));
-        assertEquals("SK OCSP RESPONDER 2011", revocationCertificate.getCommonName());
+        assertEquals("TEST of SK OCSP RESPONDER 2011", CertUtil.getCommonName((X509Certificate) revocationX509Certificate));
+        assertEquals("TEST of SK OCSP RESPONDER 2011", revocationCertificate.getCommonName());
 
         ee.openeid.siva.validation.document.report.Certificate timestampCertificate = signatureValidationData.getCertificatesByType(CertificateType.SIGNATURE_TIMESTAMP).get(0);
         Certificate timestampX509Certificate = cf.generateCertificate(new ByteArrayInputStream(Base64.decode(timestampCertificate.getContent().getBytes())));
-        assertEquals("SK TIMESTAMPING AUTHORITY", CertUtil.getCommonName((X509Certificate) timestampX509Certificate));
-        assertEquals("SK TIMESTAMPING AUTHORITY", timestampCertificate.getCommonName());
+        assertEquals("DEMO of SK TSA 2014", CertUtil.getCommonName((X509Certificate) timestampX509Certificate));
+        assertEquals("DEMO of SK TSA 2014", timestampCertificate.getCommonName());
     }
 
     @Test

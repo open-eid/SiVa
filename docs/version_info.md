@@ -21,4 +21,4 @@
 | 1.15               | 25.03.2024      | Heiti Tobi                                            | Roadmap updated.                                                              |
 | 1.16               | 29.04.2024      | Ivo Mattus, Raido Raagmaa, Heiti Tobi                 | Request size limit configuration and test cases update                        |
 | 1.17               | 19.06.2024      | Jevgeni Krutov                                        | SOAP interface removed                                                        |
-| 1.18               | 31.10.2024      | Jevgeni Krutov                                        | Documented API changes related to validaion of timestamps                     |
+| 1.18               | 10.12.2024      | Jevgeni Krutov, Heiti Tobi                            | Documented API changes related to validation of timestamps                    |

@@ -1,4 +1,4 @@
-![EU Regional Development Fund](docs/img/siva/EL_Regionaalarengu_Fond_horisontaalne-vaike.jpg)
+<img src="docs/img/siva/Co-funded_by_the_European_Union.jpg" width="350" height="200" alt="Co-funded by the European Union">
 
 # Signature Verification Service
 

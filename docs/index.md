@@ -1,7 +1,7 @@
 <!--# Introduction-->
 
 <div class="eu-logo">
-    <img src="img/siva/eu_logo.svg" />
+    <img src="img/siva/Co-funded_by_the_European_Union.jpg" alt="Co-funded by the European Union" />
 </div>
 
 SiVa is digital signature validation web service that provides JSON

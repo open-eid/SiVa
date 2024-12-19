@@ -84,11 +84,8 @@ table td:last-child {
 }
 
 .eu-logo {
-    width: 100%;
-}
-
-.eu-logo > img {
     float: right;
     margin: 1.2rem 0 .5rem 1rem;
-    height: 10rem;
+    max-height: 206px;
+    max-width: 355px;
 }

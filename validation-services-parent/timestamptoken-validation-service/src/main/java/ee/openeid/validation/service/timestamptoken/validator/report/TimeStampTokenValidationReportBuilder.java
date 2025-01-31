@@ -139,7 +139,7 @@ public class TimeStampTokenValidationReportBuilder {
             timeStampTokenValidationData.setWarning(parseTimestampWarnings(timestampId));
 
             if (TimeStampTokenValidationData.Indication.TOTAL_PASSED.equals(timeStampTokenValidationData.getIndication())) {
-                if (!isDataFileCovered(ts)) {
+                if (!isDataFileCovered(timeStampTokenValidationData)) {
                     addWarningTo(timeStampTokenValidationData, WARNING_MSG_DATAFILE_NOT_COVERED_BY_TS);
                 }
             }
@@ -175,10 +175,11 @@ public class TimeStampTokenValidationReportBuilder {
         warnings.add(new Warning(warningMessage));
     }
 
-    private boolean isDataFileCovered(TimestampWrapper ts) {
-        return ts.getTimestampedSignedData().stream()
-            .map(SignerDataWrapper::getReferencedName)
-            .anyMatch(n -> StringUtils.equals(dataFileName, n));
+    private boolean isDataFileCovered(TimeStampTokenValidationData validationData) {
+        List<Scope> scopes = validationData.getTimestampScopes();
+
+        return CollectionUtils.isNotEmpty(scopes) && scopes.stream()
+            .anyMatch(scope -> StringUtils.equals(dataFileName, scope.getName()));
     }
 
     private List<String> getTimestampIds() {

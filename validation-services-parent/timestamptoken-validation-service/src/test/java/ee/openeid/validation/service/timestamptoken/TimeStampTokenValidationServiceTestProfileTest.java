@@ -219,7 +219,7 @@ class TimeStampTokenValidationServiceTestProfileTest extends BaseTimeStampTokenV
     }
 
     @Test
-    void validateDocument_DataFileCoveredByTS_ValidationNoWarnings() {
+    void validateDocument_TwoValidTSDataFileCoveredByTS_ValidationNoWarnings() {
         SimpleReport simpleReport = validationService.validateDocument(buildValidationDocument("2xTST-valid-bdoc-data-file.asics")
         ).getSimpleReport();
 
@@ -233,16 +233,38 @@ class TimeStampTokenValidationServiceTestProfileTest extends BaseTimeStampTokenV
     }
 
     @Test
-    void validateDocument_DataFileNotCoveredByTS_ValidationPassedWithWarningThatDatafileNotCoveredByTS() {
+    void validateDocument_OneValidTSDataFileNotCoveredByTS_ValidationPassedWithWarningThatDatafileNotCoveredByTS() {
         SimpleReport simpleReport = validationService.validateDocument(buildValidationDocument("2xTST-valid-bdoc-data-file-1st-tst-invalid-2nd-tst-no-coverage.asics")
         ).getSimpleReport();
 
-        TimeStampTokenValidationData token = simpleReport.getValidationConclusion().getTimeStampTokens().get(1);
-        assertThat(token.getIndication(), equalTo(TimeStampTokenValidationData.Indication.TOTAL_PASSED));
-        assertThat(token.getWarning().size(), equalTo(1));
+        TimeStampTokenValidationData tokenOne = simpleReport.getValidationConclusion().getTimeStampTokens().get(0);
+        assertThat(tokenOne.getIndication(), equalTo(TimeStampTokenValidationData.Indication.TOTAL_FAILED));
+        assertThat(tokenOne.getWarning(), empty());
+
+        TimeStampTokenValidationData tokenTwo = simpleReport.getValidationConclusion().getTimeStampTokens().get(1);
+        assertThat(tokenTwo.getIndication(), equalTo(TimeStampTokenValidationData.Indication.TOTAL_PASSED));
+        assertThat(tokenTwo.getWarning().size(), equalTo(1));
         assertThat(
-            token.getWarning().stream().map(Warning::getContent).collect(Collectors.toList()),
+            tokenTwo.getWarning().stream().map(Warning::getContent).collect(Collectors.toList()),
             containsInAnyOrder("The time-stamp token does not cover container datafile!")
+        );
+    }
+
+    @Test
+    void validateDocument_TwoValidTSDataFileNotCoveredByTS_ValidationPassedWithWarningThatDatafileNotCoveredByTS() {
+        SimpleReport simpleReport = validationService.validateDocument(buildValidationDocument("2xTstFirstValidSecondNotCoveringNestedContainer.asics")
+        ).getSimpleReport();
+
+        TimeStampTokenValidationData tokenOne = simpleReport.getValidationConclusion().getTimeStampTokens().get(0);
+        assertThat(tokenOne.getIndication(), equalTo(TimeStampTokenValidationData.Indication.TOTAL_PASSED));
+        assertThat(tokenOne.getWarning(), empty());
+
+        TimeStampTokenValidationData tokenTwo = simpleReport.getValidationConclusion().getTimeStampTokens().get(1);
+        assertThat(tokenTwo.getIndication(), equalTo(TimeStampTokenValidationData.Indication.TOTAL_PASSED));
+        assertThat(tokenTwo.getWarning().size(), equalTo(1));
+        assertThat(
+                tokenTwo.getWarning().stream().map(Warning::getContent).collect(Collectors.toList()),
+                containsInAnyOrder("The time-stamp token does not cover container datafile!")
         );
     }
 

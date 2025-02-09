@@ -16,6 +16,8 @@
 
 package ee.openeid.validation.service.timemark;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.ArchiveTimeStamp;
@@ -54,21 +56,33 @@ import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static ee.openeid.validation.service.timemark.BDOCTestUtils.ASICE_CRL_ONLY;
 import static ee.openeid.validation.service.timemark.BDOCTestUtils.ASICE_TEST_FILE_LTA_LEVEL_SIGNATURE;
 import static ee.openeid.validation.service.timemark.BDOCTestUtils.BDOC_TEST_FILE_ALL_SIGNED;
+import static ee.openeid.validation.service.timemark.BDOCTestUtils.BDOC_TEST_FILE_LTA_LEVEL_SIGNATURE;
 import static ee.openeid.validation.service.timemark.BDOCTestUtils.BDOC_TEST_FILE_T_LEVEL_SIGNATURE;
 import static ee.openeid.validation.service.timemark.BDOCTestUtils.BDOC_TEST_FILE_UNSIGNED;
 import static ee.openeid.validation.service.timemark.BDOCTestUtils.BDOC_TEST_OF_KLASS3_CHAIN;
@@ -514,8 +528,61 @@ class TimemarkContainerValidationServiceIntegrationTest {
             assertThat(archiveTimeStamp.getSubIndication(), nullValue());
             assertThat(archiveTimeStamp.getSignedBy(), equalTo("DEMO SK TIMESTAMPING AUTHORITY 2023E"));
             assertThat(archiveTimeStamp.getCountry(), equalTo("EE"));
-            assertThat(archiveTimeStamp.getContent(), nullValue());
+            assertThat(archiveTimeStamp.getContent(), equalTo(loadTimestampContent("timestamp_content.txt")));
         }
+    }
+
+    @ParameterizedTest
+    @MethodSource("timestampProvider")
+    void validateBdocContainer_ProfileLevelIsLTA_ArchiveTimestampsBlockIsPresentForMultipleTimestamps(String signedTime, String expectedContent, int iterator) {
+        Reports reports = timemarkContainerValidationService.validateDocument(buildValidationDocument(BDOC_TEST_FILE_LTA_LEVEL_SIGNATURE));
+        ValidationConclusion validationConclusion = reports.getSimpleReport().getValidationConclusion();
+
+        List<ArchiveTimeStamp> archiveTimeStamps = validationConclusion.getSignatures().get(0).getInfo().getArchiveTimeStamps();
+
+        assertThat(archiveTimeStamps, notNullValue());
+        assertThat(archiveTimeStamps, hasSize(10));
+
+        {
+            ArchiveTimeStamp archiveTimeStamp = archiveTimeStamps.get(iterator);
+            assertThat(archiveTimeStamp.getSignedTime(), equalTo(signedTime));
+            assertThat(archiveTimeStamp.getIndication(), sameInstance(Indication.PASSED));
+            assertThat(archiveTimeStamp.getSubIndication(), nullValue());
+            assertThat(archiveTimeStamp.getSignedBy(), equalTo("DEMO SK TIMESTAMPING AUTHORITY 2023E"));
+            assertThat(archiveTimeStamp.getCountry(), equalTo("EE"));
+            assertThat(archiveTimeStamp.getContent(), equalTo(expectedContent));
+        }
+    }
+
+    private static String loadTimestampContent(String filename) {
+        try {
+            return Files.readString(Path.of("src/test/resources/test-files/" + filename));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    private static List<String> loadContentsFromJson() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, List<String>> jsonMap = objectMapper.readValue(
+                new File("src/test/resources/test-files/multiple_timestamp_content.json"),
+                new TypeReference<>() {}
+        );
+        return jsonMap.get("timestampContents");
+    }
+
+    private static Stream<Arguments> timestampProvider() throws Exception {
+        List<String> expectedContents = loadContentsFromJson();
+
+        List<String> signedTimes = List.of(
+                "2024-11-13T08:21:07Z", "2025-02-07T20:21:21Z", "2025-02-07T20:22:39Z",
+                "2025-02-07T20:23:39Z", "2025-02-07T20:24:03Z", "2025-02-07T20:26:48Z",
+                "2025-02-07T20:27:16Z", "2025-02-07T20:27:38Z", "2025-02-07T20:28:02Z",
+                "2025-02-07T20:28:24Z"
+        );
+
+        return IntStream.range(0, signedTimes.size())
+                .mapToObj(i -> Arguments.of(signedTimes.get(i), expectedContents.get(i), i));
     }
 
     private void assertSubjectDNPresent(SignatureValidationData signature, String serialNumber, String

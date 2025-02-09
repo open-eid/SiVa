@@ -35,6 +35,7 @@ final class BDOCTestUtils {
     static final String BDOC_TEST_FILE_ALL_SIGNED = "2f_all_signed.bdoc";
     static final String BDOC_TEST_FILE_T_LEVEL_SIGNATURE = "TS-05_23634_TS_unknown_TSA.bdoc";
     static final String ASICE_TEST_FILE_LTA_LEVEL_SIGNATURE = "valid-asice-lta.asice";
+    static final String BDOC_TEST_FILE_LTA_LEVEL_SIGNATURE = "test_lta_multiple_timestamps.bdoc";
 
     static ValidationDocument buildValidationDocument(String testFile) {
         return DummyValidationDocumentBuilder

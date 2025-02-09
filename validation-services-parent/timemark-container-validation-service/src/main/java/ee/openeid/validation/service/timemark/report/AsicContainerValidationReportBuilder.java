@@ -30,6 +30,7 @@ import eu.europa.esig.dss.diagnostic.DiagnosticData;
 import eu.europa.esig.dss.diagnostic.TimestampWrapper;
 import eu.europa.esig.dss.enumerations.SignatureQualification;
 import eu.europa.esig.dss.enumerations.SubIndication;
+import eu.europa.esig.dss.spi.x509.tsp.TimestampToken;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections4.CollectionUtils;
 import org.digidoc4j.Container;
@@ -178,12 +179,25 @@ public class AsicContainerValidationReportBuilder extends TimemarkContainerValid
                     .ifPresent(archiveTimeStamp::setSubIndication);
             archiveTimeStamp.setSignedBy(timestampWrapper.getSigningCertificate().getCommonName());
             archiveTimeStamp.setCountry(timestampWrapper.getSigningCertificate().getCountryName());
-            archiveTimeStamp.setContent(Base64.encodeBase64String(timestampWrapper.getBinaries()));
+            archiveTimeStamp.setContent(getContentFromTimestampToken(signature, timestampWrapper));
 
             archiveTimestamps.add(archiveTimeStamp);
         }
 
         return archiveTimestamps;
+    }
+
+    private String getContentFromTimestampToken(Signature signature, TimestampWrapper timestampWrapper) {
+        String timestampWrapperId = timestampWrapper.getId();
+        List<TimestampToken> archiveTimestampTokens = ((AsicSignature) signature).getOrigin().getDssSignature().getArchiveTimestamps();
+
+        for (TimestampToken timestampToken : archiveTimestampTokens) {
+            if (timestampWrapperId.equals(timestampToken.getDSSId().asXmlId())) {
+                return Base64.encodeBase64String(timestampToken.getEncoded());
+            }
+        }
+
+        return null;
     }
 
 }

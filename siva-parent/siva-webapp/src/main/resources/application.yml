@@ -17,12 +17,15 @@ management:
       exposure:
         include:
           - health
+          # TODO: When Kubernetes is live, remove custom heartbeat endpoint if it is not used
           - heartbeat
           - version
       base-path: /monitoring
   endpoint:
     health:
       show-details: "ALWAYS"
+      probes:
+        enabled: true
     heartbeat:
       enabled: true
       cache:

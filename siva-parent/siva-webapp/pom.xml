@@ -118,6 +118,9 @@
                     <executable>true</executable>
                     <image>
                         <name>${project.artifactId}:latest</name>
+                        <env>
+                            <BP_SPRING_CLOUD_BINDINGS_DISABLED>true</BP_SPRING_CLOUD_BINDINGS_DISABLED>
+                        </env>
                     </image>
                 </configuration>
                 <executions>

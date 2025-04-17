@@ -26,6 +26,12 @@
     <artifactId>siva-webapp</artifactId>
     <packaging>${packaging.type}</packaging>
 
+    <properties>
+        <!-- Property values here can be overridden from command line, but plugin <configuration> values below can't be -->
+        <imageName>${project.artifactId}:latest</imageName>
+        <githubMirror>https://github.com</githubMirror>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>ee.openid.siva</groupId>
@@ -117,9 +123,12 @@
                 <configuration>
                     <executable>true</executable>
                     <image>
-                        <name>${project.artifactId}:latest</name>
+                        <name>${imageName}</name>
                         <env>
+                            <!-- Avoid excessive downloads in build environments with restricted internet access -->
                             <BP_SPRING_CLOUD_BINDINGS_DISABLED>true</BP_SPRING_CLOUD_BINDINGS_DISABLED>
+                            <!-- Enable overriding GitHub mirror | TODO SIVA-860: Needs fixing -->
+                            <BP_DEPENDENCY_MIRROR_GITHUB_COM>${githubMirror}</BP_DEPENDENCY_MIRROR_GITHUB_COM>
                         </env>
                     </image>
                 </configuration>

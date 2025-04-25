@@ -22,7 +22,7 @@
 
     <groupId>ee.openid.siva</groupId>
     <artifactId>siva</artifactId>
-    <version>3.9.0-prerelease</version>
+    <version>3.9.0</version>
     <packaging>pom</packaging>
     <name>SiVa Digitally signed documents validation service</name>
     <url>https://github.com/open-eid/SiVa</url>

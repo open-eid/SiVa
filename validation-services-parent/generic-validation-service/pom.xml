@@ -19,7 +19,7 @@
     <parent>
         <artifactId>validation-services-parent</artifactId>
         <groupId>ee.openid.siva</groupId>
-        <version>3.9.0-prerelease</version>
+        <version>3.9.0</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>

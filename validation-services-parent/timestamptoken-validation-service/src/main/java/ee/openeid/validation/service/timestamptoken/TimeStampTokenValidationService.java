@@ -115,7 +115,7 @@ public class TimeStampTokenValidationService implements ValidationService {
         ASiCContainerWithCAdESValidator validator = new ASiCContainerWithCAdESValidator(dssDocument);
         CommonCertificateVerifier certificateVerifier = createCertificateVerifier();
 
-        LOGGER.info("Certificate pool size: {}", certificateVerifier.getTrustedCertSources().getNumberOfCertificates());
+        LOGGER.debug("Certificate pool size: {}", certificateVerifier.getTrustedCertSources().getNumberOfCertificates());
         validator.setCertificateVerifier(certificateVerifier);
         validator.setValidationLevel(VALIDATION_LEVEL);
 

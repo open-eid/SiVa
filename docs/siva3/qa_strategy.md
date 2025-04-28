@@ -82,7 +82,7 @@ Test cases are developed and maintained together with test automation code by th
 Following elements will be present in test cases:
 
 * TestCaseID: unique ID that makes possible to identify specific test case
-* TestType: Automated, Automated SoapUI or Manual
+* TestType: Automated or Manual
 * Requirement: Reference to the requirement that is tested
 * Title: Description of the test
 * Expected Result: expected outcome of the test (pass criteria for the test)
@@ -133,12 +133,12 @@ The report will have at least the following elements:
 ### Test levels
 **Integration testing**
 
-The scope of the tests is illustrated on the image below. The goal is to test the SiVA application API (both X-Road and REST/JSON) and to test the independent module capability for validation of specific type of file. Both valid and invalid inputs are tested. More info about testing specifics can be found in Test Plan [Integration testing](/siva3/test_plan/#integration-test-introduction/) section.
+The scope of the tests is illustrated on the image below. The goal is to test the SiVA application API (both X-Road and REST/JSON) and to test the independent module capability for validation of specific type of file. Both valid and invalid inputs are tested. More info about testing specifics can be found in Test Plan [Integration testing](../test_plan/#integration-test-introduction) section.
 ![Integration testing](../img/siva/qa_strategy/siva3/integrationTest.png)
 
 **System testing**
 
-The scope of the tests is illustrated on the image below. The goal of the test is to test the entire length of signature validation process and to test supportive functions. In addition Demo application is tested. More info about testing specifics can be found in Test Plan [System testing](/siva3/test_plan/#system-test-introduction/) section.
+The scope of the tests is illustrated on the image below. The goal of the test is to test the entire length of signature validation process and to test supportive functions. In addition Demo application is tested. More info about testing specifics can be found in Test Plan [System testing](../test_plan/#system-test-introduction) section.
 ![System testing](../img/siva/qa_strategy/siva3/systemTest.png)
 
 **Regression testing**

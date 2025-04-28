@@ -2,7 +2,7 @@
 
 ## Test execution
 
-Execution of tests in SiVa is divided in three categories: Automated, Automated SoapUI, Manual. The method is also indicated in test case description with TestType field.
+Execution of tests in SiVa is divided in two categories: Automated and Manual. The method is also indicated in test case description with TestType field.
 
 ### Execution of Automated type of tests
 
@@ -16,13 +16,8 @@ These tests are part of SiVa project and can also be executed using IntellJ IDEA
   
   * ee.openeid.siva.integrationtest
   * ee.openeid.siva.resttest
-  * ee.openeid.siva.soaptest
 
 To run the tests in IDEA right click on package name and select "Run tests in". It's also possible to run individual tests by right-clicking on specific test code and selecting "Run". 
-
-### Execution of Automated SoapUI type of tests
-
-The description how to execute the tests together with SoapUI project file to be used can be found in [SiVa GitHub](https://github.com/open-eid/SiVa/tree/master/test-helpers/XRoadSoapUITests)
 
 ### Execution of Manual type of tests
 
@@ -42,12 +37,11 @@ Files to use in manual tests can be found in [SiVa GitHub](https://github.com/op
 
 This section of the document gives overview of Integration Testing carried out on SiVa web service and SiVa Demo application.
 
-SiVa web service Integration Testing is using IO RestAssured library to implement automatic checks for REST/SOAP based tests.
+SiVa web service Integration Testing is using IO RestAssured library to implement automatic checks for REST based tests.
 
 The testing of the SiVa web service is divided into sections based on the software architecture and functionalities provided to the users. The sections are:
 
   * REST API
-  * SOAP API
   * DDOC container signature validation
   * BDOC container signature validation
   * ASICE container signature validation
@@ -55,7 +49,7 @@ The testing of the SiVa web service is divided into sections based on the softwa
   * PDF signature validation
   * XAdES hashcode validation
 
-The goal is to focus testing on functionalities implemented in SiVa web service application. Functionalities provided by [Validation libraries](../overview/#Validation-libraries) are not explicitly tested.
+The goal is to focus testing on functionalities implemented in SiVa web service application. Functionalities provided by [Validation libraries](../background/#validation-libraries) are not explicitly tested.
 
 In addition, SiVa Demo Application is tested. These tests are carried out manually.
 
@@ -122,75 +116,6 @@ Specific test cases and input files can be found in:
   * [ReportSignatureManualIT.java](../appendix/test_cases/#reportSignatureManualitjava)
   * [DetailedReportValidationManualIT.java](../appendix/test_cases/#detailedReportValidationManualitjava)
   * [DiagnosticReportValidationManualIT.java](../appendix/test_cases/#diagnosticReportValidationManualitjava)
-  
-## Testing of SOAP API
-
-The goal of the SOAP API testing is to check that the API is accepting the requests based on the specification and the output result (Validation Report) is in correct format and has all the required elements. In general the tests follow the same principles as with REST API.
-Compatibility with X-Road security server is out of scope for these tests and will be covered in X-Road System Test plan.
-
-### Validation request tests
-
-Following areas are tested on input:
-
-  * Wrong (not accepted) values in input parameters
-  * Empty values in input parameters
-  * Too many parameters
-  * Too few parameters
-  * Inconsistencies on stated parameters and actual data (wrong document type)
-  * Case insensitivity on parameter names
-  * Empty request
-
-
-In all of the negative cases correctness of returned error message is checked.
-
-Specific test cases and input files can be found in:
-
-  * [SoapValidationRequestIT.java](../appendix/test_cases/#soapvalidationrequestitjava)
-  * [SoapHashcodeValidationRequestIT.java](../appendix/test_cases/#soaphashcodevalidationrequestitjava)
-
-### Get Data Files request tests
-
-Following areas are tested on input:
-
-  * Empty request
-  * Empty values in input parameters
-  * Too many parameters
-  * Too few parameters
-  * Changed order of parameters
-  * Case insensitivity on parameter names
-  * Inconsistencies on stated parameters and actual data
-
-In all of the negative cases correctness of returned error message is checked.
-
-Specific test cases and input files can be found in:
-
-  * [SoapGetDataFileRequestIT.java](../appendix/test_cases/#soapgetdatafilerequestitjava)
-
-### Validation report tests
-
-SiVa web service returns uniform Validation Report on all the supported document types. This also includes correct document types without actual signature (for example PDF document without signature). However not all values may be present for all the document types.
-
-Following areas are tested on output (Validation Report):
-
-  * Presence of the mandatory elements on DDOC, BDOC, PDF, ASIC-S ASIC-E, XAdES hashcode
-  * Presence of optional elements on DDOC, BDOC, PDF, ASIC-S, ASIC-E, XAdES hashcode and
-  * Verification of expected values
-
-Specific test cases and input files can be found in:
-
-  * [SoapValidationReportValueIT.java](../appendix/test_cases/#soapvalidationreportvalueitjava)
-
-### Get Data Files report tests
-
-Following areas are tested on output:
-
-  * Presence of the mandatory elements
-  * Verification of expected values
-  * Extraction of all data files
-
-Specific test cases and input files can be found in:
-
-  * [SoapGetDataFileReportIT.java](../appendix/test_cases/#soapgetdatafilereportitjava)
 
 ## Testing of DDOC container signature validation
 
@@ -355,26 +280,25 @@ Testing of [SiVa Demo Application](https://github.com/open-eid/SiVa-demo-applica
 
   * Cross browser usage (IE, Edge, Chrome, Firefox and Safari)
   * File upload (different sizes, supported and unsupported file types)
-  * Displayment of Validation Report both for REST and SOAP
+  * Displayment of Validation Report for REST
   * Layout of the page
   * Error representation
 
 Sample test cases with input files can be found in:
 
-  * [Demo Application Integration Test](appendix/test_cases#demo-application-integration-test) 
+  * [Demo Application Integration Test](../appendix/test_cases#demo-application-integration-test) 
   
 ## System Test introduction
 
 While Integration Tests were mostly carried out automatically then System Testing is mostly depending on manual testing.
 
-System testing is carried out using two access points:
+System testing is carried out using following access points:
 
   * Testing through SiVa Demo Application
-  * Testing through X-Road security server using SoapUI
 
 !!! Note
  
-	Testing through X-Road security server requires presence and configuration of X-Road security server to use SiVa service.  Tests are run using SoapUI that simulates request to X-Road security server.
+	Testing through X-Road security server requires presence and configuration of X-Road security server to use SiVa service.
 
 ## Testing through X-Road security server
 
@@ -382,7 +306,6 @@ Following areas are covered for document validation:
 
   * Validation of valid signature
   * Validation of invalid signature
-  * Validation that returns Soap error
 
 All of the above test cases are run with BDOC, DDOC, PDF and ASIC-S containers. 
 
@@ -391,12 +314,6 @@ Following areas are covered for file extraction:
   * Extraction of data files from valid ddoc
   * Extraction of data files from invalid ddoc
   * Error response from data file extraction  
-
-Tests along with test case descriptions are available for rerun in [github](https://github.com/open-eid/SiVa/tree/develop/test-helpers/XRoadSoapUITests).
-
-Specific test cases and input files can be found in:
-
-  * [X-Road Soap System Test](../appendix/test_cases/#x-road-soap-system-test)
 
 ## Configuration/administration testing
 

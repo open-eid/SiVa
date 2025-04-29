@@ -127,8 +127,8 @@ http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
 |**PAdES** | NOK | NOK | **OK** | NOK | **OK** |
 |**XAdES** | NOK | NOK | **OK** | NOK | **OK** |
 |**CAdES** | NOK | NOK | **OK** | NOK | **OK** |
-|**DIGIDOC-XML 1.0...1.3 **| NOK | NOK | NOK | **OK** | NOK |
-|**DIGIDOC-XML 1.0...1.3 hashcode **| NOK | NOK | NOK | **OK** | NOK |
+|**DIGIDOC-XML 1.0...1.3**| NOK | NOK | NOK | **OK** | NOK |
+|**DIGIDOC-XML 1.0...1.3 hashcode**| NOK | NOK | NOK | **OK** | NOK |
 
 Legend:
 

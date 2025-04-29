@@ -223,7 +223,9 @@ Structure of validationConclusion block
 | signatures[0]. certificates[0].commonName | + | String | CN (common name) value in certificate. |
 | signatures[0]. certificates[0].type | + | String | Type of the certificate. Can be SIGNING, REVOCATION, SIGNATURE_TIMESTAMP, ARCHIVE_TIMESTAMP or CONTENT_TIMESTAMP. |
 | signatures[0]. certificates[0].content | + | String | DER encoded X.509 certificate in Base64. |
-| signatures[0]. certificates[0].issuer | + | String | Object containing issuer certificate information. Can create chain til the trust anchor. |
+| signatures[0]. certificates[0].issuer | - | Object | Object containing issuer certificate information. Can create chain til the trust anchor. |
+| signatures[0]. certificates[0].issuer.commonName | + | String | CN (common name) value in certificate. |
+| signatures[0]. certificates[0].issuer.content | + | String | DER encoded X.509 certificate in Base64. |
 | timeStampTokens | - | Array | Array containing the time stamp tokens |
 | timeStampTokens[0] | + | Object | Object containing the time stamp token (TST) |
 | timeStampTokens[0]. indication | + | String | Result of the time stamp token validation. <br>**Possible values:** <br> TOTAL-PASSED <br> TOTAL-FAILED |

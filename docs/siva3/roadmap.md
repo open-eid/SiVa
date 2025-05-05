@@ -4,11 +4,10 @@ This roadmap is for information purposes and can change without prior notice.
 
 ## Planned releases
 
-### 3.9.0 pre-release (with DD4J 6.0.0-RC.1) - December 2024
-- LTA support
-- X-Road REST Message Protocol support
-- X-Road SOAP Message Protocol discontinued
-- Digidoc4j version update to 6.0.0-RC.1
+### 3.10.0 release - December 2025
+- If the difference between signatures timestamp and OCSP response exceeds 24 hours, return a warning instead of an error.
+- Digidoc4j version update to 6.1.0
+- DSS version update to 6.2
 - Dependency updates
 
 ## Past releases

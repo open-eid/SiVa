@@ -23,6 +23,7 @@ import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.document.report.ValidationWarning;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
+import ee.openeid.validation.service.timemark.util.SignatureScopeParser;
 import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.Container;
 import org.digidoc4j.ContainerValidationResult;
@@ -35,7 +36,6 @@ import org.digidoc4j.impl.ddoc.DDocFacade;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class DDOCContainerValidationReportBuilder extends TimemarkContainerValidationReportBuilder {
 
@@ -85,10 +85,9 @@ public class DDOCContainerValidationReportBuilder extends TimemarkContainerValid
 
     @Override
     List<Scope> getSignatureScopes(Signature signature, List<String> dataFilenames) {
-        return dataFilenames
-                .stream()
-                .map(this::mapDataFile)
-                .collect(Collectors.toList());
+        return dataFilenames.stream()
+                .map(SignatureScopeParser::createFullSignatureScopeForDataFile)
+                .toList();
     }
 
     @Override
@@ -105,14 +104,6 @@ public class DDOCContainerValidationReportBuilder extends TimemarkContainerValid
     @Override
     List<ArchiveTimeStamp> getArchiveTimestamps(Signature signature) {
         return null;
-    }
-
-    private Scope mapDataFile(String filename) {
-        Scope signatureScope = new Scope();
-        signatureScope.setName(filename);
-        signatureScope.setContent(FULL_DOCUMENT);
-        signatureScope.setScope(FULL_SIGNATURE_SCOPE);
-        return signatureScope;
     }
 
     private String getDigidocXmlSignatureForm() {

@@ -3,7 +3,7 @@ package ee.openeid.validation.service.timemark.report;
 import ee.openeid.siva.validation.document.Datafile;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Reports;
-import ee.openeid.siva.validation.document.report.SignatureScope;
+import ee.openeid.siva.validation.document.report.Scope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
@@ -122,7 +122,7 @@ public class TimemarkHashcodeValidationReportBuilder {
       : Optional.empty();
   }
 
-  private List<SignatureScope> getSignatureScopes() {
+  private List<Scope> getSignatureScopes() {
     return signature instanceof AsicSignature
       ? getAsicSignatureScopes((AsicSignature) signature, getDataFileNames())
       : emptyList();

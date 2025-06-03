@@ -1,6 +1,6 @@
 package ee.openeid.validation.service.timemark.util;
 
-import ee.openeid.siva.validation.document.report.SignatureScope;
+import ee.openeid.siva.validation.document.report.Scope;
 import lombok.experimental.UtilityClass;
 import org.digidoc4j.impl.asic.AsicSignature;
 import org.slf4j.LoggerFactory;
@@ -16,7 +16,7 @@ public class SignatureScopeParser {
   private static final String FULL_SIGNATURE_SCOPE = "FullSignatureScope";
   private static final String FULL_DOCUMENT = "Digest of the document content";
 
-  public static List<SignatureScope> getAsicSignatureScopes(AsicSignature signature, List<String> dataFilenames) {
+  public static List<Scope> getAsicSignatureScopes(AsicSignature signature, List<String> dataFilenames) {
     return signature.getOrigin().getReferences()
       .stream()
       .map(r -> decodeUriIfPossible(r.getURI()))
@@ -34,8 +34,8 @@ public class SignatureScopeParser {
     }
   }
 
-  public static SignatureScope createFullSignatureScopeForDataFile(String filename) {
-    SignatureScope signatureScope = new SignatureScope();
+  public static Scope createFullSignatureScopeForDataFile(String filename) {
+    Scope signatureScope = new Scope();
     signatureScope.setName(filename);
     signatureScope.setScope(FULL_SIGNATURE_SCOPE);
     signatureScope.setContent(FULL_DOCUMENT);

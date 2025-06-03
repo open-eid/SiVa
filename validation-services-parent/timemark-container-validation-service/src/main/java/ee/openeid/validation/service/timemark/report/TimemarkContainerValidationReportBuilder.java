@@ -76,8 +76,6 @@ public abstract class TimemarkContainerValidationReportBuilder {
 
     protected static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(TimemarkContainerValidationReportBuilder.class);
 
-    protected static final String FULL_SIGNATURE_SCOPE = "FullSignatureScope";
-    protected static final String FULL_DOCUMENT = "Digest of the document content";
     protected static final String XADES_FORMAT_PREFIX = "XAdES_BASELINE_";
     protected static final String REPORT_INDICATION_INDETERMINATE = "INDETERMINATE";
     protected static final String BDOC_SIGNATURE_FORM = "ASiC-E";

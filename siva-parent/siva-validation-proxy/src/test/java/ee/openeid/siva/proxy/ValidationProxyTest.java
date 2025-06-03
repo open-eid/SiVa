@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 - 2024 Riigi Infosüsteemi Amet
+ * Copyright 2019 - 2025 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -19,42 +19,34 @@ package ee.openeid.siva.proxy;
 import ee.openeid.siva.proxy.document.DocumentType;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.document.ReportType;
+import ee.openeid.siva.proxy.exception.ContainerMimetypeFileException;
 import ee.openeid.siva.proxy.exception.ValidatonServiceNotFoundException;
 import ee.openeid.siva.proxy.validation.ZipMimetypeValidator;
 import ee.openeid.siva.statistics.StatisticsService;
-import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.DetailedReport;
 import ee.openeid.siva.validation.document.report.DiagnosticReport;
-import ee.openeid.siva.validation.document.report.Error;
-import ee.openeid.siva.validation.document.report.Info;
-import ee.openeid.siva.validation.document.report.Policy;
 import ee.openeid.siva.validation.document.report.Reports;
-import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
-import ee.openeid.siva.validation.document.report.ValidatedDocument;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.document.report.ValidationWarning;
-import ee.openeid.siva.validation.exception.DocumentRequirementsException;
+import ee.openeid.siva.validation.document.report.Warning;
+import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.ValidationService;
-import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
-import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
-import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import ee.openeid.validation.service.generic.GenericValidationService;
-import ee.openeid.validation.service.generic.configuration.properties.GenericSignaturePolicyProperties;
 import ee.openeid.validation.service.timemark.report.DDOCContainerValidationReportBuilder;
 import ee.openeid.validation.service.timestamptoken.TimeStampTokenValidationService;
-import ee.openeid.validation.service.timestamptoken.configuration.TimeStampTokenSignaturePolicyProperties;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.ArgumentCaptor;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
@@ -66,22 +58,34 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.WARNING_MSG_DATAFILE_NOT_COVERED_BY_TS;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -91,13 +95,15 @@ class ValidationProxyTest {
     private static final String TIMEMARK_CONTAINER_VALIDATION_SERVICE_BEAN = "timemarkContainerValidationService";
     private static final String TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN = "timeStampTokenValidationService";
     private static final String GENERIC_VALIDATION_SERVICE_BEAN = "genericValidationService";
+    private static final Instant APRIL = ZonedDateTime.of(2024, 4, 1, 1, 0, 0, 0, ZoneId.of("UTC")).toInstant();
+    private static final Instant MAY = ZonedDateTime.of(2024, 5, 1, 1, 0, 0, 0, ZoneId.of("UTC")).toInstant();
+    private static final Instant JUNE = ZonedDateTime.of(2024, 6, 1, 1, 0, 0, 0, ZoneId.of("UTC")).toInstant();
+    private static final String VALIDATION_TIME_NOW = ReportBuilderUtils.getValidationTime();
 
     private static final ValidationWarning TEST_ENV_WARNING = getTestEnvironmentValidationWarning();
 
     @InjectMocks
     private ContainerValidationProxy validationProxy;
-
-    private ValidationServiceSpy validationServiceSpy;
 
     @Mock
     private StatisticsService statisticsService;
@@ -111,121 +117,219 @@ class ValidationProxyTest {
     @Spy
     private StandardEnvironment environment;
 
-    @BeforeEach
-    public void setUp() {
-        validationServiceSpy = new ValidationServiceSpy();
-    }
-
     @Test
-    void applicationContextHasNoBeanWithGivenNameThrowsException() {
+    void validate_ApplicationContextHasNoBeanWithGivenName_ThrowsException() {
         BDDMockito.given(applicationContext.getBean(anyString())).willThrow(new NoSuchBeanDefinitionException("Bean not loaded"));
         ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.PDF);
 
         ValidatonServiceNotFoundException caughtException = assertThrows(
-                ValidatonServiceNotFoundException.class, () -> {
-                    validationProxy.validate(proxyDocument);
-                }
+                ValidatonServiceNotFoundException.class, () -> validationProxy.validate(proxyDocument)
         );
         assertEquals("genericValidationService not found", caughtException.getMessage());
         verify(applicationContext).getBean(anyString());
     }
 
     @Test
-    void proxyDocumentWithBDOCDocumentTypeShouldReturnValidationReport() {
-        when(applicationContext.getBean(TIMEMARK_CONTAINER_VALIDATION_SERVICE_BEAN)).thenReturn(validationServiceSpy);
+    void validate_ProxyDocumentWithBDOCDocumentType_ReturnsValidationReport() {
+        Reports dummyReports = createDummyReports();
+        ValidationService validationServiceMock = Mockito.mock(ValidationService.class);
+        when(validationServiceMock.validateDocument(any())).thenReturn(dummyReports);
+        when(applicationContext.getBean(TIMEMARK_CONTAINER_VALIDATION_SERVICE_BEAN)).thenReturn(validationServiceMock);
 
         ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.BDOC);
+
         SimpleReport report = validationProxy.validate(proxyDocument);
-        assertSimpleReport(report);
+
+        assertSame(dummyReports.getSimpleReport(), report);
+        assertEquals(VALIDATION_TIME_NOW, report.getValidationConclusion().getValidationTime());
     }
 
     @Test
-    void proxyDocumentWithPDFDocumentTypeShouldReturnValidationReport() {
-        when(applicationContext.getBean(GENERIC_VALIDATION_SERVICE_BEAN)).thenReturn(validationServiceSpy);
+    void validate_ProxyDocumentWithPDFDocumentType_ReturnsValidationReport() {
+        ValidationService validationServiceMock = Mockito.mock(ValidationService.class);
+        Reports dummyReports = createDummyReports();
+        when(validationServiceMock.validateDocument(any())).thenReturn(dummyReports);
+        when(applicationContext.getBean(GENERIC_VALIDATION_SERVICE_BEAN)).thenReturn(validationServiceMock);
 
         ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.PDF);
+
         SimpleReport report = validationProxy.validate(proxyDocument);
-        assertSimpleReport(report);
+
+        assertSame(dummyReports.getSimpleReport(), report);
+        assertEquals(VALIDATION_TIME_NOW, report.getValidationConclusion().getValidationTime());
     }
 
     @Test
-    void proxyDocumentWithDDOCDocumentTypeShouldReturnValidationReport() {
-        when(applicationContext.getBean(TIMEMARK_CONTAINER_VALIDATION_SERVICE_BEAN)).thenReturn(validationServiceSpy);
+    void validate_ProxyDocumentWithDDOCDocumentType_ReturnsValidationReport() {
+        ValidationService validationServiceMock = Mockito.mock(ValidationService.class);
+        Reports dummyReports = createDummyReports();
+        when(validationServiceMock.validateDocument(any())).thenReturn(dummyReports);
+        when(applicationContext.getBean(TIMEMARK_CONTAINER_VALIDATION_SERVICE_BEAN)).thenReturn(validationServiceMock);
 
         ProxyDocument proxyDocument = mockProxyDocumentWithDocument(DocumentType.DDOC);
+
         SimpleReport report = validationProxy.validate(proxyDocument);
-        assertSimpleReport(report);
+
+        assertSame(dummyReports.getSimpleReport(), report);
+        assertEquals(VALIDATION_TIME_NOW, report.getValidationConclusion().getValidationTime());
     }
 
     @ParameterizedTest
     @MethodSource("getFileNameAndTestFile")
-    void proxyDocumentWithDifferentExtensionsShouldReturnValidationReport(String fileName, String testFile) throws Exception {
+    void validate_ProxyDocumentWithDifferentExtensions_ReturnsValidationReport(String fileName, String testFile) throws Exception {
+        TimeStampTokenValidationService timeStampTokenValidationServiceMock = Mockito.mock(TimeStampTokenValidationService.class);
+        when(timeStampTokenValidationServiceMock.validateDocument(any())).thenReturn(createDummyReportsWith3PassedTSTValidations());
+        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(timeStampTokenValidationServiceMock);
 
-        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(getTimeStampValidationService());
-        when(applicationContext.getBean(TIMEMARK_CONTAINER_VALIDATION_SERVICE_BEAN)).thenReturn(validationServiceSpy);
+        ValidationService validationServiceMock = Mockito.mock(ValidationService.class);
+        Reports dummyReports = createDummyReports();
+        when(validationServiceMock.validateDocument(any())).thenReturn(dummyReports);
+        when(applicationContext.getBean(TIMEMARK_CONTAINER_VALIDATION_SERVICE_BEAN)).thenReturn(validationServiceMock);
 
         ProxyDocument proxyDocument = mockProxyDocumentWithExtension(fileName);
         proxyDocument.setBytes(buildValidationDocument(testFile));
+
         SimpleReport report = validationProxy.validate(proxyDocument);
-        TimeStampTokenValidationData timeStampTokenValidationData = report.getValidationConclusion().getTimeStampTokens().get(0);
-        assertEquals(TimeStampTokenValidationData.Indication.TOTAL_PASSED, timeStampTokenValidationData.getIndication());
-        assertSimpleReport(report);
+
+        assertSame(dummyReports.getSimpleReport(), report);
+        assertEquals(VALIDATION_TIME_NOW, report.getValidationConclusion().getValidationTime());
+
+        ArgumentCaptor<ValidationDocument> validationDocumentArgumentCaptor = ArgumentCaptor.forClass(ValidationDocument.class);
+        verify(validationServiceMock).validateDocument(validationDocumentArgumentCaptor.capture());
+        verifyNoMoreInteractions(validationServiceMock);
+        assertEquals(Date.from(MAY), validationDocumentArgumentCaptor.getValue().getValidationTime());
     }
 
     @Test
-    void proxyDocumentAsicsWithRandomDataFile() throws Exception {
-        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(getTimeStampValidationService());
-        when(applicationContext.getBean(GENERIC_VALIDATION_SERVICE_BEAN)).thenReturn(getGenericValidationService());
+    void validate_ProxyDocumentAsicsWithRandomDataFile_ReturnsValidationReport() throws Exception {
+        TimeStampTokenValidationService timeStampTokenValidationService = Mockito.mock(TimeStampTokenValidationService.class);
+        when(timeStampTokenValidationService.validateDocument(any())).thenReturn(createDummyReportsWith3PassedTSTValidations());
+        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(timeStampTokenValidationService);
+
+        GenericValidationService genericValidationServiceMock = Mockito.mock(GenericValidationService.class);
+        Reports dummyReports = createDummyReports();
+        when(genericValidationServiceMock.validateDocument(any())).thenReturn(dummyReports);
+        when(applicationContext.getBean(GENERIC_VALIDATION_SERVICE_BEAN)).thenReturn(genericValidationServiceMock);
+
         ProxyDocument proxyDocument = mockProxyDocumentWithExtension("asics");
         proxyDocument.setBytes(buildValidationDocument("TXTinsideAsics.asics"));
+
         SimpleReport report = validationProxy.validate(proxyDocument);
-        TimeStampTokenValidationData timeStampTokenValidationData = report.getValidationConclusion().getTimeStampTokens().get(0);
-        assertEquals(TimeStampTokenValidationData.Indication.TOTAL_PASSED, timeStampTokenValidationData.getIndication());
+
+        assertSame(dummyReports.getSimpleReport(), report);
+        assertEquals(VALIDATION_TIME_NOW, report.getValidationConclusion().getValidationTime());
+
+        ArgumentCaptor<ValidationDocument> validationDocumentArgumentCaptor = ArgumentCaptor.forClass(ValidationDocument.class);
+        verify(genericValidationServiceMock).validateDocument(validationDocumentArgumentCaptor.capture());
+        verifyNoMoreInteractions(genericValidationServiceMock);
+        assertEquals(Date.from(MAY), validationDocumentArgumentCaptor.getValue().getValidationTime());
     }
 
     @Test
-    void proxyDocumentAsicsWithTwoDataFiles() throws Exception {
-        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(getTimeStampValidationService());
-        ProxyDocument proxyDocument = mockProxyDocumentWithExtension("asics");
-        proxyDocument.setBytes(buildValidationDocument("TwoDataFilesAsics.asics"));
+    void validate_ProxyDocumentAsicsWithDifferentMimeType_ReturnsValidationReport() throws Exception {
+        TimeStampTokenValidationService timeStampTokenValidationService = Mockito.mock(TimeStampTokenValidationService.class);
+        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(timeStampTokenValidationService);
 
-        assertThrows(
-                DocumentRequirementsException.class, () -> validationProxy.validate(proxyDocument)
-        );
-    }
+        ValidationService validationServiceMock = Mockito.mock(ValidationService.class);
+        Reports dummyReports = createDummyReports();
+        when(validationServiceMock.validateDocument(any())).thenReturn(dummyReports);
+        when(applicationContext.getBean(GENERIC_VALIDATION_SERVICE_BEAN)).thenReturn(validationServiceMock);
 
-    @Test
-    void proxyDocumentAsicsWithDifferentMimeType() throws Exception {
-        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(getTimeStampValidationService());
-        when(applicationContext.getBean(GENERIC_VALIDATION_SERVICE_BEAN)).thenReturn(validationServiceSpy);
         ProxyDocument proxyDocument = mockProxyDocumentWithExtension("zip");
         proxyDocument.setBytes(buildValidationDocument("timestamptoken-different-mimetype.zip"));
+
         SimpleReport report = validationProxy.validate(proxyDocument);
-        assertSimpleReport(report);
+
+        assertSame(dummyReports.getSimpleReport(), report);
+        assertEquals(VALIDATION_TIME_NOW, report.getValidationConclusion().getValidationTime());
     }
 
     @Test
-    void proxyDocumentAsicsNoTeraWarning() throws Exception {
-        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(getTimeStampValidationService());
-        when(applicationContext.getBean(TIMEMARK_CONTAINER_VALIDATION_SERVICE_BEAN)).thenReturn(validationServiceSpy);
+    void validate_ProxyDocumentAsics_ReturnsValidationReportNoTeraWarning() throws Exception {
+        TimeStampTokenValidationService timeStampTokenValidationService = Mockito.mock(TimeStampTokenValidationService.class);
+        when(timeStampTokenValidationService.validateDocument(any())).thenReturn(createDummyReportsWith3PassedTSTValidations());
+        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(timeStampTokenValidationService);
+
+        ValidationService timemarkContainerValidationServiceMock = Mockito.mock(ValidationService.class);
+        Reports dummyReports = createDummyReports();
+        when(timemarkContainerValidationServiceMock.validateDocument(any())).thenReturn(dummyReports);
+        when(applicationContext.getBean(TIMEMARK_CONTAINER_VALIDATION_SERVICE_BEAN)).thenReturn(timemarkContainerValidationServiceMock);
+
         ProxyDocument proxyDocument = mockProxyDocumentWithExtension("asics");
         proxyDocument.setBytes(buildValidationDocument("timestamptoken-ddoc.asics"));
+
         SimpleReport report = validationProxy.validate(proxyDocument);
-        assertSimpleReport(report);
+
+        assertSame(dummyReports.getSimpleReport(), report);
+        assertEquals(VALIDATION_TIME_NOW, report.getValidationConclusion().getValidationTime());
+
+        ArgumentCaptor<ValidationDocument> validationDocumentArgumentCaptor = ArgumentCaptor.forClass(ValidationDocument.class);
+        verify(timemarkContainerValidationServiceMock).validateDocument(validationDocumentArgumentCaptor.capture());
+        verifyNoMoreInteractions(timemarkContainerValidationServiceMock);
+        assertEquals(Date.from(MAY), validationDocumentArgumentCaptor.getValue().getValidationTime());
     }
 
     @Test
-    void removeUnnecessaryWarningsFromValidationConclusion() {
+    void validate_TSTWithPassedValidationAndDatafileNotCoveredWarning_ValidateDocumentNotInvoked() throws Exception {
+        TimeStampTokenValidationService timeStampTokenValidationService = Mockito.mock(TimeStampTokenValidationService.class);
+        when(timeStampTokenValidationService.validateDocument(any())).thenReturn(
+            createDummyReportsWith1PassedTSTValidationAndDatafileNotCoveredWarning()
+        );
+        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(timeStampTokenValidationService);
+
+        GenericValidationService genericValidationServiceMock = Mockito.mock(GenericValidationService.class);
+        when(applicationContext.getBean(GENERIC_VALIDATION_SERVICE_BEAN)).thenReturn(genericValidationServiceMock);
+
+        ProxyDocument proxyDocument = mockProxyDocumentWithExtension("asics");
+        proxyDocument.setBytes(buildValidationDocument("TXTinsideAsics.asics"));
+
+        validationProxy.validate(proxyDocument);
+
+        verify(genericValidationServiceMock, never()).validateDocument(any());
+        verifyNoInteractions(genericValidationServiceMock);
+    }
+
+    @Test
+    void validate_TwoPassedTSTsFirstWithDatafileNotCoveredWarning_ValidateDocumentInvokedAccordingToTSTWithoutWarningDate() throws Exception {
+        TimeStampTokenValidationService timeStampTokenValidationService = Mockito.mock(TimeStampTokenValidationService.class);
+        when(timeStampTokenValidationService.validateDocument(any())).thenReturn(
+            createDummyReportsWith1PassedTSTValidationAndDatafileNotCoveredWarningAnd1WithoutWarning()
+        );
+        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(timeStampTokenValidationService);
+
+        GenericValidationService genericValidationServiceMock = Mockito.mock(GenericValidationService.class);
+        Reports dummyReports = createDummyReports();
+        when(genericValidationServiceMock.validateDocument(any())).thenReturn(dummyReports);
+        when(applicationContext.getBean(GENERIC_VALIDATION_SERVICE_BEAN)).thenReturn(genericValidationServiceMock);
+
+        ProxyDocument proxyDocument = mockProxyDocumentWithExtension("asics");
+        proxyDocument.setBytes(buildValidationDocument("TXTinsideAsics.asics"));
+
+        SimpleReport report = validationProxy.validate(proxyDocument);
+
+        assertSame(dummyReports.getSimpleReport(), report);
+        assertEquals(VALIDATION_TIME_NOW, report.getValidationConclusion().getValidationTime());
+
+        ArgumentCaptor<ValidationDocument> validationDocumentArgumentCaptor = ArgumentCaptor.forClass(ValidationDocument.class);
+        verify(genericValidationServiceMock).validateDocument(validationDocumentArgumentCaptor.capture());
+        verifyNoMoreInteractions(genericValidationServiceMock);
+        assertEquals(Date.from(JUNE), validationDocumentArgumentCaptor.getValue().getValidationTime());
+    }
+
+    @Test
+    void removeUnnecessaryWarning_InputWithWarning_WarningRemovedFromResult() {
         ValidationConclusion validationConclusion = new ValidationConclusion();
         ValidationWarning validationWarning = new ValidationWarning();
         validationWarning.setContent(DDOCContainerValidationReportBuilder.DDOC_TIMESTAMP_WARNING);
         validationConclusion.setValidationWarnings(Collections.singletonList(validationWarning));
+
         validationProxy.removeUnnecessaryWarning(validationConclusion);
-        assertTrue( validationConclusion.getValidationWarnings().isEmpty());
+
+        assertTrue(validationConclusion.getValidationWarnings().isEmpty());
     }
 
     @Test
-    void requestValidationReturnsReportInRequestedType() {
+    void validateRequest_DifferentReportTypesRequested_ReturnsReportInRequestedType() {
         mockValidationServices();
         for (DocumentType documentType : DocumentType.values()) {
             validateRequestAndAssertExpectedReportType(mockProxyDocumentWithDocument(documentType, ReportType.SIMPLE),     SimpleReport.class);
@@ -238,20 +342,20 @@ class ValidationProxyTest {
     }
 
     @Test
-    void addsTestEnvironmentWarningForTestProfile() {
+    void validate_TestProfileSet_AddsTestEnvironmentWarningToReport() {
         environment.setActiveProfiles("test");
         SimpleReport report = getValidationProxySpy().validate(new ProxyDocument());
         assertThat(report.getValidationConclusion().getValidationWarnings(), contains(TEST_ENV_WARNING));
     }
 
     @Test
-    void doesNotAddTestEnvironmentWarningWhenTestProfileNotSet() {
+    void validate_TestProfileNotSet_NoTestEnvironmentWarningInReport() {
         SimpleReport report = getValidationProxySpy().validate(new ProxyDocument());
         assertNull(report.getValidationConclusion().getValidationWarnings());
     }
 
     @Test
-    void addsTestEnvironmentWarningForTestProfile_constructsANewListWhenWarningsPresentInReport() {
+    void validate_TestProfileSetAndWarningsPresent_AddsAdditionalWarningToReport() {
         environment.setActiveProfiles("test");
         ValidationWarning warning1 = new ValidationWarning();
         warning1.setContent("warning1");
@@ -260,7 +364,27 @@ class ValidationProxyTest {
 
         SimpleReport report = getValidationProxySpyWithValidationWarningsInReport(Arrays.asList(warning1, warning2))
                 .validate(new ProxyDocument());
+
         assertThat(report.getValidationConclusion().getValidationWarnings(), contains(TEST_ENV_WARNING, warning1, warning2));
+    }
+
+    @Test
+    void validate_AsicsWithoutMimetype_ThrowsContainerMimetypeFileException() throws Exception {
+        String errorMessage = "some exception message";
+        doThrow(new ContainerMimetypeFileException(errorMessage)).when(zipMimetypeValidator).validateZipContainerMimetype(any());
+        TimeStampTokenValidationService timeStampTokenValidationService = Mockito.mock(TimeStampTokenValidationService.class);
+        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(timeStampTokenValidationService);
+        when(timeStampTokenValidationService.validateDocument(any())).thenReturn(createDummyReports());
+
+        ProxyDocument proxyDocument = mockProxyDocumentWithExtension("asics");
+        proxyDocument.setBytes(buildValidationDocument("TXTinsideAsics.asics"));
+
+        SimpleReport report = validationProxy.validate(proxyDocument);
+
+        assertThat(
+            report.getValidationConclusion().getValidationWarnings().stream().map(ValidationWarning::getContent).collect(Collectors.toList()),
+            contains(errorMessage)
+        );
     }
 
     private void mockValidationServices() {
@@ -283,24 +407,47 @@ class ValidationProxyTest {
         return reports;
     }
 
-    private GenericValidationService getGenericValidationService() {
-        GenericValidationService validationService = new GenericValidationService();
-        GenericSignaturePolicyProperties policyProperties = new GenericSignaturePolicyProperties();
-        policyProperties.initPolicySettings();
-        ConstraintLoadingSignaturePolicyService signaturePolicyService = new ConstraintLoadingSignaturePolicyService(policyProperties);
-        validationService.setSignaturePolicyService(signaturePolicyService);
-        validationService.setReportConfigurationProperties(new ReportConfigurationProperties(true));
-        return validationService;
+    private Reports createDummyReportsWith3PassedTSTValidations() {
+        ValidationConclusion validationConclusion = new ValidationConclusion();
+        validationConclusion.setTimeStampTokens(List.of(
+            createTimeStampTokenValidationData(TimeStampTokenValidationData.Indication.TOTAL_PASSED, JUNE),
+            createTimeStampTokenValidationData(TimeStampTokenValidationData.Indication.TOTAL_FAILED, APRIL),
+            createTimeStampTokenValidationData(TimeStampTokenValidationData.Indication.TOTAL_PASSED, null),
+            createTimeStampTokenValidationData(TimeStampTokenValidationData.Indication.TOTAL_PASSED, MAY)
+        ));
+        validationConclusion.setValidationTime(VALIDATION_TIME_NOW);
+        return new Reports(new SimpleReport(validationConclusion), null, null);
     }
 
-    private TimeStampTokenValidationService getTimeStampValidationService() {
-        TimeStampTokenValidationService validationService = new TimeStampTokenValidationService();
-        TimeStampTokenSignaturePolicyProperties policyProperties = new TimeStampTokenSignaturePolicyProperties();
-        policyProperties.initPolicySettings();
-        SignaturePolicyService<ValidationPolicy> signaturePolicyService = new SignaturePolicyService<>(policyProperties);
-        validationService.setSignaturePolicyService(signaturePolicyService);
-        validationService.setReportConfigurationProperties(new ReportConfigurationProperties(true));
-        return validationService;
+    private Reports createDummyReportsWith1PassedTSTValidationAndDatafileNotCoveredWarning() {
+        ValidationConclusion validationConclusion = new ValidationConclusion();
+
+        TimeStampTokenValidationData validationData = createTimeStampTokenValidationData(TimeStampTokenValidationData.Indication.TOTAL_PASSED, MAY);
+        validationData.setWarning(List.of(new Warning(WARNING_MSG_DATAFILE_NOT_COVERED_BY_TS)));
+
+        validationConclusion.setTimeStampTokens(List.of(validationData));
+        validationConclusion.setValidationTime(VALIDATION_TIME_NOW);
+        return new Reports(new SimpleReport(validationConclusion), null, null);
+    }
+
+    private Reports createDummyReportsWith1PassedTSTValidationAndDatafileNotCoveredWarningAnd1WithoutWarning() {
+        ValidationConclusion validationConclusion = new ValidationConclusion();
+
+        TimeStampTokenValidationData validationDataWithWarning = createTimeStampTokenValidationData(TimeStampTokenValidationData.Indication.TOTAL_PASSED, MAY);
+        validationDataWithWarning.setWarning(List.of(new Warning(WARNING_MSG_DATAFILE_NOT_COVERED_BY_TS)));
+
+        TimeStampTokenValidationData validationDataWithoutWarning = createTimeStampTokenValidationData(TimeStampTokenValidationData.Indication.TOTAL_PASSED, JUNE);
+
+        validationConclusion.setTimeStampTokens(List.of(validationDataWithWarning, validationDataWithoutWarning));
+        validationConclusion.setValidationTime(VALIDATION_TIME_NOW);
+        return new Reports(new SimpleReport(validationConclusion), null, null);
+    }
+
+    private TimeStampTokenValidationData createTimeStampTokenValidationData(TimeStampTokenValidationData.Indication indication, Instant signedTime) {
+        TimeStampTokenValidationData data = new TimeStampTokenValidationData();
+        data.setIndication(indication);
+        data.setSignedTime(Optional.ofNullable(signedTime).map(Instant::toString).orElse(null));
+        return data;
     }
 
     private ProxyDocument mockProxyDocumentWithDocument(DocumentType documentType) {
@@ -315,14 +462,10 @@ class ValidationProxyTest {
         return proxyDocument;
     }
 
-    private ProxyDocument mockProxyDocumentWithExtension(String filename) {
+    private ProxyDocument mockProxyDocumentWithExtension(String extension) {
         ProxyDocument proxyDocument = new ProxyDocument();
-        proxyDocument.setName(DEFAULT_DOCUMENT_NAME + filename);
+        proxyDocument.setName(DEFAULT_DOCUMENT_NAME + extension);
         return proxyDocument;
-    }
-
-    private void assertSimpleReport(SimpleReport report) {
-        assertEquals(validationServiceSpy.reports.getSimpleReport(), report);
     }
 
     private byte[] buildValidationDocument(String testFile) throws Exception {
@@ -330,67 +473,12 @@ class ValidationProxyTest {
         return Files.readAllBytes(documentPath);
     }
 
-    private static class ValidationServiceSpy implements ValidationService {
-
-        Reports reports;
-
-        @Override
-        public Reports validateDocument(ValidationDocument validationDocument) {
-            reports = createDummyReports();
-            return reports;
-        }
-
-        private Reports createDummyReports() {
-            ValidationConclusion validationConclusion = new ValidationConclusion();
-            validationConclusion.setValidSignaturesCount(0);
-            validationConclusion.setSignaturesCount(1);
-            validationConclusion.setValidationTime("ValidationTime");
-            validationConclusion.setValidatedDocument(createDummyValidatedDocument());
-            validationConclusion.setPolicy(createDummyPolicy());
-            validationConclusion.setSignatures(createDummySignatures());
-            SimpleReport simpleReport = new SimpleReport(validationConclusion);
-            return new Reports(simpleReport, null, null);
-        }
-
-        private ValidatedDocument createDummyValidatedDocument() {
-            ValidatedDocument validatedDocument = new ValidatedDocument();
-            validatedDocument.setFilename("DocumentName");
-            return validatedDocument;
-        }
-
-        private List<SignatureValidationData> createDummySignatures() {
-            SignatureValidationData signature = new SignatureValidationData();
-            signature.setSignatureLevel("SignatureLevel");
-            signature.setClaimedSigningTime("ClaimedSigningTime");
-            signature.setInfo(createDummySignatureInfo());
-            signature.setSignatureFormat("SingatureFormat");
-            signature.setId("id1");
-            signature.setSignedBy("Some Name 123456789");
-            signature.setIndication(SignatureValidationData.Indication.TOTAL_FAILED);
-            signature.setWarnings(Collections.emptyList());
-            signature.setErrors(createDummyErrors());
-            return Collections.singletonList(signature);
-        }
-
-        private List<Error> createDummyErrors() {
-            Error error = new Error();
-            error.setContent("ErrorContent");
-            return Collections.singletonList(error);
-        }
-
-        private Info createDummySignatureInfo() {
-            Info info = new Info();
-            info.setBestSignatureTime("BestSignatureTime");
-            return info;
-        }
-
-        private Policy createDummyPolicy() {
-            Policy policy = new Policy();
-            policy.setPolicyDescription("PolicyDescription");
-            policy.setPolicyName("PolicyName");
-            policy.setPolicyUrl("http://policyUrl.com");
-            return policy;
-        }
+    private Reports createDummyReports() {
+        ValidationConclusion vc = new ValidationConclusion();
+        vc.setValidationLevel("DUMMY");
+        vc.setValidationTime(VALIDATION_TIME_NOW);
+        vc.setTimeStampTokens(Collections.emptyList());
+        return new Reports(new SimpleReport(vc), null, null);
     }
 
     private static Stream<Arguments> getFileNameAndTestFile() {

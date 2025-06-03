@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 - 2024 Riigi Infosüsteemi Amet
+ * Copyright 2019 - 2025 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -17,43 +17,62 @@
 package ee.openeid.validation.service.timemark.report;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
+import ee.openeid.siva.validation.document.report.ArchiveTimeStamp;
 import ee.openeid.siva.validation.document.report.Certificate;
 import ee.openeid.siva.validation.document.report.CertificateType;
-import ee.openeid.siva.validation.document.report.SignatureScope;
+import ee.openeid.siva.validation.document.report.Scope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.document.report.ValidationWarning;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
+import eu.europa.esig.dss.diagnostic.DiagnosticData;
+import eu.europa.esig.dss.diagnostic.TimestampWrapper;
 import eu.europa.esig.dss.enumerations.SignatureQualification;
 import eu.europa.esig.dss.enumerations.SubIndication;
+import eu.europa.esig.dss.spi.x509.tsp.TimestampToken;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.collections4.CollectionUtils;
 import org.digidoc4j.Container;
+import org.digidoc4j.ContainerValidationResult;
 import org.digidoc4j.Signature;
 import org.digidoc4j.SignatureProfile;
 import org.digidoc4j.ValidationResult;
 import org.digidoc4j.impl.asic.AsicSignature;
 import org.digidoc4j.impl.asic.asice.AsicESignature;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.security.cert.X509Certificate;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-import static ee.openeid.validation.service.timemark.util.SignatureScopeParser.getAsicSignatureScopes;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.getDateFormatterWithGMTZone;
 import static ee.openeid.validation.service.timemark.util.SignatureCertificateParser.getCertificate;
 
 public class AsicContainerValidationReportBuilder extends TimemarkContainerValidationReportBuilder {
-    public AsicContainerValidationReportBuilder(Container container, ValidationDocument validationDocument, ValidationPolicy validationPolicy, ValidationResult validationResult, boolean isReportSignatureEnabled) {
+
+    public AsicContainerValidationReportBuilder(
+        Container container,
+        ValidationDocument validationDocument,
+        ValidationPolicy validationPolicy,
+        ContainerValidationResult validationResult,
+        boolean isReportSignatureEnabled
+    ) {
         super(container, validationDocument, validationPolicy, validationResult, isReportSignatureEnabled);
     }
 
     @Override
-    protected SignatureValidationData.Indication getIndication(Signature signature, Map<String, ValidationResult> signatureValidationResults) {
-        ValidationResult signatureValidationResult = signatureValidationResults.get(signature.getUniqueId());
-        if (signatureValidationResult.isValid() && validationResult.getErrors().isEmpty()) {
+    protected SignatureValidationData.Indication getIndication(Signature signature) {
+        boolean isSignatureValid = getSignatureValidationResult(signature.getUniqueId())
+            .map(ValidationResult::isValid)
+            .orElse(false);
+        if (isSignatureValid && validationResult.getErrors().isEmpty()) {
             return SignatureValidationData.Indication.TOTAL_PASSED;
         } else if (REPORT_INDICATION_INDETERMINATE.equals(getDssSimpleReport((AsicESignature) signature).getIndication(signature.getUniqueId()).name())
-                && validationResult.getErrors().isEmpty()) {
+            && validationResult.getErrors().isEmpty()) {
             return SignatureValidationData.Indication.INDETERMINATE;
         } else {
             return SignatureValidationData.Indication.TOTAL_FAILED;
@@ -61,19 +80,19 @@ public class AsicContainerValidationReportBuilder extends TimemarkContainerValid
     }
 
     @Override
-    protected String getSubIndication(Signature signature, Map<String, ValidationResult> signatureValidationResults) {
-        if (getIndication(signature, signatureValidationResults) == SignatureValidationData.Indication.TOTAL_PASSED) {
+    protected String getSubIndication(Signature signature) {
+        if (getIndication(signature) == SignatureValidationData.Indication.TOTAL_PASSED) {
             return "";
         }
         SubIndication subindication = getDssSimpleReport((AsicESignature) signature).getSubIndication(signature.getUniqueId());
         return subindication != null ? subindication.name() : "";
-
     }
 
     @Override
     protected String getSignatureLevel(Signature signature) {
         SignatureQualification signatureLevel = getDssSimpleReport((AsicESignature) signature).getSignatureQualification(signature.getUniqueId());
         return signatureLevel != null ? signatureLevel.name() : "";
+
     }
 
     @Override
@@ -93,12 +112,18 @@ public class AsicContainerValidationReportBuilder extends TimemarkContainerValid
 
     @Override
     List<ValidationWarning> getExtraValidationWarnings() {
-        return Collections.emptyList();
+        return new ArrayList<>();
     }
 
     @Override
-    List<SignatureScope> getSignatureScopes(Signature signature, List<String> dataFilenames) {
-        return getAsicSignatureScopes((AsicSignature) signature, dataFilenames);
+    List<Scope> getSignatureScopes(Signature signature, List<String> dataFilenames) {
+        AsicESignature bDocSignature = (AsicESignature) signature;
+        return bDocSignature.getOrigin().getReferences()
+                .stream()
+                .map(r -> decodeUriIfPossible(r.getURI()))
+                .filter(dataFilenames::contains) //filters out Signed Properties
+                .map(AsicContainerValidationReportBuilder::createFullSignatureScopeForDataFile)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -110,4 +135,70 @@ public class AsicContainerValidationReportBuilder extends TimemarkContainerValid
     String getSignatureFormat(SignatureProfile profile) {
         return XADES_FORMAT_PREFIX + profile.toString();
     }
+
+    @Override
+    List<ArchiveTimeStamp> getArchiveTimestamps(Signature signature) {
+        String signatureId = signature.getUniqueId();
+        DiagnosticData diagnosticData = ((AsicSignature) signature).getDssValidationReport().getReports().getDiagnosticData();
+
+        return Optional
+                .ofNullable(diagnosticData.getSignatureById(signatureId).getALevelTimestamps())
+                .filter(CollectionUtils::isNotEmpty)
+                .map(timestamps -> generateArchiveTimestamps(timestamps, signature))
+                .orElse(null);
+    }
+
+    private static Scope createFullSignatureScopeForDataFile(String filename) {
+        Scope signatureScope = new Scope();
+        signatureScope.setName(filename);
+        signatureScope.setScope(FULL_SIGNATURE_SCOPE);
+        signatureScope.setContent(FULL_DOCUMENT);
+        return signatureScope;
+    }
+
+    private String decodeUriIfPossible(String uri) {
+        try {
+            return URLDecoder.decode(uri, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            LOGGER.warn("datafile " + uri + " has unsupported encoding", e);
+            return uri;
+        }
+    }
+
+    private List<ArchiveTimeStamp> generateArchiveTimestamps(List<TimestampWrapper> timestamps, Signature signature) {
+        List<ArchiveTimeStamp> archiveTimestamps = new ArrayList<>();
+
+        for (TimestampWrapper timestampWrapper : timestamps) {
+            ArchiveTimeStamp archiveTimeStamp = new ArchiveTimeStamp();
+            eu.europa.esig.dss.simplereport.SimpleReport simpleReport = ((AsicSignature) signature).getDssValidationReport()
+                    .getReports().getSimpleReport();
+
+            archiveTimeStamp.setSignedTime(getDateFormatterWithGMTZone().format(timestampWrapper.getProductionTime()));
+            archiveTimeStamp.setIndication(simpleReport.getIndication(timestampWrapper.getId()));
+            Optional.ofNullable(simpleReport.getSubIndication(timestampWrapper.getId()))
+                    .map(SubIndication::name)
+                    .ifPresent(archiveTimeStamp::setSubIndication);
+            archiveTimeStamp.setSignedBy(timestampWrapper.getSigningCertificate().getCommonName());
+            archiveTimeStamp.setCountry(timestampWrapper.getSigningCertificate().getCountryName());
+            archiveTimeStamp.setContent(getContentFromTimestampToken(signature, timestampWrapper));
+
+            archiveTimestamps.add(archiveTimeStamp);
+        }
+
+        return archiveTimestamps;
+    }
+
+    private String getContentFromTimestampToken(Signature signature, TimestampWrapper timestampWrapper) {
+        String timestampWrapperId = timestampWrapper.getId();
+        List<TimestampToken> archiveTimestampTokens = ((AsicSignature) signature).getOrigin().getDssSignature().getArchiveTimestamps();
+
+        for (TimestampToken timestampToken : archiveTimestampTokens) {
+            if (timestampWrapperId.equals(timestampToken.getDSSId().asXmlId())) {
+                return Base64.encodeBase64String(timestampToken.getEncoded());
+            }
+        }
+
+        return null;
+    }
+
 }

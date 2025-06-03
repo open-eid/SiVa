@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2016 - 2024 Riigi Infosüsteemi Amet
+  ~ Copyright 2016 - 2025 Riigi Infosüsteemi Amet
   ~
   ~ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
   ~ the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -19,7 +19,7 @@
     <parent>
         <artifactId>siva</artifactId>
         <groupId>ee.openid.siva</groupId>
-        <version>3.7.0</version>
+        <version>3.9.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
@@ -34,7 +34,7 @@
     </modules>
 
     <properties>
-        <digidoc4j.version>5.3.0</digidoc4j.version>
+        <digidoc4j.version>6.0.1</digidoc4j.version>
     </properties>
 
     <dependencyManagement>
@@ -55,6 +55,11 @@
             <dependency>
                 <groupId>org.bouncycastle</groupId>
                 <artifactId>bcprov-jdk18on</artifactId>
+                <version>${bouncycastle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcutil-jdk18on</artifactId>
                 <version>${bouncycastle.version}</version>
             </dependency>
             <!-- DigiDoc4J -->
@@ -86,12 +91,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
-            <dependency>
-                <groupId>commons-codec</groupId>
-                <artifactId>commons-codec</artifactId>
-                <version>${commons.codec.version}</version>
-            </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-collections4</artifactId>
@@ -103,38 +102,9 @@
                 <version>${commons.io.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-lang3</artifactId>
-                <version>3.14.0</version>
-            </dependency>
-            <dependency>
                 <groupId>org.cryptacular</groupId>
                 <artifactId>cryptacular</artifactId>
-                <version>1.2.6</version>
-            </dependency>
-            <!-- Override vulnerable version-->
-            <dependency>
-                <groupId>org.yaml</groupId>
-                <artifactId>snakeyaml</artifactId>
-                <version>${snakeyaml.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>${logback.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-core</artifactId>
-                <version>${logback.version}</version>
-            </dependency>
-
-            <!-- Lombok for getters and setters -->
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok.version}</version>
+                <version>1.2.7</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

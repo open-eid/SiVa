@@ -93,11 +93,11 @@ For that we first need to create service file:
 vim siva-webapp.service
 ```
 
-Inside it we need to paste below text. You need to change few things in service setup file.
+Inside it, we need to paste below text. You need to change few things in service setup file.
 
 * First you **must not** run service as `root`. So it's strongly recommended to change line `User=root`
 * Second You can change Java JVM options by modifying the `JAVA_OPTS` inside the `siva-webapp.service` file.
-* Also You can change the SiVa application configuration options by modifying `RUN_ARGS` section in file
+* Also, You can change the SiVa application configuration options by modifying `RUN_ARGS` section in file
 
 ```ini
 [Unit]
@@ -197,7 +197,7 @@ cp siva-parent/siva-webapp/target/siva-webapp-X.X.X.war apache-tomcat-8.5.24/web
 ./apache-tomcat-7.0.77/bin/catalina.sh run
 ```
 
-> **IMPORTANT** siva-webapp on startup creates `etc` directory where it copies the TSL validaiton certificates
+> **IMPORTANT** siva-webapp on startup creates `etc` directory where it copies the TSL validation certificates
 > `siva-keystore.jks`. Default location for this directory is application root or `$CATALINA_HOME`. To change
 > this default behavior you should set environment variable `DSS_DATA_FOLDER`. 
 
@@ -206,7 +206,7 @@ cp siva-parent/siva-webapp/target/siva-webapp-X.X.X.war apache-tomcat-8.5.24/web
 
 ### How-to set WAR deployed SiVa `application.properties`
 
-SiVa override properties can be set using `application.properties` file. The file can locate anywhare in the host system.
+SiVa override properties can be set using `application.properties` file. The file can locate anywhere in the host system.
 To make properties file accessible for SiVa you need to create or edit `setenv.sh` placed inside `bin` directory.
 
 Contents of the `setenv.sh` file should look like:
@@ -219,7 +219,7 @@ export CATALINA_OPTS="-Dspring.config.location=file:/path/to/application.propert
 ### Smoke testing your deployed system
 
 **Step 1**. Install HTTPIE
-`httpie` is more user friendly version of `curl` and we will use to verify that SiVa was installed
+`httpie` is more user-friendly version of `curl` and we will use to verify that SiVa was installed
 and started correctly on our server.
 
 If you have Python and its package manager `pip` installed. Then You can issue below command:
@@ -301,7 +301,7 @@ SiVa webapps provide endpoints for external monitoring tools to periodically che
 !!! note
     Note that this endpoint is not exposed by default.
 
-The url for accessing JSON formatted health information with HTTP GET is `/monitoring/health` . See the [Interfaces section](/siva/v3/interfaces.md#service-health-monitoring) for response structure and details.
+The url for accessing JSON formatted health information with HTTP GET is `/monitoring/health` . See the [Interfaces section](../siva3/interfaces.md#service-health-monitoring) for response structure and details.
 
 * **Exposing the health monitoring endpoint**
 
@@ -325,7 +325,7 @@ These links to dependent web services have been preconfigured. For example, the 
 !!! note
     Note that this endpoint requires the health endpoint to be enabled and exposed in order to function.
 
-The url for accessing JSON formatted heartbeat information with HTTP GET is `/monitoring/heartbeat`. See the [Interfaces section](/siva/v3/interfaces.md#simplified-health-monitoring) for response structure and details.
+The url for accessing JSON formatted heartbeat information with HTTP GET is `/monitoring/heartbeat`. See the [Interfaces section](../siva3/interfaces.md#simplified-health-monitoring) for response structure and details.
 
 * **Enabling and exposing the heartbeat monitoring endpoint**
 
@@ -344,7 +344,7 @@ The endpoint is implemented by polling the health information directly from the 
 !!! note
     Note that this endpoint is not enabled nor exposed by default.
 
-The url for accessing JSON formatted version information with HTTP GET is `/monitoring/version`. See the [Interfaces section](/siva/v3/interfaces.md#version-information) for response structure and details.
+The url for accessing JSON formatted version information with HTTP GET is `/monitoring/version`. See the [Interfaces section](../siva3/interfaces.md#version-information) for response structure and details.
 
 * **Enabling and exposing the version information endpoint**
 
@@ -459,12 +459,6 @@ See the reference list of all common [application properties](http://docs.spring
     TSL is currently used only by Generic and BDOC validators
 
 
-* Configure SOAP services endpoint URL-s displayed in WSDL
-
-| Property | Description |
-| ------ | ----------- |
-| **siva.wsdl.endpoint-url** | SOAP services endpoint URL to what specific service name is added within the application. Must contain only scheme, host and/or port and optional path. Service name must not be added to the url.  |
-
 * TimeMark validation - customizing policies
 
 | Property | Description |
@@ -520,6 +514,26 @@ siva.europe.signaturePolicy.policies[1].constraintPath=generic_constraint_qes.xm
 
 !!! note
     Default policy configuration is lost when policy detail properties (name, description, url or constraintPath) are overridden or new custom policies added in custom configuration files (in this case, the existing default policies must be redefined in configuration files explicitly)
+
+* Configure SiVa to request revocation status for T level signatures
+
+By default, T level signatures do not contain revocation data.
+It is possible to configure SiVa to use OnlineOCSPSource in order to request revocation status during the validation process for T level signatures.
+
+An example of configuring SiVa to request an OCSP response only for certificates issued by Latvian and Lithuanian service providers:
+```text
+t-level-signature-filter.filter-type = ALLOWED_COUNTRIES
+t-level-signature-filter.countries[0] = LV
+t-level-signature-filter.countries[1] = LT
+```
+
+!!! note
+    If enabled, the revocation request is made for every signature level for given countries, not only T level signatures.
+
+| Property | Description |
+| -------- |-------------|
+|**t-level-signature-filter.filter-type**| A string value that determines, which filter is being used. There are two available options: ALLOWED_COUNTRIES or NOT_ALLOWED_COUNTRIES <ul><li>When set to **ALLOWED_COUNTRIES** SiVa uses OnlineOCSPSource to request revocation status for the list of provided countries. If the list of countries is left empty, no OCSP requests are made</li><li>When set to **NOT_ALLOWED_COUNTRIES** SiVa uses OnlineOCSPSource to request revocation status for all the countries that are not on the list. If the list of countries is left empty, it makes an OCSP request for every country</li><li>Default: **N/A**</li></ul> |
+|**t-level-signature-filter.countries**| A list of countries to be provided to the filter. For example: EE, LV, BE <ul><li>Default: **N/A**</li></ul>|
    
 ### Demo webapp parameters
 
@@ -529,8 +543,6 @@ siva.europe.signaturePolicy.policies[1].constraintPath=generic_constraint_qes.xm
 | -------- | ----------- |
 |**siva.service.serviceHost**| An HTTP URL link to the Siva webapp <ul><li>Default: **http://localhost:8080**</li></ul> |
 |**siva.service.jsonServicePath**| Service path in Siva webapp to access the REST/JSON API<ul><li>Default: **/validate**</li></ul> |
-|**siva.service.soapServicePath**| Service path in Siva webapp to access the SOAP API <ul><li>Default: **/soap/validationWebService/validateDocument**</li></ul> |
 |**siva.service.jsonDataFilesServicePath**| Data file service path in Siva webapp to access the REST/JSON API<ul><li>Default: **/getDataFiles**</li></ul> |
-|**siva.service.soapDataFilesServicePath**| Data file service path in Siva webapp to access the SOAP API <ul><li>Default: **/soap/dataFilesWebService/getDocumentDataFiles**</li></ul> |
 |**siva.service.trustStore**| Path to Siva webapp truststore on classpath <ul><li>Default: **siva_server_truststore.p12**</li></ul> |
 |**siva.service.trustStorePassword**| Siva webapp truststore password <ul><li>Default: **password**</li></ul> |

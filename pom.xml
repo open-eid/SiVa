@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2016 - 2024 Riigi Infosüsteemi Amet
+  ~ Copyright 2016 - 2025 Riigi Infosüsteemi Amet
   ~
   ~ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
   ~ the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -22,7 +22,7 @@
 
     <groupId>ee.openid.siva</groupId>
     <artifactId>siva</artifactId>
-    <version>3.7.0</version>
+    <version>3.9.0</version>
     <packaging>pom</packaging>
     <name>SiVa Digitally signed documents validation service</name>
     <url>https://github.com/open-eid/SiVa</url>
@@ -114,16 +114,12 @@
 
         <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss'Z'</maven.build.timestamp.format>
 
-        <bouncycastle.version>1.76</bouncycastle.version>
-        <dss.version>6.0.d4j.1</dss.version>
-        <commons.codec.version>1.16.1</commons.codec.version>
-        <commons.collections.version>4.4</commons.collections.version>
-        <commons.io.version>2.16.1</commons.io.version>
-        <json.version>20240303</json.version>
-        <logback.version>1.5.5</logback.version>
-        <lombok.version>1.18.32</lombok.version>
-        <snakeyaml.version>2.2</snakeyaml.version>
-        <spring.boot.version>3.2.4</spring.boot.version>
+        <bouncycastle.version>1.80</bouncycastle.version>
+        <dss.version>6.0.1.d4j.1</dss.version>
+        <commons.collections.version>4.5.0</commons.collections.version>
+        <commons.io.version>2.19.0</commons.io.version>
+        <json.version>20250107</json.version>
+        <spring.boot.version>3.4.5</spring.boot.version>
 
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
@@ -146,7 +142,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-pmd-plugin</artifactId>
-                <version>3.21.2</version>
+                <version>3.26.0</version>
             </plugin>
         </plugins>
     </reporting>
@@ -156,7 +152,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>license-maven-plugin</artifactId>
-                <version>2.4.0</version>
+                <version>2.5.0</version>
                 <configuration>
                     <includeTransitiveDependencies>false</includeTransitiveDependencies>
                 </configuration>
@@ -164,9 +160,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
+                <version>3.14.0</version>
                 <configuration>
-                    <forceJavacCompilerUse>true</forceJavacCompilerUse>
+                    <forceLegacyJavacApi>true</forceLegacyJavacApi>
                     <source>${language.level}</source>
                     <target>${language.level}</target>
                 </configuration>
@@ -183,14 +179,13 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.12</version>
+                <version>0.8.13</version>
                 <configuration>
                     <excludes>
                         <exclude>**/*Application.*</exclude>
                         <exclude>**/*Configuration.*</exclude>
                         <exclude>**/extra-jars/**</exclude>
                         <exclude>**/ext-lib/**</exclude>
-                        <exclude>**/ee/openeid/siva/webapp/soap/*.class</exclude>
                         <exclude>**/eu/x_road/xsd/**</exclude>
                         <exclude>**/eu/europa/**</exclude>
                     </excludes>
@@ -207,16 +202,44 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>3.1.1</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.2.5</version>
+                <version>3.5.3</version>
                 <configuration>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                     <argLine>${argLine} -Dfile.encoding=UTF-8 -Xmx1024m</argLine>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <!-- Allow only single edition (currently latest is jdk18on) of Bouncy Castle libraries.
+                                     Other libraries may reference different editions of the same Bouncy Castle library
+                                     (bcprov-jdk15on vs bcprov-jdk18on), but duplicate classes on classpath must be
+                                     avoided. -->
+                                <bannedDependencies>
+                                    <excludes>
+                                        <exclude>org.bouncycastle:*</exclude>
+                                    </excludes>
+                                    <includes>
+                                        <include>org.bouncycastle:*-jdk18on</include>
+                                    </includes>
+                                </bannedDependencies>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -232,7 +255,7 @@
                     <plugin>
                         <groupId>org.owasp</groupId>
                         <artifactId>dependency-check-maven</artifactId>
-                        <version>9.1.0</version>
+                        <version>8.4.3</version>
                         <configuration>
                             <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
                             <failOnError>false</failOnError>
@@ -255,7 +278,7 @@
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.8.12</version>
+                        <version>0.8.13</version>
                         <executions>
                             <execution>
                                 <id>prepare-agent</id>

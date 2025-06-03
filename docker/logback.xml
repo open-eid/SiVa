@@ -39,6 +39,7 @@
     </appender>
 
     <logger name="org.digidoc4j.impl" level="WARN"/>
+    <logger name="eu.europa" level="WARN"/>
 
     <root level="INFO">
         <appender-ref ref="COMMON_LOG_FILE"/>

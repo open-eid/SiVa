@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 - 2024 Riigi Infosüsteemi Amet
+ * Copyright 2016 - 2025 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -16,8 +16,8 @@
 
 package ee.openeid.validation.service.generic.validator.report;
 
-import ee.openeid.siva.validation.document.Datafile;
 import ee.openeid.siva.validation.document.ValidationDocument;
+import ee.openeid.siva.validation.document.report.ArchiveTimeStamp;
 import ee.openeid.siva.validation.document.report.Certificate;
 import ee.openeid.siva.validation.document.report.CertificateType;
 import ee.openeid.siva.validation.document.report.DetailedReport;
@@ -25,8 +25,8 @@ import ee.openeid.siva.validation.document.report.DiagnosticReport;
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.Info;
 import ee.openeid.siva.validation.document.report.Reports;
+import ee.openeid.siva.validation.document.report.Scope;
 import ee.openeid.siva.validation.document.report.SignatureProductionPlace;
-import ee.openeid.siva.validation.document.report.SignatureScope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.SignerRole;
 import ee.openeid.siva.validation.document.report.SimpleReport;
@@ -46,7 +46,6 @@ import eu.europa.esig.dss.diagnostic.SignatureWrapper;
 import eu.europa.esig.dss.diagnostic.TimestampWrapper;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlRevocation;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlSignature;
-import eu.europa.esig.dss.diagnostic.jaxb.XmlSignatureScope;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlSignerRole;
 import eu.europa.esig.dss.enumerations.ASiCContainerType;
 import eu.europa.esig.dss.enumerations.DigestAlgorithm;
@@ -75,6 +74,7 @@ import org.bouncycastle.asn1.x509.Extension;
 import org.bouncycastle.cert.ocsp.BasicOCSPResp;
 import org.bouncycastle.cert.ocsp.OCSPException;
 import org.bouncycastle.cert.ocsp.OCSPResp;
+import org.digidoc4j.impl.asic.TmSignaturePolicyType;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
@@ -90,9 +90,11 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.FORMAT_NOT_FOUND;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.ERROR_MSG_FORMAT_NOT_FOUND;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.ERROR_MSG_INVALID_SIGNATURE_FORMAT_FOR_BDOC_POLICY;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.createReportPolicy;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.emptyWhenNull;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.getDateFormatterWithGMTZone;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.getValidationTime;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.processSignatureIndications;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.valueNotKnown;
@@ -107,7 +109,6 @@ public class GenericValidationReportBuilder {
     private static final String BASELINE_SIGNATURE_FORMAT_SUFFIX = "B";
     private static final String LT_TM_XAdES_SIGNATURE_FORMAT = "XAdES_BASELINE_LT_TM";
     private static final String LT_XAdES_SIGNATURE_FORMAT = "XAdES-BASELINE-LT";
-    private static final String TM_POLICY_OID = "1.3.6.1.4.1.10015.1000.3.2.1";
 
     private final eu.europa.esig.dss.validation.reports.Reports dssReports;
     private final ValidationDocument validationDocument;
@@ -187,7 +188,7 @@ public class GenericValidationReportBuilder {
         if (containerType != null) {
             validationConclusion.setSignatureForm(containerType.toString());
         }
-        validationConclusion.setValidationWarnings(Collections.emptyList());
+        validationConclusion.setValidationWarnings(new ArrayList<>());
         validationConclusion.setSignatures(buildSignatureValidationDataList());
         validationConclusion.setSignaturesCount(validationConclusion.getSignatures().size());
         validationConclusion.setValidatedDocument(ReportBuilderUtils.createValidatedDocument(isReportSignatureEnabled, validationDocument.getName(), validationDocument.getBytes()));
@@ -415,13 +416,19 @@ public class GenericValidationReportBuilder {
     }
 
     private String changeAndValidateSignatureFormat(String signatureFormat, String signatureId) {
-        if (TM_POLICY_OID.equals(dssReports.getDiagnosticData().getSignatureById(signatureId).getPolicyId())) {
-            signatureFormat = signatureFormat.replace(LT_XAdES_SIGNATURE_FORMAT, LT_TM_XAdES_SIGNATURE_FORMAT);
+        String policyId = dssReports.getDiagnosticData().getSignatureById(signatureId).getPolicyId();
+        if (TmSignaturePolicyType.isTmPolicyOid(policyId)) {
+            if (LT_XAdES_SIGNATURE_FORMAT.equals(signatureFormat)) {
+                signatureFormat = LT_TM_XAdES_SIGNATURE_FORMAT;
+            } else {
+                new DssSimpleReportWrapper(dssReports).getSignatureAdESValidationXmlDetails(signatureId)
+                    .getError().add(DssSimpleReportWrapper.createXmlMessage(ERROR_MSG_INVALID_SIGNATURE_FORMAT_FOR_BDOC_POLICY));
+            }
         }
         if (isInvalidFormat(signatureFormat, signatureId)) {
             signatureFormat = signatureFormat.replace(LT_SIGNATURE_FORMAT_SUFFIX, BASELINE_SIGNATURE_FORMAT_SUFFIX);
             new DssSimpleReportWrapper(dssReports).getSignatureAdESValidationXmlDetails(signatureId)
-                    .getError().add(DssSimpleReportWrapper.createXmlMessage(FORMAT_NOT_FOUND));
+                    .getError().add(DssSimpleReportWrapper.createXmlMessage(ERROR_MSG_FORMAT_NOT_FOUND));
         }
         signatureFormat = signatureFormat.replace("-", "_");
         return signatureFormat;
@@ -450,6 +457,7 @@ public class GenericValidationReportBuilder {
         info.setSignerRole(parseSignerRole(signatureId));
         info.setSignatureProductionPlace(parseSignatureProductionPlace(signatureId));
         info.setSigningReason(parseReason(signatureId));
+        info.setArchiveTimeStamps(getArchiveTimestamps(signatureId));
         return info;
     }
 
@@ -487,6 +495,35 @@ public class GenericValidationReportBuilder {
         List<TimestampWrapper> timestamps = dssReports.getDiagnosticData().getSignatureById(signatureId)
                 .getTimestampListByType(TimestampType.SIGNATURE_TIMESTAMP);
         return timestamps.isEmpty() ? null : Collections.min(timestamps, Comparator.comparing(TimestampWrapper::getProductionTime));
+    }
+
+    private List<ArchiveTimeStamp> getArchiveTimestamps(String signatureId) {
+        return Optional
+                .ofNullable(dssReports.getDiagnosticData().getSignatureById(signatureId).getALevelTimestamps())
+                .filter(CollectionUtils::isNotEmpty)
+                .map(this::generateArchiveTimestamps)
+                .orElse(null);
+    }
+
+    private List<ArchiveTimeStamp> generateArchiveTimestamps(List<TimestampWrapper> timestamps) {
+        List<ArchiveTimeStamp> archiveTimestamps = new ArrayList<>();
+
+        for (TimestampWrapper timestampWrapper : timestamps) {
+            ArchiveTimeStamp archiveTimeStamp = new ArchiveTimeStamp();
+
+            archiveTimeStamp.setSignedTime(getDateFormatterWithGMTZone().format(timestampWrapper.getProductionTime()));
+            archiveTimeStamp.setIndication(dssReports.getSimpleReport().getIndication(timestampWrapper.getId()));
+            Optional.ofNullable(dssReports.getSimpleReport().getSubIndication(timestampWrapper.getId()))
+                    .map(SubIndication::name)
+                    .ifPresent(archiveTimeStamp::setSubIndication);
+            archiveTimeStamp.setSignedBy(timestampWrapper.getSigningCertificate().getCommonName());
+            archiveTimeStamp.setCountry(timestampWrapper.getSigningCertificate().getCountryName());
+            archiveTimeStamp.setContent(Base64.encodeBase64String(timestampWrapper.getBinaries()));
+
+            archiveTimestamps.add(archiveTimeStamp);
+        }
+
+        return archiveTimestamps;
     }
 
     private String parseTimeAssertionMessageImprint(String signatureFormat, String signatureId) {
@@ -631,30 +668,11 @@ public class GenericValidationReportBuilder {
                 .orElse(null);
     }
 
-    private List<SignatureScope> parseSignatureScopes(String signatureId) {
+    private List<Scope> parseSignatureScopes(String signatureId) {
         return dssReports.getDiagnosticData().getSignatureById(signatureId).getSignatureScopes()
                 .stream()
-                .map(this::parseSignatureScope)
+                .map(s -> ReportBuilderUtils.parseScope(s, validationDocument.getDatafiles()))
                 .collect(Collectors.toList());
-    }
-
-    private SignatureScope parseSignatureScope(XmlSignatureScope dssSignatureScope) {
-        SignatureScope signatureScope = new SignatureScope();
-        signatureScope.setContent(emptyWhenNull(dssSignatureScope.getDescription()));
-        signatureScope.setName(emptyWhenNull(dssSignatureScope.getName()));
-        if (dssSignatureScope.getScope() != null)
-            signatureScope.setScope(emptyWhenNull(dssSignatureScope.getScope().name()));
-        if (CollectionUtils.isNotEmpty(validationDocument.getDatafiles())) {
-            Optional<Datafile> dataFile = validationDocument.getDatafiles()
-                    .stream()
-                    .filter(datafile -> datafile.getFilename().equals(dssSignatureScope.getName()))
-                    .findFirst();
-            if (dataFile.isPresent()) {
-                signatureScope.setHash(dataFile.get().getHash());
-                signatureScope.setHashAlgo(dataFile.get().getHashAlgo().toUpperCase());
-            }
-        }
-        return signatureScope;
     }
 
     private String parseClaimedSigningTime(String signatureId) {

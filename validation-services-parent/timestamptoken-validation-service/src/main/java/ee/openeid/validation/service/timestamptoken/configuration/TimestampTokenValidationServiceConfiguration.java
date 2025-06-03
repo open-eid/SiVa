@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 - 2024 Riigi Infosüsteemi Amet
+ * Copyright 2019 - 2025 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -17,8 +17,7 @@
 package ee.openeid.validation.service.timestamptoken.configuration;
 
 
-import ee.openeid.siva.validation.service.signature.policy.SignaturePolicyService;
-import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
+import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -32,7 +31,7 @@ import org.springframework.context.annotation.Bean;
 public class TimestampTokenValidationServiceConfiguration {
 
     @Bean(name = "timestampPolicyService")
-    public SignaturePolicyService<ValidationPolicy> timestampSignaturePolicyService(TimeStampTokenSignaturePolicyProperties properties) {
-        return new SignaturePolicyService<>(properties);
+    public ConstraintLoadingSignaturePolicyService timestampSignaturePolicyService(TimeStampTokenSignaturePolicyProperties properties) {
+        return new ConstraintLoadingSignaturePolicyService(properties);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 - 2024 Riigi Infosüsteemi Amet
+ * Copyright 2019 - 2025 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -26,6 +26,7 @@ import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.document.report.ValidationWarning;
+import ee.openeid.siva.validation.document.report.Warning;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.validation.service.timemark.report.DDOCContainerValidationReportBuilder;
@@ -35,6 +36,7 @@ import eu.europa.esig.dss.exception.IllegalInputException;
 import eu.europa.esig.dss.model.DSSDocument;
 import eu.europa.esig.dss.model.DSSException;
 import eu.europa.esig.dss.model.InMemoryDocument;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,13 +48,17 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import static ee.openeid.siva.validation.constant.AsicContainerConstants.ASICS_MIME_TYPE;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.WARNING_MSG_DATAFILE_NOT_COVERED_BY_TS;
 import static eu.europa.esig.dss.asic.common.ASiCUtils.META_INF_FOLDER;
 import static eu.europa.esig.dss.asic.common.ASiCUtils.MIME_TYPE;
 
@@ -89,10 +95,20 @@ public class ContainerValidationProxy extends ValidationProxy {
         ValidationService validationService = getServiceForType(proxyRequest);
         reports = validate(validationService, proxyRequest);
         report = chooseReport(reports, proxyRequest.getReportType());
-        if (validationService instanceof TimeStampTokenValidationService
-                && report.getValidationConclusion().getTimeStampTokens().stream()
-                .allMatch(token -> token.getIndication() == TimeStampTokenValidationData.Indication.TOTAL_PASSED)) {
-            report = generateDataFileReport(proxyRequest, report);
+        if (validationService instanceof TimeStampTokenValidationService) {
+            Date validationTime = report.getValidationConclusion()
+                .getTimeStampTokens()
+                .stream()
+                .filter(this::isIndicationTotalPassedAndMissingWarningAboutUncoveredDatafile)
+                .map(TimeStampTokenValidationData::getSignedTime)
+                .filter(Objects::nonNull)
+                .map(Instant::parse)
+                .min(Instant::compareTo)
+                .map(Date::from)
+                .orElse(null);
+            if (validationTime != null) {
+                report = generateDataFileReport(proxyRequest, report, validationTime);
+            }
         }
         try {
             zipMimetypeValidator.validateZipContainerMimetype((ProxyDocument) proxyRequest);
@@ -103,13 +119,17 @@ public class ContainerValidationProxy extends ValidationProxy {
         return report;
     }
 
-    SimpleReport generateDataFileReport(ProxyRequest proxyRequest, SimpleReport report) {
+    private SimpleReport generateDataFileReport(ProxyRequest proxyRequest, SimpleReport report, Date validationTime) {
         ProxyDocument proxyDocument = (ProxyDocument) proxyRequest;
         ProxyDocument dataFileProxyDocument = generateDataFileProxyDocument(proxyDocument);
         ValidationService dataFileValidationService = getServiceForType(dataFileProxyDocument);
         SimpleReport dataFileReport = null;
         try {
-            dataFileReport = chooseReport(dataFileValidationService.validateDocument(createValidationDocument(dataFileProxyDocument)), proxyDocument.getReportType());
+            ValidationDocument validationDocument = createValidationDocument(dataFileProxyDocument, validationTime);
+            dataFileReport = chooseReport(
+                dataFileValidationService.validateDocument(validationDocument),
+                proxyDocument.getReportType()
+            );
             removeUnnecessaryWarning(dataFileReport.getValidationConclusion());
         } catch (MalformedDocumentException e) {
             if (e.getCause() == null || !DOCUMENT_FORMAT_NOT_RECOGNIZED.equalsIgnoreCase(e.getCause().getMessage())) {
@@ -117,6 +137,19 @@ public class ContainerValidationProxy extends ValidationProxy {
             }
         }
         return mergeReports(report, dataFileReport);
+    }
+
+    private boolean isIndicationTotalPassedAndMissingWarningAboutUncoveredDatafile(
+        TimeStampTokenValidationData token
+    ) {
+        if (token.getIndication() != TimeStampTokenValidationData.Indication.TOTAL_PASSED) {
+            return false;
+        } else if (CollectionUtils.isEmpty(token.getWarning())) {
+            return true;
+        }
+        return token.getWarning().stream()
+            .map(Warning::getContent)
+            .noneMatch(WARNING_MSG_DATAFILE_NOT_COVERED_BY_TS::equals);
     }
 
     @Override
@@ -135,7 +168,13 @@ public class ContainerValidationProxy extends ValidationProxy {
         return GENERIC_SERVICE + SERVICE_BEAN_NAME_POSTFIX;
     }
 
-    ValidationDocument createValidationDocument(ProxyRequest proxyRequest) {
+    private ValidationDocument createValidationDocument(ProxyRequest proxyRequest, Date validationTime) {
+        ValidationDocument validationDocument = createValidationDocument(proxyRequest);
+        validationDocument.setValidationTime(validationTime);
+        return validationDocument;
+    }
+
+    private ValidationDocument createValidationDocument(ProxyRequest proxyRequest) {
         ValidationDocument validationDocument = new ValidationDocument();
         ProxyDocument proxyDocument = (ProxyDocument) proxyRequest;
         validationDocument.setName(proxyDocument.getName());
@@ -149,6 +188,8 @@ public class ContainerValidationProxy extends ValidationProxy {
             dataFileReport.getValidationConclusion().setTimeStampTokens(timeStampTokenReport.getValidationConclusion().getTimeStampTokens());
             dataFileReport.getValidationConclusion().setSignatureForm(timeStampTokenReport.getValidationConclusion().getSignatureForm());
             dataFileReport.getValidationConclusion().setValidatedDocument(timeStampTokenReport.getValidationConclusion().getValidatedDocument());
+            dataFileReport.getValidationConclusion().setValidationTime(timeStampTokenReport.getValidationConclusion().getValidationTime());
+            dataFileReport.getValidationConclusion().setValidationWarnings(timeStampTokenReport.getValidationConclusion().getValidationWarnings());
             return dataFileReport;
         }
         return timeStampTokenReport;
@@ -226,11 +267,10 @@ public class ContainerValidationProxy extends ValidationProxy {
 
     private static void addWarningToReport(SimpleReport report, String message) {
         List<ValidationWarning> warnings = report.getValidationConclusion().getValidationWarnings();
-        List<ValidationWarning> newList = new ArrayList<>(warnings);
-        ValidationWarning validationWarning = new ValidationWarning();
-        validationWarning.setContent(message);
-        newList.add(validationWarning);
-        report.getValidationConclusion().setValidationWarnings(newList);
+        if (warnings == null) {
+            report.getValidationConclusion().setValidationWarnings(warnings = new ArrayList<>());
+        }
+        warnings.add(new ValidationWarning(message));
     }
 
     private static boolean isAsicsMimeType(DSSDocument entry) {

@@ -1,11 +1,11 @@
-![EU Regional Development Fund](docs/img/siva/EL_Regionaalarengu_Fond_horisontaalne-vaike.jpg)
+<img src="docs/img/siva/Co-funded_by_the_European_Union.jpg" width="350" height="200" alt="Co-funded by the European Union">
 
 # Signature Verification Service
 
 [![SiVa CI with Maven](https://github.com/open-eid/siva/actions/workflows/siva-verify.yml/badge.svg?branch=master)](https://github.com/open-eid/siva/actions/workflows/siva-verify.yml)
 [![GitHub license](https://img.shields.io/badge/license-EUPLv1.1-blue.svg)](https://raw.githubusercontent.com/open-eid/SiVa/develop/LICENSE.md)
 
-SiVa is digital signature validation web service that provides JSON and SOAP API to validate following file types:
+SiVa is digital signature validation web service that provides JSON API to validate following file types:
 
 * Estonian DDOC containers
 * Estonian BDOC containers with TimeMark and TimeStamp signatures
@@ -45,7 +45,7 @@ Run following command:
 After that, you can optionally create an image for Docker:
 
 ```bash
-./mvnw spring-boot:build-image -pl siva-parent/siva-webapp
+./mvnw spring-boot:build-image -pl siva-parent/siva-webapp -DskipTests
 ```
 
 ## How-to run
@@ -68,7 +68,7 @@ Logs for all running containers can be viewed at http://localhost:11080.
 SiVa project compiles **2 fat executable JAR** files that You can run after successfully building the
 project by issuing below command:
 
-**Starting the SiVa REST and SOAP webservice. NB! X.X.X denotes the version you are running.**
+**Starting the SiVa REST webservice. NB! X.X.X denotes the version you are running.**
 
 ```bash
 java -jar siva-parent/siva-webapp/target/siva-webapp-X.X.X-exec.jar

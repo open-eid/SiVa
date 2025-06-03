@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 - 2024 Riigi Infosüsteemi Amet
+ * Copyright 2018 - 2025 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -18,6 +18,7 @@ package ee.openeid.siva.validation.document;
 
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -32,5 +33,7 @@ public class ValidationDocument {
     private String dataBase64Encoded;
 
     private List<Datafile> datafiles;
+
+    private Date validationTime;
 
 }

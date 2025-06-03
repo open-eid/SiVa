@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 - 2024 Riigi Infosüsteemi Amet
+ * Copyright 2019 - 2025 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -18,7 +18,7 @@ package ee.openeid.validation.service.generic;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Reports;
-import ee.openeid.siva.validation.document.report.SignatureScope;
+import ee.openeid.siva.validation.document.report.Scope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
@@ -93,7 +93,7 @@ class PDFWithOneValidSignatureTest extends PDFValidationServiceTest {
     void validationResultForValidPDFShouldHaveCorrectSignatureScopeForPDF() {
         SimpleReport report = validateAndAssertReports(
                 buildValidationDocument(PDF_WITH_ONE_VALID_SIGNATURE)).getSimpleReport();
-        SignatureScope scope = report.getValidationConclusion().getSignatures().get(0).getSignatureScopes().get(0);
+        Scope scope = report.getValidationConclusion().getSignatures().get(0).getSignatureScopes().get(0);
 
         assertEquals("The document ByteRange : [0, 14153, 52047, 491]", scope.getContent());
         assertEquals("PARTIAL", scope.getScope());

@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2017 - 2024 Riigi Infosüsteemi Amet
+  ~ Copyright 2017 - 2025 Riigi Infosüsteemi Amet
   ~
   ~ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
   ~ the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -19,7 +19,7 @@
     <parent>
         <artifactId>validation-services-parent</artifactId>
         <groupId>ee.openid.siva</groupId>
-        <version>3.7.0</version>
+        <version>3.9.0</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -47,6 +47,11 @@
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk18on</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.digidoc4j.dss</groupId>
+            <artifactId>dss-asic-cades</artifactId>
+            <version>${dss.version}</version>
         </dependency>
 
         <!-- Spring Boot -->
@@ -78,6 +83,12 @@
                     <artifactId>android-json</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>ee.openid.siva</groupId>
+            <artifactId>generic-validation-service</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

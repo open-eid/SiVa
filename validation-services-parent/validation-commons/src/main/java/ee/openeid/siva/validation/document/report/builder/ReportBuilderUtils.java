@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 - 2024 Riigi Infosüsteemi Amet
+ * Copyright 2017 - 2025 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -16,8 +16,10 @@
 
 package ee.openeid.siva.validation.document.report.builder;
 
+import ee.openeid.siva.validation.document.Datafile;
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.Policy;
+import ee.openeid.siva.validation.document.report.Scope;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.ValidatedDocument;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
@@ -25,9 +27,11 @@ import ee.openeid.siva.validation.document.report.Warning;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
 import eu.europa.esig.dss.diagnostic.TimestampWrapper;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlDigestMatcher;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlSignatureScope;
 import eu.europa.esig.dss.enumerations.SignatureQualification;
 import eu.europa.esig.dss.spi.DSSASN1Utils;
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.asn1.tsp.MessageImprint;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
@@ -40,12 +44,17 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
+import java.util.List;
 import java.util.TimeZone;
 
 import static lombok.AccessLevel.PRIVATE;
 
 @NoArgsConstructor(access = PRIVATE)
 public final class ReportBuilderUtils {
+
+    public static final String ERROR_MSG_FORMAT_NOT_FOUND = "The expected format is not found! Expected minimal format LT";
+    public static final String ERROR_MSG_INVALID_SIGNATURE_FORMAT_FOR_BDOC_POLICY = "Invalid signature format for BDOC policy";
+    public static final String WARNING_MSG_DATAFILE_NOT_COVERED_BY_TS = "The time-stamp token does not cover container datafile!";
 
     private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final String GREENWICH_MEAN_TIME = "Etc/GMT";
@@ -54,7 +63,6 @@ public final class ReportBuilderUtils {
     private static final String QES_POLICY = "POLv4";
     private static final String SIGNATURE_LEVEL_ERROR = "Signature/seal level do not meet the minimal level required by applied policy";
     private static final String SIGNATURE_LEVEL_WARNING = "The signature is not in the Qualified Electronic Signature level";
-    public static final String FORMAT_NOT_FOUND = "The expected format is not found! Expected minimal format LT";
 
     public static String emptyWhenNull(String value) {
         return value != null ? value : valueNotPresent();
@@ -161,5 +169,25 @@ public final class ReportBuilderUtils {
         AlgorithmIdentifier algorithm = DSSASN1Utils.getAlgorithmIdentifier(messageImprint.getDigestMethod());
         byte[] nonce = new MessageImprint(algorithm, messageImprint.getDigestValue()).getEncoded();
         return StringUtils.defaultString(org.apache.tomcat.util.codec.binary.Base64.encodeBase64String(nonce));
+    }
+
+    public static Scope parseScope(XmlSignatureScope dssScope, List<Datafile> datafiles) {
+        Scope scope = new Scope();
+
+        scope.setContent(emptyWhenNull(dssScope.getDescription()));
+        scope.setName(emptyWhenNull(dssScope.getName()));
+        if (dssScope.getScope() != null) {
+            scope.setScope(emptyWhenNull(dssScope.getScope().name()));
+        }
+        if (CollectionUtils.isNotEmpty(datafiles)) {
+            datafiles.stream()
+                .filter(datafile -> datafile.getFilename().equals(dssScope.getName()))
+                .findFirst()
+                .ifPresent(dataFile -> {
+                    scope.setHash(dataFile.getHash());
+                    scope.setHashAlgo(dataFile.getHashAlgo().toUpperCase());
+                });
+        }
+        return scope;
     }
 }

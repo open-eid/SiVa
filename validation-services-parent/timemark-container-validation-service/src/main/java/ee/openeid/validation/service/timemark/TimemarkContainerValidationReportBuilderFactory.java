@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 - 2024 Riigi Infosüsteemi Amet
+ * Copyright 2020 - 2025 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -22,14 +22,18 @@ import ee.openeid.validation.service.timemark.report.AsicContainerValidationRepo
 import ee.openeid.validation.service.timemark.report.DDOCContainerValidationReportBuilder;
 import ee.openeid.validation.service.timemark.report.TimemarkContainerValidationReportBuilder;
 import org.digidoc4j.Container;
-import org.digidoc4j.ValidationResult;
+import org.digidoc4j.ContainerValidationResult;
 import org.digidoc4j.impl.ddoc.DDocContainer;
 
 public class TimemarkContainerValidationReportBuilderFactory {
 
-    public TimemarkContainerValidationReportBuilder getReportBuilder(Container container, ValidationDocument validationDocument,
-                                                                     ValidationPolicy validationPolicy, ValidationResult validationResult,
-                                                                     boolean isReportSignatureEnabled) {
+    public TimemarkContainerValidationReportBuilder getReportBuilder(
+        Container container,
+        ValidationDocument validationDocument,
+        ValidationPolicy validationPolicy,
+        ContainerValidationResult validationResult,
+        boolean isReportSignatureEnabled
+    ) {
         if (container instanceof DDocContainer) {
             return new DDOCContainerValidationReportBuilder(container, validationDocument, validationPolicy, validationResult, isReportSignatureEnabled);
         } else {

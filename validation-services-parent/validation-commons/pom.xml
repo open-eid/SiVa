@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2016 - 2024 Riigi Infosüsteemi Amet
+  ~ Copyright 2016 - 2025 Riigi Infosüsteemi Amet
   ~
   ~ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
   ~ the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -19,7 +19,7 @@
     <parent>
         <artifactId>validation-services-parent</artifactId>
         <groupId>ee.openid.siva</groupId>
-        <version>3.7.0</version>
+        <version>3.9.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -49,8 +49,16 @@
             <artifactId>bcprov-jdk18on</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcutil-jdk18on</artifactId>
+        </dependency>
+        <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -84,7 +92,7 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>24.1.0</version>
+            <version>26.0.2</version>
         </dependency>
 
         <!-- Testing -->
@@ -99,10 +107,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
-        </dependency>
     </dependencies>
 
     <build>
@@ -110,7 +114,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.4.0</version>
+                <version>3.4.2</version>
                 <executions>
                     <execution>
                         <goals>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 - 2024 Riigi Infosüsteemi Amet
+ * Copyright 2020 - 2025 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -44,7 +44,7 @@ public class SignatureValidationData {
 
     private List<Error> errors;
 
-    private List<SignatureScope> signatureScopes;
+    private List<Scope> signatureScopes;
 
     private String claimedSigningTime;
 

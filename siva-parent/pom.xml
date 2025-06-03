@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2016 - 2024 Riigi Infosüsteemi Amet
+  ~ Copyright 2016 - 2025 Riigi Infosüsteemi Amet
   ~
   ~ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
   ~ the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -19,14 +19,14 @@
     <parent>
         <artifactId>siva</artifactId>
         <groupId>ee.openid.siva</groupId>
-        <version>3.7.0</version>
+        <version>3.9.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>siva-parent</artifactId>
     <packaging>pom</packaging>
     <name>SiVa webapp and other core modules</name>
-    <version>3.7.0</version>
+    <version>3.9.0</version>
 
     <modules>
         <module>siva-validation-proxy</module>
@@ -36,10 +36,6 @@
         <module>siva-monitoring</module>
         <module>siva-signature-service</module>
     </modules>
-
-    <properties>
-        <cxf.version>4.0.4</cxf.version>
-    </properties>
 
     <dependencyManagement>
         <dependencies>
@@ -78,18 +74,6 @@
                 <version>${spring.boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>
-
-            <!-- Apache CXF -->
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-frontend-jaxws</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-transports-http</artifactId>
-                <version>${cxf.version}</version>
             </dependency>
 
             <dependency>
@@ -171,12 +155,6 @@
                 </exclusions>
             </dependency>
 
-            <dependency>
-                <groupId>org.yaml</groupId>
-                <artifactId>snakeyaml</artifactId>
-                <version>${snakeyaml.version}</version>
-            </dependency>
-
             <!-- Public Dependencies -->
             <dependency>
                 <groupId>commons-io</groupId>
@@ -184,35 +162,10 @@
                 <version>${commons.io.version}</version>
             </dependency>
 
-            <!-- Apache commons -->
-            <dependency>
-                <groupId>commons-codec</groupId>
-                <artifactId>commons-codec</artifactId>
-                <version>${commons.codec.version}</version>
-            </dependency>
-
-            <!-- Lombok for getters and setters -->
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok.version}</version>
-            </dependency>
-
             <dependency>
                 <groupId>org.json</groupId>
                 <artifactId>json</artifactId>
                 <version>${json.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>${logback.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-core</artifactId>
-                <version>${logback.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 - 2024 Riigi Infosüsteemi Amet
+ * Copyright 2017 - 2025 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -17,6 +17,7 @@
 package ee.openeid.validation.service.timemark.configuration;
 
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
+import ee.openeid.validation.service.timemark.TimemarkContainerValidationReportBuilderFactory;
 import ee.openeid.validation.service.timemark.tsl.TimemarkTrustedListsCertificateSource;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +48,11 @@ public class TimemarkContainerValidationServiceConfiguration {
     @Bean(name = TM_POLICY_SERVICE_BEAN_NAME)
     public ConstraintLoadingSignaturePolicyService timemarkSignaturePolicyService(BDOCSignaturePolicyProperties properties) {
         return new ConstraintLoadingSignaturePolicyService(properties);
+    }
+
+    @Bean
+    public TimemarkContainerValidationReportBuilderFactory timemarkContainerValidationReportBuilderFactory() {
+        return new TimemarkContainerValidationReportBuilderFactory();
     }
 
     @Bean

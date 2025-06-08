@@ -22,9 +22,6 @@ import ee.openeid.tsl.annotation.LoadableTsl;
 import ee.openeid.tsl.configuration.AlwaysFailingOCSPSource;
 import ee.openeid.validation.service.generic.configuration.properties.GenericSignaturePolicyProperties;
 import ee.openeid.validation.service.generic.configuration.properties.TLevelSignatureFilterProperties;
-import ee.openeid.validation.service.generic.validator.RevocationFreshnessValidator;
-import ee.openeid.validation.service.generic.validator.RevocationFreshnessValidatorFactory;
-import ee.openeid.validation.service.generic.validator.TLevelSignatureOfNonListedCountryPredicate;
 import ee.openeid.validation.service.generic.validator.container.AsicContainerDataFileSizeValidator;
 import ee.openeid.validation.service.generic.validator.container.ContainerValidator;
 import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
@@ -37,7 +34,6 @@ import ee.openeid.validation.service.generic.validator.ocsp.LoggingOSCPSourceWra
 import ee.openeid.validation.service.generic.validator.ocsp.OCSPRequestPredicate;
 import ee.openeid.validation.service.generic.validator.ocsp.OCSPSourceFactory;
 import eu.europa.esig.dss.diagnostic.DiagnosticData;
-import eu.europa.esig.dss.diagnostic.SignatureWrapper;
 import eu.europa.esig.dss.enumerations.ASiCContainerType;
 import eu.europa.esig.dss.enumerations.DigestAlgorithm;
 import eu.europa.esig.dss.model.x509.CertificateToken;
@@ -57,12 +53,10 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiPredicate;
-import java.util.function.Predicate;
 
 import static ee.openeid.validation.service.generic.GenericValidationConstants.GENERIC_POLICY_SERVICE_BEAN_NAME;
 import static ee.openeid.validation.service.generic.GenericValidationConstants.GENERIC_TRUSTED_LISTS_CERTIFICATE_SOURCE_BEAN_NAME;
 import static ee.openeid.validation.service.generic.GenericValidationConstants.GENERIC_TSL_NAME;
-import static ee.openeid.validation.service.generic.PolicyUtil.getTLevelSignatures;
 
 @Configuration
 @EnableConfigurationProperties(GenericSignaturePolicyProperties.class)
@@ -113,19 +107,6 @@ public class GenericValidationServiceConfiguration {
         } else {
             final OCSPSource ocspSource = new AlwaysFailingOCSPSource();
             return () -> ocspSource;
-        }
-    }
-
-    @Bean
-    public RevocationFreshnessValidatorFactory revocationFreshnessValidatorFactory(
-            @Autowired(required = false) CountryFilter countryFilter) {
-        if (countryFilter != null) {
-            return (reports, policy) -> new RevocationFreshnessValidator(
-                    reports, new TLevelSignatureOfNonListedCountryPredicate(countryFilter, getTLevelSignatures(policy))
-            );
-        } else {
-            final Predicate<SignatureWrapper> predicate = signatureWrapper -> false;
-            return (reports, policy) -> new RevocationFreshnessValidator(reports, predicate);
         }
     }
 

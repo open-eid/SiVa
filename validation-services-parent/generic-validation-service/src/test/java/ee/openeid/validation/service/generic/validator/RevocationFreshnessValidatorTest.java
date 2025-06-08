@@ -334,8 +334,8 @@ class RevocationFreshnessValidatorTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"2021-06-06T18:30:15Z", "2021-06-06T18:30:16Z", "2021-06-06T18:45:15Z"})
-    void validate_WhenOcspWithProducedAtNotBeforeTimestampAndNotAfter15minInSignatureFromDiagnosticData_DoesNothing(String ocspProducedAt) {
+    @ValueSource(strings = {"2021-06-06T18:30:15Z", "2021-06-06T18:30:16Z", "2021-06-06T18:45:14Z"})
+    void validate_WhenOcspWithProducedAtNotBeforeTimestampAndNotAtOrAfter15minInSignatureFromDiagnosticData_DoesNothing(String ocspProducedAt) {
         SignatureWrapper signatureWrapperMock = Mockito.mock(SignatureWrapper.class);
         CertificateWrapper certificateWrapperMock = Mockito.mock(CertificateWrapper.class);
         Mockito.doReturn(certificateWrapperMock).when(signatureWrapperMock).getSigningCertificate();
@@ -434,53 +434,7 @@ class RevocationFreshnessValidatorTest {
     @ValueSource(strings = {
             "2021-06-07T18:30:16Z", "2021-06-07T18:31:15Z", "2021-06-07T19:30:15Z", "2021-06-08T18:30:15Z", "2021-07-06T18:30:15Z", "2022-06-06T18:30:15Z"
     })
-    void validate_WhenOcspWithProducedAt24hAfterTimestampInSignatureFromDiagnosticDataWithPredicateReturnsFalse_ErrorIsAddedToSignature(String ocspProducedAt) {
-        SignatureWrapper signatureWrapperMock = Mockito.mock(SignatureWrapper.class);
-        CertificateWrapper certificateWrapperMock = Mockito.mock(CertificateWrapper.class);
-        Mockito.doReturn(certificateWrapperMock).when(signatureWrapperMock).getSigningCertificate();
-        TimestampWrapper timestampWrapperMock = createValidTimestampWrapperMock(Instant.parse("2021-06-06T18:30:15Z"));
-        Mockito.doReturn(List.of(timestampWrapperMock)).when(signatureWrapperMock).getTimestampList();
-        CertificateRevocationWrapper ocspRevocationWrapperMock = createValidOcspCertificateRevocationWrapperMock(Instant.parse(ocspProducedAt));
-        Mockito.doReturn(List.of(ocspRevocationWrapperMock)).when(certificateWrapperMock).getCertificateRevocationData();
-        Mockito.doReturn("S-12345").when(signatureWrapperMock).getId();
-        mockDiagnosticDataGetSignatures(signatureWrapperMock);
-        XmlSignature xmlSignatureMock = Mockito.mock(XmlSignature.class);
-        Mockito.doReturn("S-12345").when(xmlSignatureMock).getId();
-        XmlDetails signatureAdESValidationDetails = new XmlDetails();
-        Mockito.doReturn(signatureAdESValidationDetails).when(xmlSignatureMock).getAdESValidationDetails();
-        List<XmlMessage> signatureErrors = signatureAdESValidationDetails.getError();
-        Mockito.doReturn(false).when(predicate).test(signatureWrapperMock);
-        mockSimpleReportGetSignatures(xmlSignatureMock);
-
-        validator.validate();
-
-        TestXmlDetailUtils.assertEquals(
-                TestXmlDetailUtils.createMessageList(
-                        TestXmlDetailUtils.createMessage(null, "The revocation information is not considered as 'fresh'.")
-                ),
-                signatureErrors
-        );
-        assertDiagnosticDataGetSignaturesCalled();
-        Mockito.verify(signatureWrapperMock).getSigningCertificate();
-        Mockito.verify(signatureWrapperMock).getTimestampList();
-        Mockito.verify(signatureWrapperMock).getId();
-        Mockito.verifyNoMoreInteractions(signatureWrapperMock);
-        assertValidTimestampWrapperMockInteractions(timestampWrapperMock);
-        assertValidOcspCertificateRevocationWrapperMockInteractions(ocspRevocationWrapperMock);
-        Mockito.verify(certificateWrapperMock, Mockito.times(2)).getCertificateRevocationData();
-        Mockito.verifyNoMoreInteractions(certificateWrapperMock);
-        assertSimpleReportGetSignaturesCalled();
-        Mockito.verify(xmlSignatureMock).getId();
-        Mockito.verify(xmlSignatureMock).getAdESValidationDetails();
-        Mockito.verifyNoMoreInteractions(xmlSignatureMock);
-        Mockito.verifyNoMoreInteractions(validationReports, predicate);
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {
-            "2021-06-07T18:30:16Z", "2021-06-07T18:31:15Z", "2021-06-07T19:30:15Z", "2021-06-08T18:30:15Z", "2021-07-06T18:30:15Z", "2022-06-06T18:30:15Z"
-    })
-    void validate_WhenOcspWithProducedAt24hAfterTimestampInSignatureFromDiagnosticDataWithPredicateReturnsTrue_WarningIsAddedToSignature(String ocspProducedAt) {
+    void validate_WhenOcspWithProducedAt24hAfterTimestampInSignatureFromDiagnosticData_WarningIsAddedToSignature(String ocspProducedAt) {
         SignatureWrapper signatureWrapperMock = Mockito.mock(SignatureWrapper.class);
         CertificateWrapper certificateWrapperMock = Mockito.mock(CertificateWrapper.class);
         Mockito.doReturn(certificateWrapperMock).when(signatureWrapperMock).getSigningCertificate();
@@ -495,7 +449,6 @@ class RevocationFreshnessValidatorTest {
         XmlDetails signatureAdESValidationDetails = new XmlDetails();
         Mockito.doReturn(signatureAdESValidationDetails).when(xmlSignatureMock).getAdESValidationDetails();
         List<XmlMessage> signatureWarnings = signatureAdESValidationDetails.getWarning();
-        Mockito.doReturn(true).when(predicate).test(signatureWrapperMock);
         mockSimpleReportGetSignatures(xmlSignatureMock);
 
         validator.validate();

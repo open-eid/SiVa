@@ -28,7 +28,6 @@ import ee.openeid.siva.validation.document.report.SignerRole;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.siva.validation.util.CertUtil;
 import ee.openeid.validation.service.generic.configuration.properties.GenericSignaturePolicyProperties;
-import ee.openeid.validation.service.generic.validator.RevocationFreshnessValidatorFactory;
 import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
 import ee.openeid.validation.service.generic.validator.ocsp.OCSPSourceFactory;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
@@ -71,8 +70,6 @@ class HashcodeGenericValidationServiceTest {
     @Autowired
     private ContainerValidatorFactory containerValidatorFactory;
     @Autowired
-    private RevocationFreshnessValidatorFactory revocationFreshnessValidatorFactory;
-    @Autowired
     private OCSPSourceFactory ocspSourceFactory;
 
     @BeforeEach
@@ -85,7 +82,6 @@ class HashcodeGenericValidationServiceTest {
         validationService.setReportConfigurationProperties(new ReportConfigurationProperties(true));
 
         validationService.setContainerValidatorFactory(containerValidatorFactory);
-        validationService.setRevocationFreshnessValidatorFactory(revocationFreshnessValidatorFactory);
         validationService.setOcspSourceFactory(ocspSourceFactory);
     }
 

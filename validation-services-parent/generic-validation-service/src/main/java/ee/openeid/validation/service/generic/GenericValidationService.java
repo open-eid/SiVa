@@ -27,9 +27,9 @@ import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSign
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import ee.openeid.tsl.configuration.AlwaysFailingCRLSource;
-import ee.openeid.validation.service.generic.validator.RevocationFreshnessValidatorFactory;
-import ee.openeid.validation.service.generic.validator.ocsp.OCSPSourceFactory;
+import ee.openeid.validation.service.generic.validator.RevocationFreshnessValidator;
 import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
+import ee.openeid.validation.service.generic.validator.ocsp.OCSPSourceFactory;
 import ee.openeid.validation.service.generic.validator.report.GenericValidationReportBuilder;
 import ee.openeid.validation.service.generic.validator.report.ReportBuilderData;
 import eu.europa.esig.dss.enumerations.MimeType;
@@ -70,7 +70,6 @@ public class GenericValidationService implements ValidationService {
     private ReportConfigurationProperties reportConfigurationProperties;
     private ProxyConfig proxyConfig;
     private ContainerValidatorFactory containerValidatorFactory;
-    private RevocationFreshnessValidatorFactory revocationFreshnessValidatorFactory;
     private OCSPSourceFactory ocspSourceFactory;
 
     @Override
@@ -94,7 +93,7 @@ public class GenericValidationService implements ValidationService {
             //Initialize once and use in different components to reduce response time for large PDF files validation.
             List<AdvancedSignature> signatures = validator.getSignatures();
 
-            revocationFreshnessValidatorFactory.create(reports, policy).validate();
+            new RevocationFreshnessValidator(reports).validate();
             containerValidatorFactory.create(reports, validationDocument).validate();
 
             if (LOGGER.isInfoEnabled()) {
@@ -222,11 +221,6 @@ public class GenericValidationService implements ValidationService {
     @Autowired
     public void setContainerValidatorFactory(ContainerValidatorFactory containerValidatorFactory) {
         this.containerValidatorFactory = containerValidatorFactory;
-    }
-
-    @Autowired
-    public void setRevocationFreshnessValidatorFactory(RevocationFreshnessValidatorFactory revocationFreshnessValidatorFactory) {
-        this.revocationFreshnessValidatorFactory = revocationFreshnessValidatorFactory;
     }
 
     @Autowired

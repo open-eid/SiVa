@@ -39,16 +39,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RevocationFreshnessValidator {
 
-    private static final Duration REVOCATION_FRESHNESS_OK_LIMIT = Duration.ofMinutes(15);
-    private static final Duration REVOCATION_FRESHNESS_WARNING_LIMIT = Duration.ofHours(24);
-
+    private static final Duration REVOCATION_FRESHNESS_WARNING_THRESHOLD = Duration.ofMinutes(15);
     private static final String REVOCATION_FRESHNESS_FAULT = "The revocation information is not considered as 'fresh'.";
     private static final String TIMESTAMP_OCSP_ORDER_FAULT = "OCSP response production time is before timestamp time";
 
     @NonNull
     private final Reports reports;
-    @NonNull
-    private final Predicate<SignatureWrapper> revocationFreshnessWarningPredicate;
 
     public void validate() {
         reports.getDiagnosticData().getSignatures().forEach(this::validate);
@@ -80,19 +76,14 @@ public class RevocationFreshnessValidator {
         Date earliestPostTimestampOcspProducedAtDate = findEarliestTime(validOcspProducedAtDates, timestampNotAfterPredicate);
         if (earliestPostTimestampOcspProducedAtDate != null) {
             Duration timestampOcspDifference = Duration.between(timestampProductionTime.toInstant(), earliestPostTimestampOcspProducedAtDate.toInstant());
-            if (timestampOcspDifference.compareTo(REVOCATION_FRESHNESS_OK_LIMIT) <= 0) {
-                return; // OCSP is not taken later than the OK limit after timestamp
-            } else if (timestampOcspDifference.compareTo(REVOCATION_FRESHNESS_WARNING_LIMIT) <= 0 || revocationFreshnessWarningPredicate.test(signatureWrapper)) {
+            if (timestampOcspDifference.compareTo(REVOCATION_FRESHNESS_WARNING_THRESHOLD) >= 0) {
                 addSignatureAdESWarning(signatureWrapper.getId(), REVOCATION_FRESHNESS_FAULT);
-                return; // OCSP is not taken later than the WARNING limit after timestamp
+                // OCSP is taken later than the warning threshold limit after timestamp
             }
         } else if (CollectionUtils.isNotEmpty(validOcspProducedAtDates)) {
             addSignatureAdESError(signatureWrapper.getId(), TIMESTAMP_OCSP_ORDER_FAULT);
-            return; // There are valid OCSP responses, but all of them are taken before the timestamp
+            // There are valid OCSP responses, but all of them are taken before the timestamp
         }
-
-        // Every other case is considered as revocation freshness error
-        addSignatureAdESError(signatureWrapper.getId(), REVOCATION_FRESHNESS_FAULT);
     }
 
     private static Date findEarliestValidSignatureTimestampProductionTime(SignatureWrapper signatureWrapper) {

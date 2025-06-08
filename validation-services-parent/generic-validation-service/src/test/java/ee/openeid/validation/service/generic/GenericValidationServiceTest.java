@@ -35,7 +35,6 @@ import ee.openeid.tsl.TSLValidationJobFactory;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
 import ee.openeid.validation.service.generic.configuration.GenericValidationServiceConfiguration;
 import ee.openeid.validation.service.generic.configuration.properties.GenericSignaturePolicyProperties;
-import ee.openeid.validation.service.generic.validator.RevocationFreshnessValidatorFactory;
 import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
 import ee.openeid.validation.service.generic.validator.ocsp.OCSPSourceFactory;
 import eu.europa.esig.dss.enumerations.Indication;
@@ -104,8 +103,6 @@ class GenericValidationServiceTest {
     @Autowired
     private ContainerValidatorFactory containerValidatorFactory;
     @Autowired
-    private RevocationFreshnessValidatorFactory revocationFreshnessValidatorFactory;
-    @Autowired
     private OCSPSourceFactory ocspSourceFactory;
 
     @BeforeEach
@@ -118,7 +115,6 @@ class GenericValidationServiceTest {
         validationService.setReportConfigurationProperties(new ReportConfigurationProperties(true));
 
         validationService.setContainerValidatorFactory(containerValidatorFactory);
-        validationService.setRevocationFreshnessValidatorFactory(revocationFreshnessValidatorFactory);
         validationService.setOcspSourceFactory(ocspSourceFactory);
     }
 

@@ -33,6 +33,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.sameInstance;
 
 @ExtendWith(SpringExtension.class)
 class TimeStampTokenValidationServiceProdProfileTest extends BaseTimeStampTokenValidationServiceTest {
@@ -51,10 +52,12 @@ class TimeStampTokenValidationServiceProdProfileTest extends BaseTimeStampTokenV
             assertThat(validationData, notNullValue());
             assertThat(validationData, hasSize(1));
             assertThat(validationData.get(0).getIndication(), equalTo(TimeStampTokenValidationData.Indication.TOTAL_PASSED));
-            assertThat(validationData.get(0).getError(), nullValue());
-            assertThat(validationData.get(0).getWarning(), notNullValue());
-            assertThat(validationData.get(0).getWarning(), hasSize(1));
-            assertThat(validationData.get(0).getWarning().get(0).getContent(), equalTo(POE_TIME_MESSAGE_TEXT));
+            assertThat(validationData.get(0).getErrors(), nullValue());
+            assertThat(validationData.get(0).getWarnings(), notNullValue());
+            assertThat(validationData.get(0).getWarnings(), hasSize(1));
+            assertThat(validationData.get(0).getWarnings().get(0).getContent(), equalTo(POE_TIME_MESSAGE_TEXT));
+            assertThat(validationData.get(0).getError(), sameInstance(validationData.get(0).getErrors()));
+            assertThat(validationData.get(0).getWarning(), sameInstance(validationData.get(0).getWarnings()));
         }
     }
 
@@ -73,15 +76,19 @@ class TimeStampTokenValidationServiceProdProfileTest extends BaseTimeStampTokenV
             assertThat(validationData, hasSize(2));
 
             assertThat(validationData.get(0).getIndication(), equalTo(TimeStampTokenValidationData.Indication.TOTAL_PASSED));
-            assertThat(validationData.get(0).getError(), nullValue());
-            assertThat(validationData.get(0).getWarning(), notNullValue());
-            assertThat(validationData.get(0).getWarning(), hasSize(1));
-            assertThat(validationData.get(0).getWarning().get(0).getContent(), equalTo(POE_TIME_MESSAGE_TEXT));
+            assertThat(validationData.get(0).getErrors(), nullValue());
+            assertThat(validationData.get(0).getWarnings(), notNullValue());
+            assertThat(validationData.get(0).getWarnings(), hasSize(1));
+            assertThat(validationData.get(0).getWarnings().get(0).getContent(), equalTo(POE_TIME_MESSAGE_TEXT));
+            assertThat(validationData.get(0).getError(), sameInstance(validationData.get(0).getErrors()));
+            assertThat(validationData.get(0).getWarning(), sameInstance(validationData.get(0).getWarnings()));
 
             assertThat(validationData.get(1).getIndication(), equalTo(TimeStampTokenValidationData.Indication.TOTAL_PASSED));
-            assertThat(validationData.get(1).getError(), nullValue());
-            assertThat(validationData.get(1).getWarning(), notNullValue());
-            assertThat(validationData.get(1).getWarning(), empty());
+            assertThat(validationData.get(1).getErrors(), nullValue());
+            assertThat(validationData.get(1).getWarnings(), notNullValue());
+            assertThat(validationData.get(1).getWarnings(), empty());
+            assertThat(validationData.get(1).getError(), sameInstance(validationData.get(1).getErrors()));
+            assertThat(validationData.get(1).getWarning(), sameInstance(validationData.get(1).getWarnings()));
         }
     }
 
@@ -98,16 +105,24 @@ class TimeStampTokenValidationServiceProdProfileTest extends BaseTimeStampTokenV
             assertThat(validationData, hasSize(2));
 
             assertThat(validationData.get(0).getIndication(), equalTo(TimeStampTokenValidationData.Indication.TOTAL_FAILED));
-            assertThat(validationData.get(0).getError(), notNullValue());
-            assertThat(validationData.get(0).getError(), hasSize(1));
-            assertThat(validationData.get(0).getError().get(0).getContent(), equalTo("The time-stamp message imprint is not intact!"));
-            assertThat(validationData.get(0).getWarning(), empty());
+            assertThat(validationData.get(0).getErrors(), notNullValue());
+            assertThat(validationData.get(0).getErrors(), hasSize(1));
+            assertThat(validationData.get(0).getErrors().get(0).getContent(), equalTo("The time-stamp message imprint is not intact!"));
+            assertThat(validationData.get(0).getErrors(), notNullValue());
+            assertThat(validationData.get(0).getErrors(), hasSize(1));
+            assertThat(validationData.get(0).getErrors().get(0).getContent(), equalTo("The time-stamp message imprint is not intact!"));
+            assertThat(validationData.get(0).getWarnings(), empty());
+            assertThat(validationData.get(0).getError(), sameInstance(validationData.get(0).getErrors()));
+            assertThat(validationData.get(0).getWarning(), sameInstance(validationData.get(0).getWarnings()));
 
             assertThat(validationData.get(1).getIndication(), equalTo(TimeStampTokenValidationData.Indication.TOTAL_PASSED));
-            assertThat(validationData.get(1).getError(), nullValue());
-            assertThat(validationData.get(1).getWarning(), notNullValue());
-            assertThat(validationData.get(1).getWarning(), hasSize(1));
-            assertThat(validationData.get(1).getWarning().get(0).getContent(), equalTo("The time-stamp token does not cover container datafile!"));
+            assertThat(validationData.get(1).getErrors(), nullValue());
+            assertThat(validationData.get(1).getErrors(), nullValue());
+            assertThat(validationData.get(1).getWarnings(), notNullValue());
+            assertThat(validationData.get(1).getWarnings(), hasSize(1));
+            assertThat(validationData.get(1).getWarnings().get(0).getContent(), equalTo("The time-stamp token does not cover container datafile!"));
+            assertThat(validationData.get(1).getError(), sameInstance(validationData.get(1).getErrors()));
+            assertThat(validationData.get(1).getWarning(), sameInstance(validationData.get(1).getWarnings()));
         }
     }
 

@@ -70,8 +70,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.WARNING_MSG_DATAFILE_NOT_COVERED_BY_TS;
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -423,7 +423,7 @@ class ValidationProxyTest {
         ValidationConclusion validationConclusion = new ValidationConclusion();
 
         TimeStampTokenValidationData validationData = createTimeStampTokenValidationData(TimeStampTokenValidationData.Indication.TOTAL_PASSED, MAY);
-        validationData.setWarning(List.of(new Warning(WARNING_MSG_DATAFILE_NOT_COVERED_BY_TS)));
+        validationData.setWarnings(List.of(new Warning(WARNING_MSG_DATAFILE_NOT_COVERED_BY_TS)));
 
         validationConclusion.setTimeStampTokens(List.of(validationData));
         validationConclusion.setValidationTime(VALIDATION_TIME_NOW);
@@ -434,7 +434,7 @@ class ValidationProxyTest {
         ValidationConclusion validationConclusion = new ValidationConclusion();
 
         TimeStampTokenValidationData validationDataWithWarning = createTimeStampTokenValidationData(TimeStampTokenValidationData.Indication.TOTAL_PASSED, MAY);
-        validationDataWithWarning.setWarning(List.of(new Warning(WARNING_MSG_DATAFILE_NOT_COVERED_BY_TS)));
+        validationDataWithWarning.setWarnings(List.of(new Warning(WARNING_MSG_DATAFILE_NOT_COVERED_BY_TS)));
 
         TimeStampTokenValidationData validationDataWithoutWarning = createTimeStampTokenValidationData(TimeStampTokenValidationData.Indication.TOTAL_PASSED, JUNE);
 

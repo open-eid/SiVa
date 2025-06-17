@@ -144,10 +144,10 @@ public class ContainerValidationProxy extends ValidationProxy {
     ) {
         if (token.getIndication() != TimeStampTokenValidationData.Indication.TOTAL_PASSED) {
             return false;
-        } else if (CollectionUtils.isEmpty(token.getWarning())) {
+        } else if (CollectionUtils.isEmpty(token.getWarnings())) {
             return true;
         }
-        return token.getWarning().stream()
+        return token.getWarnings().stream()
             .map(Warning::getContent)
             .noneMatch(WARNING_MSG_DATAFILE_NOT_COVERED_BY_TS::equals);
     }

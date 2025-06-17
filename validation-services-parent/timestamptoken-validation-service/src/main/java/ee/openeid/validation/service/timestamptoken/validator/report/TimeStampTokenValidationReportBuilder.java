@@ -130,13 +130,13 @@ public class TimeStampTokenValidationReportBuilder {
             if (errors.isEmpty() && Objects.equals(dssIndication, Indication.PASSED)) {
                 timeStampTokenValidationData.setIndication(TimeStampTokenValidationData.Indication.TOTAL_PASSED);
             } else {
-                timeStampTokenValidationData.setError(errors);
+                timeStampTokenValidationData.setErrors(errors);
                 timeStampTokenValidationData.setIndication(TimeStampTokenValidationData.Indication.TOTAL_FAILED);
                 Optional.ofNullable(dssReports.getSimpleReport().getSubIndication(timestampId))
                     .map(SubIndication::name)
                     .ifPresent(timeStampTokenValidationData::setSubIndication);
             }
-            timeStampTokenValidationData.setWarning(parseTimestampWarnings(timestampId));
+            timeStampTokenValidationData.setWarnings(parseTimestampWarnings(timestampId));
 
             if (TimeStampTokenValidationData.Indication.TOTAL_PASSED.equals(timeStampTokenValidationData.getIndication())) {
                 if (!isDataFileCovered(timeStampTokenValidationData)) {
@@ -152,7 +152,7 @@ public class TimeStampTokenValidationReportBuilder {
 
     private List<ValidationWarning> addValidationWarningsIfNotGrantedTimestampExists(List<TimeStampTokenValidationData> validationDataList) {
         return validationDataList.stream()
-                .map(TimeStampTokenValidationData::getWarning)
+                .map(TimeStampTokenValidationData::getWarnings)
                 .map(TimestampNotGrantedValidationUtils::getValidationWarningIfNotGrantedTimestampExists)
                 .filter(Objects::nonNull)
                 .findFirst()
@@ -168,9 +168,9 @@ public class TimeStampTokenValidationReportBuilder {
     }
 
     private static void addWarningTo(TimeStampTokenValidationData timeStampTokenValidationData, String warningMessage) {
-        List<Warning> warnings = timeStampTokenValidationData.getWarning();
+        List<Warning> warnings = timeStampTokenValidationData.getWarnings();
         if (warnings == null) {
-            timeStampTokenValidationData.setWarning(warnings = new ArrayList<>());
+            timeStampTokenValidationData.setWarnings(warnings = new ArrayList<>());
         }
         warnings.add(new Warning(warningMessage));
     }

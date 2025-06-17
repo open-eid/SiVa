@@ -17,7 +17,9 @@
 package ee.openeid.siva.validation.document.report;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -28,11 +30,34 @@ public class TimeStampTokenValidationData {
     private String timestampLevel;
     private String signedBy;
     private String signedTime;
+    /**
+     * @deprecated Deprecated for removal. Use {@link #errors} instead.
+     */
+    @Deprecated
+    @Setter(AccessLevel.NONE)
     private List<Error> error;
+    private List<Error> errors;
+    /**
+     * @deprecated Deprecated for removal. Use {@link #warnings} instead.
+     */
+    @Deprecated
+    @Setter(AccessLevel.NONE)
     private List<Warning> warning;
+    private List<Warning> warnings;
     private List<Certificate> certificates;
     private List<Scope> timestampScopes;
 
+    // Remove when the deprecated error field is removed
+    public void setErrors(List<Error> errors) {
+        this.errors = errors;
+        this.error = errors;
+    }
+
+    // Remove when the deprecated warning field is removed
+    public void setWarnings(List<Warning> warnings) {
+        this.warnings = warnings;
+        this.warning = warnings;
+    }
 
     public enum Indication {
         @JsonProperty("TOTAL-PASSED")

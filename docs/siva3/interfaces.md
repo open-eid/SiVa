@@ -237,12 +237,14 @@ Structure of validationConclusion block
 | timeStampTokens[0]. certificates[0].commonName | + | String | CN (common name) value in certificate. |
 | timeStampTokens[0]. certificates[0].type | + | String | Type of the certificate. Possible value is CONTENT_TIMESTAMP. |
 | timeStampTokens[0]. certificates[0].content | + | String | DER encoded X.509 certificate in Base64. |
-| timeStampTokens[0]. error | - | Array | Errors returned in time stamp token validation. |
-| timeStampTokens[0]. error[0] | + | Object | Object containing the error. |
-| timeStampTokens[0]. error[0]. content | + | String | Error description. |
-| timeStampTokens[0]. warning | - | Array | Block of validation warnings that do not affect the overall validation result.<br><br> Aside from warnings produced by DSS, an additional warning may be issued if a timestamp token does not cover the datafile (`The time-stamp token does not cover container datafile!`). |
-| timeStampTokens[0]. warning[0] | + | Object | Object containing the warning. |
-| timeStampTokens[0]. warning[0]. content | + | String | Warning description. |
+| timeStampTokens[0]. error | - | Array | Deprecated field. Holds the same values as timeStampTokens[0].errors. |
+| timeStampTokens[0]. errors | - | Array | Errors returned in time stamp token validation. |
+| timeStampTokens[0]. errors[0] | + | Object | Object containing the error. |
+| timeStampTokens[0]. errors[0]. content | + | String | Error description. |
+| timeStampTokens[0]. warning | - | Array | Deprecated field. Holds the same values as timeStampTokens[0].warnings. |
+| timeStampTokens[0]. warnings | - | Array | Block of validation warnings that do not affect the overall validation result.<br> Aside from warnings produced by DSS, an additional warning may be issued if a timestamp token does not cover the datafile (`The time-stamp token does not cover container datafile!`). |
+| timeStampTokens[0]. warnings[0] | + | Object | Object containing the warning. |
+| timeStampTokens[0]. warnings[0]. content | + | String | Warning description. |
 | timeStampTokens[0]. timestampScopes | - | Array | Contains information of the original data that is covered by the timestamp. |
 | timeStampTokens[0]. timestampScopes[0]. name | + | String | Name of the timestamp scope. |
 | timeStampTokens[0]. timestampScopes[0]. scope | + | String | Type of the timestamp scope. |

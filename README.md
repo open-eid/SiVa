@@ -65,7 +65,7 @@ Logs for all running containers can be viewed at http://localhost:11080.
 
 ### Without docker
 
-SiVa project compiles **2 fat executable JAR** files that You can run after successfully building the
+SiVa project compiles **1 fat executable JAR** file that You can run after successfully building the
 project by issuing below command:
 
 **Starting the SiVa REST webservice. NB! X.X.X denotes the version you are running.**
@@ -123,10 +123,10 @@ To execute the tests from command line after application is built use:
 ./mvnw verify
 ```
 
-### How to run integration tests
-Integration tests can be found [here](https://github.com/open-eid/SiVa-Test), and executing them requires running SiVa Web application instance.
+### How to run system tests
+System tests can be found [here](https://github.com/open-eid/SiVa-Test), and executing them requires running SiVa Web application instance.
 
-### How to run integration tests in docker
+### How to run system tests in docker
 Before starting the docker instances, the `docker-compose.yaml` file must be modified. Add the following under the siva-webapp service to run the docker image with the test profile:
 
 ```

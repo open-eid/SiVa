@@ -67,6 +67,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -88,6 +89,7 @@ public abstract class TimemarkContainerValidationReportBuilder {
     protected static final String DDOC_SIGNATURE_FORM_PREFIX = "DIGIDOC_XML_";
     protected static final String DDOC_HASHCODE_SIGNATURE_FORM_SUFFIX = "_hashcode";
     protected static final String HASHCODE_CONTENT_TYPE = "HASHCODE";
+    private static final Set<SignatureProfile> PROFILES_WITH_TIMESTAMP = Set.of(SignatureProfile.T, SignatureProfile.LT, SignatureProfile.LTA);
 
     protected final Container container;
     private final ValidationDocument validationDocument;
@@ -250,17 +252,15 @@ public abstract class TimemarkContainerValidationReportBuilder {
     }
 
     private Info getInfo(Signature signature) {
-        Info info = new Info();
-        info.setBestSignatureTime(getBestSignatureTime(signature));
-        if (List.of(SignatureProfile.T, SignatureProfile.LT, SignatureProfile.LTA).contains(signature.getProfile())) {
-            info.setTimestampCreationTime(getTimestampTime(signature));
-        }
-        info.setOcspResponseCreationTime(getOcspTime(signature));
-        info.setTimeAssertionMessageImprint(getTimeAssertionMessageImprint(signature));
-        info.setSignerRole(getSignerRole(signature));
-        info.setSignatureProductionPlace(getSignatureProductionPlace(signature));
-        info.setArchiveTimeStamps(getArchiveTimestamps(signature));
-        return info;
+        return Info.builder()
+                .bestSignatureTime(getBestSignatureTime(signature))
+                .ocspResponseCreationTime(getOcspTime(signature))
+                .timeAssertionMessageImprint(getTimeAssertionMessageImprint(signature))
+                .signerRole(getSignerRole(signature))
+                .signatureProductionPlace(getSignatureProductionPlace(signature))
+                .archiveTimeStamps(getArchiveTimestamps(signature))
+                .timestampCreationTime(PROFILES_WITH_TIMESTAMP.contains(signature.getProfile()) ? getTimestampTime(signature) : null)
+                .build();
     }
 
     private String getOcspTime(Signature signature) {

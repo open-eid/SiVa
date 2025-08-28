@@ -19,6 +19,7 @@ package ee.openeid.validation.service.generic;
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
+import ee.openeid.siva.validation.document.report.Info;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.validation.service.generic.configuration.properties.GenericSignaturePolicyProperties;
@@ -39,6 +40,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 @SpringBootTest(classes = {PDFValidationServiceTest.TestConfiguration.class})
@@ -100,11 +102,20 @@ class AsiceSignatureTest {
         assertEquals(expectedResult, imprint);
     }
 
+    @Test
+    void whenAllInfoFieldsAreEmpty_shouldReturnNull(){
+        SimpleReport simpleReport = validationService
+                .validateDocument(buildValidationDocument("asice_TM_missing_ocsp_signature.xml"))
+                .getSimpleReport();
+
+        Info info = simpleReport.getValidationConclusion().getSignatures().get(0).getInfo();
+        assertNull(info);
+    }
+
     private static Stream<Arguments> getFileNameAndExpectedResult() {
         return Stream.of(
                 arguments("TS.asice", "MDEwDQYJYIZIAWUDBAIBBQAEIE541TO5ZHHgKv60XxTXJX0Qg04pjs4uN8bELnDUDFp1"),
-                arguments("asice_TS_missing_timestamp_signature.xml", ""),
-                arguments("asice_TM_missing_ocsp_signature.xml", "")
+                arguments("asice_TS_missing_timestamp_signature.xml", "")
         );
     }
 

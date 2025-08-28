@@ -449,16 +449,16 @@ public class GenericValidationReportBuilder {
     }
 
     private Info parseSignatureInfo(String signatureFormat, String signatureId) {
-        Info info = new Info();
-        info.setBestSignatureTime(getBestSignatureTime(signatureFormat, signatureId));
-        info.setTimestampCreationTime(getTimestampTime(signatureId));
-        info.setOcspResponseCreationTime(getOcspResponseTime(signatureId));
-        info.setTimeAssertionMessageImprint(parseTimeAssertionMessageImprint(signatureFormat, signatureId));
-        info.setSignerRole(parseSignerRole(signatureId));
-        info.setSignatureProductionPlace(parseSignatureProductionPlace(signatureId));
-        info.setSigningReason(parseReason(signatureId));
-        info.setArchiveTimeStamps(getArchiveTimestamps(signatureId));
-        return info;
+        return Info.builder()
+                .bestSignatureTime(getBestSignatureTime(signatureFormat, signatureId))
+                .timestampCreationTime(getTimestampTime(signatureId))
+                .ocspResponseCreationTime(getOcspResponseTime(signatureId))
+                .timeAssertionMessageImprint(parseTimeAssertionMessageImprint(signatureFormat, signatureId))
+                .signerRole(parseSignerRole(signatureId))
+                .signatureProductionPlace(parseSignatureProductionPlace(signatureId))
+                .signingReason(parseReason(signatureId))
+                .archiveTimeStamps(getArchiveTimestamps(signatureId))
+                .build();
     }
 
     private String formatDate(Date date) {

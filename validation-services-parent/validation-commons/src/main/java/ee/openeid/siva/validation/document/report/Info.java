@@ -16,11 +16,20 @@
 
 package ee.openeid.siva.validation.document.report;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
+import java.util.Objects;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Info {
 
     private String bestSignatureTime;
@@ -32,4 +41,27 @@ public class Info {
     private SignatureProductionPlace signatureProductionPlace;
     private List<ArchiveTimeStamp> archiveTimeStamps;
 
+    public static class InfoBuilder {
+        public Info build() {
+            boolean hasMeaningfulData = StringUtils.isNotEmpty(bestSignatureTime)
+                    || StringUtils.isNotEmpty(ocspResponseCreationTime)
+                    || StringUtils.isNotEmpty(timestampCreationTime)
+                    || StringUtils.isNotEmpty(timeAssertionMessageImprint)
+                    || StringUtils.isNotEmpty(signingReason)
+                    || CollectionUtils.isNotEmpty(signerRole)
+                    || Objects.nonNull(signatureProductionPlace)
+                    || CollectionUtils.isNotEmpty(archiveTimeStamps);
+
+            return hasMeaningfulData ? new Info(
+                    bestSignatureTime,
+                    ocspResponseCreationTime,
+                    timestampCreationTime,
+                    timeAssertionMessageImprint,
+                    signingReason,
+                    signerRole,
+                    signatureProductionPlace,
+                    archiveTimeStamps
+            ) : null;
+        }
+    }
 }

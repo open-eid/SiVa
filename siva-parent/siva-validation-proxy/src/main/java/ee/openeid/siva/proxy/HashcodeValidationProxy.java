@@ -19,55 +19,92 @@ package ee.openeid.siva.proxy;
 import ee.openeid.siva.proxy.document.ProxyHashcodeDataSet;
 import ee.openeid.siva.proxy.document.ReportType;
 import ee.openeid.siva.statistics.StatisticsService;
-import ee.openeid.siva.validation.document.SignatureFile;
+import ee.openeid.siva.validation.document.Datafile;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Reports;
 import ee.openeid.siva.validation.document.report.SimpleReport;
-import ee.openeid.siva.validation.service.ValidationService;
+import ee.openeid.siva.validation.exception.MalformedSignatureFileException;
+import ee.openeid.siva.validation.security.SecureSAXParsers;
+import ee.openeid.validation.service.generic.SignatureXmlHandler;
 import ee.openeid.validation.service.generic.HashcodeGenericValidationService;
+import ee.openeid.validation.service.timemark.TimemarkHashcodeValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import javax.xml.parsers.SAXParser;
+import java.io.ByteArrayInputStream;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 public class HashcodeValidationProxy extends ValidationProxy {
-
-    private static final String HASHCODE_GENERIC_SERVICE = "hashcodeGeneric";
+    private final HasBdocTimemarkPolicyService hasBdocTimemarkPolicyService;
+    private final HashcodeValidationMapper hashcodeValidationMapper;
+    private final HashcodeGenericValidationService hashcodeGenericValidationService;
+    private final TimemarkHashcodeValidationService timemarkHashcodeValidationService;
 
     @Autowired
-    public HashcodeValidationProxy(StatisticsService statisticsService, ApplicationContext applicationContext, Environment environment) {
+    public HashcodeValidationProxy(StatisticsService statisticsService,
+                                   ApplicationContext applicationContext,
+                                   Environment environment,
+                                   HasBdocTimemarkPolicyService hasBdocTimemarkPolicyService,
+                                   HashcodeValidationMapper hashcodeValidationMapper,
+                                   HashcodeGenericValidationService hashcodeGenericValidationService,
+                                   TimemarkHashcodeValidationService timemarkHashcodeValidationService) {
         super(statisticsService, applicationContext, environment);
+        this.hasBdocTimemarkPolicyService = hasBdocTimemarkPolicyService;
+        this.hashcodeValidationMapper = hashcodeValidationMapper;
+        this.hashcodeGenericValidationService = hashcodeGenericValidationService;
+        this.timemarkHashcodeValidationService = timemarkHashcodeValidationService;
     }
 
     @Override
     String constructValidatorName(ProxyRequest proxyRequest) {
-        return HASHCODE_GENERIC_SERVICE + SERVICE_BEAN_NAME_POSTFIX;
+        throw new IllegalStateException("Method is unimplemented");
     }
 
     @Override
     public SimpleReport validateRequest(ProxyRequest proxyRequest) {
-        ValidationService validationService = getServiceForType(proxyRequest);
-        if (validationService instanceof HashcodeGenericValidationService && proxyRequest instanceof ProxyHashcodeDataSet) {
-
-            List<ValidationDocument> validationDocuments = ((ProxyHashcodeDataSet) proxyRequest).getSignatureFiles()
-                    .stream()
-                    .map(signatureFile -> createValidationDocument(proxyRequest.getSignaturePolicy(), signatureFile))
-                    .collect(Collectors.toList());
-            Reports reports =  ((HashcodeGenericValidationService) validationService).validate(validationDocuments);
-            return chooseReport(reports, ReportType.SIMPLE);
+        if (proxyRequest instanceof ProxyHashcodeDataSet) {
+            var reports = hashcodeValidationMapper.mapToValidationDocuments((ProxyHashcodeDataSet) proxyRequest)
+              .stream()
+              .map(this::validateDocument)
+              .toList();
+            return chooseReport(hashcodeValidationMapper.mergeReportsToOne(reports), ReportType.SIMPLE);
         }
         throw new IllegalStateException("Something went wrong with hashcode validation");
     }
 
-    ValidationDocument createValidationDocument(String signaturePolicy, SignatureFile signatureFile) {
-        ValidationDocument validationDocument = new ValidationDocument();
-        validationDocument.setSignaturePolicy(signaturePolicy);
-        validationDocument.setBytes(signatureFile.getSignature());
-        validationDocument.setDatafiles(signatureFile.getDatafiles());
-        return validationDocument;
+    private Reports validateDocument(ValidationDocument validationDocument) {
+        Optional.ofNullable(getDataFileInfoIfNeeded(validationDocument))
+          .filter(dataFiles -> !dataFiles.isEmpty())
+          .ifPresent(validationDocument::setDatafiles);
+        if (hasBdocTimemarkPolicyService.hasBdocTimemarkPolicy(validationDocument)) {
+            return timemarkHashcodeValidationService.validateDocument(validationDocument);
+        } else {
+            return hashcodeGenericValidationService.validateDocument(validationDocument);
+        }
+    }
+
+    private List<Datafile> getDataFileInfoIfNeeded(ValidationDocument validationDocument) {
+        if (!CollectionUtils.isEmpty(validationDocument.getDatafiles())) {
+            return null;
+        } else {
+            try {
+                SAXParser saxParser = SecureSAXParsers.createParser();
+                SignatureXmlHandler handler = new SignatureXmlHandler();
+                saxParser.parse(new ByteArrayInputStream(validationDocument.getBytes()), handler);
+                return handler.getDatafiles();
+            } catch (Exception e) {
+                throw constructMalformedDocumentException(new RuntimeException(e));
+            }
+        }
+    }
+
+    private RuntimeException constructMalformedDocumentException(Exception cause) {
+        return new MalformedSignatureFileException(cause, "Signature file malformed");
     }
 }

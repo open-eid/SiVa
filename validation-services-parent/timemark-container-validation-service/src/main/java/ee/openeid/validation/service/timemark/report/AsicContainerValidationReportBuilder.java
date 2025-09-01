@@ -41,15 +41,14 @@ import org.digidoc4j.ValidationResult;
 import org.digidoc4j.impl.asic.AsicSignature;
 import org.digidoc4j.impl.asic.asice.AsicESignature;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.getDateFormatterWithGMTZone;
+import static ee.openeid.validation.service.timemark.util.SignatureCertificateParser.getCertificate;
+import static ee.openeid.validation.service.timemark.util.SignatureScopeParser.getAsicSignatureScopes;
 
 public class AsicContainerValidationReportBuilder extends TimemarkContainerValidationReportBuilder {
 
@@ -116,13 +115,7 @@ public class AsicContainerValidationReportBuilder extends TimemarkContainerValid
 
     @Override
     List<Scope> getSignatureScopes(Signature signature, List<String> dataFilenames) {
-        AsicESignature bDocSignature = (AsicESignature) signature;
-        return bDocSignature.getOrigin().getReferences()
-                .stream()
-                .map(r -> decodeUriIfPossible(r.getURI()))
-                .filter(dataFilenames::contains) //filters out Signed Properties
-                .map(AsicContainerValidationReportBuilder::createFullSignatureScopeForDataFile)
-                .collect(Collectors.toList());
+        return getAsicSignatureScopes((AsicSignature) signature, dataFilenames);
     }
 
     @Override
@@ -145,23 +138,6 @@ public class AsicContainerValidationReportBuilder extends TimemarkContainerValid
                 .filter(CollectionUtils::isNotEmpty)
                 .map(timestamps -> generateArchiveTimestamps(timestamps, signature))
                 .orElse(null);
-    }
-
-    private static Scope createFullSignatureScopeForDataFile(String filename) {
-        Scope signatureScope = new Scope();
-        signatureScope.setName(filename);
-        signatureScope.setScope(FULL_SIGNATURE_SCOPE);
-        signatureScope.setContent(FULL_DOCUMENT);
-        return signatureScope;
-    }
-
-    private String decodeUriIfPossible(String uri) {
-        try {
-            return URLDecoder.decode(uri, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            LOGGER.warn("datafile " + uri + " has unsupported encoding", e);
-            return uri;
-        }
     }
 
     private List<ArchiveTimeStamp> generateArchiveTimestamps(List<TimestampWrapper> timestamps, Signature signature) {

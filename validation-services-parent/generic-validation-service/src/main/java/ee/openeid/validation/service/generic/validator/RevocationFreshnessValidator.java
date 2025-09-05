@@ -40,7 +40,8 @@ import java.util.stream.Collectors;
 public class RevocationFreshnessValidator {
 
     private static final Duration REVOCATION_FRESHNESS_WARNING_THRESHOLD = Duration.ofMinutes(15);
-    private static final String REVOCATION_FRESHNESS_FAULT = "The revocation information is not considered as 'fresh'.";
+    private static final String REVOCATION_FRESHNESS_FAULT = "The time difference between the signature timestamp and the OCSP response exceeds " +
+            REVOCATION_FRESHNESS_WARNING_THRESHOLD.toMinutes() + " minutes, rendering the OCSP response not 'fresh'.";
     private static final String TIMESTAMP_OCSP_ORDER_FAULT = "OCSP response production time is before timestamp time";
 
     @NonNull

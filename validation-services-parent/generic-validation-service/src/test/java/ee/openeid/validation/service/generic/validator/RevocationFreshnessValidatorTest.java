@@ -65,6 +65,10 @@ class RevocationFreshnessValidatorTest {
     @Mock
     private SimpleReport simpleReport;
 
+    public static final String REVOCATION_FRESHNESS_FAULT_MESSAGE = "The time difference between the signature timestamp" +
+            " and the OCSP response exceeds 15 minutes, rendering the OCSP response not 'fresh'.";
+
+
     @Test
     void validate_WhenNoSignaturesInDiagnosticData_DoesNothing() {
         mockDiagnosticDataGetSignatures();
@@ -410,7 +414,7 @@ class RevocationFreshnessValidatorTest {
 
         TestXmlDetailUtils.assertEquals(
                 TestXmlDetailUtils.createMessageList(
-                        TestXmlDetailUtils.createMessage(null, "The revocation information is not considered as 'fresh'.")
+                        TestXmlDetailUtils.createMessage(null, REVOCATION_FRESHNESS_FAULT_MESSAGE)
                 ),
                 signatureWarnings
         );
@@ -455,7 +459,7 @@ class RevocationFreshnessValidatorTest {
 
         TestXmlDetailUtils.assertEquals(
                 TestXmlDetailUtils.createMessageList(
-                        TestXmlDetailUtils.createMessage(null, "The revocation information is not considered as 'fresh'.")
+                        TestXmlDetailUtils.createMessage(null, REVOCATION_FRESHNESS_FAULT_MESSAGE)
                 ),
                 signatureWarnings
         );

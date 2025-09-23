@@ -36,7 +36,6 @@ import ee.openeid.siva.validation.document.report.Warning;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.document.report.builder.SignatureValidationDataProcessor;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
-import ee.openeid.siva.validation.util.CertUtil;
 import ee.openeid.siva.validation.util.DistinguishedNameUtil;
 import ee.openeid.validation.service.generic.validator.TokenUtils;
 import eu.europa.esig.dss.diagnostic.AbstractTokenProxy;
@@ -44,9 +43,12 @@ import eu.europa.esig.dss.diagnostic.CertificateRevocationWrapper;
 import eu.europa.esig.dss.diagnostic.CertificateWrapper;
 import eu.europa.esig.dss.diagnostic.SignatureWrapper;
 import eu.europa.esig.dss.diagnostic.TimestampWrapper;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlAbstractToken;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlCertificate;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlRevocation;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlSignature;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlSignerRole;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlSigningCertificate;
 import eu.europa.esig.dss.enumerations.ASiCContainerType;
 import eu.europa.esig.dss.enumerations.DigestAlgorithm;
 import eu.europa.esig.dss.enumerations.EncryptionAlgorithm;
@@ -56,13 +58,10 @@ import eu.europa.esig.dss.enumerations.RevocationType;
 import eu.europa.esig.dss.enumerations.SignatureAlgorithm;
 import eu.europa.esig.dss.enumerations.SubIndication;
 import eu.europa.esig.dss.enumerations.TimestampType;
-import eu.europa.esig.dss.model.x509.CertificateToken;
 import eu.europa.esig.dss.simplereport.jaxb.XmlDetails;
 import eu.europa.esig.dss.simplereport.jaxb.XmlMessage;
 import eu.europa.esig.dss.simplereport.jaxb.XmlToken;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
-import eu.europa.esig.dss.spi.x509.revocation.RevocationToken;
-import eu.europa.esig.dss.spi.x509.tsp.TimestampToken;
 import eu.europa.esig.dss.validation.AdvancedSignature;
 import eu.europa.esig.dss.validation.executor.ValidationLevel;
 import eu.europa.esig.dss.validation.reports.AbstractReports;
@@ -78,15 +77,16 @@ import org.digidoc4j.impl.asic.TmSignaturePolicyType;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -119,7 +119,7 @@ public class GenericValidationReportBuilder {
     private final List<AdvancedSignature> signatures;
     private final SignatureValidationDataProcessor<String> signatureLevelAdjuster;
 
-    private List<CertificateToken> usedCertificates;
+    private Map<String, XmlCertificate> usedCertificatesMappings;
 
     public GenericValidationReportBuilder(ReportBuilderData reportData) {
         this.dssReports = reportData.getDssReports();
@@ -146,38 +146,9 @@ public class GenericValidationReportBuilder {
     }
 
     private void collectUsedCertificates() {
-        usedCertificates = dssReports.getDiagnosticDataJaxb().getUsedCertificates().stream()
-                .map(usedCertificate -> {
-                    Optional<CertificateToken> certificateToken = trustedListsCertificateSource.getCertificates().stream()
-                            .filter(c -> c.getDSSIdAsString().equals(usedCertificate.getId()))
-                            .findFirst();
-                    if (certificateToken.isPresent()) {
-                        return certificateToken.get();
-                    }
-                    for (AdvancedSignature advancedSignature : signatures) {
-                        List<CertificateToken> certificates = new ArrayList<>(advancedSignature.getCertificates());
-                        for (TimestampToken timestampToken : advancedSignature.getAllTimestamps()) {
-                            certificates.addAll(timestampToken.getCertificates());
-                        }
-
-                        advancedSignature.getCompleteOCSPSource().getSources().stream()
-                                .flatMap(revocationSource -> revocationSource.getAllRevocationTokens().stream())
-                                .filter(Objects::nonNull)
-                                .map(RevocationToken::getIssuerCertificateToken)
-                                .filter(Objects::nonNull)
-                                .forEach(certificates::add);
-
-                        Optional<CertificateToken> optionalCertSource = certificates.stream()
-                                .filter(cert -> cert.getDSSIdAsString().equals(usedCertificate.getId())).findFirst();
-
-                        if (optionalCertSource.isPresent()) {
-                            return optionalCertSource.get();
-                        }
-                    }
-                    return null;
-                })
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+        usedCertificatesMappings = dssReports.getDiagnosticDataJaxb().getUsedCertificates().stream()
+                .filter(GenericValidationReportBuilder::hasRequiredFields)
+                .collect(Collectors.toUnmodifiableMap(XmlAbstractToken::getId, UnaryOperator.identity()));
     }
 
     private ValidationConclusion getValidationConclusion() {
@@ -334,40 +305,35 @@ public class GenericValidationReportBuilder {
     }
 
     private Certificate getCertificate(String certificateId, CertificateType type) {
-        Optional<CertificateToken> certificateToken = getCertificateTokenById(certificateId);
-        if (certificateToken.isEmpty()) {
-            return null;
-        }
-        Certificate certificate = new Certificate();
-        X509Certificate x509Certificate = certificateToken.get().getCertificate();
-        certificate.setCommonName(CertUtil.getCommonName(x509Certificate));
-        certificate.setContent(CertUtil.encodeCertificateToBase64(x509Certificate));
-        certificate.setIssuer(getIssuerCertificate(x509Certificate));
-        certificate.setType(type);
-        return certificate;
-    }
-
-    private Certificate getIssuerCertificate(X509Certificate x509Certificate) {
-        Optional<CertificateToken> issuerCert = usedCertificates.stream()
-                .filter(certificateToken -> certificateToken != null
-                        && !certificateToken.isSelfSigned()
-                        && certificateToken.getSubject().getPrincipal() != null
-                        && certificateToken.getSubject().getPrincipal().equals(x509Certificate.getIssuerX500Principal()))
-                .findFirst();
-        if (issuerCert.isPresent()) {
-            Certificate certificate = new Certificate();
-            certificate.setCommonName(CertUtil.getCommonName(issuerCert.get().getCertificate()));
-            certificate.setContent(CertUtil.encodeCertificateToBase64(issuerCert.get().getCertificate()));
-            certificate.setIssuer(getIssuerCertificate(issuerCert.get().getCertificate()));
+        XmlCertificate xmlCertificate = usedCertificatesMappings.get(certificateId);
+        if (xmlCertificate != null) {
+            Certificate certificate = toCertificate(xmlCertificate);
+            certificate.setType(type);
             return certificate;
         }
         return null;
     }
 
-    private Optional<CertificateToken> getCertificateTokenById(String id) {
-        return usedCertificates.stream()
-                .filter(certificateToken -> certificateToken.getDSSIdAsString().equals(id))
-                .findFirst();
+    private static Certificate toCertificate(XmlCertificate xmlCertificate) {
+        Certificate certificate = new Certificate();
+        certificate.setCommonName(xmlCertificate.getCommonName());
+        Optional
+                .ofNullable(xmlCertificate.getBase64Encoded())
+                .map(Base64::encodeBase64String)
+                .ifPresent(certificate::setContent);
+        Optional
+                .ofNullable(xmlCertificate.getSigningCertificate())
+                .map(XmlSigningCertificate::getCertificate)
+                .filter(Predicate.not(XmlCertificate::isSelfSigned))
+                .filter(GenericValidationReportBuilder::hasRequiredFields)
+                .map(GenericValidationReportBuilder::toCertificate)
+                .ifPresent(certificate::setIssuer);
+
+        return certificate;
+    }
+
+    private static boolean hasRequiredFields(XmlCertificate xmlCertificate) {
+        return xmlCertificate.getCommonName() != null && xmlCertificate.getBase64Encoded() != null;
     }
 
     private String getSignatureId(String signatureId) {

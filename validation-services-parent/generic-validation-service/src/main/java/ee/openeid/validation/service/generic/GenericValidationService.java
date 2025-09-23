@@ -142,7 +142,7 @@ public class GenericValidationService implements ValidationService {
         validator.setValidationLevel(VALIDATION_LEVEL);
         Optional.ofNullable(validationDocument.getValidationTime()).ifPresent(validator::setValidationTime);
 
-        validator.setTokenExtractionStrategy(TokenExtractionStrategy.EXTRACT_TIMESTAMPS_AND_REVOCATION_DATA);
+        validator.setTokenExtractionStrategy(TokenExtractionStrategy.EXTRACT_CERTIFICATES_AND_TIMESTAMPS_AND_REVOCATION_DATA);
         return validator;
     }
 

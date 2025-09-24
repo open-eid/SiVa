@@ -42,7 +42,6 @@ import eu.europa.esig.dss.service.http.commons.CommonsDataLoader;
 import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.spi.x509.aia.DefaultAIASource;
-import eu.europa.esig.dss.validation.AdvancedSignature;
 import eu.europa.esig.dss.validation.CommonCertificateVerifier;
 import eu.europa.esig.dss.validation.SignedDocumentValidator;
 import eu.europa.esig.dss.validation.executor.ValidationLevel;
@@ -53,7 +52,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 import static ee.openeid.validation.service.generic.GenericValidationConstants.GENERIC_POLICY_SERVICE_BEAN_NAME;
@@ -89,10 +87,6 @@ public class GenericValidationService implements ValidationService {
             final eu.europa.esig.dss.validation.reports.Reports reports = validator.validateDocument(policy.getConstraintDataStream());
             XadesValidationReportProcessor.process(reports);
 
-            //For large PDF files the getSignatures() method is currently expensive.
-            //Initialize once and use in different components to reduce response time for large PDF files validation.
-            List<AdvancedSignature> signatures = validator.getSignatures();
-
             new RevocationFreshnessValidator(reports).validate();
             containerValidatorFactory.create(reports, validationDocument).validate();
 
@@ -111,8 +105,6 @@ public class GenericValidationService implements ValidationService {
                     .validationDocument(validationDocument)
                     .policy(policy)
                     .isReportSignatureEnabled(reportConfigurationProperties.isReportSignatureEnabled())
-                    .trustedListsCertificateSource(trustedListsCertificateSource)
-                    .signatures(signatures)
                     .build();
 
             return new GenericValidationReportBuilder(reportBuilderData).build();

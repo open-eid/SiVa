@@ -54,24 +54,17 @@ import eu.europa.esig.dss.enumerations.Indication;
 import eu.europa.esig.dss.enumerations.MaskGenerationFunction;
 import eu.europa.esig.dss.enumerations.SignatureLevel;
 import eu.europa.esig.dss.enumerations.TimestampType;
-import eu.europa.esig.dss.model.FileDocument;
-import eu.europa.esig.dss.pades.validation.PDFDocumentValidator;
 import eu.europa.esig.dss.simplereport.jaxb.XmlDetails;
 import eu.europa.esig.dss.simplereport.jaxb.XmlSimpleReport;
 import eu.europa.esig.dss.simplereport.jaxb.XmlTimestamps;
-import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
-import eu.europa.esig.dss.validation.AdvancedSignature;
 import eu.europa.esig.dss.validation.executor.ValidationLevel;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -84,11 +77,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
 
-@ExtendWith(MockitoExtension.class)
 class GenericValidationReportBuilderTest {
-
-    @Mock
-    TrustedListsCertificateSource trustedListsCertificateSource;
 
     private static final String TM_POLICY_OID = "1.3.6.1.4.1.10015.1000.3.2.1";
 
@@ -495,8 +484,6 @@ class GenericValidationReportBuilderTest {
                 .validationDocument(getValidationDocument())
                 .policy(getValidationPolicy())
                 .isReportSignatureEnabled(false)
-                .trustedListsCertificateSource(trustedListsCertificateSource)
-                .signatures(getSignatures())
                 .build();
     }
 
@@ -505,10 +492,6 @@ class GenericValidationReportBuilderTest {
         validationDocument.setName("filename.bdoc");
         validationDocument.setBytes("dGVzdA==".getBytes());
         return validationDocument;
-    }
-
-    private List<AdvancedSignature> getSignatures() {
-        return new PDFDocumentValidator(new FileDocument("src/test/resources/test-files/no-signatures.pdf")).getSignatures();
     }
 
     private ConstraintDefinedPolicy getValidationPolicy() {

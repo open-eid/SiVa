@@ -61,8 +61,6 @@ import eu.europa.esig.dss.enumerations.TimestampType;
 import eu.europa.esig.dss.simplereport.jaxb.XmlDetails;
 import eu.europa.esig.dss.simplereport.jaxb.XmlMessage;
 import eu.europa.esig.dss.simplereport.jaxb.XmlToken;
-import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
-import eu.europa.esig.dss.validation.AdvancedSignature;
 import eu.europa.esig.dss.validation.executor.ValidationLevel;
 import eu.europa.esig.dss.validation.reports.AbstractReports;
 import org.apache.commons.codec.binary.Base64;
@@ -115,8 +113,6 @@ public class GenericValidationReportBuilder {
     private final ConstraintDefinedPolicy validationPolicy;
     private final ValidationLevel validationLevel;
     private final boolean isReportSignatureEnabled;
-    private final TrustedListsCertificateSource trustedListsCertificateSource;
-    private final List<AdvancedSignature> signatures;
     private final SignatureValidationDataProcessor<String> signatureLevelAdjuster;
 
     private Map<String, XmlCertificate> usedCertificatesMappings;
@@ -127,8 +123,6 @@ public class GenericValidationReportBuilder {
         this.validationPolicy = reportData.getPolicy();
         this.validationLevel = reportData.getValidationLevel();
         this.isReportSignatureEnabled = reportData.isReportSignatureEnabled();
-        this.trustedListsCertificateSource = reportData.getTrustedListsCertificateSource();
-        this.signatures = reportData.getSignatures();
         this.signatureLevelAdjuster = createSignatureLevelAdjuster(reportData);
     }
 

@@ -26,6 +26,7 @@ import ee.openeid.tsl.TSLValidationJobFactory;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
 import ee.openeid.validation.service.generic.configuration.GenericValidationServiceConfiguration;
 import ee.openeid.validation.service.generic.configuration.properties.GenericSignaturePolicyProperties;
+import ee.openeid.validation.service.generic.configuration.properties.TLevelSignatureFilterProperties;
 import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
 import ee.openeid.validation.service.generic.validator.ocsp.OCSPSourceFactory;
 import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
@@ -78,6 +79,10 @@ abstract class GenericValidationServiceTestBase {
     }
 
     @Import({
+            // t-level properties must be explicitly imported before GenericValidationServiceConfiguration
+            //  for the conditional CountryFilter bean to be initialized correctly, if configured.
+            TLevelSignatureFilterProperties.class,
+
             TSLLoaderConfiguration.class,
             GenericValidationServiceConfiguration.class
     })

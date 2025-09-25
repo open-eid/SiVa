@@ -218,7 +218,7 @@ Structure of validationConclusion block
 | signatures[0]. warnings | - | Array | Block of validation warnings that do not affect the overall validation result. |
 | signatures[0]. warnings[0] | + | Object | Object containing the warning |
 | signatures[0]. warnings[0]. content | + | String | Warning description, as returned by the base library that was used for validation. |
-| signatures[0]. certificates | - | Array | Array containing certificates that are present in the signature or can be fetched from TSL. |
+| signatures[0]. certificates | - | Array | Array containing certificates related to this signature. |
 | signatures[0]. certificates[0] | + | Object | Object containing certificate type, common name and certificate. Minimal object is signer certificate. If present contains certificates for TimeStamps and OCSP as well. |
 | signatures[0]. certificates[0].commonName | + | String | CN (common name) value in certificate. |
 | signatures[0]. certificates[0].type | + | String | Type of the certificate. Can be SIGNING, REVOCATION, SIGNATURE_TIMESTAMP, ARCHIVE_TIMESTAMP or CONTENT_TIMESTAMP. |

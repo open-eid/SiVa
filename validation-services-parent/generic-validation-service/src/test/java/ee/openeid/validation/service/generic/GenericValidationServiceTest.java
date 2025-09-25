@@ -18,46 +18,25 @@ package ee.openeid.validation.service.generic;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
-import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
 import ee.openeid.siva.validation.document.report.ArchiveTimeStamp;
 import ee.openeid.siva.validation.document.report.Certificate;
 import ee.openeid.siva.validation.document.report.CertificateType;
 import ee.openeid.siva.validation.document.report.Reports;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
-import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.siva.validation.util.CertUtil;
-import ee.openeid.tsl.TSLLoader;
-import ee.openeid.tsl.TSLRefresher;
-import ee.openeid.tsl.TSLValidationJobFactory;
-import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
-import ee.openeid.validation.service.generic.configuration.GenericValidationServiceConfiguration;
-import ee.openeid.validation.service.generic.configuration.properties.GenericSignaturePolicyProperties;
-import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
-import ee.openeid.validation.service.generic.validator.ocsp.OCSPSourceFactory;
 import eu.europa.esig.dss.enumerations.Indication;
 import eu.europa.esig.dss.model.DSSDocument;
-import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
-import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.validation.SignedDocumentValidator;
-import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.util.encoders.Base64;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -85,38 +64,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
-@SpringBootTest(classes = {GenericValidationServiceTest.TestConfiguration.class})
-@ExtendWith(SpringExtension.class)
-@Slf4j
 @ActiveProfiles("test")
-class GenericValidationServiceTest {
-
-    private static final String TEST_FILES_LOCATION = "test-files/";
-
-    GenericValidationService validationService;
-
-    private ConstraintLoadingSignaturePolicyService signaturePolicyService;
-    @Autowired
-    private TrustedListsCertificateSource trustedListsCertificateSource;
-    @Autowired
-    private GenericSignaturePolicyProperties policySettings;
-    @Autowired
-    private ContainerValidatorFactory containerValidatorFactory;
-    @Autowired
-    private OCSPSourceFactory ocspSourceFactory;
-
-    @BeforeEach
-    public void setUp() {
-        validationService = new GenericValidationService();
-        validationService.setTrustedListsCertificateSource(trustedListsCertificateSource);
-
-        signaturePolicyService = new ConstraintLoadingSignaturePolicyService(policySettings);
-        validationService.setSignaturePolicyService(signaturePolicyService);
-        validationService.setReportConfigurationProperties(new ReportConfigurationProperties(true));
-
-        validationService.setContainerValidatorFactory(containerValidatorFactory);
-        validationService.setOcspSourceFactory(ocspSourceFactory);
-    }
+class GenericValidationServiceTest extends GenericValidationServiceTestBase {
 
     @Test
     void certificatePresent_asice() throws Exception {
@@ -278,39 +227,4 @@ class GenericValidationServiceTest {
                 .mapToObj(i -> Arguments.of(signedTimes.get(i), expectedContents.get(i), i));
     }
 
-    ValidationDocument buildValidationDocument(String testFile) {
-        return DummyValidationDocumentBuilder
-                .aValidationDocument()
-                .withDocument(TEST_FILES_LOCATION + testFile)
-                .withName(testFile)
-                .build();
-    }
-
-    @Import({
-            TSLLoaderConfiguration.class,
-            GenericValidationServiceConfiguration.class
-    })
-    public static class TestConfiguration {
-
-        @Bean
-        public ProxyConfig proxyConfig() {
-            return new ProxyConfig();
-        }
-
-        @Bean
-        public TSLLoader tslLoader() {
-            return new TSLLoader("testName");
-        }
-
-        @Bean
-        public TSLRefresher tslRefresher() {
-            return new TSLRefresher();
-        }
-
-        @Bean
-        public TSLValidationJobFactory tslValidationJobFactory() {
-            return new TSLValidationJobFactory();
-        }
-
-    }
 }

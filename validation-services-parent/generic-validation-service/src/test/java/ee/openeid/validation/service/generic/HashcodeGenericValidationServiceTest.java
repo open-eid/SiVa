@@ -16,77 +16,33 @@
 
 package ee.openeid.validation.service.generic;
 
-import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.Datafile;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.CertificateType;
 import ee.openeid.siva.validation.document.report.Reports;
-import ee.openeid.siva.validation.document.report.SignatureProductionPlace;
 import ee.openeid.siva.validation.document.report.Scope;
+import ee.openeid.siva.validation.document.report.SignatureProductionPlace;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.SignerRole;
-import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.siva.validation.util.CertUtil;
-import ee.openeid.validation.service.generic.configuration.properties.GenericSignaturePolicyProperties;
-import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
-import ee.openeid.validation.service.generic.validator.ocsp.OCSPSourceFactory;
-import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import org.bouncycastle.util.encoders.Base64;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
-@SpringBootTest(classes = {PDFValidationServiceTest.TestConfiguration.class})
-@ExtendWith(SpringExtension.class)
-class HashcodeGenericValidationServiceTest {
-
-
-    private HashcodeGenericValidationService validationService;
-    private ConstraintLoadingSignaturePolicyService signaturePolicyService;
-    @Autowired
-    private TrustedListsCertificateSource trustedListsCertificateSource;
-    @Autowired
-    private GenericSignaturePolicyProperties policySettings;
-    @Autowired
-    private ContainerValidatorFactory containerValidatorFactory;
-    @Autowired
-    private OCSPSourceFactory ocspSourceFactory;
-
-    @BeforeEach
-    public void setUp() {
-        validationService = new HashcodeGenericValidationService();
-        validationService.setTrustedListsCertificateSource(trustedListsCertificateSource);
-
-        signaturePolicyService = new ConstraintLoadingSignaturePolicyService(policySettings);
-        validationService.setSignaturePolicyService(signaturePolicyService);
-        validationService.setReportConfigurationProperties(new ReportConfigurationProperties(true));
-
-        validationService.setContainerValidatorFactory(containerValidatorFactory);
-        validationService.setOcspSourceFactory(ocspSourceFactory);
-    }
+class HashcodeGenericValidationServiceTest extends HashcodeGenericValidationServiceTestBase {
 
     @Test
-    void validHashcodeRequest() throws Exception {
+    void validHashcodeRequest() {
         Reports response = validationService.validate(getValidationDocumentSingletonList());
         Scope signatureScope = response.getSimpleReport().getValidationConclusion().getSignatures().get(0).getSignatureScopes().get(0);
         assertEquals("LvhnsrgBZBK9kTQ8asbPtcsjuEhBo9s3QDdCcIxlMmo=", signatureScope.getHash());
@@ -97,7 +53,7 @@ class HashcodeGenericValidationServiceTest {
     }
 
     @Test
-    void validMultipleSignatures() throws Exception {
+    void validMultipleSignatures() {
         List<ValidationDocument> validationDocuments = getValidationDocumentSingletonList();
         validationDocuments.addAll(getValidationDocumentSingletonList());
         Reports response = validationService.validate(validationDocuments);
@@ -107,7 +63,7 @@ class HashcodeGenericValidationServiceTest {
     }
 
     @Test
-    void validDataFromSignatureFile() throws Exception {
+    void validDataFromSignatureFile() {
         List<ValidationDocument> validationDocuments = getValidationDocumentSingletonList();
         validationDocuments.get(0).setDatafiles(null);
         Reports response = validationService.validate(validationDocuments);
@@ -144,7 +100,7 @@ class HashcodeGenericValidationServiceTest {
     }
 
     @Test
-    void hashcodeValidationSubjectDNCorrectlyPresent() throws Exception {
+    void hashcodeValidationSubjectDNCorrectlyPresent() {
         Reports reports = validationService.validate(getValidationDocumentSingletonList());
 
         assertSame(1, reports.getSimpleReport().getValidationConclusion().getSignatures().size());
@@ -155,7 +111,7 @@ class HashcodeGenericValidationServiceTest {
     }
 
     @Test
-    void populatesSignerRole() throws IOException, URISyntaxException {
+    void populatesSignerRole() {
         Reports reports = validationService.validate(getValidationDocumentSingletonList());
         List<SignerRole> signerRole = reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getSignerRole();
         assertEquals(1, signerRole.size());
@@ -163,8 +119,8 @@ class HashcodeGenericValidationServiceTest {
     }
 
     @Test
-    void populatesSignatureProductionPlace() throws IOException, URISyntaxException {
-        Reports reports = validationService.validate(getValidationDocumentSingletonList("test-files/signatures_with_sig_production_place.xml"));
+    void populatesSignatureProductionPlace() {
+        Reports reports = validationService.validate(getValidationDocumentSingletonList("signatures_with_sig_production_place.xml"));
         SignatureProductionPlace signatureProductionPlace = reports.getSimpleReport().getValidationConclusion()
                 .getSignatures().get(0).getInfo().getSignatureProductionPlace();
 
@@ -175,35 +131,30 @@ class HashcodeGenericValidationServiceTest {
     }
 
     @Test
-    void populatesSignatureMethod() throws IOException, URISyntaxException {
-        Reports reports = validationService.validate(getValidationDocumentSingletonList("test-files/signatures_with_sig_production_place.xml"));
+    void populatesSignatureMethod() {
+        Reports reports = validationService.validate(getValidationDocumentSingletonList("signatures_with_sig_production_place.xml"));
         assertEquals("http://www.w3.org/2001/04/xmldsig-more#rsa-sha256",
                 reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getSignatureMethod());
     }
 
     @Test
-    void populatesTimeAssertionMessageImprint() throws IOException, URISyntaxException {
+    void populatesTimeAssertionMessageImprint() {
         Reports reports = validationService.validate(getValidationDocumentSingletonList());
         assertEquals("MDEwDQYJYIZIAWUDBAIBBQAEIBf8So+lfR/lrfzu5i+SZwguJGakhr/W+eHwrAQJ0acJ",
                 reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getTimeAssertionMessageImprint());
     }
 
-    private List<ValidationDocument> getValidationDocumentSingletonList() throws URISyntaxException, IOException {
-        return getValidationDocumentSingletonList("test-files/signatures.xml");
+    private static List<ValidationDocument> getValidationDocumentSingletonList() {
+        return getValidationDocumentSingletonList("signatures.xml");
     }
 
-    private List<ValidationDocument> getValidationDocumentSingletonList(String signatureTestFile) throws URISyntaxException, IOException {
+    private static List<ValidationDocument> getValidationDocumentSingletonList(String signatureTestFile) {
         List<ValidationDocument> validationDocuments = new ArrayList<>();
-        ValidationDocument validationDocument = new ValidationDocument();
-        validationDocument.setDatafiles(Collections.singletonList(getDataFile()));
-        Path documentPath = Paths.get(getClass().getClassLoader().getResource(signatureTestFile).toURI());
-        validationDocument.setBytes(Files.readAllBytes(documentPath));
-        validationDocument.setSignaturePolicy("POLv3");
-        validationDocuments.add(validationDocument);
+        validationDocuments.add(buildValidationDocument(signatureTestFile, getDataFile()));
         return validationDocuments;
     }
 
-    private Datafile getDataFile() {
+    private static Datafile getDataFile() {
         Datafile datafile = new Datafile();
         datafile.setFilename("test.pdf");
         datafile.setHash("LvhnsrgBZBK9kTQ8asbPtcsjuEhBo9s3QDdCcIxlMmo=");

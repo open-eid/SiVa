@@ -16,7 +16,6 @@
 
 package ee.openeid.validation.service.timestamptoken;
 
-import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.CertificateType;
 import ee.openeid.siva.validation.document.report.Error;
@@ -365,30 +364,5 @@ class TimeStampTokenValidationServiceTestProfileTest extends BaseTimeStampTokenV
         signaturePolicyService.setSignaturePolicies(Map.of(constraintDefinedPolicy.getName(), constraintDefinedPolicy));
 
         validationService.setSignaturePolicyService(signaturePolicyService);
-    }
-
-    private TimeStampTokenValidationServiceFake createServiceFake(ASiCContainerWithCAdESValidator validatorMock) {
-        TimeStampTokenValidationServiceFake validationServiceFake = new TimeStampTokenValidationServiceFake();
-        when(validatorMock.validateDocument(any(InputStream.class))).thenReturn(
-            new eu.europa.esig.dss.validation.reports.Reports(null, null, new XmlSimpleReport(), null)
-        );
-        validationServiceFake.setValidator(validatorMock);
-
-        validationServiceFake.setSignaturePolicyService(new ConstraintLoadingSignaturePolicyService(policyProperties));
-        validationServiceFake.setTrustedListsCertificateSource(trustedListsCertificateSource);
-        validationServiceFake.setReportConfigurationProperties(new ReportConfigurationProperties(true));
-
-        return validationServiceFake;
-    }
-
-    private static class TimeStampTokenValidationServiceFake extends TimeStampTokenValidationService {
-
-        @Setter
-        private ASiCContainerWithCAdESValidator validator;
-
-        @Override
-        protected ASiCContainerWithCAdESValidator createValidatorFromDocument(final ValidationDocument validationDocument) {
-            return validator;
-        }
     }
 }

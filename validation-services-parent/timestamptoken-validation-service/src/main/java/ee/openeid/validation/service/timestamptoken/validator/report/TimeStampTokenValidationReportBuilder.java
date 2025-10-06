@@ -31,29 +31,31 @@ import ee.openeid.siva.validation.document.report.ValidationWarning;
 import ee.openeid.siva.validation.document.report.Warning;
 import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.service.signature.policy.properties.ValidationPolicy;
-import ee.openeid.siva.validation.util.CertUtil;
 import ee.openeid.validation.service.timestamptoken.util.TimestampNotGrantedValidationUtils;
 import eu.europa.esig.dss.diagnostic.CertificateWrapper;
-import eu.europa.esig.dss.diagnostic.SignerDataWrapper;
 import eu.europa.esig.dss.diagnostic.TimestampWrapper;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlAbstractToken;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlCertificate;
+import eu.europa.esig.dss.diagnostic.jaxb.XmlSigningCertificate;
 import eu.europa.esig.dss.enumerations.Indication;
 import eu.europa.esig.dss.enumerations.SubIndication;
 import eu.europa.esig.dss.enumerations.TimestampQualification;
-import eu.europa.esig.dss.model.x509.CertificateToken;
 import eu.europa.esig.dss.simplereport.jaxb.XmlDetails;
 import eu.europa.esig.dss.simplereport.jaxb.XmlMessage;
 import eu.europa.esig.dss.simplereport.jaxb.XmlTimestamp;
 import eu.europa.esig.dss.simplereport.jaxb.XmlToken;
-import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
-import eu.europa.esig.dss.spi.x509.tsp.TimestampToken;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -68,36 +70,39 @@ public class TimeStampTokenValidationReportBuilder {
     private static final String ASICS_SIGNATURE_FORMAT = "ASiC-S";
 
     private final eu.europa.esig.dss.validation.reports.Reports dssReports;
-    private final List<TimestampToken> timestamps;
     private final String dataFileName;
     private final ValidationDocument validationDocument;
     private final ValidationPolicy validationPolicy;
-    private final TrustedListsCertificateSource trustedListsCertificateSource;
     private final boolean isReportSignatureEnabled;
 
+    private Map<String, XmlCertificate> usedCertificatesMappings;
+
     public TimeStampTokenValidationReportBuilder(
-        eu.europa.esig.dss.validation.reports.Reports dssReports,
-        List<TimestampToken> timestamps,
-        ValidationDocument validationDocument,
-        String dataFileName,
-        ValidationPolicy validationPolicy,
-        TrustedListsCertificateSource trustedListsCertificateSource,
-        boolean isReportSignatureEnabled) {
+            eu.europa.esig.dss.validation.reports.Reports dssReports,
+            ValidationDocument validationDocument,
+            String dataFileName,
+            ValidationPolicy validationPolicy,
+            boolean isReportSignatureEnabled) {
         this.dssReports = dssReports;
-        this.timestamps = timestamps;
         this.validationDocument = validationDocument;
         this.dataFileName = dataFileName;
         this.validationPolicy = validationPolicy;
-        this.trustedListsCertificateSource = trustedListsCertificateSource;
         this.isReportSignatureEnabled = isReportSignatureEnabled;
     }
 
     public Reports build() {
+        collectUsedCertificates();
         ValidationConclusion validationConclusion = getValidationConclusion();
         SimpleReport simpleReport = new SimpleReport(validationConclusion);
         DetailedReport detailedReport = new DetailedReport(validationConclusion, null);
         DiagnosticReport diagnosticReport = new DiagnosticReport(validationConclusion, null);
         return new Reports(simpleReport, detailedReport, diagnosticReport);
+    }
+
+    private void collectUsedCertificates() {
+        usedCertificatesMappings = dssReports.getDiagnosticDataJaxb().getUsedCertificates().stream()
+                .filter(TimeStampTokenValidationReportBuilder::hasRequiredFields)
+                .collect(Collectors.toUnmodifiableMap(XmlAbstractToken::getId, UnaryOperator.identity()));
     }
 
     private ValidationConclusion getValidationConclusion() {
@@ -251,40 +256,44 @@ public class TimeStampTokenValidationReportBuilder {
     }
 
     private List<Certificate> getCertificateList(TimestampWrapper ts) {
-        return ts.getCertificateChain().stream()
-            .map(this::mapToCertificate)
-            .collect(Collectors.toList());
+        return Optional
+                .ofNullable(ts.getSigningCertificate())
+                .map(CertificateWrapper::getId)
+                .map(this::mapToCertificate)
+                .stream()
+                .collect(Collectors.toList());
     }
 
-    private Certificate mapToCertificate(CertificateWrapper cw) {
-        Certificate cert = new Certificate();
-        cert.setCommonName(cw.getCommonName());
-        cert.setContent(getCertificateContent(cw.getId()));
-        cert.setType(CertificateType.CONTENT_TIMESTAMP);
-
-        return cert;
+    private Certificate mapToCertificate(String certificateId) {
+        XmlCertificate xmlCertificate = usedCertificatesMappings.get(certificateId);
+        if (xmlCertificate != null) {
+            Certificate cert = toCertificate(xmlCertificate);
+            cert.setType(CertificateType.CONTENT_TIMESTAMP);
+            return cert;
+        }
+        return null;
     }
 
-    private String getCertificateContent(String certificateId) {
-        CertificateToken ct = getCertFromTsl(certificateId)
-            .orElseGet(() -> getCertFromTimestamps(certificateId).orElseThrow());
-        return Optional.of(ct)
-            .map(CertificateToken::getCertificate)
-            .map(CertUtil::encodeCertificateToBase64)
-            .orElseThrow();
+    private static Certificate toCertificate(XmlCertificate xmlCertificate) {
+        Certificate certificate = new Certificate();
+        certificate.setCommonName(xmlCertificate.getCommonName());
+
+        Optional
+                .ofNullable(xmlCertificate.getBase64Encoded())
+                .map(Base64::encodeBase64String)
+                .ifPresent(certificate::setContent);
+        Optional
+                .ofNullable(xmlCertificate.getSigningCertificate())
+                .map(XmlSigningCertificate::getCertificate)
+                .filter(Predicate.not(XmlCertificate::isSelfSigned))
+                .filter(TimeStampTokenValidationReportBuilder::hasRequiredFields)
+                .map(TimeStampTokenValidationReportBuilder::toCertificate)
+                .ifPresent(certificate::setIssuer);
+
+        return certificate;
     }
 
-    private Optional<CertificateToken> getCertFromTsl(String certificateId) {
-        return trustedListsCertificateSource.getCertificates()
-            .stream()
-            .filter(t -> StringUtils.equals(t.getDSSIdAsString(), certificateId))
-            .findFirst();
-    }
-
-    private Optional<CertificateToken> getCertFromTimestamps(String certificateId) {
-        return timestamps.stream()
-            .flatMap(t -> t.getCertificates().stream())
-            .filter(t -> StringUtils.equals(t.getDSSIdAsString(), certificateId))
-            .findFirst();
+    private static boolean hasRequiredFields(XmlCertificate xmlCertificate) {
+        return xmlCertificate.getCommonName() != null || xmlCertificate.getBase64Encoded() != null;
     }
 }

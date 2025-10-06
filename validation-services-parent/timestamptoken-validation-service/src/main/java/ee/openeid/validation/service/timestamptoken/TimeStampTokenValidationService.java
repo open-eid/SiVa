@@ -93,11 +93,9 @@ public class TimeStampTokenValidationService implements ValidationService {
 
             return new TimeStampTokenValidationReportBuilder(
                 reports,
-                validator.getDetachedTimestamps(),
                 validationDocument,
                 datafileName,
                 policy,
-                trustedListsCertificateSource,
                 reportConfigurationProperties.isReportSignatureEnabled()
             ).build();
         } catch (InvalidPolicyException e) {
@@ -119,7 +117,7 @@ public class TimeStampTokenValidationService implements ValidationService {
         validator.setCertificateVerifier(certificateVerifier);
         validator.setValidationLevel(VALIDATION_LEVEL);
 
-        validator.setTokenExtractionStrategy(TokenExtractionStrategy.EXTRACT_TIMESTAMPS_AND_REVOCATION_DATA);
+        validator.setTokenExtractionStrategy(TokenExtractionStrategy.EXTRACT_CERTIFICATES_AND_TIMESTAMPS_AND_REVOCATION_DATA);
 
         return validator;
     }

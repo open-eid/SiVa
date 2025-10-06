@@ -232,11 +232,14 @@ Structure of validationConclusion block
 | timeStampTokens[0]. subIndication | - | String | Additional subindication in case of failed validation result, according to [ETSI EN 319 102-1](http://www.etsi.org/deliver/etsi_en/319100_319199/31910201/01.01.01_60/en_31910201v010101p.pdf) "Table 6: Validation Report Structure and Semantics". |
 | timeStampTokens[0]. signedBy | + | String | Signer of the time stamp token. |
 | timeStampTokens[0]. signedTime | + | String | Time when the time stamp token was given. |
-| timeStampTokens[0]. certificates | + | Array | Array containing certificates that are present in the timestamp. |
+| timeStampTokens[0]. certificates | + | Array | Array containing certificates that are related to this timestamp. |
 | timeStampTokens[0]. certificates[0] | + | Object | Object containing certificate type, common name and certificate. |
 | timeStampTokens[0]. certificates[0].commonName | + | String | CN (common name) value in certificate. |
 | timeStampTokens[0]. certificates[0].type | + | String | Type of the certificate. Possible value is CONTENT_TIMESTAMP. |
 | timeStampTokens[0]. certificates[0].content | + | String | DER encoded X.509 certificate in Base64. |
+| timeStampTokens[0]. certificates[0].issuer | - | Object | Object containing issuer certificate information. Can create chain til the trust anchor. |
+| timeStampTokens[0]. certificates[0].issuer.commonName | + | String | CN (common name) value in certificate. |
+| timeStampTokens[0]. certificates[0].issuer.content | + | String | DER encoded X.509 certificate in Base64. |
 | timeStampTokens[0]. error | - | Array | Deprecated field. Holds the same values as timeStampTokens[0].errors. |
 | timeStampTokens[0]. errors | - | Array | Errors returned in time stamp token validation. |
 | timeStampTokens[0]. errors[0] | + | Object | Object containing the error. |
@@ -318,79 +321,66 @@ Structure of validationConclusion block
 
 ```json
 {"validationReport": {"validationConclusion": {
-    "validationTime": "2024-10-31T11:37:06Z",
-    "signaturesCount": 0,
-    "validatedDocument": {"filename": "2xTST-valid-bdoc-data-file-1st-tst-invalid-2nd-tst-no-coverage.asics"},
-    "validSignaturesCount": 0,
-    "timeStampTokens": [
+  "validationTime": "2025-10-07T06:00:23Z",
+  "validationWarnings": [{"content": "This is validation service demo. Use it for testing purposes only"}],
+  "signaturesCount": 0,
+  "validatedDocument": {"filename": "2xTST-text-data-file-1st-tst-invalid-2nd-tst-no-coverage.asics"},
+  "validSignaturesCount": 0,
+  "timeStampTokens": [
+    {
+      "signedTime": "2024-09-13T10:49:58Z",
+      "certificates": [{
+        "commonName": "SK TIMESTAMPING UNIT 2024E",
+        "type": "CONTENT_TIMESTAMP",
+        "content": "MII...",
+        "issuer": {
+          "commonName": "SK TSA CA 2023E",
+          "content": "MII..."
+        }
+      }],
+      "signedBy": "SK TIMESTAMPING UNIT 2024E",
+      "indication": "TOTAL-FAILED",
+      "error": [{"content": "The time-stamp message imprint is not intact!"}],
+      "subIndication": "HASH_FAILURE",
+      "errors": [{"content": "The time-stamp message imprint is not intact!"}],
+      "timestampLevel": "QTSA"
+    },
+    {
+      "signedTime": "2024-09-13T11:20:02Z",
+      "certificates": [{
+        "commonName": "SK TIMESTAMPING UNIT 2024E",
+        "type": "CONTENT_TIMESTAMP",
+        "content": "MII...",
+        "issuer": {
+          "commonName": "SK TSA CA 2023E",
+          "content": "MII..."
+        }
+      }],
+      "signedBy": "SK TIMESTAMPING UNIT 2024E",
+      "warnings": [{"content": "The time-stamp token does not cover container datafile!"}],
+      "warning": [{"content": "The time-stamp token does not cover container datafile!"}],
+      "indication": "TOTAL-PASSED",
+      "timestampScopes": [
         {
-            "signedTime": "2024-03-27T12:42:57Z",
-            "certificates": [
-                {
-                    "commonName": "DEMO SK TIMESTAMPING AUTHORITY 2023E",
-                    "type": "CONTENT_TIMESTAMP",
-                    "content": "MII..."
-                },
-                {
-                    "commonName": "TEST of SK TSA CA 2023E",
-                    "type": "CONTENT_TIMESTAMP",
-                    "content": "MII..."
-                },
-                {
-                    "commonName": "TEST of SK ID Solutions ROOT G1E",
-                    "type": "CONTENT_TIMESTAMP",
-                    "content": "MII..."
-                }
-            ],
-            "signedBy": "DEMO SK TIMESTAMPING AUTHORITY 2023E",
-            "indication": "TOTAL-FAILED",
-            "error": [{"content": "The time-stamp message imprint is not intact!"}],
-            "subIndication": "HASH_FAILURE",
-            "timestampLevel": "QTSA"
+          "scope": "FULL",
+          "name": "META-INF/ASiCArchiveManifest.xml",
+          "content": "Manifest document"
         },
         {
-            "signedTime": "2024-09-11T06:03:34Z",
-            "certificates": [
-                {
-                    "commonName": "DEMO SK TIMESTAMPING AUTHORITY 2023E",
-                    "type": "CONTENT_TIMESTAMP",
-                    "content": "MII..."
-                },
-                {
-                    "commonName": "TEST of SK TSA CA 2023E",
-                    "type": "CONTENT_TIMESTAMP",
-                    "content": "MII..."
-                },
-                {
-                    "commonName": "TEST of SK ID Solutions ROOT G1E",
-                    "type": "CONTENT_TIMESTAMP",
-                    "content": "MII..."
-                }
-            ],
-            "signedBy": "DEMO SK TIMESTAMPING AUTHORITY 2023E",
-            "warning": [{"content": "The time-stamp token does not cover container datafile!"}],
-            "indication": "TOTAL-PASSED",
-            "timestampScopes": [
-                {
-                    "scope": "FULL",
-                    "name": "META-INF/ASiCArchiveManifest.xml",
-                    "content": "Manifest document"
-                },
-                {
-                    "scope": "FULL",
-                    "name": "META-INF/timestamp.tst",
-                    "content": "Full document"
-                }
-            ],
-            "timestampLevel": "QTSA"
+          "scope": "FULL",
+          "name": "META-INF/timestamp.tst",
+          "content": "Full document"
         }
-    ],
-    "policy": {
-        "policyDescription": "Policy according most common requirements of Estonian Public Administration, to validate Qualified Electronic Signatures and Electronic Seals with Qualified Certificates (according to Regulation (EU) No 910/2014, aka eIDAS). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result, with exception for seals, where AdES/QC and above will produce positive result. Signatures and Seals which are not compliant with ETSI standards (referred by eIDAS) may produce unknown or invalid validation result. Validation process is based on eIDAS Article 32 and referred ETSI standards.",
-        "policyUrl": "http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4",
-        "policyName": "POLv4"
-    },
-    "signatureForm": "ASiC-S"
+      ],
+      "timestampLevel": "QTSA"
+    }
+  ],
+  "policy": {
+    "policyDescription": "Policy according most common requirements of Estonian Public Administration, to validate Qualified Electronic Signatures and Electronic Seals with Qualified Certificates (according to Regulation (EU) No 910/2014, aka eIDAS). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result, with exception for seals, where AdES/QC and above will produce positive result. Signatures and Seals which are not compliant with ETSI standards (referred by eIDAS) may produce unknown or invalid validation result. Validation process is based on eIDAS Article 32 and referred ETSI standards.",
+    "policyUrl": "http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4",
+    "policyName": "POLv4"
+  },
+  "signatureForm": "ASiC-S"
 }}}
 ```
 

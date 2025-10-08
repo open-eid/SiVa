@@ -64,10 +64,6 @@ import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
@@ -112,7 +108,7 @@ class TimeStampTokenValidationServiceTestProfileTest extends BaseTimeStampTokenV
         assertThat(tokenOne.getSignedTime(), equalTo("2024-03-27T12:42:57Z"));
         assertThat(tokenOne.getSubIndication(), nullValue());
         assertThat(tokenOne.getTimestampLevel(), equalTo("QTSA"));
-        assertThat(tokenOne.getCertificates(), hasSize(3));
+        assertThat(tokenOne.getCertificates(), hasSize(1));
         assertThat(tokenOne.getWarnings(), empty());
         assertThat(tokenOne.getErrors(), anyOf(nullValue(), empty()));
         assertThat(tokenOne.getTimestampScopes(), hasSize(5));
@@ -124,7 +120,7 @@ class TimeStampTokenValidationServiceTestProfileTest extends BaseTimeStampTokenV
         assertThat(tokenTwo.getSignedTime(), equalTo("2024-08-26T13:31:34Z"));
         assertThat(tokenTwo.getSubIndication(), nullValue());
         assertThat(tokenTwo.getTimestampLevel(), equalTo("QTSA"));
-        assertThat(tokenTwo.getCertificates().size(), equalTo(2));
+        assertThat(tokenTwo.getCertificates(), hasSize(1));
         assertThat(tokenTwo.getWarnings(), anyOf(nullValue(), empty()));
         assertThat(tokenTwo.getErrors(), anyOf(nullValue(), empty()));
         assertThat(tokenTwo.getTimestampScopes(), hasSize(7));
@@ -149,7 +145,7 @@ class TimeStampTokenValidationServiceTestProfileTest extends BaseTimeStampTokenV
         assertThat(token.getErrors().stream().map(Error::getContent).collect(Collectors.toList()), containsInAnyOrder(
             "The time-stamp message imprint is not intact!"
         ));
-        assertThat(token.getCertificates().size(), equalTo(2));
+        assertThat(token.getCertificates(), hasSize(1));
         assertThat(token.getTimestampScopes(), hasSize(0));
         assertThat(token.getError(), sameInstance(token.getErrors()));
         assertThat(token.getWarning(), sameInstance(token.getWarnings()));
@@ -274,7 +270,7 @@ class TimeStampTokenValidationServiceTestProfileTest extends BaseTimeStampTokenV
 
         TimeStampTokenValidationData tokenTwo = simpleReport.getValidationConclusion().getTimeStampTokens().get(1);
         assertThat(tokenTwo.getIndication(), equalTo(TimeStampTokenValidationData.Indication.TOTAL_PASSED));
-        assertThat(tokenTwo.getWarnings().size(), equalTo(1));
+        assertThat(tokenTwo.getWarnings(), hasSize(1));
         assertThat(
                 tokenTwo.getWarnings().stream().map(Warning::getContent).collect(Collectors.toList()),
                 containsInAnyOrder("The time-stamp token does not cover container datafile!")

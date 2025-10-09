@@ -23,6 +23,7 @@ import ee.openeid.siva.validation.document.report.Reports;
 import ee.openeid.siva.validation.document.report.Scope;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
+import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.document.report.Warning;
 import ee.openeid.siva.validation.exception.DocumentRequirementsException;
 import ee.openeid.siva.validation.exception.MalformedDocumentException;
@@ -31,29 +32,27 @@ import ee.openeid.siva.validation.service.signature.policy.PredefinedValidationP
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import ee.openeid.siva.validation.util.CertUtil;
 import ee.openeid.validation.service.timestamptoken.configuration.TimeStampTokenSignaturePolicyProperties;
-import eu.europa.esig.dss.asic.cades.validation.ASiCContainerWithCAdESValidator;
-import eu.europa.esig.dss.simplereport.jaxb.XmlSimpleReport;
-import lombok.Setter;
 import org.bouncycastle.util.encoders.Base64;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static ee.openeid.siva.validation.helper.matcher.CommonMatchers.base64String;
+import static ee.openeid.siva.validation.helper.matcher.IsCertificate.isCertificateWith;
+import static ee.openeid.siva.validation.helper.matcher.IsCertificate.isCertificateWithoutIssuerNorType;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.anyOf;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
@@ -318,25 +317,27 @@ class TimeStampTokenValidationServiceTestProfileTest extends BaseTimeStampTokenV
     }
 
     @Test
-    void validateDocument_ValidationTimeProvided_ValidationTimeSetForValidator() {
-        ValidationDocument validationDocument = buildValidationDocument("timestamptoken-ddoc.asics");
-        Date validationTime = new Date();
-        validationDocument.setValidationTime(validationTime);
-        ASiCContainerWithCAdESValidator validatorMock = Mockito.mock(ASiCContainerWithCAdESValidator.class);
+    void validateDocument_WhenValidatingAsicS_TimeStampTokenContainsSigningCertificateWithIssuer() {
+        ValidationDocument validationDocument = buildValidationDocument("1xTST-valid-bdoc-data-file.asics");
+        Reports reports = validationService.validateDocument(validationDocument);
 
-        createServiceFake(validatorMock).validateDocument(validationDocument);
-
-        verify(validatorMock).setValidationTime(validationTime);
-    }
-
-    @Test
-    void validateDocument_ValidationTimeNotProvided_ValidationTimeNotSetForValidator() {
-        ValidationDocument validationDocument = buildValidationDocument("timestamptoken-ddoc.asics");
-        ASiCContainerWithCAdESValidator validatorMock = Mockito.mock(ASiCContainerWithCAdESValidator.class);
-
-        createServiceFake(validatorMock).validateDocument(validationDocument);
-
-        verify(validatorMock, never()).setValidationTime(any(Date.class));
+        assertThat(reports.getSimpleReport().getValidationConclusion(), notNullValue());
+        ValidationConclusion validationConclusion = reports.getSimpleReport().getValidationConclusion();
+        assertThat(validationConclusion.getSignatureForm(), equalTo("ASiC-S"));
+        TimeStampTokenValidationData data = validationConclusion.getTimeStampTokens().get(0);
+        assertThat(validationConclusion.getTimeStampTokens(), hasSize(1));
+        assertThat(data.getSignedTime(), equalTo("2024-03-27T12:42:57Z"));
+        assertThat(data.getCertificates(), contains(
+                isCertificateWith(
+                        equalTo("DEMO SK TIMESTAMPING AUTHORITY 2023E"),
+                        base64String(),
+                        isCertificateWithoutIssuerNorType(
+                                equalTo("TEST of SK TSA CA 2023E"),
+                                base64String()
+                        ),
+                        sameInstance(CertificateType.CONTENT_TIMESTAMP)
+                )
+        ));
     }
 
     private void assertScope(Scope scope, String expectedName, String expectedScope, String expectedContent) {

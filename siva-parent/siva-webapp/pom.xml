@@ -127,8 +127,9 @@
                         <env>
                             <!-- Avoid excessive downloads in build environments with restricted internet access -->
                             <BP_SPRING_CLOUD_BINDINGS_DISABLED>true</BP_SPRING_CLOUD_BINDINGS_DISABLED>
-                            <!-- Enable overriding GitHub mirror | TODO SIVA-860: Needs fixing -->
+                            <!-- Enable overriding GitHub mirror -->
                             <BP_DEPENDENCY_MIRROR_GITHUB_COM>${githubMirror}</BP_DEPENDENCY_MIRROR_GITHUB_COM>
+                            <BP_RESPONSE_HEADER_TIMEOUT>60</BP_RESPONSE_HEADER_TIMEOUT>
                         </env>
                     </image>
                 </configuration>

@@ -195,7 +195,7 @@ Structure of validationConclusion block
 | signatures[0].info. signingReason | - | String | Free text field for PAdES type signatures for stating the signing reason |
 | signatures[0].info. archiveTimeStamps | - | Array | Array containing archive time-stamp tokens if present. |
 | signatures[0].info. archiveTimeStamps[0]. signedTime | + | String | Time when the archive time-stamp token was created. |
-| signatures[0].info. archiveTimeStamps[0]. indication | + | Object | Result of the archive time-stamp token validation. <br>**Possible values:** <br> PASSED <br> FAILED <br> NO_SIGNATURE_FOUND |
+| signatures[0].info. archiveTimeStamps[0]. indication | + | Object | Result of the archive time-stamp token validation. <br>**Possible values:** <br> PASSED <br> FAILED <br> INDETERMINATE <br> NO_SIGNATURE_FOUND |
 | signatures[0].info. archiveTimeStamps[0]. subIndication | - | String | Additional subindication in case of failed or indeterminate validation result. |
 | signatures[0].info. archiveTimeStamps[0]. signedBy | + | String | Signer of the archive time-stamp token. |
 | signatures[0].info. archiveTimeStamps[0]. country | + | String | Issuer country of the archive time-stamp token. |

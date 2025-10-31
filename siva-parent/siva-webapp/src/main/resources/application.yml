@@ -23,6 +23,12 @@ management:
     version:
       enabled: true
 
+server:
+  servlet:
+    encoding:
+      # Force the encoding to the configured charset on HTTP requests and responses.
+      force: true
+
 siva:
   http:
     request:
@@ -33,14 +39,6 @@ spring:
   autoconfigure:
     # Disable /error endpoint mapping and logging
     exclude: org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
-  http:
-    encoding:
-      # Charset of HTTP requests and responses. Added to the "Content-Type" header if not set explicitly.
-      charset: UTF-8
-      # Enable http encoding support.
-      enabled: true
-      # Force the encoding to the configured charset on HTTP requests and responses.
-      force: true
   mvc:
     # Allow custom handler for NoHandlerFoundException
     throw-exception-if-no-handler-found: true

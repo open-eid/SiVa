@@ -39,9 +39,6 @@ spring:
   autoconfigure:
     # Disable /error endpoint mapping and logging
     exclude: org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
-  mvc:
-    # Allow custom handler for NoHandlerFoundException
-    throw-exception-if-no-handler-found: true
   web:
     resources:
       # Allow custom handler for NoHandlerFoundException

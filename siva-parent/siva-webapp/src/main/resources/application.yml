@@ -24,6 +24,9 @@ management:
       enabled: true
 
 server:
+  error:
+    whitelabel:
+      enabled: false
   servlet:
     encoding:
       # Force the encoding to the configured charset on HTTP requests and responses.

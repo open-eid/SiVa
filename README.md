@@ -96,11 +96,6 @@ cp siva-parent/siva-webapp/target/siva-webapp-X.X.X.war apache-tomcat-7.0.70/web
 ./apache-tomcat-7.0.77/bin/catalina.sh run
 ```
 
-> **IMPORTANT** siva-webapp on startup creates `etc` directory where it copies the TSL validation certificates
-> `siva-keystore.jks` (or `test-siva-keystore.jks` if `test` profile is used). Default location for this directory
-> is application root or `$CATALINA_HOME`. To change this default behavior you should set environment variable
-> `DSS_DATA_FOLDER`
-
 ### How-to set WAR deployed SiVa `application.properties`
 
 SiVa override properties can be set using `application.properties` file. The file can locate anywhare in the host system.

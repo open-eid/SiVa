@@ -19,7 +19,6 @@ services:
       - logging.config=/etc/siva-webapp/logback.xml
       # Logs directory
       - BUILD_FOLDER=/tmp/logs
-      - DSS_DATA_FOLDER=/tmp/dss-data
     networks:
       default:
         aliases:

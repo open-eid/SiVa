@@ -16,14 +16,20 @@
 
 package ee.openeid.tsl.configuration;
 
-import ee.openeid.tsl.keystore.DSSKeyStoreFactoryBean;
+import eu.europa.esig.dss.spi.x509.KeyStoreCertificateSource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
+@Slf4j
 @Configuration
 @EnableScheduling
 public class TSLLoaderConfiguration {
@@ -32,23 +38,28 @@ public class TSLLoaderConfiguration {
     @Bean
     public TSLValidationKeystoreProperties tslValidationKeystorePropertiesTest() {
         TSLValidationKeystoreProperties configurationProperties = new TSLValidationKeystoreProperties();
-        configurationProperties.setFilename("test-siva-keystore.jks");
+        configurationProperties.setFile(new ClassPathResource("test-siva-keystore.jks", getClass().getClassLoader()));
         return configurationProperties;
     }
 
     @Profile("!test")
     @Bean
     public TSLValidationKeystoreProperties tslValidationKeystorePropertiesProd() {
-        return new TSLValidationKeystoreProperties();
+        TSLValidationKeystoreProperties configurationProperties = new TSLValidationKeystoreProperties();
+        configurationProperties.setFile(new ClassPathResource("siva-keystore.jks", getClass().getClassLoader()));
+        return configurationProperties;
     }
 
     @Bean
-    public DSSKeyStoreFactoryBean dssKeyStore(TSLValidationKeystoreProperties keystoreProperties) {
-        DSSKeyStoreFactoryBean dssKeyStoreFactoryBean = new DSSKeyStoreFactoryBean();
-        dssKeyStoreFactoryBean.setKeyStoreType(keystoreProperties.getType());
-        dssKeyStoreFactoryBean.setKeyStoreFilename(keystoreProperties.getFilename());
-        dssKeyStoreFactoryBean.setKeyStorePassword(keystoreProperties.getPassword());
-        return dssKeyStoreFactoryBean;
+    public KeyStoreCertificateSource dssKeyStore(TSLValidationKeystoreProperties keystoreProperties) {
+        final Resource resource = keystoreProperties.getFile();
+        log.info("Loading {} trust-store from {}", keystoreProperties.getType(), resource);
+        try (InputStream inputStream = resource.getInputStream()) {
+            final char[] password = keystoreProperties.getPassword().toCharArray();
+            return new KeyStoreCertificateSource(inputStream, keystoreProperties.getType(), password);
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to open LOTL trust-store from " + resource, e);
+        }
     }
 
     @Profile("test")

@@ -1,28 +1,21 @@
-spring.http.encoding.charset: UTF-8 # Charset of HTTP requests and responses. Added to the "Content-Type" header if not set explicitly.
-spring.http.encoding.enabled: true # Enable http encoding support.
-spring.http.encoding.force: true # Force the encoding to the configured charset on HTTP requests and responses.
-spring.autoconfigure.exclude: org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration # Disable /error endpoint mapping and logging
-
-siva:
-  http:
-    request:
-      max-request-size-limit: 27MB # 20 MB + base64 overhead (ceil(20MB / 3) * 4) rounded up
-
 management:
   health:
     diskspace:
       enabled: false
   endpoints:
     web:
+      base-path: /monitoring
       exposure:
         include:
           - health
+          # TODO: When Kubernetes is live, remove custom heartbeat endpoint if it is not used
           - heartbeat
           - version
-      base-path: /monitoring
   endpoint:
     health:
       show-details: "ALWAYS"
+      probes:
+        enabled: true
     heartbeat:
       enabled: true
       cache:
@@ -30,10 +23,25 @@ management:
     version:
       enabled: true
 
+server:
+  error:
+    whitelabel:
+      enabled: false
+  servlet:
+    encoding:
+      # Force the encoding to the configured charset on HTTP requests and responses.
+      force: true
+
+siva:
+  http:
+    request:
+      # 20 MB + base64 overhead (ceil(20MB / 3) * 4) rounded up
+      max-request-size-limit: 27MB
+
 spring:
-  mvc:
-    # Allow custom handler for NoHandlerFoundException
-    throw-exception-if-no-handler-found: true
+  autoconfigure:
+    # Disable /error endpoint mapping and logging
+    exclude: org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
   web:
     resources:
       # Allow custom handler for NoHandlerFoundException

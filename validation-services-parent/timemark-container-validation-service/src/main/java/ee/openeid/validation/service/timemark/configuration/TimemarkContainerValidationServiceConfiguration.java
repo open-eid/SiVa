@@ -17,11 +17,11 @@
 package ee.openeid.validation.service.timemark.configuration;
 
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
+import ee.openeid.siva.validation.util.ResourceUtil;
 import ee.openeid.validation.service.timemark.TimemarkContainerValidationReportBuilderFactory;
 import ee.openeid.validation.service.timemark.tsl.TimemarkTrustedListsCertificateSource;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.Configuration;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringBootConfiguration;
@@ -30,6 +30,9 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+
+import java.util.Optional;
 
 import static ee.openeid.validation.service.timemark.TimemarkValidationConstants.TM_POLICY_SERVICE_BEAN_NAME;
 import static ee.openeid.validation.service.timemark.TimemarkValidationConstants.TM_TRUSTED_LISTS_CERTIFICATE_SOURCE_BEAN_NAME;
@@ -61,7 +64,7 @@ public class TimemarkContainerValidationServiceConfiguration {
             @Qualifier(TM_TRUSTED_LISTS_CERTIFICATE_SOURCE_BEAN_NAME) TimemarkTrustedListsCertificateSource trustedListsCertificateSource
     ) {
         Configuration configuration = Configuration.of(Configuration.Mode.TEST);
-        configuration.loadConfiguration(getAdditionalConfigurationFilePath("/siva-digidoc4j-test.yaml"), true);
+        ResourceUtil.loadResourceTo(getResourceOrDefault("/siva-digidoc4j-test.yaml"), configuration::loadConfiguration);
         configuration.setTSL(trustedListsCertificateSource);
         return configuration;
     }
@@ -72,14 +75,15 @@ public class TimemarkContainerValidationServiceConfiguration {
             @Qualifier(TM_TRUSTED_LISTS_CERTIFICATE_SOURCE_BEAN_NAME) TimemarkTrustedListsCertificateSource trustedListsCertificateSource
     ) {
         Configuration configuration = Configuration.of(Configuration.Mode.PROD);
-        configuration.loadConfiguration(getAdditionalConfigurationFilePath("/siva-digidoc4j.yaml"), true);
+        ResourceUtil.loadResourceTo(getResourceOrDefault("/siva-digidoc4j.yaml"), configuration::loadConfiguration);
         configuration.setTSL(trustedListsCertificateSource);
         return configuration;
     }
 
-    private String getAdditionalConfigurationFilePath(String defaultFilePath) {
-        String filePath = StringUtils.defaultString(bdocValidationServiceProperties.getDigidoc4JConfigurationFile(), defaultFilePath);
-        return new ClassPathResource(filePath, this.getClass().getClassLoader()).getPath();
+    private Resource getResourceOrDefault(String defaultPath) {
+        return Optional
+                .ofNullable(bdocValidationServiceProperties.getDigidoc4JConfigurationFile())
+                .orElseGet(() -> new ClassPathResource(defaultPath, this.getClass().getClassLoader()));
     }
 
 }

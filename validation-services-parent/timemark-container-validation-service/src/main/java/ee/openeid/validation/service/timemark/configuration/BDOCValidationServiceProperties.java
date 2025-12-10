@@ -18,9 +18,10 @@ package ee.openeid.validation.service.timemark.configuration;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.core.io.Resource;
 
 @Data
 @ConfigurationProperties(prefix = "siva.bdoc")
 public class BDOCValidationServiceProperties {
-    private String digidoc4JConfigurationFile;
+    private Resource digidoc4JConfigurationFile;
 }

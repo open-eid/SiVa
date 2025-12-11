@@ -43,10 +43,10 @@ import ee.openeid.validation.service.timemark.signature.policy.BDOCConfiguration
 import ee.openeid.validation.service.timemark.signature.policy.BDOCSignaturePolicyService;
 import ee.openeid.validation.service.timemark.tsl.TimemarkTrustedListsCertificateSource;
 import eu.europa.esig.dss.enumerations.Indication;
+import eu.europa.esig.dss.model.tsl.ConditionForQualifiers;
+import eu.europa.esig.dss.model.tsl.TrustProperties;
 import eu.europa.esig.dss.model.x509.CertificateToken;
 import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
-import eu.europa.esig.dss.spi.tsl.ConditionForQualifiers;
-import eu.europa.esig.dss.spi.tsl.TrustProperties;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.util.encoders.Base64;
 import org.digidoc4j.TSLCertificateSource;

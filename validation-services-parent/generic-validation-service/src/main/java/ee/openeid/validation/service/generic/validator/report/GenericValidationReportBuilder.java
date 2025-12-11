@@ -53,15 +53,14 @@ import eu.europa.esig.dss.enumerations.ASiCContainerType;
 import eu.europa.esig.dss.enumerations.DigestAlgorithm;
 import eu.europa.esig.dss.enumerations.EncryptionAlgorithm;
 import eu.europa.esig.dss.enumerations.Indication;
-import eu.europa.esig.dss.enumerations.MaskGenerationFunction;
 import eu.europa.esig.dss.enumerations.RevocationType;
 import eu.europa.esig.dss.enumerations.SignatureAlgorithm;
 import eu.europa.esig.dss.enumerations.SubIndication;
 import eu.europa.esig.dss.enumerations.TimestampType;
+import eu.europa.esig.dss.enumerations.ValidationLevel;
 import eu.europa.esig.dss.simplereport.jaxb.XmlDetails;
 import eu.europa.esig.dss.simplereport.jaxb.XmlMessage;
 import eu.europa.esig.dss.simplereport.jaxb.XmlToken;
-import eu.europa.esig.dss.validation.executor.ValidationLevel;
 import eu.europa.esig.dss.validation.reports.AbstractReports;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections4.CollectionUtils;
@@ -403,8 +402,7 @@ public class GenericValidationReportBuilder {
     private String parseSignatureMethod(String signatureId) {
         DigestAlgorithm digestAlgorithm = dssReports.getDiagnosticData().getSignatureDigestAlgorithm(signatureId);
         EncryptionAlgorithm encryptionAlgorithm = dssReports.getDiagnosticData().getSignatureEncryptionAlgorithm(signatureId);
-        MaskGenerationFunction maskGenerationFunction = dssReports.getDiagnosticData().getSignatureMaskGenerationFunction(signatureId);
-        SignatureAlgorithm algorithm = SignatureAlgorithm.getAlgorithm(encryptionAlgorithm, digestAlgorithm, maskGenerationFunction);
+        SignatureAlgorithm algorithm = SignatureAlgorithm.getAlgorithm(encryptionAlgorithm, digestAlgorithm);
         return algorithm == null ? "" : StringUtils.defaultString(algorithm.getUri());
     }
 

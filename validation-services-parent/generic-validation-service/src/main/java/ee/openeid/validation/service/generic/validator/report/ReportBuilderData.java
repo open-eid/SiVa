@@ -18,8 +18,8 @@ package ee.openeid.validation.service.generic.validator.report;
 
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
+import eu.europa.esig.dss.enumerations.ValidationLevel;
 import eu.europa.esig.dss.validation.SignedDocumentValidator;
-import eu.europa.esig.dss.validation.executor.ValidationLevel;
 import eu.europa.esig.dss.validation.reports.Reports;
 import lombok.Builder;
 import lombok.Data;

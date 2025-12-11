@@ -19,7 +19,6 @@ package ee.openeid.validation.service.generic.helper;
 import eu.europa.esig.dss.crl.CRLBinary;
 import eu.europa.esig.dss.enumerations.DigestAlgorithm;
 import eu.europa.esig.dss.enumerations.EncryptionAlgorithm;
-import eu.europa.esig.dss.enumerations.MaskGenerationFunction;
 import eu.europa.esig.dss.enumerations.RevocationOrigin;
 import eu.europa.esig.dss.enumerations.SignatureAlgorithm;
 import eu.europa.esig.dss.enumerations.SignatureForm;
@@ -28,28 +27,29 @@ import eu.europa.esig.dss.model.Digest;
 import eu.europa.esig.dss.model.SignaturePolicyStore;
 import eu.europa.esig.dss.model.identifier.EncapsulatedRevocationTokenIdentifier;
 import eu.europa.esig.dss.model.scope.SignatureScope;
+import eu.europa.esig.dss.model.signature.CommitmentTypeIndication;
+import eu.europa.esig.dss.model.signature.SignatureDigestReference;
+import eu.europa.esig.dss.model.signature.SignaturePolicy;
+import eu.europa.esig.dss.model.signature.SignatureProductionPlace;
+import eu.europa.esig.dss.model.signature.SignerRole;
 import eu.europa.esig.dss.model.x509.CertificateToken;
 import eu.europa.esig.dss.model.x509.revocation.crl.CRL;
 import eu.europa.esig.dss.model.x509.revocation.ocsp.OCSP;
 import eu.europa.esig.dss.spi.DSSRevocationUtils;
 import eu.europa.esig.dss.spi.DSSUtils;
+import eu.europa.esig.dss.spi.signature.AdvancedSignature;
+import eu.europa.esig.dss.spi.signature.BaselineRequirementsChecker;
+import eu.europa.esig.dss.spi.signature.DefaultAdvancedSignature;
+import eu.europa.esig.dss.spi.signature.identifier.SignatureIdentifierBuilder;
+import eu.europa.esig.dss.spi.validation.CertificateVerifier;
 import eu.europa.esig.dss.spi.x509.revocation.OfflineRevocationSource;
 import eu.europa.esig.dss.spi.x509.revocation.crl.OfflineCRLSource;
 import eu.europa.esig.dss.spi.x509.revocation.ocsp.OCSPResponseBinary;
 import eu.europa.esig.dss.spi.x509.revocation.ocsp.OCSPToken;
 import eu.europa.esig.dss.spi.x509.revocation.ocsp.OfflineOCSPSource;
-import eu.europa.esig.dss.validation.AdvancedSignature;
-import eu.europa.esig.dss.validation.BaselineRequirementsChecker;
-import eu.europa.esig.dss.validation.CommitmentTypeIndication;
-import eu.europa.esig.dss.validation.DefaultAdvancedSignature;
 import eu.europa.esig.dss.model.ReferenceValidation;
 import eu.europa.esig.dss.spi.SignatureCertificateSource;
-import eu.europa.esig.dss.validation.SignatureDigestReference;
-import eu.europa.esig.dss.validation.SignatureIdentifierBuilder;
-import eu.europa.esig.dss.validation.SignaturePolicy;
-import eu.europa.esig.dss.validation.SignatureProductionPlace;
-import eu.europa.esig.dss.validation.SignerRole;
-import eu.europa.esig.dss.validation.timestamp.TimestampSource;
+import eu.europa.esig.dss.spi.x509.tsp.TimestampSource;
 import eu.europa.esig.dss.spi.x509.tsp.TimestampToken;
 import lombok.SneakyThrows;
 import org.bouncycastle.cert.ocsp.BasicOCSPResp;
@@ -131,11 +131,6 @@ public class MockSignature extends DefaultAdvancedSignature {
 
     @Override
     public DigestAlgorithm getDigestAlgorithm() {
-        return null;
-    }
-
-    @Override
-    public MaskGenerationFunction getMaskGenerationFunction() {
         return null;
     }
 
@@ -241,7 +236,7 @@ public class MockSignature extends DefaultAdvancedSignature {
     }
 
     @Override
-    protected BaselineRequirementsChecker<MockSignature> createBaselineRequirementsChecker() {
+    protected BaselineRequirementsChecker<MockSignature> createBaselineRequirementsChecker(CertificateVerifier certificateVerifier) {
         return null;
     }
 

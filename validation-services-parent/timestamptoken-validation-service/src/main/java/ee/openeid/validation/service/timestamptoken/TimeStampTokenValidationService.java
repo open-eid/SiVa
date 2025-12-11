@@ -33,12 +33,12 @@ import ee.openeid.validation.service.timestamptoken.validator.report.TimeStampTo
 import eu.europa.esig.dss.asic.cades.validation.ASiCContainerWithCAdESValidator;
 import eu.europa.esig.dss.enumerations.MimeType;
 import eu.europa.esig.dss.enumerations.TokenExtractionStrategy;
+import eu.europa.esig.dss.enumerations.ValidationLevel;
 import eu.europa.esig.dss.model.DSSDocument;
 import eu.europa.esig.dss.model.DSSException;
 import eu.europa.esig.dss.model.InMemoryDocument;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
-import eu.europa.esig.dss.validation.CommonCertificateVerifier;
-import eu.europa.esig.dss.validation.executor.ValidationLevel;
+import eu.europa.esig.dss.spi.validation.CommonCertificateVerifier;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.slf4j.Logger;

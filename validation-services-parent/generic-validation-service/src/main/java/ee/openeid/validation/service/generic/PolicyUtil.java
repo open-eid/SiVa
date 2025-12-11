@@ -17,9 +17,9 @@
 package ee.openeid.validation.service.generic;
 
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
-import eu.europa.esig.dss.exception.IllegalInputException;
 import eu.europa.esig.dss.policy.ValidationPolicy;
 import eu.europa.esig.dss.policy.ValidationPolicyFacade;
+import eu.europa.esig.dss.spi.exception.IllegalInputException;
 import jakarta.xml.bind.JAXBException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

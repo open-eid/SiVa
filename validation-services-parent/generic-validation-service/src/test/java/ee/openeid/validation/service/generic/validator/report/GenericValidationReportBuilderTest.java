@@ -51,13 +51,12 @@ import eu.europa.esig.dss.enumerations.DigestAlgorithm;
 import eu.europa.esig.dss.enumerations.EncryptionAlgorithm;
 import eu.europa.esig.dss.enumerations.EndorsementType;
 import eu.europa.esig.dss.enumerations.Indication;
-import eu.europa.esig.dss.enumerations.MaskGenerationFunction;
 import eu.europa.esig.dss.enumerations.SignatureLevel;
 import eu.europa.esig.dss.enumerations.TimestampType;
+import eu.europa.esig.dss.enumerations.ValidationLevel;
 import eu.europa.esig.dss.simplereport.jaxb.XmlDetails;
 import eu.europa.esig.dss.simplereport.jaxb.XmlSimpleReport;
 import eu.europa.esig.dss.simplereport.jaxb.XmlTimestamps;
-import eu.europa.esig.dss.validation.executor.ValidationLevel;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -554,8 +553,7 @@ class GenericValidationReportBuilderTest {
 
         XmlBasicSignature xmlBasicSignature = new XmlBasicSignature();
         xmlBasicSignature.setDigestAlgoUsedToSignThisToken(DigestAlgorithm.SHA256);
-        xmlBasicSignature.setEncryptionAlgoUsedToSignThisToken(EncryptionAlgorithm.RSA);
-        xmlBasicSignature.setMaskGenerationFunctionUsedToSignThisToken(MaskGenerationFunction.MGF1);
+        xmlBasicSignature.setEncryptionAlgoUsedToSignThisToken(EncryptionAlgorithm.RSASSA_PSS);
         xmlSignature.setBasicSignature(xmlBasicSignature);
 
         diagnosticData.setSignatures(Collections.singletonList(xmlSignature));

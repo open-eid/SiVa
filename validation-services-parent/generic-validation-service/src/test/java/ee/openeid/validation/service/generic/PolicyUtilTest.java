@@ -18,7 +18,7 @@ package ee.openeid.validation.service.generic;
 
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import eu.europa.esig.dss.enumerations.SignatureLevel;
-import eu.europa.esig.dss.exception.IllegalInputException;
+import eu.europa.esig.dss.spi.exception.IllegalInputException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;

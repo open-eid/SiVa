@@ -59,7 +59,11 @@
         <BasicSignatureConstraints>
             <ReferenceDataExistence Level="FAIL"/>
             <ReferenceDataIntact Level="FAIL"/>
+            <ReferenceDataNameMatch Level="FAIL" />
             <ManifestEntryObjectExistence Level="WARN" />
+            <ManifestEntryObjectGroup Level="WARN" />
+            <ManifestEntryObjectIntact Level="FAIL" />
+            <ManifestEntryNameMatch Level="WARN" />
             <SignatureIntact Level="FAIL"/>
             <SignatureDuplicated Level="FAIL" />
             <ProspectiveCertificateChain Level="FAIL"/>
@@ -68,106 +72,103 @@
                 <Recognition Level="FAIL"/>
                 <Signature Level="FAIL"/>
                 <NotExpired Level="FAIL"/>
-                <AuthorityInfoAccessPresent Level="INFORM" />
+                <SunsetDate Level="FAIL" />
+                <AuthorityInfoAccessPresent Level="WARN" />
+                <RevocationDataSkip Level="INFORM">
+                    <CertificateExtensions>
+                        <Id>0.4.0.194121.2.1</Id> <!-- valassured-ST-certs -->
+                        <Id>2.5.29.56</Id> <!-- noRevAvail -->
+                    </CertificateExtensions>
+                </RevocationDataSkip>
                 <RevocationInfoAccessPresent Level="WARN"/>
                 <RevocationDataAvailable Level="FAIL"/>
                 <AcceptableRevocationDataFound Level="FAIL"/>
                 <CRLNextUpdatePresent Level="WARN"/>
+                <RevocationFreshness Level="IGNORE" Unit="DAYS" Value="0" />
                 <KeyUsage Level="FAIL">
                     <Id>nonRepudiation</Id>
                 </KeyUsage>
+                <PolicyTree Level="WARN" />
+                <NameConstraints Level="WARN" />
+                <NoRevAvail Level="WARN" />
+                <SupportedCriticalExtensions Level="WARN">
+                    <Id>2.5.29.15</Id> <!-- keyUsage -->
+                    <Id>2.5.29.32</Id> <!-- certificatePolicies -->
+                    <Id>2.5.29.17</Id> <!-- subjectAlternativeName -->
+                    <Id>2.5.29.19</Id> <!-- basicConstraints -->
+                    <Id>2.5.29.30</Id> <!-- nameConstraints -->
+                    <Id>2.5.29.36</Id> <!-- policyConstraints -->
+                    <Id>2.5.29.37</Id> <!-- extendedKeyUsage -->
+                    <Id>2.5.29.31</Id> <!-- CRLDistributionPoints -->
+                    <Id>2.5.29.54</Id> <!-- inhibitAnyPolicy -->
+                    <Id>1.3.6.1.5.5.7.1.3</Id> <!-- QCStatements -->
+                    <!-- policyMappings 2.5.29.33 not supported -->
+                </SupportedCriticalExtensions>
+                <ForbiddenExtensions Level="IGNORE">
+                    <Id>1.3.6.1.5.5.7.48.1.5</Id> <!-- ocsp_noCheck -->
+                </ForbiddenExtensions>
+                <IssuerName Level="FAIL" />
                 <SerialNumberPresent Level="FAIL"/>
                 <NotRevoked Level="FAIL"/>
                 <NotOnHold Level="FAIL"/>
+                <RevocationIssuerNotExpired Level="INFORM" />
                 <NotSelfSigned Level="FAIL"/>
+                <!-- <QcCompliance Level="WARN" /> -->
+                <!-- <QcSSCD Level="WARN" /> -->
+                <!-- <QcLegislationCountryCodes Level="WARN" /> -->
+                <!-- <IssuedToNaturalPerson Level="INFORM" /> -->
+                <!-- <IssuedToLegalPerson Level="INFORM" /> -->
                 <UsePseudonym Level="INFORM"/>
-                <Cryptographic Level="FAIL">
-                    <AcceptableEncryptionAlgo>
-                        <Algo>RSA</Algo>
-                        <Algo>DSA</Algo>
-                        <Algo>ECDSA</Algo>
-                    </AcceptableEncryptionAlgo>
-                    <MiniPublicKeySize>
-                        <Algo Size="224">DSA</Algo>
-                        <Algo Size="1024">RSA</Algo>
-                        <Algo Size="256">ECDSA</Algo>
-                    </MiniPublicKeySize>
-                    <AcceptableDigestAlgo>
-                        <Algo>SHA1</Algo>
-                        <Algo>SHA224</Algo>
-                        <Algo>SHA256</Algo>
-                        <Algo>SHA384</Algo>
-                        <Algo>SHA512</Algo>
-                        <Algo>SHA3-224</Algo>
-                        <Algo>SHA3-256</Algo>
-                        <Algo>SHA3-384</Algo>
-                        <Algo>SHA3-512</Algo>
-                        <Algo>RIPEMD160</Algo>
-                    </AcceptableDigestAlgo>
-                </Cryptographic>
+                <Cryptographic />
             </SigningCertificate>
             <CACertificate>
                 <Signature Level="FAIL"/>
                 <NotExpired Level="FAIL"/>
+                <SunsetDate Level="FAIL" />
                 <RevocationDataAvailable Level="FAIL"/>
+                <AcceptableRevocationDataFound Level="IGNORE" />
                 <CRLNextUpdatePresent Level="WARN"/>
+                <RevocationFreshness Level="IGNORE" Unit="DAYS" Value="0" />
+                <CA Level="FAIL" />
+                <MaxPathLength Level="FAIL" />
+                <KeyUsage Level="FAIL">
+                    <Id>keyCertSign</Id>
+                </KeyUsage>
+                <PolicyTree Level="WARN" />
+                <NameConstraints Level="WARN" />
+                <SupportedCriticalExtensions Level="WARN">
+                    <Id>2.5.29.15</Id> <!-- keyUsage -->
+                    <Id>2.5.29.32</Id> <!-- certificatePolicies -->
+                    <Id>2.5.29.17</Id> <!-- subjectAlternativeName -->
+                    <Id>2.5.29.19</Id> <!-- basicConstraints -->
+                    <Id>2.5.29.30</Id> <!-- nameConstraints -->
+                    <Id>2.5.29.36</Id> <!-- policyConstraints -->
+                    <Id>2.5.29.37</Id> <!-- extendedKeyUsage -->
+                    <Id>2.5.29.31</Id> <!-- CRLDistributionPoints -->
+                    <Id>2.5.29.54</Id> <!-- inhibitAnyPolicy -->
+                    <Id>1.3.6.1.5.5.7.1.3</Id> <!-- QCStatements -->
+                    <!-- policyMappings 2.5.29.33 not supported -->
+                </SupportedCriticalExtensions>
+                <ForbiddenExtensions Level="IGNORE">
+                    <Id>1.3.6.1.5.5.7.48.1.5</Id> <!-- ocsp_noCheck -->
+                    <Id>2.5.29.56</Id> <!-- noRevAvail -->
+                </ForbiddenExtensions>
+                <IssuerName Level="FAIL" />
                 <NotRevoked Level="FAIL"/>
                 <NotOnHold Level="FAIL"/>
-                <Cryptographic Level="FAIL">
-                    <AcceptableEncryptionAlgo>
-                        <Algo>RSA</Algo>
-                        <Algo>DSA</Algo>
-                        <Algo>ECDSA</Algo>
-                    </AcceptableEncryptionAlgo>
-                    <MiniPublicKeySize>
-                        <Algo Size="224">DSA</Algo>
-                        <Algo Size="1024">RSA</Algo>
-                        <Algo Size="256">ECDSA</Algo>
-                    </MiniPublicKeySize>
-                    <AcceptableDigestAlgo>
-                        <Algo>SHA1</Algo>
-                        <Algo>SHA224</Algo>
-                        <Algo>SHA256</Algo>
-                        <Algo>SHA384</Algo>
-                        <Algo>SHA512</Algo>
-                        <Algo>SHA3-224</Algo>
-                        <Algo>SHA3-256</Algo>
-                        <Algo>SHA3-384</Algo>
-                        <Algo>SHA3-512</Algo>
-                        <Algo>RIPEMD160</Algo>
-                    </AcceptableDigestAlgo>
-                </Cryptographic>
+                <Cryptographic />
             </CACertificate>
-            <Cryptographic Level="FAIL">
-                <AcceptableEncryptionAlgo>
-                    <Algo>RSA</Algo>
-                    <Algo>DSA</Algo>
-                    <Algo>ECDSA</Algo>
-                </AcceptableEncryptionAlgo>
-                <MiniPublicKeySize>
-                    <Algo Size="224">DSA</Algo>
-                    <Algo Size="1024">RSA</Algo>
-                    <Algo Size="256">ECDSA</Algo>
-                </MiniPublicKeySize>
-                <AcceptableDigestAlgo>
-                    <Algo>SHA1</Algo>
-                    <Algo>SHA224</Algo>
-                    <Algo>SHA256</Algo>
-                    <Algo>SHA384</Algo>
-                    <Algo>SHA512</Algo>
-                    <Algo>SHA3-224</Algo>
-                    <Algo>SHA3-256</Algo>
-                    <Algo>SHA3-384</Algo>
-                    <Algo>SHA3-512</Algo>
-                    <Algo>RIPEMD160</Algo>
-                </AcceptableDigestAlgo>
-            </Cryptographic>
+            <Cryptographic />
         </BasicSignatureConstraints>
         <SignedAttributes>
             <SigningCertificatePresent Level="FAIL"/>
+            <UnicitySigningCertificate Level="WARN" />
+            <SigningCertificateRefersCertificateChain Level="WARN" />
+            <SigningCertificateDigestAlgorithm Level="WARN" />
             <CertDigestPresent Level="FAIL"/>
             <CertDigestMatch Level="FAIL"/>
             <IssuerSerialMatch Level="WARN"/>
+            <KeyIdentifierMatch Level="WARN" />
             <SigningTime Level="FAIL"/>
             <MessageDigestOrSignedPropertiesPresent Level="FAIL"/>
             <!--		<ContentType Level="FAIL" value="1.2.840.113549.1.7.1" />
@@ -180,11 +181,148 @@
                         </CommitmentTypeIndication>
                         <SignerLocation Level="FAIL" />
                         <ContentTimeStamp Level="FAIL" /> -->
+            <EllipticCurveKeySize Level="WARN" />
         </SignedAttributes>
         <UnsignedAttributes>
             <!--		<CounterSignature Level="IGNORE" /> check presence -->
         </UnsignedAttributes>
     </SignatureConstraints>
+    <CounterSignatureConstraints>
+        <BasicSignatureConstraints>
+            <ReferenceDataExistence Level="FAIL" />
+            <ReferenceDataIntact Level="FAIL" />
+            <ReferenceDataNameMatch Level="FAIL" />
+            <ManifestEntryObjectExistence Level="WARN" />
+            <ManifestEntryObjectGroup Level="WARN" />
+            <ManifestEntryObjectIntact Level="FAIL" />
+            <ManifestEntryNameMatch Level="WARN" />
+            <SignatureIntact Level="FAIL" />
+            <SignatureDuplicated Level="FAIL" />
+            <ProspectiveCertificateChain Level="FAIL" />
+            <!--			<TrustServiceTypeIdentifier Level="WARN"> -->
+            <!--				<Id>http://uri.etsi.org/TrstSvc/Svctype/CA/QC</Id> -->
+            <!--			</TrustServiceTypeIdentifier> -->
+            <!--			<TrustServiceStatus Level="FAIL"> -->
+            <!--				<Id>http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/undersupervision</Id> -->
+            <!--				<Id>http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/accredited</Id> -->
+            <!--				<Id>http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/supervisionincessation</Id> -->
+            <!--				<Id>http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/granted</Id> -->
+            <!--				<Id>http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/withdrawn</Id> -->
+            <!--			</TrustServiceStatus> -->
+            <SigningCertificate>
+                <Recognition Level="FAIL" />
+                <Signature Level="FAIL" />
+                <NotExpired Level="FAIL" />
+                <SunsetDate Level="FAIL" />
+                <AuthorityInfoAccessPresent Level="WARN" />
+                <RevocationDataSkip Level="INFORM">
+                    <CertificateExtensions>
+                        <Id>0.4.0.194121.2.1</Id> <!-- valassured-ST-certs -->
+                        <Id>2.5.29.56</Id> <!-- noRevAvail -->
+                    </CertificateExtensions>
+                </RevocationDataSkip>
+                <RevocationInfoAccessPresent Level="WARN" />
+                <RevocationDataAvailable Level="FAIL" />
+                <AcceptableRevocationDataFound Level="FAIL" />
+                <CRLNextUpdatePresent Level="WARN" />
+                <RevocationFreshness Level="IGNORE" Unit="DAYS" Value="0" />
+                <KeyUsage Level="WARN">
+                    <Id>nonRepudiation</Id>
+                </KeyUsage>
+                <PolicyTree Level="WARN" />
+                <NameConstraints Level="WARN" />
+                <NoRevAvail Level="WARN" />
+                <SupportedCriticalExtensions Level="WARN">
+                    <Id>2.5.29.15</Id> <!-- keyUsage -->
+                    <Id>2.5.29.32</Id> <!-- certificatePolicies -->
+                    <Id>2.5.29.17</Id> <!-- subjectAlternativeName -->
+                    <Id>2.5.29.19</Id> <!-- basicConstraints -->
+                    <Id>2.5.29.30</Id> <!-- nameConstraints -->
+                    <Id>2.5.29.36</Id> <!-- policyConstraints -->
+                    <Id>2.5.29.37</Id> <!-- extendedKeyUsage -->
+                    <Id>2.5.29.31</Id> <!-- CRLDistributionPoints -->
+                    <Id>2.5.29.54</Id> <!-- inhibitAnyPolicy -->
+                    <Id>1.3.6.1.5.5.7.1.3</Id> <!-- QCStatements -->
+                    <!-- policyMappings 2.5.29.33 not supported -->
+                </SupportedCriticalExtensions>
+                <ForbiddenExtensions Level="FAIL">
+                    <Id>1.3.6.1.5.5.7.48.1.5</Id> <!-- ocsp_noCheck -->
+                </ForbiddenExtensions>
+                <IssuerName Level="FAIL" />
+                <SerialNumberPresent Level="WARN" />
+                <NotRevoked Level="FAIL" />
+                <NotOnHold Level="FAIL" />
+                <NotSelfSigned Level="FAIL" />
+                <!-- <QcCompliance Level="WARN" /> -->
+                <!-- <QcSSCD Level="WARN" /> -->
+                <!-- <IssuedToNaturalPerson Level="INFORM" /> -->
+                <!-- <IssuedToLegalPerson Level="INFORM" /> -->
+                <UsePseudonym Level="INFORM" />
+                <Cryptographic />
+            </SigningCertificate>
+            <CACertificate>
+                <Signature Level="FAIL" />
+                <NotExpired Level="FAIL" />
+                <SunsetDate Level="FAIL" />
+                <RevocationDataAvailable Level="FAIL" />
+                <AcceptableRevocationDataFound Level="FAIL" />
+                <CRLNextUpdatePresent Level="WARN" />
+                <RevocationFreshness Level="IGNORE" Unit="DAYS" Value="0" />
+                <CA Level="FAIL" />
+                <MaxPathLength Level="FAIL" />
+                <KeyUsage Level="FAIL">
+                    <Id>keyCertSign</Id>
+                </KeyUsage>
+                <PolicyTree Level="WARN" />
+                <NameConstraints Level="WARN" />
+                <SupportedCriticalExtensions Level="WARN">
+                    <Id>2.5.29.15</Id> <!-- keyUsage -->
+                    <Id>2.5.29.32</Id> <!-- certificatePolicies -->
+                    <Id>2.5.29.17</Id> <!-- subjectAlternativeName -->
+                    <Id>2.5.29.19</Id> <!-- basicConstraints -->
+                    <Id>2.5.29.30</Id> <!-- nameConstraints -->
+                    <Id>2.5.29.36</Id> <!-- policyConstraints -->
+                    <Id>2.5.29.37</Id> <!-- extendedKeyUsage -->
+                    <Id>2.5.29.31</Id> <!-- CRLDistributionPoints -->
+                    <Id>2.5.29.54</Id> <!-- inhibitAnyPolicy -->
+                    <Id>1.3.6.1.5.5.7.1.3</Id> <!-- QCStatements -->
+                    <!-- policyMappings 2.5.29.33 not supported -->
+                </SupportedCriticalExtensions>
+                <ForbiddenExtensions Level="FAIL">
+                    <Id>1.3.6.1.5.5.7.48.1.5</Id> <!-- ocsp_noCheck -->
+                    <Id>2.5.29.56</Id> <!-- noRevAvail -->
+                </ForbiddenExtensions>
+                <IssuerName Level="FAIL" />
+                <NotRevoked Level="FAIL" />
+                <NotOnHold Level="FAIL" />
+                <Cryptographic />
+            </CACertificate>
+            <Cryptographic />
+        </BasicSignatureConstraints>
+        <SignedAttributes>
+            <SigningCertificatePresent Level="FAIL" />
+            <UnicitySigningCertificate Level="WARN" />
+            <SigningCertificateRefersCertificateChain Level="WARN" />
+            <SigningCertificateDigestAlgorithm Level="WARN" />
+            <CertDigestPresent Level="FAIL" />
+            <CertDigestMatch Level="FAIL" />
+            <IssuerSerialMatch Level="WARN" />
+            <KeyIdentifierMatch Level="WARN" />
+            <SigningTime Level="FAIL" />
+            <!--			<ContentType Level="FAIL" value="1.2.840.113549.1.7.1" />-->
+            <!--			<ContentHints Level="FAIL" value="*" />-->
+            <!--			<CommitmentTypeIndication Level="FAIL">-->
+            <!--				<Id>1.2.840.113549.1.9.16.6.1</Id>-->
+            <!--				<Id>1.2.840.113549.1.9.16.6.4</Id>-->
+            <!--				<Id>1.2.840.113549.1.9.16.6.5</Id>-->
+            <!--				<Id>1.2.840.113549.1.9.16.6.6</Id>-->
+            <!--			</CommitmentTypeIndication>-->
+            <!--			<SignerLocation Level="FAIL" />-->
+            <!--			<ContentTimeStamp Level="FAIL" />-->
+            <MessageDigestOrSignedPropertiesPresent Level="FAIL" />
+            <EllipticCurveKeySize Level="WARN" />
+        </SignedAttributes>
+    </CounterSignatureConstraints>
     <Timestamp>
         <TimestampDelay Level="IGNORE" Unit="DAYS" Value="0"/>
         <RevocationTimeAgainstBestSignatureTime Level="FAIL"/>
@@ -193,8 +331,23 @@
         <BasicSignatureConstraints>
             <ReferenceDataExistence Level="FAIL"/>
             <ReferenceDataIntact Level="WARN"/> <!-- deliberately changed FAIL to WARN for testing purposes -->
+            <ReferenceDataNameMatch Level="FAIL" />
+            <ManifestEntryObjectExistence Level="WARN" />
+            <ManifestEntryObjectGroup Level="WARN" />
+            <ManifestEntryObjectIntact Level="FAIL" />
+            <ManifestEntryNameMatch Level="WARN" />
             <SignatureIntact Level="FAIL"/>
             <ProspectiveCertificateChain Level="FAIL"/>
+            <ByteRange Level="FAIL" />
+            <ByteRangeCollision Level="WARN" />
+            <PdfSignatureDictionary Level="FAIL" />
+            <PdfPageDifference Level="FAIL" />
+            <PdfAnnotationOverlap Level="WARN" />
+            <PdfVisualDifference Level="WARN" />
+            <DocMDP Level="WARN" />
+            <FieldMDP Level="WARN" />
+            <SigFieldLock Level="WARN" />
+            <UndefinedChanges Level="WARN" />
             <TrustServiceTypeIdentifier Level="FAIL">
                 <Id>http://uri.etsi.org/TrstSvc/Svctype/TSA/QTST</Id>
             </TrustServiceTypeIdentifier>
@@ -202,99 +355,92 @@
                 <Recognition Level="FAIL"/>
                 <Signature Level="FAIL"/>
                 <NotExpired Level="FAIL"/>
+                <SunsetDate Level="FAIL" />
                 <RevocationDataAvailable Level="FAIL"/>
+                <AcceptableRevocationDataFound Level="IGNORE" />
                 <CRLNextUpdatePresent Level="WARN"/>
+                <RevocationFreshness Level="IGNORE" Unit="DAYS" Value="0" />
                 <ExtendedKeyUsage Level="FAIL">
                     <Id>timeStamping</Id>
                 </ExtendedKeyUsage>
+                <PolicyTree Level="WARN" />
+                <NameConstraints Level="WARN" />
+                <SupportedCriticalExtensions Level="WARN">
+                    <Id>2.5.29.15</Id> <!-- keyUsage -->
+                    <Id>2.5.29.32</Id> <!-- certificatePolicies -->
+                    <Id>2.5.29.17</Id> <!-- subjectAlternativeName -->
+                    <Id>2.5.29.19</Id> <!-- basicConstraints -->
+                    <Id>2.5.29.30</Id> <!-- nameConstraints -->
+                    <Id>2.5.29.36</Id> <!-- policyConstraints -->
+                    <Id>2.5.29.37</Id> <!-- extendedKeyUsage -->
+                    <Id>2.5.29.31</Id> <!-- CRLDistributionPoints -->
+                    <Id>2.5.29.54</Id> <!-- inhibitAnyPolicy -->
+                    <Id>1.3.6.1.5.5.7.1.3</Id> <!-- QCStatements -->
+                    <!-- policyMappings 2.5.29.33 not supported -->
+                </SupportedCriticalExtensions>
+                <ForbiddenExtensions Level="IGNORE">
+                    <Id>1.3.6.1.5.5.7.48.1.5</Id> <!-- ocsp_noCheck -->
+                </ForbiddenExtensions>
+                <IssuerName Level="FAIL" />
                 <NotRevoked Level="FAIL"/>
                 <NotOnHold Level="FAIL"/>
                 <NotSelfSigned Level="FAIL"/>
-                <Cryptographic Level="FAIL">
-                    <AcceptableEncryptionAlgo>
-                        <Algo>RSA</Algo>
-                        <Algo>DSA</Algo>
-                        <Algo>ECDSA</Algo>
-                    </AcceptableEncryptionAlgo>
-                    <MiniPublicKeySize>
-                        <Algo Size="224">DSA</Algo>
-                        <Algo Size="1024">RSA</Algo>
-                        <Algo Size="256">ECDSA</Algo>
-                    </MiniPublicKeySize>
-                    <AcceptableDigestAlgo>
-                        <Algo>SHA1</Algo>
-                        <Algo>SHA224</Algo>
-                        <Algo>SHA256</Algo>
-                        <Algo>SHA384</Algo>
-                        <Algo>SHA512</Algo>
-                        <Algo>SHA3-224</Algo>
-                        <Algo>SHA3-256</Algo>
-                        <Algo>SHA3-384</Algo>
-                        <Algo>SHA3-512</Algo>
-                        <Algo>RIPEMD160</Algo>
-                    </AcceptableDigestAlgo>
-                </Cryptographic>
+                <Cryptographic />
             </SigningCertificate>
             <CACertificate>
                 <Signature Level="FAIL"/>
                 <NotExpired Level="FAIL"/>
+                <SunsetDate Level="FAIL" />
                 <RevocationDataAvailable Level="FAIL"/>
+                <AcceptableRevocationDataFound Level="WARN" />
                 <CRLNextUpdatePresent Level="WARN"/>
+                <RevocationFreshness Level="IGNORE" Unit="DAYS" Value="0" />
+                <CA Level="FAIL" />
+                <MaxPathLength Level="FAIL" />
+                <KeyUsage Level="FAIL">
+                    <Id>keyCertSign</Id>
+                </KeyUsage>
+                <PolicyTree Level="WARN" />
+                <NameConstraints Level="WARN" />
+                <SupportedCriticalExtensions Level="WARN">
+                    <Id>2.5.29.15</Id> <!-- keyUsage -->
+                    <Id>2.5.29.32</Id> <!-- certificatePolicies -->
+                    <Id>2.5.29.17</Id> <!-- subjectAlternativeName -->
+                    <Id>2.5.29.19</Id> <!-- basicConstraints -->
+                    <Id>2.5.29.30</Id> <!-- nameConstraints -->
+                    <Id>2.5.29.36</Id> <!-- policyConstraints -->
+                    <Id>2.5.29.37</Id> <!-- extendedKeyUsage -->
+                    <Id>2.5.29.31</Id> <!-- CRLDistributionPoints -->
+                    <Id>2.5.29.54</Id> <!-- inhibitAnyPolicy -->
+                    <Id>1.3.6.1.5.5.7.1.3</Id> <!-- QCStatements -->
+                    <!-- policyMappings 2.5.29.33 not supported -->
+                </SupportedCriticalExtensions>
+                <ForbiddenExtensions Level="FAIL">
+                    <Id>1.3.6.1.5.5.7.48.1.5</Id> <!-- ocsp_noCheck -->
+                    <Id>2.5.29.56</Id> <!-- noRevAvail -->
+                </ForbiddenExtensions>
+                <IssuerName Level="FAIL" />
                 <NotRevoked Level="FAIL"/>
                 <NotOnHold Level="FAIL"/>
-                <Cryptographic Level="FAIL">
-                    <AcceptableEncryptionAlgo>
-                        <Algo>RSA</Algo>
-                        <Algo>DSA</Algo>
-                        <Algo>ECDSA</Algo>
-                    </AcceptableEncryptionAlgo>
-                    <MiniPublicKeySize>
-                        <Algo Size="224">DSA</Algo>
-                        <Algo Size="1024">RSA</Algo>
-                        <Algo Size="256">ECDSA</Algo>
-                    </MiniPublicKeySize>
-                    <AcceptableDigestAlgo>
-                        <Algo>SHA1</Algo>
-                        <Algo>SHA224</Algo>
-                        <Algo>SHA256</Algo>
-                        <Algo>SHA384</Algo>
-                        <Algo>SHA512</Algo>
-                        <Algo>SHA3-224</Algo>
-                        <Algo>SHA3-256</Algo>
-                        <Algo>SHA3-384</Algo>
-                        <Algo>SHA3-512</Algo>
-                        <Algo>RIPEMD160</Algo>
-                    </AcceptableDigestAlgo>
-                </Cryptographic>
+                <Cryptographic />
             </CACertificate>
-            <Cryptographic Level="FAIL">
-                <AcceptableEncryptionAlgo>
-                    <Algo>RSA</Algo>
-                    <Algo>DSA</Algo>
-                    <Algo>ECDSA</Algo>
-                </AcceptableEncryptionAlgo>
-                <MiniPublicKeySize>
-                    <Algo Size="224">DSA</Algo>
-                    <Algo Size="1024">RSA</Algo>
-                    <Algo Size="256">ECDSA</Algo>
-                </MiniPublicKeySize>
-                <AcceptableDigestAlgo>
-                    <Algo>SHA1</Algo>
-                    <Algo>SHA224</Algo>
-                    <Algo>SHA256</Algo>
-                    <Algo>SHA384</Algo>
-                    <Algo>SHA512</Algo>
-                    <Algo>SHA3-224</Algo>
-                    <Algo>SHA3-256</Algo>
-                    <Algo>SHA3-384</Algo>
-                    <Algo>SHA3-512</Algo>
-                    <Algo>RIPEMD160</Algo>
-                </AcceptableDigestAlgo>
-            </Cryptographic>
+            <Cryptographic />
         </BasicSignatureConstraints>
+        <SignedAttributes>
+            <SigningCertificatePresent Level="WARN" />
+            <!-- <UnicitySigningCertificate Level="WARN" /> RFC 5816 -->
+            <SigningCertificateRefersCertificateChain Level="WARN" />
+            <!-- <SigningCertificateDigestAlgorithm Level="WARN" /> TODO : too strict to enforce now -->
+            <CertDigestPresent Level="WARN" />
+            <IssuerSerialMatch Level="WARN" />
+        </SignedAttributes>
+        <AtsHashIndex Level="WARN" />
+        <ContainerSignedAndTimestampedFilesCovered Level="IGNORE" />
     </Timestamp>
     <Revocation>
         <UnknownStatus Level="FAIL" />
+        <OCSPResponderIdMatch Level="FAIL" />
+        <SelfIssuedOCSP Level="WARN" />
         <BasicSignatureConstraints>
             <ReferenceDataExistence Level="FAIL"/>
             <ReferenceDataIntact Level="FAIL"/>
@@ -304,95 +450,141 @@
                 <Recognition Level="FAIL"/>
                 <Signature Level="FAIL"/>
                 <NotExpired Level="FAIL"/>
+                <SunsetDate Level="FAIL" />
+                <RevocationDataSkip Level="IGNORE">
+                    <CertificateExtensions>
+                        <Id>1.3.6.1.5.5.7.48.1.5</Id> <!-- ocsp_noCheck -->
+                    </CertificateExtensions>
+                </RevocationDataSkip>
                 <RevocationDataAvailable Level="FAIL"/>
+                <AcceptableRevocationDataFound Level="IGNORE" />
                 <CRLNextUpdatePresent Level="WARN"/>
                 <RevocationFreshness Level="IGNORE" Unit="DAYS" Value="0"/>
+                <PolicyTree Level="WARN" />
+                <NameConstraints Level="WARN" />
+                <SupportedCriticalExtensions Level="WARN">
+                    <Id>2.5.29.15</Id> <!-- keyUsage -->
+                    <Id>2.5.29.32</Id> <!-- certificatePolicies-->
+                    <Id>2.5.29.17</Id> <!-- subjectAlternativeName -->
+                    <Id>2.5.29.19</Id> <!-- basicConstraints -->
+                    <Id>2.5.29.30</Id> <!-- nameConstraints -->
+                    <Id>2.5.29.36</Id> <!-- policyConstraints -->
+                    <Id>2.5.29.37</Id> <!-- extendedKeyUsage -->
+                    <Id>2.5.29.31</Id> <!-- CRLDistributionPoints -->
+                    <Id>2.5.29.54</Id> <!-- inhibitAnyPolicy -->
+                    <Id>1.3.6.1.5.5.7.1.3</Id> <!-- QCStatements -->
+                    <Id>1.3.6.1.5.5.7.48.1.5</Id> <!-- ocsp_noCheck -->
+                    <!-- policyMappings 2.5.29.33 not supported -->
+                </SupportedCriticalExtensions>
+                <IssuerName Level="FAIL" />
                 <NotRevoked Level="FAIL"/>
                 <NotOnHold Level="FAIL"/>
-                <Cryptographic Level="WARN">
-                    <AcceptableEncryptionAlgo>
-                        <Algo>RSA</Algo>
-                        <Algo>DSA</Algo>
-                        <Algo>ECDSA</Algo>
-                    </AcceptableEncryptionAlgo>
-                    <MiniPublicKeySize>
-                        <Algo Size="224">DSA</Algo>
-                        <Algo Size="1024">RSA</Algo>
-                        <Algo Size="256">ECDSA</Algo>
-                    </MiniPublicKeySize>
-                    <AcceptableDigestAlgo>
-                        <Algo>SHA1</Algo>
-                        <Algo>SHA224</Algo>
-                        <Algo>SHA256</Algo>
-                        <Algo>SHA384</Algo>
-                        <Algo>SHA512</Algo>
-                        <Algo>SHA3-224</Algo>
-                        <Algo>SHA3-256</Algo>
-                        <Algo>SHA3-384</Algo>
-                        <Algo>SHA3-512</Algo>
-                        <Algo>RIPEMD160</Algo>
-                    </AcceptableDigestAlgo>
-                </Cryptographic>
+                <Cryptographic />
             </SigningCertificate>
             <CACertificate>
                 <Signature Level="FAIL"/>
                 <NotExpired Level="FAIL"/>
+                <SunsetDate Level="FAIL" />
                 <RevocationDataAvailable Level="FAIL"/>
+                <AcceptableRevocationDataFound Level="WARN" />
                 <CRLNextUpdatePresent Level="WARN"/>
+                <RevocationFreshness Level="IGNORE" Unit="DAYS" Value="0" />
+                <CA Level="FAIL" />
+                <MaxPathLength Level="FAIL" />
+                <KeyUsage Level="FAIL">
+                    <Id>keyCertSign</Id>
+                </KeyUsage>
+                <PolicyTree Level="WARN" />
+                <NameConstraints Level="WARN" />
+                <SupportedCriticalExtensions Level="WARN">
+                    <Id>2.5.29.15</Id> <!-- keyUsage -->
+                    <Id>2.5.29.32</Id> <!-- certificatePolicies -->
+                    <Id>2.5.29.17</Id> <!-- subjectAlternativeName -->
+                    <Id>2.5.29.19</Id> <!-- basicConstraints -->
+                    <Id>2.5.29.30</Id> <!-- nameConstraints -->
+                    <Id>2.5.29.36</Id> <!-- policyConstraints -->
+                    <Id>2.5.29.37</Id> <!-- extendedKeyUsage -->
+                    <Id>2.5.29.31</Id> <!-- CRLDistributionPoints -->
+                    <Id>2.5.29.54</Id> <!-- inhibitAnyPolicy -->
+                    <Id>1.3.6.1.5.5.7.1.3</Id> <!-- QCStatements -->
+                    <!-- policyMappings 2.5.29.33 not supported -->
+                </SupportedCriticalExtensions>
+                <ForbiddenExtensions Level="FAIL">
+                    <Id>1.3.6.1.5.5.7.48.1.5</Id> <!-- ocsp_noCheck -->
+                    <Id>2.5.29.56</Id> <!-- noRevAvail -->
+                </ForbiddenExtensions>
+                <IssuerName Level="FAIL" />
                 <NotRevoked Level="FAIL"/>
                 <NotOnHold Level="FAIL"/>
-                <Cryptographic Level="FAIL">
-                    <AcceptableEncryptionAlgo>
-                        <Algo>RSA</Algo>
-                        <Algo>DSA</Algo>
-                        <Algo>ECDSA</Algo>
-                    </AcceptableEncryptionAlgo>
-                    <MiniPublicKeySize>
-                        <Algo Size="224">DSA</Algo>
-                        <Algo Size="1024">RSA</Algo>
-                        <Algo Size="256">ECDSA</Algo>
-                    </MiniPublicKeySize>
-                    <AcceptableDigestAlgo>
-                        <Algo>SHA1</Algo>
-                        <Algo>SHA224</Algo>
-                        <Algo>SHA256</Algo>
-                        <Algo>SHA384</Algo>
-                        <Algo>SHA512</Algo>
-                        <Algo>SHA3-224</Algo>
-                        <Algo>SHA3-256</Algo>
-                        <Algo>SHA3-384</Algo>
-                        <Algo>SHA3-512</Algo>
-                        <Algo>RIPEMD160</Algo>
-                    </AcceptableDigestAlgo>
-                </Cryptographic>
+                <Cryptographic />
             </CACertificate>
-            <Cryptographic Level="FAIL">
-                <AcceptableEncryptionAlgo>
-                    <Algo>RSA</Algo>
-                    <Algo>DSA</Algo>
-                    <Algo>ECDSA</Algo>
-                </AcceptableEncryptionAlgo>
-                <MiniPublicKeySize>
-                    <Algo Size="224">DSA</Algo>
-                    <Algo Size="1024">RSA</Algo>
-                    <Algo Size="256">ECDSA</Algo>
-                </MiniPublicKeySize>
-                <AcceptableDigestAlgo>
-                    <Algo>SHA1</Algo>
-                    <Algo>SHA224</Algo>
-                    <Algo>SHA256</Algo>
-                    <Algo>SHA384</Algo>
-                    <Algo>SHA512</Algo>
-                    <Algo>SHA3-224</Algo>
-                    <Algo>SHA3-256</Algo>
-                    <Algo>SHA3-384</Algo>
-                    <Algo>SHA3-512</Algo>
-                    <Algo>RIPEMD160</Algo>
-                </AcceptableDigestAlgo>
-            </Cryptographic>
+            <Cryptographic />
         </BasicSignatureConstraints>
     </Revocation>
-    <Cryptographic/>
+    <EvidenceRecord>
+        <DataObjectExistence Level="FAIL" />
+        <DataObjectIntact Level="FAIL" />
+        <DataObjectFound Level="FAIL" />
+        <DataObjectGroup Level="WARN" />
+        <SignedFilesCovered Level="WARN" />
+        <ContainerSignedAndTimestampedFilesCovered Level="WARN" />
+        <HashTreeRenewal Level="FAIL" />
+        <Cryptographic />
+    </EvidenceRecord>
+    <Cryptographic Level="FAIL">
+        <AcceptableEncryptionAlgo>
+            <!-- Following encryption algorithms are omitted when compared to DSS: DSA, PLAIN-ECDSA. -->
+            <Algo>RSA</Algo>
+            <Algo>RSASSA-PSS</Algo>
+            <Algo>ECDSA</Algo>
+        </AcceptableEncryptionAlgo>
+        <MiniPublicKeySize>
+            <!-- Previously omitted algorithms are removed from this block. -->
+            <Algo Size="1024">RSA</Algo>
+            <Algo Size="1024">RSASSA-PSS</Algo>
+            <Algo Size="256">ECDSA</Algo>
+        </MiniPublicKeySize>
+        <AcceptableDigestAlgo>
+            <!-- Following digest algorithms are omitted when compared to DSS: MD5, RIPEMD160, WHIRLPOOL. -->
+            <Algo>SHA1</Algo>
+            <Algo>SHA224</Algo>
+            <Algo>SHA256</Algo>
+            <Algo>SHA384</Algo>
+            <Algo>SHA512</Algo>
+            <Algo>SHA3-256</Algo>
+            <Algo>SHA3-384</Algo>
+            <Algo>SHA3-512</Algo>
+        </AcceptableDigestAlgo>
+        <!--//TODO (DD4J-1395): Do not update UpdateDate without analyzing SHA224 expiration date -->
+        <AlgoExpirationDate Level="FAIL" Format="yyyy-MM-dd" UpdateDate="2025-01-01" LevelAfterUpdate="WARN">
+            <!-- Previously omitted encryption and digest algorithms are removed from this block. -->
+            <!-- Digest algorithms -->
+            <Algo>SHA1</Algo>  <!-- CUSTOM -->
+            <Algo Date="2026-01-01">SHA224</Algo> <!-- CUSTOM -->
+            <Algo>SHA256</Algo> <!-- ETSI TS 119 312 v1.5.1 --> <!-- R -->
+            <Algo>SHA384</Algo> <!-- ETSI TS 119 312 v1.5.1 --> <!-- R -->
+            <Algo>SHA512</Algo> <!-- ETSI TS 119 312 v1.5.1 --> <!-- R -->
+            <Algo>SHA3-256</Algo> <!-- ETSI TS 119 312 v1.5.1 --> <!-- R -->
+            <Algo>SHA3-384</Algo> <!-- ETSI TS 119 312 v1.5.1 --> <!-- R -->
+            <Algo>SHA3-512</Algo> <!-- ETSI TS 119 312 v1.5.1 --> <!-- R -->
+            <!-- end Digest algorithms -->
+            <!-- Encryption algorithms -->
+            <Algo Date="2019-10-01" Size="1024">RSA</Algo> <!-- ETSI TS 119 312 v1.5.1 -->
+            <Algo Date="2019-10-01" Size="1536">RSA</Algo> <!-- ETSI TS 119 312 v1.5.1 -->
+            <Algo Date="2029-01-01" Size="1900">RSA</Algo> <!-- ETSI TS 119 312 v1.5.1 -->
+            <Algo Date="2029-01-01" Size="3000">RSA</Algo> <!-- ETSI TS 119 312 v1.5.1 -->
+            <Algo Date="2010-08-01" Size="786">RSASSA-PSS</Algo> <!-- ETSI TS 119 312 v1.5.1 -->
+            <Algo Date="2019-10-01" Size="1024">RSASSA-PSS</Algo> <!-- ETSI TS 119 312 v1.5.1 -->
+            <Algo Date="2019-10-01" Size="1536">RSASSA-PSS</Algo> <!-- ETSI TS 119 312 v1.5.1 -->
+            <Algo Date="2029-01-01" Size="1900">RSASSA-PSS</Algo> <!-- ETSI TS 119 312 v1.5.1 -->
+            <Algo Size="3000">RSASSA-PSS</Algo> <!-- ETSI TS 119 312 v1.5.1 --> <!-- R -->
+            <Algo Date="2012-08-01" Size="160">ECDSA</Algo> <!-- ETSI TS 102 176-1 (Historical) V2.1.1 -->
+            <Algo Date="2012-08-01" Size="163">ECDSA</Algo> <!-- ETSI TS 119 312 v1.5.1 -->
+            <Algo Date="2021-10-01" Size="224">ECDSA</Algo> <!-- ETSI TS 119 312 v1.5.1 -->
+            <Algo Size="256">ECDSA</Algo> <!-- ETSI TS 119 312 v1.5.1 --> <!-- R -->
+            <!-- end Encryption algorithms -->
+        </AlgoExpirationDate>
+    </Cryptographic>
     <Model Value="SHELL" />
     <!-- eIDAS REGL 910/EU/2014 -->
     <eIDAS>

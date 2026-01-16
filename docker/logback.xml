@@ -19,8 +19,8 @@
         <file>${STATISTICS_CONTAINER_LOG_FILE}</file>
         <encoder class="co.elastic.logging.logback.EcsEncoder"/>
         <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
-            <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
-                <marker>STATISTICS_CONTAINER_LOG</marker>
+            <evaluator class="ee.openeid.siva.statistics.logging.OnLoggerEvaluator">
+                <logger>ee.openeid.siva.statistics.logging.ContainerStatistics</logger>
             </evaluator>
             <onMismatch>DENY</onMismatch>
             <onMatch>NEUTRAL</onMatch>
@@ -30,8 +30,8 @@
         <file>${STATISTICS_SIGNATURE_LOG_FILE}</file>
         <encoder class="co.elastic.logging.logback.EcsEncoder"/>
         <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
-            <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
-                <marker>STATISTICS_SIGNATURE_LOG</marker>
+            <evaluator class="ee.openeid.siva.statistics.logging.OnLoggerEvaluator">
+                <logger>ee.openeid.siva.statistics.logging.SignatureStatistics</logger>
             </evaluator>
             <onMismatch>DENY</onMismatch>
             <onMatch>NEUTRAL</onMatch>

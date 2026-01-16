@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 - 2025 Riigi Infosüsteemi Amet
+ * Copyright 2017 - 2026 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -16,10 +16,13 @@
 
 package ee.openeid.siva.statistics;
 
+import ee.openeid.siva.statistics.logging.ContainerStatistics;
+import ee.openeid.siva.statistics.logging.SignatureStatistics;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.TimeStampTokenValidationData;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -31,17 +34,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.slf4j.MarkerFactory.getMarker;
 
@@ -54,13 +55,20 @@ class StatisticsServiceTest {
 
     private static StatisticsService statisticsService;
     private static MockedStatic<LoggerFactory> loggerFactoryMock;
-    private static Logger loggerMock;
+    private static Logger genericLoggerMock;
+    private static Logger containerLoggerMock;
+    private static Logger signatureLoggerMock;
 
     @BeforeAll
     public static void setUp() {
-        loggerMock = mock(Logger.class);
+        genericLoggerMock = mock(Logger.class);
+        containerLoggerMock = mock(Logger.class);
+        signatureLoggerMock = mock(Logger.class);
+
         loggerFactoryMock = mockStatic(LoggerFactory.class);
-        loggerFactoryMock.when(() -> LoggerFactory.getLogger(StatisticsService.class)).thenReturn(loggerMock);
+        loggerFactoryMock.when(() -> LoggerFactory.getLogger(StatisticsService.class)).thenReturn(genericLoggerMock);
+        loggerFactoryMock.when(() -> LoggerFactory.getLogger(ContainerStatistics.class)).thenReturn(containerLoggerMock);
+        loggerFactoryMock.when(() -> LoggerFactory.getLogger(SignatureStatistics.class)).thenReturn(signatureLoggerMock);
 
         statisticsService = new StatisticsService();
 
@@ -75,7 +83,7 @@ class StatisticsServiceTest {
 
     @AfterEach
     public void clearMock() {
-        Mockito.reset(loggerMock);
+        Mockito.reset(genericLoggerMock, containerLoggerMock, signatureLoggerMock);
     }
 
     @Test
@@ -98,7 +106,8 @@ class StatisticsServiceTest {
 
         statisticsService.publishValidationStatistic(TimeUnit.MILLISECONDS.toNanos(validationDurationInMillis), report.getValidationConclusion());
 
-        verify(loggerMock).info(getMarker(CONTAINER_LOG_MARKER),
+        verify(containerLoggerMock).info(
+                getMarker(CONTAINER_LOG_MARKER),
                 "{\"stats\":{" +
                         "\"type\":\"ASiC-E\"," +
                         "\"usrId\":\"N/A\"," +
@@ -109,10 +118,14 @@ class StatisticsServiceTest {
                             "{\"i\":\"TOTAL-PASSED\"," +
                             "\"cc\":\"EE\"," +
                             "\"sf\":\"XAdES_some_prefix\"}]," +
-                        "\"sigType\":\"XAdES\"}}");
-
-        verify(loggerMock).info(getMarker(SIGNATURE_LOG_MARKER),
-                "{\"signatureStats\":{\"i\":\"TOTAL-PASSED\",\"cc\":\"EE\",\"sf\":\"XAdES_some_prefix\"}}");
+                        "\"sigType\":\"XAdES\"}}"
+        );
+        verify(signatureLoggerMock).info(
+                getMarker(SIGNATURE_LOG_MARKER),
+                "{\"signatureStats\":{\"i\":\"TOTAL-PASSED\",\"cc\":\"EE\",\"sf\":\"XAdES_some_prefix\"}}"
+        );
+        verifyNoMoreInteractions(containerLoggerMock, signatureLoggerMock);
+        verifyNoInteractions(genericLoggerMock);
     }
 
     @Test
@@ -141,7 +154,8 @@ class StatisticsServiceTest {
 
         statisticsService.publishValidationStatistic(TimeUnit.MILLISECONDS.toNanos(validationDurationInMillis), report.getValidationConclusion());
 
-        verify(loggerMock).info(getMarker(CONTAINER_LOG_MARKER),
+        verify(containerLoggerMock).info(
+                getMarker(CONTAINER_LOG_MARKER),
                 "{\"stats\":{" +
                         "\"type\":\"ASiC-E\"," +
                         "\"usrId\":\"some_user\"," +
@@ -155,13 +169,18 @@ class StatisticsServiceTest {
                             "{\"i\":\"TOTAL-FAILED\"," +
                             "\"si\":\"CERTIFICATE_CHAIN_NOT_FOUND\"," +
                             "\"cc\":\"US\"}]," +
-                        "\"sigType\":\"XAdES\"}}");
-
-        verify(loggerMock).info(getMarker(SIGNATURE_LOG_MARKER),
-                "{\"signatureStats\":{\"i\":\"TOTAL-PASSED\",\"cc\":\"EE\",\"sf\":\"XAdES_some_prefix\"}}");
-
-        verify(loggerMock).info(getMarker(SIGNATURE_LOG_MARKER),
-                "{\"signatureStats\":{\"i\":\"TOTAL-FAILED\",\"si\":\"CERTIFICATE_CHAIN_NOT_FOUND\",\"cc\":\"US\"}}");
+                        "\"sigType\":\"XAdES\"}}"
+        );
+        verify(signatureLoggerMock).info(
+                getMarker(SIGNATURE_LOG_MARKER),
+                "{\"signatureStats\":{\"i\":\"TOTAL-PASSED\",\"cc\":\"EE\",\"sf\":\"XAdES_some_prefix\"}}"
+        );
+        verify(signatureLoggerMock).info(
+                getMarker(SIGNATURE_LOG_MARKER),
+                "{\"signatureStats\":{\"i\":\"TOTAL-FAILED\",\"si\":\"CERTIFICATE_CHAIN_NOT_FOUND\",\"cc\":\"US\"}}"
+        );
+        verifyNoMoreInteractions(containerLoggerMock, signatureLoggerMock);
+        verifyNoInteractions(genericLoggerMock);
     }
 
     @Test
@@ -187,7 +206,8 @@ class StatisticsServiceTest {
 
         statisticsService.publishValidationStatistic(TimeUnit.MILLISECONDS.toNanos(validationDurationInMillis), report.getValidationConclusion());
 
-        verify(loggerMock).info(getMarker(CONTAINER_LOG_MARKER),
+        verify(containerLoggerMock).info(
+                getMarker(CONTAINER_LOG_MARKER),
                 "{\"stats\":{" +
                         "\"type\":\"ASiC-S\"," +
                         "\"usrId\":\"N/A\"," +
@@ -195,9 +215,10 @@ class StatisticsServiceTest {
                         "\"sigCt\":0," +
                         "\"vSigCt\":0," +
                         "\"sigRslt\":[]," +
-                        "\"sigType\":\"N/A\"}}");
-
-        verify(loggerMock, never()).info(eq(getMarker(SIGNATURE_LOG_MARKER)), anyString());
+                        "\"sigType\":\"N/A\"}}"
+        );
+        verifyNoMoreInteractions(containerLoggerMock);
+        verifyNoInteractions(genericLoggerMock, signatureLoggerMock);
     }
 
     private SimpleReport createDummySimpleReport(String signatureForm, int validSignaturesCount, int totalSignaturesCount) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 - 2025 Riigi Infosüsteemi Amet
+ * Copyright 2017 - 2026 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -18,17 +18,18 @@ package ee.openeid.siva.statistics;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ee.openeid.siva.statistics.logging.ContainerStatistics;
+import ee.openeid.siva.statistics.logging.SignatureStatistics;
 import ee.openeid.siva.statistics.model.SimpleSignatureReport;
 import ee.openeid.siva.statistics.model.SimpleValidationReport;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -38,15 +39,10 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static ee.openeid.siva.statistics.ContainerTypeResolver.resolveContainerType;
-import static org.slf4j.MarkerFactory.getMarker;
 
+@Slf4j
 @Service
 public class StatisticsService {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(StatisticsService.class);
-
-    private static final String CONTAINER_LOG_MARKER = "STATISTICS_CONTAINER_LOG";
-    private static final String SIGNATURE_LOG_MARKER = "STATISTICS_SIGNATURE_LOG";
 
     private static final String NA = "N/A";
 
@@ -110,12 +106,12 @@ public class StatisticsService {
             logContainerStats(simpleValidationReport);
             logSignatureStats(simpleValidationReport.getSimpleSignatureReports());
         } catch (JsonProcessingException e) {
-            LOGGER.error("Error generating json: {}", e.getMessage(), e);
+            log.error("Error generating json: {}", e.getMessage(), e);
         }
     }
 
     private void logContainerStats(SimpleValidationReport simpleValidationReport) throws JsonProcessingException {
-        LOGGER.info(getMarker(CONTAINER_LOG_MARKER), toJson(simpleValidationReport));
+        ContainerStatistics.log(toJson(simpleValidationReport));
     }
 
     private String toJson(SimpleValidationReport simpleValidationReport) throws JsonProcessingException {
@@ -127,7 +123,7 @@ public class StatisticsService {
 
     private void logSignatureStats(List<SimpleSignatureReport> simpleSignatureReports) throws JsonProcessingException {
         for (SimpleSignatureReport simpleSignatureReport : simpleSignatureReports) {
-            LOGGER.info(getMarker(SIGNATURE_LOG_MARKER), toJson(simpleSignatureReport));
+            SignatureStatistics.log(toJson(simpleSignatureReport));
         }
     }
 

@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2016 - 2025 Riigi Infosüsteemi Amet
+  ~ Copyright 2016 - 2026 Riigi Infosüsteemi Amet
   ~
   ~ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
   ~ the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -47,7 +47,7 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-manifests</artifactId>
-            <version>2.1.0</version>
+            <version>${jcabi-manifests.version}</version>
         </dependency>
 
         <dependency>

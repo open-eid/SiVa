@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2016 - 2025 Riigi Infosüsteemi Amet
+  ~ Copyright 2016 - 2026 Riigi Infosüsteemi Amet
   ~
   ~ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
   ~ the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -245,32 +245,6 @@
     </build>
 
     <profiles>
-        <profile>
-            <id>dependency-check</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.owasp</groupId>
-                        <artifactId>dependency-check-maven</artifactId>
-                        <version>8.4.3</version>
-                        <configuration>
-                            <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
-                            <failOnError>false</failOnError>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>aggregate</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
         <profile>
             <id>coverage</id>
             <build>

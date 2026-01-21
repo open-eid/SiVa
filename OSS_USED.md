@@ -26,7 +26,7 @@ Lists of 44 third-party dependencies.
      (European Union Public License 1.1) tsl-loader (ee.openid.siva:tsl-loader:3.9.0 - https://github.com/open-eid/SiVa/validation-services-parent/tsl-loader)
      (European Union Public License 1.1) validation-commons (ee.openid.siva:validation-commons:3.9.0 - https://github.com/open-eid/SiVa/validation-services-parent/validation-commons)
      (Apache-2.0) Apache Commons Collections (org.apache.commons:commons-collections4:4.5.0 - https://commons.apache.org/proper/commons-collections/)
-     (Apache-2.0) Apache Commons Lang (org.apache.commons:commons-lang3:3.17.0 - https://commons.apache.org/proper/commons-lang/)
+     (Apache-2.0) Apache Commons Lang (org.apache.commons:commons-lang3:3.20.0 - https://commons.apache.org/proper/commons-lang/)
      (Bouncy Castle Licence) Bouncy Castle PKIX, CMS, EAC, TSP, PKCS, OCSP, CMP, and CRMF APIs (org.bouncycastle:bcpkix-jdk18on:1.83 - https://www.bouncycastle.org/download/bouncy-castle-java/)
      (Bouncy Castle Licence) Bouncy Castle Provider (org.bouncycastle:bcprov-jdk18on:1.83 - https://www.bouncycastle.org/download/bouncy-castle-java/)
      (Bouncy Castle Licence) Bouncy Castle ASN.1 Extension and Utility APIs (org.bouncycastle:bcutil-jdk18on:1.83 - https://www.bouncycastle.org/download/bouncy-castle-java/)

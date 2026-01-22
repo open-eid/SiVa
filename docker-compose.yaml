@@ -3,7 +3,7 @@ services:
   siva-demo-application:
     image: siva-demo-application:latest
     ports:
-      - "9000:9000"
+      - "9000:8080"
     networks:
       default:
         aliases:

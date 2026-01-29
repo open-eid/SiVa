@@ -20,6 +20,12 @@
 
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.5.10</version>
+    </parent>
+
     <groupId>ee.openid.siva</groupId>
     <artifactId>siva</artifactId>
     <version>3.9.0</version>
@@ -126,19 +132,15 @@
         <jetbrains-annotations.version>26.0.2-1</jetbrains-annotations.version>
         <json.version>20251224</json.version>
         <logback-ecs-encoder.version>1.7.0</logback-ecs-encoder.version>
-        <spring-boot.version>3.5.9</spring-boot.version>
 
         <build-helper-maven-plugin.version>3.6.1</build-helper-maven-plugin.version>
         <coveralls-maven-plugin.version>4.3.0</coveralls-maven-plugin.version>
         <findbugs-maven-plugin.version>3.0.5</findbugs-maven-plugin.version>
         <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
         <license-maven-plugin.version>2.7.1</license-maven-plugin.version>
-        <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
         <maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
-        <maven-jar-plugin.version>3.5.0</maven-jar-plugin.version>
         <maven-pmd-plugin.version>3.28.0</maven-pmd-plugin.version>
         <maven-release-plugin.version>3.3.1</maven-release-plugin.version>
-        <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
 
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
@@ -226,7 +228,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin.version}</version>
                 <configuration>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                     <argLine>${argLine} -Dfile.encoding=UTF-8 -Xmx1024m</argLine>

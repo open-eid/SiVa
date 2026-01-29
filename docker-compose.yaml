@@ -4,6 +4,8 @@ services:
     image: siva-demo-application:latest
     ports:
       - "9000:8080"
+    environment:
+      - siva.service.service-host=http://siva.localhost:8080
     networks:
       default:
         aliases:

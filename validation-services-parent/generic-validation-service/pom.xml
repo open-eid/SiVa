@@ -43,26 +43,32 @@
         <dependency>
             <groupId>org.digidoc4j.dss</groupId>
             <artifactId>dss-document</artifactId>
+            <version>${dss.version}</version>
         </dependency>
         <dependency>
             <groupId>org.digidoc4j.dss</groupId>
             <artifactId>dss-pades</artifactId>
+            <version>${dss.version}</version>
         </dependency>
         <dependency>
             <groupId>org.digidoc4j.dss</groupId>
             <artifactId>dss-pades-pdfbox</artifactId>
+            <version>${dss.version}</version>
         </dependency>
         <dependency>
             <groupId>org.digidoc4j.dss</groupId>
             <artifactId>dss-service</artifactId>
+            <version>${dss.version}</version>
         </dependency>
         <dependency>
             <groupId>org.digidoc4j.dss</groupId>
             <artifactId>dss-spi</artifactId>
+            <version>${dss.version}</version>
         </dependency>
         <dependency>
             <groupId>org.digidoc4j.dss</groupId>
             <artifactId>dss-crl-parser-x509crl</artifactId>
+            <version>${dss.version}</version>
         </dependency>
 
         <dependency>
@@ -110,6 +116,7 @@
         <dependency>
             <groupId>org.digidoc4j.dss</groupId>
             <artifactId>dss-asic-xades</artifactId>
+            <version>${dss.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

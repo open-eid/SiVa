@@ -71,14 +71,6 @@
                 </exclusions>
             </dependency>
 
-            <!-- DSS -->
-            <dependency>
-                <groupId>org.digidoc4j.dss</groupId>
-                <artifactId>sd-dss</artifactId>
-                <version>${dss.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-collections4</artifactId>

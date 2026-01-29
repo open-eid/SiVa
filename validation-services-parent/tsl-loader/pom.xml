@@ -48,14 +48,17 @@
         <dependency>
             <groupId>org.digidoc4j.dss</groupId>
             <artifactId>dss-service</artifactId>
+            <version>${dss.version}</version>
         </dependency>
         <dependency>
             <groupId>org.digidoc4j.dss</groupId>
             <artifactId>dss-tsl-validation</artifactId>
+            <version>${dss.version}</version>
         </dependency>
         <dependency>
             <groupId>org.digidoc4j.dss</groupId>
             <artifactId>dss-utils-apache-commons</artifactId>
+            <version>${dss.version}</version>
         </dependency>
         <dependency>
             <groupId>org.digidoc4j</groupId>

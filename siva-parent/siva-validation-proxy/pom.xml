@@ -73,10 +73,9 @@
             <artifactId>lombok</artifactId>
         </dependency>
 
-        <dependency><!-- CVE-2025-48924 -->
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>${commons-lang3.version}</version>
         </dependency>
 
         <dependency>

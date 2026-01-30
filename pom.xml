@@ -123,7 +123,6 @@
         <bouncycastle.version>1.83</bouncycastle.version>
         <commons-collections4.version>4.5.0</commons-collections4.version>
         <commons-io.version>2.21.0</commons-io.version>
-        <commons-lang3.version>3.20.0</commons-lang3.version>
         <cryptacular.version>1.2.7</cryptacular.version>
         <digidoc4j.version>6.0.1</digidoc4j.version>
         <dss.version>6.0.1.d4j.1</dss.version>
@@ -146,6 +145,10 @@
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
         <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../../target/jacoco-report/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
         <sonar.language>java</sonar.language>
+
+        <!-- Override vulnerable dependencies that are pulled in via Spring boot -->
+        <!-- TODO: Amend this list when Spring Boot version is updated! -->
+        <commons-lang3.version>3.20.0</commons-lang3.version> <!-- CVE-2025-48924 -->
     </properties>
 
     <reporting>

@@ -57,16 +57,6 @@
         </dependency>
         <dependency>
             <groupId>org.digidoc4j.dss</groupId>
-            <artifactId>dss-service</artifactId>
-            <version>${dss.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.digidoc4j.dss</groupId>
-            <artifactId>dss-spi</artifactId>
-            <version>${dss.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.digidoc4j.dss</groupId>
             <artifactId>dss-crl-parser-x509crl</artifactId>
             <version>${dss.version}</version>
         </dependency>
@@ -89,30 +79,6 @@
             </exclusions>
         </dependency>
 
-        <!-- Lombok for getters and setters -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-
-        <dependency><!-- CVE-2025-48924 -->
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${commons-lang3.version}</version>
-        </dependency>
-
-        <!-- Testing -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.vaadin.external.google</groupId>
-                    <artifactId>android-json</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
         <dependency>
             <groupId>org.digidoc4j.dss</groupId>
             <artifactId>dss-asic-xades</artifactId>

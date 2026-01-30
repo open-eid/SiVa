@@ -39,30 +39,10 @@
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>org.bouncycastle</groupId>
-                <artifactId>bcpkix-jdk18on</artifactId>
-                <version>${bouncycastle.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.bouncycastle</groupId>
-                <artifactId>bcprov-jdk18on</artifactId>
-                <version>${bouncycastle.version}</version>
-            </dependency>
             <!-- DSS -->
             <dependency>
                 <groupId>org.digidoc4j.dss</groupId>
-                <artifactId>dss-document</artifactId>
-                <version>${dss.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.digidoc4j.dss</groupId>
                 <artifactId>dss-service</artifactId>
-                <version>${dss.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.digidoc4j.dss</groupId>
-                <artifactId>dss-spi</artifactId>
                 <version>${dss.version}</version>
             </dependency>
 
@@ -146,12 +126,6 @@
             </dependency>
 
             <!-- Public Dependencies -->
-            <dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>${commons-io.version}</version>
-            </dependency>
-
             <dependency>
                 <groupId>org.json</groupId>
                 <artifactId>json</artifactId>

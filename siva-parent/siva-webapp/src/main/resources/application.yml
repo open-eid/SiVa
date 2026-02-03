@@ -8,6 +8,7 @@ management:
       exposure:
         include:
           - health
+          - prometheus
           # TODO: When Kubernetes is live, remove custom heartbeat endpoint if it is not used
           - heartbeat
           - version

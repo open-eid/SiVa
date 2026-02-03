@@ -98,7 +98,7 @@ public class HashcodeGenericValidationServiceTLevelTest extends HashcodeGenericV
                         sameInstance(CertificateType.SIGNING)
                 ),
                 isCertificateWith(
-                        equalTo("DEMO of ESTEID-SK 2018 AIA OCSP RESPONDER 2018"),
+                        equalTo("DEMO of ESTEID2018 OCSP RESPONDER 2026"),
                         base64String(),
                         isCertificateWithoutIssuerNorType(
                                 equalTo("TEST of ESTEID2018"),

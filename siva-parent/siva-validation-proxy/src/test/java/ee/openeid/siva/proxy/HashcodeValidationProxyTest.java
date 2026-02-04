@@ -31,10 +31,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
-import org.mockito.Mock;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
@@ -52,13 +52,13 @@ class HashcodeValidationProxyTest {
 
     private HashcodeValidationProxy hashcodeValidationProxy;
 
-    @Mock
+    @MockitoBean
     private StatisticsService statisticsService;
 
-    @Mock
+    @MockitoBean
     private ApplicationContext applicationContext;
 
-    @Mock
+    @MockitoBean
     private Environment environment;
 
     private ValidationServiceSpy validationServiceSpy;

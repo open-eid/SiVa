@@ -48,11 +48,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.StandardEnvironment;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -88,7 +88,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
+@ExtendWith(MockitoExtension.class)
 class ValidationProxyTest {
     private static final String DEFAULT_DOCUMENT_NAME = "document.";
     private static final String TEST_FILES_LOCATION = "test-files/";
@@ -227,9 +227,6 @@ class ValidationProxyTest {
 
     @Test
     void validate_ProxyDocumentAsicsWithDifferentMimeType_ReturnsValidationReport() throws Exception {
-        TimeStampTokenValidationService timeStampTokenValidationService = Mockito.mock(TimeStampTokenValidationService.class);
-        when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(timeStampTokenValidationService);
-
         ValidationService validationServiceMock = Mockito.mock(ValidationService.class);
         Reports dummyReports = createDummyReports();
         when(validationServiceMock.validateDocument(any())).thenReturn(dummyReports);
@@ -277,16 +274,10 @@ class ValidationProxyTest {
         );
         when(applicationContext.getBean(TIMESTAMP_TOKEN_VALIDATION_SERVICE_BEAN)).thenReturn(timeStampTokenValidationService);
 
-        GenericValidationService genericValidationServiceMock = Mockito.mock(GenericValidationService.class);
-        when(applicationContext.getBean(GENERIC_VALIDATION_SERVICE_BEAN)).thenReturn(genericValidationServiceMock);
-
         ProxyDocument proxyDocument = mockProxyDocumentWithExtension("asics");
         proxyDocument.setBytes(buildValidationDocument("TXTinsideAsics.asics"));
 
         validationProxy.validate(proxyDocument);
-
-        verify(genericValidationServiceMock, never()).validateDocument(any());
-        verifyNoInteractions(genericValidationServiceMock);
     }
 
     @Test

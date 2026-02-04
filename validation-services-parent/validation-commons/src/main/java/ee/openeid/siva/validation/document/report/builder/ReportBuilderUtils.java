@@ -168,7 +168,7 @@ public final class ReportBuilderUtils {
         XmlDigestMatcher messageImprint = timestamp.getMessageImprint();
         AlgorithmIdentifier algorithm = DSSASN1Utils.getAlgorithmIdentifier(messageImprint.getDigestMethod());
         byte[] nonce = new MessageImprint(algorithm, messageImprint.getDigestValue()).getEncoded();
-        return StringUtils.defaultString(org.apache.tomcat.util.codec.binary.Base64.encodeBase64String(nonce));
+        return StringUtils.defaultString(org.apache.commons.codec.binary.Base64.encodeBase64String(nonce));
     }
 
     public static Scope parseScope(XmlSignatureScope dssScope, List<Datafile> datafiles) {

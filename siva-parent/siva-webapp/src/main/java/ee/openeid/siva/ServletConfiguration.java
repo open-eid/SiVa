@@ -21,10 +21,10 @@ import ee.openeid.siva.monitoring.configuration.MonitoringConfiguration;
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.jackson.autoconfigure.JsonMapperBuilderCustomizer;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.web.servlet.DispatcherServlet;
 
 @SpringBootConfiguration
@@ -39,9 +39,11 @@ public class ServletConfiguration extends MonitoringConfiguration {
     }
 
     @Bean
-    public Jackson2ObjectMapperBuilder objectMapperBuilder() {
-        Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
-        builder.serializationInclusion(JsonInclude.Include.NON_EMPTY);
-        return builder;
+    public JsonMapperBuilderCustomizer jsonMapperBuilderCustomizer() {
+        return builder -> builder
+                .changeDefaultPropertyInclusion(incl -> incl
+                        .withValueInclusion(JsonInclude.Include.NON_EMPTY)
+                        .withContentInclusion(JsonInclude.Include.NON_EMPTY)
+                );
     }
 }

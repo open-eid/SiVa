@@ -16,7 +16,6 @@
 
 package ee.openeid.siva.webapp.interceptor;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import ee.openeid.siva.signature.SignatureService;
 import ee.openeid.siva.validation.document.report.DetailedReport;
 import ee.openeid.siva.validation.document.report.ValidatedDocument;
@@ -29,6 +28,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
 import java.util.Date;
@@ -52,7 +52,7 @@ class ReportSignatureInterceptorTest {
 
         reportSignatureInterceptor = new ReportSignatureInterceptor();
         reportSignatureInterceptor.setSignatureService(signatureService);
-        reportSignatureInterceptor.setJacksonObjectMapper(new ObjectMapper());
+        reportSignatureInterceptor.setJsonMapper(new JsonMapper());
         ReportConfigurationProperties properties = new ReportConfigurationProperties(true);
         reportSignatureInterceptor.setProperties(properties);
     }

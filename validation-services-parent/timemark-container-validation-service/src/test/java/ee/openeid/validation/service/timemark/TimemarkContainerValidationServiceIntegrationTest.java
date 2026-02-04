@@ -16,8 +16,6 @@
 
 package ee.openeid.validation.service.timemark;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.ArchiveTimeStamp;
@@ -63,6 +61,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -562,9 +562,9 @@ class TimemarkContainerValidationServiceIntegrationTest {
         }
     }
 
-    private static List<String> loadContentsFromJson() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, List<String>> jsonMap = objectMapper.readValue(
+    private static List<String> loadContentsFromJson() {
+        JsonMapper jsonMapper = new JsonMapper();
+        Map<String, List<String>> jsonMap = jsonMapper.readValue(
                 new File("src/test/resources/test-files/multiple_timestamp_content.json"),
                 new TypeReference<>() {}
         );

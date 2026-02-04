@@ -16,8 +16,6 @@
 
 package ee.openeid.validation.service.generic;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.ArchiveTimeStamp;
 import ee.openeid.siva.validation.document.report.Certificate;
@@ -37,6 +35,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.springframework.test.context.ActiveProfiles;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -204,9 +204,9 @@ class GenericValidationServiceTest extends GenericValidationServiceTestBase {
         }
     }
 
-    private static List<String> loadContentsFromJson() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, List<String>> jsonMap = objectMapper.readValue(
+    private static List<String> loadContentsFromJson() {
+        JsonMapper jsonMapper = new JsonMapper();
+        Map<String, List<String>> jsonMap = jsonMapper.readValue(
                 new File("src/test/resources/test-files/multiple_timestamp_content.json"),
                 new TypeReference<>() {}
         );

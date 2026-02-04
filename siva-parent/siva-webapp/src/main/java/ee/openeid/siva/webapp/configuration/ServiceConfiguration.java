@@ -17,22 +17,25 @@
 package ee.openeid.siva.webapp.configuration;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.StreamReadConstraints;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.introspect.Annotated;
-import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlAbstractToken;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import jakarta.xml.bind.annotation.XmlIDREF;
-import java.io.IOException;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.core.StreamReadConstraints;
+import tools.jackson.core.json.JsonFactory;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.cfg.EnumFeature;
+import tools.jackson.databind.cfg.MapperConfig;
+import tools.jackson.databind.introspect.Annotated;
+import tools.jackson.databind.introspect.JacksonAnnotationIntrospector;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.module.SimpleModule;
+import tools.jackson.databind.ser.std.StdSerializer;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,22 +44,25 @@ import java.util.Map;
 public class ServiceConfiguration {
 
     @Bean
-    public ObjectMapper objectMapper() {
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-        objectMapper.configure(SerializationFeature.WRITE_ENUMS_USING_TO_STRING, true);
-        objectMapper.configure(DeserializationFeature.READ_ENUMS_USING_TO_STRING, true);
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        objectMapper.setAnnotationIntrospector(new JaxbIdRefResolvingAnnotationIntrospector());
-
+    public JsonMapper jsonMapper() {
         SimpleModule dateSerializationModule = new SimpleModule();
         dateSerializationModule.addSerializer(Date.class, new DateAsIsoInstantSerializer());
-        objectMapper.registerModule(dateSerializationModule);
 
-        objectMapper.getFactory().setStreamReadConstraints(getStreamReadConstraintsWithMaxStringLength());
+        JsonFactory factory = JsonFactory.builder()
+                .streamReadConstraints(getStreamReadConstraintsWithMaxStringLength())
+                .build();
 
-        return objectMapper;
+        return JsonMapper.builder(factory)
+                .changeDefaultPropertyInclusion(incl -> incl
+                        .withValueInclusion(JsonInclude.Include.NON_EMPTY)
+                        .withContentInclusion(JsonInclude.Include.NON_EMPTY)
+                )
+                .enable(EnumFeature.WRITE_ENUMS_USING_TO_STRING)
+                .enable(EnumFeature.READ_ENUMS_USING_TO_STRING)
+                .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                .annotationIntrospector(new JaxbIdRefResolvingAnnotationIntrospector())
+                .addModule(dateSerializationModule)
+                .build();
     }
 
     private static StreamReadConstraints getStreamReadConstraintsWithMaxStringLength() {
@@ -83,7 +89,7 @@ public class ServiceConfiguration {
         }
 
         @Override
-        public Object findSerializer(Annotated annotated) {
+        public Object findSerializer(MapperConfig<?> config, Annotated annotated) {
             if (annotated.hasAnnotation(XmlIDREF.class)) {
                 final Class<?> fieldType = annotated.getRawType();
                 for (Map.Entry<Class<?>, Class<?>> mapping : TYPE_TO_SERIALIZER_MAPPINGS) {
@@ -92,7 +98,7 @@ public class ServiceConfiguration {
                     }
                 }
             }
-            return super.findSerializer(annotated);
+            return super.findSerializer(config, annotated);
         }
     }
 
@@ -103,10 +109,9 @@ public class ServiceConfiguration {
         }
 
         @Override
-        public void serialize(XmlAbstractToken value, JsonGenerator generator, SerializerProvider provider) throws IOException {
+        public void serialize(XmlAbstractToken value, JsonGenerator generator, SerializationContext provider) throws JacksonException {
             generator.writeString(value.getId());
         }
-
     }
 
     static class DateAsIsoInstantSerializer extends StdSerializer<Date> {
@@ -116,10 +121,9 @@ public class ServiceConfiguration {
         }
 
         @Override
-        public void serialize(Date value, JsonGenerator generator, SerializerProvider provider) throws IOException {
+        public void serialize(Date value, JsonGenerator generator, SerializationContext provider) throws JacksonException {
             generator.writeString(value.toInstant().toString());
         }
-
     }
 
 }

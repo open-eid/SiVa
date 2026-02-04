@@ -16,8 +16,6 @@
 
 package ee.openeid.siva.statistics;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import ee.openeid.siva.statistics.logging.ContainerStatistics;
 import ee.openeid.siva.statistics.logging.SignatureStatistics;
 import ee.openeid.siva.statistics.model.SimpleSignatureReport;
@@ -29,6 +27,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -105,32 +105,32 @@ public class StatisticsService {
         try {
             logContainerStats(simpleValidationReport);
             logSignatureStats(simpleValidationReport.getSimpleSignatureReports());
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             log.error("Error generating json: {}", e.getMessage(), e);
         }
     }
 
-    private void logContainerStats(SimpleValidationReport simpleValidationReport) throws JsonProcessingException {
+    private void logContainerStats(SimpleValidationReport simpleValidationReport) {
         ContainerStatistics.log(toJson(simpleValidationReport));
     }
 
-    private String toJson(SimpleValidationReport simpleValidationReport) throws JsonProcessingException {
+    private String toJson(SimpleValidationReport simpleValidationReport)  {
         Map<String, SimpleValidationReport> stats = new HashMap<>();
         stats.put("stats", simpleValidationReport);
-        return new ObjectMapper().writer().writeValueAsString(stats);
+        return new JsonMapper().writeValueAsString(stats);
     }
 
 
-    private void logSignatureStats(List<SimpleSignatureReport> simpleSignatureReports) throws JsonProcessingException {
+    private void logSignatureStats(List<SimpleSignatureReport> simpleSignatureReports) {
         for (SimpleSignatureReport simpleSignatureReport : simpleSignatureReports) {
             SignatureStatistics.log(toJson(simpleSignatureReport));
         }
     }
 
-    private String toJson(SimpleSignatureReport simpleSignatureReport) throws JsonProcessingException {
+    private String toJson(SimpleSignatureReport simpleSignatureReport) {
         Map<String, SimpleSignatureReport> stats = new HashMap<>();
         stats.put("signatureStats", simpleSignatureReport);
-        return new ObjectMapper().writer().writeValueAsString(stats);
+        return new JsonMapper().writeValueAsString(stats);
     }
 
     @Autowired

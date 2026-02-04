@@ -16,7 +16,6 @@
 
 package ee.openeid.siva.webapp.interceptor;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import ee.openeid.siva.signature.SignatureService;
 import ee.openeid.siva.validation.document.report.DetailedReport;
 import ee.openeid.siva.webapp.response.ValidationResponse;
@@ -32,6 +31,7 @@ import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * Alters the response by creating a signature from the existing response's body and adding the signature into the body.
@@ -42,7 +42,7 @@ public class ReportSignatureInterceptor implements ResponseBodyAdvice<Object> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReportSignatureInterceptor.class);
 
     @Autowired
-    private ObjectMapper jacksonObjectMapper;
+    private JsonMapper jsonMapper;
 
     @Autowired
     private SignatureService signatureService;
@@ -62,7 +62,7 @@ public class ReportSignatureInterceptor implements ResponseBodyAdvice<Object> {
                 if (responseObject instanceof ValidationResponse && ((ValidationResponse) responseObject).getValidationReport() instanceof DetailedReport) {
                     LOGGER.debug("Starting to create report signature");
                     ValidationResponse validationResponse = (ValidationResponse) responseObject;
-                    String validationReportJsonString = jacksonObjectMapper.writeValueAsString(validationResponse.getValidationReport());
+                    String validationReportJsonString = jsonMapper.writeValueAsString(validationResponse.getValidationReport());
                     byte[] reportSignatureBytes = signatureService.getSignature(validationReportJsonString.getBytes(), "validationReport.json", "application/json");
                     validationResponse.setValidationReportSignature(Base64.encodeBase64String(reportSignatureBytes));
                     LOGGER.debug("Finished creating report signature");

@@ -22,23 +22,22 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
-import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
 
     @Bean
-    MvcRequestMatcher.Builder mvc(HandlerMappingIntrospector introspector) {
-        return new MvcRequestMatcher.Builder(introspector);
+    PathPatternRequestMatcher.Builder mvc() {
+        return PathPatternRequestMatcher.withDefaults();
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, MvcRequestMatcher.Builder mvc) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, PathPatternRequestMatcher.Builder mvc) {
         http.authorizeHttpRequests((authorize) -> authorize
-                .requestMatchers(mvc.pattern("/monitoring")).denyAll()
-                .requestMatchers(mvc.pattern("/**")).permitAll());
+                .requestMatchers(mvc.matcher("/monitoring")).denyAll()
+                .requestMatchers(mvc.matcher("/**")).permitAll());
         http.csrf(AbstractHttpConfigurer::disable);
 
         return http.build();

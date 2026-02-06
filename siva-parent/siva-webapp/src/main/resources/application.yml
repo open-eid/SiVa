@@ -24,15 +24,6 @@ management:
     version:
       enabled: true
 
-server:
-  error:
-    whitelabel:
-      enabled: false
-  servlet:
-    encoding:
-      # Force the encoding to the configured charset on HTTP requests and responses.
-      force: true
-
 siva:
   http:
     request:
@@ -42,8 +33,15 @@ siva:
 spring:
   autoconfigure:
     # Disable /error endpoint mapping and logging
-    exclude: org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
+    exclude: org.springframework.boot.webmvc.autoconfigure.error.ErrorMvcAutoConfiguration
+  servlet:
+    encoding:
+      # Force the encoding to the configured charset on HTTP requests and responses.
+      force: true
   web:
+    error:
+      whitelabel:
+        enabled: false
     resources:
       # Allow custom handler for NoHandlerFoundException
       add-mappings: false

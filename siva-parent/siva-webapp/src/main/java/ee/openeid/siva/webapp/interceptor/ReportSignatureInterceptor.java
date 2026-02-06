@@ -20,10 +20,11 @@ import ee.openeid.siva.signature.SignatureService;
 import ee.openeid.siva.validation.document.report.DetailedReport;
 import ee.openeid.siva.webapp.response.ValidationResponse;
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -37,26 +38,32 @@ import tools.jackson.databind.json.JsonMapper;
  * Alters the response by creating a signature from the existing response's body and adding the signature into the body.
  */
 @RestControllerAdvice
-public class ReportSignatureInterceptor implements ResponseBodyAdvice<Object> {
+@RequiredArgsConstructor
+public class ReportSignatureInterceptor implements ResponseBodyAdvice<@NonNull Object> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ReportSignatureInterceptor.class);
 
-    @Autowired
-    private JsonMapper jsonMapper;
+    private final @NonNull JsonMapper jsonMapper;
 
-    @Autowired
-    private SignatureService signatureService;
+    private final @NonNull SignatureService signatureService;
 
-    @Autowired
-    private ReportConfigurationProperties properties;
+    private final @NonNull ReportConfigurationProperties properties;
+
 
     @Override
-    public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
+    public boolean supports(@NonNull MethodParameter returnType, @NonNull Class<? extends HttpMessageConverter<?>> converterType) {
         return true;
     }
 
     @Override
-    public Object beforeBodyWrite(Object responseObject, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
+    public Object beforeBodyWrite(
+            Object responseObject,
+            @NonNull MethodParameter returnType,
+            @NonNull MediaType selectedContentType,
+            @NonNull Class<? extends HttpMessageConverter<?>> selectedConverterType,
+            @NonNull ServerHttpRequest request,
+            @NonNull ServerHttpResponse response)
+    {
         if (properties.isReportSignatureEnabled()) {
             try {
                 if (responseObject instanceof ValidationResponse && ((ValidationResponse) responseObject).getValidationReport() instanceof DetailedReport) {
@@ -74,18 +81,6 @@ public class ReportSignatureInterceptor implements ResponseBodyAdvice<Object> {
             }
         }
         return responseObject;
-    }
-
-    public void setJacksonObjectMapper(ObjectMapper jacksonObjectMapper) {
-        this.jacksonObjectMapper = jacksonObjectMapper;
-    }
-
-    public void setSignatureService(SignatureService signatureService) {
-        this.signatureService = signatureService;
-    }
-
-    public void setProperties(ReportConfigurationProperties properties) {
-        this.properties = properties;
     }
 
 }

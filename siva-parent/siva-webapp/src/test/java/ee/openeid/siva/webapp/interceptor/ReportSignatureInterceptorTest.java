@@ -28,6 +28,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.MethodParameter;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.server.ServerHttpRequest;
+import org.springframework.http.server.ServerHttpResponse;
 import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
@@ -36,6 +41,7 @@ import java.util.Date;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -46,21 +52,43 @@ class ReportSignatureInterceptorTest {
     @Mock
     private SignatureService signatureService;
 
+    @Mock
+    private ReportConfigurationProperties properties;
+
+    @Mock
+    private MethodParameter methodParameter;
+
+    @Mock
+    private ServerHttpRequest serverHttpRequest;
+
+    @Mock
+    private ServerHttpResponse serverHttpResponse;
+
     @BeforeEach
     public void setUp() throws IOException {
         when(signatureService.getSignature(any(byte[].class), anyString(), anyString())).thenReturn(getRawSignatureMock());
+        when(properties.isReportSignatureEnabled()).thenReturn(true);
+        JsonMapper jsonMapper = new JsonMapper();
 
-        reportSignatureInterceptor = new ReportSignatureInterceptor();
-        reportSignatureInterceptor.setSignatureService(signatureService);
-        reportSignatureInterceptor.setJsonMapper(new JsonMapper());
-        ReportConfigurationProperties properties = new ReportConfigurationProperties(true);
-        reportSignatureInterceptor.setProperties(properties);
+        reportSignatureInterceptor = new ReportSignatureInterceptor(
+                jsonMapper,
+                signatureService,
+                properties
+        );
     }
 
     @Test
-    void test() throws IOException {
-        ValidationResponse validationResponse = (ValidationResponse) reportSignatureInterceptor.beforeBodyWrite(getValidationResponseMock(), null, null, null, null,null);
+    void test() {
+        ValidationResponse validationResponse = (ValidationResponse) reportSignatureInterceptor.beforeBodyWrite(
+                getValidationResponseMock(),
+                methodParameter,
+                MediaType.APPLICATION_JSON,
+                StringHttpMessageConverter.class,
+                serverHttpRequest,
+                serverHttpResponse
+        );
         assertArrayEquals(getRawSignatureMock(), Base64.decodeBase64(validationResponse.getValidationReportSignature()));
+        verifyNoInteractions(methodParameter, serverHttpRequest, serverHttpResponse);
     }
 
     private ValidationResponse getValidationResponseMock() {

@@ -24,7 +24,6 @@ import ee.openeid.siva.statistics.StatisticsService;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.webapp.request.ValidationRequest;
 import ee.openeid.siva.webapp.transformer.ValidationRequestToProxyDocumentTransformer;
-import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,7 +33,13 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import tools.jackson.databind.node.ObjectNode;
 
+import java.util.Map;
+
+import static ee.openeid.siva.webapp.utils.TestJsonUtils.toJsonBytes;
+import static ee.openeid.siva.webapp.utils.TestJsonUtils.toJsonNode;
+import static ee.openeid.siva.webapp.utils.TestJsonUtils.with;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -67,7 +72,7 @@ class ValidationControllerTest {
     void validJsonIsCorrectlyMappedToPOJO() throws Exception {
         mockMvc.perform(post("/validate")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(validRequest().toString().getBytes())
+                .content(toJsonBytes(validRequest()))
         );
         assertEquals("filename.asd", transformerSpy.validationRequest.getFilename());
         assertEquals("QVNE", transformerSpy.validationRequest.getDocument());
@@ -77,7 +82,7 @@ class ValidationControllerTest {
     void requestWithNonBase64EncodedDocumentReturnsErroneousResponse() throws Exception {
         mockMvc.perform(post("/validate")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(requestWithInvalidDocumentEncoding().toString().getBytes()))
+                .content(toJsonBytes(requestWithInvalidDocumentEncoding())))
                 .andExpect(status().isBadRequest());
     }
 
@@ -85,7 +90,7 @@ class ValidationControllerTest {
     void requestWithEmptyDocumentReturnsErroneousResponse() throws Exception {
         mockMvc.perform(post("/validate")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(requestWithEmptyDocument().toString().getBytes()))
+                .content(toJsonBytes(requestWithEmptyDocument())))
                 .andExpect(status().isBadRequest());
     }
 
@@ -93,19 +98,21 @@ class ValidationControllerTest {
     void requestWithInvalidReportTypeReturnsErroneousResponse() throws Exception {
         mockMvc.perform(post("/validate")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(requestWithInvalidReportType().toString().getBytes()))
+                .content(toJsonBytes(requestWithInvalidReportType())))
                .andExpect(status().isBadRequest());
     }
 
     @Test
     void requestWithInvalidKeysShouldBeRejectedWithError() throws Exception {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("filename", "filename.exe");
-        jsonObject.put("documentType", "BDOC");
-        jsonObject.put("Document", "QVNE");
+        byte[] request = toJsonBytes(Map.of(
+                "filename", "filename.exe",
+                "documentType", "BDOC",
+                "Document", "QVNE")
+        );
+
         String responseContent = mockMvc.perform(post("/validate")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonObject.toString().getBytes()))
+                .content(request))
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
@@ -116,7 +123,7 @@ class ValidationControllerTest {
     void requestWithEmptyFilenameReturnsErroneousResponse() throws Exception {
         mockMvc.perform(post("/validate")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(requestWithFilename("").toString().getBytes()))
+                .content(toJsonBytes(requestWithFilename(""))))
                 .andExpect(status().isBadRequest());
     }
 
@@ -124,7 +131,7 @@ class ValidationControllerTest {
     void requestWithUnusualButLegalCharacterInFilenameShouldBeValid() throws Exception {
         mockMvc.perform(post("/validate")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(requestWithFilename("üõäöžš.pdf").toString().getBytes()));
+                .content(toJsonBytes(requestWithFilename("üõäöžš.pdf"))));
         assertEquals("üõäöžš.pdf", transformerSpy.validationRequest.getFilename());
     }
 
@@ -132,7 +139,7 @@ class ValidationControllerTest {
     void requestWithMultipleErrorsReturnsAllErrorsInResponse() throws Exception {
         mockMvc.perform(post("/validate")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(invalidRequest().toString().getBytes()))
+                .content(toJsonBytes(invalidRequest())))
                 .andExpect(status().isBadRequest());
     }
 
@@ -140,7 +147,7 @@ class ValidationControllerTest {
     void aRequestWithNoRequiredKeysReturnsAllErrorsForEachMissingKey() throws Exception {
         mockMvc.perform(post("/validate")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new JSONObject().toString().getBytes()))
+                .content(toJsonBytes(Map.of())))
                 .andExpect(status().isBadRequest());
     }
 
@@ -148,50 +155,36 @@ class ValidationControllerTest {
         return "file" + illegalCharacter + "name.pdf";
     }
 
-    private JSONObject validRequest() {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("document", "QVNE");
-        jsonObject.put("filename", "filename.asd");
-        return jsonObject;
+    private ObjectNode validRequest() {
+        return toJsonNode(Map.of(
+                "document", "QVNE",
+                "filename", "filename.asd"
+        ));
     }
 
-    private JSONObject requestWithInvalidDocumentType() {
-        JSONObject jsonObject = validRequest();
-        jsonObject.put("documentType", "asd");
-        return jsonObject;
+    private ObjectNode requestWithInvalidDocumentEncoding() {
+        return with(validRequest(), Map.of("document", "ÖÕ::žšPQ;ÜÜ"));
     }
 
-    private JSONObject requestWithInvalidDocumentEncoding() {
-        JSONObject jsonObject = validRequest();
-        jsonObject.put("document", "ÖÕ::žšPQ;ÜÜ");
-        return jsonObject;
+    private ObjectNode requestWithEmptyDocument() {
+        return with(validRequest(), Map.of("document", ""));
     }
 
-    private JSONObject requestWithEmptyDocument() {
-        JSONObject jsonObject = validRequest();
-        jsonObject.put("document", "");
-        return jsonObject;
+    private ObjectNode requestWithInvalidReportType() {
+        return with(validRequest(), Map.of("reportType", "INVALID_REPORT_TYPE"));
     }
 
-    private JSONObject requestWithInvalidReportType() {
-        JSONObject jsonObject = validRequest();
-        jsonObject.put("reportType", "INVALID_REPORT_TYPE");
-        return jsonObject;
+    private ObjectNode invalidRequest() {
+        return toJsonNode(Map.of(
+                "document", "ÖÕ::žšPQ;ÜÜ",
+                "filename", filenameWithIllegalCharacter("/"),
+                "documentType", "BLAMA",
+                "reportType", "very complicated"
+        ));
     }
 
-    private JSONObject invalidRequest() {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("document", "ÖÕ::žšPQ;ÜÜ");
-        jsonObject.put("filename", filenameWithIllegalCharacter("/"));
-        jsonObject.put("documentType", "BLAMA");
-        jsonObject.put("reportType", "very complicated");
-        return jsonObject;
-    }
-
-    private JSONObject requestWithFilename(String filename) {
-        JSONObject jsonObject = validRequest();
-        jsonObject.put("filename", filename);
-        return jsonObject;
+    private ObjectNode requestWithFilename(String filename) {
+        return with(validRequest(), Map.of("filename", filename));
     }
 
     private static class ValidationProxySpy extends ContainerValidationProxy {

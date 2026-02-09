@@ -21,12 +21,17 @@ import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.validation.document.report.DataFilesReport;
 import ee.openeid.siva.webapp.request.DataFilesRequest;
 import ee.openeid.siva.webapp.transformer.DataFilesRequestToProxyDocumentTransformer;
-import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import tools.jackson.databind.node.ObjectNode;
 
+import java.util.Map;
+
+import static ee.openeid.siva.webapp.utils.TestJsonUtils.toJsonBytes;
+import static ee.openeid.siva.webapp.utils.TestJsonUtils.toJsonNode;
+import static ee.openeid.siva.webapp.utils.TestJsonUtils.with;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -51,7 +56,7 @@ class DataFilesControllerTest {
     void validJsonIsCorrectlyMappedToPOJO() throws Exception {
         mockMvc.perform(post("/getDataFiles")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(validRequest().toString().getBytes())
+                .content(toJsonBytes(validRequest()))
         );
         assertEquals("QVNE", transformerSpy.dataFilesRequest.getDocument());
         assertEquals("test.ddoc" , transformerSpy.dataFilesRequest.getFilename());
@@ -61,7 +66,7 @@ class DataFilesControllerTest {
     void requestWithInvalidDocumentTypeReturnsErroneousResponse() throws Exception {
         mockMvc.perform(post("/getDataFiles")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(requestWithInvalidFilename().toString().getBytes()))
+                .content(toJsonBytes(requestWithInvalidFilename())))
                 .andExpect(status().isBadRequest());
     }
 
@@ -69,7 +74,7 @@ class DataFilesControllerTest {
     void requestWithNonBase64EncodedDocumentReturnsErroneousResponse() throws Exception {
         mockMvc.perform(post("/getDataFiles")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(requestWithInvalidDocumentEncoding().toString().getBytes()))
+                .content(toJsonBytes(requestWithInvalidDocumentEncoding())))
                 .andExpect(status().isBadRequest());
     }
 
@@ -77,19 +82,20 @@ class DataFilesControllerTest {
     void requestWithEmptyDocumentReturnsErroneousResponse() throws Exception {
         mockMvc.perform(post("/getDataFiles")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(requestWithEmptyDocument().toString().getBytes()))
+                .content(toJsonBytes(requestWithEmptyDocument())))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void requestWithInvalidKeysShouldBeRejectedWithError() throws Exception {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("filename", "test.ddoc");
-        jsonObject.put("Document", "QVNE");
+        ObjectNode request = toJsonNode(Map.of(
+                "filename", "test.ddoc",
+                "Document", "QVNE"
+        ));
 
         mockMvc.perform(post("/getDataFiles")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonObject.toString().getBytes()))
+                .content(toJsonBytes(request)))
                 .andExpect(status().isBadRequest());
 
     }
@@ -98,7 +104,7 @@ class DataFilesControllerTest {
     void requestWithMultipleErrorsReturnsAllErrorsInResponse() throws Exception {
         mockMvc.perform(post("/getDataFiles")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(invalidRequest().toString().getBytes()))
+                .content(toJsonBytes(invalidRequest())))
                 .andExpect(status().isBadRequest());
     }
 
@@ -106,40 +112,34 @@ class DataFilesControllerTest {
     void aRequestWithNoRequiredKeysReturnsAllErrorsForEachMissingKey() throws Exception {
         mockMvc.perform(post("/getDataFiles")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new JSONObject().toString().getBytes()))
+                .content(toJsonBytes(Map.of())))
                 .andExpect(status().isBadRequest());
     }
 
-    private JSONObject validRequest() {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("document", "QVNE");
-        jsonObject.put("filename", "test.ddoc");
-        return jsonObject;
+    private ObjectNode validRequest() {
+        return toJsonNode(Map.of(
+                "document", "QVNE",
+                "filename", "test.ddoc"
+        ));
     }
 
-    private JSONObject requestWithInvalidFilename() {
-        JSONObject jsonObject = validRequest();
-        jsonObject.put("filename", "");
-        return jsonObject;
+    private ObjectNode requestWithInvalidFilename() {
+        return with(validRequest(), Map.of("filename", ""));
     }
 
-    private JSONObject requestWithInvalidDocumentEncoding() {
-        JSONObject jsonObject = validRequest();
-        jsonObject.put("document", "ÖÕ::žšPQ;ÜÜ");
-        return jsonObject;
+    private ObjectNode requestWithInvalidDocumentEncoding() {
+        return with(validRequest(), Map.of("document", "ÖÕ::žšPQ;ÜÜ"));
     }
 
-    private JSONObject requestWithEmptyDocument() {
-        JSONObject jsonObject = validRequest();
-        jsonObject.put("document", "");
-        return jsonObject;
+    private ObjectNode requestWithEmptyDocument() {
+        return with(validRequest(), Map.of("document", ""));
     }
 
-    private JSONObject invalidRequest() {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("document", "ÖÕ::žšPQ;ÜÜ");
-        jsonObject.put("documentType", "BLAMA");
-        return jsonObject;
+    private ObjectNode invalidRequest() {
+        return toJsonNode(Map.of(
+                "document", "ÖÕ::žšPQ;ÜÜ",
+                "documentType", "BLAMA"
+        ));
     }
 
     private class DataFilesProxySpy extends DataFilesProxy {

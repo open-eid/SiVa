@@ -84,12 +84,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>ee.openid.siva</groupId>
             <artifactId>validation-commons</artifactId>
             <version>${project.version}</version>

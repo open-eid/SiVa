@@ -25,7 +25,6 @@ import ee.openeid.siva.webapp.request.Datafile;
 import ee.openeid.siva.webapp.request.HashcodeValidationRequest;
 import ee.openeid.siva.webapp.request.SignatureFile;
 import ee.openeid.siva.webapp.transformer.HashcodeValidationRequestToProxyDocumentTransformer;
-import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,11 +34,15 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import tools.jackson.databind.node.ObjectNode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
+import static ee.openeid.siva.webapp.utils.TestJsonUtils.toJsonBytes;
+import static ee.openeid.siva.webapp.utils.TestJsonUtils.toJsonNode;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -74,11 +77,9 @@ class HashcodeValidationControllerTest {
 
     @Test
     void requestWithEmptySignatureFiles() throws Exception {
-        JSONObject request = new JSONObject();
-
         mockMvc.perform(post("/validateHashcode")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(request.toString().getBytes()))
+                .content(toJsonBytes(Map.of())))
                 .andExpect(status().isBadRequest());
     }
 
@@ -87,10 +88,10 @@ class HashcodeValidationControllerTest {
         Datafile datafile1 = createDatafile("test-name-1", "test-hash-1", "SHA256");
         Datafile datafile2 = createDatafile("test-name-2", "test-hash-2", "SHA512");
         List<SignatureFile> signatureFiles = createSignatureFiles("QVNE", createDatafiles(datafile1, datafile2));
-        JSONObject request = hashcodeValidationRequest(signatureFiles);
+        ObjectNode request = hashcodeValidationRequest(signatureFiles);
         mockMvc.perform(post("/validateHashcode")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(request.toString().getBytes())
+                .content(toJsonBytes(request))
         );
         SignatureFile signatureFile = hashRequestTransformerSpy.validationRequest.getSignatureFiles().get(0);
         assertEquals("QVNE", signatureFile.getSignature());
@@ -102,10 +103,10 @@ class HashcodeValidationControllerTest {
     @Test
     void hashRequestWithNonBase64EncodedSignatureReturnsErroneousResponse() throws Exception {
         List<SignatureFile> signatureFiles = createSignatureFiles("ÖÕ::žšPQ;ÜÜ", createValidDatafiles());
-        JSONObject request = hashcodeValidationRequest(signatureFiles);
+        ObjectNode request = hashcodeValidationRequest(signatureFiles);
         mockMvc.perform(post("/validateHashcode")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(request.toString().getBytes()))
+                .content(toJsonBytes(request)))
                 .andExpect(status().isBadRequest());
     }
 
@@ -113,10 +114,10 @@ class HashcodeValidationControllerTest {
     void hashRequestWithInvalidHashAlgoReturnsErroneousResponse() throws Exception {
         List<Datafile> datafiles = createDatafiles(createDatafile("test", "test-hash-1", "invalid"));
         List<SignatureFile> signatureFiles = createSignatureFiles("test", datafiles);
-        JSONObject request = hashcodeValidationRequest(signatureFiles);
+        ObjectNode request = hashcodeValidationRequest(signatureFiles);
         mockMvc.perform(post("/validateHashcode")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(request.toString().getBytes()))
+                .content(toJsonBytes(request)))
                 .andExpect(status().isBadRequest());
     }
 
@@ -124,10 +125,10 @@ class HashcodeValidationControllerTest {
     void emptyDataFilesListReturnsErrorResponse() throws Exception {
         List<Datafile> datafiles = new ArrayList<>();
         List<SignatureFile> signatureFiles = createSignatureFiles("test", datafiles);
-        JSONObject request = hashcodeValidationRequest(signatureFiles);
+        ObjectNode request = hashcodeValidationRequest(signatureFiles);
         mockMvc.perform(post("/validateHashcode")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(request.toString().getBytes()))
+                .content(toJsonBytes(request)))
                 .andExpect(status().isBadRequest());
     }
 
@@ -135,10 +136,10 @@ class HashcodeValidationControllerTest {
     void nullDataFilesListReturnsErrorResponse() throws Exception {
         List<Datafile> datafiles = null;
         List<SignatureFile> signatureFiles = createSignatureFiles("test", datafiles);
-        JSONObject request = hashcodeValidationRequest(signatureFiles);
+        ObjectNode request = hashcodeValidationRequest(signatureFiles);
         mockMvc.perform(post("/validateHashcode")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(request.toString().getBytes()))
+                .content(toJsonBytes(request)))
                 .andExpect(status().is2xxSuccessful());
     }
 
@@ -146,10 +147,10 @@ class HashcodeValidationControllerTest {
     void hashRequestWithNonBase64EncodedHashReturnsErroneousResponse() throws Exception {
         List<Datafile> datafiles = createDatafiles(createDatafile("test", "ÖÕ::žšPQ;ÜÜ", "SHA256"));
         List<SignatureFile> signatureFiles = createSignatureFiles("test", datafiles);
-        JSONObject request = hashcodeValidationRequest(signatureFiles);
+        ObjectNode request = hashcodeValidationRequest(signatureFiles);
         mockMvc.perform(post("/validateHashcode")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(request.toString().getBytes()))
+                .content(toJsonBytes(request)))
                 .andExpect(status().isBadRequest());
     }
 
@@ -176,10 +177,8 @@ class HashcodeValidationControllerTest {
         }
     }
 
-    private JSONObject hashcodeValidationRequest(List<SignatureFile> signatureFiles) {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("signatureFiles", signatureFiles);
-        return jsonObject;
+    private ObjectNode hashcodeValidationRequest(List<SignatureFile> signatureFiles) {
+        return toJsonNode(Map.of("signatureFiles", signatureFiles));
     }
 
     private List<SignatureFile> createSignatureFiles(String signature, List<Datafile> datafiles) {

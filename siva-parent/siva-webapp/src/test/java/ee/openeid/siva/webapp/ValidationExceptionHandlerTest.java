@@ -32,7 +32,6 @@ import ee.openeid.siva.webapp.transformer.DataFilesRequestToProxyDocumentTransfo
 import ee.openeid.siva.webapp.transformer.HashcodeValidationRequestToProxyDocumentTransformer;
 import ee.openeid.siva.webapp.transformer.ValidationRequestToProxyDocumentTransformer;
 import org.assertj.core.api.Assertions;
-import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -53,11 +52,16 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import tools.jackson.databind.node.ObjectNode;
 
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
+import static ee.openeid.siva.webapp.utils.TestJsonUtils.toJsonBytes;
+import static ee.openeid.siva.webapp.utils.TestJsonUtils.toJsonNode;
+import static ee.openeid.siva.webapp.utils.TestJsonUtils.with;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -163,7 +167,7 @@ class ValidationExceptionHandlerTest {
         when(dataFilesProxy.getDataFiles(any(ProxyDocument.class))).thenThrow(MalformedDocumentException.class);
         MvcResult result = mockMvcDataFiles.perform(post(GET_DATA_FILES_URL_TEMPLATE)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(dataFileRequest().toString().getBytes()))
+                .content(toJsonBytes(dataFileRequest())))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andReturn();
 
@@ -205,7 +209,7 @@ class ValidationExceptionHandlerTest {
         when(dataFilesProxy.getDataFiles(any(ProxyDocument.class))).thenThrow(ValidationServiceException.class);
         MvcResult result = mockMvcDataFiles.perform(post(GET_DATA_FILES_URL_TEMPLATE)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(dataFileRequest().toString().getBytes()))
+                .content(toJsonBytes(dataFileRequest())))
                 .andExpect(MockMvcResultMatchers.status().isInternalServerError())
                 .andReturn();
 
@@ -218,7 +222,7 @@ class ValidationExceptionHandlerTest {
         when(hashcodeValidationProxy.validate(any())).thenThrow(MalformedSignatureFileException.class);
         mockMvc.perform(post(HASHCODE_VALIDATION_URL_TEMPLATE)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(requestWithInvalidFormatSignatureFile().toString().getBytes()))
+                .content(toJsonBytes(requestWithInvalidFormatSignatureFile())))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors", hasSize(1)))
@@ -328,7 +332,7 @@ class ValidationExceptionHandlerTest {
         when(validationProxy.validate(any())).thenThrow(new RuntimeException("Unexpected error"));
         mockMvc.perform(post(VALIDATE_URL_TEMPLATE)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(request().toString().getBytes()))
+                .content(toJsonBytes(request())))
                 .andExpect(MockMvcResultMatchers.status().isInternalServerError())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors", hasSize(1)))
@@ -342,7 +346,7 @@ class ValidationExceptionHandlerTest {
         when(hashcodeValidationProxy.validate(any())).thenThrow(new RuntimeException("Unexpected error"));
         mockMvc.perform(post(HASHCODE_VALIDATION_URL_TEMPLATE)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(requestWithInvalidFormatSignatureFile().toString().getBytes()))
+                .content(toJsonBytes(requestWithInvalidFormatSignatureFile())))
                 .andExpect(MockMvcResultMatchers.status().isInternalServerError())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors", hasSize(1)))
@@ -356,7 +360,7 @@ class ValidationExceptionHandlerTest {
         when(dataFilesProxy.getDataFiles(any(ProxyDocument.class))).thenThrow(new RuntimeException("Unexpected error"));
         mockMvcDataFiles.perform(post(GET_DATA_FILES_URL_TEMPLATE)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(dataFileRequest().toString().getBytes()))
+                .content(toJsonBytes(dataFileRequest())))
                 .andExpect(MockMvcResultMatchers.status().isInternalServerError())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.requestErrors", hasSize(1)))
@@ -365,38 +369,29 @@ class ValidationExceptionHandlerTest {
                 .andReturn();
     }
 
-    private JSONObject request() {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("document", "dGVzdA0K");
-        jsonObject.put("filename", "file.bdoc");
-        return jsonObject;
-    }
-    private JSONObject dataFileRequest() {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("document", "dGVzdA0K");
-        jsonObject.put("filename", "file.ddoc");
-        return jsonObject;
-    }
-    private JSONObject requestWithInvalidDocumentType() {
-        JSONObject jsonObject = request();
-        jsonObject.put("documentType", "asd");
-        return jsonObject;
+    private ObjectNode request() {
+        return toJsonNode(Map.of(
+                "document", "dGVzdA0K",
+                "filename", "file.bdoc"
+        ));
     }
 
-    private JSONObject requestWithInvalidDataFileFilename() {
-        JSONObject jsonObject = request();
-        jsonObject.put("filename", "test.pdf");
-        return jsonObject;
+    private ObjectNode dataFileRequest() {
+        return toJsonNode(Map.of(
+                "document", "dGVzdA0K",
+                "filename", "file.ddoc"
+        ));
     }
 
-    private JSONObject requestWithInvalidReportType() {
-        JSONObject jsonObject = request();
-        jsonObject.put("reportType", "asd");
-        return jsonObject;
+    private ObjectNode requestWithInvalidDataFileFilename() {
+        return with(request(), Map.of("filename", "test.pdf"));
     }
 
-    private JSONObject requestWithInvalidFormatSignatureFile() {
-        JSONObject jsonObject = new JSONObject();
+    private ObjectNode requestWithInvalidReportType() {
+        return with(request(), Map.of("reportType", "asd"));
+    }
+
+    private ObjectNode requestWithInvalidFormatSignatureFile() {
         Datafile datafile = new Datafile();
         datafile.setFilename("test");
         datafile.setHash("test-hash-1");
@@ -404,13 +399,12 @@ class ValidationExceptionHandlerTest {
         SignatureFile signatureFile = new SignatureFile();
         signatureFile.setSignature("NOT_XML_FORMATTED_FILE_CONTENT");
         signatureFile.setDatafiles(Collections.singletonList(datafile));
-        jsonObject.put("signatureFiles", Arrays.asList(signatureFile));
-
-        jsonObject.put("reportType", ReportType.SIMPLE);
-        jsonObject.put("signaturePolicy", "POLv3");
-
-        jsonObject.put("datafiles", Arrays.asList(datafile));
-        return jsonObject;
+        return toJsonNode(Map.of(
+                "signatureFiles", List.of(signatureFile),
+                "reportType", ReportType.SIMPLE,
+                "signaturePolicy", "POLv3",
+                "datafiles", List.of(datafile)
+        ));
     }
 
     private static Stream<Arguments> provideHttpMethodsAndValidationEndpoints() {

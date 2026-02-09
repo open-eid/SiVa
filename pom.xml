@@ -129,7 +129,6 @@
         <guava.version>33.5.0-jre</guava.version>
         <jcabi-manifests.version>2.2.0</jcabi-manifests.version>
         <jetbrains-annotations.version>26.0.2-1</jetbrains-annotations.version>
-        <json.version>20251224</json.version>
         <logback-ecs-encoder.version>1.7.0</logback-ecs-encoder.version>
 
         <build-helper-maven-plugin.version>3.6.1</build-helper-maven-plugin.version>

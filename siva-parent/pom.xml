@@ -50,86 +50,37 @@
                 <groupId>ee.openid.siva</groupId>
                 <artifactId>validation-commons</artifactId>
                 <version>${project.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.apache.logging.log4j</groupId>
-                        <artifactId>*</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>ee.openid.siva</groupId>
                 <artifactId>generic-validation-service</artifactId>
                 <version>${project.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.apache.logging.log4j</groupId>
-                        <artifactId>*</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>ee.openid.siva</groupId>
                 <artifactId>timestamptoken-validation-service</artifactId>
                 <version>${project.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.apache.logging.log4j</groupId>
-                        <artifactId>*</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>ee.openid.siva</groupId>
                 <artifactId>timemark-container-validation-service</artifactId>
                 <version>${project.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.apache.logging.log4j</groupId>
-                        <artifactId>*</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
 
             <dependency>
                 <groupId>ee.openid.siva</groupId>
                 <artifactId>tsl-loader</artifactId>
                 <version>${project.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.apache.logging.log4j</groupId>
-                        <artifactId>*</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>ee.openid.siva</groupId>
                 <artifactId>siva-statistics</artifactId>
                 <version>${project.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.apache.logging.log4j</groupId>
-                        <artifactId>*</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>ee.openid.siva</groupId>
                 <artifactId>siva-monitoring</artifactId>
                 <version>${project.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.apache.logging.log4j</groupId>
-                        <artifactId>*</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
-            <!-- Public Dependencies -->
-            <dependency>
-                <groupId>org.json</groupId>
-                <artifactId>json</artifactId>
-                <version>${json.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

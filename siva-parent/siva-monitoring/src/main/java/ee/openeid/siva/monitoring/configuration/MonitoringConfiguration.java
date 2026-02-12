@@ -21,10 +21,9 @@ import ee.openeid.siva.monitoring.enpoint.VersionEndpoint;
 import ee.openeid.siva.monitoring.indicator.ApplicationHealthIndicator;
 import ee.openeid.siva.monitoring.util.ManifestReader;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
-import org.springframework.boot.actuate.health.HealthEndpoint;
+import org.springframework.boot.health.actuate.endpoint.HealthEndpoint;
 import org.springframework.context.annotation.Bean;
 
-import jakarta.servlet.ServletContext;
 
 public abstract class MonitoringConfiguration {
 

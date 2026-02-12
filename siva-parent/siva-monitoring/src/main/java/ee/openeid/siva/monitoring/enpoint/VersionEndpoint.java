@@ -17,6 +17,7 @@
 package ee.openeid.siva.monitoring.enpoint;
 
 import ee.openeid.siva.monitoring.util.ManifestReader;
+import org.springframework.boot.actuate.endpoint.Access;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 
@@ -25,7 +26,7 @@ import java.util.Map;
 import static ee.openeid.siva.monitoring.util.ApplicationInfoConstants.MANIFEST_PARAM_APP_VERSION;
 import static ee.openeid.siva.monitoring.util.ApplicationInfoConstants.NOT_AVAILABLE;
 
-@Endpoint(id = "version", enableByDefault = false)
+@Endpoint(id = "version", defaultAccess = Access.NONE)
 public class VersionEndpoint {
 
     public static final String RESPONSE_PARAM_VERSION = "version";

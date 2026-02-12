@@ -26,9 +26,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.verification.VerificationMode;
-import org.springframework.boot.actuate.health.HealthComponent;
-import org.springframework.boot.actuate.health.HealthEndpoint;
-import org.springframework.boot.actuate.health.Status;
+import org.springframework.boot.health.actuate.endpoint.HealthEndpoint;
+import org.springframework.boot.health.actuate.endpoint.IndicatedHealthDescriptor;
+import org.springframework.boot.health.contributor.Status;
 
 import java.util.stream.Stream;
 
@@ -41,7 +41,7 @@ class HeartbeatEndpointTest {
     private HeartbeatEndpoint heartbeatEndpoint;
 
     @Mock
-    private HealthComponent healthComponent;
+    private IndicatedHealthDescriptor indicatedHealthDescriptor;
 
     @ParameterizedTest
     @MethodSource("allStatuses")
@@ -78,22 +78,22 @@ class HeartbeatEndpointTest {
     }
 
     private void mockHealthEndpointToReturnStatus(Status status) {
-        Mockito.doReturn(healthComponent).when(healthEndpoint).health();
-        Mockito.doReturn(status).when(healthComponent).getStatus();
+        Mockito.doReturn(indicatedHealthDescriptor).when(healthEndpoint).health();
+        Mockito.doReturn(status).when(indicatedHealthDescriptor).getStatus();
     }
 
     private void mockHealthEndpointToReturnStatuses(Status... statuses) {
         Object firstStatus = statuses[0];
         Object[] nextStatuses = new Object[statuses.length - 1];
         System.arraycopy(statuses, 1, nextStatuses, 0, nextStatuses.length);
-        Mockito.doReturn(firstStatus, nextStatuses).when(healthComponent).getStatus();
-        Mockito.doReturn(healthComponent).when(healthEndpoint).health();
+        Mockito.doReturn(firstStatus, nextStatuses).when(indicatedHealthDescriptor).getStatus();
+        Mockito.doReturn(indicatedHealthDescriptor).when(healthEndpoint).health();
     }
 
     private void assertHealthEndpointReturnedStatus(VerificationMode verificationMode) {
         Mockito.verify(healthEndpoint, verificationMode).health();
-        Mockito.verify(healthComponent, verificationMode).getStatus();
-        Mockito.verifyNoMoreInteractions(healthEndpoint, healthComponent);
+        Mockito.verify(indicatedHealthDescriptor, verificationMode).getStatus();
+        Mockito.verifyNoMoreInteractions(healthEndpoint, indicatedHealthDescriptor);
     }
 
     private static Stream<Status> allStatuses() {

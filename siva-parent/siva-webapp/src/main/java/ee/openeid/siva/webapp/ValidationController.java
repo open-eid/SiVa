@@ -19,12 +19,12 @@ package ee.openeid.siva.webapp;
 import ee.openeid.siva.proxy.ContainerValidationProxy;
 import ee.openeid.siva.proxy.HashcodeValidationProxy;
 import ee.openeid.siva.proxy.document.ProxyHashcodeDataSet;
+import ee.openeid.siva.webapp.contentdisposition.WithContentDisposition;
 import ee.openeid.siva.webapp.request.JSONHashcodeValidationRequest;
 import ee.openeid.siva.webapp.request.JSONValidationRequest;
 import ee.openeid.siva.webapp.response.ValidationResponse;
 import ee.openeid.siva.webapp.transformer.HashcodeValidationRequestToProxyDocumentTransformer;
 import ee.openeid.siva.webapp.transformer.ValidationRequestToProxyDocumentTransformer;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import static ee.openeid.siva.webapp.util.ResponseHeaderUtils.setContentDispositionHeader;
+import static ee.openeid.siva.webapp.contentdisposition.ContentDispositionConstants.API_JSON;
 
 @RestController
 public class ValidationController {
@@ -43,14 +43,14 @@ public class ValidationController {
     private HashcodeValidationRequestToProxyDocumentTransformer hashRequestTransformer;
 
     @PostMapping(value = "/validate", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ValidationResponse validate(@Valid @RequestBody JSONValidationRequest validationRequest, HttpServletResponse response) {
-        setContentDispositionHeader(response);
+    @WithContentDisposition(filename = API_JSON)
+    public ValidationResponse validate(@Valid @RequestBody JSONValidationRequest validationRequest) {
         return new ValidationResponse(containerValidationProxy.validate(transformer.transform(validationRequest)));
     }
 
     @PostMapping(value = "/validateHashcode", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ValidationResponse validateHashcode(@Valid @RequestBody JSONHashcodeValidationRequest validationRequest, HttpServletResponse response) {
-        setContentDispositionHeader(response);
+    @WithContentDisposition(filename = API_JSON)
+    public ValidationResponse validateHashcode(@Valid @RequestBody JSONHashcodeValidationRequest validationRequest) {
         ProxyHashcodeDataSet proxyDocument = hashRequestTransformer.transform(validationRequest);
         return new ValidationResponse(hashcodeValidationProxy.validate(proxyDocument));
     }

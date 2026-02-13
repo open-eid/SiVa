@@ -18,9 +18,9 @@ package ee.openeid.siva.webapp;
 
 import ee.openeid.siva.proxy.DataFilesProxy;
 import ee.openeid.siva.validation.document.report.DataFilesReport;
+import ee.openeid.siva.webapp.contentdisposition.WithContentDisposition;
 import ee.openeid.siva.webapp.request.JSONDataFilesRequest;
 import ee.openeid.siva.webapp.transformer.DataFilesRequestToProxyDocumentTransformer;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import static ee.openeid.siva.webapp.util.ResponseHeaderUtils.setContentDispositionHeader;
+import static ee.openeid.siva.webapp.contentdisposition.ContentDispositionConstants.API_JSON;
 
 @RestController
 public class DataFilesController {
@@ -37,8 +37,8 @@ public class DataFilesController {
     private DataFilesRequestToProxyDocumentTransformer transformer;
 
     @PostMapping(value = "/getDataFiles", produces = MediaType.APPLICATION_JSON_VALUE)
-    public DataFilesReport getDataFiles(@Valid @RequestBody JSONDataFilesRequest dataFilesRequest, HttpServletResponse response) {
-        setContentDispositionHeader(response);
+    @WithContentDisposition(filename = API_JSON)
+    public DataFilesReport getDataFiles(@Valid @RequestBody JSONDataFilesRequest dataFilesRequest) {
         return dataFilesProxy.getDataFiles(transformer.transform(dataFilesRequest));
     }
 

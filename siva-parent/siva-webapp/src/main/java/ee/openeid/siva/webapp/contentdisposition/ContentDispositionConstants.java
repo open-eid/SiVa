@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 - 2026 Riigi Infosüsteemi Amet
+ * Copyright 2026 Riigi Infosüsteemi Amet
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -14,20 +14,10 @@
  * See the Licence for the specific language governing permissions and limitations under the Licence.
  */
 
-package ee.openeid.siva.webapp.util;
+package ee.openeid.siva.webapp.contentdisposition;
 
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import org.springframework.http.ContentDisposition;
+public class ContentDispositionConstants {
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ResponseHeaderUtils {
-
-    public static void setContentDispositionHeader(HttpServletResponse response) {
-        ContentDisposition contentDisposition = ContentDisposition.attachment()
-                .filename("api.json")
-                .build();
-        response.setHeader("Content-Disposition", contentDisposition.toString());
-    }
+    public static final String CONTENT_DISPOSITION_FILENAME_ATTR = "content.disposition.filename";
+    public static final String API_JSON = "api.json";
 }

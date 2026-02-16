@@ -43,6 +43,11 @@ import org.digidoc4j.utils.ResourceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import jakarta.annotation.PostConstruct;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.Duration;
 import java.util.HashSet;
 import java.util.Set;
@@ -120,12 +125,23 @@ public class TSLLoader {
     private CommonsDataLoader createCommonsDataLoader() {
         CommonsDataLoader commonsDataLoader = new CommonsDataLoader();
         commonsDataLoader.setProxyConfig(proxyConfig);
-        if (configurationProperties.getSslTruststorePath() != null) {
-            DSSDocument truststore = new InMemoryDocument(ResourceUtils.getResource(configurationProperties.getSslTruststorePath()));
-            commonsDataLoader.setSslTruststore(truststore);
+
+        Resource truststoreResource = configurationProperties.getSslTruststorePath();
+        if (truststoreResource == null) {
+            truststoreResource = new ClassPathResource("tsl-ssl-truststore.p12", getClass().getClassLoader());
         }
+
+        DSSDocument truststore;
+        try (InputStream inputStream = truststoreResource.getInputStream()) {
+            truststore = new InMemoryDocument(inputStream, truststoreResource.getFilename());
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to read TSL SSL truststore resource: " + truststoreResource, e);
+        }
+        
+        commonsDataLoader.setSslTruststore(truststore);
         commonsDataLoader.setSslTruststoreType(configurationProperties.getSslTruststoreType());
         commonsDataLoader.setSslTruststorePassword(configurationProperties.getSslTruststorePassword().toCharArray());
+        
         return commonsDataLoader;
     }
 

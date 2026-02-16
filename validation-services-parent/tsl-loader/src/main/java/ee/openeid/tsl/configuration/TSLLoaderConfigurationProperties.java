@@ -18,6 +18,7 @@ package ee.openeid.tsl.configuration;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.core.io.Resource;
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -33,7 +34,7 @@ public class TSLLoaderConfigurationProperties {
     private String lotlRootSchemeInfoUri = "https://ec.europa.eu/tools/lotl/eu-lotl-legalnotice.html";
     private String schedulerCron = "0 0 3 * * ?";
     private List<String> trustedTerritories =   Arrays.asList("AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "EL", "HU", "HR", "IE", "IS", "IT", "LT", "LU", "LV", "LI", "MT", "NO", "NL", "PL", "PT", "RO", "SE", "SI", "SK", "UK");
-    private String sslTruststorePath = "classpath:tsl-ssl-truststore.p12";
+    private Resource sslTruststorePath;
     private String sslTruststoreType = "PKCS12";
     @SuppressWarnings("squid:S2068") //default password
     private String sslTruststorePassword = "digidoc4j-password";

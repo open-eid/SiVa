@@ -20,6 +20,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.core.io.Resource;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -29,7 +30,7 @@ import java.io.InputStream;
 @NoArgsConstructor
 @ToString(exclude = "constraintData")
 public class ConstraintDefinedPolicy extends ValidationPolicy {
-    private String constraintPath;
+    private Resource constraintPath;
     private byte[] constraintData;
 
     public ConstraintDefinedPolicy(ValidationPolicy validationPolicy) {

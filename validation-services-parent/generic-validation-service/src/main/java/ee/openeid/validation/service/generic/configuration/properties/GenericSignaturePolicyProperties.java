@@ -24,6 +24,9 @@ import lombok.EqualsAndHashCode;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import jakarta.annotation.PostConstruct;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -37,8 +40,8 @@ import static ee.openeid.siva.validation.service.signature.policy.PredefinedVali
 @ConfigurationProperties(prefix = "siva.europe.signature-policy")
 public class GenericSignaturePolicyProperties extends SignaturePolicyProperties<ConstraintDefinedPolicy> {
 
-    private static final String ADES_CONSTRAINT = "generic_constraint_ades.xml";
-    private static final String QES_CONSTRAINT = "generic_constraint_qes.xml";
+    private static final Resource ADES_CONSTRAINT = new ClassPathResource("generic_constraint_ades.xml");
+    private static final Resource QES_CONSTRAINT = new ClassPathResource("generic_constraint_qes.xml");
 
     private String defaultPolicy;
     private List<ConstraintDefinedPolicy> policies = new ArrayList<>();
@@ -72,7 +75,7 @@ public class GenericSignaturePolicyProperties extends SignaturePolicyProperties<
     }
 
 
-    private ConstraintDefinedPolicy createConstraintDefinedPolicy(ValidationPolicy validationPolicy, String constraintPath) {
+    private ConstraintDefinedPolicy createConstraintDefinedPolicy(ValidationPolicy validationPolicy, Resource constraintPath) {
         ConstraintDefinedPolicy constraintDefinedPolicy = new ConstraintDefinedPolicy(validationPolicy);
         constraintDefinedPolicy.setConstraintPath(constraintPath);
         return constraintDefinedPolicy;

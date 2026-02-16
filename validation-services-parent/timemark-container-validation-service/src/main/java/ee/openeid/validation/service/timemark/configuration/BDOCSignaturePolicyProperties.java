@@ -24,6 +24,9 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import jakarta.annotation.PostConstruct;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -38,8 +41,8 @@ import static ee.openeid.siva.validation.service.signature.policy.PredefinedVali
 @ConfigurationProperties(prefix = "siva.bdoc.signature-policy")
 public class BDOCSignaturePolicyProperties extends SignaturePolicyProperties<ConstraintDefinedPolicy> {
 
-    private static final String QES_BDOC_CONSTRAINT = "bdoc_constraint_qes.xml";
-    private static final String ADES_BDOC_CONSTRAINT = "bdoc_constraint_ades.xml";
+    private static final Resource QES_BDOC_CONSTRAINT = new ClassPathResource("bdoc_constraint_qes.xml");
+    private static final Resource ADES_BDOC_CONSTRAINT = new ClassPathResource("bdoc_constraint_ades.xml");
 
     private String defaultPolicy;
     private List<ConstraintDefinedPolicy> policies = new ArrayList<>();
@@ -68,7 +71,7 @@ public class BDOCSignaturePolicyProperties extends SignaturePolicyProperties<Con
         return createConstraintDefinedPolicy(ADES_POLICY, ADES_BDOC_CONSTRAINT);
     }
 
-    private ConstraintDefinedPolicy createConstraintDefinedPolicy(ValidationPolicy validationPolicy, String constraintPath) {
+    private ConstraintDefinedPolicy createConstraintDefinedPolicy(ValidationPolicy validationPolicy, Resource constraintPath) {
         ConstraintDefinedPolicy constraintDefinedPolicy = new ConstraintDefinedPolicy(validationPolicy);
         constraintDefinedPolicy.setConstraintPath(constraintPath);
         return constraintDefinedPolicy;

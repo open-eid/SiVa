@@ -21,8 +21,11 @@ import ee.openeid.siva.validation.service.signature.policy.properties.SignatureP
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class ConstraintLoadingSignaturePolicyService extends SignaturePolicyService<ConstraintDefinedPolicy> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConstraintLoadingSignaturePolicyService.class);
@@ -57,24 +60,15 @@ public class ConstraintLoadingSignaturePolicyService extends SignaturePolicyServ
         PolicySchemaValidator.validate(policyDataStream);
     }
 
-    private byte[] getContentFromPolicyPath(String policyPath) throws IOException {
-        InputStream policyDataStream = null;
-        if (new File(policyPath).isAbsolute()) {
-            LOGGER.info("Reading policy from absolute path: {}", policyPath);
-            try {
-                policyDataStream = new FileInputStream(new File(policyPath));
-            } catch (FileNotFoundException e) {
-                LOGGER.warn(e.getMessage(), e);
-            }
-        } else {
-            LOGGER.info("Reading policy from classpath: {}", policyPath);
-            policyDataStream = getClass().getClassLoader().getResourceAsStream(policyPath);
+    private byte[] getContentFromPolicyPath(Resource policyPath) {
+        if (!policyPath.isReadable()) {
+            throw new PolicyPathNotFoundException("Could not read: " + policyPath);
         }
 
-        if (policyDataStream == null) {
-            throw new PolicyPathNotFoundException("Could not find: " + policyPath);
+        try (InputStream policyDataStream = policyPath.getInputStream()) {
+            return IOUtils.toByteArray(policyDataStream);
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to load: " + policyPath, e);
         }
-
-        return IOUtils.toByteArray(policyDataStream);
     }
 }

@@ -35,6 +35,8 @@ import ee.openeid.validation.service.timestamptoken.configuration.TimeStampToken
 import org.bouncycastle.util.encoders.Base64;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -348,7 +350,9 @@ class TimeStampTokenValidationServiceTestProfileTest extends BaseTimeStampTokenV
 
     private void setUpCustomValidationPolicy(String xmlPath) {
         ConstraintDefinedPolicy constraintDefinedPolicy = new ConstraintDefinedPolicy(PredefinedValidationPolicySource.QES_POLICY);
-        constraintDefinedPolicy.setConstraintPath(xmlPath);
+
+        Resource constraintResource = new ClassPathResource(xmlPath);
+        constraintDefinedPolicy.setConstraintPath(constraintResource);
         constraintDefinedPolicy.setName("custom_policy_for_testing");
         constraintDefinedPolicy.setDescription("a custom policy for unit tests");
 

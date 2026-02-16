@@ -19,6 +19,9 @@ package ee.openeid.siva.validation.service.signature.policy;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
 import ee.openeid.siva.validation.service.signature.policy.properties.SignaturePolicyProperties;
 import org.junit.jupiter.api.Test;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -35,14 +38,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ConstraintLoadingSignaturePolicyServiceTest {
 
-    private static final String VALID_CLASSPATH_CONSTRAINT = "valid-constraint.xml";
-    private static final String INVALID_CLASSPATH_CONSTRAINT = "invalid-constraint.xml";
+    private static final Resource VALID_CLASSPATH_CONSTRAINT = new ClassPathResource("valid-constraint.xml");
+    private static final Resource INVALID_CLASSPATH_CONSTRAINT = new ClassPathResource("invalid-constraint.xml");
 
-    private static final String VALID_ABSOLUTE_PATH_CONSTRAINT = getResourceAbsolutePath("/valid-constraint.xml");
-    private static final String INVALID_ABSOLUTE_PATH_CONSTRAINT = getResourceAbsolutePath("/invalid-constraint.xml");
+    private static final Resource VALID_ABSOLUTE_PATH_CONSTRAINT = getResourceAbsolutePath("/valid-constraint.xml");
+    private static final Resource INVALID_ABSOLUTE_PATH_CONSTRAINT = getResourceAbsolutePath("/invalid-constraint.xml");
 
-    private static final String NON_EXISITNG_CLASSPATH_CONSTRAINT = "non-existing-constraint.xml";
-    private static final String NON_EXISITNG_ABSOLUTE_PATH_CONSTRAINT = "/non-existing-constraint.xml";
+    private static final Resource NON_EXISITNG_CLASSPATH_CONSTRAINT = new ClassPathResource("non-existing-constraint.xml");
+    private static final Resource NON_EXISITNG_ABSOLUTE_PATH_CONSTRAINT = new FileSystemResource("non-existing-constraint.xml");
 
     @Test
     void whenSignaturePolicesDoNotContainDefaultPolicyThenThrowException() {
@@ -137,7 +140,7 @@ class ConstraintLoadingSignaturePolicyServiceTest {
         return new SignaturePolicyServiceImpl(signaturePolicyProperties);
     }
 
-    private ConstraintDefinedPolicy createValidationPolicy(String name, String constraintPath) {
+    private ConstraintDefinedPolicy createValidationPolicy(String name, Resource constraintPath) {
         ConstraintDefinedPolicy constraintDefinedPolicy = new ConstraintDefinedPolicy();
         constraintDefinedPolicy.setName(name);
         constraintDefinedPolicy.setConstraintPath(constraintPath);
@@ -153,10 +156,10 @@ class ConstraintLoadingSignaturePolicyServiceTest {
         );
     }
 
-    private static String getResourceAbsolutePath(String resourceRelativePath) {
+    private static Resource getResourceAbsolutePath(String resourceRelativePath) {
         try {
             URL resource = ConstraintLoadingSignaturePolicyServiceTest.class.getResource(resourceRelativePath);
-            return Paths.get(resource.toURI()).toAbsolutePath().toString();
+            return new FileSystemResource(Paths.get(resource.toURI()));
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }

@@ -441,16 +441,13 @@ See the reference list of all common [application properties](http://docs.spring
 | **siva.tsl.loader.code** | Sets the LOTL code in DSS <ul><li>Default: **EU**</li></ul> |
 | **siva.tsl.loader.trustedTerritories** | Sets the trusted territories by countries <ul><li>Default: **"AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "GR", "HU", "HR", "IE", "IS", "IT", "LT", "LU", "LV", "LI", "MT", "NO", "NL", "PL", "PT", "RO", "SE", "SI", "SK", "UK"**</li></ul> |
 | **siva.tsl.loader.schedulerCron** | A string in a [Crontab expression format](http://www.manpagez.com/man/5/crontab/) that defines the interval at which the TSL renewal process is started. The default is 03:00 every day (local time) <ul><li>Default: **0 0 3 \* * ?**</li></ul> |
-| **siva.tsl.loader.sslTruststorePath** | Path to truststore containing trusted CA certificates used in HTTPS connection to retrieve member states TSLs <ul><li>Default: **classpath:tsl-ssl-truststore.p12**</li></ul> |
+| **siva.tsl.loader.sslTruststorePath** | Path to truststore containing trusted CA certificates used in HTTPS connection to retrieve member states TSLs. Requires *classpath:* prefix to load truststore from application classpath or *file:* prefix to load truststore from file system. <ul><li>Default: **classpath:tsl-ssl-truststore.p12**</li></ul> |
 | **siva.tsl.loader.sslTruststoreType** | Truststore type <ul><li>Default: **PKCS12**</li></ul> |
 | **siva.tsl.loader.sslTruststorePassword** | Truststore password <ul><li>Default: **digidoc4j-password**</li></ul>  |
 | **siva.tsl.loader.LotlPivotSupportEnabled** | A boolean value that determines, whether LOTL pivot mode should be used or not <ul><li>Default: **true**</li></ul> |
-| **siva.keystore.type** | Keystore type <ul><li>Default: **JKS**</li></ul> |
-| **siva.keystore.filename** | Keystore that contains public keys of trusted LOTL signers for LOTL signature validation<ul><li>Default: **siva-keystore.jks**</li></ul> |
-| **siva.keystore.password** | Keystore password <ul><li>Default: **siva-keystore-password**</li></ul> |
-
-!!! note
-    Note that the keystore file location can be overriden using environment variable `DSS_DATA_FOLDER`. By default the keystore file location, is expected to be on local filesystem in `etc` directory which is at the same level with the fat jar file (one is created, if no such directory exists).
+| **siva.tsl.loader.lotlTruststoreType** | Truststore type <ul><li>Default: **PKCS12**</li></ul> |
+| **siva.tsl.loader.lotlTruststorePath** | Truststore that contains public keys of trusted LOTL signers for LOTL signature validation. Requires *classpath:* prefix to load truststore from application classpath or *file:* prefix to load truststore from file system.<ul><li>Default: **classpath:lotl-truststore.p12**</li></ul> |
+| **siva.tsl.loader.lotlTruststorePassword** | Truststore password <ul><li>Default: **lotl-truststore-password**</li></ul> |
 
 !!! note
     When updating the siva-keystore.jks it is needed to delete the "temp" keystore from default/specified location. Deleting the "temp" keystore is also needed when upgrading your deployment to newer SIVA version!
@@ -463,14 +460,14 @@ See the reference list of all common [application properties](http://docs.spring
 
 | Property | Description |
 | -------- | ----------- |
-| **siva.bdoc.digidoc4JConfigurationFile** | Path to Digidoc4j configuration override <ul><li>Default: **N/A**</li></ul> |
+| **siva.bdoc.digidoc4JConfigurationFile** | Path to Digidoc4j configuration override. Requires *classpath:* prefix to load configuration from application classpath or *file:* prefix to load configuration from file system. <ul><li>Default: **N/A**</li></ul> |
 
 | Property | Description |
 | -------- | ----------- |
 |**siva.bdoc.signaturePolicy.defaultPolicy**| Selected default policy name <ul><li>Default: **N/A**</li></ul>|
 |**siva.bdoc.signaturePolicy.policies[index].name**| Policy name <ul><li>Default: **N/A**</li></ul>|
 |**siva.bdoc.signaturePolicy.policies[index].description**| Policy description <ul><li>Default: **N/A**</li></ul>|
-|**siva.bdoc.signaturePolicy.policies[index].constraintPath**| Constraint XML file path for the policy. An absolute path or a reference to a resource on the classpath<ul><li>Default: **N/A**</li></ul>|
+|**siva.bdoc.signaturePolicy.policies[index].constraintPath**| Constraint XML file path for the policy. Requires *classpath:* prefix to load constraint from application classpath or *file:* prefix to load constraint from file system.<ul><li>Default: **N/A**</li></ul>|
 |**siva.bdoc.signaturePolicy.policies[index].url**| Policy URL <ul><li>Default: **N/A**</li></ul>|
 
 By default, the following configuration is used
@@ -478,12 +475,12 @@ By default, the following configuration is used
 siva.bdoc.signaturePolicy.policies[0].name=POLv3
 siva.bdoc.signaturePolicy.policies[0].description=Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature.
 siva.bdoc.signaturePolicy.policies[0].url=http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv3
-siva.bdoc.signaturePolicy.policies[0].constraintPath=bdoc_constraint_ades.xml
+siva.bdoc.signaturePolicy.policies[0].constraintPath=classpath:bdoc_constraint_ades.xml
 
 siva.bdoc.signaturePolicy.policies[1].name=POLv4
 siva.bdoc.signaturePolicy.policies[1].description=Policy for validating Qualified Electronic Signatures and Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result.
 siva.bdoc.signaturePolicy.policies[1].url=http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
-siva.bdoc.signaturePolicy.policies[1].constraintPath=bdoc_constraint_qes.xml
+siva.bdoc.signaturePolicy.policies[1].constraintPath=classpath:bdoc_constraint_qes.xml
 ```
 
 !!! note
@@ -496,7 +493,7 @@ siva.bdoc.signaturePolicy.policies[1].constraintPath=bdoc_constraint_qes.xml
 |**siva.europe.signaturePolicy.defaultPolicy**| Selected default policy name <ul><li>Default: **N/A**</li></ul>|
 |**siva.europe.signaturePolicy.policies[index].name**| Policy name <ul><li>Default: **N/A**</li></ul>|
 |**siva.europe.signaturePolicy.policies[index].description**| Policy description <ul><li>Default: **N/A**</li></ul>|
-|**siva.europe.signaturePolicy.policies[index].constraintPath**| Constraint XML file path for the policy. An absolute path or a reference to a resource on the classpath<ul><li>Default: **N/A**</li></ul>|
+|**siva.europe.signaturePolicy.policies[index].constraintPath**| Constraint XML file path for the policy. Requires *classpath:* prefix to load constraint from application classpath or *file:* prefix to load constraint from file system.<ul><li>Default: **N/A**</li></ul>|
 |**siva.europe.signaturePolicy.policies[index].url**| Policy URL <ul><li>Default: **N/A**</li></ul>|
 
 By default, the following configuration is used
@@ -504,12 +501,12 @@ By default, the following configuration is used
 siva.europe.signaturePolicy.policies[0].name=POLv3
 siva.europe.signaturePolicy.policies[0].description=Policy for validating Electronic Signatures and Electronic Seals regardless of the legal type of the signature or seal (according to Regulation (EU) No 910/2014), i.e. the fact that the electronic signature or electronic seal is either Advanced electronic Signature (AdES), AdES supported by a Qualified Certificate (AdES/QC) or a Qualified electronic Signature (QES) does not change the total validation result of the signature.
 siva.europe.signaturePolicy.policies[0].url=http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv3
-siva.europe.signaturePolicy.policies[0].constraintPath=generic_constraint_ades.xml
+siva.europe.signaturePolicy.policies[0].constraintPath=classpath:generic_constraint_ades.xml
 
 siva.europe.signaturePolicy.policies[1].name=POLv4
 siva.europe.signaturePolicy.policies[1].description=Policy for validating Qualified Electronic Signatures and Qualified Electronic Seals (according to Regulation (EU) No 910/2014). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result.
 siva.europe.signaturePolicy.policies[1].url=http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4
-siva.europe.signaturePolicy.policies[1].constraintPath=generic_constraint_qes.xml
+siva.europe.signaturePolicy.policies[1].constraintPath=classpath:generic_constraint_qes.xml
 ```
 
 !!! note

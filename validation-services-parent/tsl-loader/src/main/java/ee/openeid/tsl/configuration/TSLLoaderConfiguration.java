@@ -34,29 +34,13 @@ import java.util.ArrayList;
 @EnableScheduling
 public class TSLLoaderConfiguration {
 
-    @Profile("test")
     @Bean
-    public TSLValidationKeystoreProperties tslValidationKeystorePropertiesTest() {
-        TSLValidationKeystoreProperties configurationProperties = new TSLValidationKeystoreProperties();
-        configurationProperties.setFile(new ClassPathResource("test-siva-keystore.jks", getClass().getClassLoader()));
-        return configurationProperties;
-    }
-
-    @Profile("!test")
-    @Bean
-    public TSLValidationKeystoreProperties tslValidationKeystorePropertiesProd() {
-        TSLValidationKeystoreProperties configurationProperties = new TSLValidationKeystoreProperties();
-        configurationProperties.setFile(new ClassPathResource("siva-keystore.jks", getClass().getClassLoader()));
-        return configurationProperties;
-    }
-
-    @Bean
-    public KeyStoreCertificateSource dssKeyStore(TSLValidationKeystoreProperties keystoreProperties) {
-        final Resource resource = keystoreProperties.getFile();
-        log.info("Loading {} trust-store from {}", keystoreProperties.getType(), resource);
+    public KeyStoreCertificateSource dssKeyStore(TSLLoaderConfigurationProperties lotlTruststoreProperties) {
+        final Resource resource = lotlTruststoreProperties.getLotlTruststorePath();
+        log.info("Loading {} trust-store from {}", lotlTruststoreProperties.getLotlTruststoreType(), resource);
         try (InputStream inputStream = resource.getInputStream()) {
-            final char[] password = keystoreProperties.getPassword().toCharArray();
-            return new KeyStoreCertificateSource(inputStream, keystoreProperties.getType(), password);
+            final char[] password = lotlTruststoreProperties.getLotlTruststorePassword().toCharArray();
+            return new KeyStoreCertificateSource(inputStream, lotlTruststoreProperties.getLotlTruststoreType(), password);
         } catch (IOException e) {
             throw new IllegalStateException("Failed to open LOTL trust-store from " + resource, e);
         }
@@ -68,13 +52,16 @@ public class TSLLoaderConfiguration {
         TSLLoaderConfigurationProperties configurationProperties = new TSLLoaderConfigurationProperties();
         configurationProperties.setUrl("https://open-eid.github.io/test-TL/tl-mp-test-EE.xml");
         configurationProperties.setTrustedTerritories(new ArrayList<>());
+        configurationProperties.setLotlTruststorePath(new ClassPathResource("test-lotl-truststore.p12", getClass().getClassLoader()));
         return configurationProperties;
     }
 
     @Profile("!test")
     @Bean
     public TSLLoaderConfigurationProperties tslLoaderConfigurationPropertiesProd() {
-        return new TSLLoaderConfigurationProperties();
+        TSLLoaderConfigurationProperties configurationProperties = new TSLLoaderConfigurationProperties();
+        configurationProperties.setLotlTruststorePath(new ClassPathResource("lotl-truststore.p12", getClass().getClassLoader()));
+        return configurationProperties;
     }
 
 }

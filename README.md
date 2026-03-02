@@ -60,6 +60,12 @@ The following command will run siva-webapp along with siva-demo-application:
 docker compose up
 ```
 
+To remove all containers run:
+
+```
+docker compose down -v
+```
+
 Now SiVa itself is accessible http://siva.localhost:8080/ and siva-demo-application http://siva-demo.localhost:9000/.
 Logs for all running containers can be viewed at http://localhost:11080.
 

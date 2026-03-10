@@ -148,6 +148,8 @@
         <!-- Override vulnerable dependencies that are pulled in via Spring boot -->
         <!-- TODO: Amend this list when Spring Boot version is updated! -->
         <commons-lang3.version>3.20.0</commons-lang3.version> <!-- CVE-2025-48924 -->
+        <jackson-bom.version>3.1.0</jackson-bom.version> <!-- CVE-2026-29062 -->
+        <jackson-2-bom.version>2.21.1</jackson-2-bom.version> <!-- CVE-2026-29062 -->
         <tomcat.version>11.0.18</tomcat.version> <!-- CVE-2026-24734 -->
     </properties>
 

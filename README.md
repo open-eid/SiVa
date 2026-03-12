@@ -63,7 +63,7 @@ docker compose up
 To remove all containers run:
 
 ```
-docker compose down -v
+docker compose down -v --remove-orphans
 ```
 
 Now SiVa itself is accessible http://siva.localhost:8080/ and siva-demo-application http://siva-demo.localhost:9000/.

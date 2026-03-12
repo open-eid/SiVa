@@ -60,6 +60,11 @@
             <artifactId>dss-crl-parser-x509crl</artifactId>
             <version>${dss.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.digidoc4j.dss</groupId>
+            <artifactId>dss-validation</artifactId>
+            <version>${dss.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>com.google.guava</groupId>

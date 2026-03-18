@@ -18,15 +18,22 @@ services:
     ports:
       - "8080:8080"
     environment:
+      - SPRING_CONFIG_ADDITIONAL_LOCATION=file:/etc/siva-webapp/application.yml
       - logging.config=/etc/siva-webapp/logback.xml
       # Logs directory
       - BUILD_FOLDER=/tmp/logs
+      - "SPRING_PROFILES_ACTIVE=test"
+      - TZ=Europe/Tallinn
+      - t-level-signature-filter.filter-type=NOT_ALLOWED_COUNTRIES
+      - t-level-signature-filter.countries=EE
+
     networks:
       default:
         aliases:
           - siva.localhost
     volumes:
       - ./docker/logback.xml:/etc/siva-webapp/logback.xml
+      - ./docker/application.yml:/etc/siva-webapp/application.yml
 
   dozzle: # Web-based UI for browsing container logs
     image: amir20/dozzle:latest

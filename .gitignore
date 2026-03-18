@@ -27,3 +27,6 @@ apache-tomcat-*
 site
 
 *.patch
+
+# config override for Docker
+docker/application.yml

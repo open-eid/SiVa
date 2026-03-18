@@ -50,9 +50,12 @@ After that, you can optionally create an image for Docker:
 
 ## How-to run
 
-### With docker
+### With docker (for testing only)
 
 Before continuing, the [siva-demo-application](https://github.com/open-eid/SiVa-demo-application) docker image must be built and available on Docker as `siva-demo-application:latest`.
+
+> **Configuration note:** For configuration changes create an `application.yml` file inside the `docker` directory 
+> and define all required configuration overrides there.
 
 The following command will run siva-webapp along with siva-demo-application:
 
@@ -127,13 +130,7 @@ To execute the tests from command line after application is built use:
 ### How to run system tests
 System tests can be found [here](https://github.com/open-eid/SiVa-Test), and executing them requires running SiVa Web application instance.
 
-### How to run system tests in docker
-Before starting the docker instances, the `docker-compose.yaml` file must be modified. Add the following under the siva-webapp service to run the docker image with the test profile:
-
-```
-environment:
-  - "SPRING_PROFILES_ACTIVE=test"
-```
+PS! Some tests are expected to fail as they need a special test LOTL.
 
 ### How to run load tests
 

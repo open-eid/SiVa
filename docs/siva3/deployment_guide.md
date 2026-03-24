@@ -439,7 +439,7 @@ See the reference list of all common [application properties](http://docs.spring
 | **siva.tsl.loader.ojUrl** | A url value that points to the legal act in Official Journal of the European Union <ul><li>Default: **https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=uriserv:OJ.C_.2019.276.01.0001.01.ENG**</li></ul> |
 | **siva.tsl.loader.lotlRootSchemeInfoUri** | A url value that points to the European Unions' disclaimer regarding LOTL <ul><li>Default: **https://ec.europa.eu/tools/lotl/eu-lotl-legalnotice.html**</li></ul> |
 | **siva.tsl.loader.code** | Sets the LOTL code in DSS <ul><li>Default: **EU**</li></ul> |
-| **siva.tsl.loader.trustedTerritories** | Sets the trusted territories by countries <ul><li>Default: **"AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "GR", "HU", "HR", "IE", "IS", "IT", "LT", "LU", "LV", "LI", "MT", "NO", "NL", "PL", "PT", "RO", "SE", "SI", "SK", "UK"**</li></ul> |
+| **siva.tsl.loader.trustedTerritories** | Sets the trusted territories by countries <ul><li>Default: **"AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "EL", "HU", "HR", "IE", "IS", "IT", "LT", "LU", "LV", "LI", "MT", "NO", "NL", "PL", "PT", "RO", "SE", "SI", "SK", "UK"**</li><li>If the property is not specified or has an empty value, the default trusted territories will be used</li><li>Values are case-sensitive. Country codes must be specified in uppercase format</li></ul> |
 | **siva.tsl.loader.schedulerCron** | A string in a [Crontab expression format](http://www.manpagez.com/man/5/crontab/) that defines the interval at which the TSL renewal process is started. The default is 03:00 every day (local time) <ul><li>Default: **0 0 3 \* * ?**</li></ul> |
 | **siva.tsl.loader.sslTruststorePath** | Path to truststore containing trusted CA certificates used in HTTPS connection to retrieve member states TSLs. Requires *classpath:* prefix to load truststore from application classpath or *file:* prefix to load truststore from file system. <ul><li>Default: **classpath:tsl-ssl-truststore.p12**</li></ul> |
 | **siva.tsl.loader.sslTruststoreType** | Truststore type <ul><li>Default: **PKCS12**</li></ul> |
@@ -460,7 +460,7 @@ See the reference list of all common [application properties](http://docs.spring
 
 | Property | Description |
 | -------- | ----------- |
-| **siva.bdoc.digidoc4JConfigurationFile** | Path to Digidoc4j configuration override. Requires *classpath:* prefix to load configuration from application classpath or *file:* prefix to load configuration from file system. <ul><li>Default: **N/A**</li></ul> |
+| **siva.bdoc.digidoc4JConfigurationFile** | Path to Digidoc4j configuration override. Requires *classpath:* prefix to load configuration from application classpath or *file:* prefix to load configuration from file system. <ul><li>Default: **classpath:/siva-digidoc4j.yaml**</li></ul> |
 
 | Property | Description |
 | -------- | ----------- |

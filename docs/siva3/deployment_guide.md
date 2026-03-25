@@ -12,9 +12,9 @@ Following are the minimum requirements to build and deploy SiVa webapps as a ser
 * 2GB of free disk space
 * Supported operating system is Ubuntu 16.04 LTS
 
-## Building
+# Building
 
-### Building SiVa webapps
+## Building SiVa webapps
 
 It is recommended to build the project with Maven Wrapper. Run following command in the projects main directory:
 
@@ -57,9 +57,9 @@ The last lines of build output should look very similar to below image:
 ```
 
 
-## Deploying
+# Deploying
 
-### OPTION 1 - starting webapps from command line
+## OPTION 1 - starting webapps from command line
 SiVa project compiles **2 fat executable JAR** files that you can run after successfully building the
 project by issuing below commands:
 
@@ -81,7 +81,7 @@ Easiest way to test out the deployment is to run SiVa demo application and use i
 Now point Your browser to URL: <http://localhost:9000>
 
 
-### OPTION 2 - running webapps as systemd services
+## OPTION 2 - running webapps as systemd services
 
 Maven build generates executable JAR files. This means web container and all its dependencies are package inside
 single JAR file. It makes a lot easier to deploy it into servers.
@@ -162,7 +162,7 @@ Jul 20 03:00:01 siva siva-webapp.jar[15965]: 20.07.2016 03:00:01.450 INFO  [pool
 Jul 20 03:00:01 siva siva-webapp.jar[15965]: 20.07.2016 03:00:01.450 INFO  [pool-3-thread-1] [e.e.e.dss.tsl.service.TSLRepository.sync
 ```
 
-### OPTION 3  - deploy webapps as war files (Tomcat setup for legacy systems)
+## OPTION 3  - deploy webapps as war files (Tomcat setup for legacy systems)
 
 > **NOTE 1**: Each SiVa service **must** be deployed to separate instance of Tomcat to avoid Java JAR library version
 > conflicts.
@@ -204,7 +204,7 @@ cp siva-parent/siva-webapp/target/siva-webapp-X.X.X.war apache-tomcat-8.5.24/web
 > **IMPORTANT** When updating the siva-keystore.jks it is needed to delete the "temp" keystore from default/specified location. 
 > Deleting the "temp" keystore is also needed when upgrading your deployment to newer SIVA version!
 
-### How-to set WAR deployed SiVa `application.properties`
+## How-to set WAR deployed SiVa `application.properties`
 
 SiVa override properties can be set using `application.properties` file. The file can locate anywhere in the host system.
 To make properties file accessible for SiVa you need to create or edit `setenv.sh` placed inside `bin` directory.
@@ -216,7 +216,7 @@ export CATALINA_OPTS="-Dspring.config.location=file:/path/to/application.propert
 ```
 
 
-### Smoke testing your deployed system
+## Smoke testing your deployed system
 
 **Step 1**. Install HTTPIE
 `httpie` is more user-friendly version of `curl` and we will use to verify that SiVa was installed
@@ -242,7 +242,7 @@ http POST http://localhost:8080/validate < bdocPass.json
 ```
 **Step 4**. Verify the output. Look for `signatureCount` and `validSignatureCount`, they **must** be equal.
 
-## Logging
+# Logging
 
 By default, logging works on the INFO level and logs are directed to the system console only. Logging functionality is handled by the SLF4J logging facade and on top of the Logback framework. As a result, logging can be configured via the standard Logback configuration file through Spring boot. Additional logging appenders can be added. Consult [logback documentation](http://logback.qos.ch/documentation.html) for more details on log file structure.
 
@@ -251,7 +251,7 @@ For example, adding application.properties to classpath with the **logging.confi
 logging.config=/path/to/logback.xml
 ```
 
-## Statistics
+# Statistics
 
 For every validation a statistical report is composed that contains the following data:
 
@@ -292,11 +292,11 @@ Example of statistic
 This information is sent to log feeds (at INFO level) which can be redirected to files or to a syslog feed.
 
 
-## Monitoring
+# Monitoring
 
 SiVa webapps provide endpoints for external monitoring tools to periodically check the generic service health status.
 
-### Health Endpoint
+## Health Endpoint
 
 !!! note
     Note that this endpoint is not exposed by default.
@@ -317,7 +317,7 @@ The endpoint is implemented as a customized Spring boot [health endpoint](http:/
 Demo webapp and Siva webapp include additional information about the health of their dependent services.
 These links to dependent web services have been preconfigured. For example, the Demo webapp is preset to check whether the Siva webapp is accessible from the following url (parameter `siva.service.serviceHost` value)/monitoring/health.
 
-### Heartbeat endpoint
+## Heartbeat endpoint
 
 !!! note
     Note that this endpoint is not enabled nor exposed by default.
@@ -339,7 +339,7 @@ management.endpoint.heartbeat.enabled=true
 
 The endpoint is implemented by polling the health information directly from the underlying health endpoint implementation, but exposing just the aggregated overall service status, hiding everything else.
 
-### Version information endpoint
+## Version information endpoint
 
 !!! note
     Note that this endpoint is not enabled nor exposed by default.
@@ -355,7 +355,7 @@ management.endpoint.version.enabled=true
 ```
 
 
-## Validation Report Signature
+# Validation Report Signature
 
 SiVa provides the ability to sign the validation report. The idea of supplementing the validation report with a validation report signature is to prove the authority's authenticity and integrity over the validation.
 
@@ -391,7 +391,7 @@ Supported interfaces for signature creation:
 
 Report signature configuration parameters:
 
-Property | Description |
+|Property | Description |
 | -------- | ----------- |
 |**siva.report.reportSignatureEnabled**| Enables signing of the validation report. Validation report will only be signed when requesting detailed report.  <ul><li>Default: **false**</li></ul> |
 |**siva.signatureService.signatureLevel**| The level of the validation report signature. <br> **Example values:** <br> * XAdES_BASELINE_B <br> * XAdES_BASELINE_T <br> * XAdES_BASELINE_LT <br> * XAdES_BASELINE_LTA |
@@ -407,13 +407,13 @@ Property | Description |
     When configuring report signature, either PKCS#11 or PKCS#12 should be configured, no need to configure both.
 
 --------------------------------------------------------------------------------------
-## Configuration parameters
+# Configuration parameters
 
 All SiVa webapps have been designed to run with predetermined defaults after building and without additional configuration.
 However, all the properties can be overridden on the service or embedded web server level, if necessary.
 
-By default, the service loads it's global configuration from the application.yml file that is packaged inside the jar file.
-Default configuration parameters can be overridden by providing custom application.yml in the [following locations](http://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html#boot-features-external-config-application-property-files), or using command line parameters or by using other [externalized configuration methods](http://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html) methods.
+By default, the service loads it's global configuration from the `application.yml` file that is packaged inside the jar file.
+Default configuration parameters can be overridden by providing custom `application.yml` in the [following locations](http://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html#boot-features-external-config-application-property-files), or using command line parameters or by using other [externalized configuration methods](http://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html) methods.
 
 For example, to configure the embedded Tomcat web server inside a fat jar to run on different port (default is 8080), change the **server.port** following property:
 ```bash
@@ -427,9 +427,9 @@ siva.http.request.max-request-size-limit: 15MB
 
 See the reference list of all common [application properties](http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html) provided by Spring boot
 
-### Siva webapp parameters
+## Siva webapp parameters
 
-* Updating TSL
+### Updating TSL
 
 | Property | Description |
 | -------- | ----------- |
@@ -456,7 +456,7 @@ See the reference list of all common [application properties](http://docs.spring
     TSL is currently used only by Generic and BDOC validators
 
 
-* TimeMark validation - customizing policies
+### TimeMark validation - customizing policies
 
 | Property | Description |
 | -------- | ----------- |
@@ -486,7 +486,7 @@ siva.bdoc.signaturePolicy.policies[1].constraintPath=classpath:bdoc_constraint_q
 !!! note
     Default policy configuration is lost when policy detail properties (name, description, url or constraintPath) are overridden or new custom policies added in custom configuration files (in this case, the existing default policies must be redefined in configuration files explicitly)
 
-* Generic validation - customize validation policies
+### Generic validation - customize validation policies
 
 | Property | Description |
 | -------- | ----------- |
@@ -512,7 +512,7 @@ siva.europe.signaturePolicy.policies[1].constraintPath=classpath:generic_constra
 !!! note
     Default policy configuration is lost when policy detail properties (name, description, url or constraintPath) are overridden or new custom policies added in custom configuration files (in this case, the existing default policies must be redefined in configuration files explicitly)
 
-* Configure SiVa to request revocation status for T level signatures
+### Configure SiVa to request revocation status for T level signatures
 
 By default, T level signatures do not contain revocation data.
 It is possible to configure SiVa to use OnlineOCSPSource in order to request revocation status during the validation process for T level signatures.
@@ -524,15 +524,19 @@ t-level-signature-filter.countries[0] = LV
 t-level-signature-filter.countries[1] = LT
 ```
 
-!!! note
-    If enabled, the revocation request is made for every signature level for given countries, not only T level signatures.
-
 | Property | Description |
 | -------- |-------------|
 |**t-level-signature-filter.filter-type**| A string value that determines, which filter is being used. There are two available options: ALLOWED_COUNTRIES or NOT_ALLOWED_COUNTRIES <ul><li>When set to **ALLOWED_COUNTRIES** SiVa uses OnlineOCSPSource to request revocation status for the list of provided countries. If the list of countries is left empty, no OCSP requests are made</li><li>When set to **NOT_ALLOWED_COUNTRIES** SiVa uses OnlineOCSPSource to request revocation status for all the countries that are not on the list. If the list of countries is left empty, it makes an OCSP request for every country</li><li>Default: **N/A**</li></ul> |
 |**t-level-signature-filter.countries**| A list of countries to be provided to the filter. For example: EE, LV, BE <ul><li>Default: **N/A**</li></ul>|
+
+!!! note
+    If enabled, the revocation request is made for every signature level for given countries, not only T level signatures.
+
+!!! note
+    Revocation requests are only executed when using the Generic validator and are not applied to BDOC or DDOC validation,
+    where revocation handling follows container-specific rules.
    
-### Demo webapp parameters
+## Demo webapp parameters
 
 * Linking to SiVa webapp
 

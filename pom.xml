@@ -120,13 +120,13 @@
 
         <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss'Z'</maven.build.timestamp.format>
 
-        <bouncycastle.version>1.83</bouncycastle.version>
+        <bouncycastle.version>1.84</bouncycastle.version>
         <commons-collections4.version>4.5.0</commons-collections4.version>
         <commons-io.version>2.21.0</commons-io.version>
         <cryptacular.version>1.3.0</cryptacular.version>
-        <digidoc4j.version>6.1.0</digidoc4j.version>
+        <digidoc4j.version>6.1.1</digidoc4j.version>
         <dss.version>6.2.d4j.1</dss.version>
-        <guava.version>33.5.0-jre</guava.version>
+        <guava.version>33.6.0-jre</guava.version>
         <jcabi-manifests.version>2.2.0</jcabi-manifests.version>
         <jetbrains-annotations.version>26.1.0</jetbrains-annotations.version>
         <logback-ecs-encoder.version>1.7.0</logback-ecs-encoder.version>
@@ -147,6 +147,8 @@
 
         <!-- Override vulnerable dependencies that are pulled in via Spring boot -->
         <!-- TODO: Amend this list when Spring Boot version is updated! -->
+        <spring-framework.version>7.0.7</spring-framework.version> <!-- CVE-2026-33929, CVE-2026-22741 -->
+        <spring-security.version>7.0.5</spring-security.version> <!-- CVE-2026-22751, CVE-2026-22754, CVE-2026-22753, CVE-2026-22746 -->
         <tomcat.version>11.0.21</tomcat.version> <!-- CVE-2026-34483 -->
     </properties>
 

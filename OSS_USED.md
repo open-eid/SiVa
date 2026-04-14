@@ -11,7 +11,7 @@ Libraries license information was obtained using the following command:
 
 Lists of 46 third-party dependencies.
      (The Apache Software License, Version 2.0) co.elastic.logging:logback-ecs-encoder (co.elastic.logging:logback-ecs-encoder:1.7.0 - https://github.com/elastic/ecs-logging-java/logback-ecs-encoder)
-     (Apache License, Version 2.0) Guava: Google Core Libraries for Java (com.google.guava:guava:33.5.0-jre - https://github.com/google/guava)
+     (Apache License, Version 2.0) Guava: Google Core Libraries for Java (com.google.guava:guava:33.6.0-jre - https://github.com/google/guava)
      (3-Clause BSD License) jcabi-manifests (com.jcabi:jcabi-manifests:2.2.0 - https://www.jcabi.com/jcabi-manifests)
      (Apache-2.0) Apache Commons IO (commons-io:commons-io:2.21.0 - https://commons.apache.org/proper/commons-io/)
      (European Union Public License 1.1) Generic Validation Service (ee.openid.siva:generic-validation-service:3.9.0 - https://github.com/open-eid/SiVa/validation-services-parent/generic-validation-service)
@@ -27,10 +27,10 @@ Lists of 46 third-party dependencies.
      (The Apache Software License, Version 2.0) micrometer-registry-prometheus (io.micrometer:micrometer-registry-prometheus:1.16.4 - https://github.com/micrometer-metrics/micrometer)
      (Apache-2.0) Apache Commons Collections (org.apache.commons:commons-collections4:4.5.0 - https://commons.apache.org/proper/commons-collections/)
      (Apache-2.0) Apache Commons Lang (org.apache.commons:commons-lang3:3.19.0 - https://commons.apache.org/proper/commons-lang/)
-     (Bouncy Castle Licence) Bouncy Castle PKIX, CMS, EAC, TSP, PKCS, OCSP, CMP, and CRMF APIs (org.bouncycastle:bcpkix-jdk18on:1.83 - https://www.bouncycastle.org/download/bouncy-castle-java/)
-     (Bouncy Castle Licence) Bouncy Castle Provider (org.bouncycastle:bcprov-jdk18on:1.83 - https://www.bouncycastle.org/download/bouncy-castle-java/)
-     (Bouncy Castle Licence) Bouncy Castle ASN.1 Extension and Utility APIs (org.bouncycastle:bcutil-jdk18on:1.83 - https://www.bouncycastle.org/download/bouncy-castle-java/)
-     (GNU Lesser General Public License, Version 2.1) DigiDoc4j (org.digidoc4j:digidoc4j:6.1.0 - https://github.com/open-eid/digidoc4j)
+     (Bouncy Castle Licence) Bouncy Castle PKIX, CMS, EAC, TSP, PKCS, OCSP, CMP, and CRMF APIs (org.bouncycastle:bcpkix-jdk18on:1.84 - https://www.bouncycastle.org/download/bouncy-castle-java/)
+     (Bouncy Castle Licence) Bouncy Castle Provider (org.bouncycastle:bcprov-jdk18on:1.84 - https://www.bouncycastle.org/download/bouncy-castle-java/)
+     (Bouncy Castle Licence) Bouncy Castle ASN.1 Extension and Utility APIs (org.bouncycastle:bcutil-jdk18on:1.84 - https://www.bouncycastle.org/download/bouncy-castle-java/)
+     (GNU Lesser General Public License, Version 2.1) DigiDoc4j (org.digidoc4j:digidoc4j:6.1.1 - https://github.com/open-eid/digidoc4j)
      (GNU Lesser General Public License) DSS ASiC with CAdES signature(s) (org.digidoc4j.dss:dss-asic-cades:6.2.d4j.1 - https://github.com/open-eid/sd-dss/dss-asic-cades)
      (GNU Lesser General Public License) DSS ASiC Common (org.digidoc4j.dss:dss-asic-common:6.2.d4j.1 - https://github.com/open-eid/sd-dss/dss-asic-common)
      (GNU Lesser General Public License) DSS ASiC with XAdES signature(s) (org.digidoc4j.dss:dss-asic-xades:6.2.d4j.1 - https://github.com/open-eid/sd-dss/dss-asic-xades)

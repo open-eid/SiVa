@@ -28,6 +28,7 @@ nav:
 - 5. DEPLOYMENT:
       - 5.1 Deployment model: siva3/deployment.md
       - 5.2 Deployment guide: siva3/deployment_guide.md
+      - 5.3 LOTL update April 2026: siva3/LOTL_update_April_2026.md
 - 6. QUALITY ASSURANCE: 
       - 6.1 QA Strategy: siva3/qa_strategy.md
       - 6.2 Test Plan: siva3/test_plan.md

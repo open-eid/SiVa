@@ -534,7 +534,7 @@ t-level-signature-filter.countries[1] = LT
 | -------- |-------------|
 |**t-level-signature-filter.filter-type**| A string value that determines, which filter is being used. There are two available options: ALLOWED_COUNTRIES or NOT_ALLOWED_COUNTRIES <ul><li>When set to **ALLOWED_COUNTRIES** SiVa uses OnlineOCSPSource to request revocation status for the list of provided countries. If the list of countries is left empty, no OCSP requests are made</li><li>When set to **NOT_ALLOWED_COUNTRIES** SiVa uses OnlineOCSPSource to request revocation status for all the countries that are not on the list. If the list of countries is left empty, it makes an OCSP request for every country</li><li>Default: **N/A**</li></ul> |
 |**t-level-signature-filter.countries**| A list of countries to be provided to the filter. For example: EE, LV, BE <ul><li>Default: **N/A**</li></ul>|
-   
+
 ### Demo webapp parameters
 
 * Linking to SiVa webapp

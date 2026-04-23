@@ -35,5 +35,5 @@ In order to update the truststore for the initial set of LOTL signing certificat
         - `siva.tsl.loader.lotlTruststorePassword`.
         - `siva.tsl.loader.lotlTruststoreType`.
 
-Set the new Official Journal of the European Union URL to https://eur-lex.europa.eu/eli/C/2026/1944/oj through the following property:
-* [siva.tsl.loader.ojUrl](https://github.com/open-eid/SiVa/blob/release-3.9.0/validation-services-parent/tsl-loader/src/main/java/ee/openeid/tsl/configuration/TSLLoaderConfigurationProperties.java#L32).
+Set the new Official Journal of the European Union URL to *https://eur-lex.europa.eu/eli/C/2026/1944/oj* through the 
+following property: [siva.tsl.loader.ojUrl](https://github.com/open-eid/SiVa/blob/release-3.9.0/validation-services-parent/tsl-loader/src/main/java/ee/openeid/tsl/configuration/TSLLoaderConfigurationProperties.java#L32).

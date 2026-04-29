@@ -40,7 +40,9 @@ import eu.europa.esig.dss.model.DSSException;
 import eu.europa.esig.dss.model.InMemoryDocument;
 import eu.europa.esig.dss.service.http.commons.CommonsDataLoader;
 import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
+import eu.europa.esig.dss.spi.client.http.NativeHTTPDataLoader;
 import eu.europa.esig.dss.spi.exception.IllegalInputException;
+import eu.europa.esig.dss.spi.policy.SignaturePolicyProvider;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.spi.validation.CommonCertificateVerifier;
 import eu.europa.esig.dss.spi.x509.aia.DefaultAIASource;
@@ -128,9 +130,11 @@ public class GenericValidationService implements ValidationService {
         final DSSDocument dssDocument = createDssDocument(validationDocument);
         SignedDocumentValidator validator = createSignedDocumentValidator(dssDocument);
         CommonCertificateVerifier certificateVerifier = createCertificateVerifier();
+        SignaturePolicyProvider signaturePolicyProvider = createSignaturePolicyProvider();
 
         LOGGER.debug("Certificate pool size: {}", getCertificatePoolSize(certificateVerifier));
         validator.setCertificateVerifier(certificateVerifier);
+        validator.setSignaturePolicyProvider(signaturePolicyProvider);
         validator.setValidationLevel(VALIDATION_LEVEL);
         Optional.ofNullable(validationDocument.getValidationTime()).ifPresent(validator::setValidationTime);
 
@@ -173,6 +177,16 @@ public class GenericValidationService implements ValidationService {
         certificateVerifier.setAIASource(aiaSource);
 
         return certificateVerifier;
+    }
+
+    private static SignaturePolicyProvider createSignaturePolicyProvider() {
+        // Create and configure SignaturePolicyProvider explicitly in order to restore DSS 6.0.1 behavior where
+        //  signature policy is reliably accessible for all signature validation stages requiring its presence.
+        // This implementation is based on:
+        //  https://github.com/open-eid/sd-dss/blob/dss-6.0.1.d4j.1/dss-document/src/main/java/eu/europa/esig/dss/validation/SignedDocumentValidator.java#L754-L755
+        SignaturePolicyProvider signaturePolicyProvider = new SignaturePolicyProvider();
+        signaturePolicyProvider.setDataLoader(new NativeHTTPDataLoader());
+        return signaturePolicyProvider;
     }
 
     private int getCertificatePoolSize(CommonCertificateVerifier certificateVerifier) {

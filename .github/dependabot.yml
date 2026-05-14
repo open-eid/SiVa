@@ -1,0 +1,33 @@
+version: 2
+updates:
+  - package-ecosystem: "maven"
+    directory: "/"
+    target-branch: "master-dependency-update"
+    open-pull-requests-limit: 10
+
+    schedule:
+      interval: "daily"
+      time: "04:00"
+      timezone: "Europe/Tallinn"
+
+    exclude-paths:
+      - ".mvn/**"
+
+    commit-message:
+      prefix: "Dependabot"
+
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-major"
+
+      - dependency-name: "org.digidoc4j:digidoc4j"
+      - dependency-name: "org.digidoc4j.dss:*"
+
+    groups:
+      maven-patch-and-minor:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"

@@ -602,6 +602,23 @@ Sample response:
     "version": "3.5.0"
 }
 ```
+## Prometheus metrics
+
+SiVa webapps provide an interface for exposing the Spring Boot application's metrics in the format required for scraping by a Prometheus server. For more information, visit [Spring Boot Actuator – Prometheus endpoint](https://docs.spring.io/spring-boot/api/rest/actuator/prometheus.html).
+
+### The request
+
+The Prometheus metrics endpoint is accessible via HTTP GET at **/monitoring/prometheus** url.
+
+Sample request:
+
+```
+GET https://<server url>/monitoring/prometheus
+```
+
+### The response
+
+As a response, default plain text is returned in [Prometheus exposition format](https://prometheus.io/docs/instrumenting/exposition_formats/). 
 
 ## Changes in API compared to V3 v3.8.1
 

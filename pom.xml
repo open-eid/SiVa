@@ -136,7 +136,7 @@
         <findbugs-maven-plugin.version>3.0.5</findbugs-maven-plugin.version>
         <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
         <license-maven-plugin.version>2.7.1</license-maven-plugin.version>
-        <maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
+        <maven-enforcer-plugin.version>3.6.3</maven-enforcer-plugin.version>
         <maven-pmd-plugin.version>3.28.0</maven-pmd-plugin.version>
         <maven-release-plugin.version>3.3.1</maven-release-plugin.version>
 
@@ -144,6 +144,10 @@
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
         <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../../target/jacoco-report/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
         <sonar.language>java</sonar.language>
+
+        <!-- Override vulnerable dependencies that are pulled in via Spring boot -->
+        <!-- TODO: Amend this list when Spring Boot version is updated! -->
+        <tomcat.version>11.0.22</tomcat.version>
     </properties>
 
     <reporting>

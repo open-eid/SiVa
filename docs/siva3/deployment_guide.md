@@ -299,13 +299,13 @@ SiVa webapps provide endpoints for external monitoring tools to periodically che
 ## Health Endpoint
 
 !!! note
-    Note that this endpoint is not exposed by default.
+    Note that this endpoint is exposed by default.
 
 The url for accessing JSON formatted health information with HTTP GET is `/monitoring/health` . See the [Interfaces section](../siva3/interfaces.md#service-health-monitoring) for response structure and details.
 
 * **Exposing the health monitoring endpoint**
 
-To expose the endpoint, use the following configuration parameter:
+This endpoint is controlled by the following configuration parameter:
 ```bash
 management.endpoints.web.exposure.include=health
 ```
@@ -320,7 +320,7 @@ These links to dependent web services have been preconfigured. For example, the 
 ## Heartbeat endpoint
 
 !!! note
-    Note that this endpoint is not enabled nor exposed by default.
+    Note that this endpoint is enabled and exposed by default.
 
 !!! note
     Note that this endpoint requires the health endpoint to be enabled and exposed in order to function.
@@ -329,7 +329,7 @@ The url for accessing JSON formatted heartbeat information with HTTP GET is `/mo
 
 * **Enabling and exposing the heartbeat monitoring endpoint**
 
-To enable and expose the endpoint, use the following configuration parameters:
+This endpoint is controlled by the following configuration parameters:
 ```bash
 management.endpoints.web.exposure.include=health,heartbeat
 management.endpoint.heartbeat.enabled=true
@@ -342,13 +342,13 @@ The endpoint is implemented by polling the health information directly from the 
 ## Version information endpoint
 
 !!! note
-    Note that this endpoint is not enabled nor exposed by default.
+    Note that this endpoint is enabled and exposed by default.
 
 The url for accessing JSON formatted version information with HTTP GET is `/monitoring/version`. See the [Interfaces section](../siva3/interfaces.md#version-information) for response structure and details.
 
 * **Enabling and exposing the version information endpoint**
 
-To enable and expose the endpoint, use the following configuration parameters:
+This endpoint is controlled by the following configuration parameters:
 ```bash
 management.endpoints.web.exposure.include=version
 management.endpoint.version.enabled=true

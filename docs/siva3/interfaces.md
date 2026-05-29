@@ -604,7 +604,8 @@ Sample response:
 ```
 ## Prometheus metrics
 
-SiVa webapps provide an interface for exposing the Spring Boot application's metrics in the format required for scraping by a Prometheus server. For more information, visit [Spring Boot Actuator – Prometheus endpoint](https://docs.spring.io/spring-boot/api/rest/actuator/prometheus.html).
+SiVa webapps provide an interface for exposing the Spring Boot application's standard metrics in the format required for scraping 
+by a Prometheus server. For more information, visit [Spring Boot Actuator – Prometheus endpoint](https://docs.spring.io/spring-boot/api/rest/actuator/prometheus.html).
 
 ### The request
 

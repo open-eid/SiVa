@@ -354,6 +354,20 @@ management.endpoints.web.exposure.include=version
 management.endpoint.version.enabled=true
 ```
 
+## Prometheus metrics endpoint
+
+!!! note
+    Note that this endpoint is exposed by default.
+
+The url for accessing Prometheus metrics with HTTP GET is `/monitoring/prometheus`. 
+See the [Interfaces section](../siva3/interfaces.md#prometheus-metrics) for response structure and details.
+
+* **Exposing the Prometheus metrics endpoint**
+
+This endpoint is controlled by the following configuration parameter:
+```bash
+management.endpoints.web.exposure.include=prometheus
+```
 
 # Validation Report Signature
 

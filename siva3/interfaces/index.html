@@ -902,6 +902,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#prometheus-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prometheus metrics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prometheus metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-request_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The request
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-response_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The response
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#changes-in-api-compared-to-v3-v381" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3258,6 +3297,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#prometheus-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prometheus metrics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prometheus metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-request_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The request
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-response_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The response
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#changes-in-api-compared-to-v3-v381" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3932,43 +4010,43 @@
 <td>Free text field for PAdES type signatures for stating the signing reason</td>
 </tr>
 <tr>
-<td>signatures[0].info. archiveTimestamps</td>
+<td>signatures[0].info. archiveTimeStamps</td>
 <td>-</td>
 <td>Array</td>
 <td>Array containing archive time-stamp tokens if present.</td>
 </tr>
 <tr>
-<td>signatures[0].info. archiveTimestamps[0]. signedTime</td>
+<td>signatures[0].info. archiveTimeStamps[0]. signedTime</td>
 <td>+</td>
 <td>String</td>
 <td>Time when the archive time-stamp token was created.</td>
 </tr>
 <tr>
-<td>signatures[0].info. archiveTimestamps[0]. indication</td>
+<td>signatures[0].info. archiveTimeStamps[0]. indication</td>
 <td>+</td>
 <td>Object</td>
-<td>Result of the archive time-stamp token validation. <br><strong>Possible values:</strong> <br> PASSED <br> FAILED <br> NO_SIGNATURE_FOUND</td>
+<td>Result of the archive time-stamp token validation. <br><strong>Possible values:</strong> <br> PASSED <br> FAILED <br> INDETERMINATE <br> NO_SIGNATURE_FOUND</td>
 </tr>
 <tr>
-<td>signatures[0].info. archiveTimestamps[0]. subIndication</td>
+<td>signatures[0].info. archiveTimeStamps[0]. subIndication</td>
 <td>-</td>
 <td>String</td>
 <td>Additional subindication in case of failed or indeterminate validation result.</td>
 </tr>
 <tr>
-<td>signatures[0].info. archiveTimestamps[0]. signedBy</td>
+<td>signatures[0].info. archiveTimeStamps[0]. signedBy</td>
 <td>+</td>
 <td>String</td>
 <td>Signer of the archive time-stamp token.</td>
 </tr>
 <tr>
-<td>signatures[0].info. archiveTimestamps[0]. country</td>
+<td>signatures[0].info. archiveTimeStamps[0]. country</td>
 <td>+</td>
 <td>String</td>
 <td>Issuer country of the archive time-stamp token.</td>
 </tr>
 <tr>
-<td>signatures[0].info. archiveTimestamps[0]. content</td>
+<td>signatures[0].info. archiveTimeStamps[0]. content</td>
 <td>+</td>
 <td>String</td>
 <td>Archive time-stamp token encoded in base64.</td>
@@ -3977,7 +4055,7 @@
 <td>signatures[0]. signatureFormat</td>
 <td>+</td>
 <td>String</td>
-<td>Format and profile (according to Baseline Profile) of the signature. See <a href="http://www.etsi.org/deliver/etsi_ts/103100_103199/103171/02.01.01_60/ts_103171v020101p.pdf">XAdES Baseline Profile</a>, <a href="http://www.etsi.org/deliver/etsi_ts/103100_103199/103173/02.02.01_60/ts_103173v020201p.pdf">CAdES Baseline Profile</a> and <a href="http://www.etsi.org/deliver/etsi_ts/103100_103199/103172/02.02.02_60/ts_103172v020202p.pdf">PAdES Baseline Profile</a> for detailed description of the Baseline Profile levels. Levels that are accepted in SiVa validation policy are described in <a href="../appendix/validation_policy/">SiVa signature validation policy</a> <br><strong>Possible values:</strong>  <br> XAdES_BASELINE_B <br> XAdES_BASELINE_B_BES <br> XAdES_BASELINE_B_EPES <br> XAdES_BASELINE_T <br> XAdES_BASELINE_LT - long-term level XAdES signature where time-stamp is used as a assertion of trusted signing time<br> XAdES_BASELINE_LT_TM - long-term level XAdES signature where time-mark is used as a assertion of trusted signing time. Used in case of <a href="https://www.id.ee/wp-content/uploads/2021/06/bdoc-spec212-eng.pdf">BDOC</a> signatures with time-mark profile and <a href="https://www.id.ee/wp-content/uploads/2020/08/digidoc_format_1.3.pdf">DIGIDOC-XML</a> (DDOC) signatures.<br>  XAdES_BASELINE_LTA <br> CAdES_BASELINE_B <br> CAdES_BASELINE_T <br> CAdES_BASELINE_LT <br> CAdES_BASELINE_LTA<br> PAdES_BASELINE_B <br> PAdES_BASELINE_T <br> PAdES_BASELINE_LT <br> PAdES_BASELINE_LTA</td>
+<td>Format and profile (according to Baseline Profile) of the signature. See <a href="http://www.etsi.org/deliver/etsi_ts/103100_103199/103171/02.01.01_60/ts_103171v020101p.pdf">XAdES Baseline Profile</a>, <a href="http://www.etsi.org/deliver/etsi_ts/103100_103199/103173/02.02.01_60/ts_103173v020201p.pdf">CAdES Baseline Profile</a> and <a href="http://www.etsi.org/deliver/etsi_ts/103100_103199/103172/02.02.02_60/ts_103172v020202p.pdf">PAdES Baseline Profile</a> for detailed description of the Baseline Profile levels. Levels that are accepted in SiVa validation policy are described in <a href="../appendix/validation_policy/">SiVa signature validation policy</a> <br><strong>Possible values:</strong>  <br> SK_XML_1.0 - used in case of DIGIDOC-XML (DDOC) signatures. <br> DIGIDOC_XML_1.1 - used in case of DIGIDOC-XML (DDOC) signatures. <br>  DIGIDOC_XML_1.2 - used in case of DIGIDOC-XML (DDOC) signatures. <br> DIGIDOC_XML_1.3 - used in case of <a href="https://www.id.ee/wp-content/uploads/2020/08/digidoc_format_1.3.pdf">DIGIDOC-XML</a> (DDOC) signatures. <br> XAdES_BASELINE_B <br> XAdES_BASELINE_B_BES <br> XAdES_BASELINE_B_EPES <br> XAdES_BASELINE_T <br> XAdES_BASELINE_LT - long-term level XAdES signature where time-stamp is used as a assertion of trusted signing time<br> XAdES_BASELINE_LT_TM - long-term level XAdES signature where time-mark is used as a assertion of trusted signing time. Used in case of <a href="https://www.id.ee/wp-content/uploads/2021/06/bdoc-spec212-eng.pdf">BDOC</a> signatures with time-mark profile. <br>  XAdES_BASELINE_LTA <br> CAdES_BASELINE_B <br> CAdES_BASELINE_T <br> CAdES_BASELINE_LT <br> CAdES_BASELINE_LTA<br> PAdES_BASELINE_B <br> PAdES_BASELINE_T <br> PAdES_BASELINE_LT <br> PAdES_BASELINE_LTA</td>
 </tr>
 <tr>
 <td>signatures[0]. signatureMethod</td>
@@ -4085,7 +4163,7 @@
 <td>signatures[0]. certificates</td>
 <td>-</td>
 <td>Array</td>
-<td>Array containing certificates that are present in the signature or can be fetched from TSL.</td>
+<td>Array containing certificates related to this signature.</td>
 </tr>
 <tr>
 <td>signatures[0]. certificates[0]</td>
@@ -4169,7 +4247,7 @@
 <td>timeStampTokens[0]. certificates</td>
 <td>+</td>
 <td>Array</td>
-<td>Array containing certificates that are present in the timestamp.</td>
+<td>Array containing certificates that are related to this timestamp.</td>
 </tr>
 <tr>
 <td>timeStampTokens[0]. certificates[0]</td>
@@ -4196,19 +4274,43 @@
 <td>DER encoded X.509 certificate in Base64.</td>
 </tr>
 <tr>
+<td>timeStampTokens[0]. certificates[0].issuer</td>
+<td>-</td>
+<td>Object</td>
+<td>Object containing issuer certificate information. Can create chain til the trust anchor.</td>
+</tr>
+<tr>
+<td>timeStampTokens[0]. certificates[0].issuer.commonName</td>
+<td>+</td>
+<td>String</td>
+<td>CN (common name) value in certificate.</td>
+</tr>
+<tr>
+<td>timeStampTokens[0]. certificates[0].issuer.content</td>
+<td>+</td>
+<td>String</td>
+<td>DER encoded X.509 certificate in Base64.</td>
+</tr>
+<tr>
 <td>timeStampTokens[0]. error</td>
+<td>-</td>
+<td>Array</td>
+<td>Deprecated field. Holds the same values as timeStampTokens[0].errors.</td>
+</tr>
+<tr>
+<td>timeStampTokens[0]. errors</td>
 <td>-</td>
 <td>Array</td>
 <td>Errors returned in time stamp token validation.</td>
 </tr>
 <tr>
-<td>timeStampTokens[0]. error[0]</td>
+<td>timeStampTokens[0]. errors[0]</td>
 <td>+</td>
 <td>Object</td>
 <td>Object containing the error.</td>
 </tr>
 <tr>
-<td>timeStampTokens[0]. error[0]. content</td>
+<td>timeStampTokens[0]. errors[0]. content</td>
 <td>+</td>
 <td>String</td>
 <td>Error description.</td>
@@ -4217,16 +4319,22 @@
 <td>timeStampTokens[0]. warning</td>
 <td>-</td>
 <td>Array</td>
-<td>Block of validation warnings that do not affect the overall validation result.<br><br> Aside from warnings produced by DSS, an additional warning may be issued if a timestamp token does not cover the datafile (<code>The time-stamp token does not cover container datafile!</code>).</td>
+<td>Deprecated field. Holds the same values as timeStampTokens[0].warnings.</td>
 </tr>
 <tr>
-<td>timeStampTokens[0]. warning[0]</td>
+<td>timeStampTokens[0]. warnings</td>
+<td>-</td>
+<td>Array</td>
+<td>Block of validation warnings that do not affect the overall validation result.<br> Aside from warnings produced by DSS, an additional warning may be issued if a timestamp token does not cover the datafile (<code>The time-stamp token does not cover container datafile!</code>).</td>
+</tr>
+<tr>
+<td>timeStampTokens[0]. warnings[0]</td>
 <td>+</td>
 <td>Object</td>
 <td>Object containing the warning.</td>
 </tr>
 <tr>
-<td>timeStampTokens[0]. warning[0]. content</td>
+<td>timeStampTokens[0]. warnings[0]. content</td>
 <td>+</td>
 <td>String</td>
 <td>Warning description.</td>
@@ -4326,79 +4434,66 @@
 
 <h4 id="sample-json-response-simple-report-asic-s-with-2-timestamps">Sample JSON response Simple Report (ASiC-S with 2 timestamps)</h4>
 <div class="codehilite"><pre><span></span><code><span class="p">{</span><span class="nt">&quot;validationReport&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;validationConclusion&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;validationTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-10-31T11:37:06Z&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;signaturesCount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;validatedDocument&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;filename&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2xTST-valid-bdoc-data-file-1st-tst-invalid-2nd-tst-no-coverage.asics&quot;</span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;validSignaturesCount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;timeStampTokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="nt">&quot;validationTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-10-07T06:00:23Z&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;validationWarnings&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;This is validation service demo. Use it for testing purposes only&quot;</span><span class="p">}],</span>
+<span class="w">  </span><span class="nt">&quot;signaturesCount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;validatedDocument&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;filename&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2xTST-text-data-file-1st-tst-invalid-2nd-tst-no-coverage.asics&quot;</span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;validSignaturesCount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;timeStampTokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;signedTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-09-13T10:49:58Z&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;certificates&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
+<span class="w">        </span><span class="nt">&quot;commonName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SK TIMESTAMPING UNIT 2024E&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CONTENT_TIMESTAMP&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MII...&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;issuer&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;commonName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SK TSA CA 2023E&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MII...&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}],</span>
+<span class="w">      </span><span class="nt">&quot;signedBy&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SK TIMESTAMPING UNIT 2024E&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;indication&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TOTAL-FAILED&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;The time-stamp message imprint is not intact!&quot;</span><span class="p">}],</span>
+<span class="w">      </span><span class="nt">&quot;subIndication&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;HASH_FAILURE&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;errors&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;The time-stamp message imprint is not intact!&quot;</span><span class="p">}],</span>
+<span class="w">      </span><span class="nt">&quot;timestampLevel&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;QTSA&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;signedTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-09-13T11:20:02Z&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;certificates&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
+<span class="w">        </span><span class="nt">&quot;commonName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SK TIMESTAMPING UNIT 2024E&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CONTENT_TIMESTAMP&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MII...&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;issuer&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;commonName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SK TSA CA 2023E&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MII...&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}],</span>
+<span class="w">      </span><span class="nt">&quot;signedBy&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SK TIMESTAMPING UNIT 2024E&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;warnings&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;The time-stamp token does not cover container datafile!&quot;</span><span class="p">}],</span>
+<span class="w">      </span><span class="nt">&quot;warning&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;The time-stamp token does not cover container datafile!&quot;</span><span class="p">}],</span>
+<span class="w">      </span><span class="nt">&quot;indication&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TOTAL-PASSED&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;timestampScopes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">        </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;signedTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-03-27T12:42:57Z&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;certificates&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                </span><span class="p">{</span>
-<span class="w">                    </span><span class="nt">&quot;commonName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DEMO SK TIMESTAMPING AUTHORITY 2023E&quot;</span><span class="p">,</span>
-<span class="w">                    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CONTENT_TIMESTAMP&quot;</span><span class="p">,</span>
-<span class="w">                    </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MII...&quot;</span>
-<span class="w">                </span><span class="p">},</span>
-<span class="w">                </span><span class="p">{</span>
-<span class="w">                    </span><span class="nt">&quot;commonName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TEST of SK TSA CA 2023E&quot;</span><span class="p">,</span>
-<span class="w">                    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CONTENT_TIMESTAMP&quot;</span><span class="p">,</span>
-<span class="w">                    </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MII...&quot;</span>
-<span class="w">                </span><span class="p">},</span>
-<span class="w">                </span><span class="p">{</span>
-<span class="w">                    </span><span class="nt">&quot;commonName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TEST of SK ID Solutions ROOT G1E&quot;</span><span class="p">,</span>
-<span class="w">                    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CONTENT_TIMESTAMP&quot;</span><span class="p">,</span>
-<span class="w">                    </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MII...&quot;</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">            </span><span class="p">],</span>
-<span class="w">            </span><span class="nt">&quot;signedBy&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DEMO SK TIMESTAMPING AUTHORITY 2023E&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;indication&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TOTAL-FAILED&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;The time-stamp message imprint is not intact!&quot;</span><span class="p">}],</span>
-<span class="w">            </span><span class="nt">&quot;subIndication&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;HASH_FAILURE&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;timestampLevel&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;QTSA&quot;</span>
+<span class="w">          </span><span class="nt">&quot;scope&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FULL&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;META-INF/ASiCArchiveManifest.xml&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Manifest document&quot;</span>
 <span class="w">        </span><span class="p">},</span>
 <span class="w">        </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;signedTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-09-11T06:03:34Z&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;certificates&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                </span><span class="p">{</span>
-<span class="w">                    </span><span class="nt">&quot;commonName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DEMO SK TIMESTAMPING AUTHORITY 2023E&quot;</span><span class="p">,</span>
-<span class="w">                    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CONTENT_TIMESTAMP&quot;</span><span class="p">,</span>
-<span class="w">                    </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MII...&quot;</span>
-<span class="w">                </span><span class="p">},</span>
-<span class="w">                </span><span class="p">{</span>
-<span class="w">                    </span><span class="nt">&quot;commonName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TEST of SK TSA CA 2023E&quot;</span><span class="p">,</span>
-<span class="w">                    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CONTENT_TIMESTAMP&quot;</span><span class="p">,</span>
-<span class="w">                    </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MII...&quot;</span>
-<span class="w">                </span><span class="p">},</span>
-<span class="w">                </span><span class="p">{</span>
-<span class="w">                    </span><span class="nt">&quot;commonName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TEST of SK ID Solutions ROOT G1E&quot;</span><span class="p">,</span>
-<span class="w">                    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CONTENT_TIMESTAMP&quot;</span><span class="p">,</span>
-<span class="w">                    </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MII...&quot;</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">            </span><span class="p">],</span>
-<span class="w">            </span><span class="nt">&quot;signedBy&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DEMO SK TIMESTAMPING AUTHORITY 2023E&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;warning&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;The time-stamp token does not cover container datafile!&quot;</span><span class="p">}],</span>
-<span class="w">            </span><span class="nt">&quot;indication&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TOTAL-PASSED&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;timestampScopes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                </span><span class="p">{</span>
-<span class="w">                    </span><span class="nt">&quot;scope&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FULL&quot;</span><span class="p">,</span>
-<span class="w">                    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;META-INF/ASiCArchiveManifest.xml&quot;</span><span class="p">,</span>
-<span class="w">                    </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Manifest document&quot;</span>
-<span class="w">                </span><span class="p">},</span>
-<span class="w">                </span><span class="p">{</span>
-<span class="w">                    </span><span class="nt">&quot;scope&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FULL&quot;</span><span class="p">,</span>
-<span class="w">                    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;META-INF/timestamp.tst&quot;</span><span class="p">,</span>
-<span class="w">                    </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Full document&quot;</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">            </span><span class="p">],</span>
-<span class="w">            </span><span class="nt">&quot;timestampLevel&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;QTSA&quot;</span>
+<span class="w">          </span><span class="nt">&quot;scope&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FULL&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;META-INF/timestamp.tst&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Full document&quot;</span>
 <span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">],</span>
-<span class="w">    </span><span class="nt">&quot;policy&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;policyDescription&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Policy according most common requirements of Estonian Public Administration, to validate Qualified Electronic Signatures and Electronic Seals with Qualified Certificates (according to Regulation (EU) No 910/2014, aka eIDAS). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result, with exception for seals, where AdES/QC and above will produce positive result. Signatures and Seals which are not compliant with ETSI standards (referred by eIDAS) may produce unknown or invalid validation result. Validation process is based on eIDAS Article 32 and referred ETSI standards.&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;policyUrl&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;policyName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;POLv4&quot;</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;signatureForm&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ASiC-S&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;timestampLevel&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;QTSA&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;policy&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;policyDescription&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Policy according most common requirements of Estonian Public Administration, to validate Qualified Electronic Signatures and Electronic Seals with Qualified Certificates (according to Regulation (EU) No 910/2014, aka eIDAS). I.e. signatures that have been recognized as Advanced electronic Signatures (AdES) and AdES supported by a Qualified Certificate (AdES/QC) do not produce a positive validation result, with exception for seals, where AdES/QC and above will produce positive result. Signatures and Seals which are not compliant with ETSI standards (referred by eIDAS) may produce unknown or invalid validation result. Validation process is based on eIDAS Article 32 and referred ETSI standards.&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;policyUrl&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http://open-eid.github.io/SiVa/siva3/appendix/validation_policy/#POLv4&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;policyName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;POLv4&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;signatureForm&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ASiC-S&quot;</span>
 <span class="p">}}}</span>
 </code></pre></div>
 
@@ -4736,6 +4831,16 @@ SiVa returns all data files as they are extracted by JDigiDoc library in an as i
 <span class="p">}</span>
 </code></pre></div>
 
+<h2 id="prometheus-metrics">Prometheus metrics</h2>
+<p>SiVa webapps provide an interface for exposing the Spring Boot application's metrics in the format required for scraping by a Prometheus server. For more information, visit <a href="https://docs.spring.io/spring-boot/api/rest/actuator/prometheus.html">Spring Boot Actuator – Prometheus endpoint</a>.</p>
+<h3 id="the-request_3">The request</h3>
+<p>The Prometheus metrics endpoint is accessible via HTTP GET at <strong>/monitoring/prometheus</strong> url.</p>
+<p>Sample request:</p>
+<div class="codehilite"><pre><span></span><code>GET https://&lt;server url&gt;/monitoring/prometheus
+</code></pre></div>
+
+<h3 id="the-response_3">The response</h3>
+<p>As a response, default plain text is returned in <a href="https://prometheus.io/docs/instrumenting/exposition_formats/">Prometheus exposition format</a>. </p>
 <h2 id="changes-in-api-compared-to-v3-v381">Changes in API compared to V3 v3.8.1</h2>
 <h4 id="soap-interface-removed">SOAP interface removed.</h4>
 <p>Discontinued support for following endpoints (incl. respective WSDL definitions):</p>

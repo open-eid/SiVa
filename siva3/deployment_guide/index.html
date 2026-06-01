@@ -19,7 +19,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
       
@@ -771,6 +771,17 @@
     <span class="md-ellipsis">
       
         Version information endpoint
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prometheus-metrics-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prometheus metrics endpoint
       
     </span>
   </a>
@@ -2735,6 +2746,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#prometheus-metrics-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prometheus metrics endpoint
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3158,13 +3180,13 @@ the command below.</p>
 <h2 id="health-endpoint">Health Endpoint</h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Note that this endpoint is not exposed by default.</p>
+<p>Note that this endpoint is exposed by default.</p>
 </div>
 <p>The url for accessing JSON formatted health information with HTTP GET is <code>/monitoring/health</code> . See the <a href="../interfaces/#service-health-monitoring">Interfaces section</a> for response structure and details.</p>
 <ul>
 <li><strong>Exposing the health monitoring endpoint</strong></li>
 </ul>
-<p>To expose the endpoint, use the following configuration parameter:</p>
+<p>This endpoint is controlled by the following configuration parameter:</p>
 <div class="codehilite"><pre><span></span><code>management.endpoints.web.exposure.include<span class="o">=</span>health
 </code></pre></div>
 
@@ -3177,7 +3199,7 @@ These links to dependent web services have been preconfigured. For example, the 
 <h2 id="heartbeat-endpoint">Heartbeat endpoint</h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Note that this endpoint is not enabled nor exposed by default.</p>
+<p>Note that this endpoint is enabled and exposed by default.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -3187,7 +3209,7 @@ These links to dependent web services have been preconfigured. For example, the 
 <ul>
 <li><strong>Enabling and exposing the heartbeat monitoring endpoint</strong></li>
 </ul>
-<p>To enable and expose the endpoint, use the following configuration parameters:</p>
+<p>This endpoint is controlled by the following configuration parameters:</p>
 <div class="codehilite"><pre><span></span><code>management.endpoints.web.exposure.include<span class="o">=</span>health,heartbeat
 management.endpoint.heartbeat.enabled<span class="o">=</span><span class="nb">true</span>
 </code></pre></div>
@@ -3199,15 +3221,29 @@ management.endpoint.heartbeat.enabled<span class="o">=</span><span class="nb">tr
 <h2 id="version-information-endpoint">Version information endpoint</h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Note that this endpoint is not enabled nor exposed by default.</p>
+<p>Note that this endpoint is enabled and exposed by default.</p>
 </div>
 <p>The url for accessing JSON formatted version information with HTTP GET is <code>/monitoring/version</code>. See the <a href="../interfaces/#version-information">Interfaces section</a> for response structure and details.</p>
 <ul>
 <li><strong>Enabling and exposing the version information endpoint</strong></li>
 </ul>
-<p>To enable and expose the endpoint, use the following configuration parameters:</p>
+<p>This endpoint is controlled by the following configuration parameters:</p>
 <div class="codehilite"><pre><span></span><code>management.endpoints.web.exposure.include<span class="o">=</span>version
 management.endpoint.version.enabled<span class="o">=</span><span class="nb">true</span>
+</code></pre></div>
+
+<h2 id="prometheus-metrics-endpoint">Prometheus metrics endpoint</h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Note that this endpoint is exposed by default.</p>
+</div>
+<p>The url for accessing Prometheus metrics with HTTP GET is <code>/monitoring/prometheus</code>. 
+See the <a href="../interfaces/#prometheus-metrics">Interfaces section</a> for response structure and details.</p>
+<ul>
+<li><strong>Exposing the Prometheus metrics endpoint</strong></li>
+</ul>
+<p>This endpoint is controlled by the following configuration parameter:</p>
+<div class="codehilite"><pre><span></span><code>management.endpoints.web.exposure.include<span class="o">=</span>prometheus
 </code></pre></div>
 
 <h1 id="validation-report-signature">Validation Report Signature</h1>

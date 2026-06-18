@@ -506,44 +506,41 @@ GET https://<server url>/monitoring/health
 ```
 
 ### The response
+The response is provided and documented by Spring Boot Actuator — see the [Spring Boot health endpoint](https://docs.spring.io/spring-boot/reference/actuator/endpoints.html#actuator.endpoints.health).
+Exact shape depends on the Spring Boot version and the [active configuration](https://github.com/open-eid/SiVa/blob/master/siva-parent/siva-webapp/src/main/resources/application.yml). 
+SiVa contributes one additional health indicator, `components.health`, with the following details:
 
-As a response, a JSON object is returned with the following information:
-
-| Field | Description |
-| ---------| --------------- |
-| status | General status of the webapp. <br/>Possible values: <ul><li>**DOWN** - when some of the dependent indicators status are down (ie when `link{number}.status` is DOWN, the overall service status is DOWN)</li><li>**UP** - the default value. </li></ul> |
-| components.health.status | Status of current webapp - constant value **UP** |
-| components.health.details.webappName | The artifact name of the webapp. Taken from the MANIFEST.MF file (inside the jar/war file). |
-| components.health.details.version | The release version fo the webapp. Taken from the MANIFEST.MF (inside the jar/war file).  |
-| components.health.details.buildTime | Build date and time (format yyyy-MM-dd'T'HH:mm:ss'Z') of the webapp. Taken from the MANIFEST.MF (inside the jar/war file).  |
-| components.health.details.startTime | Webapp startup date and time (format yyyy-MM-dd'T'HH:mm:ss'Z')|
-| components.health.details.currentTime | Current server date and time (format yyyy-MM-dd'T'HH:mm:ss'Z') |
-| components.link{number}.status | (OPTIONAL) Represents the status of a link to the external system that the webapp depends on. <ul><li>**DOWN** when the webapp does not respond (within a specified timeout limit - default 10 seconds) or the response is in invalid format (default Spring boot actuator /health endpoint format is expected).</li><li>**UP** if the service responds with HTTP status code 200 and returns a valid JSON object with status "UP"</li></ul> |) |
-| components.link{number}.details.name | (OPTIONAL) Descriptive name for the link to the external system |
+| Field | Description                                                                                                                |
+| ---------|----------------------------------------------------------------------------------------------------------------------------|
+| components.health.status | Status of current webapp - constant value **UP**                                                                           |
+| components.health.details.webappName | The artifact name of the webapp. Taken from the MANIFEST.MF file (inside the jar/war file).                                |
+| components.health.details.version | The release version of the webapp. Taken from the MANIFEST.MF (inside the jar/war file).                                   |
+| components.health.details.buildTime | Build date and time (format yyyy-MM-dd'T'HH:mm:ss'Z') of the webapp. Taken from the MANIFEST.MF (inside the jar/war file). |
+| components.health.details.startTime | Webapp startup date and time (format yyyy-MM-dd'T'HH:mm:ss'Z')                                                             |
+| components.health.details.currentTime | Current server date and time (format yyyy-MM-dd'T'HH:mm:ss'Z')                                                             |
 
 Sample response:
 
 ```json
 {
-    "status": "UP",
-    "components": {
-        "health": {
-            "details": {
-               "webappName":"siva-sample-application",
-                "version":"3.3.0",
-                "buildTime":"2016-10-21T15:56:21Z",
-                "startTime":"2016-10-21T15:57:48Z",
-                "currentTime":"2016-10-21T15:58:39Z"
-            },
-            "status": "UP"
-        },
-        "link1": {
-            "details": {
-                "name": "sivaService"
-            },
-            "status": "UP"
-        }
-    }
+  "components": {
+    "health": {
+      "status": "UP",
+      "details": {
+        "webappName": "siva-sample-application",
+        "version": "3.3.0",
+        "buildTime": "2016-10-21T15:56:21Z",
+        "startTime": "2016-10-21T15:57:48Z",
+        "currentTime": "2016-10-21T15:58:39Z"
+      }
+    },
+    "ping": { "status": "UP" },
+    "livenessState": { "status": "UP" },
+    "readinessState": { "status": "UP" },
+    "ssl": { "status": "UP", "details": { "expiringChains": [], "invalidChains": [], "validChains": [] } }
+  },
+  "groups": ["liveness", "readiness"],
+  "status": "UP"
 }
 ```
 

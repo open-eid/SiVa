@@ -147,7 +147,6 @@
 
         <!-- Override vulnerable dependencies that are pulled in via Spring boot -->
         <!-- TODO: Amend this list when Spring Boot version is updated! -->
-        <tomcat.version>11.0.22</tomcat.version>
     </properties>
 
     <reporting>

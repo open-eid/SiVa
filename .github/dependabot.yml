@@ -23,6 +23,7 @@ updates:
 
       - dependency-name: "org.digidoc4j:digidoc4j"
       - dependency-name: "org.digidoc4j.dss:*"
+      - dependency-name: "org.bouncycastle:*" #Remove this when DSS is updated
 
     groups:
       maven-patch-and-minor:

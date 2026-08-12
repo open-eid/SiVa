@@ -120,7 +120,8 @@
 
         <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss'Z'</maven.build.timestamp.format>
 
-        <bouncycastle.version>1.85</bouncycastle.version>
+        <!--BouncyCastle 1.85 causes false positives in PAdES validation with current DSS; update when DSS is updated -->
+        <bouncycastle.version>1.84</bouncycastle.version>
         <commons-collections4.version>4.6.0</commons-collections4.version>
         <commons-io.version>2.22.0</commons-io.version>
         <cryptacular.version>1.3.0</cryptacular.version>

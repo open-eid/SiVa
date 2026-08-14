@@ -31,6 +31,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -94,6 +95,15 @@ class TSLLoaderTest {
         verify(tslValidationJob).onlineRefresh();
         verifyNoMoreInteractions(tslValidationJobFactory, tslValidationJob);
         verifyNoInteractions(trustedListSource, keyStoreCertificateSource);
+    }
+
+    @Test
+    void getTrustedCertificateCount_ReturnsCertificateSourceSize() {
+        tslLoader.setTslLoaderConfigurationProperties(createConfigurationProperties(true));
+        tslLoader.init();
+        when(trustedListSource.getNumberOfCertificates()).thenReturn(123);
+
+        assertEquals(123, tslLoader.getTrustedCertificateCount());
     }
 
     private static TSLLoaderConfigurationProperties createConfigurationProperties(boolean loadFromCache) {

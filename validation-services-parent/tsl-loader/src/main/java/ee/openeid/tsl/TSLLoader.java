@@ -91,6 +91,10 @@ public class TSLLoader {
         }
     }
 
+    public int getTrustedCertificateCount() {
+        return trustedListSource.getNumberOfCertificates();
+    }
+
     public LOTLSource europeanLOTL() {
         LOTLSource lotlSource = new LOTLSource();
         lotlSource.setUrl(configurationProperties.getUrl());

@@ -508,7 +508,10 @@ GET https://<server url>/monitoring/health
 ### The response
 The response is provided and documented by Spring Boot Actuator — see the [Spring Boot health endpoint](https://docs.spring.io/spring-boot/reference/actuator/endpoints.html#actuator.endpoints.health).
 Exact shape depends on the Spring Boot version and the [active configuration](https://github.com/open-eid/SiVa/blob/master/siva-parent/siva-webapp/src/main/resources/application.yml). 
-SiVa contributes one additional health indicator, `components.health`, with the following details:
+SiVa contributes the `components.health` and `components.trustedLists` health indicators.
+`components.trustedLists` is **DOWN** when any configured trusted-list source contains no trusted certificates;
+its `details.trustedCertificateCounts` field reports the certificate count per source.
+`components.health` provides the following details:
 
 | Field | Description                                                                                                                |
 | ---------|----------------------------------------------------------------------------------------------------------------------------|
@@ -533,6 +536,10 @@ Sample response:
         "startTime": "2016-10-21T15:57:48Z",
         "currentTime": "2016-10-21T15:58:39Z"
       }
+    },
+    "trustedLists": {
+      "status": "UP",
+      "details": { "trustedCertificateCounts": { "generic": 120, "timemark": 118 } }
     },
     "ping": { "status": "UP" },
     "livenessState": { "status": "UP" },

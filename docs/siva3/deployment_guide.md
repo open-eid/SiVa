@@ -338,6 +338,7 @@ management.endpoint.heartbeat.enabled=true
 * **Simplified service health indicator**
 
 The endpoint is implemented by polling the health information directly from the underlying health endpoint implementation, but exposing just the aggregated overall service status, hiding everything else.
+The aggregated status is **DOWN** when any configured trusted-list source contains no trusted certificates.
 
 ## Version information endpoint
 

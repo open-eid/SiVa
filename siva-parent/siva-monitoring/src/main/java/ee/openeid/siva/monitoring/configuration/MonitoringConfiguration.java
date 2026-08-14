@@ -19,10 +19,14 @@ package ee.openeid.siva.monitoring.configuration;
 import ee.openeid.siva.monitoring.enpoint.HeartbeatEndpoint;
 import ee.openeid.siva.monitoring.enpoint.VersionEndpoint;
 import ee.openeid.siva.monitoring.indicator.ApplicationHealthIndicator;
+import ee.openeid.siva.monitoring.indicator.TrustedListHealthIndicator;
 import ee.openeid.siva.monitoring.util.ManifestReader;
+import ee.openeid.tsl.TSLLoader;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
 import org.springframework.boot.health.actuate.endpoint.HealthEndpoint;
 import org.springframework.context.annotation.Bean;
+
+import java.util.Set;
 
 
 public abstract class MonitoringConfiguration {
@@ -38,6 +42,11 @@ public abstract class MonitoringConfiguration {
     @Bean
     public ApplicationHealthIndicator health(ManifestReader manifestReader) {
         return new ApplicationHealthIndicator(manifestReader);
+    }
+
+    @Bean
+    public TrustedListHealthIndicator trustedLists(Set<TSLLoader> tslLoaders) {
+        return new TrustedListHealthIndicator(tslLoaders);
     }
 
     @Bean

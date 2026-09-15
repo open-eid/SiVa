@@ -132,7 +132,7 @@
         <jetbrains-annotations.version>26.1.0</jetbrains-annotations.version>
         <logback-ecs-encoder.version>1.8.0</logback-ecs-encoder.version>
 
-        <build-helper-maven-plugin.version>3.6.1</build-helper-maven-plugin.version>
+        <build-helper-maven-plugin.version>3.6.2</build-helper-maven-plugin.version>
         <coveralls-maven-plugin.version>4.3.0</coveralls-maven-plugin.version>
         <findbugs-maven-plugin.version>3.0.5</findbugs-maven-plugin.version>
         <jacoco-maven-plugin.version>0.8.15</jacoco-maven-plugin.version>

@@ -30,8 +30,6 @@ public class ValidationDocument {
 
     private String signaturePolicy;
 
-    private String dataBase64Encoded;
-
     private List<Datafile> datafiles;
 
     private Date validationTime;

@@ -47,6 +47,7 @@ import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.spi.validation.CommonCertificateVerifier;
 import eu.europa.esig.dss.spi.x509.aia.DefaultAIASource;
 import eu.europa.esig.dss.validation.SignedDocumentValidator;
+import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.impl.asic.xades.XadesValidationReportProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +64,7 @@ import static ee.openeid.validation.service.generic.GenericValidationConstants.G
 public class GenericValidationService implements ValidationService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GenericValidationService.class);
-    private static final ValidationLevel VALIDATION_LEVEL = ValidationLevel.ARCHIVAL_DATA;
+    private static final ValidationLevel DEFAULT_VALIDATION_LEVEL = ValidationLevel.ARCHIVAL_DATA;
 
     private TrustedListsCertificateSource trustedListsCertificateSource;
     private ConstraintLoadingSignaturePolicyService signaturePolicyService;
@@ -103,7 +104,7 @@ public class GenericValidationService implements ValidationService {
             }
             ReportBuilderData reportBuilderData = ReportBuilderData.builder()
                     .dssReports(reports)
-                    .validationLevel(VALIDATION_LEVEL)
+                    .validationLevel(getValidationLevel(validationDocument))
                     .validationDocument(validationDocument)
                     .policy(policy)
                     .isReportSignatureEnabled(reportConfigurationProperties.isReportSignatureEnabled())
@@ -135,7 +136,7 @@ public class GenericValidationService implements ValidationService {
         LOGGER.debug("Certificate pool size: {}", getCertificatePoolSize(certificateVerifier));
         validator.setCertificateVerifier(certificateVerifier);
         validator.setSignaturePolicyProvider(signaturePolicyProvider);
-        validator.setValidationLevel(VALIDATION_LEVEL);
+        validator.setValidationLevel(getValidationLevel(validationDocument));
         Optional.ofNullable(validationDocument.getValidationTime()).ifPresent(validator::setValidationTime);
 
         validator.setTokenExtractionStrategy(TokenExtractionStrategy.EXTRACT_CERTIFICATES_AND_TIMESTAMPS_AND_REVOCATION_DATA);
@@ -187,6 +188,14 @@ public class GenericValidationService implements ValidationService {
         SignaturePolicyProvider signaturePolicyProvider = new SignaturePolicyProvider();
         signaturePolicyProvider.setDataLoader(new NativeHTTPDataLoader());
         return signaturePolicyProvider;
+    }
+
+    private static ValidationLevel getValidationLevel(ValidationDocument validationDocument) {
+        return Optional
+                .ofNullable(validationDocument.getValidationLevel())
+                .filter(StringUtils::isNotBlank)
+                .map(ValidationLevel::valueOf)
+                .orElse(DEFAULT_VALIDATION_LEVEL);
     }
 
     private int getCertificatePoolSize(CommonCertificateVerifier certificateVerifier) {

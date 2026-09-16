@@ -60,6 +60,7 @@ import eu.europa.esig.dss.enumerations.TimestampType;
 import eu.europa.esig.dss.enumerations.ValidationLevel;
 import eu.europa.esig.dss.simplereport.jaxb.XmlDetails;
 import eu.europa.esig.dss.simplereport.jaxb.XmlMessage;
+import eu.europa.esig.dss.simplereport.jaxb.XmlTimestamp;
 import eu.europa.esig.dss.simplereport.jaxb.XmlToken;
 import eu.europa.esig.dss.validation.reports.AbstractReports;
 import org.apache.commons.codec.binary.Base64;
@@ -606,9 +607,18 @@ public class GenericValidationReportBuilder {
                 .flatMap(signature -> Stream.concat(
                         Stream.of(signature),
                         Optional.ofNullable(dssSimpleReportWrapper.getDssSimpleReport().getSignatureTimestamps(signatureId))
-                                .stream().flatMap(List::stream)
+                                .stream().flatMap(List::stream).filter(this::isTimestampApplicable)
                 ))
                 .flatMap(token -> extractTokenMessages(token, detailMessagesExtractor));
+    }
+
+    private boolean isTimestampApplicable(XmlTimestamp timestamp) {
+        return switch (validationLevel) {
+            case LONG_TERM_DATA -> dssReports.getDiagnosticData().getTimestampById(timestamp.getId())
+                    .getType() != TimestampType.ARCHIVE_TIMESTAMP;
+            case ARCHIVAL_DATA -> true;
+            default -> throw new UnsupportedOperationException("Timestamp filtering is not supported for: " + validationLevel);
+        };
     }
 
     private static Stream<XmlMessage> extractTokenMessages(XmlToken token, Function<XmlDetails, List<XmlMessage>> detailMessagesExtractor) {

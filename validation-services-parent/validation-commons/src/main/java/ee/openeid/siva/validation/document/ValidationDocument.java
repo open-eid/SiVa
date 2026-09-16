@@ -30,6 +30,8 @@ public class ValidationDocument {
 
     private String signaturePolicy;
 
+    private String validationLevel;
+
     private List<Datafile> datafiles;
 
     private Date validationTime;

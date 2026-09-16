@@ -17,6 +17,7 @@
 package ee.openeid.siva.webapp.request.validation;
 
 import ee.openeid.siva.proxy.document.ReportType;
+import ee.openeid.siva.proxy.document.ValidationLevel;
 import eu.europa.esig.dss.enumerations.DigestAlgorithm;
 
 import java.util.Arrays;
@@ -30,12 +31,20 @@ public enum AcceptedValue {
         public List<String> getAcceptedValues() {
             return Collections.emptyList();
         }
-    }, REPORT_TYPE {
+    },
+    REPORT_TYPE {
         @Override
         public List<String> getAcceptedValues() {
             return Arrays.stream(ReportType.values()).map(Enum::name).collect(Collectors.toList());
         }
-    }, HASH_ALGO {
+    },
+    VALIDATION_LEVEL {
+        @Override
+        public List<String> getAcceptedValues() {
+            return Arrays.stream(ValidationLevel.values()).map(ValidationLevel::getValue).collect(Collectors.toList());
+        }
+    },
+    HASH_ALGO {
         @Override
         public List<String> getAcceptedValues() {
             return Arrays.stream(DigestAlgorithm.values()).map(Enum::name).collect(Collectors.toList());

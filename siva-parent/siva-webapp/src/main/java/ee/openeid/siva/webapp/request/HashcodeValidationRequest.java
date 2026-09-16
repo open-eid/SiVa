@@ -24,6 +24,8 @@ public interface HashcodeValidationRequest {
 
     String getSignaturePolicy();
 
+    String getValidationLevel();
+
     String getReportType();
 
 

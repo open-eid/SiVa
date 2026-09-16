@@ -43,6 +43,7 @@ class HashcodeValidationRequestToProxyDocumentTransformerTest {
 
     private static final String SIGNATURE_FILE = "test-files/signatures0.xml";
     public static final String DEFAULT_SIGNATURE_POLICY = null;
+    public static final String DEFAULT_VALIDATION_LEVEL = null;
     public static final String DEFAULT_REPORT_TYPE = "Simple";
 
     private HashcodeValidationRequestToProxyDocumentTransformer transformer = new HashcodeValidationRequestToProxyDocumentTransformer();
@@ -157,22 +158,8 @@ class HashcodeValidationRequestToProxyDocumentTransformerTest {
 
         private List<SignatureFile> signatureFiles = new ArrayList<>();
         private String signaturePolicy = DEFAULT_SIGNATURE_POLICY;
+        private String validationLevel = DEFAULT_VALIDATION_LEVEL;
         private String reportType = DEFAULT_REPORT_TYPE;
-
-        @Override
-        public List<SignatureFile> getSignatureFiles() {
-            return signatureFiles;
-        }
-
-        @Override
-        public String getSignaturePolicy() {
-            return signaturePolicy;
-        }
-
-        @Override
-        public String getReportType() {
-            return reportType;
-        }
 
     }
 }

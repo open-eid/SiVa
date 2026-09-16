@@ -18,6 +18,7 @@ package ee.openeid.siva.webapp.request;
 
 import ee.openeid.siva.webapp.request.validation.annotations.ValidReportType;
 import ee.openeid.siva.webapp.request.validation.annotations.ValidSignaturePolicy;
+import ee.openeid.siva.webapp.request.validation.annotations.ValidValidationLevel;
 import lombok.Data;
 
 import jakarta.validation.Valid;
@@ -35,6 +36,9 @@ public class JSONHashcodeValidationRequest implements HashcodeValidationRequest 
 
     @ValidSignaturePolicy
     private String signaturePolicy;
+
+    @ValidValidationLevel
+    private String validationLevel;
 
     @ValidReportType
     private String reportType;

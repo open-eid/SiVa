@@ -31,6 +31,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,23 +52,27 @@ public class HashcodeValidationProxy extends ValidationProxy {
     @Override
     public SimpleReport validateRequest(ProxyRequest proxyRequest) {
         ValidationService validationService = getServiceForType(proxyRequest);
-        if (validationService instanceof HashcodeGenericValidationService && proxyRequest instanceof ProxyHashcodeDataSet) {
+        if (validationService instanceof HashcodeGenericValidationService hashcodeValidationService &&
+                proxyRequest instanceof ProxyHashcodeDataSet hashcodeProxyRequest) {
 
-            List<ValidationDocument> validationDocuments = ((ProxyHashcodeDataSet) proxyRequest).getSignatureFiles()
+            List<ValidationDocument> validationDocuments = hashcodeProxyRequest.getSignatureFiles()
                     .stream()
-                    .map(signatureFile -> createValidationDocument(proxyRequest.getSignaturePolicy(), signatureFile))
+                    .map(signatureFile -> createValidationDocument(hashcodeProxyRequest, signatureFile))
                     .collect(Collectors.toList());
-            Reports reports =  ((HashcodeGenericValidationService) validationService).validate(validationDocuments);
+            Reports reports = hashcodeValidationService.validate(validationDocuments);
             return chooseReport(reports, ReportType.SIMPLE);
         }
         throw new IllegalStateException("Something went wrong with hashcode validation");
     }
 
-    ValidationDocument createValidationDocument(String signaturePolicy, SignatureFile signatureFile) {
+    private static ValidationDocument createValidationDocument(ProxyRequest request, SignatureFile signatureFile) {
         ValidationDocument validationDocument = new ValidationDocument();
-        validationDocument.setSignaturePolicy(signaturePolicy);
+        validationDocument.setSignaturePolicy(request.getSignaturePolicy());
         validationDocument.setBytes(signatureFile.getSignature());
         validationDocument.setDatafiles(signatureFile.getDatafiles());
+        Optional.ofNullable(request.getValidationLevel())
+                .map(Enum::name)
+                .ifPresent(validationDocument::setValidationLevel);
         return validationDocument;
     }
 }

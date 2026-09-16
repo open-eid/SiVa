@@ -18,6 +18,7 @@ package ee.openeid.siva.webapp.transformer;
 
 import ee.openeid.siva.proxy.document.ProxyHashcodeDataSet;
 import ee.openeid.siva.proxy.document.ReportType;
+import ee.openeid.siva.proxy.document.ValidationLevel;
 import ee.openeid.siva.validation.document.Datafile;
 import ee.openeid.siva.webapp.request.HashcodeValidationRequest;
 import ee.openeid.siva.webapp.request.SignatureFile;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -36,13 +38,14 @@ public class HashcodeValidationRequestToProxyDocumentTransformer {
         ProxyHashcodeDataSet proxyHashcodeDataSet = new ProxyHashcodeDataSet();
 
         setReportType(hashcodeValidationRequest, proxyHashcodeDataSet);
+        setValidationLevel(hashcodeValidationRequest, proxyHashcodeDataSet);
         proxyHashcodeDataSet.setSignaturePolicy(hashcodeValidationRequest.getSignaturePolicy());
         proxyHashcodeDataSet.setSignatureFiles(mapSignatureFiles(hashcodeValidationRequest.getSignatureFiles()));
 
         return proxyHashcodeDataSet;
     }
 
-    private void setReportType(HashcodeValidationRequest hashcodeValidationRequest, ProxyHashcodeDataSet proxyHashcodeDataSet) {
+    private static void setReportType(HashcodeValidationRequest hashcodeValidationRequest, ProxyHashcodeDataSet proxyHashcodeDataSet) {
         if (hashcodeValidationRequest.getReportType() != null) {
             proxyHashcodeDataSet.setReportType(ReportType.reportTypeFromString(hashcodeValidationRequest.getReportType()));
         } else {
@@ -50,7 +53,13 @@ public class HashcodeValidationRequestToProxyDocumentTransformer {
         }
     }
 
-    private List<ee.openeid.siva.validation.document.SignatureFile> mapSignatureFiles(List<SignatureFile> requestSignatureFiles) {
+    private static void setValidationLevel(HashcodeValidationRequest hashcodeValidationRequest, ProxyHashcodeDataSet proxyHashcodeDataSet) {
+        Optional
+                .ofNullable(hashcodeValidationRequest.getValidationLevel())
+                .ifPresent(l -> proxyHashcodeDataSet.setValidationLevel(ValidationLevel.validationLevelFromString(l)));
+    }
+
+    private static List<ee.openeid.siva.validation.document.SignatureFile> mapSignatureFiles(List<SignatureFile> requestSignatureFiles) {
         List<ee.openeid.siva.validation.document.SignatureFile> signatureFiles = new ArrayList<>();
 
         requestSignatureFiles.forEach(requestSignatureFile -> {
@@ -63,16 +72,16 @@ public class HashcodeValidationRequestToProxyDocumentTransformer {
         return signatureFiles;
     }
 
-    private List<Datafile> mapRequestDatafilesToProxyDocument(List<ee.openeid.siva.webapp.request.Datafile> requestDatafiles) {
+    private static List<Datafile> mapRequestDatafilesToProxyDocument(List<ee.openeid.siva.webapp.request.Datafile> requestDatafiles) {
         if (requestDatafiles == null || requestDatafiles.isEmpty()) {
             return Collections.emptyList();
         }
         return requestDatafiles.stream()
-                .map(this::mapRequestDatafileToProxyDatafile)
+                .map(HashcodeValidationRequestToProxyDocumentTransformer::mapRequestDatafileToProxyDatafile)
                 .collect(Collectors.toList());
     }
 
-    private Datafile mapRequestDatafileToProxyDatafile(ee.openeid.siva.webapp.request.Datafile requestDatafile) {
+    private static Datafile mapRequestDatafileToProxyDatafile(ee.openeid.siva.webapp.request.Datafile requestDatafile) {
         Datafile proxyDatafile = new Datafile();
         proxyDatafile.setFilename(requestDatafile.getFilename());
         proxyDatafile.setHash(requestDatafile.getHash());

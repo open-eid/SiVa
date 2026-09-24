@@ -97,7 +97,7 @@ import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUt
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.processSignatureIndications;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.valueNotKnown;
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.valueNotPresent;
-import static ee.openeid.validation.service.generic.validator.report.GenericReportBuilderUtils.createSignatureLevelAdjuster;
+import static ee.openeid.validation.service.generic.validator.report.GenericReportBuilderUtils.createSignatureValidationDataAdjusters;
 
 public class GenericValidationReportBuilder {
 
@@ -113,7 +113,7 @@ public class GenericValidationReportBuilder {
     private final ConstraintDefinedPolicy validationPolicy;
     private final ValidationLevel validationLevel;
     private final boolean isReportSignatureEnabled;
-    private final SignatureValidationDataProcessor<String> signatureLevelAdjuster;
+    private final List<SignatureValidationDataProcessor<String>> signatureValidationDataAdjusters;
 
     private Map<String, XmlCertificate> usedCertificatesMappings;
 
@@ -123,7 +123,7 @@ public class GenericValidationReportBuilder {
         this.validationPolicy = reportData.getPolicy();
         this.validationLevel = reportData.getValidationLevel();
         this.isReportSignatureEnabled = reportData.isReportSignatureEnabled();
-        this.signatureLevelAdjuster = createSignatureLevelAdjuster(reportData);
+        this.signatureValidationDataAdjusters = createSignatureValidationDataAdjusters(reportData);
     }
 
     public Reports build() {
@@ -193,7 +193,7 @@ public class GenericValidationReportBuilder {
         signatureValidationData.setIndication(parseIndication(signatureId, signatureValidationData.getErrors()));
         signatureValidationData.setSubIndication(parseSubIndication(signatureId, signatureValidationData.getErrors()));
         signatureValidationData.setCertificates(getCertificateList(signatureId));
-        signatureLevelAdjuster.process(signatureValidationData, signatureId);
+        signatureValidationDataAdjusters.forEach(a -> a.process(signatureValidationData, signatureId));
         return signatureValidationData;
     }
 

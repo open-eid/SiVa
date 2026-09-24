@@ -43,7 +43,7 @@ import java.util.stream.Stream;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.sameInstance;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -59,21 +59,21 @@ class GenericReportBuilderUtilsTest {
 
     @ParameterizedTest
     @ValueSource(strings = {StringUtils.EMPTY, StringUtils.SPACE, "unrelated", "POLv3"})
-    void createSignatureLevelAdjuster_WhenNotPolV4Policy_ReturnsNoOpProcessor(String policyName) {
+    void createSignatureLevelAdjusterIfRequired_WhenNotPolV4Policy_ReturnsNull(String policyName) {
         ReportBuilderData reportData = mock(ReportBuilderData.class);
         ConstraintDefinedPolicy policy = mock(ConstraintDefinedPolicy.class);
         doReturn(policy).when(reportData).getPolicy();
         doReturn(policyName).when(policy).getName();
 
         SignatureValidationDataProcessor<String> result = GenericReportBuilderUtils
-                .createSignatureLevelAdjuster(reportData);
+                .createSignatureLevelAdjusterIfRequired(reportData);
 
-        assertThat(result, sameInstance(GenericReportBuilderUtils.NO_OP_SIGNATURE_LEVEL_ADJUSTER));
+        assertThat(result, nullValue());
         verifyNoMoreInteractions(reportData, policy);
     }
 
     @Test
-    void createSignatureLevelAdjuster_WhenPolV4Policy_ReturnsSignatureLevelAdjuster() {
+    void createSignatureLevelAdjusterIfRequired_WhenPolV4Policy_ReturnsSignatureLevelAdjuster() {
         ReportBuilderData reportData = mock(ReportBuilderData.class);
         ConstraintDefinedPolicy policy = mock(ConstraintDefinedPolicy.class);
         doReturn(policy).when(reportData).getPolicy();
@@ -84,7 +84,7 @@ class GenericReportBuilderUtilsTest {
         doReturn(detailedReport).when(dssReports).getDetailedReport();
 
         SignatureValidationDataProcessor<String> result = GenericReportBuilderUtils
-                .createSignatureLevelAdjuster(reportData);
+                .createSignatureLevelAdjusterIfRequired(reportData);
 
         assertThat(result, instanceOf(SignatureLevelAdjuster.class));
         verifyNoMoreInteractions(reportData, policy, dssReports);

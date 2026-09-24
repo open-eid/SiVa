@@ -22,8 +22,11 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiConsumer;
+import java.util.stream.Stream;
 
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.isSignatureLevelAdjustmentEligible;
 
@@ -31,13 +34,19 @@ import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUt
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class GenericReportBuilderUtils {
 
-    public static final SignatureValidationDataProcessor<String> NO_OP_SIGNATURE_LEVEL_ADJUSTER = (data, id) -> {};
+    public static List<SignatureValidationDataProcessor<String>> createSignatureValidationDataAdjusters(ReportBuilderData reportData) {
+        return Stream.of(
+                createSignatureLevelAdjusterIfRequired(reportData)
+        )
+                .filter(Objects::nonNull)
+                .toList();
+    }
 
-    public static SignatureValidationDataProcessor<String> createSignatureLevelAdjuster(ReportBuilderData reportData) {
+    static SignatureValidationDataProcessor<String> createSignatureLevelAdjusterIfRequired(ReportBuilderData reportData) {
         if (isSignatureLevelAdjustmentEligible(reportData.getPolicy().getName())) {
             return createSignatureLevelAdjuster(new DssDetailedReportWrapper(reportData.getDssReports()));
         } else {
-            return NO_OP_SIGNATURE_LEVEL_ADJUSTER;
+            return null;
         }
     }
 

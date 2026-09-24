@@ -18,14 +18,13 @@ package ee.openeid.siva.validation.document.report.builder;
 
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.SignatureValidationData.Indication;
-import ee.openeid.siva.validation.document.report.Warning;
+import ee.openeid.siva.validation.util.ListUtil;
 import eu.europa.esig.dss.enumerations.CertificateQualification;
 import eu.europa.esig.dss.enumerations.SignatureQualification;
 import eu.europa.esig.dss.enumerations.ValidationTime;
 import lombok.Builder;
 import lombok.NonNull;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -109,14 +108,8 @@ public class SignatureLevelAdjuster<T> implements SignatureValidationDataProcess
     private void adjustSignatureData(AdjustmentMapping mapping, SignatureValidationData signatureValidationData) {
         signatureValidationData.setSignatureLevel(mapping.signatureQualificationToAdjustTo().name());
 
-        List<Warning> warningList = signatureValidationData.getWarnings();
-
-        if (warningList == null) {
-            warningList = new ArrayList<>();
-            signatureValidationData.setWarnings(warningList);
-        }
-
-        warningList.add(ReportBuilderUtils.createValidationWarning(mapping.warningMessageOnAdjustment()));
+        ListUtil.getOrCreateList(signatureValidationData::getWarnings, signatureValidationData::setWarnings)
+                .add(ReportBuilderUtils.createValidationWarning(mapping.warningMessageOnAdjustment()));
     }
 
     public interface Event {

@@ -18,6 +18,9 @@ package ee.openeid.validation.service.generic.validator.report;
 
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.SignatureValidationData.Indication;
+import ee.openeid.siva.validation.document.report.Warning;
+import ee.openeid.siva.validation.document.report.builder.ReportBuilderTestUtil;
+import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.document.report.builder.SignatureLevelAdjuster;
 import ee.openeid.siva.validation.document.report.builder.SignatureValidationDataProcessor;
 import ee.openeid.siva.validation.helper.TestLog;
@@ -26,6 +29,7 @@ import eu.europa.esig.dss.detailedreport.DetailedReport;
 import eu.europa.esig.dss.detailedreport.jaxb.XmlValidationSignatureQualification;
 import eu.europa.esig.dss.enumerations.CertificateQualification;
 import eu.europa.esig.dss.enumerations.SignatureQualification;
+import eu.europa.esig.dss.enumerations.ValidationLevel;
 import eu.europa.esig.dss.enumerations.ValidationTime;
 import eu.europa.esig.dss.validation.reports.Reports;
 import org.apache.commons.lang3.StringUtils;
@@ -33,16 +37,23 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
+import static ee.openeid.validation.service.generic.validator.report.GenericReportBuilderUtils.LTA_VALIDATION_LEVEL_WARNING_TEMPLATE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -58,6 +69,7 @@ class GenericReportBuilderUtilsTest {
             SIGNATURE_ID + "' has been re-evaluated from %s to %s";
 
     @ParameterizedTest
+    @NullSource
     @ValueSource(strings = {StringUtils.EMPTY, StringUtils.SPACE, "unrelated", "POLv3"})
     void createSignatureLevelAdjusterIfRequired_WhenNotPolV4Policy_ReturnsNull(String policyName) {
         ReportBuilderData reportData = mock(ReportBuilderData.class);
@@ -166,6 +178,73 @@ class GenericReportBuilderUtilsTest {
                 Arguments.of(SignatureQualification.UNKNOWN_QC, SignatureQualification.ADESEAL_QC),
                 Arguments.of(SignatureQualification.UNKNOWN_QC_QSCD, SignatureQualification.QESIG)
         );
+    }
+
+    @Test
+    void createValidationLevelWarnerIfRequired_WhenValidationLevelIsArchivalData_ReturnsNull() {
+        ReportBuilderData reportBuilderData = mock(ReportBuilderData.class);
+        doReturn(ValidationLevel.ARCHIVAL_DATA).when(reportBuilderData).getValidationLevel();
+
+        SignatureValidationDataProcessor<String> result = GenericReportBuilderUtils
+                .createValidationLevelWarnerIfRequired(reportBuilderData);
+
+        assertThat(result, nullValue());
+        verifyNoMoreInteractions(reportBuilderData);
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = ValidationLevel.class, mode = EnumSource.Mode.EXCLUDE, names = {"ARCHIVAL_DATA"})
+    void createValidationLevelWarnerIfRequired_WhenValidationLevelIsNotArchivalData_ReturnsNonNull(ValidationLevel validationLevel) {
+        ReportBuilderData reportBuilderData = mock(ReportBuilderData.class);
+        doReturn(validationLevel).when(reportBuilderData).getValidationLevel();
+
+        SignatureValidationDataProcessor<String> result = GenericReportBuilderUtils
+                .createValidationLevelWarnerIfRequired(reportBuilderData);
+
+        assertThat(result, notNullValue());
+        verifyNoMoreInteractions(reportBuilderData);
+    }
+
+    @ParameterizedTest
+    @NullSource
+    @MethodSource("ee.openeid.siva.validation.document.report.builder.ReportBuilderTestUtil#nonLtaSignatureFormatStrings")
+    void validationLevelWarnerProcess_WhenSignatureProfileIsNotLta_SignatureValidationDataIsNotAdjusted(String signatureFormat) {
+        SignatureValidationDataProcessor<String> validationLevelWarner = GenericReportBuilderUtils
+                .createValidationLevelWarnerForLta(null);
+        SignatureValidationData signatureValidationData = mock(SignatureValidationData.class);
+        doReturn(signatureFormat).when(signatureValidationData).getSignatureFormat();
+
+        validationLevelWarner.process(signatureValidationData, SIGNATURE_ID);
+
+        verifyNoMoreInteractions(signatureValidationData);
+    }
+
+    @ParameterizedTest
+    @MethodSource("validationLevelAndSignatureFormatCombinations")
+    void validationLevelWarnerProcess_WhenSignatureProfileIsLta_WarningIsAddedToSignatureValidationData(
+            ValidationLevel validationLevel,
+            String signatureFormat
+    ) {
+        SignatureValidationDataProcessor<String> validationLevelWarner = GenericReportBuilderUtils
+                .createValidationLevelWarnerForLta(validationLevel);
+        SignatureValidationData signatureValidationData = mock(SignatureValidationData.class);
+        doReturn(signatureFormat).when(signatureValidationData).getSignatureFormat();
+        List<Warning> warningList = new ArrayList<>();
+        doReturn(warningList).when(signatureValidationData).getWarnings();
+
+        validationLevelWarner.process(signatureValidationData, SIGNATURE_ID);
+
+        assertThat(warningList, is(List.of(
+                ReportBuilderUtils.createValidationWarning(String.format(LTA_VALIDATION_LEVEL_WARNING_TEMPLATE, validationLevel))
+        )));
+        verifyNoMoreInteractions(signatureValidationData);
+    }
+
+    static Stream<Arguments> validationLevelAndSignatureFormatCombinations() {
+        return Stream
+                .of(ValidationLevel.values())
+                .flatMap(level -> ReportBuilderTestUtil.ltaSignatureFormatStrings()
+                        .map(format -> Arguments.of(level, format)));
     }
 
 }

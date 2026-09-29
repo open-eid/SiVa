@@ -26,6 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.lang.reflect.Constructor;
@@ -38,6 +39,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 class ReportBuilderUtilsTest {
 
@@ -97,6 +102,42 @@ class ReportBuilderUtilsTest {
     @ValueSource(strings = {StringUtils.EMPTY, StringUtils.SPACE, "unrelated", "POLv3"})
     void isSignatureLevelAdjustmentEligible_WhenPolicyNameIsNotPolV4_ReturnsFalse(String policyName) {
         assertFalse(ReportBuilderUtils.isSignatureLevelAdjustmentEligible(policyName));
+    }
+
+    @ParameterizedTest
+    @MethodSource("ee.openeid.siva.validation.document.report.builder.ReportBuilderTestUtil#ltaSignatureFormatStrings")
+    void isSignatureProfileLta_WhenSignatureProfileStringIsLta_ReturnsTrue(String signatureFormatString) {
+        assertTrue(ReportBuilderUtils.isSignatureProfileLta(signatureFormatString));
+    }
+
+    @ParameterizedTest
+    @MethodSource("ee.openeid.siva.validation.document.report.builder.ReportBuilderTestUtil#ltaSignatureFormatStrings")
+    void isSignatureProfileLta_WhenSignatureValidationDataReturnsLtaProfile_ReturnsTrue(String signatureFormatString) {
+        SignatureValidationData signatureValidationData = mock(SignatureValidationData.class);
+        doReturn(signatureFormatString).when(signatureValidationData).getSignatureFormat();
+
+        assertTrue(ReportBuilderUtils.isSignatureProfileLta(signatureValidationData));
+
+        verify(signatureValidationData).getSignatureFormat();
+        verifyNoMoreInteractions(signatureValidationData);
+    }
+
+    @ParameterizedTest
+    @MethodSource("ee.openeid.siva.validation.document.report.builder.ReportBuilderTestUtil#nonLtaSignatureFormatStrings")
+    void isSignatureProfileLta_WhenSignatureProfileStringIsNotLta_ReturnsFalse(String signatureFormatString) {
+        assertFalse(ReportBuilderUtils.isSignatureProfileLta(signatureFormatString));
+    }
+
+    @ParameterizedTest
+    @MethodSource("ee.openeid.siva.validation.document.report.builder.ReportBuilderTestUtil#nonLtaSignatureFormatStrings")
+    void isSignatureProfileLta_WhenSignatureValidationDataReturnsNonLtaProfile_ReturnsFalse(String signatureFormatString) {
+        SignatureValidationData signatureValidationData = mock(SignatureValidationData.class);
+        doReturn(signatureFormatString).when(signatureValidationData).getSignatureFormat();
+
+        assertFalse(ReportBuilderUtils.isSignatureProfileLta(signatureValidationData));
+
+        verify(signatureValidationData).getSignatureFormat();
+        verifyNoMoreInteractions(signatureValidationData);
     }
 
     private void assertTotalPassed(ValidationConclusion validationConclusion) {

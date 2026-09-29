@@ -33,6 +33,7 @@ import eu.europa.esig.dss.spi.DSSASN1Utils;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.bouncycastle.asn1.tsp.MessageImprint;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 
@@ -61,6 +62,7 @@ public final class ReportBuilderUtils {
     private static final String DIGEST_ALGO = "SHA256";
     private static final String UNKNOWN_VALUE = "NA";
     private static final String QES_POLICY = "POLv4";
+    private static final String SIGNATURE_FORMAT_LTA_SUFFIX = "_LTA";
     private static final String SIGNATURE_LEVEL_ERROR = "Signature/seal level do not meet the minimal level required by applied policy";
     private static final String SIGNATURE_LEVEL_WARNING = "The signature is not in the Qualified Electronic Signature level";
 
@@ -134,6 +136,14 @@ public final class ReportBuilderUtils {
 
     public static boolean isSignatureLevelAdjustmentEligible(String policyName) {
         return QES_POLICY.equals(policyName);
+    }
+
+    public static boolean isSignatureProfileLta(String signatureFormatString) {
+        return Strings.CS.endsWith(signatureFormatString, SIGNATURE_FORMAT_LTA_SUFFIX);
+    }
+
+    public static boolean isSignatureProfileLta(SignatureValidationData signatureValidationData) {
+        return isSignatureProfileLta(signatureValidationData.getSignatureFormat());
     }
 
     public static String getValidationTime() {

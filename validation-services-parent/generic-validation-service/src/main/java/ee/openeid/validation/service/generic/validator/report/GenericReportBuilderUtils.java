@@ -16,8 +16,11 @@
 
 package ee.openeid.validation.service.generic.validator.report;
 
+import ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils;
 import ee.openeid.siva.validation.document.report.builder.SignatureLevelAdjuster;
 import ee.openeid.siva.validation.document.report.builder.SignatureValidationDataProcessor;
+import ee.openeid.siva.validation.util.ListUtil;
+import eu.europa.esig.dss.enumerations.ValidationLevel;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,14 +32,19 @@ import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
 import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.isSignatureLevelAdjustmentEligible;
+import static ee.openeid.siva.validation.document.report.builder.ReportBuilderUtils.isSignatureProfileLta;
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class GenericReportBuilderUtils {
 
+    static final String LTA_VALIDATION_LEVEL_WARNING_TEMPLATE =
+            "LTA archive timestamps have no effect on the validation result of the signature at the %s validation level.";
+
     public static List<SignatureValidationDataProcessor<String>> createSignatureValidationDataAdjusters(ReportBuilderData reportData) {
         return Stream.of(
-                createSignatureLevelAdjusterIfRequired(reportData)
+                createSignatureLevelAdjusterIfRequired(reportData),
+                createValidationLevelWarnerIfRequired(reportData)
         )
                 .filter(Objects::nonNull)
                 .toList();
@@ -70,6 +78,24 @@ public final class GenericReportBuilderUtils {
             Optional
                     .ofNullable(detailedReportWrapper.getValidationSignatureQualification(signatureId))
                     .ifPresent(q -> q.setSignatureQualification(event.getNewSignatureQualification()));
+        };
+    }
+
+    static SignatureValidationDataProcessor<String> createValidationLevelWarnerIfRequired(ReportBuilderData reportData) {
+        if (reportData.getValidationLevel() != ValidationLevel.ARCHIVAL_DATA) {
+            return createValidationLevelWarnerForLta(reportData.getValidationLevel());
+        } else {
+            return null;
+        }
+    }
+
+    static SignatureValidationDataProcessor<String> createValidationLevelWarnerForLta(ValidationLevel validationLevel) {
+        return (validationData, signatureId) -> {
+            if (isSignatureProfileLta(validationData)) {
+                String warningMessage = String.format(LTA_VALIDATION_LEVEL_WARNING_TEMPLATE, validationLevel);
+                ListUtil.getOrCreateList(validationData::getWarnings, validationData::setWarnings)
+                        .add(ReportBuilderUtils.createValidationWarning(warningMessage));
+            }
         };
     }
 

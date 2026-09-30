@@ -64,9 +64,16 @@ POST https://<server url>/validateHashcode
 
 ### Validation request parameters
 
-Two different use cases are supported for the hashcode validation. 
-1) Providing the data file name, hash algorithm and hash on validation.
-2) Providing only signature file. **NB! This method requires validation result change on integrator side when the local datafile hashes do not match with hashes returned in validation result!**
+Two different use cases are supported for the hashcode validation:
+
+1. Providing the data file name, hash algorithm and hash on validation.
+2. Providing only signature file. **NB! This method requires validation result change on integrator side when the local datafile hashes do not match with hashes returned in validation result!**
+
+!!! warning
+
+    It is not possible to successfully validate LTA archive timestamps in hashcode form!
+    In order to calculate digests for archive timestamps, access to the contents of datafiles is needed.
+    Thus, in hashcode form, archive timestamps are always considered invalid.
 
 Validation request parameters for JSON interface are described in the table below.
 
@@ -82,6 +89,7 @@ Validation request parameters for JSON interface are described in the table belo
 | signatureFiles[0].datafiles[0].hash | + |  String | Data file hash in Base64 encoded format. |
 | signaturePolicy | - |  String | Can be used to change the default signature validation policy that is used by the service. <br> See also [SiVa Validation Policy](../siva3/appendix/validation_policy.md) for more detailed information on given policy constraints.<br>**Possible values:** <br> POLv3 - signatures with all legal levels are accepted (i.e. QES, AdESqc and AdES, according to Regulation (EU) No 910/2014.) <br> POLv4 - the default policy. Accepted signatures depend on their type (i.e. signature, seal or unknown) and legal level (i.e. QES, AdESqc and Ades) |
 | reportType | - | String | <br>**Possible values:** <br> Simple - default report type. Returns overall validation result (validationConclusion block)<br> Detailed -  returns detailed information about the signatures and their validation results (validationConclusion, validationProcess and validationReportSignature. Two later ones are not supported for hashcode). <br> Diagnostic -  returns diagnostic data about the information contained in the signature itself, it's revocation data and mathematical validity (validationConclusion, diagnosticData block. Last one is not support for hashcode) |
+| validationLevel | - | String | Can be used to change the target validation level as per [ETSI EN 319 102-1](https://www.etsi.org/deliver/etsi_en/319100_319199/31910201/01.04.01_60/en_31910201v010401p.pdf).<br>**Possible values:**<br> LongTermData - validation as per "5.5 Validation process for Signatures with Time and Signatures with Long-Term Validation Material". The validation result of signatures **is not affected** by the validation result of archive timestamps.<br> ArchivalData - default validation level. Validation as per "5.6 Validation process for Signatures providing Long Term Availability and Integrity of Validation Material". The validation result of signatures **is affected** by the validation result of archive timestamps. |
 
 ### Sample JSON request with mandatory parameters (datafile hashcode match verification done on integrators side)
 
@@ -134,7 +142,8 @@ Validation request parameters for JSON interface are described in the table belo
 		}
 	],
 	"reportType": "Simple",
-	"signaturePolicy": "POLv4"
+	"signaturePolicy": "POLv4",
+    "validationLevel": "ArchivalData"
 }
 ```
 
@@ -617,6 +626,14 @@ GET https://<server url>/monitoring/prometheus
 ### The response
 
 As a response, default plain text is returned in [Prometheus exposition format](https://prometheus.io/docs/instrumenting/exposition_formats/). 
+
+## Changes in API compared to V3 v3.10.3
+
+### Changes in validation request for hashcode (non-breaking additions to protocol)
+
+| Endpoint | Parameter | Change | Link | Comment |
+|----------|-----------|--------|------|---------|
+| /validateHashcode | validationLevel | added | [Link](#validation-request-parameters_1) | Optional validation level parameter added. |
 
 ## Changes in API compared to V3 v3.8.1
 

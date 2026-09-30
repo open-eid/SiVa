@@ -18,6 +18,7 @@ package ee.openeid.siva.validation.helper.matcher;
 
 import ee.openeid.siva.validation.document.report.Certificate;
 import ee.openeid.siva.validation.document.report.CertificateType;
+import ee.openeid.siva.validation.helper.Generators;
 import lombok.AllArgsConstructor;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -25,6 +26,7 @@ import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 @AllArgsConstructor
 public class IsCertificate extends TypeSafeDiagnosingMatcher<Certificate> {
@@ -36,40 +38,29 @@ public class IsCertificate extends TypeSafeDiagnosingMatcher<Certificate> {
 
     @Override
     protected boolean matchesSafely(Certificate item, Description mismatchDescription) {
+        Supplier<String> conjunctionGenerator = Generators.infinite("Certificate ", " and ");
         boolean result = true;
 
         if (commonNameMatcher != null && !commonNameMatcher.matches(item.getCommonName())) {
-            mismatchDescription.appendText("Certificate common name ");
+            mismatchDescription.appendText(conjunctionGenerator.get()).appendText("common name ");
             commonNameMatcher.describeMismatch(item.getCommonName(), mismatchDescription);
             result = false;
         }
 
         if (contentMatcher != null && !contentMatcher.matches(item.getContent())) {
-            if (result) {
-                mismatchDescription.appendText("Certificate content ");
-            } else {
-                mismatchDescription.appendText(" and content ");
-            }
+            mismatchDescription.appendText(conjunctionGenerator.get()).appendText("content ");
             contentMatcher.describeMismatch(item.getContent(), mismatchDescription);
             result = false;
         }
 
         if (issuerMatcher != null && !issuerMatcher.matches(item.getIssuer())) {
-            if (result) {
-                mismatchDescription.appendText("Certificate issuer ");
-            } else {
-                mismatchDescription.appendText(" and issuer ");
-            }
+            mismatchDescription.appendText(conjunctionGenerator.get()).appendText("issuer ");
             issuerMatcher.describeMismatch(item.getIssuer(), mismatchDescription);
             result = false;
         }
 
         if (typeMatcher != null && !typeMatcher.matches(item.getType())) {
-            if (result) {
-                mismatchDescription.appendText("Certificate type ");
-            } else {
-                mismatchDescription.appendText(" and type ");
-            }
+            mismatchDescription.appendText(conjunctionGenerator.get()).appendText("type ");
             typeMatcher.describeMismatch(item.getType(), mismatchDescription);
             result = false;
         }
@@ -79,23 +70,20 @@ public class IsCertificate extends TypeSafeDiagnosingMatcher<Certificate> {
 
     @Override
     public void describeTo(Description description) {
+        Supplier<String> conjunctionGenerator = Generators.infinite(" with ", " and ");
         description.appendText("Certificate");
-        boolean hasMatchers = false;
 
         if (commonNameMatcher != null) {
-            description.appendText(" with common name ").appendDescriptionOf(commonNameMatcher);
-            hasMatchers = true;
+            description.appendText(conjunctionGenerator.get()).appendText("common name ").appendDescriptionOf(commonNameMatcher);
         }
         if (contentMatcher != null) {
-            description.appendText(hasMatchers ? " and" : " with").appendText(" content ").appendDescriptionOf(contentMatcher);
-            hasMatchers = true;
+            description.appendText(conjunctionGenerator.get()).appendText("content ").appendDescriptionOf(contentMatcher);
         }
         if (issuerMatcher != null) {
-            description.appendText(hasMatchers ? " and" : " with").appendText(" issuer ").appendDescriptionOf(issuerMatcher);
-            hasMatchers = true;
+            description.appendText(conjunctionGenerator.get()).appendText("issuer ").appendDescriptionOf(issuerMatcher);
         }
         if (typeMatcher != null) {
-            description.appendText(hasMatchers ? " and" : " with").appendText(" type ").appendDescriptionOf(typeMatcher);
+            description.appendText(conjunctionGenerator.get()).appendText("type ").appendDescriptionOf(typeMatcher);
         }
     }
 

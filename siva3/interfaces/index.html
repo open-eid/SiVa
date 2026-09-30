@@ -4700,7 +4700,9 @@ SiVa returns all data files as they are extracted by JDigiDoc library in an as i
 </code></pre></div>
 
 <h3 id="the-response">The response</h3>
-<p>As a response, a JSON object is returned with the following information:</p>
+<p>The response is provided and documented by Spring Boot Actuator — see the <a href="https://docs.spring.io/spring-boot/reference/actuator/endpoints.html#actuator.endpoints.health">Spring Boot health endpoint</a>.
+Exact shape depends on the Spring Boot version and the <a href="https://github.com/open-eid/SiVa/blob/master/siva-parent/siva-webapp/src/main/resources/application.yml">active configuration</a>. 
+SiVa contributes one additional health indicator, <code>components.health</code>, with the following details:</p>
 <table>
 <thead>
 <tr>
@@ -4709,10 +4711,6 @@ SiVa returns all data files as they are extracted by JDigiDoc library in an as i
 </tr>
 </thead>
 <tbody>
-<tr>
-<td>status</td>
-<td>General status of the webapp. <br/>Possible values: <ul><li><strong>DOWN</strong> - when some of the dependent indicators status are down (ie when <code>link{number}.status</code> is DOWN, the overall service status is DOWN)</li><li><strong>UP</strong> - the default value. </li></ul></td>
-</tr>
 <tr>
 <td>components.health.status</td>
 <td>Status of current webapp - constant value <strong>UP</strong></td>
@@ -4723,7 +4721,7 @@ SiVa returns all data files as they are extracted by JDigiDoc library in an as i
 </tr>
 <tr>
 <td>components.health.details.version</td>
-<td>The release version fo the webapp. Taken from the MANIFEST.MF (inside the jar/war file).</td>
+<td>The release version of the webapp. Taken from the MANIFEST.MF (inside the jar/war file).</td>
 </tr>
 <tr>
 <td>components.health.details.buildTime</td>
@@ -4737,37 +4735,28 @@ SiVa returns all data files as they are extracted by JDigiDoc library in an as i
 <td>components.health.details.currentTime</td>
 <td>Current server date and time (format yyyy-MM-dd'T'HH:mm:ss'Z')</td>
 </tr>
-<tr>
-<td>components.link{number}.status</td>
-<td>(OPTIONAL) Represents the status of a link to the external system that the webapp depends on. <ul><li><strong>DOWN</strong> when the webapp does not respond (within a specified timeout limit - default 10 seconds) or the response is in invalid format (default Spring boot actuator /health endpoint format is expected).</li><li><strong>UP</strong> if the service responds with HTTP status code 200 and returns a valid JSON object with status "UP"</li></ul></td>
-</tr>
-<tr>
-<td>components.link{number}.details.name</td>
-<td>(OPTIONAL) Descriptive name for the link to the external system</td>
-</tr>
 </tbody>
 </table>
 <p>Sample response:</p>
 <div class="codehilite"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;UP&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;components&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;health&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;details&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;webappName&quot;</span><span class="p">:</span><span class="s2">&quot;siva-sample-application&quot;</span><span class="p">,</span>
-<span class="w">                </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="s2">&quot;3.3.0&quot;</span><span class="p">,</span>
-<span class="w">                </span><span class="nt">&quot;buildTime&quot;</span><span class="p">:</span><span class="s2">&quot;2016-10-21T15:56:21Z&quot;</span><span class="p">,</span>
-<span class="w">                </span><span class="nt">&quot;startTime&quot;</span><span class="p">:</span><span class="s2">&quot;2016-10-21T15:57:48Z&quot;</span><span class="p">,</span>
-<span class="w">                </span><span class="nt">&quot;currentTime&quot;</span><span class="p">:</span><span class="s2">&quot;2016-10-21T15:58:39Z&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;UP&quot;</span>
-<span class="w">        </span><span class="p">},</span>
-<span class="w">        </span><span class="nt">&quot;link1&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;details&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sivaService&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;UP&quot;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="nt">&quot;components&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;health&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;UP&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;details&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;webappName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;siva-sample-application&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;3.3.0&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;buildTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2016-10-21T15:56:21Z&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;startTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2016-10-21T15:57:48Z&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;currentTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2016-10-21T15:58:39Z&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;ping&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;UP&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;livenessState&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;UP&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;readinessState&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;UP&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;ssl&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;UP&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;details&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;expiringChains&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w"> </span><span class="nt">&quot;invalidChains&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w"> </span><span class="nt">&quot;validChains&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;groups&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;liveness&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;readiness&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;UP&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
 

@@ -28,10 +28,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -63,6 +70,35 @@ class TSLLoaderTest {
     }
 
     @Test
+    void loadTSL_WhenRefreshReturns_LastRefreshAndCertificateCountAreRecorded() {
+        tslLoader.setTslLoaderConfigurationProperties(createConfigurationProperties(false));
+        tslLoader.init();
+        when(trustedListSource.getNumberOfCertificates()).thenReturn(42);
+        assertNull(tslLoader.getLastRefresh());
+        assertEquals(0, tslLoader.getNumberOfCertificates());
+        Instant before = Instant.now();
+
+        tslLoader.loadTSL();
+
+        assertNotNull(tslLoader.getLastRefresh());
+        assertFalse(tslLoader.getLastRefresh().isBefore(before));
+        assertEquals(42, tslLoader.getNumberOfCertificates());
+    }
+
+    @Test
+    void loadTSL_WhenRefreshThrows_NothingIsRecorded() {
+        tslLoader.setTslLoaderConfigurationProperties(createConfigurationProperties(false));
+        tslLoader.init();
+        doThrow(new IllegalStateException("boom")).when(tslValidationJob).onlineRefresh();
+
+        assertThrows(IllegalStateException.class, tslLoader::loadTSL);
+
+        assertNull(tslLoader.getLastRefresh());
+        assertEquals(0, tslLoader.getNumberOfCertificates());
+        verifyNoInteractions(trustedListSource);
+    }
+
+    @Test
     void loadTSL_WhenLoadFromCacheIsTrue_OfflineDataLoaderIsUsed() {
         tslLoader.setTslLoaderConfigurationProperties(createConfigurationProperties(true));
         tslLoader.init();
@@ -75,8 +111,9 @@ class TSLLoaderTest {
         verify(tslValidationJob).setListOfTrustedListSources(any());
         verify(tslValidationJob).setSynchronizationStrategy(any());
         verify(tslValidationJob).offlineRefresh();
-        verifyNoMoreInteractions(tslValidationJobFactory, tslValidationJob);
-        verifyNoInteractions(trustedListSource, keyStoreCertificateSource);
+        verify(trustedListSource).getNumberOfCertificates();
+        verifyNoMoreInteractions(tslValidationJobFactory, tslValidationJob, trustedListSource);
+        verifyNoInteractions(keyStoreCertificateSource);
     }
 
     @Test
@@ -92,8 +129,9 @@ class TSLLoaderTest {
         verify(tslValidationJob).setListOfTrustedListSources(any());
         verify(tslValidationJob).setSynchronizationStrategy(any());
         verify(tslValidationJob).onlineRefresh();
-        verifyNoMoreInteractions(tslValidationJobFactory, tslValidationJob);
-        verifyNoInteractions(trustedListSource, keyStoreCertificateSource);
+        verify(trustedListSource).getNumberOfCertificates();
+        verifyNoMoreInteractions(tslValidationJobFactory, tslValidationJob, trustedListSource);
+        verifyNoInteractions(keyStoreCertificateSource);
     }
 
     private static TSLLoaderConfigurationProperties createConfigurationProperties(boolean loadFromCache) {

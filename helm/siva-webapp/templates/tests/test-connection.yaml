@@ -20,6 +20,6 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       command: ['wget']
-      args: ['-q', '-O-', 'http://{{ include "siva-webapp.fullname" . }}:{{ .Values.service.port }}/monitoring/health']
+      args: ['-q', '-O-', {{ include "siva-webapp.healthUrl" . | quote }}]
   restartPolicy: Never
 {{- end }}

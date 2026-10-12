@@ -24,3 +24,7 @@ env:
     value: NOT_ALLOWED_COUNTRIES
   - name: t-level-signature-filter.countries
     value: EE
+# SiVa's system tests reach the monitoring endpoints through the same host:port as the API, so
+# this overlay keeps the actuator on the traffic port instead of the chart's default split.
+runtime:
+  managementPort: 8080

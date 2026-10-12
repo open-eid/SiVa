@@ -50,8 +50,37 @@ config:
     #   tsl:
     #     trustedTerritories: [EE, LV, LT]
 
+# Runtime settings the chart injects as environment variables (Spring relaxed binding). They are
+# kept out of config.applicationYaml so that an override there cannot silently drop them.
+runtime:
+  # Actuator (health, probes, Prometheus) on its own port. The traffic Service and the Ingresses
+  # never carry it; a ClusterIP Service <release>-management exposes it in-cluster for probes,
+  # scraping and helm test. Set it equal to service.containerPort to keep the actuator on the
+  # traffic port (the layout SiVa's docker-compose and system tests expect).
+  managementPort: 8081
+  # Graceful shutdown (server.shutdown=graceful): on SIGTERM the server stops accepting new
+  # connections and waits up to this long for in-flight validations
+  # (spring.lifecycle.timeout-per-shutdown-phase, whole seconds with the "s" unit). Size it to
+  # your slowest validation; it applies per shutdown phase, so leave margin below the grace
+  # period (the chart refuses to render when sleep + timeout reach terminationGracePeriodSeconds).
+  shutdownTimeout: 30s
+  # Seconds the pod sleeps in preStop before SIGTERM, so endpoint removal has propagated and no
+  # new request lands on a pod that is stopping. Runs `sleep` inside the image (present in
+  # Paketo images; a distroless image has none). 0 disables the hook.
+  preStopSleepSeconds: 5
+  # server.forward-headers-strategy: "framework" trusts X-Forwarded-* from the Ingress/edge so
+  # the app sees the client address and scheme; "none" when nothing in front sets them.
+  forwardHeadersStrategy: framework
+  # JAVA_TOOL_OPTIONS for the JVM. Paketo's memory calculator appends its own flags to this.
+  # ExitOnOutOfMemoryError makes a JVM that ran out of heap exit so Kubernetes restarts it
+  # instead of letting it limp along (Paketo's Liberica buildpack sets it too; the duplicate is
+  # harmless and the chart value also covers images built another way).
+  javaToolOptions: "-XX:+ExitOnOutOfMemoryError"
+
 # -- Extra environment variables for the container (plain Kubernetes EnvVar entries).
 # Spring relaxed binding applies, e.g. {name: SIVA_TSL_TRUSTEDTERRITORIES, value: "EE,LV"}.
+# Do not set JAVA_TOOL_OPTIONS or the runtime.* variables here: a later duplicate wins and
+# silently replaces the chart's value; use runtime.* instead.
 env: []
 
 envFrom:
@@ -67,6 +96,9 @@ trust:
   pemSecret: ""
 
 probes:
+  # With the management port split the probes talk to the actuator connector, not the traffic
+  # one: a wedged traffic connector (thread pool exhausted) keeps the pod Ready. That is the
+  # accepted trade-off of keeping the actuator off the public surface.
   # Trust lists are downloaded in @PostConstruct and that takes minutes; readiness turns true
   # before the download finishes today (an application change to gate readiness on the trust
   # lists is planned). The startup probe budget (periodSeconds * failureThreshold = 10 min) is
@@ -167,8 +199,8 @@ nodeSelector: {}
 tolerations: []
 affinity: {}
 
-# No graceful shutdown is configured in the app yet; 60 s still gives in-flight validations a
-# chance before SIGKILL.
+# Must exceed runtime.preStopSleepSeconds + runtime.shutdownTimeout, or Kubernetes SIGKILLs
+# the JVM while it is still draining.
 terminationGracePeriodSeconds: 60
 
 tests:

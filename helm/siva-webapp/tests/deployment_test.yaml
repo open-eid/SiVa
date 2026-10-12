@@ -56,7 +56,7 @@ tests:
           path: spec.template.spec.imagePullSecrets[0].name
           value: regcred
 
-  - it: probes hit the actuator health groups on the http port
+  - it: probes hit the actuator health groups on the management port
     template: deployment.yaml
     asserts:
       - equal:
@@ -70,13 +70,13 @@ tests:
           value: /monitoring/health/liveness
       - equal:
           path: spec.template.spec.containers[0].startupProbe.httpGet.port
-          value: http
+          value: management
       - equal:
           path: spec.template.spec.containers[0].readinessProbe.httpGet.port
-          value: http
+          value: management
       - equal:
           path: spec.template.spec.containers[0].livenessProbe.httpGet.port
-          value: http
+          value: management
       - equal:
           path: spec.template.spec.containers[0].startupProbe.failureThreshold
           value: 60
@@ -191,7 +191,7 @@ tests:
           value: SPRING_CONFIG_ADDITIONAL_LOCATION
       - lengthEqual:
           path: spec.template.spec.containers[0].env
-          count: 4
+          count: 9   # 6 chart-owned (Spring location, management port, 4 runtime) + 3
       - contains:
           path: spec.template.spec.containers[0].env
           content:
@@ -224,7 +224,9 @@ tests:
           value: Always
       - lengthEqual:
           path: spec.template.spec.containers[0].env
-          count: 5
+          count: 9   # 5 chart-owned (no management port: the overlay keeps the actuator on 8080) + 4
+      - notExists:
+          path: spec.template.spec.containers[0].env[?(@.name == "MANAGEMENT_SERVER_PORT")]
       - contains:
           path: spec.template.spec.containers[0].env
           content:
@@ -346,3 +348,107 @@ tests:
       - equal:
           path: spec.replicas
           value: 2
+
+  - it: splits the actuator onto the management port by default
+    template: deployment.yaml
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: MANAGEMENT_SERVER_PORT
+            value: "8081"
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: management
+            containerPort: 8081
+            protocol: TCP
+      - lengthEqual:
+          path: spec.template.spec.containers[0].ports
+          count: 2
+
+  - it: keeps the actuator on the traffic port when managementPort equals containerPort
+    template: deployment.yaml
+    set:
+      runtime:
+        managementPort: 8080
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].env[?(@.name == "MANAGEMENT_SERVER_PORT")]
+      - lengthEqual:
+          path: spec.template.spec.containers[0].ports
+          count: 1
+      - equal:
+          path: spec.template.spec.containers[0].startupProbe.httpGet.port
+          value: http
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.port
+          value: http
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet.port
+          value: http
+
+  - it: configures graceful shutdown, forward headers and the JVM through env
+    template: deployment.yaml
+    set:
+      runtime:
+        shutdownTimeout: 45s
+        forwardHeadersStrategy: native
+        javaToolOptions: "-XX:+ExitOnOutOfMemoryError -Xss512k"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SERVER_SHUTDOWN
+            value: graceful
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE
+            value: 45s
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SERVER_FORWARD_HEADERS_STRATEGY
+            value: native
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: JAVA_TOOL_OPTIONS
+            value: "-XX:+ExitOnOutOfMemoryError -Xss512k"
+
+  - it: omits JAVA_TOOL_OPTIONS when empty
+    template: deployment.yaml
+    set:
+      runtime:
+        javaToolOptions: ""
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].env[?(@.name == "JAVA_TOOL_OPTIONS")]
+
+  - it: sleeps in preStop by default
+    template: deployment.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].lifecycle.preStop.exec.command
+          value: ["sleep", "5"]
+
+  - it: drops the preStop hook when the sleep is 0
+    template: deployment.yaml
+    set:
+      runtime:
+        preStopSleepSeconds: 0
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].lifecycle
+
+  - it: refuses to render when sleep + shutdown timeout reach the grace period
+    template: deployment.yaml
+    set:
+      runtime:
+        preStopSleepSeconds: 10
+        shutdownTimeout: 50s
+      terminationGracePeriodSeconds: 60
+    asserts:
+      - failedTemplate:
+          errorPattern: terminationGracePeriodSeconds \(60\) must exceed

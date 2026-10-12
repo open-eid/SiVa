@@ -60,3 +60,28 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Whether the actuator runs on its own port (management port differs from the traffic port).
+*/}}
+{{- define "siva-webapp.managementSplit" -}}
+{{- if ne (int .Values.runtime.managementPort) (int .Values.service.containerPort) }}true{{ end }}
+{{- end }}
+
+{{/*
+Name of the container port the probes use: management when split, http otherwise.
+*/}}
+{{- define "siva-webapp.probePort" -}}
+{{- if include "siva-webapp.managementSplit" . }}management{{ else }}http{{ end }}
+{{- end }}
+
+{{/*
+In-cluster URL of the health endpoint (management Service when split, traffic Service otherwise).
+*/}}
+{{- define "siva-webapp.healthUrl" -}}
+{{- if include "siva-webapp.managementSplit" . -}}
+http://{{ include "siva-webapp.fullname" . }}-management:{{ .Values.runtime.managementPort }}/monitoring/health
+{{- else -}}
+http://{{ include "siva-webapp.fullname" . }}:{{ .Values.service.port }}/monitoring/health
+{{- end }}
+{{- end }}

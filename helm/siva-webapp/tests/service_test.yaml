@@ -48,6 +48,18 @@ tests:
       - equal:
           path: spec.ports[0].nodePort
           value: 30080
+  - it: never carries the management port, even as NodePort
+    set:
+      service:
+        type: NodePort
+        nodePort: 30080
+    asserts:
+      - lengthEqual:
+          path: spec.ports
+          count: 1
+      - equal:
+          path: spec.ports[0].name
+          value: http
   - it: ignores nodePort for ClusterIP
     set:
       service:

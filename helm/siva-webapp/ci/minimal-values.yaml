@@ -16,3 +16,7 @@ resources: null
 security:
   podSecurityContext: null
   securityContext: null
+runtime:
+  managementPort: 8080
+  preStopSleepSeconds: 0
+  javaToolOptions: ""

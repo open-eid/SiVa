@@ -1,3 +1,8 @@
+{{- /* The drain must fit the grace period, or Kubernetes SIGKILLs the JVM mid-shutdown. */ -}}
+{{- $drain := add (int .Values.runtime.preStopSleepSeconds) (int (trimSuffix "s" .Values.runtime.shutdownTimeout)) -}}
+{{- if ge $drain (int .Values.terminationGracePeriodSeconds) -}}
+{{- fail (printf "terminationGracePeriodSeconds (%d) must exceed runtime.preStopSleepSeconds + runtime.shutdownTimeout (%d s)" (int .Values.terminationGracePeriodSeconds) $drain) -}}
+{{- end -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -44,6 +49,20 @@ spec:
           env:
             - name: SPRING_CONFIG_ADDITIONAL_LOCATION
               value: "file:{{ .Values.config.mountPath }}/application.yml"
+            {{- if include "siva-webapp.managementSplit" . }}
+            - name: MANAGEMENT_SERVER_PORT
+              value: {{ .Values.runtime.managementPort | quote }}
+            {{- end }}
+            - name: SERVER_SHUTDOWN
+              value: graceful
+            - name: SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE
+              value: {{ .Values.runtime.shutdownTimeout | quote }}
+            - name: SERVER_FORWARD_HEADERS_STRATEGY
+              value: {{ .Values.runtime.forwardHeadersStrategy | quote }}
+            {{- with .Values.runtime.javaToolOptions }}
+            - name: JAVA_TOOL_OPTIONS
+              value: {{ . | quote }}
+            {{- end }}
             {{- with .Values.env }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -56,12 +75,23 @@ spec:
             - name: http
               containerPort: {{ .Values.service.containerPort }}
               protocol: TCP
+            {{- if include "siva-webapp.managementSplit" . }}
+            - name: management
+              containerPort: {{ .Values.runtime.managementPort }}
+              protocol: TCP
+            {{- end }}
+          {{- if gt (int .Values.runtime.preStopSleepSeconds) 0 }}
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sleep", {{ .Values.runtime.preStopSleepSeconds | quote }}]
+          {{- end }}
           {{- with .Values.probes.startup }}
           {{- if .enabled }}
           startupProbe:
             httpGet:
               path: {{ .path }}
-              port: http
+              port: {{ include "siva-webapp.probePort" $ }}
             initialDelaySeconds: {{ .initialDelaySeconds }}
             periodSeconds: {{ .periodSeconds }}
             timeoutSeconds: {{ .timeoutSeconds }}
@@ -73,7 +103,7 @@ spec:
           readinessProbe:
             httpGet:
               path: {{ .path }}
-              port: http
+              port: {{ include "siva-webapp.probePort" $ }}
             initialDelaySeconds: {{ .initialDelaySeconds }}
             periodSeconds: {{ .periodSeconds }}
             timeoutSeconds: {{ .timeoutSeconds }}
@@ -85,7 +115,7 @@ spec:
           livenessProbe:
             httpGet:
               path: {{ .path }}
-              port: http
+              port: {{ include "siva-webapp.probePort" $ }}
             initialDelaySeconds: {{ .initialDelaySeconds }}
             periodSeconds: {{ .periodSeconds }}
             timeoutSeconds: {{ .timeoutSeconds }}

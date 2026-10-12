@@ -93,6 +93,22 @@ tests:
           path: metadata.annotations["nginx.ingress.kubernetes.io/proxy-body-size"]
           value: 28m
         documentIndex: 0
+  - it: never routes to the management port
+    set:
+      network:
+        ingresses:
+          - name: public
+            hosts:
+              - host: siva.example.invalid
+                paths:
+                  - path: /
+                  - path: /validate
+    asserts:
+      - notExists:
+          path: spec.rules[0].http.paths[?(@.backend.service.port.number == 8081)]
+      - equal:
+          path: spec.rules[0].http.paths[1].backend.service.port.number
+          value: 8080
   - it: backends use service.port, not the container port
     set:
       service:

@@ -1,44 +1,54 @@
 # Default values for siva-webapp.
 #
-# Layout is deliberately sectioned (image, config, trust, probes, resources, scaling, network,
-# monitoring, security) so that later iterations add keys without renaming existing ones.
-# Nothing in this file is environment specific; every hostname, class, secret and image reference
-# is meant to be overridden in a private values file.
+# Layout is deliberately sectioned (image, config, runtime, trust, probes, resources, scaling,
+# network, monitoring, security) so that later iterations add keys without renaming existing
+# ones. Nothing in this file is environment specific; every hostname, class, secret and image
+# reference is meant to be overridden in a private values file. The `# --` comments feed
+# helm-docs (README.md.gotmpl -> README.md).
 
+# -- Override the chart name used in resource names.
 nameOverride: ""
+# -- Override the full resource name (release name + chart name).
 fullnameOverride: ""
 
 # -- Number of webapp replicas (ignored when scaling.hpa is on). Each replica downloads the
-# trust lists itself at startup (see README "known limits"), so scale with that in mind.
+# trust lists itself at startup (see "Known limits"), so scale with that in mind.
 replicaCount: 1
 
 image:
-  # SiVa publishes no image. Build one with `./mvnw spring-boot:build-image` (Paketo buildpacks),
-  # push it to a registry your cluster can pull from and set repository (and tag) to it.
+  # -- Image to run. SiVa publishes no image: build one with `./mvnw spring-boot:build-image`
+  # (Paketo buildpacks), push it to a registry your cluster can pull from and set this to it.
   repository: siva-webapp
-  # -- Image tag; empty means the chart's appVersion (the SiVa release this chart was written for).
+  # -- Image tag; empty means the chart's appVersion (the SiVa release this chart was written
+  # for). Numeric-looking tags need `--set-string`.
   tag: ""
+  # -- Pull policy.
   pullPolicy: IfNotPresent
-  # -- List of imagePullSecrets names, e.g. [{name: my-registry-credentials}]
+  # -- imagePullSecrets, e.g. `[{name: my-registry-credentials}]`.
   pullSecrets: []
 
 service:
-  # ClusterIP, NodePort or LoadBalancer.
+  # -- ClusterIP, NodePort or LoadBalancer.
   type: ClusterIP
+  # -- Service port for API traffic.
   port: 8080
-  # Container port the app listens on (Paketo default process `web`, server.port=8080).
+  # -- Container port the app listens on (Paketo process `web`, server.port=8080).
   containerPort: 8080
-  # Only used when type is NodePort; leave empty for an allocated port.
+  # -- (int or string) Fixed node port (30000-32767); only used when type is NodePort, empty for
+  # an allocated one.
   nodePort: ""
+  # -- Service annotations.
   annotations: {}
 
 config:
-  # Spring Boot configuration override, rendered into a ConfigMap and mounted at
-  # <mountPath>/application.yml; the container gets
-  # SPRING_CONFIG_ADDITIONAL_LOCATION=file:<mountPath>/application.yml (same mechanism as the
-  # project's docker-compose.yaml). Properties here win over the application.yml on the classpath.
-  # See docs/siva3/deployment_guide.md in the SiVa repository for the siva.* keys.
+  # -- Where the Spring Boot configuration override is mounted; the container gets
+  # SPRING_CONFIG_ADDITIONAL_LOCATION=file:<mountPath>/application.yml.
   mountPath: /etc/siva-webapp
+  # -- Spring Boot configuration override, rendered into a ConfigMap (same mechanism as the
+  # project's docker-compose.yaml). Properties here win over the application.yml on the
+  # classpath; the `siva.*` keys are documented in the SiVa deployment guide
+  # (docs/siva3/deployment_guide.md). Put environment-specific settings in a private overlay.
+  # @default -- actuator probes enabled
   applicationYaml: |
     management:
       endpoint:
@@ -48,39 +58,41 @@ config:
     # Examples of what belongs in a private overlay, not here:
     # siva:
     #   tsl:
-    #     trustedTerritories: [EE, LV, LT]
+    #     loader:
+    #       trustedTerritories: [EE, LV, LT]
 
 # Runtime settings the chart injects as environment variables (Spring relaxed binding). They are
 # kept out of config.applicationYaml so that an override there cannot silently drop them.
 runtime:
-  # Actuator (health, probes, Prometheus) on its own port. The traffic Service and the Ingresses
-  # never carry it; a ClusterIP Service <release>-management exposes it in-cluster for probes,
-  # scraping and helm test. Set it equal to service.containerPort to keep the actuator on the
-  # traffic port (the layout SiVa's docker-compose and system tests expect).
+  # -- Actuator (health, probes, Prometheus) on its own port. The traffic Service and the
+  # Ingresses never carry it; a ClusterIP Service `<release>-management` exposes it in-cluster
+  # for probes, scraping and `helm test`. Set it equal to service.containerPort to keep the
+  # actuator on the traffic port (the layout SiVa's docker-compose and system tests expect).
   managementPort: 8081
-  # Graceful shutdown (server.shutdown=graceful): on SIGTERM the server stops accepting new
+  # -- Graceful shutdown (server.shutdown=graceful): on SIGTERM the server stops accepting new
   # connections and waits up to this long for in-flight validations
-  # (spring.lifecycle.timeout-per-shutdown-phase, whole seconds with the "s" unit). Size it to
+  # (spring.lifecycle.timeout-per-shutdown-phase; whole seconds with the `s` unit). Size it to
   # your slowest validation; it applies per shutdown phase, so leave margin below the grace
   # period (the chart refuses to render when sleep + timeout reach terminationGracePeriodSeconds).
   shutdownTimeout: 30s
-  # Seconds the pod sleeps in preStop before SIGTERM, so endpoint removal has propagated and no
-  # new request lands on a pod that is stopping. Runs `sleep` inside the image (present in
+  # -- Seconds the pod sleeps in preStop before SIGTERM, so endpoint removal has propagated and
+  # no new request lands on a pod that is stopping. Runs `sleep` inside the image (present in
   # Paketo images; a distroless image has none). 0 disables the hook.
   preStopSleepSeconds: 5
-  # server.forward-headers-strategy: "framework" trusts X-Forwarded-* from the Ingress/edge so
-  # the app sees the client address and scheme; "none" when nothing in front sets them.
+  # -- server.forward-headers-strategy: `framework` trusts X-Forwarded-* from the Ingress/edge
+  # so the app sees the client address and scheme; `none` when nothing in front sets them.
   forwardHeadersStrategy: framework
-  # JAVA_TOOL_OPTIONS for the JVM. Paketo's memory calculator appends its own flags to this.
+  # -- JAVA_TOOL_OPTIONS for the JVM; Paketo's memory calculator appends its own flags.
   # ExitOnOutOfMemoryError makes a JVM that ran out of heap exit so Kubernetes restarts it
   # instead of letting it limp along (Paketo's Liberica buildpack sets it too; the duplicate is
   # harmless and the chart value also covers images built another way).
   javaToolOptions: "-XX:+ExitOnOutOfMemoryError"
 
-# -- Extra environment variables for the container (plain Kubernetes EnvVar entries).
-# Spring relaxed binding applies, e.g. {name: SIVA_TSL_TRUSTEDTERRITORIES, value: "EE,LV"}.
-# Do not set JAVA_TOOL_OPTIONS or the runtime.* variables here: a later duplicate wins and
-# silently replaces the chart's value; use runtime.* instead.
+# -- Extra environment variables for the container (plain Kubernetes EnvVar entries). Spring
+# relaxed binding applies, e.g. `{name: SIVA_TSL_LOADER_TRUSTEDTERRITORIES, value: "EE,LV"}`
+# (values are strings: use `--set-string` on the command line). Do not
+# set JAVA_TOOL_OPTIONS or the runtime.* variables here: a later duplicate wins and silently
+# replaces the chart's value; use runtime.* instead.
 env: []
 
 envFrom:
@@ -89,45 +101,64 @@ envFrom:
   existingSecret: ""
 
 trust:
-  # Placeholder. SiVa 3.10 ships its TSL and LOTL truststores on the classpath, which is what this
-  # chart uses; nothing is mounted. Supplying your own trust material (PEM ConfigMap/Secret, SSL
-  # bundles, Paketo ca-certificates binding) is planned, not supported yet.
+  # -- Placeholder, not wired yet: a ConfigMap with PEM trust material. SiVa 3.10 ships its TSL
+  # and LOTL truststores on the classpath, which is what this chart uses; nothing is mounted.
   pemConfigMap: ""
+  # -- Placeholder, not wired yet: a Secret with PEM trust material.
   pemSecret: ""
 
+# Probes talk to the actuator connector (management port), not the traffic one: a wedged
+# traffic connector keeps the pod Ready. That is the accepted trade-off of keeping the actuator
+# off the public surface. Trust lists are downloaded at startup and that takes minutes;
+# readiness turns true before the download finishes today (an application change to gate
+# readiness on the trust lists is planned). The startup probe budget
+# (periodSeconds * failureThreshold = 10 min) is the compensation: tune it to your egress.
 probes:
-  # With the management port split the probes talk to the actuator connector, not the traffic
-  # one: a wedged traffic connector (thread pool exhausted) keeps the pod Ready. That is the
-  # accepted trade-off of keeping the actuator off the public surface.
-  # Trust lists are downloaded in @PostConstruct and that takes minutes; readiness turns true
-  # before the download finishes today (an application change to gate readiness on the trust
-  # lists is planned). The startup probe budget (periodSeconds * failureThreshold = 10 min) is
-  # the compensation: tune it to your egress.
   startup:
+    # -- Render the startup probe.
     enabled: true
+    # -- Path on the management port (the traffic port when the actuator is not split).
     path: /monitoring/health/liveness
+    # -- Seconds before the first probe.
     initialDelaySeconds: 10
+    # -- Seconds between probes.
     periodSeconds: 10
+    # -- Seconds before a probe counts as failed.
     timeoutSeconds: 5
+    # -- Failures before the container is restarted; with periodSeconds this is the startup
+    # budget for the trust-list download (60 x 10 s = 10 min): tune it to your egress.
     failureThreshold: 60
   readiness:
+    # -- Render the readiness probe.
     enabled: true
+    # -- Path on the management port (the traffic port when the actuator is not split).
     path: /monitoring/health/readiness
+    # -- Seconds before the first probe.
     initialDelaySeconds: 0
+    # -- Seconds between probes.
     periodSeconds: 10
+    # -- Seconds before a probe counts as failed.
     timeoutSeconds: 5
+    # -- Failures before the pod is taken out of the Service.
     failureThreshold: 3
   liveness:
+    # -- Render the liveness probe.
     enabled: true
+    # -- Path on the management port (the traffic port when the actuator is not split).
     path: /monitoring/health/liveness
+    # -- Seconds before the first probe.
     initialDelaySeconds: 0
+    # -- Seconds between probes.
     periodSeconds: 20
+    # -- Seconds before a probe counts as failed.
     timeoutSeconds: 5
+    # -- Failures before the container is restarted.
     failureThreshold: 3
 
-# Paketo's memory calculator sizes the JVM heap from the container memory LIMIT (it reads the
-# cgroup), so the limit is the knob, not the request. The default handles a 20 MB container with
-# headroom; no CPU limit on purpose (JVM startup and TSL parsing are bursty).
+# -- Container resources. Paketo's memory calculator sizes the JVM heap from the memory LIMIT
+# (it reads the cgroup), so the limit is the knob, not the request. The default handles a
+# 20 MB document with headroom; no CPU limit on purpose (JVM startup and TSL parsing are bursty).
+# @default -- requests 500m / 1Gi, limit 2Gi memory
 resources:
   requests:
     cpu: 500m
@@ -137,54 +168,50 @@ resources:
 
 scaling:
   pdb:
-    # PodDisruptionBudget, rendered only when there is more than one pod to budget
+    # -- PodDisruptionBudget, rendered only when there is more than one pod to budget
     # (replicaCount > 1, or the HPA is on with minReplicas > 1); with one pod it would block
     # every node drain.
     enabled: true
+    # -- (int or string) minAvailable (a count or a percentage), used unless maxUnavailable is set.
     minAvailable: 1
-    # Set (0, a number or a percentage) to use maxUnavailable instead of minAvailable.
+    # -- (int or string) Set (0, a count or a percentage) to use maxUnavailable instead of
+    # minAvailable.
     maxUnavailable: ""
   hpa:
-    # HorizontalPodAutoscaler (autoscaling/v2). When on, replicaCount is ignored and
+    # -- HorizontalPodAutoscaler (autoscaling/v2). When on, replicaCount is ignored and
     # scaling.pdb applies. Each new pod downloads the trust lists first (minutes), so scale on
     # a sustained signal, not spikes.
     enabled: false
+    # -- Lower bound; with 1 the PodDisruptionBudget is not rendered.
     minReplicas: 2
+    # -- Upper bound.
     maxReplicas: 5
+    # -- (int or string) CPU utilisation target; empty disables the CPU metric.
     targetCPUUtilizationPercentage: 70
-    # Empty disables the memory metric (the JVM holds its heap, so memory is a poor signal).
+    # -- (int or string) Memory utilisation target; empty disables it (the JVM holds its heap, so
+    # memory is a poor signal).
     targetMemoryUtilizationPercentage: ""
-    # Extra MetricSpec entries (custom/external metrics), appended as given.
+    # -- Extra MetricSpec entries (custom/external metrics), appended as given.
     customMetrics: []
-    # HorizontalPodAutoscalerBehavior, as given.
+    # -- HorizontalPodAutoscalerBehavior, as given.
     behavior: {}
 
 network:
-  # List of Ingress objects to create, default none. Each entry becomes
-  # <release-fullname>-<name>. Example:
-  #   - name: public
-  #     className: nginx
-  #     annotations:
-  #       nginx.ingress.kubernetes.io/proxy-body-size: 28m   # request limit is 27 MB
-  #     hosts:
-  #       - host: siva.example.invalid
-  #         paths:
-  #           - path: /
-  #             pathType: Prefix
-  #     tls:
-  #       - secretName: siva-example-invalid-tls
-  #         hosts: [siva.example.invalid]
+  # -- Ingress objects to create, one per entry, named `<release-fullname>-<name>`. Keys:
+  # name, className, annotations, hosts (host + paths with path and optional pathType), tls.
+  # Set your controller's body-size limit to at least 27 MB
+  # (e.g. `nginx.ingress.kubernetes.io/proxy-body-size: 28m`). Example in ci/all-on-values.yaml.
   ingresses: []
   networkPolicy:
-    # Ingress-only NetworkPolicy for the webapp pods. Egress stays open: the trust lists,
+    # -- Ingress-only NetworkPolicy for the webapp pods. Egress stays open: the trust lists,
     # OCSP and timestamp responders are a changing set of public HTTPS hosts; restrict it in
     # your own policy if your CNI resolves names. Needs a CNI that enforces policies.
     enabled: false
-    # NetworkPolicyPeer entries allowed to the traffic port (namespaceSelector, podSelector,
+    # -- NetworkPolicyPeer entries allowed to the traffic port (namespaceSelector, podSelector,
     # ipBlock). Empty: any source, in or outside the cluster (NodePort/LoadBalancer traffic
     # included); list your Ingress controller's namespace to narrow it.
     ingressFrom: []
-    # Peers allowed to the management port when the actuator is split: Prometheus, and the
+    # -- Peers allowed to the management port when the actuator is split: Prometheus, and the
     # `helm test` pod if you still want it to pass (kubelet probes come from the node and are
     # not subject to the policy on most CNIs). Empty: any source. Without the split the
     # actuator sits on the traffic port and ingressFrom governs it; this list is then unused.
@@ -192,94 +219,121 @@ network:
 
 monitoring:
   serviceMonitor:
-    # Prometheus-operator ServiceMonitor scraping /monitoring/prometheus on the management
+    # -- Prometheus-operator ServiceMonitor scraping /monitoring/prometheus on the management
     # Service (the traffic Service when the actuator is not split). Needs the CRD.
     enabled: false
+    # -- Scrape interval (Prometheus duration).
     interval: 30s
+    # -- Scrape timeout (Prometheus duration).
     scrapeTimeout: 10s
-    # Labels your Prometheus selects ServiceMonitors by, e.g. {release: kube-prometheus-stack}.
+    # -- Labels your Prometheus selects ServiceMonitors by, e.g. `{release: kube-prometheus-stack}`.
     labels: {}
-    # Namespace to create it in (empty: the release namespace).
+    # -- Namespace to create it in (empty: the release namespace).
     namespace: ""
+    # -- Relabelings for the endpoint, as given.
     relabelings: []
   prometheusRule:
-    # Alert rules (PrometheusRule CRD): not ready, 5xx ratio, restarts, OOM kill. They use
-    # Spring Boot's http_server_requests metrics and kube-state-metrics.
+    # -- Alert rules (PrometheusRule CRD): SivaNotReady, SivaValidationErrorRate, SivaRestarts,
+    # SivaOomKilled. They use Spring Boot's http_server_requests metrics and kube-state-metrics.
     enabled: false
+    # -- Labels your Prometheus selects PrometheusRules by.
     labels: {}
+    # -- Namespace to create it in (empty: the release namespace).
     namespace: ""
-    # Rules for signals the application does not publish yet: oversized requests (answered 400
-    # today, no 413), trust-list age and territory state, OCSP/TSA failures. Off until it does.
+    # -- Rules for signals the application does not publish yet: oversized requests (answered
+    # 400 today, no 413), trust-list age and territory state, OCSP/TSA failures. Off until it does.
     pendingRules: false
-    # Extra rules appended to the group, as given.
+    # -- Extra rules appended to the group, as given.
     additionalRules: []
   grafanaDashboard:
-    # Dashboard ConfigMap for the Grafana sidecar (kube-prometheus-stack picks up the label).
+    # -- Dashboard ConfigMap for the Grafana sidecar (kube-prometheus-stack picks up the label).
     # Generic by design: one dashboard, namespace and pod variables select the release. The
     # latency panel shows mean and max; for percentiles set
-    # management.metrics.distribution.percentiles-histogram.http.server.requests: true in
-    # config.applicationYaml (adds histogram buckets per uri) and use http_server_requests_seconds_bucket.
+    # `management.metrics.distribution.percentiles-histogram.http.server.requests: true` in
+    # config.applicationYaml (adds histogram buckets per uri) and use
+    # http_server_requests_seconds_bucket.
     enabled: false
+    # -- Labels the sidecar selects dashboards by.
     labels:
       grafana_dashboard: "1"
+    # -- Annotations, e.g. `{grafana_folder: SiVa}`.
     annotations: {}
+    # -- Namespace to create it in (empty: the release namespace).
     namespace: ""
 
+# Written to pass Pod Security "restricted". Overriding any field below (or setting one to
+# null) relaxes the profile; the chart does not stop you, a namespace with
+# pod-security.kubernetes.io/enforce=restricted does.
 security:
-  # Written to pass Pod Security "restricted" (runAsNonRoot, no privilege escalation, all
-  # capabilities dropped, RuntimeDefault seccomp). No runAsUser/runAsGroup: the buildpack image
-  # carries a numeric non-root USER (whatever CNB_USER_ID the builder used) and the launcher
-  # needs to run as exactly that uid to read /layers; pinning a uid here breaks launch when the
-  # image was built as another one. Set them only if your image has no numeric USER.
+  # -- Pod security context, written to pass Pod Security "restricted" together with
+  # securityContext below; overriding a field (or nulling it) relaxes the profile, which only a
+  # namespace labelled pod-security.kubernetes.io/enforce=restricted prevents. No
+  # runAsUser/runAsGroup: the buildpack image carries a numeric non-root USER (whatever
+  # CNB_USER_ID the builder used) and the launcher needs to run as exactly that uid to read
+  # /layers; pinning a uid here breaks launch when the image was built as another one. Set them
+  # only if your image has no numeric USER.
+  # @default -- runAsNonRoot, RuntimeDefault seccomp
   podSecurityContext:
     runAsNonRoot: true
     seccompProfile:
       type: RuntimeDefault
+  # -- Container security context. The only writable path the app needs is /tmp
+  # (java.io.tmpdir: DSS and DigiDoc4J trust-list caches, temporary policy files; Paketo's
+  # certificate loader also copies the JVM truststore there when its layer is read-only) and
+  # it is an emptyDir. Logs go to stdout.
+  # @default -- no privilege escalation, drop ALL, read-only root
   securityContext:
     allowPrivilegeEscalation: false
     capabilities:
       drop:
         - ALL
-    # The only writable path the app needs is /tmp (java.io.tmpdir: DSS and DigiDoc4J trust-list
-    # caches, temporary policy files; Paketo's certificate loader also copies the JVM truststore
-    # there when its layer is read-only) and it is an emptyDir. Logs go to stdout.
     readOnlyRootFilesystem: true
-  # The app never talks to the Kubernetes API.
+  # -- Mount the ServiceAccount token. The app never talks to the Kubernetes API.
   automountServiceAccountToken: false
-  # Overriding any of the fields above (or setting one to null) relaxes the restricted profile;
-  # the chart does not stop you, a namespace with pod-security.kubernetes.io/enforce=restricted does.
 
-# -- Size limit of the /tmp emptyDir (trust-list caches, about 10 MB per list set, and temp
-# files); the pod is evicted when it fills up, so keep headroom. Empty for no limit.
+# -- Size limit of the /tmp emptyDir (trust-list caches, a few tens of MB, and temp files); the
+# pod is evicted when it fills up, so keep headroom. Empty for no limit.
 tmpSizeLimit: 1Gi
 
 serviceAccount:
+  # -- Create a ServiceAccount for the pods.
   create: true
+  # -- Name of the ServiceAccount to create or use (empty: the release's full name, or
+  # `default` when not created).
   name: ""
+  # -- ServiceAccount annotations.
   annotations: {}
 
+# -- Extra pod annotations.
 podAnnotations: {}
+# -- Extra pod labels.
 podLabels: {}
 
+# -- Node selector.
 nodeSelector: {}
+# -- Tolerations.
 tolerations: []
+# -- Affinity rules, as given.
 affinity: {}
 # -- Spread replicas across nodes (soft: scheduling never blocks on it). Each entry is a plain
 # topologySpreadConstraint; labelSelector is filled in by the chart when omitted. Empty list
 # disables.
+# @default -- one soft constraint on kubernetes.io/hostname
 topologySpreadConstraints:
   - maxSkew: 1
     topologyKey: kubernetes.io/hostname
     whenUnsatisfiable: ScheduleAnyway
 
-# Must exceed runtime.preStopSleepSeconds + runtime.shutdownTimeout, or Kubernetes SIGKILLs
-# the JVM while it is still draining.
+# -- Grace period on pod deletion. Must exceed runtime.preStopSleepSeconds +
+# runtime.shutdownTimeout, or Kubernetes SIGKILLs the JVM while it is still draining.
 terminationGracePeriodSeconds: 60
 
 tests:
-  # `helm test` pod: GETs /monitoring/health through the management (or traffic) Service.
+  # -- Render the `helm test` pod, which GETs /monitoring/health through the management (or
+  # traffic) Service.
   enabled: true
+  # -- Image for the test pod (needs wget).
   image: busybox:1.37.0
-  # busybox carries no numeric USER; this uid/gid satisfies runAsNonRoot (nobody). The test
-  # pod's restricted context is fixed in its template; this is its only knob.
+  # -- uid/gid of the test pod: busybox carries no numeric USER, so runAsNonRoot needs one
+  # (65534 = nobody). The pod's restricted context is fixed in its template; this is its only knob.
   runAsUser: 65534

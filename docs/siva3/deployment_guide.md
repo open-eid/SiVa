@@ -216,6 +216,62 @@ export CATALINA_OPTS="-Dspring.config.location=file:/path/to/application.propert
 ```
 
 
+## OPTION 4 - Kubernetes (Helm)
+
+A reference Helm chart ships with the sources in `helm/siva-webapp/`. Like the docker-compose
+file it is a reference, not a product: build the image yourself, override what your cluster
+needs, no support promise. Its README (`helm/siva-webapp/README.md`) documents every value.
+
+1. Build the image with the Spring Boot Maven plugin (Paketo buildpacks) and push it to a
+   registry your cluster can pull from:
+
+   ```bash
+   ./mvnw spring-boot:build-image -pl siva-parent/siva-webapp -DskipTests -Dspring-boot.build-image.imageName=<registry>/siva-webapp:<version>
+   docker push <registry>/siva-webapp:<version>
+   ```
+
+2. Install, pointing the chart at the image:
+
+   ```bash
+   helm install siva ./helm/siva-webapp --namespace siva --create-namespace \
+     --set image.repository=<registry>/siva-webapp --set-string image.tag=<version>
+   kubectl -n siva rollout status deployment/siva-siva-webapp --timeout=15m
+   ```
+
+   The first start downloads the EU trust lists, which takes minutes; the startup probe budget
+   covers it. Pods run under the Pod Security "restricted" profile with a read-only root
+   filesystem. `helm install` prints how to reach the service for the chosen Service type
+   (in-cluster name, NodePort or LoadBalancer); the smoke tests below then apply to that
+   address instead of `localhost:8080`.
+
+3. Configure through values: `config.applicationYaml` takes the `siva.*` keys from this guide
+   as a Spring configuration override; `env` takes environment variables (relaxed binding);
+   `envFrom.existingSecret` sources passwords from a Secret. Ingress objects come from
+   `network.ingresses` (set your controller's body-size limit to at least 27 MB). Health,
+   readiness and Prometheus metrics are served on the management port (8081) through the
+   in-cluster Service `<release>-management`, not through the traffic port or the Ingress.
+
+Optional objects, all off by default: HorizontalPodAutoscaler, NetworkPolicy, ServiceMonitor,
+PrometheusRule and a Grafana dashboard (`scaling.*`, `network.networkPolicy.*`,
+`monitoring.*`). A PodDisruptionBudget is created once there is more than one replica.
+
+### Test instance
+
+A test instance (SiVa-Test, the demo application) needs what the docker-compose file gives the
+webapp: SiVa's `test` Spring profile (the open-eid test trust list and truststore shipped in the
+jar), `TZ=Europe/Tallinn` and the Estonian T-level signature filter, and the monitoring
+endpoints on the API port because the system tests address both through one host:port. The
+chart's `values-kind.yaml` is that profile for a local kind cluster:
+
+```bash
+helm install siva ./helm/siva-webapp -f helm/siva-webapp/values-kind.yaml \
+  --set image.repository=<registry>/siva-webapp --set-string image.tag=<version>
+```
+
+Reach it at `<kind node>:30080`. A number of SiVa-Test specifications need a trust list that
+mixes production and test anchors and is not published; they fail against this instance and
+against a production one alike, which is expected.
+
 ## Smoke testing your deployed system
 
 **Step 1**. Install HTTPIE

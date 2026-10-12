@@ -1,0 +1,74 @@
+{{ template "chart.header" . }}
+
+{{ template "chart.versionBadge" . }}{{ template "chart.typeBadge" . }}{{ template "chart.appVersionBadge" . }}
+
+Reference deployment of [SiVa](https://github.com/open-eid/SiVa), the Estonian digital-signature
+validation service, on Kubernetes. Like the project's docker-compose file it is a reference, not a
+product: best-effort, no support promise, build and run it yourself.
+
+Licence: EUPL 1.1, the same as the SiVa repository this chart belongs with.
+
+## Before you install
+
+- **Build your own image.** SiVa publishes source only. `./mvnw spring-boot:build-image` in the
+  SiVa checkout produces a Paketo image of `siva-webapp`; push it to a registry your cluster can
+  pull from and set `image.repository` / `image.tag`.
+- **Egress.** Each pod downloads the EU LOTL and the member-state trust lists at startup and on a
+  nightly cron. Allow HTTPS egress to those hosts, and to the OCSP/TSA responders of the
+  certificates you validate.
+- **Trust material.** This iteration uses the truststores shipped on the application classpath.
+  Supplying your own is not wired yet (`trust.*` is a placeholder).
+
+```sh
+helm install siva ./helm/siva-webapp \
+  --set image.repository=registry.example.invalid/siva-webapp --set-string image.tag=3.10.3
+```
+
+`image.tag` and `env[].value` are strings; use `--set-string` for numeric-looking values (a git
+short sha such as `1234567` would otherwise be parsed as a number and rejected by the values
+schema).
+
+## Values
+
+Generated from the comments in `values.yaml` by helm-docs (1.14; run `helm-docs` in this
+directory); edit the comments, not this table.
+
+{{ template "chart.valuesTable" . }}
+
+## Verifying on a NodePort (kind or any node you can reach)
+
+```sh
+helm install siva ./helm/siva-webapp --set image.repository=<your-registry>/siva-webapp \
+  --set service.type=NodePort --set service.nodePort=30080
+kubectl rollout status deployment/siva-siva-webapp --timeout=15m   # trust lists download first
+curl -X POST -H 'Content-Type: application/json' \
+     --data @build-helpers/sample-requests/<any>.json http://<node>:30080/validate
+helm test siva
+```
+
+On kind, `<node>` is the control-plane container (`<cluster>-control-plane`) from the kind
+network, or `localhost` if the cluster was created with an `extraPortMappings` entry for 30080.
+
+## Known limits
+
+- Readiness is reported before the trust lists are loaded; the long `startupProbe` budget is the
+  compensation, and a pod can receive traffic it cannot yet validate. An application change is
+  planned to gate readiness on the TSL.
+- Health never turns DOWN when a trust-list refresh fails; alerting is left to you.
+- Every replica fetches the trust lists itself; replicas started at different times can hold
+  different trust states until the next refresh.
+- Metrics are at `<release>-management:8081/monitoring/prometheus` (the service port when
+  `runtime.managementPort` equals `service.containerPort`); `monitoring.serviceMonitor` scrapes
+  it with the Prometheus operator, otherwise scrape it yourself. The alert rules cover what the
+  application publishes today; trust-list freshness and OCSP/TSA failures have no metric yet.
+- Health, probes and metrics live on the management port (`8081` by default) and are reachable
+  only inside the cluster through `<release>-management`; the traffic port answers 404 under
+  `/monitoring`. SiVa's own system tests expect them on the traffic port, so a test instance
+  sets `runtime.managementPort` to the traffic port (see `values-kind.yaml`). The probes talk
+  to the management connector, so a wedged traffic connector does not fail readiness.
+- Graceful shutdown needs `sleep` in the image for the preStop pause (Paketo images have it;
+  set `runtime.preStopSleepSeconds: 0` otherwise) and a `terminationGracePeriodSeconds` above
+  sleep + `runtime.shutdownTimeout`; the chart refuses to render otherwise.
+- Put JVM flags in `runtime.javaToolOptions`, not in `env`: an `env` entry named
+  `JAVA_TOOL_OPTIONS` replaces the chart's.
+- Trust material is the classpath default; rotating it means a new image.

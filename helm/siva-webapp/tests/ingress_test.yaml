@@ -125,3 +125,20 @@ tests:
       - equal:
           path: spec.rules[0].http.paths[0].backend.service.port.number
           value: 80
+  - it: allows TLS without a secretName (controller default certificate)
+    set:
+      network:
+        ingresses:
+          - name: public
+            hosts:
+              - host: siva.example.invalid
+                paths:
+                  - path: /
+            tls:
+              - hosts: [siva.example.invalid]
+    asserts:
+      - equal:
+          path: spec.tls[0].hosts
+          value: [siva.example.invalid]
+      - notExists:
+          path: spec.tls[0].secretName

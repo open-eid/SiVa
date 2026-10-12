@@ -1,0 +1,38 @@
+SiVa webapp {{ .Chart.AppVersion }} (chart {{ .Chart.Version }}) released as {{ .Release.Name }} in namespace {{ .Release.Namespace }}.
+
+Image: {{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}
+{{- if not (contains "/" .Values.image.repository) }}
+  WARNING: image.repository is the bare default. SiVa publishes no image; build one and set
+  image.repository (and image.tag) to it, or the pod will stay in ImagePullBackOff.
+{{- end }}
+
+Startup downloads the EU trust lists and takes a few minutes; watch it with
+  kubectl -n {{ .Release.Namespace }} rollout status deployment/{{ include "siva-webapp.fullname" . }}
+  kubectl -n {{ .Release.Namespace }} logs deployment/{{ include "siva-webapp.fullname" . }} -f
+
+Reaching the service:
+{{- if .Values.network.ingresses }}
+{{- range .Values.network.ingresses }}
+{{- $scheme := ternary "https" "http" (not (empty .tls)) }}
+{{- range .hosts }}
+  {{ $scheme }}://{{ .host }}/monitoring/health
+{{- end }}
+{{- end }}
+{{- else if eq .Values.service.type "NodePort" }}
+  export NODE_PORT=$(kubectl -n {{ .Release.Namespace }} get svc {{ include "siva-webapp.fullname" . }} -o jsonpath='{.spec.ports[0].nodePort}')
+  export NODE_IP=$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}')
+  curl http://$NODE_IP:$NODE_PORT/monitoring/health
+  (on kind the node is also reachable by its container name, e.g. <cluster>-control-plane:$NODE_PORT)
+{{- else if eq .Values.service.type "LoadBalancer" }}
+  kubectl -n {{ .Release.Namespace }} get svc -w {{ include "siva-webapp.fullname" . }}
+  curl http://<EXTERNAL-IP>:{{ .Values.service.port }}/monitoring/health
+{{- else }}
+  In-cluster: http://{{ include "siva-webapp.fullname" . }}.{{ .Release.Namespace }}.svc:{{ .Values.service.port }}
+  From outside: kubectl -n {{ .Release.Namespace }} port-forward svc/{{ include "siva-webapp.fullname" . }} 8080:{{ .Values.service.port }}
+                curl http://localhost:8080/monitoring/health
+{{- end }}
+
+Try a validation (sample bodies in build-helpers/sample-requests/ of the SiVa repository):
+  curl -X POST -H 'Content-Type: application/json' --data @sample.json <base-url>/validate
+
+Run the connectivity test:  helm -n {{ .Release.Namespace }} test {{ .Release.Name }}

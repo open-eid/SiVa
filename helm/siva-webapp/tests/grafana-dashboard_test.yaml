@@ -1,0 +1,30 @@
+suite: grafana dashboard
+templates:
+  - grafana-dashboard.yaml
+tests:
+  - it: is off by default
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: renders a labelled ConfigMap holding the dashboard JSON
+    set:
+      monitoring:
+        grafanaDashboard:
+          enabled: true
+          annotations:
+            grafana_folder: SiVa
+    asserts:
+      - isKind:
+          of: ConfigMap
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-siva-webapp-grafana-dashboard
+      - equal:
+          path: metadata.labels.grafana_dashboard
+          value: "1"
+      - equal:
+          path: metadata.annotations.grafana_folder
+          value: SiVa
+      - matchRegex:
+          path: data["siva-webapp.json"]
+          pattern: '"uid": "siva-webapp"'

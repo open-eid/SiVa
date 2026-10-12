@@ -8,8 +8,8 @@
 nameOverride: ""
 fullnameOverride: ""
 
-# -- Number of webapp replicas. Each replica downloads the trust lists itself at startup
-# (see README "known limits"), so scale with that in mind.
+# -- Number of webapp replicas (ignored when scaling.hpa is on). Each replica downloads the
+# trust lists itself at startup (see README "known limits"), so scale with that in mind.
 replicaCount: 1
 
 image:
@@ -136,9 +136,28 @@ resources:
     memory: 2Gi
 
 scaling:
-  # Placeholder; no HPA template in this iteration. Set replicaCount instead.
+  pdb:
+    # PodDisruptionBudget, rendered only when there is more than one pod to budget
+    # (replicaCount > 1, or the HPA is on with minReplicas > 1); with one pod it would block
+    # every node drain.
+    enabled: true
+    minAvailable: 1
+    # Set (0, a number or a percentage) to use maxUnavailable instead of minAvailable.
+    maxUnavailable: ""
   hpa:
+    # HorizontalPodAutoscaler (autoscaling/v2). When on, replicaCount is ignored and
+    # scaling.pdb applies. Each new pod downloads the trust lists first (minutes), so scale on
+    # a sustained signal, not spikes.
     enabled: false
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 70
+    # Empty disables the memory metric (the JVM holds its heap, so memory is a poor signal).
+    targetMemoryUtilizationPercentage: ""
+    # Extra MetricSpec entries (custom/external metrics), appended as given.
+    customMetrics: []
+    # HorizontalPodAutoscalerBehavior, as given.
+    behavior: {}
 
 network:
   # List of Ingress objects to create, default none. Each entry becomes
@@ -157,13 +176,54 @@ network:
   #         hosts: [siva.example.invalid]
   ingresses: []
   networkPolicy:
-    # Placeholder; no template in this iteration.
+    # Ingress-only NetworkPolicy for the webapp pods. Egress stays open: the trust lists,
+    # OCSP and timestamp responders are a changing set of public HTTPS hosts; restrict it in
+    # your own policy if your CNI resolves names. Needs a CNI that enforces policies.
     enabled: false
+    # NetworkPolicyPeer entries allowed to the traffic port (namespaceSelector, podSelector,
+    # ipBlock). Empty: any source, in or outside the cluster (NodePort/LoadBalancer traffic
+    # included); list your Ingress controller's namespace to narrow it.
+    ingressFrom: []
+    # Peers allowed to the management port when the actuator is split: Prometheus, and the
+    # `helm test` pod if you still want it to pass (kubelet probes come from the node and are
+    # not subject to the policy on most CNIs). Empty: any source. Without the split the
+    # actuator sits on the traffic port and ingressFrom governs it; this list is then unused.
+    managementFrom: []
 
 monitoring:
-  # Placeholder; scrape /monitoring/prometheus on the service port yourself for now.
   serviceMonitor:
+    # Prometheus-operator ServiceMonitor scraping /monitoring/prometheus on the management
+    # Service (the traffic Service when the actuator is not split). Needs the CRD.
     enabled: false
+    interval: 30s
+    scrapeTimeout: 10s
+    # Labels your Prometheus selects ServiceMonitors by, e.g. {release: kube-prometheus-stack}.
+    labels: {}
+    # Namespace to create it in (empty: the release namespace).
+    namespace: ""
+    relabelings: []
+  prometheusRule:
+    # Alert rules (PrometheusRule CRD): not ready, 5xx ratio, restarts, OOM kill. They use
+    # Spring Boot's http_server_requests metrics and kube-state-metrics.
+    enabled: false
+    labels: {}
+    namespace: ""
+    # Rules for signals the application does not publish yet: oversized requests (answered 400
+    # today, no 413), trust-list age and territory state, OCSP/TSA failures. Off until it does.
+    pendingRules: false
+    # Extra rules appended to the group, as given.
+    additionalRules: []
+  grafanaDashboard:
+    # Dashboard ConfigMap for the Grafana sidecar (kube-prometheus-stack picks up the label).
+    # Generic by design: one dashboard, namespace and pod variables select the release. The
+    # latency panel shows mean and max; for percentiles set
+    # management.metrics.distribution.percentiles-histogram.http.server.requests: true in
+    # config.applicationYaml (adds histogram buckets per uri) and use http_server_requests_seconds_bucket.
+    enabled: false
+    labels:
+      grafana_dashboard: "1"
+    annotations: {}
+    namespace: ""
 
 security:
   # Written to pass Pod Security "restricted" (runAsNonRoot, no privilege escalation, all

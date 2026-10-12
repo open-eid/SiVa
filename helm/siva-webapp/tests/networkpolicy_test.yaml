@@ -1,0 +1,77 @@
+suite: network policy
+templates:
+  - networkpolicy.yaml
+tests:
+  - it: is off by default
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: is ingress-only, selects the chart's pods and opens both ports to any in-cluster source
+    set:
+      network:
+        networkPolicy:
+          enabled: true
+    asserts:
+      - isKind:
+          of: NetworkPolicy
+      - equal:
+          path: spec.policyTypes
+          value: [Ingress]
+      - notExists:
+          path: spec.egress
+      - equal:
+          path: spec.podSelector.matchLabels
+          value:
+            app.kubernetes.io/name: siva-webapp
+            app.kubernetes.io/instance: RELEASE-NAME
+      - lengthEqual:
+          path: spec.ingress
+          count: 2
+      - equal:
+          path: spec.ingress[0].ports[0]
+          value:
+            port: http
+            protocol: TCP
+      - notExists:
+          path: spec.ingress[0].from
+      - equal:
+          path: spec.ingress[1].ports[0].port
+          value: management
+  - it: restricts sources per port when peers are given
+    set:
+      network:
+        networkPolicy:
+          enabled: true
+          ingressFrom:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: ingress-nginx
+          managementFrom:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: monitoring
+              podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: prometheus
+    asserts:
+      - equal:
+          path: spec.ingress[0].from[0].namespaceSelector.matchLabels["kubernetes.io/metadata.name"]
+          value: ingress-nginx
+      - equal:
+          path: spec.ingress[1].from[0].podSelector.matchLabels["app.kubernetes.io/name"]
+          value: prometheus
+  - it: has a single rule without the management split and ignores managementFrom
+    set:
+      network:
+        networkPolicy:
+          enabled: true
+          managementFrom:
+            - podSelector: {}
+      runtime:
+        managementPort: 8080
+    asserts:
+      - lengthEqual:
+          path: spec.ingress
+          count: 1
+      - notExists:
+          path: spec.ingress[0].from

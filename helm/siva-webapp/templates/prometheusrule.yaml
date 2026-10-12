@@ -1,0 +1,103 @@
+{{- if .Values.monitoring.prometheusRule.enabled }}
+{{- $name := include "siva-webapp.fullname" . }}
+{{- $ns := .Release.Namespace }}
+{{- /* Deployment pods are <fullname>-<replicaset hash>-<pod hash>. A dot in the name must reach
+       the regex as \. and PromQL's double-quoted string needs that backslash doubled. */ -}}
+{{- $pods := printf "%s-[a-z0-9]+-[a-z0-9]+" ($name | replace "." "\\\\.") }}
+{{- $app := printf `namespace="%s",pod=~"%s",uri!~"/monitoring.*"` $ns $pods }}
+{{- $kube := printf `namespace="%s",pod=~"%s"` $ns $pods }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ $name }}
+  {{- with .Values.monitoring.prometheusRule.namespace }}
+  namespace: {{ . }}
+  {{- end }}
+  labels:
+    {{- include "siva-webapp.labels" . | nindent 4 }}
+    {{- with .Values.monitoring.prometheusRule.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  groups:
+    - name: {{ $name }}
+      rules:
+        # Spring Boot's http_server_requests metrics (scraped through the ServiceMonitor; the
+        # actuator's own requests are excluded by uri) and kube-state-metrics pod metrics.
+        - alert: SivaNotReady
+          expr: >-
+            kube_pod_status_ready{{ "{" }}{{ $kube }},condition="true"} == 0
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: "SiVa pod {{ "{{ $labels.pod }}" }} not ready for 15 minutes"
+            description: "Longer than the startup budget for the trust-list download; a stuck download or a wedged JVM."
+        - alert: SivaValidationErrorRate
+          expr: >-
+            sum(rate(http_server_requests_seconds_count{{ "{" }}{{ $app }},status=~"5.."}[10m]))
+              / sum(rate(http_server_requests_seconds_count{{ "{" }}{{ $app }}}[10m])) > 0.05
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "SiVa 5xx ratio above 5 % for 10 minutes"
+            description: "More than 5 % of API requests fail with a 5xx; check the pod logs."
+        - alert: SivaRestarts
+          expr: >-
+            increase(kube_pod_container_status_restarts_total{{ "{" }}{{ $kube }}}[1h]) > 2
+          labels:
+            severity: warning
+          annotations:
+            summary: "SiVa pod {{ "{{ $labels.pod }}" }} restarted more than twice in an hour"
+            description: "Crash loop or repeated OOM; the previous container's log has the reason."
+        - alert: SivaOomKilled
+          expr: >-
+            kube_pod_container_status_last_terminated_reason{{ "{" }}{{ $kube }},reason="OOMKilled"} == 1
+              and on (namespace, pod, container) increase(kube_pod_container_status_restarts_total{{ "{" }}{{ $kube }}}[30m]) > 0
+          labels:
+            severity: critical
+          annotations:
+            summary: "SiVa pod {{ "{{ $labels.pod }}" }} was OOM-killed in the last 30 minutes"
+            description: "Raise resources.limits.memory (Paketo sizes the heap from it) or lower the thread count."
+        {{- if .Values.monitoring.prometheusRule.pendingRules }}
+        # Signals the application does not publish yet: oversized requests are answered 400 like
+        # any other bad request (no 413, no counter), trust-list age/territory state and OCSP/TSA
+        # failures have no metric. The names and expressions are the agreed ones; switch
+        # pendingRules on once the application exposes them.
+        - alert: SivaRequestRejectedSize
+          expr: >-
+            increase(http_server_requests_seconds_count{{ "{" }}{{ $app }},status="413"}[15m]) > 0
+          labels:
+            severity: info
+          annotations:
+            summary: "SiVa rejects oversized requests"
+            description: "Clients send containers above the request size limit (27 MB by default)."
+        - alert: SivaTslStale
+          expr: siva_tsl_snapshot_age_seconds{{ "{" }}{{ $kube }}} > 2 * 86400
+          labels:
+            severity: critical
+          annotations:
+            summary: "SiVa trust lists older than two days"
+            description: "The trust-list refresh has not succeeded for two days; validations run on stale anchors."
+        - alert: SivaTslTerritoryDegraded
+          expr: siva_tsl_territories{{ "{" }}{{ $kube }},state="failed"} > 0
+          for: 1h
+          labels:
+            severity: warning
+          annotations:
+            summary: "A trusted territory's list failed to load"
+            description: "Signatures from that territory validate as untrusted until the next successful refresh."
+        - alert: SivaOcspTsaFailures
+          expr: rate(siva_ocsp_tsa_failures_total{{ "{" }}{{ $kube }}}[15m]) > 0
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: "OCSP or timestamp responders failing"
+            description: "Revocation or timestamp checks fail; LT/LTA validations degrade."
+        {{- end }}
+        {{- with .Values.monitoring.prometheusRule.additionalRules }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+{{- end }}

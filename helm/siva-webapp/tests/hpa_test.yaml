@@ -1,0 +1,108 @@
+suite: horizontal pod autoscaler
+templates:
+  - hpa.yaml
+  - deployment.yaml
+  - configmap.yaml
+tests:
+  - it: is off by default and the Deployment keeps its replicas
+    asserts:
+      - hasDocuments:
+          count: 0
+        template: hpa.yaml
+      - equal:
+          path: spec.replicas
+          value: 1
+        template: deployment.yaml
+  - it: renders an autoscaling/v2 HPA on CPU and drops replicas from the Deployment
+    set:
+      scaling:
+        hpa:
+          enabled: true
+    asserts:
+      - isAPIVersion:
+          of: autoscaling/v2
+        template: hpa.yaml
+      - equal:
+          path: spec.scaleTargetRef
+          value:
+            apiVersion: apps/v1
+            kind: Deployment
+            name: RELEASE-NAME-siva-webapp
+        template: hpa.yaml
+      - equal:
+          path: spec.minReplicas
+          value: 2
+        template: hpa.yaml
+      - equal:
+          path: spec.maxReplicas
+          value: 5
+        template: hpa.yaml
+      - lengthEqual:
+          path: spec.metrics
+          count: 1
+        template: hpa.yaml
+      - equal:
+          path: spec.metrics[0].resource
+          value:
+            name: cpu
+            target:
+              type: Utilization
+              averageUtilization: 70
+        template: hpa.yaml
+      - notExists:
+          path: spec.behavior
+        template: hpa.yaml
+      - notExists:
+          path: spec.replicas
+        template: deployment.yaml
+  - it: adds memory, custom metrics and behavior when given
+    set:
+      scaling:
+        hpa:
+          enabled: true
+          targetMemoryUtilizationPercentage: 80
+          customMetrics:
+            - type: Pods
+              pods:
+                metric:
+                  name: http_server_requests_per_second
+                target:
+                  type: AverageValue
+                  averageValue: "50"
+          behavior:
+            scaleDown:
+              stabilizationWindowSeconds: 600
+    template: hpa.yaml
+    asserts:
+      - lengthEqual:
+          path: spec.metrics
+          count: 3
+      - equal:
+          path: spec.metrics[1].resource.name
+          value: memory
+      - equal:
+          path: spec.metrics[2].pods.metric.name
+          value: http_server_requests_per_second
+      - equal:
+          path: spec.behavior.scaleDown.stabilizationWindowSeconds
+          value: 600
+  - it: refuses an HPA without any metric
+    set:
+      scaling:
+        hpa:
+          enabled: true
+          targetCPUUtilizationPercentage: ""
+    template: hpa.yaml
+    asserts:
+      - failedTemplate:
+          errorPattern: needs at least one metric
+  - it: refuses minReplicas above maxReplicas
+    set:
+      scaling:
+        hpa:
+          enabled: true
+          minReplicas: 6
+    template: hpa.yaml
+    asserts:
+      - failedTemplate:
+          errorPattern: must not exceed maxReplicas

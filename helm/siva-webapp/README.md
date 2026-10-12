@@ -50,7 +50,13 @@ helm install siva ./helm/siva-webapp \
 | `topologySpreadConstraints` | soft spread over nodes | Plain constraints; `labelSelector` defaults to the chart's pods. `[]` disables. |
 | `terminationGracePeriodSeconds` | `60` | Greater than preStop sleep + shutdown timeout. |
 | `tests.enabled`, `tests.image`, `tests.runAsUser` | `true`, `busybox:1.37.0`, `65534` | `helm test` pod hitting `/monitoring/health` on the management Service; runs as the given uid under the same restricted context. |
-| `trust.*`, `scaling.hpa.*`, `network.networkPolicy.*`, `monitoring.serviceMonitor.*` | disabled | Placeholders; keys reserved, no templates yet. |
+| `scaling.pdb.*` | on, `minAvailable: 1` | PodDisruptionBudget, rendered only with more than one pod (replicas > 1, or HPA with minReplicas > 1). |
+| `scaling.hpa.*` | off | autoscaling/v2 HPA on CPU (memory and custom metrics optional); `replicaCount` is ignored when on. New pods load the trust lists first, so scale on sustained load. |
+| `network.networkPolicy.*` | off | Ingress-only policy: traffic port from `ingressFrom`, management port from `managementFrom` (empty = any source; list Prometheus and, if you run it, the `helm test` pod). Egress stays open (trust lists, OCSP, TSA). |
+| `monitoring.serviceMonitor.*` | off | Prometheus-operator ServiceMonitor on the management Service, `/monitoring/prometheus`, 30 s. |
+| `monitoring.prometheusRule.*` | off | Alerts: SivaNotReady, SivaValidationErrorRate (5xx > 5 % of API requests), SivaRestarts, SivaOomKilled. `pendingRules` adds oversized-request, trust-list and OCSP/TSA alerts for signals the app does not publish yet (oversized requests get a 400 today). |
+| `monitoring.grafanaDashboard.*` | off | ConfigMap with `dashboards/siva-webapp.json` for the Grafana sidecar (requests, 5xx, mean/max latency, in-flight, JVM, restarts). Percentiles need the histogram switched on in `config.applicationYaml`, see the values comment. |
+| `trust.*` | disabled | Placeholder; keys reserved, no templates yet. |
 
 ## Verifying on a NodePort (kind or any node you can reach)
 
@@ -74,8 +80,10 @@ network, or `localhost` if the cluster was created with an `extraPortMappings` e
 - Health never turns DOWN when a trust-list refresh fails; alerting is left to you.
 - Every replica fetches the trust lists itself; replicas started at different times can hold
   different trust states until the next refresh.
-- No metrics objects; scrape `<release>-management:8081/monitoring/prometheus` yourself (the
-  service port when `runtime.managementPort` equals `service.containerPort`).
+- Metrics are at `<release>-management:8081/monitoring/prometheus` (the service port when
+  `runtime.managementPort` equals `service.containerPort`); `monitoring.serviceMonitor` scrapes
+  it with the Prometheus operator, otherwise scrape it yourself. The alert rules cover what the
+  application publishes today; trust-list freshness and OCSP/TSA failures have no metric yet.
 - Health, probes and metrics live on the management port (`8081` by default) and are reachable
   only inside the cluster through `<release>-management`; the traffic port answers 404 under
   `/monitoring`. SiVa's own system tests expect them on the traffic port, so a test instance

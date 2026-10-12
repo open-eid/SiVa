@@ -2,7 +2,7 @@ suite: helm test pod
 templates:
   - tests/test-connection.yaml
 tests:
-  - it: renders the test hook against the service port
+  - it: renders the test hook against the management service by default
     asserts:
       - isKind:
           of: Pod
@@ -11,11 +11,13 @@ tests:
           value: test
       - contains:
           path: spec.containers[0].args
-          content: http://RELEASE-NAME-siva-webapp:8080/monitoring/health
-  - it: follows service.port
+          content: http://RELEASE-NAME-siva-webapp-management:8081/monitoring/health
+  - it: targets the traffic service and service.port without the split
     set:
       service:
         port: 80
+      runtime:
+        managementPort: 8080
     asserts:
       - contains:
           path: spec.containers[0].args

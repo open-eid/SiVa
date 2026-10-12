@@ -180,12 +180,18 @@ security:
     capabilities:
       drop:
         - ALL
-    # Kept false in this iteration: /tmp is already an emptyDir (TSL cache, JVM temp), but the
-    # Paketo launch helpers and the app's log/etc fallbacks have not been verified against a
-    # read-only root. Once every writable path is explicit, flip this to true.
-    readOnlyRootFilesystem: false
+    # The only writable path the app needs is /tmp (java.io.tmpdir: DSS and DigiDoc4J trust-list
+    # caches, temporary policy files; Paketo's certificate loader also copies the JVM truststore
+    # there when its layer is read-only) and it is an emptyDir. Logs go to stdout.
+    readOnlyRootFilesystem: true
   # The app never talks to the Kubernetes API.
   automountServiceAccountToken: false
+  # Overriding any of the fields above (or setting one to null) relaxes the restricted profile;
+  # the chart does not stop you, a namespace with pod-security.kubernetes.io/enforce=restricted does.
+
+# -- Size limit of the /tmp emptyDir (trust-list caches, about 10 MB per list set, and temp
+# files); the pod is evicted when it fills up, so keep headroom. Empty for no limit.
+tmpSizeLimit: 1Gi
 
 serviceAccount:
   create: true
@@ -198,12 +204,22 @@ podLabels: {}
 nodeSelector: {}
 tolerations: []
 affinity: {}
+# -- Spread replicas across nodes (soft: scheduling never blocks on it). Each entry is a plain
+# topologySpreadConstraint; labelSelector is filled in by the chart when omitted. Empty list
+# disables.
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: kubernetes.io/hostname
+    whenUnsatisfiable: ScheduleAnyway
 
 # Must exceed runtime.preStopSleepSeconds + runtime.shutdownTimeout, or Kubernetes SIGKILLs
 # the JVM while it is still draining.
 terminationGracePeriodSeconds: 60
 
 tests:
-  # `helm test` pod: GETs /monitoring/health through the Service.
+  # `helm test` pod: GETs /monitoring/health through the management (or traffic) Service.
   enabled: true
   image: busybox:1.37.0
+  # busybox carries no numeric USER; this uid/gid satisfies runAsNonRoot (nobody). The test
+  # pod's restricted context is fixed in its template; this is its only knob.
+  runAsUser: 65534

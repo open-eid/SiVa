@@ -20,3 +20,5 @@ runtime:
   managementPort: 8080
   preStopSleepSeconds: 0
   javaToolOptions: ""
+tmpSizeLimit: ""
+topologySpreadConstraints: []

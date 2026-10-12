@@ -138,7 +138,12 @@ spec:
           configMap:
             name: {{ include "siva-webapp.fullname" . }}
         - name: tmp
-          emptyDir: {}
+          emptyDir:
+            {{- with .Values.tmpSizeLimit }}
+            sizeLimit: {{ . }}
+            {{- else }}
+            {}
+            {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -150,4 +155,15 @@ spec:
       {{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.topologySpreadConstraints }}
+      {{- $selector := dict "matchLabels" (fromYaml (include "siva-webapp.selectorLabels" $)) }}
+      {{- $constraints := list }}
+      {{- range . }}
+      {{- $c := deepCopy . }}
+      {{- if not $c.labelSelector }}{{- $_ := set $c "labelSelector" (deepCopy $selector) }}{{- end }}
+      {{- $constraints = append $constraints $c }}
+      {{- end }}
+      topologySpreadConstraints:
+        {{- toYaml $constraints | nindent 8 }}
       {{- end }}

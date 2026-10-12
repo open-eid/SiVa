@@ -1,0 +1,26 @@
+# Overlay for a local kind cluster: one replica on a fixed NodePort, SiVa's own "test" profile.
+# Shipped inside the chart so a GitOps tool can select it by name; production installs ignore
+# it. Reach the app at <kind node>:30080.
+replicaCount: 1
+service:
+  type: NodePort
+  nodePort: 30080
+image:
+  # A registry the kind node can pull from and the SiVa commit the image was built from. A
+  # developer loop rebuilds the same tag in place, so the node must re-check the registry digest.
+  repository: jail-siva-registry:5000/siva-webapp
+  tag: "0cf3a218b35d"
+  pullPolicy: Always
+# SiVa's own "test" profile: the open-eid test trust list with the test truststore shipped in the
+# jar, so containers signed with test certificates validate. Never for production.
+env:
+  - name: SPRING_PROFILES_ACTIVE
+    value: test
+  # The rest of what the project's docker-compose.yaml gives the webapp, so the system tests see
+  # the instance they were written against: Tallinn time and the Estonian T-level filter.
+  - name: TZ
+    value: Europe/Tallinn
+  - name: t-level-signature-filter.filter-type
+    value: NOT_ALLOWED_COUNTRIES
+  - name: t-level-signature-filter.countries
+    value: EE

@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "siva-webapp values",
+  "type": "object",
+  "required": ["image", "service", "config", "probes", "security"],
+  "properties": {
+    "replicaCount": { "type": "integer", "minimum": 0 },
+    "image": {
+      "type": "object",
+      "required": ["repository"],
+      "properties": {
+        "repository": { "type": "string", "minLength": 1 },
+        "tag": { "type": "string" },
+        "pullPolicy": { "type": "string", "enum": ["Always", "IfNotPresent", "Never"] },
+        "pullSecrets": { "type": "array" }
+      }
+    },
+    "service": {
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "enum": ["ClusterIP", "NodePort", "LoadBalancer"] },
+        "port": { "type": "integer", "minimum": 1, "maximum": 65535 },
+        "containerPort": { "type": "integer", "minimum": 1, "maximum": 65535 },
+        "nodePort": { "type": ["integer", "string"] }
+      }
+    },
+    "config": {
+      "type": "object",
+      "properties": {
+        "mountPath": { "type": "string" },
+        "applicationYaml": { "type": "string" }
+      }
+    },
+    "env": { "type": "array" },
+    "envFrom": { "type": "object", "properties": { "existingSecret": { "type": "string" } } },
+    "probes": { "type": "object" },
+    "resources": { "type": "object" },
+    "network": {
+      "type": "object",
+      "properties": {
+        "ingresses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "hosts"],
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "className": { "type": "string" },
+              "annotations": { "type": "object" },
+              "hosts": { "type": "array" },
+              "tls": { "type": "array" }
+            }
+          }
+        }
+      }
+    },
+    "security": { "type": "object" },
+    "serviceAccount": { "type": "object" },
+    "terminationGracePeriodSeconds": { "type": "integer", "minimum": 0 }
+  }
+}

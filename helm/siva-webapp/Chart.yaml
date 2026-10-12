@@ -1,0 +1,22 @@
+apiVersion: v2
+name: siva-webapp
+description: >-
+  Reference Kubernetes deployment of SiVa, the Estonian digital-signature validation service
+  (open-eid/SiVa). Best-effort: build the image yourself from the SiVa sources, point
+  image.repository/tag at it, override what your cluster needs.
+type: application
+# Chart version: bumped on every chart change; tracks the SiVa release once published upstream.
+version: 0.2.0
+# SiVa release this chart was written against.
+appVersion: "3.10.3"
+kubeVersion: ">=1.25.0-0"
+keywords:
+  - siva
+  - digital-signature
+  - validation
+  - eidas
+  - open-eid
+home: https://github.com/open-eid/SiVa
+sources:
+  - https://github.com/open-eid/SiVa
+  - https://github.com/open-eid/SiVa/tree/develop/docs/siva3

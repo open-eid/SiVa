@@ -1,0 +1,56 @@
+# chart-testing / lint overlay: every optional object switched on with neutral example values, so
+# `helm template | kubeconform -strict` covers the templates the defaults leave out. Never a
+# deployment profile; nothing in here is a real host, class or secret.
+replicaCount: 2
+image:
+  pullSecrets:
+    - name: example-registry-credentials
+service:
+  type: NodePort
+  nodePort: 30080
+envFrom:
+  existingSecret: example-siva-env
+env:
+  - name: EXAMPLE_FLAG
+    value: "1"
+network:
+  ingresses:
+    - name: public
+      className: nginx
+      annotations:
+        nginx.ingress.kubernetes.io/proxy-body-size: 28m
+      hosts:
+        - host: siva.example.invalid
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - secretName: siva-example-invalid-tls
+          hosts: [siva.example.invalid]
+    - name: internal
+      hosts:
+        - host: siva.internal.example.invalid
+          paths:
+            - path: /
+podAnnotations:
+  example.invalid/annotation: "yes"
+podLabels:
+  example.invalid/label: "yes"
+nodeSelector:
+  kubernetes.io/os: linux
+tolerations:
+  - key: example.invalid/taint
+    operator: Exists
+    effect: NoSchedule
+serviceAccount:
+  annotations:
+    example.invalid/sa: "yes"
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          topologyKey: kubernetes.io/hostname
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: siva-webapp

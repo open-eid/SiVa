@@ -1,0 +1,177 @@
+# Default values for siva-webapp.
+#
+# Layout is deliberately sectioned (image, config, trust, probes, resources, scaling, network,
+# monitoring, security) so that later iterations add keys without renaming existing ones.
+# Nothing in this file is environment specific; every hostname, class, secret and image reference
+# is meant to be overridden in a private values file.
+
+nameOverride: ""
+fullnameOverride: ""
+
+# -- Number of webapp replicas. Each replica downloads the trust lists itself at startup
+# (see README "known limits"), so scale with that in mind.
+replicaCount: 1
+
+image:
+  # SiVa publishes no image. Build one with `./mvnw spring-boot:build-image` (Paketo buildpacks),
+  # push it to a registry your cluster can pull from and set repository (and tag) to it.
+  repository: siva-webapp
+  # -- Image tag; empty means the chart's appVersion (the SiVa release this chart was written for).
+  tag: ""
+  pullPolicy: IfNotPresent
+  # -- List of imagePullSecrets names, e.g. [{name: my-registry-credentials}]
+  pullSecrets: []
+
+service:
+  # ClusterIP, NodePort or LoadBalancer.
+  type: ClusterIP
+  port: 8080
+  # Container port the app listens on (Paketo default process `web`, server.port=8080).
+  containerPort: 8080
+  # Only used when type is NodePort; leave empty for an allocated port.
+  nodePort: ""
+  annotations: {}
+
+config:
+  # Spring Boot configuration override, rendered into a ConfigMap and mounted at
+  # <mountPath>/application.yml; the container gets
+  # SPRING_CONFIG_ADDITIONAL_LOCATION=file:<mountPath>/application.yml (same mechanism as the
+  # project's docker-compose.yaml). Properties here win over the application.yml on the classpath.
+  # See docs/siva3/deployment_guide.md in the SiVa repository for the siva.* keys.
+  mountPath: /etc/siva-webapp
+  applicationYaml: |
+    management:
+      endpoint:
+        health:
+          probes:
+            enabled: true
+    # Examples of what belongs in a private overlay, not here:
+    # siva:
+    #   tsl:
+    #     trustedTerritories: [EE, LV, LT]
+
+# -- Extra environment variables for the container (plain Kubernetes EnvVar entries).
+# Spring relaxed binding applies, e.g. {name: SIVA_TSL_TRUSTEDTERRITORIES, value: "EE,LV"}.
+env: []
+
+envFrom:
+  # -- Name of an existing Secret whose keys become environment variables (passwords, keystore
+  # passphrases). Not created by the chart.
+  existingSecret: ""
+
+trust:
+  # Placeholder. SiVa 3.10 ships its TSL and LOTL truststores on the classpath, which is what this
+  # chart uses; nothing is mounted. Supplying your own trust material (PEM ConfigMap/Secret, SSL
+  # bundles, Paketo ca-certificates binding) is planned, not supported yet.
+  pemConfigMap: ""
+  pemSecret: ""
+
+probes:
+  # Trust lists are downloaded in @PostConstruct and that takes minutes; readiness turns true
+  # before the download finishes today (an application change to gate readiness on the trust
+  # lists is planned). The startup probe budget (periodSeconds * failureThreshold = 10 min) is
+  # the compensation: tune it to your egress.
+  startup:
+    enabled: true
+    path: /monitoring/health/liveness
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 60
+  readiness:
+    enabled: true
+    path: /monitoring/health/readiness
+    initialDelaySeconds: 0
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+  liveness:
+    enabled: true
+    path: /monitoring/health/liveness
+    initialDelaySeconds: 0
+    periodSeconds: 20
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+# Paketo's memory calculator sizes the JVM heap from the container memory LIMIT (it reads the
+# cgroup), so the limit is the knob, not the request. The default handles a 20 MB container with
+# headroom; no CPU limit on purpose (JVM startup and TSL parsing are bursty).
+resources:
+  requests:
+    cpu: 500m
+    memory: 1Gi
+  limits:
+    memory: 2Gi
+
+scaling:
+  # Placeholder; no HPA template in this iteration. Set replicaCount instead.
+  hpa:
+    enabled: false
+
+network:
+  # List of Ingress objects to create, default none. Each entry becomes
+  # <release-fullname>-<name>. Example:
+  #   - name: public
+  #     className: nginx
+  #     annotations:
+  #       nginx.ingress.kubernetes.io/proxy-body-size: 28m   # request limit is 27 MB
+  #     hosts:
+  #       - host: siva.example.invalid
+  #         paths:
+  #           - path: /
+  #             pathType: Prefix
+  #     tls:
+  #       - secretName: siva-example-invalid-tls
+  #         hosts: [siva.example.invalid]
+  ingresses: []
+  networkPolicy:
+    # Placeholder; no template in this iteration.
+    enabled: false
+
+monitoring:
+  # Placeholder; scrape /monitoring/prometheus on the service port yourself for now.
+  serviceMonitor:
+    enabled: false
+
+security:
+  # Written to pass Pod Security "restricted" (runAsNonRoot, no privilege escalation, all
+  # capabilities dropped, RuntimeDefault seccomp). No runAsUser/runAsGroup: the buildpack image
+  # carries a numeric non-root USER (whatever CNB_USER_ID the builder used) and the launcher
+  # needs to run as exactly that uid to read /layers; pinning a uid here breaks launch when the
+  # image was built as another one. Set them only if your image has no numeric USER.
+  podSecurityContext:
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    # Kept false in this iteration: /tmp is already an emptyDir (TSL cache, JVM temp), but the
+    # Paketo launch helpers and the app's log/etc fallbacks have not been verified against a
+    # read-only root. Once every writable path is explicit, flip this to true.
+    readOnlyRootFilesystem: false
+  # The app never talks to the Kubernetes API.
+  automountServiceAccountToken: false
+
+serviceAccount:
+  create: true
+  name: ""
+  annotations: {}
+
+podAnnotations: {}
+podLabels: {}
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+# No graceful shutdown is configured in the app yet; 60 s still gives in-flight validations a
+# chance before SIGKILL.
+terminationGracePeriodSeconds: 60
+
+tests:
+  # `helm test` pod: GETs /monitoring/health through the Service.
+  enabled: true
+  image: busybox:1.37.0

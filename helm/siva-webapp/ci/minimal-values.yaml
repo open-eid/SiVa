@@ -1,0 +1,18 @@
+# chart-testing / lint overlay: every switch off, every optional block removed (null, not {}:
+# Helm merges maps, only null deletes a default), so the templates' "absent" branches render too.
+# Not a deployment profile.
+serviceAccount:
+  create: false
+tests:
+  enabled: false
+probes:
+  startup:
+    enabled: false
+  readiness:
+    enabled: false
+  liveness:
+    enabled: false
+resources: null
+security:
+  podSecurityContext: null
+  securityContext: null

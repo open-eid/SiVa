@@ -1,0 +1,25 @@
+{{- if .Values.tests.enabled }}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "siva-webapp.fullname" . }}-test-connection"
+  labels:
+    {{- include "siva-webapp.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  {{- with .Values.security.podSecurityContext }}
+  securityContext:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  containers:
+    - name: wget
+      image: {{ .Values.tests.image }}
+      {{- with .Values.security.securityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      command: ['wget']
+      args: ['-q', '-O-', 'http://{{ include "siva-webapp.fullname" . }}:{{ .Values.service.port }}/monitoring/health']
+  restartPolicy: Never
+{{- end }}

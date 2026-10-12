@@ -49,6 +49,7 @@ import org.springframework.core.io.Resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -58,6 +59,15 @@ public class TSLLoader {
 
     @Getter
     private final @NonNull String tslName;
+
+    /**
+     * When the last refresh attempt finished, {@code null} until the first one. DSS does not throw on
+     * download failures, so this says "attempted", not "succeeded"; {@link #getNumberOfCertificates()}
+     * tells whether anything came out of it. Together they are what readiness is judged on.
+     */
+    @Getter
+    private volatile Instant lastRefresh;
+    private volatile int numberOfCertificates;
 
     private TSLValidationJobFactory tslValidationJobFactory;
     private TLValidationJob tslValidationJob;
@@ -89,6 +99,19 @@ public class TSLLoader {
             tslValidationJob.onlineRefresh();
             log.info("Finished loading '{}' TSL over the network", tslName);
         }
+        numberOfCertificates = trustedListSource.getNumberOfCertificates();
+        lastRefresh = Instant.now();
+    }
+
+    /**
+     * Number of trust anchors this TSL held when its last refresh attempt finished, zero until then or
+     * when the refresh left nothing (nothing can be validated). A snapshot on purpose: the DSS source
+     * is emptied and refilled while a refresh runs, so reading it live would flicker. With
+     * {@code loadFromCache} a pod that started with an empty cache stays at zero until the cache is
+     * filled and the next scheduled refresh runs.
+     */
+    public int getNumberOfCertificates() {
+        return numberOfCertificates;
     }
 
     public LOTLSource europeanLOTL() {

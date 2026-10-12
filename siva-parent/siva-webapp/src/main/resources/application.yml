@@ -17,6 +17,13 @@ management:
       show-details: "ALWAYS"
       probes:
         enabled: true
+      group:
+        readiness:
+          # A pod is ready only once its trust lists are loaded (tsl-loader's TSLHealthIndicator).
+          # Status only, like the built-in probe group; the details stay on /monitoring/health.
+          include: readinessState, tsl
+          show-details: never
+          show-components: never
     heartbeat:
       enabled: true
       cache:

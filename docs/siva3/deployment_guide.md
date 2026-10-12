@@ -373,6 +373,10 @@ The endpoint is implemented as a customized Spring boot [health endpoint](http:/
 Demo webapp and Siva webapp include additional information about the health of their dependent services.
 These links to dependent web services have been preconfigured. For example, the Demo webapp is preset to check whether the Siva webapp is accessible from the following url (parameter `siva.service.serviceHost` value)/monitoring/health.
 
+* **Trust lists**
+
+The `tsl` component reports, per trusted list, the number of trust anchors and when the last refresh finished. It is DOWN until every trusted list has been loaded with at least one anchor, and goes DOWN again when a refresh leaves a list empty; the overall health and the heartbeat follow it. It is part of the `readiness` probe group (`/monitoring/health/readiness`), so a Kubernetes pod in that state receives no traffic.
+
 ## Heartbeat endpoint
 
 !!! note

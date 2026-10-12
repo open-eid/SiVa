@@ -48,6 +48,14 @@
     "network": {
       "type": "object",
       "properties": {
+        "networkPolicy": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "ingressFrom": { "type": "array" },
+            "managementFrom": { "type": "array" }
+          }
+        },
         "ingresses": {
           "type": "array",
           "items": {
@@ -60,6 +68,66 @@
               "hosts": { "type": "array" },
               "tls": { "type": "array" }
             }
+          }
+        }
+      }
+    },
+    "scaling": {
+      "type": "object",
+      "properties": {
+        "pdb": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "minAvailable": { "type": ["integer", "string"] },
+            "maxUnavailable": { "type": ["integer", "string"] }
+          }
+        },
+        "hpa": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "minReplicas": { "type": "integer", "minimum": 1 },
+            "maxReplicas": { "type": "integer", "minimum": 1 },
+            "targetCPUUtilizationPercentage": { "type": ["integer", "string"] },
+            "targetMemoryUtilizationPercentage": { "type": ["integer", "string"] },
+            "customMetrics": { "type": "array" },
+            "behavior": { "type": "object" }
+          }
+        }
+      }
+    },
+    "monitoring": {
+      "type": "object",
+      "properties": {
+        "serviceMonitor": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "interval": { "type": "string", "pattern": "^[0-9]+(ms|s|m|h)$" },
+            "scrapeTimeout": { "type": "string", "pattern": "^[0-9]+(ms|s|m|h)$" },
+            "labels": { "type": "object" },
+            "namespace": { "type": "string" },
+            "relabelings": { "type": "array" }
+          }
+        },
+        "prometheusRule": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "labels": { "type": "object" },
+            "namespace": { "type": "string" },
+            "pendingRules": { "type": "boolean" },
+            "additionalRules": { "type": "array" }
+          }
+        },
+        "grafanaDashboard": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "labels": { "type": "object" },
+            "annotations": { "type": "object" },
+            "namespace": { "type": "string" }
           }
         }
       }

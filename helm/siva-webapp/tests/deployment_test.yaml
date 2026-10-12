@@ -409,9 +409,8 @@ tests:
       - equal:
           path: spec.template.spec.imagePullSecrets[0].name
           value: example-registry-credentials
-      - equal:
-          path: spec.replicas
-          value: 2
+      - notExists:
+          path: spec.replicas   # the all-on overlay turns the HPA on
 
   - it: splits the actuator onto the management port by default
     template: deployment.yaml

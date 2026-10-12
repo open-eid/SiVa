@@ -1,0 +1,89 @@
+suite: prometheus rule
+templates:
+  - prometheusrule.yaml
+tests:
+  - it: is off by default
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: renders the four rules on existing metrics, scoped to the release's pods and namespace
+    set:
+      monitoring:
+        prometheusRule:
+          enabled: true
+    asserts:
+      - isKind:
+          of: PrometheusRule
+      - lengthEqual:
+          path: spec.groups[0].rules
+          count: 4
+      - equal:
+          path: spec.groups[0].rules[0].alert
+          value: SivaNotReady
+      - equal:
+          path: spec.groups[0].rules[0].expr
+          value: kube_pod_status_ready{namespace="NAMESPACE",pod=~"RELEASE-NAME-siva-webapp-[a-z0-9]+-[a-z0-9]+",condition="true"} == 0
+      - equal:
+          path: spec.groups[0].rules[0].for
+          value: 15m
+      - equal:
+          path: spec.groups[0].rules[1].alert
+          value: SivaValidationErrorRate
+      - matchRegex:
+          path: spec.groups[0].rules[1].expr
+          pattern: ^sum\(rate\(http_server_requests_seconds_count\{namespace="NAMESPACE",pod=~"RELEASE-NAME-siva-webapp-\[a-z0-9\]\+-\[a-z0-9\]\+",uri!~"/monitoring\.\*",status=~"5\.\."\}\[10m\]\)\)\s+/ sum\(rate\(http_server_requests_seconds_count\{namespace="NAMESPACE",pod=~"[^"]+",uri!~"/monitoring\.\*"\}\[10m\]\)\) > 0\.05$
+      - equal:
+          path: spec.groups[0].rules[2].alert
+          value: SivaRestarts
+      - equal:
+          path: spec.groups[0].rules[2].expr
+          value: increase(kube_pod_container_status_restarts_total{namespace="NAMESPACE",pod=~"RELEASE-NAME-siva-webapp-[a-z0-9]+-[a-z0-9]+"}[1h]) > 2
+      - equal:
+          path: spec.groups[0].rules[3].alert
+          value: SivaOomKilled
+      - matchRegex:
+          path: spec.groups[0].rules[3].expr
+          pattern: reason="OOMKilled"\} == 1\s+and on \(namespace, pod, container\) increase\(kube_pod_container_status_restarts_total\{[^}]+\}\[30m\]\) > 0$
+      - equal:
+          path: spec.groups[0].rules[3].labels.severity
+          value: critical
+      - matchRegex:
+          path: spec.groups[0].rules[0].annotations.summary
+          pattern: "\\{\\{ \\$labels.pod \\}\\}"
+  - it: escapes dots in the release name inside the pod regex
+    release:
+      name: siva.v2
+    set:
+      monitoring:
+        prometheusRule:
+          enabled: true
+    asserts:
+      - matchRegex:
+          path: spec.groups[0].rules[0].expr
+          pattern: 'pod=~"siva\\\\\.v2-siva-webapp-'   # rendered text is siva\\.v2 (PromQL string escape of \.)
+  - it: adds the pending rules and extra rules when asked
+    set:
+      monitoring:
+        prometheusRule:
+          enabled: true
+          pendingRules: true
+          namespace: monitoring
+          additionalRules:
+            - alert: SivaCustom
+              expr: vector(1)
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: monitoring
+      - lengthEqual:
+          path: spec.groups[0].rules
+          count: 9
+      - equal:
+          path: spec.groups[0].rules[4].alert
+          value: SivaRequestRejectedSize
+      - equal:
+          path: spec.groups[0].rules[5].alert
+          value: SivaTslStale
+      - equal:
+          path: spec.groups[0].rules[8].alert
+          value: SivaCustom

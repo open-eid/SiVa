@@ -14,6 +14,16 @@ env:
   - name: EXAMPLE_FLAG
     value: "1"
 network:
+  networkPolicy:
+    enabled: true
+    ingressFrom:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: ingress-nginx
+    managementFrom:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: monitoring
   ingresses:
     - name: public
       className: nginx
@@ -64,3 +74,24 @@ topologySpreadConstraints:
     labelSelector:
       matchLabels:
         app.kubernetes.io/name: siva-webapp
+scaling:
+  pdb:
+    enabled: true
+  hpa:
+    enabled: true
+    targetMemoryUtilizationPercentage: 80
+    behavior:
+      scaleDown:
+        stabilizationWindowSeconds: 600
+monitoring:
+  serviceMonitor:
+    enabled: true
+    labels:
+      release: kube-prometheus-stack
+  prometheusRule:
+    enabled: true
+    pendingRules: true
+    labels:
+      release: kube-prometheus-stack
+  grafanaDashboard:
+    enabled: true

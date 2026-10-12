@@ -10,7 +10,9 @@ metadata:
   labels:
     {{- include "siva-webapp.labels" . | nindent 4 }}
 spec:
+  {{- if not .Values.scaling.hpa.enabled }}
   replicas: {{ .Values.replicaCount }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "siva-webapp.selectorLabels" . | nindent 6 }}

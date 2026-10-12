@@ -1,0 +1,77 @@
+suite: service
+templates:
+  - service.yaml
+tests:
+  - it: is a ClusterIP on 8080 -> http by default
+    asserts:
+      - isKind:
+          of: Service
+      - equal:
+          path: spec.type
+          value: ClusterIP
+      - contains:
+          path: spec.ports
+          content:
+            name: http
+            port: 8080
+            targetPort: http
+            protocol: TCP
+      - notExists:
+          path: spec.ports[0].nodePort
+      - isSubset:
+          path: spec.selector
+          content:
+            app.kubernetes.io/name: siva-webapp
+            app.kubernetes.io/instance: RELEASE-NAME
+  - it: service.port and service.containerPort are independent (port -> named targetPort)
+    set:
+      service:
+        port: 80
+        containerPort: 9090
+    asserts:
+      - equal:
+          path: spec.ports[0].port
+          value: 80
+      - equal:
+          path: spec.ports[0].targetPort
+          value: http
+
+  - it: pins the node port only for NodePort
+    set:
+      service:
+        type: NodePort
+        nodePort: 30080
+    asserts:
+      - equal:
+          path: spec.type
+          value: NodePort
+      - equal:
+          path: spec.ports[0].nodePort
+          value: 30080
+  - it: ignores nodePort for ClusterIP
+    set:
+      service:
+        nodePort: 30080
+    asserts:
+      - notExists:
+          path: spec.ports[0].nodePort
+  - it: the kind overlay exposes a fixed NodePort
+    values:
+      - ../values-kind.yaml
+    asserts:
+      - equal:
+          path: spec.type
+          value: NodePort
+      - equal:
+          path: spec.ports[0].nodePort
+          value: 30080
+
+  - it: renders annotations
+    set:
+      service:
+        annotations:
+          example.invalid/a: b
+    asserts:
+      - equal:
+          path: metadata.annotations["example.invalid/a"]
+          value: b

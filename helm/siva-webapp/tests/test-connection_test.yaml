@@ -1,0 +1,29 @@
+suite: helm test pod
+templates:
+  - tests/test-connection.yaml
+tests:
+  - it: renders the test hook against the service port
+    asserts:
+      - isKind:
+          of: Pod
+      - equal:
+          path: metadata.annotations["helm.sh/hook"]
+          value: test
+      - contains:
+          path: spec.containers[0].args
+          content: http://RELEASE-NAME-siva-webapp:8080/monitoring/health
+  - it: follows service.port
+    set:
+      service:
+        port: 80
+    asserts:
+      - contains:
+          path: spec.containers[0].args
+          content: http://RELEASE-NAME-siva-webapp:80/monitoring/health
+  - it: can be switched off
+    set:
+      tests:
+        enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0

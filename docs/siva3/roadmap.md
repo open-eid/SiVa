@@ -13,7 +13,7 @@ This roadmap is for information purposes and can change without prior notice.
 - Upgrade DSS to a 6.5 release
 - General dependency updates and maintenance improvements
 
-### 3.13.0 release - Targeted for February 2026
+### 3.13.0 release - Targeted for February 2027
 - Add JAdES validation support
 - General dependency updates and maintenance improvements
 

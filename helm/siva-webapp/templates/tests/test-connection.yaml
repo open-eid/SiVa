@@ -8,17 +8,24 @@ metadata:
   annotations:
     "helm.sh/hook": test
 spec:
-  {{- with .Values.security.podSecurityContext }}
+  automountServiceAccountToken: false
+  # A fixed-purpose pod: the restricted profile is spelled out here rather than inherited from
+  # security.*, and busybox has no numeric USER, so the uid is explicit (tests.runAsUser).
   securityContext:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+    runAsNonRoot: true
+    runAsUser: {{ .Values.tests.runAsUser }}
+    runAsGroup: {{ .Values.tests.runAsUser }}
+    seccompProfile:
+      type: RuntimeDefault
   containers:
     - name: wget
       image: {{ .Values.tests.image }}
-      {{- with .Values.security.securityContext }}
       securityContext:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities:
+          drop:
+            - ALL
       command: ['wget']
       args: ['-q', '-O-', {{ include "siva-webapp.healthUrl" . | quote }}]
   restartPolicy: Never

@@ -41,13 +41,15 @@ helm install siva ./helm/siva-webapp \
 | `env`, `envFrom.existingSecret` | `[]`, `""` | Extra env vars; a Secret to source env from. |
 | `probes.startup/readiness/liveness` | actuator paths under `/monitoring/health` | All timings overridable. Startup budget 10 min by default. |
 | `resources` | req 500m/1Gi, limit 2Gi | Paketo sizes the heap from the memory **limit**. |
-| `security.podSecurityContext`, `security.securityContext` | restricted-compatible | `readOnlyRootFilesystem` is `false` for now, see comment in values. |
+| `security.podSecurityContext`, `security.securityContext` | Pod Security "restricted" | runAsNonRoot, RuntimeDefault seccomp, no privilege escalation, all capabilities dropped, read-only root (only `/tmp` is writable, an emptyDir). Overriding a field relaxes the profile; enforce it with the namespace label. |
+| `tmpSizeLimit` | `1Gi` | Size limit of the `/tmp` emptyDir (trust-list caches, temp files); the pod is evicted when it fills, so keep headroom. Empty for none. |
 | `security.automountServiceAccountToken` | `false` | |
 | `network.ingresses` | `[]` | List of Ingress objects (`name`, `className`, `annotations`, `hosts`, `tls`). Set the body-size annotation of your controller to at least 27 MB. |
 | `serviceAccount.create/name/annotations` | `true`, `""`, `{}` | |
 | `nodeSelector`, `tolerations`, `affinity` | empty | |
+| `topologySpreadConstraints` | soft spread over nodes | Plain constraints; `labelSelector` defaults to the chart's pods. `[]` disables. |
 | `terminationGracePeriodSeconds` | `60` | Greater than preStop sleep + shutdown timeout. |
-| `tests.enabled`, `tests.image` | `true`, `busybox:1.37.0` | `helm test` pod hitting `/monitoring/health` on the management Service. |
+| `tests.enabled`, `tests.image`, `tests.runAsUser` | `true`, `busybox:1.37.0`, `65534` | `helm test` pod hitting `/monitoring/health` on the management Service; runs as the given uid under the same restricted context. |
 | `trust.*`, `scaling.hpa.*`, `network.networkPolicy.*`, `monitoring.serviceMonitor.*` | disabled | Placeholders; keys reserved, no templates yet. |
 
 ## Verifying on a NodePort (kind or any node you can reach)

@@ -66,6 +66,28 @@
     },
     "security": { "type": "object" },
     "serviceAccount": { "type": "object" },
-    "terminationGracePeriodSeconds": { "type": "integer", "minimum": 0 }
+    "terminationGracePeriodSeconds": { "type": "integer", "minimum": 0 },
+    "tmpSizeLimit": { "type": "string", "pattern": "^([0-9]+(\\.[0-9]+)?(Ei|Pi|Ti|Gi|Mi|Ki|E|P|T|G|M|k|m)?)?$" },
+    "topologySpreadConstraints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["maxSkew", "topologyKey", "whenUnsatisfiable"],
+        "properties": {
+          "maxSkew": { "type": "integer", "minimum": 1 },
+          "topologyKey": { "type": "string", "minLength": 1 },
+          "whenUnsatisfiable": { "type": "string", "enum": ["DoNotSchedule", "ScheduleAnyway"] },
+          "labelSelector": { "type": "object" }
+        }
+      }
+    },
+    "tests": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "image": { "type": "string", "minLength": 1 },
+        "runAsUser": { "type": "integer", "minimum": 1 }
+      }
+    }
   }
 }

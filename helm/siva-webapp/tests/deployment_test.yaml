@@ -293,10 +293,13 @@ tests:
           path: spec.template.spec.containers[0].securityContext.capabilities.drop
           content: ALL
       - equal:
+          path: spec.template.spec.containers[0].securityContext.readOnlyRootFilesystem
+          value: true
+      - equal:
           path: spec.template.spec.terminationGracePeriodSeconds
           value: 60
 
-  - it: resources and /tmp emptyDir are present by default
+  - it: resources and a size-limited /tmp emptyDir are present by default
     template: deployment.yaml
     asserts:
       - equal:
@@ -306,7 +309,68 @@ tests:
           path: spec.template.spec.volumes
           content:
             name: tmp
+            emptyDir:
+              sizeLimit: 1Gi
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: tmp
+            mountPath: /tmp
+
+  - it: the /tmp size limit can be dropped
+    template: deployment.yaml
+    set:
+      tmpSizeLimit: ""
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: tmp
             emptyDir: {}
+
+  - it: spreads replicas over nodes softly by default, selecting its own pods
+    template: deployment.yaml
+    asserts:
+      - lengthEqual:
+          path: spec.template.spec.topologySpreadConstraints
+          count: 1
+      - equal:
+          path: spec.template.spec.topologySpreadConstraints[0]
+          value:
+            maxSkew: 1
+            topologyKey: kubernetes.io/hostname
+            whenUnsatisfiable: ScheduleAnyway
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: siva-webapp
+                app.kubernetes.io/instance: RELEASE-NAME
+
+  - it: keeps an explicit labelSelector on a spread constraint
+    template: deployment.yaml
+    set:
+      topologySpreadConstraints:
+        - maxSkew: 2
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              custom: selector
+    asserts:
+      - equal:
+          path: spec.template.spec.topologySpreadConstraints[0].labelSelector.matchLabels
+          value:
+            custom: selector
+      - equal:
+          path: spec.template.spec.topologySpreadConstraints[0].maxSkew
+          value: 2
+
+  - it: renders no spread constraints when the list is empty
+    template: deployment.yaml
+    set:
+      topologySpreadConstraints: []
+    asserts:
+      - notExists:
+          path: spec.template.spec.topologySpreadConstraints
 
   - it: scheduling knobs, pod annotations and labels are only rendered when set
     template: deployment.yaml
@@ -452,3 +516,44 @@ tests:
     asserts:
       - failedTemplate:
           errorPattern: terminationGracePeriodSeconds \(60\) must exceed
+
+  - it: defaults the selector per entry and passes other constraint fields through
+    template: deployment.yaml
+    set:
+      nameOverride: validator
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: DoNotSchedule
+          minDomains: 2
+          matchLabelKeys: [pod-template-hash]
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchExpressions:
+              - key: custom
+                operator: Exists
+    asserts:
+      - lengthEqual:
+          path: spec.template.spec.topologySpreadConstraints
+          count: 2
+      - equal:
+          path: spec.template.spec.topologySpreadConstraints[0].labelSelector.matchLabels
+          value:
+            app.kubernetes.io/name: validator
+            app.kubernetes.io/instance: RELEASE-NAME
+      - equal:
+          path: spec.template.spec.topologySpreadConstraints[0].minDomains
+          value: 2
+      - equal:
+          path: spec.template.spec.topologySpreadConstraints[0].matchLabelKeys
+          value: [pod-template-hash]
+      - equal:
+          path: spec.template.spec.topologySpreadConstraints[1].labelSelector
+          value:
+            matchExpressions:
+              - key: custom
+                operator: Exists
+      - notExists:
+          path: spec.template.spec.topologySpreadConstraints[1].labelSelector.matchLabels

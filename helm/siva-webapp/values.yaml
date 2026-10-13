@@ -64,10 +64,12 @@ config:
 # Runtime settings the chart injects as environment variables (Spring relaxed binding). They are
 # kept out of config.applicationYaml so that an override there cannot silently drop them.
 runtime:
-  # -- Actuator (health, probes, Prometheus) on its own port. The traffic Service and the
-  # Ingresses never carry it; a ClusterIP Service `<release>-management` exposes it in-cluster
-  # for probes, scraping and `helm test`. Set it equal to service.containerPort to keep the
-  # actuator on the traffic port (the layout SiVa's docker-compose and system tests expect).
+  # -- Actuator (health with details, Prometheus, heartbeat, version) on its own port. The
+  # traffic Service and the Ingresses never carry it; a ClusterIP Service `<release>-management`
+  # exposes it in-cluster for scraping and `helm test`. The traffic port keeps the status-only
+  # probe paths /readyz and /livez for the kubelet and external load balancers. Set it equal to
+  # service.containerPort to keep the whole actuator on the traffic port (the layout SiVa's
+  # docker-compose and system tests expect; the probes then use /monitoring/health/*).
   managementPort: 8081
   # -- Graceful shutdown (server.shutdown=graceful): on SIGTERM the server stops accepting new
   # connections and waits up to this long for in-flight validations
@@ -107,18 +109,19 @@ trust:
   # -- Placeholder, not wired yet: a Secret with PEM trust material.
   pemSecret: ""
 
-# Probes talk to the actuator connector (management port), not the traffic one: a wedged
-# traffic connector keeps the pod Ready. That is the accepted trade-off of keeping the actuator
-# off the public surface. Trust lists are downloaded at startup and that takes minutes;
-# readiness turns true before the download finishes today (an application change to gate
-# readiness on the trust lists is planned). The startup probe budget
-# (periodSeconds * failureThreshold = 10 min) is the compensation: tune it to your egress.
+# Probes go to the traffic port, so a wedged traffic connector fails readiness and the pod leaves
+# the Service. Readiness is Spring Boot's readiness group plus SiVa's `tsl` component: a pod is
+# Ready only once the mandatory trusted lists (siva.tsl.loader.mandatoryTerritories, EE by
+# default) are loaded, which takes minutes on first start; the startup probe budget
+# (periodSeconds * failureThreshold = 10 min) covers that download: tune it to your egress.
+# Paths default to /readyz and /livez with the management port split and to
+# /monitoring/health/readiness and /liveness without it (see runtime.managementPort).
 probes:
   startup:
     # -- Render the startup probe.
     enabled: true
-    # -- Path on the management port (the traffic port when the actuator is not split).
-    path: /monitoring/health/liveness
+    # -- Path on the traffic port; empty picks the liveness group's path for the layout.
+    path: ""
     # -- Seconds before the first probe.
     initialDelaySeconds: 10
     # -- Seconds between probes.
@@ -131,8 +134,8 @@ probes:
   readiness:
     # -- Render the readiness probe.
     enabled: true
-    # -- Path on the management port (the traffic port when the actuator is not split).
-    path: /monitoring/health/readiness
+    # -- Path on the traffic port; empty picks the readiness group's path for the layout.
+    path: ""
     # -- Seconds before the first probe.
     initialDelaySeconds: 0
     # -- Seconds between probes.
@@ -144,8 +147,8 @@ probes:
   liveness:
     # -- Render the liveness probe.
     enabled: true
-    # -- Path on the management port (the traffic port when the actuator is not split).
-    path: /monitoring/health/liveness
+    # -- Path on the traffic port; empty picks the liveness group's path for the layout.
+    path: ""
     # -- Seconds before the first probe.
     initialDelaySeconds: 0
     # -- Seconds between probes.
@@ -212,9 +215,9 @@ network:
     # included); list your Ingress controller's namespace to narrow it.
     ingressFrom: []
     # -- Peers allowed to the management port when the actuator is split: Prometheus, and the
-    # `helm test` pod if you still want it to pass (kubelet probes come from the node and are
-    # not subject to the policy on most CNIs). Empty: any source. Without the split the
-    # actuator sits on the traffic port and ingressFrom governs it; this list is then unused.
+    # `helm test` pod if you still want it to pass (the kubelet probes use the traffic port).
+    # Empty: any source. Without the split the actuator sits on the traffic port and
+    # ingressFrom governs it; this list is then unused.
     managementFrom: []
 
 monitoring:

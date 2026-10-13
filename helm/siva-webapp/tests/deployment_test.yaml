@@ -224,7 +224,12 @@ tests:
           value: Always
       - lengthEqual:
           path: spec.template.spec.containers[0].env
-          count: 9   # 5 chart-owned (no management port: the overlay keeps the actuator on 8080) + 4
+          count: 12   # 5 chart-owned (no management port: the overlay keeps the actuator on 8080) + 3 snapshot mode + 4
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_SNAPSHOTPOLLINTERVAL
+            value: PT30S
       - notExists:
           path: spec.template.spec.containers[0].env[?(@.name == "MANAGEMENT_SERVER_PORT")]
       - contains:
@@ -602,3 +607,83 @@ tests:
                 operator: Exists
       - notExists:
           path: spec.template.spec.topologySpreadConstraints[1].labelSelector.matchLabels
+
+  - it: runs online by default, with no trust-list store mounted
+    template: deployment.yaml
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].env[?(@.name == "SIVA_TSL_LOADER_LOADFROMCACHE")]
+      - notExists:
+          path: spec.template.spec.volumes[?(@.name == "tsl-store")]
+      - lengthEqual:
+          path: spec.template.spec.containers[0].volumeMounts
+          count: 2
+
+  - it: in snapshot mode reads the store read-only and follows its current snapshot
+    template: deployment.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          volume:
+            persistentVolumeClaim:
+              claimName: my-tsl
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_LOADFROMCACHE
+            value: "true"
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_SNAPSHOTDIRECTORY
+            value: /var/siva/tsl
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_SNAPSHOTPOLLINTERVAL
+            value: PT1M
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: tsl-store
+            mountPath: /var/siva/tsl
+            readOnly: true
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: tsl-store
+            persistentVolumeClaim:
+              claimName: my-tsl
+
+  - it: in snapshot mode mounts the chart's own claim when it creates one
+    template: deployment.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          mountPath: /mnt/tsl
+          persistentVolumeClaim:
+            create: true
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: tsl-store
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-siva-webapp-tsl
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_SNAPSHOTDIRECTORY
+            value: /mnt/tsl
+
+  - it: refuses snapshot mode without a store
+    template: deployment.yaml
+    set:
+      tsl:
+        mode: snapshot
+    asserts:
+      - failedTemplate:
+          errorPattern: tsl.mode snapshot needs a store

@@ -11,8 +11,9 @@ nameOverride: ""
 # -- Override the full resource name (release name + chart name).
 fullnameOverride: ""
 
-# -- Number of webapp replicas (ignored when scaling.hpa is on). Each replica downloads the
-# trust lists itself at startup (see "Known limits"), so scale with that in mind.
+# -- Number of webapp replicas (ignored when scaling.hpa is on). In `tsl.mode: online` each
+# replica downloads the trust lists itself at startup (minutes); in snapshot mode it reads the
+# published snapshot (seconds).
 replicaCount: 1
 
 image:
@@ -110,6 +111,87 @@ trust:
   pemConfigMap: ""
   # -- Placeholder, not wired yet: a Secret with PEM trust material.
   pemSecret: ""
+
+# How the pods get the EU trust lists (LOTL and member-state lists) they validate against.
+tsl:
+  # -- `online`: every pod downloads the lists itself at startup and on SiVa's nightly cron
+  # (needs HTTPS egress to ~30 hosts, minutes until ready, replicas started at different times
+  # can hold different trust states). `snapshot`: a CronJob running this image in SiVa's
+  # `tsl-fetch` profile downloads them, publishes a snapshot into a shared volume and every
+  # pod reads that (ready in seconds, identical trust state, no egress to the list hosts from
+  # the webapp); the fetcher publishes only when the mandatory territories came through, so
+  # `current` always names the last good snapshot. Needs a SiVa build with the fetcher
+  # (3.11.0+).
+  mode: online
+  snapshot:
+    # -- Where the snapshot store is mounted (read-only in the webapp pods, read-write in the
+    # fetcher).
+    mountPath: /var/siva/tsl
+    # -- The store: a volume source without the `name`, for example
+    # `persistentVolumeClaim: {claimName: siva-tsl}` for a ReadWriteMany claim you created, or
+    # a CSI bucket mount. Ignored when persistentVolumeClaim.create is on. The fetcher renames
+    # files and directories in it, so the filesystem must support rename; an object-store
+    # mount that does not (mountpoint-s3) cannot hold it.
+    volume: {}
+    persistentVolumeClaim:
+      # -- Create the claim (`<release>-tsl`, kept on uninstall). ReadWriteMany when the
+      # fetcher and the webapp pods may land on different nodes; ReadWriteOnce is enough on a
+      # single node (kind).
+      create: false
+      # -- Access modes of the claim.
+      accessModes: [ReadWriteMany]
+      # -- Requested size; a snapshot is about 10 MB, keepSnapshots + 1 of them are kept.
+      size: 1Gi
+      # -- StorageClass; empty for the cluster default.
+      storageClassName: ""
+      # -- Claim annotations.
+      annotations: {}
+    # -- How often a pod checks `current` for a new snapshot (ISO-8601 duration;
+    # siva.tsl.loader.snapshotPollInterval). Replicas converge within this of a publish; the
+    # nightly refresh stays as the safety net.
+    pollInterval: PT1M
+  fetcher:
+    # -- Cron schedule of the fetch. Keep it well inside the shortest list validity you rely
+    # on: a snapshot that goes stale degrades every replica at once, not one by one.
+    schedule: "0 */6 * * *"
+    # -- IANA time zone of the schedule (Kubernetes 1.27+); empty for the controller's.
+    timeZone: ""
+    # -- Seconds after a missed schedule the fetch may still start; empty for the default.
+    startingDeadlineSeconds: ""
+    # -- Snapshots kept besides the current one (siva.tsl.fetcher.keepSnapshots); a pod in the
+    # middle of loading an older one is not pulled away.
+    keepSnapshots: 3
+    # -- Seconds a fetch may run before it is killed (30 lists take a few minutes).
+    activeDeadlineSeconds: 1800
+    # -- Retries of a failed fetch within one schedule slot (a new pod each time).
+    backoffLimit: 2
+    # -- Finished fetch Jobs kept for `kubectl get jobs` and the alert rule.
+    successfulJobsHistoryLimit: 3
+    # -- Failed fetch Jobs kept.
+    failedJobsHistoryLimit: 3
+    # -- Also run one fetch as a Job at install and whenever the fetcher pod changes (image,
+    # config), so a fresh install has a snapshot without waiting for the schedule. Named after
+    # a hash of the pod spec; the finished Job stays until the next change replaces it.
+    bootstrapJob: true
+    # -- Working cache the fetcher downloads into, kept between runs so that a list whose
+    # download fails keeps its last copy: a volume source as above, or empty for a `work/`
+    # directory inside the store.
+    workVolume: {}
+    # -- Resources of the fetcher pod; the JVM is sized from the memory limit as for the webapp.
+    # @default -- requests 250m / 512Mi, limit 1Gi memory
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        memory: 1Gi
+    # -- Extra environment variables for the fetcher only; it already gets `env`, `envFrom`,
+    # the ConfigMap and `runtime.javaToolOptions` (same profile and settings as the webapp,
+    # which is what makes its snapshot the one the webapp expects).
+    env: []
+    # -- Seconds without a successful fetch before the SivaTslFetchFailing alert fires
+    # (monitoring.prometheusRule, needs kube-state-metrics).
+    staleAfterSeconds: 86400
 
 # Probes go to the traffic port, so a wedged traffic connector fails readiness and the pod leaves
 # the Service. Readiness is Spring Boot's readiness group plus SiVa's `tsl` component: a pod is
@@ -278,16 +360,18 @@ security:
   # runAsUser/runAsGroup: the buildpack image carries a numeric non-root USER (whatever
   # CNB_USER_ID the builder used) and the launcher needs to run as exactly that uid to read
   # /layers; pinning a uid here breaks launch when the image was built as another one. Set them
-  # only if your image has no numeric USER.
+  # only if your image has no numeric USER. Applies to the fetcher pod too; add `fsGroup` when
+  # your storage does not make the snapshot volume writable for the image's user.
   # @default -- runAsNonRoot, RuntimeDefault seccomp
   podSecurityContext:
     runAsNonRoot: true
     seccompProfile:
       type: RuntimeDefault
   # -- Container security context. The only writable path the app needs is /tmp
-  # (java.io.tmpdir: DSS and DigiDoc4J trust-list caches, temporary policy files; Paketo's
-  # certificate loader also copies the JVM truststore there when its layer is read-only) and
-  # it is an emptyDir. Logs go to stdout.
+  # (java.io.tmpdir: DSS and DigiDoc4J trust-list caches in online mode, temporary policy
+  # files; Paketo's certificate loader also copies the JVM truststore there when its layer is
+  # read-only) and it is an emptyDir; in snapshot mode the fetcher also writes the store. Logs
+  # go to stdout.
   # @default -- no privilege escalation, drop ALL, read-only root
   securityContext:
     allowPrivilegeEscalation: false

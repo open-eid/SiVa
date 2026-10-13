@@ -60,6 +60,18 @@ spec:
           annotations:
             summary: "SiVa pod {{ "{{ $labels.pod }}" }} was OOM-killed in the last 30 minutes"
             description: "Raise resources.limits.memory (Paketo sizes the heap from it) or lower the thread count."
+        {{- if include "siva-webapp.snapshotMode" . }}
+        # kube-state-metrics' view of the fetch CronJob: 0 until the first success, then the
+        # epoch seconds of the last one.
+        - alert: SivaTslFetchFailing
+          expr: >-
+            time() - max(kube_cronjob_status_last_successful_time{namespace="{{ $ns }}",cronjob="{{ include "siva-webapp.fetcherName" . }}"}) > {{ .Values.tsl.fetcher.staleAfterSeconds }}
+          labels:
+            severity: warning
+          annotations:
+            summary: "SiVa trust-list fetch has not succeeded for {{ .Values.tsl.fetcher.staleAfterSeconds }} s"
+            description: "The pods keep validating on the last published snapshot; its lists expire one by one. Check the fetch Job's logs: kubectl -n {{ $ns }} logs job/<newest {{ include "siva-webapp.fetcherName" . }}-...>."
+        {{- end }}
         {{- if .Values.monitoring.prometheusRule.pendingRules }}
         # Signals the application does not publish yet: oversized requests are answered 400 like
         # any other bad request (no 413, no counter), trust-list age/territory state and OCSP/TSA

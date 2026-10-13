@@ -6,9 +6,18 @@ Image: {{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppV
   image.repository (and image.tag) to it, or the pod will stay in ImagePullBackOff.
 {{- end }}
 
+{{- if include "siva-webapp.snapshotMode" . }}
+Trust lists come from a snapshot: the fetch Job runs first (then the CronJob
+{{ include "siva-webapp.fetcherName" . }} on "{{ .Values.tsl.fetcher.schedule }}"), the pods load it
+within {{ .Values.tsl.snapshot.pollInterval }} and become ready in seconds. Watch it with
+  kubectl -n {{ .Release.Namespace }} get jobs,cronjobs -l app.kubernetes.io/component=tsl-fetch
+  kubectl -n {{ .Release.Namespace }} logs -l app.kubernetes.io/component=tsl-fetch --tail=20
+  kubectl -n {{ .Release.Namespace }} rollout status deployment/{{ include "siva-webapp.fullname" . }}
+{{- else }}
 Startup downloads the EU trust lists and takes a few minutes; watch it with
   kubectl -n {{ .Release.Namespace }} rollout status deployment/{{ include "siva-webapp.fullname" . }}
   kubectl -n {{ .Release.Namespace }} logs deployment/{{ include "siva-webapp.fullname" . }} -f
+{{- end }}
 
 {{- if include "siva-webapp.managementSplit" . }}
 

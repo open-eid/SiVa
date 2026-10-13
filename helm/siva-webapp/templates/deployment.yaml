@@ -61,6 +61,14 @@ spec:
               value: {{ .Values.runtime.shutdownTimeout | quote }}
             - name: SERVER_FORWARD_HEADERS_STRATEGY
               value: {{ .Values.runtime.forwardHeadersStrategy | quote }}
+            {{- if include "siva-webapp.snapshotMode" . }}
+            - name: SIVA_TSL_LOADER_LOADFROMCACHE
+              value: "true"
+            - name: SIVA_TSL_LOADER_SNAPSHOTDIRECTORY
+              value: {{ .Values.tsl.snapshot.mountPath | quote }}
+            - name: SIVA_TSL_LOADER_SNAPSHOTPOLLINTERVAL
+              value: {{ .Values.tsl.snapshot.pollInterval | quote }}
+            {{- end }}
             {{- with .Values.runtime.javaToolOptions }}
             - name: JAVA_TOOL_OPTIONS
               value: {{ . | quote }}
@@ -140,9 +148,14 @@ spec:
             - name: config
               mountPath: {{ .Values.config.mountPath }}
               readOnly: true
-            # TSL cache and JVM temp files live under java.io.tmpdir.
+            # Trust-list cache (online mode) and JVM temp files live under java.io.tmpdir.
             - name: tmp
               mountPath: /tmp
+            {{- if include "siva-webapp.snapshotMode" . }}
+            - name: tsl-store
+              mountPath: {{ .Values.tsl.snapshot.mountPath }}
+              readOnly: true
+            {{- end }}
       volumes:
         - name: config
           configMap:
@@ -154,6 +167,10 @@ spec:
             {{- else }}
             {}
             {{- end }}
+        {{- if include "siva-webapp.snapshotMode" . }}
+        - name: tsl-store
+          {{- include "siva-webapp.tslStoreVolumeSource" . | nindent 10 }}
+        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -1,0 +1,86 @@
+suite: trust-list bootstrap job
+templates:
+  - job-tsl-fetch.yaml
+  - configmap.yaml   # referenced by the checksum annotation
+tests:
+  - it: is not rendered in online mode
+    template: job-tsl-fetch.yaml
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: runs one fetch with the cronjob's pod template, named after a hash of it
+    template: job-tsl-fetch.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Job
+      - matchRegex:
+          path: metadata.name
+          pattern: ^RELEASE-NAME-siva-webapp-tsl-fetch-[0-9a-f]{8}$
+      - equal:
+          path: metadata.labels["app.kubernetes.io/component"]
+          value: tsl-fetch
+      - notExists:
+          path: metadata.annotations
+      - equal:
+          path: spec.backoffLimit
+          value: 2
+      - equal:
+          path: spec.activeDeadlineSeconds
+          value: 1800
+      - notExists:
+          path: spec.ttlSecondsAfterFinished
+      - equal:
+          path: spec.template.spec.restartPolicy
+          value: Never
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SPRING_PROFILES_INCLUDE
+            value: tsl-fetch
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: tsl-store
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-siva-webapp-tsl
+
+  - it: changes its name when the fetcher pod changes
+    template: job-tsl-fetch.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+      image:
+        tag: other
+    asserts:
+      - matchRegex:
+          path: metadata.name
+          pattern: ^RELEASE-NAME-siva-webapp-tsl-fetch-[0-9a-f]{8}$
+      - notEqual:
+          path: metadata.name
+          value: RELEASE-NAME-siva-webapp-tsl-fetch-29856fe6
+
+  - it: can be switched off
+    template: job-tsl-fetch.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+        fetcher:
+          bootstrapJob: false
+    asserts:
+      - hasDocuments:
+          count: 0

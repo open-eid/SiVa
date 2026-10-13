@@ -1,0 +1,186 @@
+suite: trust-list fetch cronjob
+templates:
+  - cronjob-tsl-fetch.yaml
+  - configmap.yaml   # referenced by the checksum annotation
+chart:
+  appVersion: 9.9.9
+tests:
+  - it: is not rendered in online mode
+    template: cronjob-tsl-fetch.yaml
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: runs the webapp image in the tsl-fetch profile against the store, one at a time
+    template: cronjob-tsl-fetch.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+      env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: test
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: CronJob
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-siva-webapp-tsl-fetch
+      - equal:
+          path: metadata.labels["app.kubernetes.io/name"]
+          value: siva-webapp-tsl-fetch
+      - equal:
+          path: metadata.labels["app.kubernetes.io/component"]
+          value: tsl-fetch
+      - equal:
+          path: spec.schedule
+          value: "0 */6 * * *"
+      - equal:
+          path: spec.concurrencyPolicy
+          value: Forbid
+      - notExists:
+          path: spec.timeZone
+      - notExists:
+          path: spec.startingDeadlineSeconds
+      - equal:
+          path: spec.successfulJobsHistoryLimit
+          value: 3
+      - equal:
+          path: spec.jobTemplate.spec.backoffLimit
+          value: 2
+      - equal:
+          path: spec.jobTemplate.spec.activeDeadlineSeconds
+          value: 1800
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.restartPolicy
+          value: Never
+      - equal:
+          path: spec.jobTemplate.spec.template.metadata.labels["app.kubernetes.io/name"]
+          value: siva-webapp-tsl-fetch
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.containers[0].image
+          value: siva-webapp:9.9.9
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.containers[0].name
+          value: tsl-fetch
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: SPRING_PROFILES_INCLUDE
+            value: tsl-fetch
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_LOADFROMCACHE
+            value: "false"
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_CACHEDIRECTORY
+            value: /var/siva/tsl/work
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_FETCHER_OUTPUTDIRECTORY
+            value: /var/siva/tsl
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_FETCHER_KEEPSNAPSHOTS
+            value: "3"
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: SPRING_PROFILES_ACTIVE
+            value: test
+      - notExists:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env[?(@.name == "MANAGEMENT_SERVER_PORT")]
+      - notExists:
+          path: spec.jobTemplate.spec.template.spec.containers[0].ports
+      - notExists:
+          path: spec.jobTemplate.spec.template.spec.containers[0].readinessProbe
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.containers[0].securityContext.readOnlyRootFilesystem
+          value: true
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.securityContext.runAsNonRoot
+          value: true
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.automountServiceAccountToken
+          value: false
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.containers[0].resources.limits.memory
+          value: 1Gi
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].volumeMounts
+          content:
+            name: tsl-store
+            mountPath: /var/siva/tsl
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].volumeMounts
+          content:
+            name: config
+            mountPath: /etc/siva-webapp
+            readOnly: true
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.volumes
+          content:
+            name: tsl-store
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-siva-webapp-tsl
+      - notExists:
+          path: spec.jobTemplate.spec.template.spec.volumes[?(@.name == "tsl-work")]
+
+  - it: takes schedule, time zone, deadlines, a separate working cache and fetcher-only env from values
+    template: cronjob-tsl-fetch.yaml
+    values:
+      - ../ci/all-on-values.yaml
+    asserts:
+      - equal:
+          path: spec.schedule
+          value: "15 */4 * * *"
+      - equal:
+          path: spec.timeZone
+          value: Europe/Tallinn
+      - equal:
+          path: spec.startingDeadlineSeconds
+          value: 600
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_CACHEDIRECTORY
+            value: /var/siva/tsl-work
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: EXAMPLE_FETCHER_FLAG
+            value: "1"
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: EXAMPLE_FLAG
+            value: "1"
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].volumeMounts
+          content:
+            name: tsl-work
+            mountPath: /var/siva/tsl-work
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.volumes
+          content:
+            name: tsl-work
+            persistentVolumeClaim:
+              claimName: example-tsl-work
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.imagePullSecrets[0].name
+          value: example-registry-credentials
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.containers[0].envFrom[0].secretRef.name
+          value: example-siva-env
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.nodeSelector["kubernetes.io/os"]
+          value: linux

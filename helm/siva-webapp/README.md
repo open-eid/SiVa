@@ -1,6 +1,6 @@
 # siva-webapp
 
-![Version: 0.9.4](https://img.shields.io/badge/Version-0.9.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.11.0-SNAPSHOT](https://img.shields.io/badge/AppVersion-3.11.0--SNAPSHOT-informational?style=flat-square)
+![Version: 0.10.0](https://img.shields.io/badge/Version-0.10.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.11.0-SNAPSHOT](https://img.shields.io/badge/AppVersion-3.11.0--SNAPSHOT-informational?style=flat-square)
 
 Reference deployment of [SiVa](https://github.com/open-eid/SiVa), the Estonian digital-signature
 validation service, on Kubernetes. Like the project's docker-compose file it is a reference, not a
@@ -13,9 +13,10 @@ Licence: EUPL 1.1, the same as the SiVa repository this chart belongs with.
 - **Build your own image.** SiVa publishes source only. `./mvnw spring-boot:build-image` in the
   SiVa checkout produces a Paketo image of `siva-webapp`; push it to a registry your cluster can
   pull from and set `image.repository` / `image.tag`.
-- **Egress.** Each pod downloads the EU LOTL and the member-state trust lists at startup and on a
-  nightly cron. Allow HTTPS egress to those hosts, and to the OCSP/TSA responders of the
-  certificates you validate.
+- **Egress.** In the default `tsl.mode: online` each pod downloads the EU LOTL and the
+  member-state trust lists at startup and on a nightly cron; in snapshot mode only the fetcher
+  does (see "Trust lists"). Allow HTTPS egress to those hosts from whichever pods download, and
+  from every pod to the OCSP/TSA responders of the certificates you validate.
 - **Trust material.** This iteration uses the truststores shipped on the application classpath.
   Supplying your own is not wired yet (`trust.*` is a placeholder).
 
@@ -27,6 +28,37 @@ helm install siva ./helm/siva-webapp \
 `image.tag` and `env[].value` are strings; use `--set-string` for numeric-looking values (a git
 short sha such as `1234567` would otherwise be parsed as a number and rejected by the values
 schema).
+
+## Trust lists
+
+SiVa validates against the EU list of trusted lists and the member-state lists it points to.
+The chart offers two ways to get them into the pods:
+
+- `tsl.mode: online` (default): every pod downloads them itself at startup and on SiVa's
+  nightly cron. Simple, needs egress from every pod, takes minutes before a pod is ready, and
+  replicas started at different times can hold different trust states for a while.
+- `tsl.mode: snapshot`: a CronJob (`<release>-tsl-fetch`) runs the same image in SiVa's
+  `tsl-fetch` profile, downloads the lists into a working cache and publishes them as a
+  snapshot (`snapshots/<id>/` plus `current`) into a shared volume; the webapp pods mount it
+  read-only, load the snapshot `current` names and poll for a new one
+  (`tsl.snapshot.pollInterval`). A fresh pod is ready in seconds, every replica validates
+  against the same anchors, and the webapp needs no egress to the list hosts. The fetcher
+  publishes only when the mandatory territories (`siva.tsl.loader.mandatoryTerritories`) came
+  through, so `current` always names the last good snapshot; a list whose download fails keeps
+  its last copy in the working cache. A Job runs one fetch at install (and whenever the fetcher
+  pod changes), so the pods have something to load before the first schedule. Needs a SiVa
+  build with the fetcher (3.11.0 and later).
+
+Snapshot mode needs a store the fetcher can write and every webapp pod can read: a
+ReadWriteMany claim you bring (`tsl.snapshot.volume`) or one the chart creates
+(`tsl.snapshot.persistentVolumeClaim.create`, ReadWriteOnce is enough on a single node). The
+fetcher renames files and directories in it, so the filesystem must support rename; an
+object-store mount without rename (mountpoint-s3) cannot hold it. The fetcher gets the same
+ConfigMap, `env` and secret as the webapp, so its snapshot matches what the webapp expects
+(same profile, same `trustedTerritories`); `tsl.fetcher.env` adds fetcher-only variables.
+`monitoring.prometheusRule` gains `SivaTslFetchFailing` (no successful fetch for
+`tsl.fetcher.staleAfterSeconds`); mind that a snapshot that goes stale degrades every replica
+at once, which is why the schedule should sit well inside the lists' validity.
 
 ## Values
 
@@ -86,7 +118,7 @@ directory); edit the comments, not this table.
 | probes.startup.path | string | `""` | Path on the traffic port; empty picks the liveness group's path for the layout. |
 | probes.startup.periodSeconds | int | `10` | Seconds between probes. |
 | probes.startup.timeoutSeconds | int | `5` | Seconds before a probe counts as failed. |
-| replicaCount | int | `1` | Number of webapp replicas (ignored when scaling.hpa is on). Each replica downloads the trust lists itself at startup (see "Known limits"), so scale with that in mind. |
+| replicaCount | int | `1` | Number of webapp replicas (ignored when scaling.hpa is on). In `tsl.mode: online` each replica downloads the trust lists itself at startup (minutes); in snapshot mode it reads the published snapshot (seconds). |
 | resources | object | requests 500m / 1Gi, limit 2Gi memory | Container resources. Paketo's memory calculator sizes the JVM heap from the memory LIMIT (it reads the cgroup), so the limit is the knob, not the request. The default handles a 20 MB document with headroom; no CPU limit on purpose (JVM startup and TSL parsing are bursty). |
 | runtime.forwardHeadersStrategy | string | `"framework"` | server.forward-headers-strategy: `framework` trusts X-Forwarded-* from the Ingress/edge so the app sees the client address and scheme; `none` when nothing in front sets them. |
 | runtime.javaToolOptions | string | `"-XX:+ExitOnOutOfMemoryError"` | JAVA_TOOL_OPTIONS for the JVM; Paketo's memory calculator appends its own flags. ExitOnOutOfMemoryError makes a JVM that ran out of heap exit so Kubernetes restarts it instead of letting it limp along (Paketo's Liberica buildpack sets it too; the duplicate is harmless and the chart value also covers images built another way). |
@@ -104,8 +136,8 @@ directory); edit the comments, not this table.
 | scaling.pdb.maxUnavailable | int or string | `""` | Set (0, a count or a percentage) to use maxUnavailable instead of minAvailable. |
 | scaling.pdb.minAvailable | int or string | `1` | minAvailable (a count or a percentage), used unless maxUnavailable is set. |
 | security.automountServiceAccountToken | bool | `false` | Mount the ServiceAccount token. The app never talks to the Kubernetes API. |
-| security.podSecurityContext | object | runAsNonRoot, RuntimeDefault seccomp | Pod security context, written to pass Pod Security "restricted" together with securityContext below; overriding a field (or nulling it) relaxes the profile, which only a namespace labelled pod-security.kubernetes.io/enforce=restricted prevents. No runAsUser/runAsGroup: the buildpack image carries a numeric non-root USER (whatever CNB_USER_ID the builder used) and the launcher needs to run as exactly that uid to read /layers; pinning a uid here breaks launch when the image was built as another one. Set them only if your image has no numeric USER. |
-| security.securityContext | object | no privilege escalation, drop ALL, read-only root | Container security context. The only writable path the app needs is /tmp (java.io.tmpdir: DSS and DigiDoc4J trust-list caches, temporary policy files; Paketo's certificate loader also copies the JVM truststore there when its layer is read-only) and it is an emptyDir. Logs go to stdout. |
+| security.podSecurityContext | object | runAsNonRoot, RuntimeDefault seccomp | Pod security context, written to pass Pod Security "restricted" together with securityContext below; overriding a field (or nulling it) relaxes the profile, which only a namespace labelled pod-security.kubernetes.io/enforce=restricted prevents. No runAsUser/runAsGroup: the buildpack image carries a numeric non-root USER (whatever CNB_USER_ID the builder used) and the launcher needs to run as exactly that uid to read /layers; pinning a uid here breaks launch when the image was built as another one. Set them only if your image has no numeric USER. Applies to the fetcher pod too; add `fsGroup` when your storage does not make the snapshot volume writable for the image's user. |
+| security.securityContext | object | no privilege escalation, drop ALL, read-only root | Container security context. The only writable path the app needs is /tmp (java.io.tmpdir: DSS and DigiDoc4J trust-list caches in online mode, temporary policy files; Paketo's certificate loader also copies the JVM truststore there when its layer is read-only) and it is an emptyDir; in snapshot mode the fetcher also writes the store. Logs go to stdout. |
 | service.annotations | object | `{}` | Service annotations. |
 | service.containerPort | int | `8080` | Container port the app listens on (Paketo process `web`, server.port=8080). |
 | service.nodePort | int or string | `""` | Fixed node port (30000-32767); only used when type is NodePort, empty for an allocated one. |
@@ -123,13 +155,35 @@ directory); edit the comments, not this table.
 | topologySpreadConstraints | list | one soft constraint on kubernetes.io/hostname | Spread replicas across nodes (soft: scheduling never blocks on it). Each entry is a plain topologySpreadConstraint; labelSelector is filled in by the chart when omitted. Empty list disables. |
 | trust.pemConfigMap | string | `""` | Placeholder, not wired yet: a ConfigMap with PEM trust material. SiVa 3.10 ships its TSL and LOTL truststores on the classpath, which is what this chart uses; nothing is mounted. |
 | trust.pemSecret | string | `""` | Placeholder, not wired yet: a Secret with PEM trust material. |
+| tsl.fetcher.activeDeadlineSeconds | int | `1800` | Seconds a fetch may run before it is killed (30 lists take a few minutes). |
+| tsl.fetcher.backoffLimit | int | `2` | Retries of a failed fetch within one schedule slot (a new pod each time). |
+| tsl.fetcher.bootstrapJob | bool | `true` | Also run one fetch as a Job at install and whenever the fetcher pod changes (image, config), so a fresh install has a snapshot without waiting for the schedule. Named after a hash of the pod spec; the finished Job stays until the next change replaces it. |
+| tsl.fetcher.env | list | `[]` | Extra environment variables for the fetcher only; it already gets `env`, `envFrom`, the ConfigMap and `runtime.javaToolOptions` (same profile and settings as the webapp, which is what makes its snapshot the one the webapp expects). |
+| tsl.fetcher.failedJobsHistoryLimit | int | `3` | Failed fetch Jobs kept. |
+| tsl.fetcher.keepSnapshots | int | `3` | Snapshots kept besides the current one (siva.tsl.fetcher.keepSnapshots); a pod in the middle of loading an older one is not pulled away. |
+| tsl.fetcher.resources | object | requests 250m / 512Mi, limit 1Gi memory | Resources of the fetcher pod; the JVM is sized from the memory limit as for the webapp. |
+| tsl.fetcher.schedule | string | `"0 */6 * * *"` | Cron schedule of the fetch. Keep it well inside the shortest list validity you rely on: a snapshot that goes stale degrades every replica at once, not one by one. |
+| tsl.fetcher.staleAfterSeconds | int | `86400` | Seconds without a successful fetch before the SivaTslFetchFailing alert fires (monitoring.prometheusRule, needs kube-state-metrics). |
+| tsl.fetcher.startingDeadlineSeconds | string | `""` | Seconds after a missed schedule the fetch may still start; empty for the default. |
+| tsl.fetcher.successfulJobsHistoryLimit | int | `3` | Finished fetch Jobs kept for `kubectl get jobs` and the alert rule. |
+| tsl.fetcher.timeZone | string | `""` | IANA time zone of the schedule (Kubernetes 1.27+); empty for the controller's. |
+| tsl.fetcher.workVolume | object | `{}` | Working cache the fetcher downloads into, kept between runs so that a list whose download fails keeps its last copy: a volume source as above, or empty for a `work/` directory inside the store. |
+| tsl.mode | string | `"online"` | `online`: every pod downloads the lists itself at startup and on SiVa's nightly cron (needs HTTPS egress to ~30 hosts, minutes until ready, replicas started at different times can hold different trust states). `snapshot`: a CronJob running this image in SiVa's `tsl-fetch` profile downloads them, publishes a snapshot into a shared volume and every pod reads that (ready in seconds, identical trust state, no egress to the list hosts from the webapp); the fetcher publishes only when the mandatory territories came through, so `current` always names the last good snapshot. Needs a SiVa build with the fetcher (3.11.0+). |
+| tsl.snapshot.mountPath | string | `"/var/siva/tsl"` | Where the snapshot store is mounted (read-only in the webapp pods, read-write in the fetcher). |
+| tsl.snapshot.persistentVolumeClaim.accessModes | list | `["ReadWriteMany"]` | Access modes of the claim. |
+| tsl.snapshot.persistentVolumeClaim.annotations | object | `{}` | Claim annotations. |
+| tsl.snapshot.persistentVolumeClaim.create | bool | `false` | Create the claim (`<release>-tsl`, kept on uninstall). ReadWriteMany when the fetcher and the webapp pods may land on different nodes; ReadWriteOnce is enough on a single node (kind). |
+| tsl.snapshot.persistentVolumeClaim.size | string | `"1Gi"` | Requested size; a snapshot is about 10 MB, keepSnapshots + 1 of them are kept. |
+| tsl.snapshot.persistentVolumeClaim.storageClassName | string | `""` | StorageClass; empty for the cluster default. |
+| tsl.snapshot.pollInterval | string | `"PT1M"` | How often a pod checks `current` for a new snapshot (ISO-8601 duration; siva.tsl.loader.snapshotPollInterval). Replicas converge within this of a publish; the nightly refresh stays as the safety net. |
+| tsl.snapshot.volume | object | `{}` | The store: a volume source without the `name`, for example `persistentVolumeClaim: {claimName: siva-tsl}` for a ReadWriteMany claim you created, or a CSI bucket mount. Ignored when persistentVolumeClaim.create is on. The fetcher renames files and directories in it, so the filesystem must support rename; an object-store mount that does not (mountpoint-s3) cannot hold it. |
 
 ## Verifying on a NodePort (kind or any node you can reach)
 
 ```sh
 helm install siva ./helm/siva-webapp --set image.repository=<your-registry>/siva-webapp \
   --set service.type=NodePort --set service.nodePort=30080
-kubectl rollout status deployment/siva-siva-webapp --timeout=15m   # trust lists download first
+kubectl rollout status deployment/siva-siva-webapp --timeout=15m   # online mode downloads the trust lists first
 curl -X POST -H 'Content-Type: application/json' \
      --data @build-helpers/sample-requests/<any>.json http://<node>:30080/validate
 helm test siva
@@ -143,8 +197,9 @@ network, or `localhost` if the cluster was created with an `extraPortMappings` e
 - Readiness waits for the mandatory trusted lists (`siva.tsl.loader.mandatoryTerritories`, `EE`
   by default); every other territory can be missing or stale without taking the pod out of
   rotation, and health only says so in the `tsl` component's details. Alerting is left to you.
-- Every replica fetches the trust lists itself; replicas started at different times can hold
-  different trust states until the next refresh.
+- In online mode every replica fetches the trust lists itself; replicas started at different
+  times can hold different trust states until the next refresh. Snapshot mode (see "Trust
+  lists") removes that, at the price of a shared volume and a CronJob.
 - Metrics are at `<release>-management:8081/monitoring/prometheus` (the service port when
   `runtime.managementPort` equals `service.containerPort`); `monitoring.serviceMonitor` scrapes
   it with the Prometheus operator, otherwise scrape it yourself. The alert rules cover what the

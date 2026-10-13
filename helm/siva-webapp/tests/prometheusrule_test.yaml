@@ -87,3 +87,38 @@ tests:
       - equal:
           path: spec.groups[0].rules[8].alert
           value: SivaCustom
+
+  - it: watches the fetch cronjob in snapshot mode
+    set:
+      monitoring:
+        prometheusRule:
+          enabled: true
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+        fetcher:
+          staleAfterSeconds: 43200
+    asserts:
+      - lengthEqual:
+          path: spec.groups[0].rules
+          count: 5
+      - equal:
+          path: spec.groups[0].rules[4].alert
+          value: SivaTslFetchFailing
+      - equal:
+          path: spec.groups[0].rules[4].expr
+          value: time() - max(kube_cronjob_status_last_successful_time{namespace="NAMESPACE",cronjob="RELEASE-NAME-siva-webapp-tsl-fetch"}) > 43200
+      - equal:
+          path: spec.groups[0].rules[4].labels.severity
+          value: warning
+
+  - it: has no fetch rule in online mode
+    set:
+      monitoring:
+        prometheusRule:
+          enabled: true
+    asserts:
+      - notExists:
+          path: spec.groups[0].rules[?(@.alert == "SivaTslFetchFailing")]

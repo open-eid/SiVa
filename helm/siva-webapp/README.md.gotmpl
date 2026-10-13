@@ -69,6 +69,16 @@ ConfigMap, `env` and secret as the webapp, so its snapshot matches what the weba
 `tsl.fetcher.staleAfterSeconds`); mind that a snapshot that goes stale degrades every replica
 at once, which is why the schedule should sit well inside the lists' validity.
 
+Whoever can write the store can point every pod at any snapshot whose lists are still inside
+their validity window, so treat write access to it as trust-list authority: only the fetcher
+writes, the webapp mounts it read-only, and `tsl.snapshot.maxAge` (two days by default) makes
+a pod refuse a snapshot older than that rather than serve it. The fetcher pod gets its own
+Secret (`tsl.fetcher.existingSecret`), never the webapp's: it parses thirty documents from the
+internet and should hold nothing else. With `network.networkPolicy.egress` on, the webapp pods
+reach only DNS and the public internet on 80 and 443 (OCSP and timestamp responders) and the
+fetcher pods the same with no ingress at all. The store holds nothing worth backing up: a lost
+store is rebuilt by the next fetch, so leave the claim out of your backup scope.
+
 ## Values
 
 Generated from the comments in `values.yaml` by helm-docs (1.14; run `helm-docs` in this

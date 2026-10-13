@@ -69,6 +69,16 @@ ConfigMap, `env` and secret as the webapp, so its snapshot matches what the weba
 `tsl.fetcher.staleAfterSeconds`); mind that a snapshot that goes stale degrades every replica
 at once, which is why the schedule should sit well inside the lists' validity.
 
+Whoever can write the store can point every pod at any snapshot whose lists are still inside
+their validity window, so treat write access to it as trust-list authority: only the fetcher
+writes, the webapp mounts it read-only, and `tsl.snapshot.maxAge` (two days by default) makes
+a pod refuse a snapshot older than that rather than serve it. The fetcher pod gets its own
+Secret (`tsl.fetcher.existingSecret`), never the webapp's: it parses thirty documents from the
+internet and should hold nothing else. With `network.networkPolicy.egress` on, the webapp pods
+reach only DNS and the public internet on 80 and 443 (OCSP and timestamp responders) and the
+fetcher pods the same with no ingress at all. The store holds nothing worth backing up: a lost
+store is rebuilt by the next fetch, so leave the claim out of your backup scope.
+
 ## Values
 
 Generated from the comments in `values.yaml` by helm-docs (1.14; run `helm-docs` in this
@@ -104,7 +114,12 @@ directory); edit the comments, not this table.
 | monitoring.serviceMonitor.scrapeTimeout | string | `"10s"` | Scrape timeout (Prometheus duration). |
 | nameOverride | string | `""` | Override the chart name used in resource names. |
 | network.ingresses | list | `[]` | Ingress objects to create, one per entry, named `<release-fullname>-<name>`. Keys: name, className, annotations, hosts (host + paths with path and optional pathType), tls. Set your controller's body-size limit to at least 27 MB (e.g. `nginx.ingress.kubernetes.io/proxy-body-size: 28m`). Example in ci/all-on-values.yaml. |
-| network.networkPolicy.enabled | bool | `false` | Ingress-only NetworkPolicy for the webapp pods. Egress stays open: the trust lists, OCSP and timestamp responders are a changing set of public HTTPS hosts; restrict it in your own policy if your CNI resolves names. Needs a CNI that enforces policies. |
+| network.networkPolicy.egress.additionalRules | list | `[]` | Extra NetworkPolicyEgressRule entries appended as given (for example a private OCSP responder or an egress proxy). |
+| network.networkPolicy.egress.dns | bool | `true` | Allow DNS (UDP and TCP 53) to any destination. |
+| network.networkPolicy.egress.enabled | bool | `false` | Also restrict egress. The webapp then reaches only DNS and `to` on `ports` (OCSP and timestamp responders, and in online mode the trust-list hosts: public HTTPS and, for some OCSP responders, HTTP); the fetcher pods get the same rules in their own policy (`<release>-tsl-fetch`, no ingress at all). The default `to` is the whole internet minus the private ranges and the cloud metadata address, so a compromised pod cannot reach cluster services or the node; tighten it to your responders' addresses if your CNI cannot resolve names. |
+| network.networkPolicy.egress.ports | list | `[80,443]` | Ports the pods may reach on `to`. |
+| network.networkPolicy.egress.to | list | 0.0.0.0/0 except 10/8, 172.16/12, 192.168/16, 169.254.169.254/32 | NetworkPolicyPeer entries the pods may reach on `ports`. |
+| network.networkPolicy.enabled | bool | `false` | NetworkPolicy for the webapp pods: ingress to the two ports from the peers below and, with egress.enabled, egress limited to DNS and the public internet. Needs a CNI that enforces policies. |
 | network.networkPolicy.ingressFrom | list | `[]` | NetworkPolicyPeer entries allowed to the traffic port (namespaceSelector, podSelector, ipBlock). Empty: any source, in or outside the cluster (NodePort/LoadBalancer traffic included); list your Ingress controller's namespace to narrow it. |
 | network.networkPolicy.managementFrom | list | `[]` | Peers allowed to the management port when the actuator is split: Prometheus, and the `helm test` pod if you still want it to pass (the kubelet probes use the traffic port). Empty: any source. Without the split the actuator sits on the traffic port and ingressFrom governs it; this list is then unused. |
 | nodeSelector | object | `{}` | Node selector. |
@@ -168,7 +183,8 @@ directory); edit the comments, not this table.
 | tsl.fetcher.activeDeadlineSeconds | int | `1800` | Seconds a fetch may run before it is killed (30 lists take a few minutes). |
 | tsl.fetcher.backoffLimit | int | `2` | Retries of a failed fetch within one schedule slot (a new pod each time). |
 | tsl.fetcher.bootstrapJob | bool | `true` | Also run one fetch as a Job at install and whenever the fetcher pod changes (image, config), so a fresh install has a snapshot without waiting for the schedule. Named after a hash of the pod spec; the finished Job stays until the next change replaces it. |
-| tsl.fetcher.env | list | `[]` | Extra environment variables for the fetcher only; it already gets `env`, `envFrom`, the ConfigMap and `runtime.javaToolOptions` (same profile and settings as the webapp, which is what makes its snapshot the one the webapp expects). |
+| tsl.fetcher.env | list | `[]` | Extra environment variables for the fetcher only; it already gets `env`, the ConfigMap and `runtime.javaToolOptions` (same profile and settings as the webapp, which is what makes its snapshot the one the webapp expects). |
+| tsl.fetcher.existingSecret | string | `""` | Secret whose keys become the fetcher's environment variables. The fetcher does not get the webapp's `envFrom.existingSecret`: it parses thirty documents from the internet and should hold nothing but what that needs (truststore passwords, if you changed them), not the report-signing key's. Empty: no Secret. |
 | tsl.fetcher.failedJobsHistoryLimit | int | `3` | Failed fetch Jobs kept. |
 | tsl.fetcher.keepSnapshots | int | `3` | Snapshots kept besides the current one (siva.tsl.fetcher.keepSnapshots); a pod in the middle of loading an older one is not pulled away. |
 | tsl.fetcher.resources | object | requests 250m / 512Mi, limit 1Gi memory | Resources of the fetcher pod; the JVM is sized from the memory limit as for the webapp. |
@@ -179,6 +195,7 @@ directory); edit the comments, not this table.
 | tsl.fetcher.timeZone | string | `""` | IANA time zone of the schedule (Kubernetes 1.27+); empty for the controller's. |
 | tsl.fetcher.workVolume | object | `{}` | Working cache the fetcher downloads into, kept between runs so that a list whose download fails keeps its last copy: a volume source as above, or empty for a `work/` directory inside the store. |
 | tsl.mode | string | `"online"` | `online`: every pod downloads the lists itself at startup and on SiVa's nightly cron (needs HTTPS egress to ~30 hosts, minutes until ready, replicas started at different times can hold different trust states). `snapshot`: a CronJob running this image in SiVa's `tsl-fetch` profile downloads them, publishes a snapshot into a shared volume and every pod reads that (ready in seconds, identical trust state, no egress to the list hosts from the webapp); the fetcher publishes only when the mandatory territories came through, so `current` always names the last good snapshot. Needs a SiVa build with the fetcher (3.11.0+). |
+| tsl.snapshot.maxAge | string | `"PT48H"` | Refuse a snapshot older than this (ISO-8601 duration; siva.tsl.loader.snapshotMaxAge) and keep the loaded state: a store that stopped being refreshed, or was pointed at an old snapshot by whoever can write it, cannot feed a fresh pod lists older than you allow. A pod that has nothing loaded stays not-ready, which is what the fetch alert is for. Size it to a few missed fetches; empty disables the check. |
 | tsl.snapshot.mountPath | string | `"/var/siva/tsl"` | Where the snapshot store is mounted (read-only in the webapp pods, read-write in the fetcher). |
 | tsl.snapshot.persistentVolumeClaim.accessModes | list | `["ReadWriteMany"]` | Access modes of the claim. |
 | tsl.snapshot.persistentVolumeClaim.annotations | object | `{}` | Claim annotations. |

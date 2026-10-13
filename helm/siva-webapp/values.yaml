@@ -150,6 +150,12 @@ tsl:
     # siva.tsl.loader.snapshotPollInterval). Replicas converge within this of a publish; the
     # nightly refresh stays as the safety net.
     pollInterval: PT1M
+    # -- Refuse a snapshot older than this (ISO-8601 duration; siva.tsl.loader.snapshotMaxAge)
+    # and keep the loaded state: a store that stopped being refreshed, or was pointed at an old
+    # snapshot by whoever can write it, cannot feed a fresh pod lists older than you allow. A
+    # pod that has nothing loaded stays not-ready, which is what the fetch alert is for. Size it
+    # to a few missed fetches; empty disables the check.
+    maxAge: PT48H
   fetcher:
     # -- Cron schedule of the fetch. Keep it well inside the shortest list validity you rely
     # on: a snapshot that goes stale degrades every replica at once, not one by one.
@@ -185,10 +191,15 @@ tsl:
         memory: 512Mi
       limits:
         memory: 1Gi
-    # -- Extra environment variables for the fetcher only; it already gets `env`, `envFrom`,
-    # the ConfigMap and `runtime.javaToolOptions` (same profile and settings as the webapp,
-    # which is what makes its snapshot the one the webapp expects).
+    # -- Extra environment variables for the fetcher only; it already gets `env`, the ConfigMap
+    # and `runtime.javaToolOptions` (same profile and settings as the webapp, which is what makes
+    # its snapshot the one the webapp expects).
     env: []
+    # -- Secret whose keys become the fetcher's environment variables. The fetcher does not get
+    # the webapp's `envFrom.existingSecret`: it parses thirty documents from the internet and
+    # should hold nothing but what that needs (truststore passwords, if you changed them), not
+    # the report-signing key's. Empty: no Secret.
+    existingSecret: ""
     # -- Seconds without a successful fetch before the SivaTslFetchFailing alert fires
     # (monitoring.prometheusRule, needs kube-state-metrics).
     staleAfterSeconds: 86400
@@ -292,9 +303,9 @@ network:
   # (e.g. `nginx.ingress.kubernetes.io/proxy-body-size: 28m`). Example in ci/all-on-values.yaml.
   ingresses: []
   networkPolicy:
-    # -- Ingress-only NetworkPolicy for the webapp pods. Egress stays open: the trust lists,
-    # OCSP and timestamp responders are a changing set of public HTTPS hosts; restrict it in
-    # your own policy if your CNI resolves names. Needs a CNI that enforces policies.
+    # -- NetworkPolicy for the webapp pods: ingress to the two ports from the peers below and,
+    # with egress.enabled, egress limited to DNS and the public internet. Needs a CNI that
+    # enforces policies.
     enabled: false
     # -- NetworkPolicyPeer entries allowed to the traffic port (namespaceSelector, podSelector,
     # ipBlock). Empty: any source, in or outside the cluster (NodePort/LoadBalancer traffic
@@ -305,6 +316,32 @@ network:
     # Empty: any source. Without the split the actuator sits on the traffic port and
     # ingressFrom governs it; this list is then unused.
     managementFrom: []
+    egress:
+      # -- Also restrict egress. The webapp then reaches only DNS and `to` on `ports` (OCSP and
+      # timestamp responders, and in online mode the trust-list hosts: public HTTPS and, for
+      # some OCSP responders, HTTP); the fetcher pods get the same rules in their own policy
+      # (`<release>-tsl-fetch`, no ingress at all). The default `to` is the whole internet minus
+      # the private ranges and the cloud metadata address, so a compromised pod cannot reach
+      # cluster services or the node; tighten it to your responders' addresses if your CNI
+      # cannot resolve names.
+      enabled: false
+      # -- Allow DNS (UDP and TCP 53) to any destination.
+      dns: true
+      # -- Ports the pods may reach on `to`.
+      ports: [80, 443]
+      # -- NetworkPolicyPeer entries the pods may reach on `ports`.
+      # @default -- 0.0.0.0/0 except 10/8, 172.16/12, 192.168/16, 169.254.169.254/32
+      to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 10.0.0.0/8
+              - 172.16.0.0/12
+              - 192.168.0.0/16
+              - 169.254.169.254/32
+      # -- Extra NetworkPolicyEgressRule entries appended as given (for example a private OCSP
+      # responder or an egress proxy).
+      additionalRules: []
 
 monitoring:
   serviceMonitor:

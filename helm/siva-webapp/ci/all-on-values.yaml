@@ -24,6 +24,15 @@ network:
       - namespaceSelector:
           matchLabels:
             kubernetes.io/metadata.name: monitoring
+    egress:
+      enabled: true
+      additionalRules:
+        - to:
+            - ipBlock:
+                cidr: 192.0.2.10/32
+          ports:
+            - port: 8080
+              protocol: TCP
   ingresses:
     - name: public
       className: nginx
@@ -102,6 +111,7 @@ tsl:
     env:
       - name: EXAMPLE_FETCHER_FLAG
         value: "1"
+    existingSecret: example-tsl-fetch-env
 monitoring:
   serviceMonitor:
     enabled: true

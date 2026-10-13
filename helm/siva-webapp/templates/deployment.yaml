@@ -72,6 +72,10 @@ spec:
               value: {{ .Values.tsl.snapshot.mountPath | quote }}
             - name: SIVA_TSL_LOADER_SNAPSHOTPOLLINTERVAL
               value: {{ .Values.tsl.snapshot.pollInterval | quote }}
+            {{- with .Values.tsl.snapshot.maxAge }}
+            - name: SIVA_TSL_LOADER_SNAPSHOTMAXAGE
+              value: {{ . | quote }}
+            {{- end }}
             {{- end }}
             {{- with .Values.runtime.javaToolOptions }}
             - name: JAVA_TOOL_OPTIONS

@@ -3,7 +3,9 @@ name: siva-webapp
 description: >-
   Reference Kubernetes deployment of SiVa, the Estonian digital-signature validation service
   (open-eid/SiVa). Best-effort: build the image yourself from the SiVa sources, point
-  image.repository/tag at it, override what your cluster needs.
+  image.repository/tag at it, override what your cluster needs. In snapshot mode the pods load
+  the trust lists from a shared store and are ready in seconds: descheduler-friendly, cheap to
+  restart, scale and move.
 type: application
 # Chart version: bumped on every chart change; tracks the SiVa release once published upstream.
 version: 0.10.1

@@ -1,0 +1,10 @@
+# One-shot trust-list fetcher (tsl-loader's TSLFetcherConfiguration): same context, no listening port.
+server:
+  port: -1
+management:
+  server:
+    port: -1
+siva:
+  tsl:
+    loader:
+      loadFromCache: false

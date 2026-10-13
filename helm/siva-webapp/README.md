@@ -1,6 +1,6 @@
 # siva-webapp
 
-![Version: 0.8.3](https://img.shields.io/badge/Version-0.8.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.10.3](https://img.shields.io/badge/AppVersion-3.10.3-informational?style=flat-square)
+![Version: 0.9.4](https://img.shields.io/badge/Version-0.9.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.11.0-SNAPSHOT](https://img.shields.io/badge/AppVersion-3.11.0--SNAPSHOT-informational?style=flat-square)
 
 Reference deployment of [SiVa](https://github.com/open-eid/SiVa), the Estonian digital-signature
 validation service, on Kubernetes. Like the project's docker-compose file it is a reference, not a
@@ -91,7 +91,7 @@ directory); edit the comments, not this table.
 | runtime.forwardHeadersStrategy | string | `"framework"` | server.forward-headers-strategy: `framework` trusts X-Forwarded-* from the Ingress/edge so the app sees the client address and scheme; `none` when nothing in front sets them. |
 | runtime.javaToolOptions | string | `"-XX:+ExitOnOutOfMemoryError"` | JAVA_TOOL_OPTIONS for the JVM; Paketo's memory calculator appends its own flags. ExitOnOutOfMemoryError makes a JVM that ran out of heap exit so Kubernetes restarts it instead of letting it limp along (Paketo's Liberica buildpack sets it too; the duplicate is harmless and the chart value also covers images built another way). |
 | runtime.managementPort | int | `8081` | Actuator (health with details, Prometheus, heartbeat, version) on its own port. The traffic Service and the Ingresses never carry it; a ClusterIP Service `<release>-management` exposes it in-cluster for scraping and `helm test`. The traffic port keeps the status-only probe paths /readyz and /livez for the kubelet and external load balancers. Set it equal to service.containerPort to keep the whole actuator on the traffic port (the layout SiVa's docker-compose and system tests expect; the probes then use /monitoring/health/*). |
-| runtime.preStopSleepSeconds | int | `5` | Seconds the pod sleeps in preStop before SIGTERM, so endpoint removal has propagated and no new request lands on a pod that is stopping. Runs `sleep` inside the image (present in Paketo images; a distroless image has none). 0 disables the hook. |
+| runtime.preStopSleepSeconds | int | `5` | Seconds the pod sleeps in preStop before SIGTERM, so endpoint removal has propagated and no new request lands on a pod that is stopping. On Kubernetes 1.30+ this is the kubelet's own Sleep action and needs nothing in the image; on older clusters it execs `sleep`, which Paketo's default tiny run image does not have (the hook then fails and the pause is lost). 0 disables the hook. |
 | runtime.shutdownTimeout | string | `"30s"` | Graceful shutdown (server.shutdown=graceful): on SIGTERM the server stops accepting new connections and waits up to this long for in-flight validations (spring.lifecycle.timeout-per-shutdown-phase; whole seconds with the `s` unit). Size it to your slowest validation; it applies per shutdown phase, so leave margin below the grace period (the chart refuses to render when sleep + timeout reach terminationGracePeriodSeconds). |
 | scaling.hpa.behavior | object | `{}` | HorizontalPodAutoscalerBehavior, as given. |
 | scaling.hpa.customMetrics | list | `[]` | Extra MetricSpec entries (custom/external metrics), appended as given. |
@@ -156,9 +156,11 @@ network, or `localhost` if the cluster was created with an `extraPortMappings` e
   own system tests expect everything on the traffic port, so a test instance sets
   `runtime.managementPort` to the traffic port (see `values-kind.yaml`); the probes then use
   `/monitoring/health/readiness` and `/liveness`.
-- Graceful shutdown needs `sleep` in the image for the preStop pause (Paketo images have it;
-  set `runtime.preStopSleepSeconds: 0` otherwise) and a `terminationGracePeriodSeconds` above
-  sleep + `runtime.shutdownTimeout`; the chart refuses to render otherwise.
+- The preStop pause uses the kubelet's Sleep action on Kubernetes 1.30+ and needs nothing in
+  the image. Below 1.30 it execs `sleep`, which Paketo's default tiny run image does not ship:
+  there, use a run image that has it or set `runtime.preStopSleepSeconds: 0` (and accept that a
+  rollout may refuse a request or two). `terminationGracePeriodSeconds` must exceed sleep +
+  `runtime.shutdownTimeout`; the chart refuses to render otherwise.
 - Put JVM flags in `runtime.javaToolOptions`, not in `env`: an `env` entry named
   `JAVA_TOOL_OPTIONS` replaces the chart's.
 - Trust material is the classpath default; rotating it means a new image.

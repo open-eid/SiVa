@@ -518,12 +518,29 @@ tests:
       - notExists:
           path: spec.template.spec.containers[0].env[?(@.name == "JAVA_TOOL_OPTIONS")]
 
-  - it: sleeps in preStop by default
+  - it: sleeps in preStop with the kubelet's Sleep action on Kubernetes 1.30+
     template: deployment.yaml
+    capabilities:
+      majorVersion: 1
+      minorVersion: 30
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].lifecycle.preStop.sleep.seconds
+          value: 5
+      - notExists:
+          path: spec.template.spec.containers[0].lifecycle.preStop.exec
+
+  - it: falls back to exec sleep below Kubernetes 1.30
+    template: deployment.yaml
+    capabilities:
+      majorVersion: 1
+      minorVersion: 29
     asserts:
       - equal:
           path: spec.template.spec.containers[0].lifecycle.preStop.exec.command
           value: ["sleep", "5"]
+      - notExists:
+          path: spec.template.spec.containers[0].lifecycle.preStop.sleep
 
   - it: drops the preStop hook when the sleep is 0
     template: deployment.yaml

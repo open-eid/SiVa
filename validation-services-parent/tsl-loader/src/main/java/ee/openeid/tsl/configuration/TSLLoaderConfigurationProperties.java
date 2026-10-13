@@ -33,6 +33,12 @@ public class TSLLoaderConfigurationProperties {
     private String ojUrl = "https://eur-lex.europa.eu/eli/C/2026/1944/oj";
     private String lotlRootSchemeInfoUri = "https://ec.europa.eu/tools/lotl/eu-lotl-legalnotice.html";
     private String schedulerCron = "0 0 3 * * ?";
+    /**
+     * Territories (scheme territory codes) whose trusted list must be loaded with at least one trust anchor for
+     * the service to count as ready ({@code tsl} health component). Any other trusted territory may be missing,
+     * stale or failing without affecting readiness. Empty: any loaded trusted list is enough.
+     */
+    private List<String> mandatoryTerritories = Arrays.asList("EE");
     private List<String> trustedTerritories =   Arrays.asList("AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "EL", "HU", "HR", "IE", "IS", "IT", "LT", "LU", "LV", "LI", "MT", "NO", "NL", "PL", "PT", "RO", "SE", "SI", "SK", "UK");
     private Resource sslTruststorePath;
     private String sslTruststoreType = "PKCS12";

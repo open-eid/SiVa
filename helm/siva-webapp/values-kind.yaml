@@ -1,7 +1,7 @@
-# Overlay for a local kind cluster: one replica on a fixed NodePort, SiVa's own "test" profile.
+# Overlay for a local kind cluster: two replicas (a rollout keeps one serving) on a fixed NodePort, SiVa's own "test" profile.
 # Shipped inside the chart so a GitOps tool can select it by name; production installs ignore
 # it. Reach the app at <kind node>:30080.
-replicaCount: 1
+replicaCount: 2
 service:
   type: NodePort
   nodePort: 30080
@@ -9,7 +9,7 @@ image:
   # A registry the kind node can pull from and the SiVa commit the image was built from. A
   # developer loop rebuilds the same tag in place, so the node must re-check the registry digest.
   repository: jail-siva-registry:5000/siva-webapp
-  tag: "20154a183a9e"
+  tag: "068d0009303f"
   pullPolicy: Always
 # SiVa's own "test" profile: the open-eid test trust list with the test truststore shipped in the
 # jar, so containers signed with test certificates validate. Never for production.

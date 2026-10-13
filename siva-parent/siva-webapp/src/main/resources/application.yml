@@ -17,6 +17,10 @@ management:
       show-details: "ALWAYS"
       probes:
         enabled: true
+        # With a separate management port (MANAGEMENT_SERVER_PORT) the liveness and readiness groups
+        # also answer on the traffic port as /livez and /readyz: status only, for load balancers and
+        # kubelet probes. Without the split, /monitoring/health/liveness and /readiness remain the paths.
+        add-additional-paths: true
       group:
         readiness:
           # A pod is ready only once its trust lists are loaded (tsl-loader's TSLHealthIndicator).

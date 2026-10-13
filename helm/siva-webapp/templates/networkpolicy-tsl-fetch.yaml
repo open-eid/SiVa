@@ -1,0 +1,19 @@
+{{- if and (include "siva-webapp.snapshotMode" .) .Values.network.networkPolicy.enabled .Values.network.networkPolicy.egress.enabled }}
+# The fetcher pods: no ingress at all (they serve nothing), egress as the webapp's.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "siva-webapp.fetcherName" . }}
+  labels:
+    {{- include "siva-webapp.fetcherLabels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "siva-webapp.fetcherSelectorLabels" . | nindent 6 }}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress: []
+  egress:
+    {{- include "siva-webapp.egressRules" . | nindent 4 }}
+{{- end }}

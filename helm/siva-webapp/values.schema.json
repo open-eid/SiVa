@@ -280,6 +280,10 @@
             "pollInterval": {
               "type": "string",
               "pattern": "^P([0-9]+D)?(T([0-9]+H)?([0-9]+M)?([0-9]+(\\.[0-9]+)?S)?)?$"
+            },
+            "maxAge": {
+              "type": "string",
+              "pattern": "^(P([0-9]+D)?(T([0-9]+H)?([0-9]+M)?([0-9]+(\\.[0-9]+)?S)?)?)?$"
             }
           }
         },
@@ -368,6 +372,9 @@
             "staleAfterSeconds": {
               "type": "integer",
               "minimum": 1
+            },
+            "existingSecret": {
+              "type": "string"
             }
           }
         }
@@ -652,6 +659,42 @@
               "type": "array",
               "items": {
                 "type": "object"
+              }
+            },
+            "egress": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "enabled"
+              ],
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "dns": {
+                  "type": "boolean"
+                },
+                "ports": {
+                  "type": "array",
+                  "items": {
+                    "type": [
+                      "integer",
+                      "string"
+                    ]
+                  }
+                },
+                "to": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                },
+                "additionalRules": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
               }
             }
           }

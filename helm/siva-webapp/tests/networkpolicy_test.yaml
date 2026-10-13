@@ -75,3 +75,68 @@ tests:
           count: 1
       - notExists:
           path: spec.ingress[0].from
+
+  - it: stays ingress-only unless egress is switched on
+    set:
+      network:
+        networkPolicy:
+          enabled: true
+    asserts:
+      - equal:
+          path: spec.policyTypes
+          value: [Ingress]
+      - notExists:
+          path: spec.egress
+
+  - it: with egress on allows DNS, the public internet on 80 and 443 and nothing private
+    set:
+      network:
+        networkPolicy:
+          enabled: true
+          egress:
+            enabled: true
+    asserts:
+      - equal:
+          path: spec.policyTypes
+          value: [Ingress, Egress]
+      - lengthEqual:
+          path: spec.egress
+          count: 2
+      - equal:
+          path: spec.egress[0].ports
+          value:
+            - port: 53
+              protocol: UDP
+            - port: 53
+              protocol: TCP
+      - notExists:
+          path: spec.egress[0].to
+      - equal:
+          path: spec.egress[1].ports
+          value:
+            - port: 80
+              protocol: TCP
+            - port: 443
+              protocol: TCP
+      - equal:
+          path: spec.egress[1].to[0].ipBlock.cidr
+          value: 0.0.0.0/0
+      - contains:
+          path: spec.egress[1].to[0].ipBlock.except
+          content: 169.254.169.254/32
+
+  - it: appends extra egress rules and can drop DNS
+    values:
+      - ../ci/all-on-values.yaml
+    set:
+      network:
+        networkPolicy:
+          egress:
+            dns: false
+    asserts:
+      - lengthEqual:
+          path: spec.egress
+          count: 2
+      - equal:
+          path: spec.egress[1].to[0].ipBlock.cidr
+          value: 192.0.2.10/32

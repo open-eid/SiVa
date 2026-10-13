@@ -134,6 +134,22 @@ tests:
               claimName: RELEASE-NAME-siva-webapp-tsl
       - notExists:
           path: spec.jobTemplate.spec.template.spec.volumes[?(@.name == "tsl-work")]
+      - notExists:
+          path: spec.jobTemplate.spec.template.spec.containers[0].envFrom
+
+  - it: never inherits the webapp's Secret
+    template: cronjob-tsl-fetch.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+      envFrom:
+        existingSecret: webapp-secret
+    asserts:
+      - notExists:
+          path: spec.jobTemplate.spec.template.spec.containers[0].envFrom
 
   - it: takes schedule, time zone, deadlines, a separate working cache and fetcher-only env from values
     template: cronjob-tsl-fetch.yaml
@@ -180,7 +196,7 @@ tests:
           value: example-registry-credentials
       - equal:
           path: spec.jobTemplate.spec.template.spec.containers[0].envFrom[0].secretRef.name
-          value: example-siva-env
+          value: example-tsl-fetch-env
       - equal:
           path: spec.jobTemplate.spec.template.spec.nodeSelector["kubernetes.io/os"]
           value: linux

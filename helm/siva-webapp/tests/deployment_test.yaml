@@ -224,7 +224,7 @@ tests:
           value: Always
       - lengthEqual:
           path: spec.template.spec.containers[0].env
-          count: 12   # 5 chart-owned (no management port: the overlay keeps the actuator on 8080) + 3 snapshot mode + 4
+          count: 13   # 5 chart-owned (no management port: the overlay keeps the actuator on 8080) + 4 snapshot mode + 4
       - contains:
           path: spec.template.spec.containers[0].env
           content:
@@ -645,6 +645,11 @@ tests:
             name: SIVA_TSL_LOADER_SNAPSHOTPOLLINTERVAL
             value: PT1M
       - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_SNAPSHOTMAXAGE
+            value: PT48H
+      - contains:
           path: spec.template.spec.containers[0].volumeMounts
           content:
             name: tsl-store
@@ -707,3 +712,16 @@ tests:
           path: spec.template.metadata.annotations["cluster-autoscaler.kubernetes.io/safe-to-evict"]
       - notExists:
           path: spec.template.metadata.annotations["descheduler.alpha.kubernetes.io/evict"]
+
+  - it: omits the snapshot max age when empty
+    template: deployment.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          maxAge: ""
+          persistentVolumeClaim:
+            create: true
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].env[?(@.name == "SIVA_TSL_LOADER_SNAPSHOTMAXAGE")]

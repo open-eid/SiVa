@@ -218,10 +218,10 @@ spec:
         {{- with .Values.tsl.fetcher.env }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- if .Values.envFrom.existingSecret }}
+      {{- with .Values.tsl.fetcher.existingSecret }}
       envFrom:
         - secretRef:
-            name: {{ .Values.envFrom.existingSecret }}
+            name: {{ . }}
       {{- end }}
       {{- with .Values.tsl.fetcher.resources }}
       resources:
@@ -264,4 +264,31 @@ spec:
   tolerations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
+{{- end }}
+
+{{/*
+Egress rules shared by the webapp and the fetcher NetworkPolicies (network.networkPolicy.egress).
+*/}}
+{{- define "siva-webapp.egressRules" -}}
+{{- with .Values.network.networkPolicy.egress }}
+{{- if .dns }}
+- ports:
+    - port: 53
+      protocol: UDP
+    - port: 53
+      protocol: TCP
+{{- end }}
+- ports:
+    {{- range .ports }}
+    - port: {{ . }}
+      protocol: TCP
+    {{- end }}
+  {{- with .to }}
+  to:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- with .additionalRules }}
+{{ toYaml . }}
+{{- end }}
+{{- end }}
 {{- end }}

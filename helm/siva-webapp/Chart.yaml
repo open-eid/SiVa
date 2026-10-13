@@ -8,7 +8,7 @@ description: >-
   restart, scale and move.
 type: application
 # Chart version: bumped on every chart change; tracks the SiVa release once published upstream.
-version: 0.10.1
+version: 0.10.2
 # SiVa release this chart was written against.
 appVersion: "3.11.0-SNAPSHOT"
 kubeVersion: ">=1.25.0-0"

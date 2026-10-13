@@ -21,4 +21,5 @@ runtime:
   preStopSleepSeconds: 0
   javaToolOptions: ""
 tmpSizeLimit: ""
+evictable: false
 topologySpreadConstraints: []

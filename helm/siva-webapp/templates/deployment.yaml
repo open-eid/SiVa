@@ -20,6 +20,10 @@ spec:
     metadata:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- if .Values.evictable }}
+        cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
+        descheduler.alpha.kubernetes.io/evict: "true"
+        {{- end }}
         {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

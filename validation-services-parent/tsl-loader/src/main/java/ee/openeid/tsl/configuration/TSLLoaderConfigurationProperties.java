@@ -20,6 +20,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.core.io.Resource;
 
+import java.io.File;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
@@ -28,16 +29,15 @@ import java.util.List;
 @ConfigurationProperties(prefix = "siva.tsl.loader")
 public class TSLLoaderConfigurationProperties {
     private boolean loadFromCache = false;
+    // DSS file cache the trusted lists are downloaded into or, with loadFromCache, read from; null = java.io.tmpdir
+    private File cacheDirectory;
     private Duration onlineCacheExpirationTime = Duration.parse("PT1H");
     private String url = "https://ec.europa.eu/tools/lotl/eu-lotl.xml";
     private String ojUrl = "https://eur-lex.europa.eu/eli/C/2026/1944/oj";
     private String lotlRootSchemeInfoUri = "https://ec.europa.eu/tools/lotl/eu-lotl-legalnotice.html";
     private String schedulerCron = "0 0 3 * * ?";
-    /**
-     * Territories (scheme territory codes) whose trusted list must be loaded with at least one trust anchor for
-     * the service to count as ready ({@code tsl} health component). Any other trusted territory may be missing,
-     * stale or failing without affecting readiness. Empty: any loaded trusted list is enough.
-     */
+    // Territories whose trusted list must hold at least one anchor for the service to count as ready (tsl health);
+    // any other trusted territory may be missing, stale or failing. Empty: any loaded trusted list is enough
     private List<String> mandatoryTerritories = Arrays.asList("EE");
     private List<String> trustedTerritories =   Arrays.asList("AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "EL", "HU", "HR", "IE", "IS", "IT", "LT", "LU", "LV", "LI", "MT", "NO", "NL", "PL", "PT", "RO", "SE", "SI", "SK", "UK");
     private Resource sslTruststorePath;

@@ -50,6 +50,7 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
@@ -196,7 +197,8 @@ public class TSLLoader {
     }
 
     public DSSFileLoader onlineLoader() {
-        FileCacheDataLoader onlineFileLoader = new FileCacheDataLoader();
+        FileCacheDataLoader onlineFileLoader = new LastGoodCopyFileCacheDataLoader();
+        cacheDirectory(onlineFileLoader, configurationProperties.getCacheDirectory());
         if (configurationProperties.getOnlineCacheExpirationTime() != null) {
             Duration cacheExpirationTime = configurationProperties.getOnlineCacheExpirationTime();
             onlineFileLoader.setCacheExpirationTime(cacheExpirationTime.toMillis());
@@ -230,9 +232,17 @@ public class TSLLoader {
 
     public DSSFileLoader offlineLoader() {
         FileCacheDataLoader offlineFileLoader = new FileCacheDataLoader();
+        cacheDirectory(offlineFileLoader, configurationProperties.getCacheDirectory());
         offlineFileLoader.setCacheExpirationTime(Long.MAX_VALUE);
         offlineFileLoader.setDataLoader(new IgnoreDataLoader());
         return offlineFileLoader;
+    }
+
+    // Null keeps DSS's default, the JVM's temporary directory.
+    private static void cacheDirectory(FileCacheDataLoader loader, File directory) {
+        if (directory != null) {
+            loader.setFileCacheDirectory(directory);
+        }
     }
 
     @Autowired

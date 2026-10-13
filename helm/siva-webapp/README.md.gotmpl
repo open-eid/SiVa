@@ -67,9 +67,11 @@ network, or `localhost` if the cluster was created with an `extraPortMappings` e
   own system tests expect everything on the traffic port, so a test instance sets
   `runtime.managementPort` to the traffic port (see `values-kind.yaml`); the probes then use
   `/monitoring/health/readiness` and `/liveness`.
-- Graceful shutdown needs `sleep` in the image for the preStop pause (Paketo images have it;
-  set `runtime.preStopSleepSeconds: 0` otherwise) and a `terminationGracePeriodSeconds` above
-  sleep + `runtime.shutdownTimeout`; the chart refuses to render otherwise.
+- The preStop pause uses the kubelet's Sleep action on Kubernetes 1.30+ and needs nothing in
+  the image. Below 1.30 it execs `sleep`, which Paketo's default tiny run image does not ship:
+  there, use a run image that has it or set `runtime.preStopSleepSeconds: 0` (and accept that a
+  rollout may refuse a request or two). `terminationGracePeriodSeconds` must exceed sleep +
+  `runtime.shutdownTimeout`; the chart refuses to render otherwise.
 - Put JVM flags in `runtime.javaToolOptions`, not in `env`: an `env` entry named
   `JAVA_TOOL_OPTIONS` replaces the chart's.
 - Trust material is the classpath default; rotating it means a new image.

@@ -85,8 +85,16 @@ spec:
           {{- if gt (int .Values.runtime.preStopSleepSeconds) 0 }}
           lifecycle:
             preStop:
+              {{- /* The kubelet's own Sleep action (GA in 1.30) needs no binary in the image; Paketo's
+                     default tiny run image has no `sleep`, and an exec hook that fails is a no-op
+                     that lets SIGTERM race the endpoint removal. Exec only on older clusters. */}}
+              {{- if semverCompare ">=1.30.0-0" .Capabilities.KubeVersion.Version }}
+              sleep:
+                seconds: {{ .Values.runtime.preStopSleepSeconds }}
+              {{- else }}
               exec:
                 command: ["sleep", {{ .Values.runtime.preStopSleepSeconds | quote }}]
+              {{- end }}
           {{- end }}
           {{- with .Values.probes.startup }}
           {{- if .enabled }}

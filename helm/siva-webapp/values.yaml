@@ -78,8 +78,10 @@ runtime:
   # period (the chart refuses to render when sleep + timeout reach terminationGracePeriodSeconds).
   shutdownTimeout: 30s
   # -- Seconds the pod sleeps in preStop before SIGTERM, so endpoint removal has propagated and
-  # no new request lands on a pod that is stopping. Runs `sleep` inside the image (present in
-  # Paketo images; a distroless image has none). 0 disables the hook.
+  # no new request lands on a pod that is stopping. On Kubernetes 1.30+ this is the kubelet's
+  # own Sleep action and needs nothing in the image; on older clusters it execs `sleep`, which
+  # Paketo's default tiny run image does not have (the hook then fails and the pause is lost).
+  # 0 disables the hook.
   preStopSleepSeconds: 5
   # -- server.forward-headers-strategy: `framework` trusts X-Forwarded-* from the Ingress/edge
   # so the app sees the client address and scheme; `none` when nothing in front sets them.

@@ -247,9 +247,11 @@ needs, no support promise. Its README (`helm/siva-webapp/README.md`) documents e
 3. Configure through values: `config.applicationYaml` takes the `siva.*` keys from this guide
    as a Spring configuration override; `env` takes environment variables (relaxed binding);
    `envFrom.existingSecret` sources passwords from a Secret. Ingress objects come from
-   `network.ingresses` (set your controller's body-size limit to at least 27 MB). Health,
-   readiness and Prometheus metrics are served on the management port (8081) through the
-   in-cluster Service `<release>-management`, not through the traffic port or the Ingress.
+   `network.ingresses` (set your controller's body-size limit to at least 27 MB). Health with
+   details, heartbeat, version and Prometheus metrics are served on the management port (8081)
+   through the in-cluster Service `<release>-management`, not through the traffic port or the
+   Ingress; the traffic port answers only the status-only probes `/readyz` and `/livez`, which
+   the kubelet and an external load balancer's health check use.
 
 Optional objects, all off by default: HorizontalPodAutoscaler, NetworkPolicy, ServiceMonitor,
 PrometheusRule and a Grafana dashboard (`scaling.*`, `network.networkPolicy.*`,
@@ -375,7 +377,11 @@ These links to dependent web services have been preconfigured. For example, the 
 
 * **Trust lists**
 
-The `tsl` component reports, per trusted list, the number of trust anchors and when the last refresh finished. It is DOWN until every trusted list has been loaded with at least one anchor, and goes DOWN again when a refresh leaves a list empty; the overall health and the heartbeat follow it. It is part of the `readiness` probe group (`/monitoring/health/readiness`), so a Kubernetes pod in that state receives no traffic.
+The `tsl` component reports, per trusted-list loader, the number of trust anchors, when the last refresh finished and the anchors per territory (every trusted list that parsed, validated and has not expired). It is DOWN until each loader has refreshed once and holds every mandatory territory (`siva.tsl.loader.mandatoryTerritories`, `EE` by default) with at least one anchor, naming the missing ones in `missingMandatoryTerritories`; other territories never decide the status, so one member state's list being unreachable does not take the service out of rotation. The overall health and the heartbeat follow it. It is part of the `readiness` probe group (`/monitoring/health/readiness`), so a Kubernetes pod in that state receives no traffic.
+
+* **Probe paths on the application port**
+
+When the actuator runs on its own port (`management.server.port`), the `liveness` and `readiness` groups are also served on the application port as `/livez` and `/readyz` (`management.endpoint.health.probes.add-additional-paths`, on by default). They return the status only, nothing else, which makes them the right target for a load balancer's health check and for Kubernetes probes. Without a separate management port the groups stay under `/monitoring/health/liveness` and `/monitoring/health/readiness`.
 
 ## Heartbeat endpoint
 
@@ -514,6 +520,7 @@ See the reference list of all common [application properties](http://docs.spring
 | **siva.tsl.loader.lotlRootSchemeInfoUri** | A url value that points to the European Unions' disclaimer regarding LOTL <ul><li>Default: **https://ec.europa.eu/tools/lotl/eu-lotl-legalnotice.html**</li></ul> |
 | **siva.tsl.loader.code** | Sets the LOTL code in DSS <ul><li>Default: **EU**</li></ul> |
 | **siva.tsl.loader.trustedTerritories** | Sets the trusted territories by countries <ul><li>Default: **"AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "EL", "HU", "HR", "IE", "IS", "IT", "LT", "LU", "LV", "LI", "MT", "NO", "NL", "PL", "PT", "RO", "SE", "SI", "SK", "UK"**</li><li>If the property is not specified or has an empty value, the default trusted territories will be used</li><li>Values are case-sensitive. Country codes must be specified in uppercase format</li></ul> |
+| **siva.tsl.loader.mandatoryTerritories** | Territories (same codes as above) whose trusted list must be loaded with at least one trust anchor before the service reports itself ready (the `tsl` health component, see [Health Endpoint](#health-endpoint)). Any other trusted territory may be missing or stale without affecting readiness. <ul><li>Default: **"EE"**</li><li>Empty: any loaded trusted list is enough</li></ul> |
 | **siva.tsl.loader.schedulerCron** | A string in a [Crontab expression format](http://www.manpagez.com/man/5/crontab/) that defines the interval at which the TSL renewal process is started. The default is 03:00 every day (local time) <ul><li>Default: **0 0 3 \* * ?**</li></ul> |
 | **siva.tsl.loader.sslTruststorePath** | Path to truststore containing trusted CA certificates used in HTTPS connection to retrieve member states TSLs. Requires *classpath:* prefix to load truststore from application classpath or *file:* prefix to load truststore from file system. <ul><li>Default: **classpath:tsl-ssl-truststore.p12**</li></ul> |
 | **siva.tsl.loader.sslTruststoreType** | Truststore type <ul><li>Default: **PKCS12**</li></ul> |

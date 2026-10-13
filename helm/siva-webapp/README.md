@@ -1,12 +1,18 @@
 # siva-webapp
 
-![Version: 0.10.0](https://img.shields.io/badge/Version-0.10.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.11.0-SNAPSHOT](https://img.shields.io/badge/AppVersion-3.11.0--SNAPSHOT-informational?style=flat-square)
+![Version: 0.10.1](https://img.shields.io/badge/Version-0.10.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.11.0-SNAPSHOT](https://img.shields.io/badge/AppVersion-3.11.0--SNAPSHOT-informational?style=flat-square)
 
 Reference deployment of [SiVa](https://github.com/open-eid/SiVa), the Estonian digital-signature
 validation service, on Kubernetes. Like the project's docker-compose file it is a reference, not a
 product: best-effort, no support promise, build and run it yourself.
 
 Licence: EUPL 1.1, the same as the SiVa repository this chart belongs with.
+
+Pods are disposable. In snapshot mode (`tsl.mode: snapshot`, see "Trust lists") a new pod loads
+the EU trust lists from a shared store and is ready in seconds with no download of its own, so
+the deployment is friendly to the descheduler, to daily rolling restarts, to autoscaling and to
+preemptible nodes; every replica validates against the same anchors. Object storage as the store,
+bridged by a sync sidecar rather than a CSI driver, is the next step on that path.
 
 ## Before you install
 

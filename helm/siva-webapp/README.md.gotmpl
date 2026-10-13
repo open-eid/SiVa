@@ -8,6 +8,12 @@ product: best-effort, no support promise, build and run it yourself.
 
 Licence: EUPL 1.1, the same as the SiVa repository this chart belongs with.
 
+Pods are disposable. In snapshot mode (`tsl.mode: snapshot`, see "Trust lists") a new pod loads
+the EU trust lists from a shared store and is ready in seconds with no download of its own, so
+the deployment is friendly to the descheduler, to daily rolling restarts, to autoscaling and to
+preemptible nodes; every replica validates against the same anchors. Object storage as the store,
+bridged by a sync sidecar rather than a CSI driver, is the next step on that path.
+
 ## Before you install
 
 - **Build your own image.** SiVa publishes source only. `./mvnw spring-boot:build-image` in the

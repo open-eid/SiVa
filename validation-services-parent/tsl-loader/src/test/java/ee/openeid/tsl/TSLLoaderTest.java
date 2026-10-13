@@ -17,6 +17,8 @@
 package ee.openeid.tsl;
 
 import ee.openeid.tsl.configuration.TSLLoaderConfigurationProperties;
+import ee.openeid.tsl.snapshot.TSLSnapshotManifest;
+import ee.openeid.tsl.snapshot.TSLSnapshotStore;
 import eu.europa.esig.dss.model.tsl.ParsingInfoRecord;
 import eu.europa.esig.dss.model.tsl.TLInfo;
 import eu.europa.esig.dss.model.tsl.TrustProperties;
@@ -32,10 +34,12 @@ import org.junit.jupiter.api.io.TempDir;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
@@ -235,9 +239,72 @@ class TSLLoaderTest {
         verify(tslValidationJob, never()).offlineRefresh();
     }
 
+    @Test
+    void loadTSL_WhenCurrentNamesAMissingDirectory_NothingIsLoadedAndStartupSurvives() throws IOException {
+        tslLoader.setTslLoaderConfigurationProperties(createSnapshotConfigurationProperties());
+        tslLoader.init();
+        Files.writeString(snapshotRoot.resolve("current"), "20261013T183000Z\n");
+
+        tslLoader.loadTSL();
+
+        verify(tslValidationJob, never()).offlineRefresh();
+        assertNull(tslLoader.getSnapshotId());
+    }
+
+    @Test
+    void loadTSL_WhenSnapshotIsOlderThanMaxAge_ItIsRefusedAndTheLoadedStateKept() throws IOException {
+        TSLLoaderConfigurationProperties props = createSnapshotConfigurationProperties();
+        props.setSnapshotMaxAge(Duration.ofDays(2));
+        tslLoader.setTslLoaderConfigurationProperties(props);
+        tslLoader.init();
+        publish("20261013T183000Z", Instant.now().minus(Duration.ofHours(1)));
+        tslLoader.loadTSL();
+        publish("20261014T000000Z", Instant.now().minus(Duration.ofDays(3)));
+
+        tslLoader.refreshIfSnapshotChanged();
+        tslLoader.refreshIfSnapshotChanged();
+
+        verify(tslValidationJob, times(1)).offlineRefresh();
+        assertEquals("20261013T183000Z", tslLoader.getSnapshotId());
+    }
+
+    @Test
+    void loadTSL_WhenMaxAgeIsSetAndTheManifestIsMissing_TheSnapshotIsRefused() throws IOException {
+        TSLLoaderConfigurationProperties props = createSnapshotConfigurationProperties();
+        props.setSnapshotMaxAge(Duration.ofDays(2));
+        tslLoader.setTslLoaderConfigurationProperties(props);
+        tslLoader.init();
+        publish("20261013T183000Z");
+
+        tslLoader.loadTSL();
+
+        verify(tslValidationJob, never()).offlineRefresh();
+    }
+
+    @Test
+    void loadTSL_WhenSnapshotIsYoungerThanMaxAge_ItIsLoaded() throws IOException {
+        TSLLoaderConfigurationProperties props = createSnapshotConfigurationProperties();
+        props.setSnapshotMaxAge(Duration.ofDays(2));
+        tslLoader.setTslLoaderConfigurationProperties(props);
+        tslLoader.init();
+        publish("20261013T183000Z", Instant.now().minus(Duration.ofHours(1)));
+
+        tslLoader.loadTSL();
+
+        verify(tslValidationJob).offlineRefresh();
+        assertEquals("20261013T183000Z", tslLoader.getSnapshotId());
+    }
+
     private void publish(String id) throws IOException {
         Files.createDirectories(snapshotRoot.resolve("snapshots").resolve(id));
         Files.writeString(snapshotRoot.resolve("current"), id + "\n");
+    }
+
+    private void publish(String id, Instant createdAt) throws IOException {
+        publish(id);
+        TSLSnapshotManifest manifest = new TSLSnapshotManifest(id, createdAt, "UP", List.of(), Map.of(), 0);
+        Files.write(snapshotRoot.resolve("snapshots").resolve(id).resolve(TSLSnapshotStore.MANIFEST_FILE),
+                JsonMapper.shared().writeValueAsBytes(manifest));
     }
 
     private TSLLoaderConfigurationProperties createSnapshotConfigurationProperties() {

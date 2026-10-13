@@ -687,3 +687,23 @@ tests:
     asserts:
       - failedTemplate:
           errorPattern: tsl.mode snapshot needs a store
+
+  - it: marks the pods safe to evict for the descheduler and the cluster autoscaler by default
+    template: deployment.yaml
+    asserts:
+      - equal:
+          path: spec.template.metadata.annotations["cluster-autoscaler.kubernetes.io/safe-to-evict"]
+          value: "true"
+      - equal:
+          path: spec.template.metadata.annotations["descheduler.alpha.kubernetes.io/evict"]
+          value: "true"
+
+  - it: drops the eviction annotations when evictable is off
+    template: deployment.yaml
+    set:
+      evictable: false
+    asserts:
+      - notExists:
+          path: spec.template.metadata.annotations["cluster-autoscaler.kubernetes.io/safe-to-evict"]
+      - notExists:
+          path: spec.template.metadata.annotations["descheduler.alpha.kubernetes.io/evict"]

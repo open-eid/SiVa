@@ -11,7 +11,10 @@ Licence: EUPL 1.1, the same as the SiVa repository this chart belongs with.
 Pods are disposable. In snapshot mode (`tsl.mode: snapshot`, see "Trust lists") a new pod loads
 the EU trust lists from a shared store and is ready in seconds with no download of its own, so
 the deployment is friendly to the descheduler, to daily rolling restarts, to autoscaling and to
-preemptible nodes; every replica validates against the same anchors. Object storage as the store,
+preemptible nodes; every replica validates against the same anchors. The pods carry the
+safe-to-evict annotations the descheduler and the cluster autoscaler look for (`evictable`),
+and the PodDisruptionBudget bounds how many go at once; which descheduler, and on what policy,
+is yours to choose. Object storage as the store,
 bridged by a sync sidecar rather than a CSI driver, is the next step on that path.
 
 ## Before you install
@@ -78,6 +81,7 @@ directory); edit the comments, not this table.
 | config.mountPath | string | `"/etc/siva-webapp"` | Where the Spring Boot configuration override is mounted; the container gets SPRING_CONFIG_ADDITIONAL_LOCATION=file:<mountPath>/application.yml. |
 | env | list | `[]` | Extra environment variables for the container (plain Kubernetes EnvVar entries). Spring relaxed binding applies, e.g. `{name: SIVA_TSL_LOADER_TRUSTEDTERRITORIES, value: "EE,LV"}` (values are strings: use `--set-string` on the command line). Do not set JAVA_TOOL_OPTIONS or the runtime.* variables here: a later duplicate wins and silently replaces the chart's value; use runtime.* instead. |
 | envFrom.existingSecret | string | `""` | Name of an existing Secret whose keys become environment variables (passwords, keystore passphrases). Not created by the chart. |
+| evictable | bool | `true` | Mark the webapp pods as safe to evict: the descheduler and the cluster autoscaler both skip pods with local storage by default, and /tmp is an emptyDir, so without the annotations `cluster-autoscaler.kubernetes.io/safe-to-evict` and `descheduler.alpha.kubernetes.io/evict` neither would ever move a SiVa pod. Nothing in a pod is worth keeping (the trust-list cache is re-downloaded or re-read from the store); the PodDisruptionBudget still bounds how many pods go at once and graceful shutdown drains the one that goes. The fetcher pods are not marked: a Job interrupted mid-run just retries. |
 | fullnameOverride | string | `""` | Override the full resource name (release name + chart name). |
 | image.pullPolicy | string | `"IfNotPresent"` | Pull policy. |
 | image.pullSecrets | list | `[]` | imagePullSecrets, e.g. `[{name: my-registry-credentials}]`. |

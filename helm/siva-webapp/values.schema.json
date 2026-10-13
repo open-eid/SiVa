@@ -796,6 +796,9 @@
         }
       }
     },
+    "evictable": {
+      "type": "boolean"
+    },
     "podAnnotations": {
       "type": "object",
       "additionalProperties": {

@@ -395,6 +395,14 @@ serviceAccount:
   # -- ServiceAccount annotations.
   annotations: {}
 
+# -- Mark the webapp pods as safe to evict: the descheduler and the cluster autoscaler both skip
+# pods with local storage by default, and /tmp is an emptyDir, so without the annotations
+# `cluster-autoscaler.kubernetes.io/safe-to-evict` and `descheduler.alpha.kubernetes.io/evict`
+# neither would ever move a SiVa pod. Nothing in a pod is worth keeping (the trust-list cache is
+# re-downloaded or re-read from the store); the PodDisruptionBudget still bounds how many pods
+# go at once and graceful shutdown drains the one that goes. The fetcher pods are not marked:
+# a Job interrupted mid-run just retries.
+evictable: true
 # -- Extra pod annotations.
 podAnnotations: {}
 # -- Extra pod labels.

@@ -17,6 +17,7 @@
 package ee.openeid.tsl.health;
 
 import ee.openeid.tsl.TSLLoader;
+import ee.openeid.tsl.configuration.TSLLoaderConfigurationProperties;
 import org.springframework.boot.health.contributor.Health;
 import org.springframework.boot.health.contributor.HealthIndicator;
 import org.springframework.stereotype.Component;
@@ -24,40 +25,57 @@ import org.springframework.stereotype.Component;
 import java.time.Instant;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 /**
- * Health of the trusted lists: UP once every {@link TSLLoader} has refreshed at least once and
- * came out of it with at least one trust anchor, DOWN otherwise. Registered as the {@code tsl}
- * health component: the webapp adds it to the readiness group, so a pod whose trust lists never
- * loaded (or were emptied by a refresh) does not receive traffic, and as part of the default
- * aggregate it also turns {@code /monitoring/health} and the heartbeat DOWN in that state.
+ * Health of the trusted lists: UP when every loader has refreshed at least once and holds the mandatory
+ * territories ({@code siva.tsl.loader.mandatoryTerritories}), each with at least one trust anchor. Other
+ * territories are reported but never decide the status, so one member state's list being unreachable for a
+ * while does not take the service out of rotation. With no mandatory territory configured, a loader is UP once
+ * it holds any trust anchor at all. Member of the {@code readiness} probe group.
  */
 @Component("tslHealthIndicator")
 public class TSLHealthIndicator implements HealthIndicator {
 
     public static final String DETAIL_CERTIFICATES = "certificates";
     public static final String DETAIL_LAST_REFRESH = "lastRefresh";
+    public static final String DETAIL_TERRITORIES = "territories";
+    public static final String DETAIL_MISSING = "missingMandatoryTerritories";
 
     private final Set<TSLLoader> loaders;
+    private final TSLLoaderConfigurationProperties configurationProperties;
 
-    public TSLHealthIndicator(Set<TSLLoader> loaders) {
+    public TSLHealthIndicator(Set<TSLLoader> loaders, TSLLoaderConfigurationProperties configurationProperties) {
         this.loaders = loaders;
+        this.configurationProperties = configurationProperties;
     }
 
     @Override
     public Health health() {
+        List<String> mandatory = configurationProperties.getMandatoryTerritories() == null
+                ? List.of() : configurationProperties.getMandatoryTerritories();
         boolean up = !loaders.isEmpty();
         Map<String, Object> details = new LinkedHashMap<>();
         for (TSLLoader loader : loaders.stream().sorted(Comparator.comparing(TSLLoader::getTslName)).toList()) {
             Instant lastRefresh = loader.getLastRefresh();
             int certificates = loader.getNumberOfCertificates();
-            up &= lastRefresh != null && certificates > 0;
+            Map<String, Integer> territories = loader.getCertificatesByTerritory();
+            List<String> missing = mandatory.stream()
+                    .filter(territory -> territories.getOrDefault(territory, 0) <= 0)
+                    .toList();
+            boolean loaded = mandatory.isEmpty() ? certificates > 0 : missing.isEmpty();
+            up &= lastRefresh != null && loaded;
+
             Map<String, Object> loaderDetails = new LinkedHashMap<>();
             loaderDetails.put(DETAIL_CERTIFICATES, certificates);
             if (lastRefresh != null) {
                 loaderDetails.put(DETAIL_LAST_REFRESH, lastRefresh.toString());
+            }
+            loaderDetails.put(DETAIL_TERRITORIES, territories);
+            if (!missing.isEmpty()) {
+                loaderDetails.put(DETAIL_MISSING, missing);
             }
             details.put(loader.getTslName(), loaderDetails);
         }

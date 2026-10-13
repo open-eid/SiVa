@@ -19,6 +19,11 @@ package ee.openeid.tsl;
 import ee.openeid.tsl.configuration.TSLLoaderConfigurationProperties;
 import eu.europa.esig.dss.model.DSSDocument;
 import eu.europa.esig.dss.model.InMemoryDocument;
+import eu.europa.esig.dss.model.tsl.LOTLInfo;
+import eu.europa.esig.dss.model.tsl.ParsingInfoRecord;
+import eu.europa.esig.dss.model.tsl.TLInfo;
+import eu.europa.esig.dss.model.tsl.TLValidationJobSummary;
+import eu.europa.esig.dss.model.tsl.ValidationInfoRecord;
 import eu.europa.esig.dss.service.http.commons.CommonsDataLoader;
 import eu.europa.esig.dss.service.http.commons.FileCacheDataLoader;
 import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
@@ -50,8 +55,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -68,6 +79,7 @@ public class TSLLoader {
     @Getter
     private volatile Instant lastRefresh;
     private volatile int numberOfCertificates;
+    private volatile Map<String, Integer> certificatesByTerritory = Map.of();
 
     private TSLValidationJobFactory tslValidationJobFactory;
     private TLValidationJob tslValidationJob;
@@ -100,6 +112,7 @@ public class TSLLoader {
             log.info("Finished loading '{}' TSL over the network", tslName);
         }
         numberOfCertificates = trustedListSource.getNumberOfCertificates();
+        certificatesByTerritory = snapshotCertificatesByTerritory(trustedListSource.getSummary());
         lastRefresh = Instant.now();
     }
 
@@ -112,6 +125,51 @@ public class TSLLoader {
      */
     public int getNumberOfCertificates() {
         return numberOfCertificates;
+    }
+
+    /**
+     * Trust anchors per territory (scheme territory code) when the last refresh attempt finished, for every
+     * trusted list this loader follows directly or through a list of trusted lists. A list counts only when it
+     * parsed, has a next-update date in the future and its signature did not fail validation, the conditions
+     * under which {@link ExpirationAndSignatureCheckStrategy} lets its anchors into the certificate source. A list whose
+     * latest download failed keeps its previous parsed state in the DSS cache, so it stays here until that
+     * state is dropped; a list that never parsed is absent. Sorted by territory; empty until the first refresh.
+     */
+    public Map<String, Integer> getCertificatesByTerritory() {
+        return certificatesByTerritory;
+    }
+
+    private static Map<String, Integer> snapshotCertificatesByTerritory(TLValidationJobSummary summary) {
+        if (summary == null) {
+            return Map.of();
+        }
+        List<TLInfo> trustedLists = new ArrayList<>();
+        if (summary.getOtherTLInfos() != null) {
+            trustedLists.addAll(summary.getOtherTLInfos());
+        }
+        if (summary.getLOTLInfos() != null) {
+            for (LOTLInfo lotl : summary.getLOTLInfos()) {
+                if (lotl.getTLInfos() != null) {
+                    trustedLists.addAll(lotl.getTLInfos());
+                }
+            }
+        }
+        Date now = new Date();
+        Map<String, Integer> result = new TreeMap<>();
+        for (TLInfo trustedList : trustedLists) {
+            ParsingInfoRecord parsing = trustedList.getParsingCacheInfo();
+            ValidationInfoRecord validation = trustedList.getValidationCacheInfo();
+            // The same acceptance rule as ExpirationAndSignatureCheckStrategy, which decides what reaches the
+            // certificate source: no next-update date or one in the past means expired; a validation result,
+            // when there is one, must be valid.
+            if (parsing == null || !parsing.isResultExist() || parsing.getTerritory() == null
+                    || parsing.getNextUpdateDate() == null || now.after(parsing.getNextUpdateDate())
+                    || (validation != null && validation.isResultExist() && !validation.isValid())) {
+                continue;
+            }
+            result.merge(parsing.getTerritory(), parsing.getCertNumber(), Integer::sum);
+        }
+        return Collections.unmodifiableMap(result);
     }
 
     public LOTLSource europeanLOTL() {

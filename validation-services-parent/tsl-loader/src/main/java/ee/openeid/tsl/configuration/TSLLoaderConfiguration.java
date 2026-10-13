@@ -28,6 +28,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Configuration
@@ -52,6 +53,8 @@ public class TSLLoaderConfiguration {
         TSLLoaderConfigurationProperties configurationProperties = new TSLLoaderConfigurationProperties();
         configurationProperties.setUrl("https://open-eid.github.io/test-TL/tl-mp-test-EE.xml");
         configurationProperties.setTrustedTerritories(new ArrayList<>());
+        // The test trusted list declares the scheme territory EE_T, not EE.
+        configurationProperties.setMandatoryTerritories(new ArrayList<>(List.of("EE_T")));
         configurationProperties.setLotlTruststorePath(new ClassPathResource("test-lotl-truststore.p12", getClass().getClassLoader()));
         return configurationProperties;
     }

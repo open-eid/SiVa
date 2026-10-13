@@ -1,6 +1,6 @@
 # siva-webapp
 
-![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.10.3](https://img.shields.io/badge/AppVersion-3.10.3-informational?style=flat-square)
+![Version: 0.7.2](https://img.shields.io/badge/Version-0.7.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.10.3](https://img.shields.io/badge/AppVersion-3.10.3-informational?style=flat-square)
 
 Reference deployment of [SiVa](https://github.com/open-eid/SiVa), the Estonian digital-signature
 validation service, on Kubernetes. Like the project's docker-compose file it is a reference, not a
@@ -64,33 +64,33 @@ directory); edit the comments, not this table.
 | network.ingresses | list | `[]` | Ingress objects to create, one per entry, named `<release-fullname>-<name>`. Keys: name, className, annotations, hosts (host + paths with path and optional pathType), tls. Set your controller's body-size limit to at least 27 MB (e.g. `nginx.ingress.kubernetes.io/proxy-body-size: 28m`). Example in ci/all-on-values.yaml. |
 | network.networkPolicy.enabled | bool | `false` | Ingress-only NetworkPolicy for the webapp pods. Egress stays open: the trust lists, OCSP and timestamp responders are a changing set of public HTTPS hosts; restrict it in your own policy if your CNI resolves names. Needs a CNI that enforces policies. |
 | network.networkPolicy.ingressFrom | list | `[]` | NetworkPolicyPeer entries allowed to the traffic port (namespaceSelector, podSelector, ipBlock). Empty: any source, in or outside the cluster (NodePort/LoadBalancer traffic included); list your Ingress controller's namespace to narrow it. |
-| network.networkPolicy.managementFrom | list | `[]` | Peers allowed to the management port when the actuator is split: Prometheus, and the `helm test` pod if you still want it to pass (kubelet probes come from the node and are not subject to the policy on most CNIs). Empty: any source. Without the split the actuator sits on the traffic port and ingressFrom governs it; this list is then unused. |
+| network.networkPolicy.managementFrom | list | `[]` | Peers allowed to the management port when the actuator is split: Prometheus, and the `helm test` pod if you still want it to pass (the kubelet probes use the traffic port). Empty: any source. Without the split the actuator sits on the traffic port and ingressFrom governs it; this list is then unused. |
 | nodeSelector | object | `{}` | Node selector. |
 | podAnnotations | object | `{}` | Extra pod annotations. |
 | podLabels | object | `{}` | Extra pod labels. |
 | probes.liveness.enabled | bool | `true` | Render the liveness probe. |
 | probes.liveness.failureThreshold | int | `3` | Failures before the container is restarted. |
 | probes.liveness.initialDelaySeconds | int | `0` | Seconds before the first probe. |
-| probes.liveness.path | string | `"/monitoring/health/liveness"` | Path on the management port (the traffic port when the actuator is not split). |
+| probes.liveness.path | string | `""` | Path on the traffic port; empty picks the liveness group's path for the layout. |
 | probes.liveness.periodSeconds | int | `20` | Seconds between probes. |
 | probes.liveness.timeoutSeconds | int | `5` | Seconds before a probe counts as failed. |
 | probes.readiness.enabled | bool | `true` | Render the readiness probe. |
 | probes.readiness.failureThreshold | int | `3` | Failures before the pod is taken out of the Service. |
 | probes.readiness.initialDelaySeconds | int | `0` | Seconds before the first probe. |
-| probes.readiness.path | string | `"/monitoring/health/readiness"` | Path on the management port (the traffic port when the actuator is not split). |
+| probes.readiness.path | string | `""` | Path on the traffic port; empty picks the readiness group's path for the layout. |
 | probes.readiness.periodSeconds | int | `10` | Seconds between probes. |
 | probes.readiness.timeoutSeconds | int | `5` | Seconds before a probe counts as failed. |
 | probes.startup.enabled | bool | `true` | Render the startup probe. |
 | probes.startup.failureThreshold | int | `60` | Failures before the container is restarted; with periodSeconds this is the startup budget for the trust-list download (60 x 10 s = 10 min): tune it to your egress. |
 | probes.startup.initialDelaySeconds | int | `10` | Seconds before the first probe. |
-| probes.startup.path | string | `"/monitoring/health/liveness"` | Path on the management port (the traffic port when the actuator is not split). |
+| probes.startup.path | string | `""` | Path on the traffic port; empty picks the liveness group's path for the layout. |
 | probes.startup.periodSeconds | int | `10` | Seconds between probes. |
 | probes.startup.timeoutSeconds | int | `5` | Seconds before a probe counts as failed. |
 | replicaCount | int | `1` | Number of webapp replicas (ignored when scaling.hpa is on). Each replica downloads the trust lists itself at startup (see "Known limits"), so scale with that in mind. |
 | resources | object | requests 500m / 1Gi, limit 2Gi memory | Container resources. Paketo's memory calculator sizes the JVM heap from the memory LIMIT (it reads the cgroup), so the limit is the knob, not the request. The default handles a 20 MB document with headroom; no CPU limit on purpose (JVM startup and TSL parsing are bursty). |
 | runtime.forwardHeadersStrategy | string | `"framework"` | server.forward-headers-strategy: `framework` trusts X-Forwarded-* from the Ingress/edge so the app sees the client address and scheme; `none` when nothing in front sets them. |
 | runtime.javaToolOptions | string | `"-XX:+ExitOnOutOfMemoryError"` | JAVA_TOOL_OPTIONS for the JVM; Paketo's memory calculator appends its own flags. ExitOnOutOfMemoryError makes a JVM that ran out of heap exit so Kubernetes restarts it instead of letting it limp along (Paketo's Liberica buildpack sets it too; the duplicate is harmless and the chart value also covers images built another way). |
-| runtime.managementPort | int | `8081` | Actuator (health, probes, Prometheus) on its own port. The traffic Service and the Ingresses never carry it; a ClusterIP Service `<release>-management` exposes it in-cluster for probes, scraping and `helm test`. Set it equal to service.containerPort to keep the actuator on the traffic port (the layout SiVa's docker-compose and system tests expect). |
+| runtime.managementPort | int | `8081` | Actuator (health with details, Prometheus, heartbeat, version) on its own port. The traffic Service and the Ingresses never carry it; a ClusterIP Service `<release>-management` exposes it in-cluster for scraping and `helm test`. The traffic port keeps the status-only probe paths /readyz and /livez for the kubelet and external load balancers. Set it equal to service.containerPort to keep the whole actuator on the traffic port (the layout SiVa's docker-compose and system tests expect; the probes then use /monitoring/health/*). |
 | runtime.preStopSleepSeconds | int | `5` | Seconds the pod sleeps in preStop before SIGTERM, so endpoint removal has propagated and no new request lands on a pod that is stopping. Runs `sleep` inside the image (present in Paketo images; a distroless image has none). 0 disables the hook. |
 | runtime.shutdownTimeout | string | `"30s"` | Graceful shutdown (server.shutdown=graceful): on SIGTERM the server stops accepting new connections and waits up to this long for in-flight validations (spring.lifecycle.timeout-per-shutdown-phase; whole seconds with the `s` unit). Size it to your slowest validation; it applies per shutdown phase, so leave margin below the grace period (the chart refuses to render when sleep + timeout reach terminationGracePeriodSeconds). |
 | scaling.hpa.behavior | object | `{}` | HorizontalPodAutoscalerBehavior, as given. |
@@ -140,21 +140,22 @@ network, or `localhost` if the cluster was created with an `extraPortMappings` e
 
 ## Known limits
 
-- Readiness is reported before the trust lists are loaded; the long `startupProbe` budget is the
-  compensation, and a pod can receive traffic it cannot yet validate. An application change is
-  planned to gate readiness on the TSL.
-- Health never turns DOWN when a trust-list refresh fails; alerting is left to you.
+- Readiness waits for the mandatory trusted lists (`siva.tsl.loader.mandatoryTerritories`, `EE`
+  by default); every other territory can be missing or stale without taking the pod out of
+  rotation, and health only says so in the `tsl` component's details. Alerting is left to you.
 - Every replica fetches the trust lists itself; replicas started at different times can hold
   different trust states until the next refresh.
 - Metrics are at `<release>-management:8081/monitoring/prometheus` (the service port when
   `runtime.managementPort` equals `service.containerPort`); `monitoring.serviceMonitor` scrapes
   it with the Prometheus operator, otherwise scrape it yourself. The alert rules cover what the
   application publishes today; trust-list freshness and OCSP/TSA failures have no metric yet.
-- Health, probes and metrics live on the management port (`8081` by default) and are reachable
-  only inside the cluster through `<release>-management`; the traffic port answers 404 under
-  `/monitoring`. SiVa's own system tests expect them on the traffic port, so a test instance
-  sets `runtime.managementPort` to the traffic port (see `values-kind.yaml`). The probes talk
-  to the management connector, so a wedged traffic connector does not fail readiness.
+- Health with details, heartbeat, version and metrics live on the management port (`8081` by
+  default) and are reachable only inside the cluster through `<release>-management`; the
+  traffic port answers 404 under `/monitoring` and serves only the status-only `/readyz` and
+  `/livez`, which the kubelet probes and an external load balancer's health check use. SiVa's
+  own system tests expect everything on the traffic port, so a test instance sets
+  `runtime.managementPort` to the traffic port (see `values-kind.yaml`); the probes then use
+  `/monitoring/health/readiness` and `/liveness`.
 - Graceful shutdown needs `sleep` in the image for the preStop pause (Paketo images have it;
   set `runtime.preStopSleepSeconds: 0` otherwise) and a `terminationGracePeriodSeconds` above
   sleep + `runtime.shutdownTimeout`; the chart refuses to render otherwise.

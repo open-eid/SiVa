@@ -222,7 +222,7 @@
             },
             "path": {
               "type": "string",
-              "pattern": "^/"
+              "pattern": "^(/.*)?$"
             },
             "initialDelaySeconds": {
               "type": "integer",
@@ -251,7 +251,7 @@
             },
             "path": {
               "type": "string",
-              "pattern": "^/"
+              "pattern": "^(/.*)?$"
             },
             "initialDelaySeconds": {
               "type": "integer",
@@ -280,7 +280,7 @@
             },
             "path": {
               "type": "string",
-              "pattern": "^/"
+              "pattern": "^(/.*)?$"
             },
             "initialDelaySeconds": {
               "type": "integer",

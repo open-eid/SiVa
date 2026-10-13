@@ -12,7 +12,8 @@ Startup downloads the EU trust lists and takes a few minutes; watch it with
 
 {{- if include "siva-webapp.managementSplit" . }}
 
-Health, probes and Prometheus metrics are on the management port, not on the traffic port:
+Health with details and Prometheus metrics are on the management port, not on the traffic
+port (which answers only the status-only probes /readyz and /livez):
   in-cluster {{ include "siva-webapp.healthUrl" . }}
   (never exposed through the Service below or an Ingress; from outside the cluster:
    kubectl -n {{ .Release.Namespace }} port-forward svc/{{ include "siva-webapp.fullname" . }}-management {{ .Values.runtime.managementPort }}

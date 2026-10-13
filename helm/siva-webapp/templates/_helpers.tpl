@@ -69,10 +69,20 @@ Whether the actuator runs on its own port (management port differs from the traf
 {{- end }}
 
 {{/*
-Name of the container port the probes use: management when split, http otherwise.
+Path of a probe on the traffic port. An explicit value wins; otherwise Spring Boot's /readyz and
+/livez when the actuator is split (management.endpoint.health.probes.add-additional-paths publishes
+the two probe groups on the traffic port only when there is a separate management port), or the
+groups under /monitoring/health when the actuator shares the traffic port.
+Usage: include "siva-webapp.probePath" (dict "root" $ "group" "readiness" "path" .path)
 */}}
-{{- define "siva-webapp.probePort" -}}
-{{- if include "siva-webapp.managementSplit" . }}management{{ else }}http{{ end }}
+{{- define "siva-webapp.probePath" -}}
+{{- if .path -}}
+{{ .path }}
+{{- else if include "siva-webapp.managementSplit" .root -}}
+{{ ternary "/readyz" "/livez" (eq .group "readiness") }}
+{{- else -}}
+/monitoring/health/{{ .group }}
+{{- end -}}
 {{- end }}
 
 {{/*

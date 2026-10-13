@@ -56,27 +56,27 @@ tests:
           path: spec.template.spec.imagePullSecrets[0].name
           value: regcred
 
-  - it: probes hit the actuator health groups on the management port
+  - it: probes hit Spring Boot's additional probe paths on the traffic port when the actuator is split
     template: deployment.yaml
     asserts:
       - equal:
           path: spec.template.spec.containers[0].startupProbe.httpGet.path
-          value: /monitoring/health/liveness
+          value: /livez
       - equal:
           path: spec.template.spec.containers[0].readinessProbe.httpGet.path
-          value: /monitoring/health/readiness
+          value: /readyz
       - equal:
           path: spec.template.spec.containers[0].livenessProbe.httpGet.path
-          value: /monitoring/health/liveness
+          value: /livez
       - equal:
           path: spec.template.spec.containers[0].startupProbe.httpGet.port
-          value: management
+          value: http
       - equal:
           path: spec.template.spec.containers[0].readinessProbe.httpGet.port
-          value: management
+          value: http
       - equal:
           path: spec.template.spec.containers[0].livenessProbe.httpGet.port
-          value: management
+          value: http
       - equal:
           path: spec.template.spec.containers[0].startupProbe.failureThreshold
           value: 60
@@ -102,7 +102,7 @@ tests:
           value: 9
       - equal:
           path: spec.template.spec.containers[0].livenessProbe.httpGet.path
-          value: /monitoring/health/liveness
+          value: /livez
 
   - it: the container port follows service.containerPort, independently of service.port
     template: deployment.yaml
@@ -442,14 +442,33 @@ tests:
           path: spec.template.spec.containers[0].ports
           count: 1
       - equal:
-          path: spec.template.spec.containers[0].startupProbe.httpGet.port
-          value: http
+          path: spec.template.spec.containers[0].startupProbe.httpGet.path
+          value: /monitoring/health/liveness
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.path
+          value: /monitoring/health/readiness
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet.path
+          value: /monitoring/health/liveness
       - equal:
           path: spec.template.spec.containers[0].readinessProbe.httpGet.port
           value: http
+
+  - it: an explicit probe path wins over the layout default without the split
+    template: deployment.yaml
+    set:
+      runtime:
+        managementPort: 8080
+      probes:
+        readiness:
+          path: /custom/ready
+    asserts:
       - equal:
-          path: spec.template.spec.containers[0].livenessProbe.httpGet.port
-          value: http
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.path
+          value: /custom/ready
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet.path
+          value: /monitoring/health/liveness
 
   - it: configures graceful shutdown, forward headers and the JVM through env
     template: deployment.yaml

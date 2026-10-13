@@ -51,21 +51,22 @@ network, or `localhost` if the cluster was created with an `extraPortMappings` e
 
 ## Known limits
 
-- Readiness is reported before the trust lists are loaded; the long `startupProbe` budget is the
-  compensation, and a pod can receive traffic it cannot yet validate. An application change is
-  planned to gate readiness on the TSL.
-- Health never turns DOWN when a trust-list refresh fails; alerting is left to you.
+- Readiness waits for the mandatory trusted lists (`siva.tsl.loader.mandatoryTerritories`, `EE`
+  by default); every other territory can be missing or stale without taking the pod out of
+  rotation, and health only says so in the `tsl` component's details. Alerting is left to you.
 - Every replica fetches the trust lists itself; replicas started at different times can hold
   different trust states until the next refresh.
 - Metrics are at `<release>-management:8081/monitoring/prometheus` (the service port when
   `runtime.managementPort` equals `service.containerPort`); `monitoring.serviceMonitor` scrapes
   it with the Prometheus operator, otherwise scrape it yourself. The alert rules cover what the
   application publishes today; trust-list freshness and OCSP/TSA failures have no metric yet.
-- Health, probes and metrics live on the management port (`8081` by default) and are reachable
-  only inside the cluster through `<release>-management`; the traffic port answers 404 under
-  `/monitoring`. SiVa's own system tests expect them on the traffic port, so a test instance
-  sets `runtime.managementPort` to the traffic port (see `values-kind.yaml`). The probes talk
-  to the management connector, so a wedged traffic connector does not fail readiness.
+- Health with details, heartbeat, version and metrics live on the management port (`8081` by
+  default) and are reachable only inside the cluster through `<release>-management`; the
+  traffic port answers 404 under `/monitoring` and serves only the status-only `/readyz` and
+  `/livez`, which the kubelet probes and an external load balancer's health check use. SiVa's
+  own system tests expect everything on the traffic port, so a test instance sets
+  `runtime.managementPort` to the traffic port (see `values-kind.yaml`); the probes then use
+  `/monitoring/health/readiness` and `/liveness`.
 - Graceful shutdown needs `sleep` in the image for the preStop pause (Paketo images have it;
   set `runtime.preStopSleepSeconds: 0` otherwise) and a `terminationGracePeriodSeconds` above
   sleep + `runtime.shutdownTimeout`; the chart refuses to render otherwise.

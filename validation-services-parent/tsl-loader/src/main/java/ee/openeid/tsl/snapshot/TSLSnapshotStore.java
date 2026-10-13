@@ -55,6 +55,9 @@ public class TSLSnapshotStore {
     public static final String MANIFEST_FILE = "manifest.json";
 
     private static final String TEMPORARY_SUFFIX = ".tmp";
+    // The pointer is one id; the manifest is a few kilobytes. Anything larger is not ours and is not read.
+    private static final long MAX_POINTER_BYTES = 1024;
+    private static final long MAX_MANIFEST_BYTES = 1024 * 1024;
     private static final Pattern SNAPSHOT_ID = Pattern.compile("[A-Za-z0-9][A-Za-z0-9_-]{0,63}");
     private static final DateTimeFormatter ID_FORMAT = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss'Z'")
             .withZone(ZoneOffset.UTC);
@@ -73,6 +76,10 @@ public class TSLSnapshotStore {
             return Optional.empty();
         }
         try {
+            if (Files.size(current) > MAX_POINTER_BYTES) {
+                log.warn("Trust-list snapshot pointer {} is not a pointer: larger than {} bytes", current, MAX_POINTER_BYTES);
+                return Optional.empty();
+            }
             String id = Files.readString(current, StandardCharsets.UTF_8).trim();
             if (!SNAPSHOT_ID.matcher(id).matches()) {
                 log.warn("Trust-list snapshot pointer {} holds no snapshot id: '{}'", current, id);
@@ -96,6 +103,10 @@ public class TSLSnapshotStore {
             return Optional.empty();
         }
         try {
+            if (Files.size(manifest) > MAX_MANIFEST_BYTES) {
+                log.warn("Trust-list snapshot manifest {} is larger than {} bytes; not read", manifest, MAX_MANIFEST_BYTES);
+                return Optional.empty();
+            }
             return Optional.of(json.readValue(Files.readAllBytes(manifest), TSLSnapshotManifest.class));
         } catch (IOException | JacksonException e) {
             String reason = e.getMessage();

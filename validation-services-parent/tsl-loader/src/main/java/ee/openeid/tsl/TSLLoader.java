@@ -17,6 +17,7 @@
 package ee.openeid.tsl;
 
 import ee.openeid.tsl.configuration.TSLLoaderConfigurationProperties;
+import ee.openeid.tsl.snapshot.TSLSnapshotManifest;
 import ee.openeid.tsl.snapshot.TSLSnapshotStore;
 import eu.europa.esig.dss.model.DSSDocument;
 import eu.europa.esig.dss.model.InMemoryDocument;
@@ -54,6 +55,7 @@ import org.springframework.core.io.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
@@ -92,6 +94,8 @@ public class TSLLoader {
     private KeyStoreCertificateSource keyStoreCertificateSource;
     private ProxyConfig proxyConfig;
     private TSLSnapshotStore snapshotStore;
+    // The snapshot id last refused (missing directory, too old); warned about once, then only at debug.
+    private String refusedSnapshotId;
 
     @PostConstruct
     public void init() {
@@ -132,7 +136,11 @@ public class TSLLoader {
                 return;
             }
             snapshotId = current.get();
-            tslValidationJob.setOfflineDataLoader(offlineLoader(snapshotStore.snapshotDirectory(snapshotId)));
+            Path directory = snapshotStore.snapshotDirectory(snapshotId);
+            if (!acceptable(snapshotId, directory)) {
+                return;
+            }
+            tslValidationJob.setOfflineDataLoader(offlineLoader(directory));
         }
         String source = snapshotId == null ? "cache" : "snapshot " + snapshotId;
         log.info("Loading '{}' TSL from {}", tslName, source);
@@ -155,6 +163,35 @@ public class TSLLoader {
             log.info("'{}' TSL: snapshot {} published, replacing {}", tslName, published, loaded);
             loadTSL();
         }
+    }
+
+    // A snapshot is loaded only when its directory is there (a pointer at a missing one must not take the startup
+    // refresh down) and, with snapshotMaxAge set, when its manifest says it is young enough.
+    private boolean acceptable(String snapshotId, Path directory) {
+        String reason = null;
+        if (!Files.isDirectory(directory)) {
+            reason = "its directory " + directory + " does not exist";
+        } else if (configurationProperties.getSnapshotMaxAge() != null) {
+            Instant oldest = Instant.now().minus(configurationProperties.getSnapshotMaxAge());
+            Instant createdAt = snapshotStore.manifest(snapshotId).map(TSLSnapshotManifest::createdAt).orElse(null);
+            if (createdAt == null) {
+                reason = "its manifest is missing or unreadable and snapshotMaxAge is set";
+            } else if (createdAt.isBefore(oldest)) {
+                reason = "it was created " + createdAt + ", older than snapshotMaxAge "
+                        + configurationProperties.getSnapshotMaxAge();
+            }
+        }
+        if (reason == null) {
+            refusedSnapshotId = null;
+            return true;
+        }
+        if (snapshotId.equals(refusedSnapshotId)) {
+            log.debug("'{}' TSL: still refusing snapshot {}: {}", tslName, snapshotId, reason);
+        } else {
+            log.warn("'{}' TSL: refusing snapshot {}: {}; keeping the loaded state", tslName, snapshotId, reason);
+            refusedSnapshotId = snapshotId;
+        }
+        return false;
     }
 
     private void record(String snapshotId) {

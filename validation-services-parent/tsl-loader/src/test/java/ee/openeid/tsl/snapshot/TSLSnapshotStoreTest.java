@@ -93,6 +93,13 @@ class TSLSnapshotStoreTest {
     }
 
     @Test
+    void currentId_WhenThePointerIsOversized_Empty() throws IOException {
+        Files.write(root.resolve(TSLSnapshotStore.CURRENT_FILE), new byte[2048]);
+
+        assertThat(store.currentId(), is(Optional.empty()));
+    }
+
+    @Test
     void manifest_WhenUnreadable_Empty() throws IOException {
         Files.createDirectories(store.snapshotDirectory("broken"));
         Files.writeString(store.snapshotDirectory("broken").resolve(TSLSnapshotStore.MANIFEST_FILE), "{");

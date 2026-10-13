@@ -30,7 +30,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.anEmptyMap;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -51,12 +55,12 @@ class TSLHealthIndicatorTest {
 
         Health health = indicator(List.of("EE")).health();
 
-        assertThat(health.getStatus()).isEqualTo(Status.UP);
-        assertThat(health.getDetails()).containsOnlyKeys("generic", "timemark");
-        assertThat(health.getDetails().get("generic")).isEqualTo(Map.of(
+        assertThat(health.getStatus(), is(Status.UP));
+        assertThat(health.getDetails().keySet(), containsInAnyOrder("generic", "timemark"));
+        assertThat(health.getDetails().get("generic"), is(Map.of(
                 TSLHealthIndicator.DETAIL_CERTIFICATES, 37,
                 TSLHealthIndicator.DETAIL_LAST_REFRESH, "2026-10-12T20:00:00Z",
-                TSLHealthIndicator.DETAIL_TERRITORIES, EE_AND_LV));
+                TSLHealthIndicator.DETAIL_TERRITORIES, EE_AND_LV)));
     }
 
     @Test
@@ -66,7 +70,7 @@ class TSLHealthIndicatorTest {
 
         Health health = indicator(List.of("EE")).health();
 
-        assertThat(health.getStatus()).isEqualTo(Status.UP);
+        assertThat(health.getStatus(), is(Status.UP));
     }
 
     @Test
@@ -76,16 +80,16 @@ class TSLHealthIndicatorTest {
 
         Health health = indicator(List.of("EE", "LV")).health();
 
-        assertThat(health.getStatus()).isEqualTo(Status.DOWN);
-        assertThat(health.getDetails().get("timemark")).isEqualTo(Map.of(
+        assertThat(health.getStatus(), is(Status.DOWN));
+        assertThat(health.getDetails().get("timemark"), is(Map.of(
                 TSLHealthIndicator.DETAIL_CERTIFICATES, 5,
                 TSLHealthIndicator.DETAIL_LAST_REFRESH, "2026-10-12T20:00:00Z",
                 TSLHealthIndicator.DETAIL_TERRITORIES, Map.of("LV", 5),
-                TSLHealthIndicator.DETAIL_MISSING, List.of("EE")));
-        assertThat(health.getDetails().get("generic")).isEqualTo(Map.of(
+                TSLHealthIndicator.DETAIL_MISSING, List.of("EE"))));
+        assertThat(health.getDetails().get("generic"), is(Map.of(
                 TSLHealthIndicator.DETAIL_CERTIFICATES, 37,
                 TSLHealthIndicator.DETAIL_LAST_REFRESH, "2026-10-12T20:00:00Z",
-                TSLHealthIndicator.DETAIL_TERRITORIES, EE_AND_LV));
+                TSLHealthIndicator.DETAIL_TERRITORIES, EE_AND_LV)));
     }
 
     @Test
@@ -95,7 +99,7 @@ class TSLHealthIndicatorTest {
 
         Health health = indicator(List.of("EE")).health();
 
-        assertThat(health.getStatus()).isEqualTo(Status.DOWN);
+        assertThat(health.getStatus(), is(Status.DOWN));
     }
 
     @Test
@@ -103,8 +107,8 @@ class TSLHealthIndicatorTest {
         stub(genericLoader, "generic", REFRESHED, 5, Map.of("LV", 5));
         stub(timemarkLoader, "timemark", REFRESHED, 32, Map.of("EE", 32));
 
-        assertThat(indicator(List.of()).health().getStatus()).isEqualTo(Status.UP);
-        assertThat(indicator(null).health().getStatus()).isEqualTo(Status.UP);
+        assertThat(indicator(List.of()).health().getStatus(), is(Status.UP));
+        assertThat(indicator(null).health().getStatus(), is(Status.UP));
     }
 
     @Test
@@ -112,7 +116,7 @@ class TSLHealthIndicatorTest {
         stub(genericLoader, "generic", REFRESHED, 0, Map.of());
         stub(timemarkLoader, "timemark", REFRESHED, 32, Map.of("EE", 32));
 
-        assertThat(indicator(List.of()).health().getStatus()).isEqualTo(Status.DOWN);
+        assertThat(indicator(List.of()).health().getStatus(), is(Status.DOWN));
     }
 
     @Test
@@ -122,11 +126,11 @@ class TSLHealthIndicatorTest {
 
         Health health = indicator(List.of("EE")).health();
 
-        assertThat(health.getStatus()).isEqualTo(Status.DOWN);
-        assertThat(health.getDetails().get("timemark")).isEqualTo(Map.of(
+        assertThat(health.getStatus(), is(Status.DOWN));
+        assertThat(health.getDetails().get("timemark"), is(Map.of(
                 TSLHealthIndicator.DETAIL_CERTIFICATES, 0,
                 TSLHealthIndicator.DETAIL_TERRITORIES, Map.of(),
-                TSLHealthIndicator.DETAIL_MISSING, List.of("EE")));
+                TSLHealthIndicator.DETAIL_MISSING, List.of("EE"))));
     }
 
     @Test
@@ -134,7 +138,7 @@ class TSLHealthIndicatorTest {
         stub(genericLoader, "generic", REFRESHED, 32, Map.of("EE", 32));
         stub(timemarkLoader, "timemark", null, 32, Map.of("EE", 32));
 
-        assertThat(indicator(List.of("EE")).health().getStatus()).isEqualTo(Status.DOWN);
+        assertThat(indicator(List.of("EE")).health().getStatus(), is(Status.DOWN));
     }
 
     @Test
@@ -144,19 +148,19 @@ class TSLHealthIndicatorTest {
 
         Health health = new TSLHealthIndicator(Set.of(timemarkLoader, genericLoader), properties(List.of("EE"))).health();
 
-        assertThat(health.getDetails().keySet()).containsExactly("generic", "timemark");
+        assertThat(health.getDetails().keySet(), contains("generic", "timemark"));
         @SuppressWarnings("unchecked")
         Map<String, Object> timemark = (Map<String, Object>) health.getDetails().get("timemark");
-        assertThat(timemark.keySet()).containsExactly(TSLHealthIndicator.DETAIL_CERTIFICATES,
-                TSLHealthIndicator.DETAIL_LAST_REFRESH, TSLHealthIndicator.DETAIL_TERRITORIES);
+        assertThat(timemark.keySet(), contains(TSLHealthIndicator.DETAIL_CERTIFICATES,
+                TSLHealthIndicator.DETAIL_LAST_REFRESH, TSLHealthIndicator.DETAIL_TERRITORIES));
     }
 
     @Test
     void health_WhenNoLoaders_Down() {
         Health health = new TSLHealthIndicator(Set.of(), properties(List.of("EE"))).health();
 
-        assertThat(health.getStatus()).isEqualTo(Status.DOWN);
-        assertThat(health.getDetails()).isEmpty();
+        assertThat(health.getStatus(), is(Status.DOWN));
+        assertThat(health.getDetails(), is(anEmptyMap()));
     }
 
     private TSLHealthIndicator indicator(List<String> mandatoryTerritories) {

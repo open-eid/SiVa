@@ -60,6 +60,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -69,14 +70,15 @@ public class TSLLoader {
     private final @NonNull String tslName;
 
     /**
-     * When the last refresh attempt finished, {@code null} until the first one. DSS does not throw on
-     * download failures, so this says "attempted", not "succeeded"; {@link #getNumberOfCertificates()}
-     * tells whether anything came out of it. Together they are what readiness is judged on.
+     * What the last refresh attempt left behind, published as one immutable value so that a reader (the
+     * health indicator, on a request thread) never sees the count of one refresh with the territories of
+     * another. {@link Snapshot#NONE} until the first refresh.
      */
-    @Getter
-    private volatile Instant lastRefresh;
-    private volatile int numberOfCertificates;
-    private volatile Map<String, Integer> certificatesByTerritory = Map.of();
+    private final AtomicReference<Snapshot> snapshot = new AtomicReference<>(Snapshot.NONE);
+
+    private record Snapshot(Instant lastRefresh, int numberOfCertificates, Map<String, Integer> certificatesByTerritory) {
+        private static final Snapshot NONE = new Snapshot(null, 0, Map.of());
+    }
 
     private TSLValidationJobFactory tslValidationJobFactory;
     private TLValidationJob tslValidationJob;
@@ -114,9 +116,17 @@ public class TSLLoader {
             tslValidationJob.onlineRefresh();
             log.info("Finished loading '{}' TSL over the network", tslName);
         }
-        numberOfCertificates = trustedListSource.getNumberOfCertificates();
-        certificatesByTerritory = snapshotCertificatesByTerritory(trustedListSource);
-        lastRefresh = Instant.now();
+        snapshot.set(new Snapshot(Instant.now(), trustedListSource.getNumberOfCertificates(),
+                snapshotCertificatesByTerritory(trustedListSource)));
+    }
+
+    /**
+     * When the last refresh attempt finished, {@code null} until the first one. DSS does not throw on
+     * download failures, so this says "attempted", not "succeeded"; {@link #getNumberOfCertificates()}
+     * tells whether anything came out of it. Together they are what readiness is judged on.
+     */
+    public Instant getLastRefresh() {
+        return snapshot.get().lastRefresh();
     }
 
     /**
@@ -127,7 +137,7 @@ public class TSLLoader {
      * filled and the next scheduled refresh runs.
      */
     public int getNumberOfCertificates() {
-        return numberOfCertificates;
+        return snapshot.get().numberOfCertificates();
     }
 
     /**
@@ -138,7 +148,7 @@ public class TSLLoader {
      * several trusted lists counts once per territory. Sorted by territory; empty until the first refresh.
      */
     public Map<String, Integer> getCertificatesByTerritory() {
-        return certificatesByTerritory;
+        return snapshot.get().certificatesByTerritory();
     }
 
     private static Map<String, Integer> snapshotCertificatesByTerritory(TrustedListsCertificateSource source) {

@@ -9,7 +9,7 @@ image:
   # A registry the kind node can pull from and the SiVa commit the image was built from. A
   # developer loop rebuilds the same tag in place, so the node must re-check the registry digest.
   repository: jail-siva-registry:5000/siva-webapp
-  tag: "0a82eec6f9db"
+  tag: "20154a183a9e"
   pullPolicy: Always
 # SiVa's own "test" profile: the open-eid test trust list with the test truststore shipped in the
 # jar, so containers signed with test certificates validate. Never for production.

@@ -153,15 +153,6 @@
         <jackson-2-bom.version>2.22.1</jackson-2-bom.version> <!-- CVE-2026-59889 -->
     </properties>
 
-    <reporting>
-        <plugins>
-            <plugin>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <version>${maven-pmd-plugin.version}</version>
-            </plugin>
-        </plugins>
-    </reporting>
-
     <build>
         <plugins>
             <plugin>
@@ -194,6 +185,31 @@
                 <executions>
                     <execution>
                         <id>spotbugs-check</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>${maven-pmd-plugin.version}</version>
+                <configuration>
+                    <targetJdk>${language.level}</targetJdk>
+                    <includeTests>false</includeTests>
+                    <printFailingErrors>true</printFailingErrors>
+                    <linkXRef>false</linkXRef>
+                    <rulesets>
+                        <ruleset>${maven.multiModuleProjectDirectory}/pmd-ruleset.xml</ruleset>
+                    </rulesets>
+                    <!-- Violations in code that predates the gate (class=rule,rule); still reported, not failing. -->
+                    <excludeFromFailureFile>${maven.multiModuleProjectDirectory}/pmd-exclude.properties</excludeFromFailureFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>pmd-check</id>
                         <phase>verify</phase>
                         <goals>
                             <goal>check</goal>

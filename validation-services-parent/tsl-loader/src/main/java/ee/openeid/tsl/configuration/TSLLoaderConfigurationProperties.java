@@ -31,6 +31,11 @@ public class TSLLoaderConfigurationProperties {
     private boolean loadFromCache = false;
     // DSS file cache the trusted lists are downloaded into or, with loadFromCache, read from; null = java.io.tmpdir
     private File cacheDirectory;
+    // With loadFromCache: a snapshot store published by the fetcher (`current` names the snapshot under
+    // snapshots/); the loader reads that snapshot instead of cacheDirectory and follows `current` when it changes
+    private File snapshotDirectory;
+    // How often a loader in snapshot mode checks `current` for another snapshot; zero or null = scheduled refresh only
+    private Duration snapshotPollInterval = Duration.ofMinutes(1);
     private Duration onlineCacheExpirationTime = Duration.parse("PT1H");
     private String url = "https://ec.europa.eu/tools/lotl/eu-lotl.xml";
     private String ojUrl = "https://eur-lex.europa.eu/eli/C/2026/1944/oj";

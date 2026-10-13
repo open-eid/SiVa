@@ -43,6 +43,7 @@ public class TSLHealthIndicator implements HealthIndicator {
     public static final String DETAIL_LAST_REFRESH = "lastRefresh";
     public static final String DETAIL_TERRITORIES = "territories";
     public static final String DETAIL_MISSING = "missingMandatoryTerritories";
+    public static final String DETAIL_SNAPSHOT = "snapshot";
 
     private final Set<TSLLoader> loaders;
     private final TSLLoaderConfigurationProperties configurationProperties;
@@ -74,6 +75,9 @@ public class TSLHealthIndicator implements HealthIndicator {
                 loaderDetails.put(DETAIL_LAST_REFRESH, lastRefresh.toString());
             }
             loaderDetails.put(DETAIL_TERRITORIES, territories);
+            if (loader.getSnapshotId() != null) {
+                loaderDetails.put(DETAIL_SNAPSHOT, loader.getSnapshotId());
+            }
             if (!missing.isEmpty()) {
                 loaderDetails.put(DETAIL_MISSING, missing);
             }

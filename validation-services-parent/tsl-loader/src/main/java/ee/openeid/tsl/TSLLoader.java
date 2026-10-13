@@ -17,6 +17,7 @@
 package ee.openeid.tsl;
 
 import ee.openeid.tsl.configuration.TSLLoaderConfigurationProperties;
+import ee.openeid.tsl.snapshot.TSLSnapshotStore;
 import eu.europa.esig.dss.model.DSSDocument;
 import eu.europa.esig.dss.model.InMemoryDocument;
 import eu.europa.esig.dss.model.tsl.ParsingInfoRecord;
@@ -53,12 +54,14 @@ import org.springframework.core.io.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicReference;
@@ -73,12 +76,13 @@ public class TSLLoader {
     /**
      * What the last refresh attempt left behind, published as one immutable value so that a reader (the
      * health indicator, on a request thread) never sees the count of one refresh with the territories of
-     * another. {@link Snapshot#NONE} until the first refresh.
+     * another. {@link State#NONE} until the first refresh.
      */
-    private final AtomicReference<Snapshot> snapshot = new AtomicReference<>(Snapshot.NONE);
+    private final AtomicReference<State> state = new AtomicReference<>(State.NONE);
 
-    private record Snapshot(Instant lastRefresh, int numberOfCertificates, Map<String, Integer> certificatesByTerritory) {
-        private static final Snapshot NONE = new Snapshot(null, 0, Map.of());
+    private record State(Instant lastRefresh, int numberOfCertificates, Map<String, Integer> certificatesByTerritory,
+                         String snapshotId) {
+        private static final State NONE = new State(null, 0, Map.of(), null);
     }
 
     private TSLValidationJobFactory tslValidationJobFactory;
@@ -87,6 +91,7 @@ public class TSLLoader {
     private TrustedListsCertificateSource trustedListSource;
     private KeyStoreCertificateSource keyStoreCertificateSource;
     private ProxyConfig proxyConfig;
+    private TSLSnapshotStore snapshotStore;
 
     @PostConstruct
     public void init() {
@@ -97,10 +102,13 @@ public class TSLLoader {
                     + "readiness can never be reached (codes are case-sensitive)", tslName, mandatory, trusted);
         }
         tslValidationJob = tslValidationJobFactory.createValidationJob();
-        if (configurationProperties.isLoadFromCache()) {
-            tslValidationJob.setOfflineDataLoader(offlineLoader());
-        } else {
+        if (!configurationProperties.isLoadFromCache()) {
             tslValidationJob.setOnlineDataLoader(onlineLoader());
+        } else if (configurationProperties.getSnapshotDirectory() != null) {
+            // The offline loader is created per refresh, on whichever snapshot `current` names then.
+            snapshotStore = new TSLSnapshotStore(configurationProperties.getSnapshotDirectory().toPath());
+        } else {
+            tslValidationJob.setOfflineDataLoader(offlineLoader());
         }
         tslValidationJob.setTrustedListCertificateSource(trustedListSource);
         tslValidationJob.setListOfTrustedListSources(europeanLOTL());
@@ -108,17 +116,50 @@ public class TSLLoader {
     }
 
     void loadTSL() {
-        if (configurationProperties.isLoadFromCache()) {
-            log.info("Loading '{}' TSL from cache", tslName);
-            tslValidationJob.offlineRefresh();
-            log.info("Finished loading '{}' TSL from cache", tslName);
-        } else {
+        if (!configurationProperties.isLoadFromCache()) {
             log.info("Loading '{}' TSL over the network", tslName);
             tslValidationJob.onlineRefresh();
             log.info("Finished loading '{}' TSL over the network", tslName);
+            record(null);
+            return;
         }
-        snapshot.set(new Snapshot(Instant.now(), trustedListSource.getNumberOfCertificates(),
-                snapshotCertificatesByTerritory(trustedListSource)));
+        String snapshotId = null;
+        if (snapshotStore != null) {
+            Optional<String> current = snapshotStore.currentId();
+            if (current.isEmpty()) {
+                Path root = snapshotStore.getRoot();
+                log.warn("'{}' TSL: no trust-list snapshot published under {} yet; nothing to load", tslName, root);
+                return;
+            }
+            snapshotId = current.get();
+            tslValidationJob.setOfflineDataLoader(offlineLoader(snapshotStore.snapshotDirectory(snapshotId)));
+        }
+        String source = snapshotId == null ? "cache" : "snapshot " + snapshotId;
+        log.info("Loading '{}' TSL from {}", tslName, source);
+        tslValidationJob.offlineRefresh();
+        log.info("Finished loading '{}' TSL from {}", tslName, source);
+        record(snapshotId);
+    }
+
+    /**
+     * In snapshot mode: reloads when the store's {@code current} names a snapshot other than the one loaded
+     * (or none has been loaded yet). A no-op otherwise.
+     */
+    void refreshIfSnapshotChanged() {
+        if (snapshotStore == null) {
+            return;
+        }
+        String loaded = state.get().snapshotId();
+        String published = snapshotStore.currentId().orElse(null);
+        if (published != null && !published.equals(loaded)) {
+            log.info("'{}' TSL: snapshot {} published, replacing {}", tslName, published, loaded);
+            loadTSL();
+        }
+    }
+
+    private void record(String snapshotId) {
+        state.set(new State(Instant.now(), trustedListSource.getNumberOfCertificates(),
+                snapshotCertificatesByTerritory(trustedListSource), snapshotId));
     }
 
     /**
@@ -127,7 +168,15 @@ public class TSLLoader {
      * tells whether anything came out of it. Together they are what readiness is judged on.
      */
     public Instant getLastRefresh() {
-        return snapshot.get().lastRefresh();
+        return state.get().lastRefresh();
+    }
+
+    /**
+     * Id of the published snapshot the last refresh loaded; {@code null} outside snapshot mode or before the
+     * first load.
+     */
+    public String getSnapshotId() {
+        return state.get().snapshotId();
     }
 
     /**
@@ -138,7 +187,7 @@ public class TSLLoader {
      * filled and the next scheduled refresh runs.
      */
     public int getNumberOfCertificates() {
-        return snapshot.get().numberOfCertificates();
+        return state.get().numberOfCertificates();
     }
 
     /**
@@ -149,7 +198,7 @@ public class TSLLoader {
      * several trusted lists counts once per territory. Sorted by territory; empty until the first refresh.
      */
     public Map<String, Integer> getCertificatesByTerritory() {
-        return snapshot.get().certificatesByTerritory();
+        return state.get().certificatesByTerritory();
     }
 
     private static Map<String, Integer> snapshotCertificatesByTerritory(TrustedListsCertificateSource source) {
@@ -231,8 +280,13 @@ public class TSLLoader {
     }
 
     public DSSFileLoader offlineLoader() {
+        File cacheDirectory = configurationProperties.getCacheDirectory();
+        return offlineLoader(cacheDirectory == null ? null : cacheDirectory.toPath());
+    }
+
+    private static DSSFileLoader offlineLoader(Path directory) {
         FileCacheDataLoader offlineFileLoader = new FileCacheDataLoader();
-        cacheDirectory(offlineFileLoader, configurationProperties.getCacheDirectory());
+        cacheDirectory(offlineFileLoader, directory == null ? null : directory.toFile());
         offlineFileLoader.setCacheExpirationTime(Long.MAX_VALUE);
         offlineFileLoader.setDataLoader(new IgnoreDataLoader());
         return offlineFileLoader;

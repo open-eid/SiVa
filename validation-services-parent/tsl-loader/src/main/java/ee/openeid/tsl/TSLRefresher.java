@@ -41,6 +41,15 @@ public class TSLRefresher implements Runnable {
         log.info("Finished TSL refresh process...");
     }
 
+    /**
+     * Loaders in snapshot mode reload when the store's {@code current} names another snapshot; the others
+     * do nothing. Polled between scheduled refreshes so every replica converges on a new snapshot within
+     * the poll interval instead of at its own cron.
+     */
+    public void refreshChangedSnapshots() {
+        loaders.forEach(TSLLoader::refreshIfSnapshotChanged);
+    }
+
     @Autowired
     public void setLoaders(Set<TSLLoader> loaders) {
         this.loaders = loaders;

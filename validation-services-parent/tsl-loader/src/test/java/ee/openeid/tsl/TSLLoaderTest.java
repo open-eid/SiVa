@@ -17,12 +17,10 @@
 package ee.openeid.tsl;
 
 import ee.openeid.tsl.configuration.TSLLoaderConfigurationProperties;
-import eu.europa.esig.dss.model.tsl.DownloadInfoRecord;
-import eu.europa.esig.dss.model.tsl.LOTLInfo;
 import eu.europa.esig.dss.model.tsl.ParsingInfoRecord;
 import eu.europa.esig.dss.model.tsl.TLInfo;
-import eu.europa.esig.dss.model.tsl.TLValidationJobSummary;
-import eu.europa.esig.dss.model.tsl.ValidationInfoRecord;
+import eu.europa.esig.dss.model.tsl.TrustProperties;
+import eu.europa.esig.dss.model.x509.CertificateToken;
 import eu.europa.esig.dss.spi.client.http.DSSFileLoader;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.spi.x509.KeyStoreCertificateSource;
@@ -36,7 +34,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -47,6 +44,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -95,53 +93,35 @@ class TSLLoaderTest {
     }
 
     @Test
-    void loadTSL_WhenSummaryHasTrustedLists_OnlyParsedUnexpiredNotInvalidOnesAreCountedPerTerritory() {
+    void loadTSL_WhenSourceHoldsAnchors_TheyAreCountedOncePerTerritoryOfTheirTrustedList() {
         tslLoader.setTslLoaderConfigurationProperties(createConfigurationProperties(false));
         tslLoader.init();
-        Date tomorrow = new Date(System.currentTimeMillis() + 86_400_000L);
-        Date yesterday = new Date(System.currentTimeMillis() - 86_400_000L);
-        LOTLInfo lotl = new LOTLInfo(mock(DownloadInfoRecord.class), mock(ParsingInfoRecord.class), mock(ValidationInfoRecord.class), "lotl");
-        lotl.setTlInfos(List.of(
-                trustedList("EE", 7, true, Boolean.TRUE, tomorrow),
-                trustedList("EE", 3, true, Boolean.TRUE, null),
-                trustedList("LV", 4, true, Boolean.TRUE, tomorrow),
-                trustedList("LT", 1, true, null, tomorrow),
-                trustedList("BE", 9, true, Boolean.FALSE, tomorrow),
-                trustedList("DE", 9, true, Boolean.TRUE, yesterday),
-                trustedList("FR", 9, false, Boolean.TRUE, tomorrow)));
-        TLValidationJobSummary summary = new TLValidationJobSummary(List.of(lotl), List.of(
-                trustedList("LT", 2, true, Boolean.TRUE, tomorrow)));
-        when(trustedListSource.getSummary()).thenReturn(summary);
+        TLInfo estonian = trustedList("EE");
+        TLInfo estonianMirror = trustedList("EE");
+        TLInfo latvian = trustedList("LV");
+        TLInfo unparsed = new TLInfo(null, null, null, "https://tl/none");
+        CertificateToken ca1 = anchor("ca1", trust(estonian), trust(estonianMirror));
+        CertificateToken ca2 = anchor("ca2", trust(estonian), trust(latvian));
+        CertificateToken ca3 = anchor("ca3", trust(latvian));
+        CertificateToken orphan = anchor("orphan");
+        CertificateToken unplaced = anchor("unplaced", trust(unparsed), trust(null));
+        when(trustedListSource.getCertificates()).thenReturn(List.of(ca1, ca2, ca3, orphan, unplaced));
         assertEquals(Map.of(), tslLoader.getCertificatesByTerritory());
 
         tslLoader.loadTSL();
 
-        assertEquals(Map.of("EE", 7, "LT", 3, "LV", 4), tslLoader.getCertificatesByTerritory());
-        assertEquals(List.of("EE", "LT", "LV"), List.copyOf(tslLoader.getCertificatesByTerritory().keySet()));
+        assertEquals(Map.of("EE", 2, "LV", 2), tslLoader.getCertificatesByTerritory());
+        assertEquals(List.of("EE", "LV"), List.copyOf(tslLoader.getCertificatesByTerritory().keySet()));
     }
 
     @Test
-    void loadTSL_WhenSummaryIsAbsent_NoTerritoriesAreRecorded() {
+    void loadTSL_WhenSourceIsEmpty_NoTerritoriesAreRecorded() {
         tslLoader.setTslLoaderConfigurationProperties(createConfigurationProperties(false));
         tslLoader.init();
-        when(trustedListSource.getSummary()).thenReturn(null);
 
         tslLoader.loadTSL();
 
         assertEquals(Map.of(), tslLoader.getCertificatesByTerritory());
-    }
-
-    @Test
-    void loadTSL_WhenRefreshThrows_NothingIsRecorded() {
-        tslLoader.setTslLoaderConfigurationProperties(createConfigurationProperties(false));
-        tslLoader.init();
-        doThrow(new IllegalStateException("boom")).when(tslValidationJob).onlineRefresh();
-
-        assertThrows(IllegalStateException.class, tslLoader::loadTSL);
-
-        assertNull(tslLoader.getLastRefresh());
-        assertEquals(0, tslLoader.getNumberOfCertificates());
-        verifyNoInteractions(trustedListSource);
     }
 
     @Test
@@ -158,7 +138,7 @@ class TSLLoaderTest {
         verify(tslValidationJob).setSynchronizationStrategy(any());
         verify(tslValidationJob).offlineRefresh();
         verify(trustedListSource).getNumberOfCertificates();
-        verify(trustedListSource).getSummary();
+        verify(trustedListSource).getCertificates();
         verifyNoMoreInteractions(tslValidationJobFactory, tslValidationJob, trustedListSource);
         verifyNoInteractions(keyStoreCertificateSource);
     }
@@ -177,31 +157,28 @@ class TSLLoaderTest {
         verify(tslValidationJob).setSynchronizationStrategy(any());
         verify(tslValidationJob).onlineRefresh();
         verify(trustedListSource).getNumberOfCertificates();
-        verify(trustedListSource).getSummary();
+        verify(trustedListSource).getCertificates();
         verifyNoMoreInteractions(tslValidationJobFactory, tslValidationJob, trustedListSource);
         verifyNoInteractions(keyStoreCertificateSource);
     }
 
-    /** {@code valid} null: the trusted list has no validation result (yet), which the DSS strategy accepts. */
-    private static TLInfo trustedList(String territory, int certificates, boolean parsed, Boolean valid, Date nextUpdate) {
+    private static TLInfo trustedList(String territory) {
         ParsingInfoRecord parsing = mock(ParsingInfoRecord.class);
-        when(parsing.isResultExist()).thenReturn(parsed);
-        ValidationInfoRecord validation = mock(ValidationInfoRecord.class);
-        boolean unexpired = nextUpdate != null && nextUpdate.after(new Date());
-        if (parsed) {
-            when(parsing.getTerritory()).thenReturn(territory);
-            when(parsing.getNextUpdateDate()).thenReturn(nextUpdate);
-        }
-        if (parsed && unexpired) {
-            when(validation.isResultExist()).thenReturn(valid != null);
-        }
-        if (parsed && unexpired && valid != null) {
-            when(validation.isValid()).thenReturn(valid);
-        }
-        if (parsed && unexpired && !Boolean.FALSE.equals(valid)) {
-            when(parsing.getCertNumber()).thenReturn(certificates);
-        }
-        return new TLInfo(mock(DownloadInfoRecord.class), parsing, validation, "https://tl/" + territory + "/" + certificates);
+        when(parsing.getTerritory()).thenReturn(territory);
+        return new TLInfo(null, parsing, null, "https://tl/" + territory);
+    }
+
+    private static TrustProperties trust(TLInfo trustedList) {
+        TrustProperties trustProperties = mock(TrustProperties.class);
+        when(trustProperties.getTLInfo()).thenReturn(trustedList);
+        return trustProperties;
+    }
+
+    private CertificateToken anchor(String id, TrustProperties... trustProperties) {
+        CertificateToken token = mock(CertificateToken.class);
+        when(trustedListSource.getTrustServices(token)).thenReturn(List.of(trustProperties));
+        lenient().when(token.getDSSIdAsString()).thenReturn(id);
+        return token;
     }
 
     private static TSLLoaderConfigurationProperties createConfigurationProperties(boolean loadFromCache) {

@@ -19,11 +19,10 @@ package ee.openeid.tsl;
 import ee.openeid.tsl.configuration.TSLLoaderConfigurationProperties;
 import eu.europa.esig.dss.model.DSSDocument;
 import eu.europa.esig.dss.model.InMemoryDocument;
-import eu.europa.esig.dss.model.tsl.LOTLInfo;
 import eu.europa.esig.dss.model.tsl.ParsingInfoRecord;
 import eu.europa.esig.dss.model.tsl.TLInfo;
-import eu.europa.esig.dss.model.tsl.TLValidationJobSummary;
-import eu.europa.esig.dss.model.tsl.ValidationInfoRecord;
+import eu.europa.esig.dss.model.tsl.TrustProperties;
+import eu.europa.esig.dss.model.x509.CertificateToken;
 import eu.europa.esig.dss.service.http.commons.CommonsDataLoader;
 import eu.europa.esig.dss.service.http.commons.FileCacheDataLoader;
 import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
@@ -55,9 +54,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -90,6 +87,12 @@ public class TSLLoader {
 
     @PostConstruct
     public void init() {
+        List<String> trusted = configurationProperties.getTrustedTerritories();
+        List<String> mandatory = configurationProperties.getMandatoryTerritories();
+        if (trusted != null && !trusted.isEmpty() && mandatory != null && !trusted.containsAll(mandatory)) {
+            log.warn("'{}' TSL: mandatory territories {} are not all among the trusted territories {}; "
+                    + "readiness can never be reached (codes are case-sensitive)", tslName, mandatory, trusted);
+        }
         tslValidationJob = tslValidationJobFactory.createValidationJob();
         if (configurationProperties.isLoadFromCache()) {
             tslValidationJob.setOfflineDataLoader(offlineLoader());
@@ -112,7 +115,7 @@ public class TSLLoader {
             log.info("Finished loading '{}' TSL over the network", tslName);
         }
         numberOfCertificates = trustedListSource.getNumberOfCertificates();
-        certificatesByTerritory = snapshotCertificatesByTerritory(trustedListSource.getSummary());
+        certificatesByTerritory = snapshotCertificatesByTerritory(trustedListSource);
         lastRefresh = Instant.now();
     }
 
@@ -128,48 +131,37 @@ public class TSLLoader {
     }
 
     /**
-     * Trust anchors per territory (scheme territory code) when the last refresh attempt finished, for every
-     * trusted list this loader follows directly or through a list of trusted lists. A list counts only when it
-     * parsed, has a next-update date in the future and its signature did not fail validation, the conditions
-     * under which {@link ExpirationAndSignatureCheckStrategy} lets its anchors into the certificate source. A list whose
-     * latest download failed keeps its previous parsed state in the DSS cache, so it stays here until that
-     * state is dropped; a list that never parsed is absent. Sorted by territory; empty until the first refresh.
+     * Trust anchors per territory (scheme territory code of the trusted list they came from) when the last
+     * refresh attempt finished: what the certificate source actually holds after DSS synchronized it, so it
+     * follows DSS's own acceptance of lists and lists of lists (expiry, signature, LOTL-level rejection) and
+     * keeps a list whose re-download failed exactly as long as DSS keeps its anchors. An anchor listed by
+     * several trusted lists counts once per territory. Sorted by territory; empty until the first refresh.
      */
     public Map<String, Integer> getCertificatesByTerritory() {
         return certificatesByTerritory;
     }
 
-    private static Map<String, Integer> snapshotCertificatesByTerritory(TLValidationJobSummary summary) {
-        if (summary == null) {
-            return Map.of();
-        }
-        List<TLInfo> trustedLists = new ArrayList<>();
-        if (summary.getOtherTLInfos() != null) {
-            trustedLists.addAll(summary.getOtherTLInfos());
-        }
-        if (summary.getLOTLInfos() != null) {
-            for (LOTLInfo lotl : summary.getLOTLInfos()) {
-                if (lotl.getTLInfos() != null) {
-                    trustedLists.addAll(lotl.getTLInfos());
+    private static Map<String, Integer> snapshotCertificatesByTerritory(TrustedListsCertificateSource source) {
+        Map<String, Set<String>> anchorsByTerritory = new TreeMap<>();
+        for (CertificateToken token : source.getCertificates()) {
+            for (TrustProperties trustProperties : source.getTrustServices(token)) {
+                String territory = territoryOf(trustProperties.getTLInfo());
+                if (territory != null) {
+                    anchorsByTerritory.computeIfAbsent(territory, key -> new HashSet<>()).add(token.getDSSIdAsString());
                 }
             }
         }
-        Date now = new Date();
         Map<String, Integer> result = new TreeMap<>();
-        for (TLInfo trustedList : trustedLists) {
-            ParsingInfoRecord parsing = trustedList.getParsingCacheInfo();
-            ValidationInfoRecord validation = trustedList.getValidationCacheInfo();
-            // The same acceptance rule as ExpirationAndSignatureCheckStrategy, which decides what reaches the
-            // certificate source: no next-update date or one in the past means expired; a validation result,
-            // when there is one, must be valid.
-            if (parsing == null || !parsing.isResultExist() || parsing.getTerritory() == null
-                    || parsing.getNextUpdateDate() == null || now.after(parsing.getNextUpdateDate())
-                    || (validation != null && validation.isResultExist() && !validation.isValid())) {
-                continue;
-            }
-            result.merge(parsing.getTerritory(), parsing.getCertNumber(), Integer::sum);
-        }
+        anchorsByTerritory.forEach((territory, anchors) -> result.put(territory, anchors.size()));
         return Collections.unmodifiableMap(result);
+    }
+
+    private static String territoryOf(TLInfo trustedList) {
+        if (trustedList == null) {
+            return null;
+        }
+        ParsingInfoRecord parsing = trustedList.getParsingCacheInfo();
+        return parsing == null ? null : parsing.getTerritory();
     }
 
     public LOTLSource europeanLOTL() {

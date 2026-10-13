@@ -239,7 +239,9 @@ needs, no support promise. Its README (`helm/siva-webapp/README.md`) documents e
    ```
 
    The first start downloads the EU trust lists, which takes minutes; the startup probe budget
-   covers it. Pods run under the Pod Security "restricted" profile with a read-only root
+   covers it. With `tsl.mode: snapshot` a CronJob downloads them instead and the pods load the
+   published snapshot in seconds (see [Trust-list snapshots](#trust-list-snapshots) and the
+   chart README). Pods run under the Pod Security "restricted" profile with a read-only root
    filesystem. `helm install` prints how to reach the service for the chosen Service type
    (in-cluster name, NodePort or LoadBalancer); the smoke tests below then apply to that
    address instead of `localhost:8080`.
@@ -255,7 +257,8 @@ needs, no support promise. Its README (`helm/siva-webapp/README.md`) documents e
 
 Optional objects, all off by default: HorizontalPodAutoscaler, NetworkPolicy, ServiceMonitor,
 PrometheusRule and a Grafana dashboard (`scaling.*`, `network.networkPolicy.*`,
-`monitoring.*`). A PodDisruptionBudget is created once there is more than one replica.
+`monitoring.*`), and in snapshot mode the trust-list fetch CronJob, its bootstrap Job and the
+store claim (`tsl.*`). A PodDisruptionBudget is created once there is more than one replica.
 
 ### Test instance
 
@@ -377,7 +380,7 @@ These links to dependent web services have been preconfigured. For example, the 
 
 * **Trust lists**
 
-The `tsl` component reports, per trusted-list loader, the number of trust anchors, when the last refresh finished and the anchors per territory (what the certificate source holds after DSS synchronized the lists it accepts, so a list whose re-download failed keeps counting as long as DSS keeps its anchors). It is DOWN until each loader has refreshed once and holds every mandatory territory (`siva.tsl.loader.mandatoryTerritories`, `EE` by default) with at least one anchor, naming the missing ones in `missingMandatoryTerritories`; other territories never decide the status, so one member state's list being unreachable does not take the service out of rotation. The overall health and the heartbeat follow it. It is part of the `readiness` probe group (`/monitoring/health/readiness`), so a Kubernetes pod in that state receives no traffic.
+The `tsl` component reports, per trusted-list loader, the number of trust anchors, when the last refresh finished and the anchors per territory (what the certificate source holds after DSS synchronized the lists it accepts, so a list whose re-download failed keeps counting as long as DSS keeps its anchors). It is DOWN until each loader has refreshed once and holds every mandatory territory (`siva.tsl.loader.mandatoryTerritories`, `EE` by default) with at least one anchor, naming the missing ones in `missingMandatoryTerritories`; other territories never decide the status, so one member state's list being unreachable does not take the service out of rotation. In snapshot mode (see [Trust-list snapshots](#trust-list-snapshots)) each loader also reports the `snapshot` id it loaded. The overall health and the heartbeat follow it. It is part of the `readiness` probe group (`/monitoring/health/readiness`), so a Kubernetes pod in that state receives no traffic.
 
 * **Probe paths on the application port**
 
@@ -514,6 +517,9 @@ See the reference list of all common [application properties](http://docs.spring
 | Property | Description |
 | -------- | ----------- |
 | **siva.tsl.loader.loadFromCache** | A boolean value that determines whether the TSL is loaded from disk cache instead of by downloading a new TSL in a predetermined interval.<br/><br/>Note that the cache files are by default stored in a system temporary folder (can be set with system property `java.io.tmpdir`; make sure the application has both read and write permissions in that folder).<ul><li>When set to **false**, the cache is refreshed periodically by SiVa in a predetermined interval specified by `siva.tsl.loader.schedulerCron` using `siva.tsl.loader.url`.</li><li>When set to **true**, SiVa uses existing cache as it's TSL. No direct polling for updates is performed, so all the files (LOTL and TSL files) must be present in system temporary directory. The cache files must have the same filenames as their URLs, but special characters need to be replaced with underscores. For example, the file downloaded from https://sr.riik.ee/tsl/estonian-tsl.xml must be named `https___sr_riik_ee_tsl_estonian_tsl_xml`</li><li>Default: **false**</li></ul> |
+| **siva.tsl.loader.cacheDirectory** | Directory of the disk cache the trusted lists are downloaded into, or read from with `loadFromCache`. <ul><li>Default: the JVM's temporary directory (`java.io.tmpdir`), as before</li></ul> |
+| **siva.tsl.loader.snapshotDirectory** | With `loadFromCache=true`: root of a snapshot store written by the trust-list fetcher (see [Trust-list snapshots](#trust-list-snapshots)). The file `current` in it names the snapshot under `snapshots/` to load; the loader reads that snapshot instead of `cacheDirectory`, checks `current` every `snapshotPollInterval` and loads the new snapshot when it changes. The `tsl` health component then shows the snapshot id per loader. <ul><li>Default: not set (plain cache directory)</li></ul> |
+| **siva.tsl.loader.snapshotPollInterval** | ISO-8601 duration between checks of `current` in snapshot mode; the scheduled refresh (`schedulerCron`) stays as the safety net. Zero disables the checks. <ul><li>Default: **PT1M**</li></ul> |
 | **siva.tsl.loader.onlineCacheExpirationTime** | A string value in a [format based on ISO-8601 duration format PnDTnHnMn.nS](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/Duration.html#parse(java.lang.CharSequence)) that determines the expiration time of TSL disk cache in case `siva.tsl.loader.loadFromCache` is set to `false`. The default is 1 hour.<br/><br/>Note that the expiration time only determines, for each cached file, the minimum time that must have been passed since their last update before that file is considered expired and is susceptible to an update. The actual update is performed periodically by SiVa (specified by `siva.tsl.loader.schedulerCron`) or when the application is (re)started. <ul><li>Default: **PT1H**</li></ul> |
 | **siva.tsl.loader.url** | A url value that points to the external TSL <ul><li>Default: **https://ec.europa.eu/tools/lotl/eu-lotl.xml**</li></ul> |
 | **siva.tsl.loader.ojUrl** | A url value that points to the legal act in Official Journal of the European Union <ul><li>Default: **https://eur-lex.europa.eu/eli/C/2026/1944/oj**</li></ul> |
@@ -536,6 +542,23 @@ See the reference list of all common [application properties](http://docs.spring
 !!! note
     TSL is currently used only by Generic and BDOC validators
 
+
+### Trust-list snapshots
+
+Instead of every instance downloading the trusted lists itself, one process can download them and publish a snapshot that all instances load from disk: a Kubernetes CronJob with several replicas, or a cron entry next to a systemd service. The fetcher is the webapp itself in the `tsl-fetch` Spring profile: it starts without a listening port, refreshes the trusted lists online into `siva.tsl.loader.cacheDirectory` (keep that directory between runs: a list whose download fails keeps its last copy there), publishes the cache as `snapshots/<id>/` with a `manifest.json` under `siva.tsl.fetcher.outputDirectory`, points the file `current` at it and exits. When the lists end up below the readiness threshold (`siva.tsl.loader.mandatoryTerritories`), nothing is published, `current` keeps naming the last good snapshot and the exit code is non-zero (1: below threshold, 2: the store could not be written).
+
+```bash
+java -jar siva-webapp-X.Y.Z-exec.jar --spring.profiles.include=tsl-fetch \
+  --siva.tsl.loader.cacheDirectory=/var/siva/tsl/work \
+  --siva.tsl.fetcher.outputDirectory=/var/siva/tsl
+```
+
+The instances run with `siva.tsl.loader.loadFromCache=true` and `siva.tsl.loader.snapshotDirectory=/var/siva/tsl` (read-only is enough), load the snapshot `current` names in seconds and follow `current` when it changes. The fetcher and the instances must share the rest of the `siva.tsl.loader.*` settings (profile, `url`, `trustedTerritories`), or the instances look for lists the fetcher never downloaded. The manifest records the fetcher's `tsl` health at publication: per loader the anchor count, the territories and any missing mandatory ones, exactly as an instance reports them after loading the same files.
+
+| Property | Description |
+| -------- | ----------- |
+| **siva.tsl.fetcher.outputDirectory** | Root of the snapshot store (`current`, `snapshots/<id>/`). Required in the `tsl-fetch` profile. |
+| **siva.tsl.fetcher.keepSnapshots** | Snapshots kept besides the current one; older ones are deleted after each successful publish. <ul><li>Default: **3**</li></ul> |
 
 ### TimeMark validation - customizing policies
 

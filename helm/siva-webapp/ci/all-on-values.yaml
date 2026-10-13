@@ -83,6 +83,25 @@ scaling:
     behavior:
       scaleDown:
         stabilizationWindowSeconds: 600
+tsl:
+  mode: snapshot
+  snapshot:
+    persistentVolumeClaim:
+      create: true
+      storageClassName: example-rwx
+      annotations:
+        example.invalid/claim: "yes"
+    pollInterval: PT30S
+  fetcher:
+    schedule: "15 */4 * * *"
+    timeZone: Europe/Tallinn
+    startingDeadlineSeconds: 600
+    workVolume:
+      persistentVolumeClaim:
+        claimName: example-tsl-work
+    env:
+      - name: EXAMPLE_FETCHER_FLAG
+        value: "1"
 monitoring:
   serviceMonitor:
     enabled: true

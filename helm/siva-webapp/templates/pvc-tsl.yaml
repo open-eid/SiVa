@@ -1,0 +1,25 @@
+{{- if and (include "siva-webapp.snapshotMode" .) .Values.tsl.snapshot.persistentVolumeClaim.create }}
+# The snapshot store: written by the fetcher, read by every webapp pod. Kept on uninstall so the
+# last good snapshot survives a reinstall; delete it yourself when you mean to.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "siva-webapp.tslClaimName" . }}
+  labels:
+    {{- include "siva-webapp.labels" . | nindent 4 }}
+    app.kubernetes.io/component: tsl-store
+  annotations:
+    helm.sh/resource-policy: keep
+    {{- with .Values.tsl.snapshot.persistentVolumeClaim.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  accessModes:
+    {{- toYaml .Values.tsl.snapshot.persistentVolumeClaim.accessModes | nindent 4 }}
+  resources:
+    requests:
+      storage: {{ .Values.tsl.snapshot.persistentVolumeClaim.size }}
+  {{- with .Values.tsl.snapshot.persistentVolumeClaim.storageClassName }}
+  storageClassName: {{ . | quote }}
+  {{- end }}
+{{- end }}

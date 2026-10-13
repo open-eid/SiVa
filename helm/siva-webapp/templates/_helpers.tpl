@@ -77,6 +77,9 @@ Usage: include "siva-webapp.probePath" (dict "root" $ "group" "readiness" "path"
 */}}
 {{- define "siva-webapp.probePath" -}}
 {{- if .path -}}
+{{- if and (include "siva-webapp.managementSplit" .root) (hasPrefix "/monitoring/" .path) -}}
+{{- fail (printf "probes.%s.path %q is under /monitoring, which the traffic port does not serve while the actuator is on its own port (runtime.managementPort); leave the path empty for /readyz and /livez" .group .path) -}}
+{{- end -}}
 {{ .path }}
 {{- else if include "siva-webapp.managementSplit" .root -}}
 {{ ternary "/readyz" "/livez" (eq .group "readiness") }}

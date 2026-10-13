@@ -115,7 +115,9 @@ trust:
 # default) are loaded, which takes minutes on first start; the startup probe budget
 # (periodSeconds * failureThreshold = 10 min) covers that download: tune it to your egress.
 # Paths default to /readyz and /livez with the management port split and to
-# /monitoring/health/readiness and /liveness without it (see runtime.managementPort).
+# /monitoring/health/readiness and /liveness without it (see runtime.managementPort); an
+# explicit /monitoring/... path is refused at render time while the port is split, because the
+# traffic port does not serve it there.
 probes:
   startup:
     # -- Render the startup probe.

@@ -92,7 +92,7 @@ spec:
           {{- if .enabled }}
           startupProbe:
             httpGet:
-              path: {{ include "siva-webapp.probePath" (dict "root" $ "group" "liveness" "path" .path) }}
+              path: {{ include "siva-webapp.probePath" (dict "root" $ "group" "liveness" "path" .path) | quote }}
               port: http
             initialDelaySeconds: {{ .initialDelaySeconds }}
             periodSeconds: {{ .periodSeconds }}
@@ -104,7 +104,7 @@ spec:
           {{- if .enabled }}
           readinessProbe:
             httpGet:
-              path: {{ include "siva-webapp.probePath" (dict "root" $ "group" "readiness" "path" .path) }}
+              path: {{ include "siva-webapp.probePath" (dict "root" $ "group" "readiness" "path" .path) | quote }}
               port: http
             initialDelaySeconds: {{ .initialDelaySeconds }}
             periodSeconds: {{ .periodSeconds }}
@@ -116,7 +116,7 @@ spec:
           {{- if .enabled }}
           livenessProbe:
             httpGet:
-              path: {{ include "siva-webapp.probePath" (dict "root" $ "group" "liveness" "path" .path) }}
+              path: {{ include "siva-webapp.probePath" (dict "root" $ "group" "liveness" "path" .path) | quote }}
               port: http
             initialDelaySeconds: {{ .initialDelaySeconds }}
             periodSeconds: {{ .periodSeconds }}

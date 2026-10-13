@@ -53,6 +53,15 @@ class TSLRefresherTest {
     }
 
     @Test
+    void refreshChangedSnapshots_WhenTslLoadersSet_EveryLoaderChecksItsSnapshot() {
+        tslRefresher.refreshChangedSnapshots();
+
+        verify(tslLoader1).refreshIfSnapshotChanged();
+        verify(tslLoader2).refreshIfSnapshotChanged();
+        verifyNoMoreInteractions(tslLoader1, tslLoader2);
+    }
+
+    @Test
     void run_WhenTslLoadersSet_AllTslLoadersAreRefreshed() {
         tslRefresher.run();
 

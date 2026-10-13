@@ -28,10 +28,14 @@ import eu.europa.esig.dss.tsl.job.TLValidationJob;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
@@ -42,8 +46,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -65,6 +72,9 @@ class TSLLoaderTest {
     private TrustedListsCertificateSource trustedListSource;
     @Mock
     private KeyStoreCertificateSource keyStoreCertificateSource;
+
+    @TempDir
+    private Path snapshotRoot;
 
     @InjectMocks
     private TSLLoader tslLoader = new TSLLoader("testName");
@@ -158,6 +168,82 @@ class TSLLoaderTest {
         verify(trustedListSource).getCertificates();
         verifyNoMoreInteractions(tslValidationJobFactory, tslValidationJob, trustedListSource);
         verifyNoInteractions(keyStoreCertificateSource);
+    }
+
+    @Test
+    void loadTSL_WhenSnapshotStoreHasNoCurrentSnapshot_NothingIsLoaded() {
+        tslLoader.setTslLoaderConfigurationProperties(createSnapshotConfigurationProperties());
+        tslLoader.init();
+
+        tslLoader.loadTSL();
+
+        verify(tslValidationJob, never()).setOfflineDataLoader(any());
+        verify(tslValidationJob, never()).offlineRefresh();
+        assertNull(tslLoader.getLastRefresh());
+        assertNull(tslLoader.getSnapshotId());
+    }
+
+    @Test
+    void loadTSL_WhenSnapshotStoreNamesASnapshot_ItIsLoadedAndRecorded() throws IOException {
+        tslLoader.setTslLoaderConfigurationProperties(createSnapshotConfigurationProperties());
+        tslLoader.init();
+        publish("20261013T183000Z");
+
+        tslLoader.loadTSL();
+
+        var order = inOrder(tslValidationJob);
+        order.verify(tslValidationJob).setOfflineDataLoader(any(DSSFileLoader.class));
+        order.verify(tslValidationJob).offlineRefresh();
+        verify(tslValidationJob, never()).onlineRefresh();
+        assertEquals("20261013T183000Z", tslLoader.getSnapshotId());
+        assertNotNull(tslLoader.getLastRefresh());
+    }
+
+    @Test
+    void refreshIfSnapshotChanged_WhenCurrentStillNamesTheLoadedSnapshot_NothingHappens() throws IOException {
+        tslLoader.setTslLoaderConfigurationProperties(createSnapshotConfigurationProperties());
+        tslLoader.init();
+        publish("20261013T183000Z");
+        tslLoader.loadTSL();
+
+        tslLoader.refreshIfSnapshotChanged();
+
+        verify(tslValidationJob).offlineRefresh();
+    }
+
+    @Test
+    void refreshIfSnapshotChanged_WhenCurrentNamesAnotherSnapshot_ItIsLoaded() throws IOException {
+        tslLoader.setTslLoaderConfigurationProperties(createSnapshotConfigurationProperties());
+        tslLoader.init();
+        publish("20261013T183000Z");
+        tslLoader.loadTSL();
+        publish("20261014T000000Z");
+
+        tslLoader.refreshIfSnapshotChanged();
+
+        verify(tslValidationJob, times(2)).offlineRefresh();
+        assertEquals("20261014T000000Z", tslLoader.getSnapshotId());
+    }
+
+    @Test
+    void refreshIfSnapshotChanged_OutsideSnapshotMode_NothingHappens() {
+        tslLoader.setTslLoaderConfigurationProperties(createConfigurationProperties(true));
+        tslLoader.init();
+
+        tslLoader.refreshIfSnapshotChanged();
+
+        verify(tslValidationJob, never()).offlineRefresh();
+    }
+
+    private void publish(String id) throws IOException {
+        Files.createDirectories(snapshotRoot.resolve("snapshots").resolve(id));
+        Files.writeString(snapshotRoot.resolve("current"), id + "\n");
+    }
+
+    private TSLLoaderConfigurationProperties createSnapshotConfigurationProperties() {
+        TSLLoaderConfigurationProperties props = createConfigurationProperties(true);
+        props.setSnapshotDirectory(snapshotRoot.toFile());
+        return props;
     }
 
     private static TLInfo trustedList(String territory) {

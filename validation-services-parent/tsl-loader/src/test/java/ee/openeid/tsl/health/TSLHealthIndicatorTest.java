@@ -64,6 +64,22 @@ class TSLHealthIndicatorTest {
     }
 
     @Test
+    void health_WhenALoaderRunsOnAPublishedSnapshot_ItsIdIsReported() {
+        stub(genericLoader, "generic", REFRESHED, 32, Map.of("EE", 32));
+        stub(timemarkLoader, "timemark", REFRESHED, 32, Map.of("EE", 32));
+        when(genericLoader.getSnapshotId()).thenReturn("20261013T183000Z");
+
+        Health health = indicator(List.of("EE")).health();
+
+        assertThat(health.getStatus(), is(Status.UP));
+        assertThat(health.getDetails().get("generic"), is(Map.of(
+                TSLHealthIndicator.DETAIL_CERTIFICATES, 32,
+                TSLHealthIndicator.DETAIL_LAST_REFRESH, "2026-10-12T20:00:00Z",
+                TSLHealthIndicator.DETAIL_TERRITORIES, Map.of("EE", 32),
+                TSLHealthIndicator.DETAIL_SNAPSHOT, "20261013T183000Z")));
+    }
+
+    @Test
     void health_WhenANonMandatoryTerritoryIsMissing_Up() {
         stub(genericLoader, "generic", REFRESHED, 32, Map.of("EE", 32));
         stub(timemarkLoader, "timemark", REFRESHED, 32, Map.of("EE", 32));

@@ -19,8 +19,10 @@ package ee.openeid.tsl;
 import ee.openeid.tsl.configuration.TSLLoaderConfigurationProperties;
 import ee.openeid.tsl.snapshot.TSLSnapshotManifest;
 import ee.openeid.tsl.snapshot.TSLSnapshotStore;
+import eu.europa.esig.dss.model.tsl.LOTLInfo;
 import eu.europa.esig.dss.model.tsl.ParsingInfoRecord;
 import eu.europa.esig.dss.model.tsl.TLInfo;
+import eu.europa.esig.dss.model.tsl.TLValidationJobSummary;
 import eu.europa.esig.dss.model.tsl.TrustProperties;
 import eu.europa.esig.dss.model.x509.CertificateToken;
 import eu.europa.esig.dss.spi.client.http.DSSFileLoader;
@@ -42,6 +44,7 @@ import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -149,6 +152,7 @@ class TSLLoaderTest {
         verify(tslValidationJob).setListOfTrustedListSources(any());
         verify(tslValidationJob).setSynchronizationStrategy(any());
         verify(tslValidationJob).offlineRefresh();
+        verify(tslValidationJob).getSummary();
         verify(trustedListSource).getNumberOfCertificates();
         verify(trustedListSource).getCertificates();
         verifyNoMoreInteractions(tslValidationJobFactory, tslValidationJob, trustedListSource);
@@ -168,6 +172,7 @@ class TSLLoaderTest {
         verify(tslValidationJob).setListOfTrustedListSources(any());
         verify(tslValidationJob).setSynchronizationStrategy(any());
         verify(tslValidationJob).onlineRefresh();
+        verify(tslValidationJob).getSummary();
         verify(trustedListSource).getNumberOfCertificates();
         verify(trustedListSource).getCertificates();
         verifyNoMoreInteractions(tslValidationJobFactory, tslValidationJob, trustedListSource);
@@ -295,6 +300,50 @@ class TSLLoaderTest {
         assertEquals("20261013T183000Z", tslLoader.getSnapshotId());
     }
 
+    @Test
+    void loadTSL_WhenListsWereParsed_TheEarliestNextUpdatePerTerritoryAndTheLotlsAreRecorded() {
+        tslLoader.setTslLoaderConfigurationProperties(createConfigurationProperties(false));
+        tslLoader.init();
+        Instant estonianSoon = Instant.parse("2026-11-20T00:00:00Z");
+        Instant later = Instant.parse("2027-04-08T00:00:00Z");
+        LOTLInfo lotl = lotl(Instant.parse("2027-03-17T12:04:06Z"),
+                trustedList("EE", later), trustedList("EE", estonianSoon), trustedList("LV", later),
+                trustedList("FI", null), new TLInfo(null, null, null, "https://tl/unparsed"));
+        TLInfo polish = trustedList("PL", later);
+        when(tslValidationJob.getSummary()).thenReturn(new TLValidationJobSummary(List.of(lotl), List.of(polish)));
+        assertEquals(Map.of(), tslLoader.getNextUpdateByTerritory());
+        assertNull(tslLoader.getLotlNextUpdate());
+
+        tslLoader.loadTSL();
+
+        assertEquals(Map.of("EE", estonianSoon, "LV", later, "PL", later), tslLoader.getNextUpdateByTerritory());
+        assertEquals(Instant.parse("2027-03-17T12:04:06Z"), tslLoader.getLotlNextUpdate());
+    }
+
+    @Test
+    void loadTSL_WhenSnapshotIsLoaded_ItsCreationTimeIsRecorded() throws IOException {
+        tslLoader.setTslLoaderConfigurationProperties(createSnapshotConfigurationProperties());
+        tslLoader.init();
+        Instant createdAt = Instant.parse("2026-10-14T06:01:08Z");
+        publish("20261014T060108Z", createdAt);
+
+        tslLoader.loadTSL();
+
+        assertEquals(createdAt, tslLoader.getSnapshotCreatedAt());
+    }
+
+    @Test
+    void loadTSL_WhenSnapshotHasNoManifest_ItsCreationTimeIsUnknown() throws IOException {
+        tslLoader.setTslLoaderConfigurationProperties(createSnapshotConfigurationProperties());
+        tslLoader.init();
+        publish("20261014T060108Z");
+
+        tslLoader.loadTSL();
+
+        assertEquals("20261014T060108Z", tslLoader.getSnapshotId());
+        assertNull(tslLoader.getSnapshotCreatedAt());
+    }
+
     private void publish(String id) throws IOException {
         Files.createDirectories(snapshotRoot.resolve("snapshots").resolve(id));
         Files.writeString(snapshotRoot.resolve("current"), id + "\n");
@@ -317,6 +366,21 @@ class TSLLoaderTest {
         ParsingInfoRecord parsing = mock(ParsingInfoRecord.class);
         when(parsing.getTerritory()).thenReturn(territory);
         return new TLInfo(null, parsing, null, "https://tl/" + territory);
+    }
+
+    private static TLInfo trustedList(String territory, Instant nextUpdate) {
+        ParsingInfoRecord parsing = mock(ParsingInfoRecord.class);
+        when(parsing.getTerritory()).thenReturn(territory);
+        lenient().when(parsing.getNextUpdateDate()).thenReturn(nextUpdate == null ? null : Date.from(nextUpdate));
+        return new TLInfo(null, parsing, null, "https://tl/" + territory);
+    }
+
+    private static LOTLInfo lotl(Instant nextUpdate, TLInfo... trustedLists) {
+        ParsingInfoRecord parsing = mock(ParsingInfoRecord.class);
+        when(parsing.getNextUpdateDate()).thenReturn(Date.from(nextUpdate));
+        LOTLInfo lotl = new LOTLInfo(null, parsing, null, "https://lotl");
+        lotl.setTlInfos(List.of(trustedLists));
+        return lotl;
     }
 
     private static TrustProperties trust(TLInfo trustedList) {

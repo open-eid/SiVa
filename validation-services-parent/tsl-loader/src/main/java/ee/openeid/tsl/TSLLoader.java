@@ -23,6 +23,7 @@ import eu.europa.esig.dss.model.DSSDocument;
 import eu.europa.esig.dss.model.InMemoryDocument;
 import eu.europa.esig.dss.model.tsl.ParsingInfoRecord;
 import eu.europa.esig.dss.model.tsl.TLInfo;
+import eu.europa.esig.dss.model.tsl.TLValidationJobSummary;
 import eu.europa.esig.dss.model.tsl.TrustProperties;
 import eu.europa.esig.dss.model.x509.CertificateToken;
 import eu.europa.esig.dss.service.http.commons.CommonsDataLoader;
@@ -59,10 +60,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
@@ -83,8 +87,9 @@ public class TSLLoader {
     private final AtomicReference<State> state = new AtomicReference<>(State.NONE);
 
     private record State(Instant lastRefresh, int numberOfCertificates, Map<String, Integer> certificatesByTerritory,
-                         String snapshotId) {
-        private static final State NONE = new State(null, 0, Map.of(), null);
+                         Map<String, Instant> nextUpdateByTerritory, Instant lotlNextUpdate, String snapshotId,
+                         Instant snapshotCreatedAt) {
+        private static final State NONE = new State(null, 0, Map.of(), Map.of(), null, null, null);
     }
 
     private TSLValidationJobFactory tslValidationJobFactory;
@@ -195,8 +200,12 @@ public class TSLLoader {
     }
 
     private void record(String snapshotId) {
+        TLValidationJobSummary summary = tslValidationJob.getSummary();
+        Instant snapshotCreatedAt = snapshotId == null ? null
+                : snapshotStore.manifest(snapshotId).map(TSLSnapshotManifest::createdAt).orElse(null);
         state.set(new State(Instant.now(), trustedListSource.getNumberOfCertificates(),
-                snapshotCertificatesByTerritory(trustedListSource), snapshotId));
+                snapshotCertificatesByTerritory(trustedListSource), nextUpdateByTerritory(summary),
+                lotlNextUpdate(summary), snapshotId, snapshotCreatedAt));
     }
 
     /**
@@ -236,6 +245,66 @@ public class TSLLoader {
      */
     public Map<String, Integer> getCertificatesByTerritory() {
         return state.get().certificatesByTerritory();
+    }
+
+    /**
+     * {@code NextUpdate} of each territory's trusted list as parsed by the last refresh attempt, the earliest when a
+     * territory has several; after it the list counts as expired. Includes lists DSS did not accept, so an expired
+     * list stays visible. Sorted by territory; empty until the first refresh.
+     */
+    public Map<String, Instant> getNextUpdateByTerritory() {
+        return state.get().nextUpdateByTerritory();
+    }
+
+    /**
+     * {@code NextUpdate} of the list of trusted lists as parsed by the last refresh attempt (the earliest of several);
+     * every territory depends on it. {@code null} until the first refresh or when it was never parsed.
+     */
+    public Instant getLotlNextUpdate() {
+        return state.get().lotlNextUpdate();
+    }
+
+    /**
+     * When the loaded snapshot was published ({@code manifest.json} {@code createdAt}); {@code null} outside snapshot
+     * mode, before the first load or when the manifest is missing.
+     */
+    public Instant getSnapshotCreatedAt() {
+        return state.get().snapshotCreatedAt();
+    }
+
+    private static Map<String, Instant> nextUpdateByTerritory(TLValidationJobSummary summary) {
+        if (summary == null) {
+            return Map.of();
+        }
+        List<TLInfo> trustedLists = new ArrayList<>(summary.getOtherTLInfos());
+        summary.getLOTLInfos().forEach(lotl -> trustedLists.addAll(lotl.getTLInfos()));
+        Map<String, Instant> result = new TreeMap<>();
+        for (TLInfo trustedList : trustedLists) {
+            String territory = territoryOf(trustedList);
+            Instant nextUpdate = nextUpdateOf(trustedList);
+            if (territory != null && nextUpdate != null) {
+                result.merge(territory, nextUpdate, (a, b) -> a.isBefore(b) ? a : b);
+            }
+        }
+        return Collections.unmodifiableMap(result);
+    }
+
+    private static Instant lotlNextUpdate(TLValidationJobSummary summary) {
+        if (summary == null) {
+            return null;
+        }
+        return summary.getLOTLInfos().stream()
+                .filter(lotl -> !lotl.isPivot())
+                .map(TSLLoader::nextUpdateOf)
+                .filter(Objects::nonNull)
+                .min(Instant::compareTo)
+                .orElse(null);
+    }
+
+    private static Instant nextUpdateOf(TLInfo trustedList) {
+        ParsingInfoRecord parsing = trustedList.getParsingCacheInfo();
+        Date nextUpdate = parsing == null ? null : parsing.getNextUpdateDate();
+        return nextUpdate == null ? null : nextUpdate.toInstant();
     }
 
     private static Map<String, Integer> snapshotCertificatesByTerritory(TrustedListsCertificateSource source) {

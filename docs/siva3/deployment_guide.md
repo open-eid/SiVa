@@ -587,8 +587,8 @@ Run the fetcher at least weekly; every six hours is the default. A monthly fetch
 | ------- | ---- | ------- | --------- | ---------- |
 | Fetch schedule | every P | `0 */6 * * *` | `0 3 * * *` | `0 3 * * 1` |
 | `siva.tsl.loader.snapshotMaxAge` | max(4P, 48 h) | PT48H | P4D | P28D |
-| Alert: last successful fetch older than | 2P + grace | 13 h | 49 h | 15 days |
-| Alert: snapshot loaded by an instance older than | 2P + grace | 13 h | 49 h | 15 days |
+| Alert: last successful fetch older than | 2P + grace | 13 h | 49 h | 14 days 1 h |
+| Alert: snapshot loaded by an instance older than | 2P + grace | 13 h | 49 h | 14 days 1 h |
 | Warning: a configured country's list expires within | 2P + lead time | 7.5 days | 9 days | 21 days |
 | Critical: a configured country's list expires within | P + 1 day | 1.25 days | 2 days | 8 days |
 | Warning / critical: a configured country has no trust anchors | 15 minutes | | | |

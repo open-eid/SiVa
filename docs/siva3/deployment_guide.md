@@ -396,11 +396,11 @@ The Prometheus endpoint (`/monitoring/prometheus`) carries the trust-list state 
 
 | Metric | Labels | Meaning |
 | ------ | ------ | ------- |
-| `siva_tsl_trust_anchors` | `loader`, `territory` | Trust anchors the loader holds for that country after DSS accepted its list. Zero or absent means signatures from that country cannot be validated as trusted. |
+| `siva_tsl_trust_anchors` | `loader`, `territory`, `mandatory` (`true`, `false`) | Trust anchors the loader holds for that country after DSS accepted its list, for every configured country (`siva.tsl.loader.trustedTerritories` and `mandatoryTerritories`). Zero means signatures from that country cannot be validated as trusted. |
 | `siva_tsl_next_update_timestamp_seconds` | `loader`, `kind` (`lotl`, `tl`), `territory` | The list's `NextUpdate` as Unix time: after it, the list counts as expired. For the LOTL every country depends on it. |
 | `siva_tsl_snapshot_created_timestamp_seconds` | `loader` | Snapshot mode only: when the loaded snapshot was published (`manifest.json` `createdAt`), so its age as the instance sees it, after any copy between the fetcher and the instance. |
 
-Alert on them per configured country (`siva.tsl.loader.trustedTerritories`, `mandatoryTerritories`), with thresholds derived from the fetch period as described under [Choosing the fetch period](#choosing-the-fetch-period); the Helm chart's PrometheusRule does exactly that.
+Because the series exist exactly for the configured countries and say which are mandatory, alerts need no list of their own: zero anchors with `mandatory="true"` is critical, with `mandatory="false"` a warning. Thresholds for list expiry and snapshot age derive from the fetch period as described under [Choosing the fetch period](#choosing-the-fetch-period); the Helm chart's PrometheusRule does exactly that.
 
 ## Heartbeat endpoint
 

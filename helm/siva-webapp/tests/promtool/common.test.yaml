@@ -1,0 +1,111 @@
+# promtool tests that hold for every variant: the trust-anchor rules and the selectors. Run by the
+# lab's rule-test script with each <variant>.values.yaml rendered into rules.yaml, release
+# siva-webapp in namespace siva (pods siva-webapp-<replicaset>-<pod>).
+rule_files:
+  - rules.yaml
+evaluation_interval: 1m
+
+tests:
+  # A mandatory territory loses its anchors at 11m: pending for 15 minutes, then critical. A
+  # second, non-mandatory territory that keeps its anchors stays quiet.
+  - interval: 1m
+    input_series:
+      - series: 'siva_tsl_trust_anchors{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",loader="generic",territory="EE",mandatory="true"}'
+        values: '32x10 0x30'
+      - series: 'siva_tsl_trust_anchors{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",loader="generic",territory="LV",mandatory="false"}'
+        values: '32x40'
+    alert_rule_test:
+      - eval_time: 21m
+        alertname: SivaTslMandatoryTerritoryNotValidating
+        exp_alerts: []
+      - eval_time: 25m
+        alertname: SivaTslMandatoryTerritoryNotValidating
+        exp_alerts: []
+      - eval_time: 26m
+        alertname: SivaTslMandatoryTerritoryNotValidating
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              namespace: siva
+              pod: siva-webapp-7d9f8b6c4-x2k9p
+              loader: generic
+              territory: EE
+              mandatory: "true"
+            exp_annotations:
+              summary: "SiVa holds no trust anchors for mandatory territory EE (generic loader)"
+              description: "Signatures from EE cannot be validated as trusted and the pod is not ready. Its list is missing, expired or badly signed: check the tsl health detail and, in snapshot mode, the fetch Job's log."
+      - eval_time: 26m
+        alertname: SivaTslTerritoryNotValidating
+        exp_alerts: []
+
+  # A non-mandatory territory loses its anchors: warning only, never the critical rule.
+  - interval: 1m
+    input_series:
+      - series: 'siva_tsl_trust_anchors{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",loader="generic",territory="EE",mandatory="true"}'
+        values: '32x40'
+      - series: 'siva_tsl_trust_anchors{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",loader="generic",territory="LV",mandatory="false"}'
+        values: '32x10 0x30'
+    alert_rule_test:
+      - eval_time: 25m
+        alertname: SivaTslTerritoryNotValidating
+        exp_alerts: []
+      - eval_time: 26m
+        alertname: SivaTslTerritoryNotValidating
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              namespace: siva
+              pod: siva-webapp-7d9f8b6c4-x2k9p
+              loader: generic
+              territory: LV
+              mandatory: "false"
+            exp_annotations:
+              summary: "SiVa holds no trust anchors for territory LV (generic loader)"
+              description: "Signatures from LV validate as untrusted until its list loads again; other territories are unaffected."
+      - eval_time: 26m
+        alertname: SivaTslMandatoryTerritoryNotValidating
+        exp_alerts: []
+
+  # A configured list SiVa has not parsed yet publishes NextUpdate as NaN: no expiry alert.
+  - interval: 1m
+    input_series:
+      - series: 'siva_tsl_next_update_timestamp_seconds{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",loader="generic",kind="tl",territory="LV"}'
+        values: 'NaN NaN NaN'
+    alert_rule_test:
+      - eval_time: 2m
+        alertname: SivaTslListExpiringSoon
+        exp_alerts: []
+      - eval_time: 2m
+        alertname: SivaTslListExpiring
+        exp_alerts: []
+
+  # Series of another namespace, another release or the fetcher's pods, all in the worst state
+  # (no anchors, lists expired at epoch 0): nothing fires. Snapshot and fetch selectors are tested
+  # with the thresholds, in the snapshot variants.
+  - interval: 1m
+    input_series:
+      - series: 'siva_tsl_trust_anchors{namespace="other",pod="siva-webapp-7d9f8b6c4-x2k9p",loader="generic",territory="EE",mandatory="true"}'
+        values: '0x30'
+      - series: 'siva_tsl_trust_anchors{namespace="siva",pod="siva-webapp-canary-5c6d7e8f9-q1w2e",loader="generic",territory="EE",mandatory="true"}'
+        values: '0x30'
+      - series: 'siva_tsl_trust_anchors{namespace="siva",pod="other-siva-webapp-7d9f8b6c4-x2k9p",loader="generic",territory="EE",mandatory="false"}'
+        values: '0x30'
+      - series: 'siva_tsl_trust_anchors{namespace="siva",pod="siva-webapp-tsl-fetch-29345678-ab1cd",loader="generic",territory="EE",mandatory="true"}'
+        values: '0x30'
+      - series: 'siva_tsl_next_update_timestamp_seconds{namespace="other",pod="siva-webapp-7d9f8b6c4-x2k9p",loader="generic",kind="tl",territory="EE"}'
+        values: '0x30'
+      - series: 'siva_tsl_next_update_timestamp_seconds{namespace="siva",pod="siva-webapp-canary-5c6d7e8f9-q1w2e",loader="generic",kind="lotl",territory="EU"}'
+        values: '0x30'
+    alert_rule_test:
+      - eval_time: 30m
+        alertname: SivaTslMandatoryTerritoryNotValidating
+        exp_alerts: []
+      - eval_time: 30m
+        alertname: SivaTslTerritoryNotValidating
+        exp_alerts: []
+      - eval_time: 30m
+        alertname: SivaTslListExpiringSoon
+        exp_alerts: []
+      - eval_time: 30m
+        alertname: SivaTslListExpiring
+        exp_alerts: []

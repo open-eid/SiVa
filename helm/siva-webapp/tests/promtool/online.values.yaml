@@ -1,0 +1,4 @@
+# Online mode: the refresh period is SiVa's nightly reload (one day); no snapshot rules.
+monitoring:
+  prometheusRule:
+    enabled: true

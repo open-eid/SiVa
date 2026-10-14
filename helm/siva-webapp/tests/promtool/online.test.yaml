@@ -1,0 +1,88 @@
+# promtool threshold tests for online.values.yaml. Online mode: refresh period one day (SiVa's nightly reload). Warning 2P + lead time (P7D) = 9 d,
+# critical P + 1 d = 2 d; no snapshot rules.
+# Minutes below are those thresholds written out, not recomputed from the chart. Rules are
+# evaluated every 10 minutes (14 days at 1m take a minute); each boundary is probed 10 minutes either side.
+rule_files:
+  - rules.yaml
+evaluation_interval: 10m
+
+tests:
+  # EE's list and the LOTL both have NextUpdate at 13020m: warning from 12960m before it (after 60m),
+  # critical from 2880m before it (after 10140m), each alert per list.
+  - interval: 1m
+    input_series:
+      - series: 'siva_tsl_next_update_timestamp_seconds{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",loader="generic",kind="tl",territory="EE"}'
+        values: '781200x10150'
+      - series: 'siva_tsl_next_update_timestamp_seconds{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",loader="generic",kind="lotl",territory="EU"}'
+        values: '781200x10150'
+    alert_rule_test:
+      - eval_time: 50m
+        alertname: SivaTslListExpiringSoon
+        exp_alerts: []
+      - eval_time: 70m
+        alertname: SivaTslListExpiringSoon
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              namespace: siva
+              pod: siva-webapp-7d9f8b6c4-x2k9p
+              loader: generic
+              kind: tl
+              territory: EE
+            exp_annotations:
+              summary: "The EE trusted list (tl) runs out within 9 d"
+              description: "Its NextUpdate is close and SiVa has not received a newer version. Once it passes, signatures relying on it lose qualification (POLv4 fails them) and, at the next reload, their trust anchors."
+          - exp_labels:
+              severity: warning
+              namespace: siva
+              pod: siva-webapp-7d9f8b6c4-x2k9p
+              loader: generic
+              kind: lotl
+              territory: EU
+            exp_annotations:
+              summary: "The EU trusted list (lotl) runs out within 9 d"
+              description: "Its NextUpdate is close and SiVa has not received a newer version. Once it passes, signatures relying on it lose qualification (POLv4 fails them) and, at the next reload, their trust anchors."
+      - eval_time: 70m
+        alertname: SivaTslListExpiring
+        exp_alerts: []
+      - eval_time: 10130m
+        alertname: SivaTslListExpiring
+        exp_alerts: []
+      - eval_time: 10150m
+        alertname: SivaTslListExpiring
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              namespace: siva
+              pod: siva-webapp-7d9f8b6c4-x2k9p
+              loader: generic
+              kind: tl
+              territory: EE
+            exp_annotations:
+              summary: "The EE trusted list (tl) runs out within 2 d"
+              description: "Less than one refresh period plus a day is left. Check that the publisher has issued a newer list and that the refresh picks it up."
+          - exp_labels:
+              severity: critical
+              namespace: siva
+              pod: siva-webapp-7d9f8b6c4-x2k9p
+              loader: generic
+              kind: lotl
+              territory: EU
+            exp_annotations:
+              summary: "The EU trusted list (lotl) runs out within 2 d"
+              description: "Less than one refresh period plus a day is left. Check that the publisher has issued a newer list and that the refresh picks it up."
+
+  # Online mode renders no snapshot rules: a snapshot and a fetch frozen at epoch 0 stay quiet.
+  - interval: 1m
+    input_series:
+      - series: 'siva_tsl_snapshot_created_timestamp_seconds{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",loader="generic"}'
+        values: '0x3000'
+      - series: 'kube_cronjob_status_last_successful_time{namespace="siva",cronjob="siva-webapp-tsl-fetch"}'
+        values: '0x3000'
+    alert_rule_test:
+      - eval_time: 3000m
+        alertname: SivaTslSnapshotStale
+        exp_alerts: []
+      - eval_time: 3000m
+        alertname: SivaTslFetchFailing
+        exp_alerts: []

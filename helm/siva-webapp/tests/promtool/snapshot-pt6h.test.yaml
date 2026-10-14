@@ -1,0 +1,126 @@
+# promtool threshold tests for snapshot-pt6h.values.yaml. Snapshot mode, period PT6H. Stale 2P + grace (PT1H) = 13 h, warning 2P + lead time (P7D) = 7 d 12 h,
+# critical P + 1 d = 1 d 6 h.
+# Minutes below are those thresholds written out, not recomputed from the chart. Rules are
+# evaluated every 10 minutes (14 days at 1m take a minute); each boundary is probed 10 minutes either side.
+rule_files:
+  - rules.yaml
+evaluation_interval: 10m
+
+tests:
+  # EE's list and the LOTL both have NextUpdate at 10860m: warning from 10800m before it (after 60m),
+  # critical from 1800m before it (after 9060m), each alert per list.
+  - interval: 1m
+    input_series:
+      - series: 'siva_tsl_next_update_timestamp_seconds{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",loader="generic",kind="tl",territory="EE"}'
+        values: '651600x9070'
+      - series: 'siva_tsl_next_update_timestamp_seconds{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",loader="generic",kind="lotl",territory="EU"}'
+        values: '651600x9070'
+    alert_rule_test:
+      - eval_time: 50m
+        alertname: SivaTslListExpiringSoon
+        exp_alerts: []
+      - eval_time: 70m
+        alertname: SivaTslListExpiringSoon
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              namespace: siva
+              pod: siva-webapp-7d9f8b6c4-x2k9p
+              loader: generic
+              kind: tl
+              territory: EE
+            exp_annotations:
+              summary: "The EE trusted list (tl) runs out within 7 d 12 h"
+              description: "Its NextUpdate is close and SiVa has not received a newer version. Once it passes, signatures relying on it lose qualification (POLv4 fails them) and, at the next reload, their trust anchors."
+          - exp_labels:
+              severity: warning
+              namespace: siva
+              pod: siva-webapp-7d9f8b6c4-x2k9p
+              loader: generic
+              kind: lotl
+              territory: EU
+            exp_annotations:
+              summary: "The EU trusted list (lotl) runs out within 7 d 12 h"
+              description: "Its NextUpdate is close and SiVa has not received a newer version. Once it passes, signatures relying on it lose qualification (POLv4 fails them) and, at the next reload, their trust anchors."
+      - eval_time: 70m
+        alertname: SivaTslListExpiring
+        exp_alerts: []
+      - eval_time: 9050m
+        alertname: SivaTslListExpiring
+        exp_alerts: []
+      - eval_time: 9070m
+        alertname: SivaTslListExpiring
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              namespace: siva
+              pod: siva-webapp-7d9f8b6c4-x2k9p
+              loader: generic
+              kind: tl
+              territory: EE
+            exp_annotations:
+              summary: "The EE trusted list (tl) runs out within 1 d 6 h"
+              description: "Less than one refresh period plus a day is left. Check that the publisher has issued a newer list and that the refresh picks it up."
+          - exp_labels:
+              severity: critical
+              namespace: siva
+              pod: siva-webapp-7d9f8b6c4-x2k9p
+              loader: generic
+              kind: lotl
+              territory: EU
+            exp_annotations:
+              summary: "The EU trusted list (lotl) runs out within 1 d 6 h"
+              description: "Less than one refresh period plus a day is left. Check that the publisher has issued a newer list and that the refresh picks it up."
+
+  # The pod's snapshot is renewed at 360m (one period), then frozen: stale only after 1140m, not at
+  # 780m. Another namespace's snapshot, frozen at 0, never fires.
+  - interval: 1m
+    input_series:
+      - series: 'siva_tsl_snapshot_created_timestamp_seconds{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",loader="generic"}'
+        values: '0x359 21600x790'
+      - series: 'siva_tsl_snapshot_created_timestamp_seconds{namespace="other",pod="siva-webapp-7d9f8b6c4-x2k9p",loader="generic"}'
+        values: '0x1150'
+    alert_rule_test:
+      - eval_time: 790m
+        alertname: SivaTslSnapshotStale
+        exp_alerts: []
+      - eval_time: 1130m
+        alertname: SivaTslSnapshotStale
+        exp_alerts: []
+      - eval_time: 1150m
+        alertname: SivaTslSnapshotStale
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              namespace: siva
+              pod: siva-webapp-7d9f8b6c4-x2k9p
+              loader: generic
+            exp_annotations:
+              summary: "SiVa pod siva-webapp-7d9f8b6c4-x2k9p runs on a snapshot older than 13 h"
+              description: "Two fetch periods without a newer snapshot reaching the pod: the fetch, a sync between store and pod, or the pod's refusal of a newer snapshot (see its log)."
+
+  # The fetch CronJob last succeeded at 360m, then fails: alert after 1140m. CronJobs of another
+  # name or namespace keep succeeding; were the selector to take them in, max() would hide the failure.
+  - interval: 1m
+    input_series:
+      - series: 'kube_cronjob_status_last_successful_time{namespace="siva",cronjob="siva-webapp-tsl-fetch"}'
+        values: '0x359 21600x790'
+      - series: 'kube_cronjob_status_last_successful_time{namespace="siva",cronjob="siva-webapp-canary-tsl-fetch"}'
+        values: '0+60x1150'
+      - series: 'kube_cronjob_status_last_successful_time{namespace="other",cronjob="siva-webapp-tsl-fetch"}'
+        values: '0+60x1150'
+    alert_rule_test:
+      - eval_time: 790m
+        alertname: SivaTslFetchFailing
+        exp_alerts: []
+      - eval_time: 1130m
+        alertname: SivaTslFetchFailing
+        exp_alerts: []
+      - eval_time: 1150m
+        alertname: SivaTslFetchFailing
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+            exp_annotations:
+              summary: "SiVa trust-list fetch has not succeeded for 13 h"
+              description: "The pods keep validating on the last published snapshot; its lists expire one by one. Check the fetch Job's logs: kubectl -n siva logs job/<newest siva-webapp-tsl-fetch-...>."

@@ -1,6 +1,6 @@
 # siva-webapp
 
-![Version: 0.10.1](https://img.shields.io/badge/Version-0.10.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.11.0-SNAPSHOT](https://img.shields.io/badge/AppVersion-3.11.0--SNAPSHOT-informational?style=flat-square)
+![Version: 0.11.0](https://img.shields.io/badge/Version-0.11.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.11.0-SNAPSHOT](https://img.shields.io/badge/AppVersion-3.11.0--SNAPSHOT-informational?style=flat-square)
 
 Reference deployment of [SiVa](https://github.com/open-eid/SiVa), the Estonian digital-signature
 validation service, on Kubernetes. Like the project's docker-compose file it is a reference, not a
@@ -64,15 +64,20 @@ ReadWriteMany claim you bring (`tsl.snapshot.volume`) or one the chart creates
 fetcher renames files and directories in it, so the filesystem must support rename; an
 object-store mount without rename (mountpoint-s3) cannot hold it. The fetcher gets the same
 ConfigMap, `env` and secret as the webapp, so its snapshot matches what the webapp expects
-(same profile, same `trustedTerritories`); `tsl.fetcher.env` adds fetcher-only variables.
-`monitoring.prometheusRule` gains `SivaTslFetchFailing` (no successful fetch for
-`tsl.fetcher.staleAfterSeconds`); mind that a snapshot that goes stale degrades every replica
-at once, which is why the schedule should sit well inside the lists' validity.
+(same profile, same territories); `tsl.fetcher.env` adds fetcher-only variables. Set the
+countries in `tsl.territories` so both get them.
+
+`tsl.fetcher.period` (six hours by default, at most a week) is the one setting the rest follows:
+the CronJob schedule, `tsl.snapshot.maxAge` (max(4 x period, 48 h)) and the trust-list alert
+thresholds derive from it, so a weekly fetch is one value. A snapshot that goes stale degrades
+every replica at once, and member-state lists run out within three to six months of issue,
+which is why a period beyond a week is refused. The deployment guide's "Choosing the fetch
+period" has the table.
 
 Whoever can write the store can point every pod at any snapshot whose lists are still inside
 their validity window, so treat write access to it as trust-list authority: only the fetcher
-writes, the webapp mounts it read-only, and `tsl.snapshot.maxAge` (two days by default) makes
-a pod refuse a snapshot older than that rather than serve it. The fetcher pod gets its own
+writes, the webapp mounts it read-only, and `tsl.snapshot.maxAge` makes a pod refuse a
+snapshot older than that rather than serve it. The fetcher pod gets its own
 Secret (`tsl.fetcher.existingSecret`), never the webapp's: it parses thirty documents from the
 internet and should hold nothing else. With `network.networkPolicy.egress` on, the webapp pods
 reach only DNS and the public internet on 80 and 443 (OCSP and timestamp responders) and the
@@ -102,10 +107,12 @@ directory); edit the comments, not this table.
 | monitoring.grafanaDashboard.labels | object | `{"grafana_dashboard":"1"}` | Labels the sidecar selects dashboards by. |
 | monitoring.grafanaDashboard.namespace | string | `""` | Namespace to create it in (empty: the release namespace). |
 | monitoring.prometheusRule.additionalRules | list | `[]` | Extra rules appended to the group, as given. |
-| monitoring.prometheusRule.enabled | bool | `false` | Alert rules (PrometheusRule CRD): SivaNotReady, SivaValidationErrorRate, SivaRestarts, SivaOomKilled. They use Spring Boot's http_server_requests metrics and kube-state-metrics. |
+| monitoring.prometheusRule.enabled | bool | `false` | Alert rules (PrometheusRule CRD): SivaNotReady, SivaValidationErrorRate, SivaRestarts, SivaOomKilled from Spring Boot's http_server_requests metrics and kube-state-metrics; the trust-list rules (a configured territory without anchors, a list close to its NextUpdate, in snapshot mode a stale snapshot or failing fetch) from SiVa's siva_tsl_* gauges. |
 | monitoring.prometheusRule.labels | object | `{}` | Labels your Prometheus selects PrometheusRules by. |
 | monitoring.prometheusRule.namespace | string | `""` | Namespace to create it in (empty: the release namespace). |
-| monitoring.prometheusRule.pendingRules | bool | `false` | Rules for signals the application does not publish yet: oversized requests (answered 400 today, no 413), trust-list age and territory state, OCSP/TSA failures. Off until it does. |
+| monitoring.prometheusRule.pendingRules | bool | `false` | Rules for signals the application does not publish yet: oversized requests (answered 400 today, no 413) and OCSP/TSA failures. Off until it does. |
+| monitoring.prometheusRule.tsl.grace | string | `"PT1H"` | Added to two refresh periods before SivaTslSnapshotStale and SivaTslFetchFailing fire (ISO-8601). Add the interval of any sync that copies the store to the pods. |
+| monitoring.prometheusRule.tsl.leadTime | string | `"P7D"` | Time you give yourself to react before a list expires: SivaTslListExpiringSoon fires at two refresh periods plus this before its NextUpdate (ISO-8601). |
 | monitoring.serviceMonitor.enabled | bool | `false` | Prometheus-operator ServiceMonitor scraping /monitoring/prometheus on the management Service (the traffic Service when the actuator is not split). Needs the CRD. |
 | monitoring.serviceMonitor.interval | string | `"30s"` | Scrape interval (Prometheus duration). |
 | monitoring.serviceMonitor.labels | object | `{}` | Labels your Prometheus selects ServiceMonitors by, e.g. `{release: kube-prometheus-stack}`. |
@@ -187,15 +194,15 @@ directory); edit the comments, not this table.
 | tsl.fetcher.existingSecret | string | `""` | Secret whose keys become the fetcher's environment variables. The fetcher does not get the webapp's `envFrom.existingSecret`: it parses thirty documents from the internet and should hold nothing but what that needs (truststore passwords, if you changed them), not the report-signing key's. Empty: no Secret. |
 | tsl.fetcher.failedJobsHistoryLimit | int | `3` | Failed fetch Jobs kept. |
 | tsl.fetcher.keepSnapshots | int | `3` | Snapshots kept besides the current one (siva.tsl.fetcher.keepSnapshots); a pod in the middle of loading an older one is not pulled away. |
+| tsl.fetcher.period | string | `"PT6H"` | How often the trusted lists are fetched (ISO-8601 duration, at most P7D). The schedule, `tsl.snapshot.maxAge` and the trust-list alert thresholds derive from it (ADR 0004; table in the deployment guide, "Choosing the fetch period"). Lists can run out within three months of issue, so a longer period is refused at render time. |
 | tsl.fetcher.resources | object | requests 250m / 512Mi, limit 1Gi memory | Resources of the fetcher pod; the JVM is sized from the memory limit as for the webapp. |
-| tsl.fetcher.schedule | string | `"0 */6 * * *"` | Cron schedule of the fetch. Keep it well inside the shortest list validity you rely on: a snapshot that goes stale degrades every replica at once, not one by one. |
-| tsl.fetcher.staleAfterSeconds | int | `86400` | Seconds without a successful fetch before the SivaTslFetchFailing alert fires (monitoring.prometheusRule, needs kube-state-metrics). |
+| tsl.fetcher.schedule | string | derived from period | Cron schedule of the fetch. Empty: derived from `period` (minutes dividing an hour, hours dividing a day, P1D at 03:00, P7D Mondays 03:00). When you set it, keep `period` saying what it means: the alerts are sized from `period`, not from this. |
 | tsl.fetcher.startingDeadlineSeconds | string | `""` | Seconds after a missed schedule the fetch may still start; empty for the default. |
 | tsl.fetcher.successfulJobsHistoryLimit | int | `3` | Finished fetch Jobs kept for `kubectl get jobs` and the alert rule. |
 | tsl.fetcher.timeZone | string | `""` | IANA time zone of the schedule (Kubernetes 1.27+); empty for the controller's. |
 | tsl.fetcher.workVolume | object | `{}` | Working cache the fetcher downloads into, kept between runs so that a list whose download fails keeps its last copy: a volume source as above, or empty for a `work/` directory inside the store. |
 | tsl.mode | string | `"online"` | `online`: every pod downloads the lists itself at startup and on SiVa's nightly cron (needs HTTPS egress to ~30 hosts, minutes until ready, replicas started at different times can hold different trust states). `snapshot`: a CronJob running this image in SiVa's `tsl-fetch` profile downloads them, publishes a snapshot into a shared volume and every pod reads that (ready in seconds, identical trust state, no egress to the list hosts from the webapp); the fetcher publishes only when the mandatory territories came through, so `current` always names the last good snapshot. Needs a SiVa build with the fetcher (3.11.0+). |
-| tsl.snapshot.maxAge | string | `"PT48H"` | Refuse a snapshot older than this (ISO-8601 duration; siva.tsl.loader.snapshotMaxAge) and keep the loaded state: a store that stopped being refreshed, or was pointed at an old snapshot by whoever can write it, cannot feed a fresh pod lists older than you allow. A pod that has nothing loaded stays not-ready, which is what the fetch alert is for. Size it to a few missed fetches; empty disables the check. |
+| tsl.snapshot.maxAge | string | max(4 x period, PT48H) | Refuse a snapshot older than this (ISO-8601 duration; siva.tsl.loader.snapshotMaxAge) and keep the loaded state: a store that stopped being refreshed, or was pointed at an old snapshot by whoever can write it, cannot feed a fresh pod lists older than you allow. It only stops new pods from loading (a pod with nothing loaded stays not-ready), so it is lenient on purpose and the alerts catch staleness earlier. Empty: max(4 x tsl.fetcher.period, 48 h); `none` disables the check. |
 | tsl.snapshot.mountPath | string | `"/var/siva/tsl"` | Where the snapshot store is mounted (read-only in the webapp pods, read-write in the fetcher). |
 | tsl.snapshot.persistentVolumeClaim.accessModes | list | `["ReadWriteMany"]` | Access modes of the claim. |
 | tsl.snapshot.persistentVolumeClaim.annotations | object | `{}` | Claim annotations. |
@@ -204,6 +211,8 @@ directory); edit the comments, not this table.
 | tsl.snapshot.persistentVolumeClaim.storageClassName | string | `""` | StorageClass; empty for the cluster default. |
 | tsl.snapshot.pollInterval | string | `"PT1M"` | How often a pod checks `current` for a new snapshot (ISO-8601 duration; siva.tsl.loader.snapshotPollInterval). Replicas converge within this of a publish; the nightly refresh stays as the safety net. |
 | tsl.snapshot.volume | object | `{}` | The store: a volume source without the `name`, for example `persistentVolumeClaim: {claimName: siva-tsl}` for a ReadWriteMany claim you created, or a CSI bucket mount. Ignored when persistentVolumeClaim.create is on. The fetcher renames files and directories in it, so the filesystem must support rename; an object-store mount that does not (mountpoint-s3) cannot hold it. |
+| tsl.territories.mandatory | list | `[]` | Countries that must have trust anchors before a pod is ready and before the fetcher publishes (siva.tsl.loader.mandatoryTerritories); their absence alerts as critical, other trusted countries' as warning. Empty: SiVa's default, `EE` (`EE_T` under the `test` profile). |
+| tsl.territories.trusted | list | `[]` | Countries whose trusted lists SiVa downloads and trusts (siva.tsl.loader.trustedTerritories), for webapp and fetcher alike. Empty: SiVa's default list (the `test` profile: everything the test LOTL points to). Set them here rather than in config.applicationYaml; the alerts read SiVa's resolved configuration from its metrics either way. |
 
 ## Verifying on a NodePort (kind or any node you can reach)
 
@@ -223,14 +232,17 @@ network, or `localhost` if the cluster was created with an `extraPortMappings` e
 
 - Readiness waits for the mandatory trusted lists (`siva.tsl.loader.mandatoryTerritories`, `EE`
   by default); every other territory can be missing or stale without taking the pod out of
-  rotation, and health only says so in the `tsl` component's details. Alerting is left to you.
+  rotation; `SivaTslTerritoryNotValidating` (warning) says so, from SiVa's `siva_tsl_trust_anchors`
+  gauge, and `SivaTslMandatoryTerritoryNotValidating` (critical) for the mandatory ones.
 - In online mode every replica fetches the trust lists itself; replicas started at different
   times can hold different trust states until the next refresh. Snapshot mode (see "Trust
   lists") removes that, at the price of a shared volume and a CronJob.
 - Metrics are at `<release>-management:8081/monitoring/prometheus` (the service port when
   `runtime.managementPort` equals `service.containerPort`); `monitoring.serviceMonitor` scrapes
-  it with the Prometheus operator, otherwise scrape it yourself. The alert rules cover what the
-  application publishes today; trust-list freshness and OCSP/TSA failures have no metric yet.
+  it with the Prometheus operator, otherwise scrape it yourself. The trust-list rules use SiVa's
+  `siva_tsl_*` gauges, which exist for exactly the configured countries and mark the mandatory
+  ones, so the rules carry no country list; request-size rejections and OCSP/TSA failures have
+  no metric yet (`monitoring.prometheusRule.pendingRules`).
 - Health with details, heartbeat, version and metrics live on the management port (`8081` by
   default) and are reachable only inside the cluster through `<release>-management`; the
   traffic port answers 404 under `/monitoring` and serves only the status-only `/readyz` and

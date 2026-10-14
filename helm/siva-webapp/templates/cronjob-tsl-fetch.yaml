@@ -10,7 +10,7 @@ metadata:
   labels:
     {{- include "siva-webapp.fetcherLabels" . | nindent 4 }}
 spec:
-  schedule: {{ .Values.tsl.fetcher.schedule | quote }}
+  schedule: {{ include "siva-webapp.fetcherSchedule" . | quote }}
   {{- with .Values.tsl.fetcher.timeZone }}
   timeZone: {{ . | quote }}
   {{- end }}

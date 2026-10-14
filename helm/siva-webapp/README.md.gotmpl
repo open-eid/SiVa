@@ -64,15 +64,20 @@ ReadWriteMany claim you bring (`tsl.snapshot.volume`) or one the chart creates
 fetcher renames files and directories in it, so the filesystem must support rename; an
 object-store mount without rename (mountpoint-s3) cannot hold it. The fetcher gets the same
 ConfigMap, `env` and secret as the webapp, so its snapshot matches what the webapp expects
-(same profile, same `trustedTerritories`); `tsl.fetcher.env` adds fetcher-only variables.
-`monitoring.prometheusRule` gains `SivaTslFetchFailing` (no successful fetch for
-`tsl.fetcher.staleAfterSeconds`); mind that a snapshot that goes stale degrades every replica
-at once, which is why the schedule should sit well inside the lists' validity.
+(same profile, same territories); `tsl.fetcher.env` adds fetcher-only variables. Set the
+countries in `tsl.territories` so both get them.
+
+`tsl.fetcher.period` (six hours by default, at most a week) is the one setting the rest follows:
+the CronJob schedule, `tsl.snapshot.maxAge` (max(4 x period, 48 h)) and the trust-list alert
+thresholds derive from it, so a weekly fetch is one value. A snapshot that goes stale degrades
+every replica at once, and member-state lists run out within three to six months of issue,
+which is why a period beyond a week is refused. The deployment guide's "Choosing the fetch
+period" has the table.
 
 Whoever can write the store can point every pod at any snapshot whose lists are still inside
 their validity window, so treat write access to it as trust-list authority: only the fetcher
-writes, the webapp mounts it read-only, and `tsl.snapshot.maxAge` (two days by default) makes
-a pod refuse a snapshot older than that rather than serve it. The fetcher pod gets its own
+writes, the webapp mounts it read-only, and `tsl.snapshot.maxAge` makes a pod refuse a
+snapshot older than that rather than serve it. The fetcher pod gets its own
 Secret (`tsl.fetcher.existingSecret`), never the webapp's: it parses thirty documents from the
 internet and should hold nothing else. With `network.networkPolicy.egress` on, the webapp pods
 reach only DNS and the public internet on 80 and 443 (OCSP and timestamp responders) and the
@@ -104,14 +109,17 @@ network, or `localhost` if the cluster was created with an `extraPortMappings` e
 
 - Readiness waits for the mandatory trusted lists (`siva.tsl.loader.mandatoryTerritories`, `EE`
   by default); every other territory can be missing or stale without taking the pod out of
-  rotation, and health only says so in the `tsl` component's details. Alerting is left to you.
+  rotation; `SivaTslTerritoryNotValidating` (warning) says so, from SiVa's `siva_tsl_trust_anchors`
+  gauge, and `SivaTslMandatoryTerritoryNotValidating` (critical) for the mandatory ones.
 - In online mode every replica fetches the trust lists itself; replicas started at different
   times can hold different trust states until the next refresh. Snapshot mode (see "Trust
   lists") removes that, at the price of a shared volume and a CronJob.
 - Metrics are at `<release>-management:8081/monitoring/prometheus` (the service port when
   `runtime.managementPort` equals `service.containerPort`); `monitoring.serviceMonitor` scrapes
-  it with the Prometheus operator, otherwise scrape it yourself. The alert rules cover what the
-  application publishes today; trust-list freshness and OCSP/TSA failures have no metric yet.
+  it with the Prometheus operator, otherwise scrape it yourself. The trust-list rules use SiVa's
+  `siva_tsl_*` gauges, which exist for exactly the configured countries and mark the mandatory
+  ones, so the rules carry no country list; request-size rejections and OCSP/TSA failures have
+  no metric yet (`monitoring.prometheusRule.pendingRules`).
 - Health with details, heartbeat, version and metrics live on the management port (`8081` by
   default) and are reachable only inside the cluster through `<release>-management`; the
   traffic port answers 404 under `/monitoring` and serves only the status-only `/readyz` and

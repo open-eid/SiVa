@@ -200,3 +200,92 @@ tests:
       - equal:
           path: spec.jobTemplate.spec.template.spec.nodeSelector["kubernetes.io/os"]
           value: linux
+
+  - it: derives the schedule from the fetch period
+    template: cronjob-tsl-fetch.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+        fetcher:
+          period: P7D
+    asserts:
+      - equal:
+          path: spec.schedule
+          value: "0 3 * * 1"
+
+  - it: derives a daily schedule at 03:00
+    template: cronjob-tsl-fetch.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+        fetcher:
+          period: P1D
+    asserts:
+      - equal:
+          path: spec.schedule
+          value: "0 3 * * *"
+
+  - it: derives a schedule in minutes for periods under an hour
+    template: cronjob-tsl-fetch.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+        fetcher:
+          period: PT30M
+    asserts:
+      - equal:
+          path: spec.schedule
+          value: "*/30 * * * *"
+
+  - it: refuses a fetch period longer than a week
+    template: cronjob-tsl-fetch.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+        fetcher:
+          period: P30D
+    asserts:
+      - failedTemplate:
+          errorPattern: tsl.fetcher.period must be more than zero and at most P7D
+
+  - it: asks for an explicit schedule when the period has no derived one
+    template: cronjob-tsl-fetch.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+        fetcher:
+          period: PT5H
+    asserts:
+      - failedTemplate:
+          errorPattern: set tsl.fetcher.schedule to match it
+
+  - it: gives the fetcher the same territories as the webapp
+    template: cronjob-tsl-fetch.yaml
+    values:
+      - ../ci/all-on-values.yaml
+    asserts:
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_TRUSTEDTERRITORIES
+            value: EE,LV,LT
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_MANDATORYTERRITORIES
+            value: EE

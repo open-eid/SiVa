@@ -221,6 +221,28 @@
             "snapshot"
           ]
         },
+        "territories": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "trusted": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Z]{2}(_T)?$"
+              },
+              "uniqueItems": true
+            },
+            "mandatory": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Z]{2}(_T)?$"
+              },
+              "uniqueItems": true
+            }
+          }
+        },
         "snapshot": {
           "type": "object",
           "additionalProperties": false,
@@ -283,7 +305,7 @@
             },
             "maxAge": {
               "type": "string",
-              "pattern": "^(P([0-9]+D)?(T([0-9]+H)?([0-9]+M)?([0-9]+(\\.[0-9]+)?S)?)?)?$"
+              "pattern": "^(none|P([0-9]+D)?(T([0-9]+H)?([0-9]+M)?([0-9]+(\\.[0-9]+)?S)?)?)?$"
             }
           }
         },
@@ -291,19 +313,22 @@
           "type": "object",
           "additionalProperties": false,
           "required": [
+            "period",
             "schedule",
             "keepSnapshots",
             "activeDeadlineSeconds",
             "backoffLimit",
             "successfulJobsHistoryLimit",
             "failedJobsHistoryLimit",
-            "bootstrapJob",
-            "staleAfterSeconds"
+            "bootstrapJob"
           ],
           "properties": {
-            "schedule": {
+            "period": {
               "type": "string",
-              "minLength": 1
+              "pattern": "^P([0-9]+D)?(T([0-9]+H)?([0-9]+M)?([0-9]+S)?)?$"
+            },
+            "schedule": {
+              "type": "string"
             },
             "timeZone": {
               "type": "string"
@@ -368,10 +393,6 @@
                   }
                 }
               }
-            },
-            "staleAfterSeconds": {
-              "type": "integer",
-              "minimum": 1
             },
             "existingSecret": {
               "type": "string"
@@ -743,6 +764,20 @@
           "properties": {
             "enabled": {
               "type": "boolean"
+            },
+            "tsl": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "grace": {
+                  "type": "string",
+                  "pattern": "^P([0-9]+D)?(T([0-9]+H)?([0-9]+M)?([0-9]+S)?)?$"
+                },
+                "leadTime": {
+                  "type": "string",
+                  "pattern": "^P([0-9]+D)?(T([0-9]+H)?([0-9]+M)?([0-9]+S)?)?$"
+                }
+              }
             },
             "labels": {
               "type": "object",

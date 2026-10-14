@@ -123,6 +123,16 @@ tsl:
   # `current` always names the last good snapshot. Needs a SiVa build with the fetcher
   # (3.11.0+).
   mode: online
+  territories:
+    # -- Countries whose trusted lists SiVa downloads and trusts (siva.tsl.loader.trustedTerritories),
+    # for webapp and fetcher alike. Empty: SiVa's default list (the `test` profile: everything the
+    # test LOTL points to). Set them here rather than in config.applicationYaml; the alerts read
+    # SiVa's resolved configuration from its metrics either way.
+    trusted: []
+    # -- Countries that must have trust anchors before a pod is ready and before the fetcher
+    # publishes (siva.tsl.loader.mandatoryTerritories); their absence alerts as critical, other
+    # trusted countries' as warning. Empty: SiVa's default, `EE` (`EE_T` under the `test` profile).
+    mandatory: []
   snapshot:
     # -- Where the snapshot store is mounted (read-only in the webapp pods, read-write in the
     # fetcher).
@@ -152,14 +162,23 @@ tsl:
     pollInterval: PT1M
     # -- Refuse a snapshot older than this (ISO-8601 duration; siva.tsl.loader.snapshotMaxAge)
     # and keep the loaded state: a store that stopped being refreshed, or was pointed at an old
-    # snapshot by whoever can write it, cannot feed a fresh pod lists older than you allow. A
-    # pod that has nothing loaded stays not-ready, which is what the fetch alert is for. Size it
-    # to a few missed fetches; empty disables the check.
-    maxAge: PT48H
+    # snapshot by whoever can write it, cannot feed a fresh pod lists older than you allow. It only
+    # stops new pods from loading (a pod with nothing loaded stays not-ready), so it is lenient on
+    # purpose and the alerts catch staleness earlier. Empty: max(4 x tsl.fetcher.period, 48 h);
+    # `none` disables the check.
+    # @default -- max(4 x period, PT48H)
+    maxAge: ""
   fetcher:
-    # -- Cron schedule of the fetch. Keep it well inside the shortest list validity you rely
-    # on: a snapshot that goes stale degrades every replica at once, not one by one.
-    schedule: "0 */6 * * *"
+    # -- How often the trusted lists are fetched (ISO-8601 duration, at most P7D). The schedule,
+    # `tsl.snapshot.maxAge` and the trust-list alert thresholds derive from it (ADR 0004; table in
+    # the deployment guide, "Choosing the fetch period"). Lists can run out within three months of
+    # issue, so a longer period is refused at render time.
+    period: PT6H
+    # -- Cron schedule of the fetch. Empty: derived from `period` (minutes dividing an hour, hours
+    # dividing a day, P1D at 03:00, P7D Mondays 03:00). When you set it, keep `period` saying what
+    # it means: the alerts are sized from `period`, not from this.
+    # @default -- derived from period
+    schedule: ""
     # -- IANA time zone of the schedule (Kubernetes 1.27+); empty for the controller's.
     timeZone: ""
     # -- Seconds after a missed schedule the fetch may still start; empty for the default.
@@ -200,9 +219,6 @@ tsl:
     # should hold nothing but what that needs (truststore passwords, if you changed them), not
     # the report-signing key's. Empty: no Secret.
     existingSecret: ""
-    # -- Seconds without a successful fetch before the SivaTslFetchFailing alert fires
-    # (monitoring.prometheusRule, needs kube-state-metrics).
-    staleAfterSeconds: 86400
 
 # Probes go to the traffic port, so a wedged traffic connector fails readiness and the pod leaves
 # the Service. Readiness is Spring Boot's readiness group plus SiVa's `tsl` component: a pod is
@@ -360,14 +376,23 @@ monitoring:
     relabelings: []
   prometheusRule:
     # -- Alert rules (PrometheusRule CRD): SivaNotReady, SivaValidationErrorRate, SivaRestarts,
-    # SivaOomKilled. They use Spring Boot's http_server_requests metrics and kube-state-metrics.
+    # SivaOomKilled from Spring Boot's http_server_requests metrics and kube-state-metrics; the
+    # trust-list rules (a configured territory without anchors, a list close to its NextUpdate,
+    # in snapshot mode a stale snapshot or failing fetch) from SiVa's siva_tsl_* gauges.
     enabled: false
+    tsl:
+      # -- Added to two refresh periods before SivaTslSnapshotStale and SivaTslFetchFailing fire
+      # (ISO-8601). Add the interval of any sync that copies the store to the pods.
+      grace: PT1H
+      # -- Time you give yourself to react before a list expires: SivaTslListExpiringSoon fires at
+      # two refresh periods plus this before its NextUpdate (ISO-8601).
+      leadTime: P7D
     # -- Labels your Prometheus selects PrometheusRules by.
     labels: {}
     # -- Namespace to create it in (empty: the release namespace).
     namespace: ""
     # -- Rules for signals the application does not publish yet: oversized requests (answered
-    # 400 today, no 413), trust-list age and territory state, OCSP/TSA failures. Off until it does.
+    # 400 today, no 413) and OCSP/TSA failures. Off until it does.
     pendingRules: false
     # -- Extra rules appended to the group, as given.
     additionalRules: []

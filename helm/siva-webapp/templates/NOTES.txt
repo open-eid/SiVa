@@ -8,7 +8,7 @@ Image: {{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppV
 
 {{- if include "siva-webapp.snapshotMode" . }}
 Trust lists come from a snapshot: the fetch Job runs first (then the CronJob
-{{ include "siva-webapp.fetcherName" . }} on "{{ .Values.tsl.fetcher.schedule }}"), the pods load it
+{{ include "siva-webapp.fetcherName" . }} on "{{ include "siva-webapp.fetcherSchedule" . }}"), the pods load it
 within {{ .Values.tsl.snapshot.pollInterval }} and become ready in seconds. Watch it with
   kubectl -n {{ .Release.Namespace }} get jobs,cronjobs -l app.kubernetes.io/component=tsl-fetch
   kubectl -n {{ .Release.Namespace }} logs -l app.kubernetes.io/component=tsl-fetch --tail=20

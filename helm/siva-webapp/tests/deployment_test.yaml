@@ -713,15 +713,90 @@ tests:
       - notExists:
           path: spec.template.metadata.annotations["descheduler.alpha.kubernetes.io/evict"]
 
-  - it: omits the snapshot max age when empty
+  - it: omits the snapshot max age when set to none
     template: deployment.yaml
     set:
       tsl:
         mode: snapshot
         snapshot:
-          maxAge: ""
+          maxAge: none
           persistentVolumeClaim:
             create: true
     asserts:
       - notExists:
           path: spec.template.spec.containers[0].env[?(@.name == "SIVA_TSL_LOADER_SNAPSHOTMAXAGE")]
+
+  - it: derives the snapshot max age as max(4 x period, 48 h)
+    template: deployment.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_SNAPSHOTMAXAGE
+            value: PT48H
+
+  - it: derives four weeks of snapshot max age from a weekly period
+    template: deployment.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+        fetcher:
+          period: P7D
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_SNAPSHOTMAXAGE
+            value: PT672H
+
+  - it: keeps an explicit snapshot max age
+    template: deployment.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          maxAge: P3D
+          persistentVolumeClaim:
+            create: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_SNAPSHOTMAXAGE
+            value: P3D
+
+  - it: leaves the territories to SiVa by default
+    template: deployment.yaml
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].env[?(@.name == "SIVA_TSL_LOADER_TRUSTEDTERRITORIES")]
+      - notExists:
+          path: spec.template.spec.containers[0].env[?(@.name == "SIVA_TSL_LOADER_MANDATORYTERRITORIES")]
+
+  - it: passes configured territories to SiVa
+    template: deployment.yaml
+    set:
+      tsl:
+        territories:
+          trusted: [EE, LV, LT]
+          mandatory: [EE]
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_TRUSTEDTERRITORIES
+            value: EE,LV,LT
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_MANDATORYTERRITORIES
+            value: EE

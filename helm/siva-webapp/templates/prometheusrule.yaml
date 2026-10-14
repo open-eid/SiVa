@@ -60,22 +60,64 @@ spec:
           annotations:
             summary: "SiVa pod {{ "{{ $labels.pod }}" }} was OOM-killed in the last 30 minutes"
             description: "Raise resources.limits.memory (Paketo sizes the heap from it) or lower the thread count."
+        {{- $stale := include "siva-webapp.tslAlertSeconds" (list $ "stale") }}
+        {{- $expiryWarning := include "siva-webapp.tslAlertSeconds" (list $ "expiryWarning") }}
+        {{- $expiryCritical := include "siva-webapp.tslAlertSeconds" (list $ "expiryCritical") }}
+        # SiVa's trust-list gauges: one series per configured territory (trusted and mandatory, as
+        # SiVa itself resolved them), so these rules repeat no country list. Thresholds derive from
+        # the refresh period: tsl.fetcher.period in snapshot mode, one day online (ADR 0004).
+        - alert: SivaTslMandatoryTerritoryNotValidating
+          expr: siva_tsl_trust_anchors{{ "{" }}{{ $kube }},mandatory="true"} == 0
+          for: 15m
+          labels:
+            severity: critical
+          annotations:
+            summary: "SiVa holds no trust anchors for mandatory territory {{ "{{ $labels.territory }}" }} ({{ "{{ $labels.loader }}" }} loader)"
+            description: "Signatures from {{ "{{ $labels.territory }}" }} cannot be validated as trusted and the pod is not ready. Its list is missing, expired or badly signed: check the tsl health detail and, in snapshot mode, the fetch Job's log."
+        - alert: SivaTslTerritoryNotValidating
+          expr: siva_tsl_trust_anchors{{ "{" }}{{ $kube }},mandatory="false"} == 0
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: "SiVa holds no trust anchors for territory {{ "{{ $labels.territory }}" }} ({{ "{{ $labels.loader }}" }} loader)"
+            description: "Signatures from {{ "{{ $labels.territory }}" }} validate as untrusted until its list loads again; other territories are unaffected."
+        - alert: SivaTslListExpiringSoon
+          expr: siva_tsl_next_update_timestamp_seconds{{ "{" }}{{ $kube }}} - time() < {{ $expiryWarning }}
+          labels:
+            severity: warning
+          annotations:
+            summary: "The {{ "{{ $labels.territory }}" }} trusted list ({{ "{{ $labels.kind }}" }}) runs out within {{ include "siva-webapp.humanSeconds" $expiryWarning }}"
+            description: "Its NextUpdate is close and SiVa has not received a newer version. Once it passes, signatures relying on it lose qualification (POLv4 fails them) and, at the next reload, their trust anchors."
+        - alert: SivaTslListExpiring
+          expr: siva_tsl_next_update_timestamp_seconds{{ "{" }}{{ $kube }}} - time() < {{ $expiryCritical }}
+          labels:
+            severity: critical
+          annotations:
+            summary: "The {{ "{{ $labels.territory }}" }} trusted list ({{ "{{ $labels.kind }}" }}) runs out within {{ include "siva-webapp.humanSeconds" $expiryCritical }}"
+            description: "Less than one refresh period plus a day is left. Check that the publisher has issued a newer list and that the refresh picks it up."
         {{- if include "siva-webapp.snapshotMode" . }}
+        - alert: SivaTslSnapshotStale
+          expr: time() - siva_tsl_snapshot_created_timestamp_seconds{{ "{" }}{{ $kube }}} > {{ $stale }}
+          labels:
+            severity: warning
+          annotations:
+            summary: "SiVa pod {{ "{{ $labels.pod }}" }} runs on a snapshot older than {{ include "siva-webapp.humanSeconds" $stale }}"
+            description: "Two fetch periods without a newer snapshot reaching the pod: the fetch, a sync between store and pod, or the pod's refusal of a newer snapshot (see its log)."
         # kube-state-metrics' view of the fetch CronJob: 0 until the first success, then the
         # epoch seconds of the last one.
         - alert: SivaTslFetchFailing
           expr: >-
-            time() - max(kube_cronjob_status_last_successful_time{namespace="{{ $ns }}",cronjob="{{ include "siva-webapp.fetcherName" . }}"}) > {{ .Values.tsl.fetcher.staleAfterSeconds }}
+            time() - max(kube_cronjob_status_last_successful_time{namespace="{{ $ns }}",cronjob="{{ include "siva-webapp.fetcherName" . }}"}) > {{ $stale }}
           labels:
             severity: warning
           annotations:
-            summary: "SiVa trust-list fetch has not succeeded for {{ .Values.tsl.fetcher.staleAfterSeconds }} s"
+            summary: "SiVa trust-list fetch has not succeeded for {{ include "siva-webapp.humanSeconds" $stale }}"
             description: "The pods keep validating on the last published snapshot; its lists expire one by one. Check the fetch Job's logs: kubectl -n {{ $ns }} logs job/<newest {{ include "siva-webapp.fetcherName" . }}-...>."
         {{- end }}
         {{- if .Values.monitoring.prometheusRule.pendingRules }}
         # Signals the application does not publish yet: oversized requests are answered 400 like
-        # any other bad request (no 413, no counter), trust-list age/territory state and OCSP/TSA
-        # failures have no metric. The names and expressions are the agreed ones; switch
+        # any other bad request (no 413, no counter), and OCSP/TSA failures have no metric. The names and expressions are the agreed ones; switch
         # pendingRules on once the application exposes them.
         - alert: SivaRequestRejectedSize
           expr: >-
@@ -85,21 +127,6 @@ spec:
           annotations:
             summary: "SiVa rejects oversized requests"
             description: "Clients send containers above the request size limit (27 MB by default)."
-        - alert: SivaTslStale
-          expr: siva_tsl_snapshot_age_seconds{{ "{" }}{{ $kube }}} > 2 * 86400
-          labels:
-            severity: critical
-          annotations:
-            summary: "SiVa trust lists older than two days"
-            description: "The trust-list refresh has not succeeded for two days; validations run on stale anchors."
-        - alert: SivaTslTerritoryDegraded
-          expr: siva_tsl_territories{{ "{" }}{{ $kube }},state="failed"} > 0
-          for: 1h
-          labels:
-            severity: warning
-          annotations:
-            summary: "A trusted territory's list failed to load"
-            description: "Signatures from that territory validate as untrusted until the next successful refresh."
         - alert: SivaOcspTsaFailures
           expr: rate(siva_ocsp_tsa_failures_total{{ "{" }}{{ $kube }}}[15m]) > 0
           for: 15m

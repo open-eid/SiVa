@@ -208,6 +208,9 @@ spec:
           value: {{ .Values.tsl.snapshot.mountPath | quote }}
         - name: SIVA_TSL_FETCHER_KEEPSNAPSHOTS
           value: {{ .Values.tsl.fetcher.keepSnapshots | quote }}
+        {{- with include "siva-webapp.territoryEnv" . | trim }}
+        {{- . | nindent 8 }}
+        {{- end }}
         {{- with .Values.runtime.javaToolOptions }}
         - name: JAVA_TOOL_OPTIONS
           value: {{ . | quote }}
@@ -290,5 +293,130 @@ Egress rules shared by the webapp and the fetcher NetworkPolicies (network.netwo
 {{- with .additionalRules }}
 {{ toYaml . }}
 {{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
+Seconds of an ISO-8601 duration in the forms the trust-list settings use: PnD, PTnH, PTnM, PTnS and
+combinations (P1DT12H). Anything else fails the render with the value's name. Call with
+(list "<value name>" "<duration>").
+*/}}
+{{- define "siva-webapp.isoSeconds" -}}
+{{- $name := index . 0 -}}
+{{- $value := index . 1 | toString -}}
+{{- $re := `^P(?:([0-9]+)D)?(?:T(?:([0-9]+)H)?(?:([0-9]+)M)?(?:([0-9]+)S)?)?$` -}}
+{{- if or (not (regexMatch $re $value)) (eq $value "P") (eq $value "PT") -}}
+{{- fail (printf "%s must be an ISO-8601 duration like PT6H or P7D, not %q" $name $value) -}}
+{{- end -}}
+{{- $d := regexReplaceAll $re $value "${1}" | default "0" | atoi -}}
+{{- $h := regexReplaceAll $re $value "${2}" | default "0" | atoi -}}
+{{- $m := regexReplaceAll $re $value "${3}" | default "0" | atoi -}}
+{{- $s := regexReplaceAll $re $value "${4}" | default "0" | atoi -}}
+{{- add (mul $d 86400) (mul $h 3600) (mul $m 60) $s -}}
+{{- end }}
+
+{{/*
+The trust-list refresh period P in seconds (ADR 0004): tsl.fetcher.period in snapshot mode, at most
+seven days; one day in online mode, where each pod refreshes on siva.tsl.loader.schedulerCron
+(03:00 daily by default).
+*/}}
+{{- define "siva-webapp.tslPeriodSeconds" -}}
+{{- if include "siva-webapp.snapshotMode" . -}}
+{{- $p := include "siva-webapp.isoSeconds" (list "tsl.fetcher.period" .Values.tsl.fetcher.period) | atoi -}}
+{{- if or (le $p 0) (gt $p 604800) -}}
+{{- fail (printf "tsl.fetcher.period must be more than zero and at most P7D (one week), not %q: trusted lists can run out within three months of issue, a longer fetch leaves too little time to notice" .Values.tsl.fetcher.period) -}}
+{{- end -}}
+{{- $p -}}
+{{- else -}}
+86400
+{{- end -}}
+{{- end }}
+
+{{/*
+Cron schedule of the fetch: tsl.fetcher.schedule when set, else derived from the period. Derivable:
+minutes dividing an hour, hours dividing a day, one day (03:00) and seven days (Mondays 03:00).
+*/}}
+{{- define "siva-webapp.fetcherSchedule" -}}
+{{- if .Values.tsl.fetcher.schedule -}}
+{{- .Values.tsl.fetcher.schedule -}}
+{{- else -}}
+{{- $p := include "siva-webapp.tslPeriodSeconds" . | atoi -}}
+{{- if and (lt $p 3600) (eq (mod $p 60) 0) (eq (mod 3600 $p) 0) -}}
+{{- printf "*/%d * * * *" (div $p 60) -}}
+{{- else if eq $p 3600 -}}
+0 * * * *
+{{- else if and (lt $p 86400) (eq (mod $p 3600) 0) (eq (mod 86400 $p) 0) -}}
+{{- printf "0 */%d * * *" (div $p 3600) -}}
+{{- else if eq $p 86400 -}}
+0 3 * * *
+{{- else if eq $p 604800 -}}
+0 3 * * 1
+{{- else -}}
+{{- fail (printf "tsl.fetcher.period %q has no derived schedule (minutes dividing an hour, hours dividing a day, P1D or P7D); set tsl.fetcher.schedule to match it" .Values.tsl.fetcher.period) -}}
+{{- end -}}
+{{- end -}}
+{{- end }}
+
+{{/*
+siva.tsl.loader.snapshotMaxAge: tsl.snapshot.maxAge when set, nothing for "none", else
+max(4P, 48 h) in hours.
+*/}}
+{{- define "siva-webapp.snapshotMaxAge" -}}
+{{- $v := .Values.tsl.snapshot.maxAge | toString -}}
+{{- if eq $v "none" -}}
+{{- else if $v -}}
+{{- $v -}}
+{{- else -}}
+{{- $p := include "siva-webapp.tslPeriodSeconds" . | atoi -}}
+{{- printf "PT%dH" (div (max (mul 4 $p) 172800) 3600) -}}
+{{- end -}}
+{{- end }}
+
+{{/*
+Alert thresholds in seconds (ADR 0004): "stale" = 2P + grace (fetch and snapshot age),
+"expiryWarning" = 2P + lead time, "expiryCritical" = P + 1 day. Call with (list $ "<name>").
+*/}}
+{{- define "siva-webapp.tslAlertSeconds" -}}
+{{- $root := index . 0 -}}
+{{- $which := index . 1 -}}
+{{- $p := include "siva-webapp.tslPeriodSeconds" $root | atoi -}}
+{{- $tsl := $root.Values.monitoring.prometheusRule.tsl -}}
+{{- if eq $which "stale" -}}
+{{- add (mul 2 $p) (include "siva-webapp.isoSeconds" (list "monitoring.prometheusRule.tsl.grace" $tsl.grace) | atoi) -}}
+{{- else if eq $which "expiryWarning" -}}
+{{- add (mul 2 $p) (include "siva-webapp.isoSeconds" (list "monitoring.prometheusRule.tsl.leadTime" $tsl.leadTime) | atoi) -}}
+{{- else -}}
+{{- add $p 86400 -}}
+{{- end -}}
+{{- end }}
+
+{{/*
+Seconds as a short human text for alert summaries: "14 d 1 h", "13 h", "1 h 30 min", "30 min".
+*/}}
+{{- define "siva-webapp.humanSeconds" -}}
+{{- $s := . | int -}}
+{{- $d := div $s 86400 -}}
+{{- $h := div (mod $s 86400) 3600 -}}
+{{- $m := div (mod $s 3600) 60 -}}
+{{- $parts := list -}}
+{{- if $d }}{{ $parts = append $parts (printf "%d d" $d) }}{{ end -}}
+{{- if $h }}{{ $parts = append $parts (printf "%d h" $h) }}{{ end -}}
+{{- if and $m (not $d) }}{{ $parts = append $parts (printf "%d min" $m) }}{{ end -}}
+{{- join " " $parts -}}
+{{- end }}
+
+{{/*
+The countries SiVa trusts and requires, when set in values (empty: SiVa's own defaults, which the
+test profile replaces). Webapp and fetcher get the same, or the pods look for lists the fetcher
+never downloaded.
+*/}}
+{{- define "siva-webapp.territoryEnv" -}}
+{{- with .Values.tsl.territories.trusted }}
+- name: SIVA_TSL_LOADER_TRUSTEDTERRITORIES
+  value: {{ join "," . | quote }}
+{{- end }}
+{{- with .Values.tsl.territories.mandatory }}
+- name: SIVA_TSL_LOADER_MANDATORYTERRITORIES
+  value: {{ join "," . | quote }}
 {{- end }}
 {{- end }}

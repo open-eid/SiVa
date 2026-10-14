@@ -93,6 +93,9 @@ scaling:
       scaleDown:
         stabilizationWindowSeconds: 600
 tsl:
+  territories:
+    trusted: [EE, LV, LT]
+    mandatory: [EE]
   mode: snapshot
   snapshot:
     persistentVolumeClaim:
@@ -102,6 +105,7 @@ tsl:
         example.invalid/claim: "yes"
     pollInterval: PT30S
   fetcher:
+    period: PT4H
     schedule: "15 */4 * * *"
     timeZone: Europe/Tallinn
     startingDeadlineSeconds: 600
@@ -120,6 +124,9 @@ monitoring:
   prometheusRule:
     enabled: true
     pendingRules: true
+    tsl:
+      grace: PT2H
+      leadTime: P10D
     labels:
       release: kube-prometheus-stack
   grafanaDashboard:

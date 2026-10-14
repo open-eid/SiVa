@@ -43,6 +43,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -262,7 +263,8 @@ class TSLLoaderTest {
         props.setSnapshotMaxAge(Duration.ofDays(2));
         tslLoader.setTslLoaderConfigurationProperties(props);
         tslLoader.init();
-        publish("20261013T183000Z", Instant.now().minus(Duration.ofHours(1)));
+        Instant keptCreatedAt = Instant.now().minus(Duration.ofHours(1)).truncatedTo(ChronoUnit.SECONDS);
+        publish("20261013T183000Z", keptCreatedAt);
         tslLoader.loadTSL();
         publish("20261014T000000Z", Instant.now().minus(Duration.ofDays(3)));
 
@@ -271,6 +273,8 @@ class TSLLoaderTest {
 
         verify(tslValidationJob, times(1)).offlineRefresh();
         assertEquals("20261013T183000Z", tslLoader.getSnapshotId());
+        // SivaTslSnapshotStale reads this time: a refused snapshot must not make the pod look fresh.
+        assertEquals(keptCreatedAt, tslLoader.getSnapshotCreatedAt());
     }
 
     @Test

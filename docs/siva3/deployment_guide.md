@@ -259,6 +259,10 @@ Optional objects, all off by default: HorizontalPodAutoscaler, NetworkPolicy, Se
 PrometheusRule and a Grafana dashboard (`scaling.*`, `network.networkPolicy.*`,
 `monitoring.*`), and in snapshot mode the trust-list fetch CronJob, its bootstrap Job and the
 store claim (`tsl.*`). A PodDisruptionBudget is created once there is more than one replica.
+The trusted and mandatory countries are chart values (`tsl.territories.*`), so SiVa and the
+PrometheusRule use the same list; in snapshot mode `tsl.fetcher.period` sets the fetch schedule,
+the snapshot age limit and the alert thresholds together (see
+[Choosing the fetch period](#choosing-the-fetch-period)).
 
 ### Test instance
 
@@ -385,6 +389,18 @@ The `tsl` component reports, per trusted-list loader, the number of trust anchor
 * **Probe paths on the application port**
 
 When the actuator runs on its own port (`management.server.port`), the `liveness` and `readiness` groups are also served on the application port as `/livez` and `/readyz` (`management.endpoint.health.probes.add-additional-paths`, on by default). They return the status only, nothing else, which makes them the right target for a load balancer's health check and for Kubernetes probes. Without a separate management port the groups stay under `/monitoring/health/liveness` and `/monitoring/health/readiness`.
+
+## Trust-list metrics
+
+The Prometheus endpoint (`/monitoring/prometheus`) carries the trust-list state of each loader (`generic`, `timemark`), refreshed whenever the loader reloads its lists:
+
+| Metric | Labels | Meaning |
+| ------ | ------ | ------- |
+| `siva_tsl_trust_anchors` | `loader`, `territory` | Trust anchors the loader holds for that country after DSS accepted its list. Zero or absent means signatures from that country cannot be validated as trusted. |
+| `siva_tsl_next_update_timestamp_seconds` | `loader`, `kind` (`lotl`, `tl`), `territory` | The list's `NextUpdate` as Unix time: after it, the list counts as expired. For the LOTL every country depends on it. |
+| `siva_tsl_snapshot_created_timestamp_seconds` | `loader` | Snapshot mode only: when the loaded snapshot was published (`manifest.json` `createdAt`), so its age as the instance sees it, after any copy between the fetcher and the instance. |
+
+Alert on them per configured country (`siva.tsl.loader.trustedTerritories`, `mandatoryTerritories`), with thresholds derived from the fetch period as described under [Choosing the fetch period](#choosing-the-fetch-period); the Helm chart's PrometheusRule does exactly that.
 
 ## Heartbeat endpoint
 
@@ -560,6 +576,24 @@ The instances run with `siva.tsl.loader.loadFromCache=true` and `siva.tsl.loader
 | -------- | ----------- |
 | **siva.tsl.fetcher.outputDirectory** | Root of the snapshot store (`current`, `snapshots/<id>/`). Required in the `tsl-fetch` profile. |
 | **siva.tsl.fetcher.keepSnapshots** | Snapshots kept besides the current one; older ones are deleted after each successful publish. <ul><li>Default: **3**</li></ul> |
+
+#### Choosing the fetch period
+
+How often the fetcher runs is the one choice the other staleness settings follow. What finally ends validation is a list's own `NextUpdate`: the EU LOTL and most member-state lists are valid for about six months from issue, some for three, and a list is reissued only when its content changes, so a production list can be weeks from expiry at any time. Once a list's `NextUpdate` has passed, SiVa stops treating that country's signatures as qualified (under POLv4 they fail) and, at the next reload, drops its trust anchors altogether. The fetch period has to be short against that, and the alerts have to watch it.
+
+Run the fetcher at least weekly; every six hours is the default. A monthly fetch is not supported: with lists running out within three months of issue it leaves too little time to notice and react. For a fetch period P, set the rest as follows (the Helm chart derives all of them from `tsl.fetcher.period`; with plain cron, set them by hand):
+
+| Setting | Rule | P = 6 h | P = 1 day | P = 7 days |
+| ------- | ---- | ------- | --------- | ---------- |
+| Fetch schedule | every P | `0 */6 * * *` | `0 3 * * *` | `0 3 * * 1` |
+| `siva.tsl.loader.snapshotMaxAge` | max(4P, 48 h) | PT48H | P4D | P28D |
+| Alert: last successful fetch older than | 2P + grace | 13 h | 49 h | 15 days |
+| Alert: snapshot loaded by an instance older than | 2P + grace | 13 h | 49 h | 15 days |
+| Warning: a configured country's list expires within | 2P + lead time | 7.5 days | 9 days | 21 days |
+| Critical: a configured country's list expires within | P + 1 day | 1.25 days | 2 days | 8 days |
+| Warning / critical: a configured country has no trust anchors | 15 minutes | | | |
+
+Grace defaults to one hour; when a sync tool copies the store between the fetcher and the instances (for example through object storage), add its interval. Lead time defaults to seven days, the time you give yourself to react before a list expires. `snapshotMaxAge` is lenient on purpose: it only stops instances from loading an old snapshot, so a tight value turns a late fetch into instances that never become ready; the alerts are what catch staleness early. The metrics behind the alerts are described under [Trust-list metrics](#trust-list-metrics).
 
 ### TimeMark validation - customizing policies
 

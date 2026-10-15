@@ -1,6 +1,6 @@
 # siva-webapp
 
-![Version: 0.12.0](https://img.shields.io/badge/Version-0.12.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.11.0-SNAPSHOT](https://img.shields.io/badge/AppVersion-3.11.0--SNAPSHOT-informational?style=flat-square)
+![Version: 0.13.0](https://img.shields.io/badge/Version-0.13.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.11.0-SNAPSHOT](https://img.shields.io/badge/AppVersion-3.11.0--SNAPSHOT-informational?style=flat-square)
 
 Reference deployment of [SiVa](https://github.com/open-eid/SiVa), the Estonian digital-signature
 validation service, on Kubernetes. Like the project's docker-compose file it is a reference, not a
@@ -113,11 +113,12 @@ directory); edit the comments, not this table.
 | monitoring.prometheusRule.pendingRules | bool | `false` | Rules for signals the application does not publish yet: oversized requests (answered 400 today, no 413) and OCSP/TSA failures. Off until it does. |
 | monitoring.prometheusRule.tsl.grace | string | `"PT1H"` | Added to two refresh periods before SivaTslSnapshotStale and SivaTslFetchFailing fire (ISO-8601). Add the interval of any sync that copies the store to the pods. |
 | monitoring.prometheusRule.tsl.leadTime | string | `"P7D"` | Time you give yourself to react before a list expires: SivaTslListExpiringSoon fires at two refresh periods plus this before its NextUpdate (ISO-8601). |
+| monitoring.serviceMonitor.applicationLabel | bool | `true` | Add an `application` label (the release's full name) to every scraped series: the label Micrometer's community Grafana dashboards select by (see the README's "Dashboards and alerts that pair with SiVa"). Turn it off when SiVa's own config sets `management.metrics.tags.application`. |
 | monitoring.serviceMonitor.enabled | bool | `false` | Prometheus-operator ServiceMonitor scraping /monitoring/prometheus on the management Service (the traffic Service when the actuator is not split). Needs the CRD. |
 | monitoring.serviceMonitor.interval | string | `"30s"` | Scrape interval (Prometheus duration). |
 | monitoring.serviceMonitor.labels | object | `{}` | Labels your Prometheus selects ServiceMonitors by, e.g. `{release: kube-prometheus-stack}`. |
 | monitoring.serviceMonitor.namespace | string | `""` | Namespace to create it in (empty: the release namespace). |
-| monitoring.serviceMonitor.relabelings | list | `[]` | Relabelings for the endpoint, as given. |
+| monitoring.serviceMonitor.relabelings | list | `[]` | Relabelings for the endpoint, as given (after the application label). |
 | monitoring.serviceMonitor.scrapeTimeout | string | `"10s"` | Scrape timeout (Prometheus duration). |
 | nameOverride | string | `""` | Override the chart name used in resource names. |
 | network.ingresses | list | `[]` | Ingress objects to create, one per entry, named `<release-fullname>-<name>`. Keys: name, className, annotations, hosts (host + paths with path and optional pathType), tls. Set your controller's body-size limit to at least 27 MB (e.g. `nginx.ingress.kubernetes.io/proxy-body-size: 28m`). Example in ci/all-on-values.yaml. |
@@ -227,6 +228,23 @@ helm test siva
 
 On kind, `<node>` is the control-plane container (`<cluster>-control-plane`) from the kind
 network, or `localhost` if the cluster was created with an `extraPortMappings` entry for 30080.
+
+## Dashboards and alerts that pair with SiVa
+
+The chart ships only what needs SiVa's knowledge: the trust-list and error-rate alerts
+(`monitoring.prometheusRule`) and one overview dashboard (`monitoring.grafanaDashboard`). For
+the rest, use what your monitoring stack and the Grafana community already maintain:
+
+| Need | Use | Notes |
+|---|---|---|
+| JVM in depth | [JVM (Micrometer)](https://grafana.com/grafana/dashboards/4701), ID 4701 | 24 of its 27 panels fill against SiVa 3.11. Thread utilisation needs `server.tomcat.mbeanregistry.enabled: true` in `config.applicationYaml`; process memory needs micrometer-jvm-extras, which SiVa does not include; the errors panel stays empty until a request fails with 5xx. |
+| Spring Boot overview by namespace | [Spring Boot 3.x Statistics](https://grafana.com/grafana/dashboards/19004), ID 19004 | Its six HikariCP panels stay empty: SiVa has no database. |
+| Pod CPU, memory against limits, restarts | kube-prometheus-stack's "Kubernetes / Compute Resources / Pod" | Ships with the stack. |
+| Pod not ready, crash loops | kube-prometheus-stack's `KubePodNotReady`, `KubePodCrashLooping` | The chart does not repeat them; `SivaOomKilled` stays, the stack sees an OOM kill only as a crash loop. |
+
+Both community dashboards select by an `application` label. `monitoring.serviceMonitor` adds
+it (the release's full name) unless `applicationLabel` is false; without the operator, set
+`management.metrics.tags.application` in SiVa's config instead.
 
 ## Known limits
 

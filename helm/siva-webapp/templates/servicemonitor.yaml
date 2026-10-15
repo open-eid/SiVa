@@ -27,7 +27,11 @@ spec:
       path: /monitoring/prometheus
       interval: {{ .Values.monitoring.serviceMonitor.interval }}
       scrapeTimeout: {{ .Values.monitoring.serviceMonitor.scrapeTimeout }}
-      {{- with .Values.monitoring.serviceMonitor.relabelings }}
+      {{- $relabelings := list }}
+      {{- if .Values.monitoring.serviceMonitor.applicationLabel }}
+      {{- $relabelings = append $relabelings (dict "action" "replace" "targetLabel" "application" "replacement" (include "siva-webapp.fullname" .)) }}
+      {{- end }}
+      {{- with concat $relabelings .Values.monitoring.serviceMonitor.relabelings }}
       relabelings:
         {{- toYaml . | nindent 8 }}
       {{- end }}

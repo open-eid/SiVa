@@ -372,7 +372,12 @@ monitoring:
     labels: {}
     # -- Namespace to create it in (empty: the release namespace).
     namespace: ""
-    # -- Relabelings for the endpoint, as given.
+    # -- Add an `application` label (the release's full name) to every scraped series: the label
+    # Micrometer's community Grafana dashboards select by (see the README's "Dashboards and alerts
+    # that pair with SiVa"). Turn it off when SiVa's own config sets
+    # `management.metrics.tags.application`.
+    applicationLabel: true
+    # -- Relabelings for the endpoint, as given (after the application label).
     relabelings: []
   prometheusRule:
     # -- Alert rules (PrometheusRule CRD): SivaValidationErrorRate and SivaOomKilled from Spring

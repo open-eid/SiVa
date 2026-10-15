@@ -23,16 +23,9 @@ spec:
     - name: {{ $name }}
       rules:
         # Spring Boot's http_server_requests metrics (scraped through the ServiceMonitor; the
-        # actuator's own requests are excluded by uri) and kube-state-metrics pod metrics.
-        - alert: SivaNotReady
-          expr: >-
-            kube_pod_status_ready{{ "{" }}{{ $kube }},condition="true"} == 0
-          for: 15m
-          labels:
-            severity: warning
-          annotations:
-            summary: "SiVa pod {{ "{{ $labels.pod }}" }} not ready for 15 minutes"
-            description: "Longer than the startup budget for the trust-list download; a stuck download or a wedged JVM."
+        # actuator's own requests are excluded by uri) and kube-state-metrics pod metrics. Pod
+        # readiness and crash loops are left to the cluster's own rules (kube-prometheus-stack's
+        # KubePodNotReady and KubePodCrashLooping); an OOM kill shows there only as a crash loop.
         - alert: SivaValidationErrorRate
           expr: >-
             sum(rate(http_server_requests_seconds_count{{ "{" }}{{ $app }},status=~"5.."}[10m]))
@@ -43,14 +36,6 @@ spec:
           annotations:
             summary: "SiVa 5xx ratio above 5 % for 10 minutes"
             description: "More than 5 % of API requests fail with a 5xx; check the pod logs."
-        - alert: SivaRestarts
-          expr: >-
-            increase(kube_pod_container_status_restarts_total{{ "{" }}{{ $kube }}}[1h]) > 2
-          labels:
-            severity: warning
-          annotations:
-            summary: "SiVa pod {{ "{{ $labels.pod }}" }} restarted more than twice in an hour"
-            description: "Crash loop or repeated OOM; the previous container's log has the reason."
         - alert: SivaOomKilled
           expr: >-
             kube_pod_container_status_last_terminated_reason{{ "{" }}{{ $kube }},reason="OOMKilled"} == 1

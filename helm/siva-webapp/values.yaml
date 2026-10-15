@@ -375,9 +375,9 @@ monitoring:
     # -- Relabelings for the endpoint, as given.
     relabelings: []
   prometheusRule:
-    # -- Alert rules (PrometheusRule CRD): SivaNotReady, SivaValidationErrorRate, SivaRestarts,
-    # SivaOomKilled from Spring Boot's http_server_requests metrics and kube-state-metrics; the
-    # trust-list rules (a configured territory without anchors, a list close to its NextUpdate,
+    # -- Alert rules (PrometheusRule CRD): SivaValidationErrorRate and SivaOomKilled from Spring
+    # Boot's http_server_requests metrics and kube-state-metrics (pod readiness and crash loops
+    # are left to the cluster's own rules, e.g. kube-prometheus-stack's); the trust-list rules (a configured territory without anchors, a list close to its NextUpdate,
     # in snapshot mode a stale snapshot or failing fetch) from SiVa's siva_tsl_* gauges.
     enabled: false
     tsl:

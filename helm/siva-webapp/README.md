@@ -1,6 +1,6 @@
 # siva-webapp
 
-![Version: 0.11.0](https://img.shields.io/badge/Version-0.11.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.11.0-SNAPSHOT](https://img.shields.io/badge/AppVersion-3.11.0--SNAPSHOT-informational?style=flat-square)
+![Version: 0.12.0](https://img.shields.io/badge/Version-0.12.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.11.0-SNAPSHOT](https://img.shields.io/badge/AppVersion-3.11.0--SNAPSHOT-informational?style=flat-square)
 
 Reference deployment of [SiVa](https://github.com/open-eid/SiVa), the Estonian digital-signature
 validation service, on Kubernetes. Like the project's docker-compose file it is a reference, not a
@@ -107,7 +107,7 @@ directory); edit the comments, not this table.
 | monitoring.grafanaDashboard.labels | object | `{"grafana_dashboard":"1"}` | Labels the sidecar selects dashboards by. |
 | monitoring.grafanaDashboard.namespace | string | `""` | Namespace to create it in (empty: the release namespace). |
 | monitoring.prometheusRule.additionalRules | list | `[]` | Extra rules appended to the group, as given. |
-| monitoring.prometheusRule.enabled | bool | `false` | Alert rules (PrometheusRule CRD): SivaNotReady, SivaValidationErrorRate, SivaRestarts, SivaOomKilled from Spring Boot's http_server_requests metrics and kube-state-metrics; the trust-list rules (a configured territory without anchors, a list close to its NextUpdate, in snapshot mode a stale snapshot or failing fetch) from SiVa's siva_tsl_* gauges. |
+| monitoring.prometheusRule.enabled | bool | `false` | Alert rules (PrometheusRule CRD): SivaValidationErrorRate and SivaOomKilled from Spring Boot's http_server_requests metrics and kube-state-metrics (pod readiness and crash loops are left to the cluster's own rules, e.g. kube-prometheus-stack's); the trust-list rules (a configured territory without anchors, a list close to its NextUpdate, in snapshot mode a stale snapshot or failing fetch) from SiVa's siva_tsl_* gauges. |
 | monitoring.prometheusRule.labels | object | `{}` | Labels your Prometheus selects PrometheusRules by. |
 | monitoring.prometheusRule.namespace | string | `""` | Namespace to create it in (empty: the release namespace). |
 | monitoring.prometheusRule.pendingRules | bool | `false` | Rules for signals the application does not publish yet: oversized requests (answered 400 today, no 413) and OCSP/TSA failures. Off until it does. |

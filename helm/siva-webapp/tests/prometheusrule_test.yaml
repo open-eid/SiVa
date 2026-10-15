@@ -16,40 +16,29 @@ tests:
           of: PrometheusRule
       - lengthEqual:
           path: spec.groups[0].rules
-          count: 8
+          count: 6
       - equal:
           path: spec.groups[0].rules[0].alert
-          value: SivaNotReady
-      - equal:
-          path: spec.groups[0].rules[0].expr
-          value: kube_pod_status_ready{namespace="NAMESPACE",pod=~"RELEASE-NAME-siva-webapp-[a-z0-9]+-[a-z0-9]+",condition="true"} == 0
-      - equal:
-          path: spec.groups[0].rules[0].for
-          value: 15m
-      - equal:
-          path: spec.groups[0].rules[1].alert
           value: SivaValidationErrorRate
       - matchRegex:
-          path: spec.groups[0].rules[1].expr
+          path: spec.groups[0].rules[0].expr
           pattern: ^sum\(rate\(http_server_requests_seconds_count\{namespace="NAMESPACE",pod=~"RELEASE-NAME-siva-webapp-\[a-z0-9\]\+-\[a-z0-9\]\+",uri!~"/monitoring\.\*",status=~"5\.\."\}\[10m\]\)\)\s+/ sum\(rate\(http_server_requests_seconds_count\{namespace="NAMESPACE",pod=~"[^"]+",uri!~"/monitoring\.\*"\}\[10m\]\)\) > 0\.05$
       - equal:
-          path: spec.groups[0].rules[2].alert
-          value: SivaRestarts
-      - equal:
-          path: spec.groups[0].rules[2].expr
-          value: increase(kube_pod_container_status_restarts_total{namespace="NAMESPACE",pod=~"RELEASE-NAME-siva-webapp-[a-z0-9]+-[a-z0-9]+"}[1h]) > 2
-      - equal:
-          path: spec.groups[0].rules[3].alert
+          path: spec.groups[0].rules[1].alert
           value: SivaOomKilled
       - matchRegex:
-          path: spec.groups[0].rules[3].expr
+          path: spec.groups[0].rules[1].expr
           pattern: reason="OOMKilled"\} == 1\s+and on \(namespace, pod, container\) increase\(kube_pod_container_status_restarts_total\{[^}]+\}\[30m\]\) > 0$
       - equal:
-          path: spec.groups[0].rules[3].labels.severity
+          path: spec.groups[0].rules[1].labels.severity
           value: critical
       - matchRegex:
-          path: spec.groups[0].rules[0].annotations.summary
+          path: spec.groups[0].rules[1].annotations.summary
           pattern: "\\{\\{ \\$labels.pod \\}\\}"
+      - notExists:
+          path: spec.groups[0].rules[?(@.alert == "SivaNotReady")]
+      - notExists:
+          path: spec.groups[0].rules[?(@.alert == "SivaRestarts")]
   - it: escapes dots in the release name inside the pod regex
     release:
       name: siva.v2
@@ -77,15 +66,15 @@ tests:
           value: monitoring
       - lengthEqual:
           path: spec.groups[0].rules
-          count: 11
+          count: 9
       - equal:
-          path: spec.groups[0].rules[8].alert
+          path: spec.groups[0].rules[6].alert
           value: SivaRequestRejectedSize
       - equal:
-          path: spec.groups[0].rules[9].alert
+          path: spec.groups[0].rules[7].alert
           value: SivaOcspTsaFailures
       - equal:
-          path: spec.groups[0].rules[10].alert
+          path: spec.groups[0].rules[8].alert
           value: SivaCustom
 
   - it: watches the fetch cronjob in snapshot mode
@@ -103,24 +92,24 @@ tests:
     asserts:
       - lengthEqual:
           path: spec.groups[0].rules
-          count: 10
+          count: 8
       - equal:
-          path: spec.groups[0].rules[9].alert
+          path: spec.groups[0].rules[7].alert
           value: SivaTslFetchFailing
       - equal:   # 2 x 12 h + 1 h grace
-          path: spec.groups[0].rules[9].expr
+          path: spec.groups[0].rules[7].expr
           value: time() - max(kube_cronjob_status_last_successful_time{namespace="NAMESPACE",cronjob="RELEASE-NAME-siva-webapp-tsl-fetch"}) > 90000
       - equal:
-          path: spec.groups[0].rules[9].labels.severity
+          path: spec.groups[0].rules[7].labels.severity
           value: warning
       - equal:
-          path: spec.groups[0].rules[9].annotations.summary
+          path: spec.groups[0].rules[7].annotations.summary
           value: SiVa trust-list fetch has not succeeded for 1 d 1 h
       - equal:
-          path: spec.groups[0].rules[8].alert
+          path: spec.groups[0].rules[6].alert
           value: SivaTslSnapshotStale
       - equal:
-          path: spec.groups[0].rules[8].expr
+          path: spec.groups[0].rules[6].expr
           value: time() - siva_tsl_snapshot_created_timestamp_seconds{namespace="NAMESPACE",pod=~"RELEASE-NAME-siva-webapp-[a-z0-9]+-[a-z0-9]+"} > 90000
 
   - it: has no fetch rule in online mode
@@ -139,22 +128,22 @@ tests:
           enabled: true
     asserts:
       - equal:
-          path: spec.groups[0].rules[4].alert
+          path: spec.groups[0].rules[2].alert
           value: SivaTslMandatoryTerritoryNotValidating
       - equal:
-          path: spec.groups[0].rules[4].expr
+          path: spec.groups[0].rules[2].expr
           value: siva_tsl_trust_anchors{namespace="NAMESPACE",pod=~"RELEASE-NAME-siva-webapp-[a-z0-9]+-[a-z0-9]+",mandatory="true"} == 0
       - equal:
-          path: spec.groups[0].rules[4].labels.severity
+          path: spec.groups[0].rules[2].labels.severity
           value: critical
       - equal:
-          path: spec.groups[0].rules[5].alert
+          path: spec.groups[0].rules[3].alert
           value: SivaTslTerritoryNotValidating
       - matchRegex:
-          path: spec.groups[0].rules[5].expr
+          path: spec.groups[0].rules[3].expr
           pattern: ',mandatory="false"\} == 0$'
       - equal:
-          path: spec.groups[0].rules[5].labels.severity
+          path: spec.groups[0].rules[3].labels.severity
           value: warning
 
   - it: sizes list-expiry alerts on one day in online mode
@@ -164,13 +153,13 @@ tests:
           enabled: true
     asserts:
       - equal:   # 2 x 1 d + 7 d lead time
-          path: spec.groups[0].rules[6].expr
+          path: spec.groups[0].rules[4].expr
           value: siva_tsl_next_update_timestamp_seconds{namespace="NAMESPACE",pod=~"RELEASE-NAME-siva-webapp-[a-z0-9]+-[a-z0-9]+"} - time() < 777600
       - equal:   # 1 d + 1 d
-          path: spec.groups[0].rules[7].expr
+          path: spec.groups[0].rules[5].expr
           value: siva_tsl_next_update_timestamp_seconds{namespace="NAMESPACE",pod=~"RELEASE-NAME-siva-webapp-[a-z0-9]+-[a-z0-9]+"} - time() < 172800
       - equal:
-          path: spec.groups[0].rules[7].labels.severity
+          path: spec.groups[0].rules[5].labels.severity
           value: critical
 
   - it: sizes every trust-list threshold from a weekly fetch period, grace and lead time
@@ -190,17 +179,17 @@ tests:
           period: P7D
     asserts:
       - matchRegex:   # 2 x 7 d + 14 d
-          path: spec.groups[0].rules[6].expr
+          path: spec.groups[0].rules[4].expr
           pattern: ' < 2419200$'
       - equal:
-          path: spec.groups[0].rules[6].annotations.summary
+          path: spec.groups[0].rules[4].annotations.summary
           value: The {{ $labels.territory }} trusted list ({{ $labels.kind }}) runs out within 28 d
       - matchRegex:   # 7 d + 1 d
-          path: spec.groups[0].rules[7].expr
+          path: spec.groups[0].rules[5].expr
           pattern: ' < 691200$'
       - matchRegex:   # 2 x 7 d + 6 h
-          path: spec.groups[0].rules[8].expr
+          path: spec.groups[0].rules[6].expr
           pattern: ' > 1231200$'
       - equal:
-          path: spec.groups[0].rules[8].annotations.summary
+          path: spec.groups[0].rules[6].annotations.summary
           value: SiVa pod {{ $labels.pod }} runs on a snapshot older than 14 d 6 h

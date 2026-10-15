@@ -105,6 +105,23 @@ helm test siva
 On kind, `<node>` is the control-plane container (`<cluster>-control-plane`) from the kind
 network, or `localhost` if the cluster was created with an `extraPortMappings` entry for 30080.
 
+## Dashboards and alerts that pair with SiVa
+
+The chart ships only what needs SiVa's knowledge: the trust-list and error-rate alerts
+(`monitoring.prometheusRule`) and one overview dashboard (`monitoring.grafanaDashboard`). For
+the rest, use what your monitoring stack and the Grafana community already maintain:
+
+| Need | Use | Notes |
+|---|---|---|
+| JVM in depth | [JVM (Micrometer)](https://grafana.com/grafana/dashboards/4701), ID 4701 | 24 of its 27 panels fill against SiVa 3.11. Thread utilisation needs `server.tomcat.mbeanregistry.enabled: true` in `config.applicationYaml`; process memory needs micrometer-jvm-extras, which SiVa does not include; the errors panel stays empty until a request fails with 5xx. |
+| Spring Boot overview by namespace | [Spring Boot 3.x Statistics](https://grafana.com/grafana/dashboards/19004), ID 19004 | Its six HikariCP panels stay empty: SiVa has no database. |
+| Pod CPU, memory against limits, restarts | kube-prometheus-stack's "Kubernetes / Compute Resources / Pod" | Ships with the stack. |
+| Pod not ready, crash loops | kube-prometheus-stack's `KubePodNotReady`, `KubePodCrashLooping` | The chart does not repeat them; `SivaOomKilled` stays, the stack sees an OOM kill only as a crash loop. |
+
+Both community dashboards select by an `application` label. `monitoring.serviceMonitor` adds
+it (the release's full name) unless `applicationLabel` is false; without the operator, set
+`management.metrics.tags.application` in SiVa's config instead.
+
 ## Known limits
 
 - Readiness waits for the mandatory trusted lists (`siva.tsl.loader.mandatoryTerritories`, `EE`

@@ -750,6 +750,9 @@
             "namespace": {
               "type": "string"
             },
+            "applicationLabel": {
+              "type": "boolean"
+            },
             "relabelings": {
               "type": "array",
               "items": {

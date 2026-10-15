@@ -41,9 +41,12 @@ tsl:
   fetcher:
     period: PT30M
 # The lab cluster runs kube-prometheus-stack with every selector open (no release label needed),
-# so the overlay turns on the scrape and the alert rules to exercise them against the test list.
+# so the overlay turns on the scrape, the alert rules and the dashboard (the chart's default
+# grafana_dashboard label is what the Grafana sidecar watches).
 monitoring:
   serviceMonitor:
     enabled: true
   prometheusRule:
+    enabled: true
+  grafanaDashboard:
     enabled: true

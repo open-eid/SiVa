@@ -31,7 +31,7 @@ class SslBundleDataLoaderTest {
 
     @Test
     void getSSLTrustStore_ReturnsTheBundlesCurrentTrustStore() throws Exception {
-        KeyStore first = testTrustStore();
+        KeyStore first = lotlTestTrustStore();
         KeyStore second = KeyStore.getInstance("PKCS12");
         second.load(null, null);
         DefaultSslBundleRegistry registry = new DefaultSslBundleRegistry("tsl", bundle(first));
@@ -47,7 +47,7 @@ class SslBundleDataLoaderTest {
         return SslBundle.of(SslStoreBundle.of(null, null, trustStore));
     }
 
-    static KeyStore testTrustStore() throws Exception {
+    static KeyStore lotlTestTrustStore() throws Exception {
         KeyStore keyStore = KeyStore.getInstance("PKCS12");
         try (InputStream in = SslBundleDataLoaderTest.class.getResourceAsStream("/test-lotl-truststore.p12")) {
             keyStore.load(in, "lotl-truststore-password".toCharArray());

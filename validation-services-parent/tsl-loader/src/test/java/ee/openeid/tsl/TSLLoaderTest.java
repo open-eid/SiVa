@@ -362,7 +362,7 @@ class TSLLoaderTest {
         props.setSslBundle("tsl");
         tslLoader.setTslLoaderConfigurationProperties(props);
         tslLoader.setSslBundles(new DefaultSslBundleRegistry("tsl",
-                SslBundleDataLoaderTest.bundle(SslBundleDataLoaderTest.testTrustStore())));
+                SslBundleDataLoaderTest.bundle(SslBundleDataLoaderTest.lotlTestTrustStore())));
 
         tslLoader.init();
 
@@ -377,7 +377,7 @@ class TSLLoaderTest {
         props.setLotlBundle("lotl");
         tslLoader.setTslLoaderConfigurationProperties(props);
         DefaultSslBundleRegistry registry = new DefaultSslBundleRegistry("lotl",
-                SslBundleDataLoaderTest.bundle(SslBundleDataLoaderTest.testTrustStore()));
+                SslBundleDataLoaderTest.bundle(SslBundleDataLoaderTest.lotlTestTrustStore()));
         tslLoader.setSslBundles(registry);
         tslLoader.init();
         CertificateSource signers = tslLoader.europeanLOTL().getCertificateSource();

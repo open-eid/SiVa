@@ -6,10 +6,13 @@ service:
   type: NodePort
   nodePort: 30080
 image:
-  # A registry the kind node can pull from and the SiVa commit the image was built from. A
-  # developer loop rebuilds the same tag in place, so the node must re-check the registry digest.
+  # A registry the kind node can pull from. The tag is a placeholder, never a real build: the
+  # lab's chart-push stamps the build id (<SiVa version>-dev.<UTC time>.g<sha>) into the copy it
+  # packages, as both image tag and chart version, and the chart refuses to render the
+  # placeholder itself. Installing this overlay by hand needs --set-string image.tag=<tag>.
+  # Always: the node re-checks the registry digest should a tag ever be rebuilt in place.
   repository: jail-siva-registry:5000/siva-webapp
-  tag: "597535b95"
+  tag: set-by-chart-push
   pullPolicy: Always
 # SiVa's own "test" profile: the open-eid test trust list with the test truststore shipped in the
 # jar, so containers signed with test certificates validate. Never for production.

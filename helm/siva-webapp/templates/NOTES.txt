@@ -1,6 +1,6 @@
 SiVa webapp {{ .Chart.AppVersion }} (chart {{ .Chart.Version }}) released as {{ .Release.Name }} in namespace {{ .Release.Namespace }}.
 
-Image: {{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}
+Image: {{ include "siva-webapp.image" . }}
 {{- if not (contains "/" .Values.image.repository) }}
   WARNING: image.repository is the bare default. SiVa publishes no image; build one and set
   image.repository (and image.tag) to it, or the pod will stay in ImagePullBackOff.

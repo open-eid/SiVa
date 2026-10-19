@@ -68,10 +68,11 @@ Write keys nested, in the kebab-case Spring Boot documents (`max-request-size-li
 key on one line survives `toYaml` but not `--set`, and Spring's relaxed binding accepts the
 camelCase spelling of the SiVa deployment guide as well. Quote values that YAML would read as a
 number or boolean when the property is a string. The values schema (`values.schema.json`)
-checks the keys under `siva`, `t-level-signature-filter` and the Spring Boot prefixes SiVa's
-deployment guide names against the configuration metadata the SiVa build emits, so a mistyped
-key fails `helm lint`, `template`, `install` and `upgrade` with its path; prefixes without
-metadata pass. Secrets never go into `config.spring`: a ConfigMap is not a Secret. Reference an
+checks every key against the configuration metadata the SiVa build emits (SiVa's own
+`siva.*` and `t-level-signature-filter.*`, and Spring Boot's `server`, `management`, `logging`
+and `spring`), so a mistyped key fails `helm lint`, `template`, `install` and `upgrade` naming
+the key; a prefix nothing declares (`dss.*`) passes. The fragment is generated from the SiVa
+build and committed, so an upgrade of SiVa regenerates it. Secrets never go into `config.spring`: a ConfigMap is not a Secret. Reference an
 environment variable from `envFrom.existingSecret` instead
 (`siva.signature-service.pkcs12.password: ${SIVA_PKCS12_PASSWORD}`). The chart's own settings
 (`runtime.*`, `tsl.*`, `trust.*`) are injected as environment variables, which win over the file,

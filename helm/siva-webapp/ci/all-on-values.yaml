@@ -8,6 +8,23 @@ image:
 service:
   type: NodePort
   nodePort: 30080
+config:
+  spring:
+    logging:
+      config: /etc/siva-webapp/logback.xml
+    siva:
+      bdoc:
+        digidoc4j-configuration-file: file:/etc/siva-webapp/siva-digidoc4j.yaml
+      http:
+        request:
+          max-request-size-limit: 27MB
+  files:
+    logback.xml: |
+      <configuration>
+        <include resource="org/springframework/boot/logging/logback/base.xml"/>
+      </configuration>
+    siva-digidoc4j.yaml: |
+      DIGIDOC_LOG4J_CONFIG: /dev/null
 envFrom:
   existingSecret: example-siva-env
 trust:

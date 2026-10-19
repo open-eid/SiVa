@@ -40,6 +40,66 @@ helm install siva ./helm/siva-webapp \
 short sha such as `1234567` would otherwise be parsed as a number and rejected by the values
 schema).
 
+## Configuration
+
+`config.spring` is a Spring Boot configuration override in application.yml syntax, rendered as
+the ConfigMap file `application.yml` and named to SiVa through
+`SPRING_CONFIG_ADDITIONAL_LOCATION`, as the project's docker-compose setup does. It is a map, so
+one key can be set from the command line and two overlays merge key by key:
+
+```sh
+helm upgrade siva ./helm/siva-webapp --reuse-values \
+  --set config.spring.siva.tsl.loader.trusted-territories='{EE,LV,LT}'
+```
+
+```yaml
+config:
+  spring:
+    siva:
+      tsl:
+        loader:
+          trusted-territories: [EE, LV, LT]
+    logging:
+      level:
+        ee.openeid: DEBUG
+```
+
+Write keys nested, in the kebab-case Spring Boot documents (`max-request-size-limit`); a dotted
+key on one line survives `toYaml` but not `--set`, and Spring's relaxed binding accepts the
+camelCase spelling of the SiVa deployment guide as well. Quote values that YAML would read as a
+number or boolean when the property is a string. The values schema (`values.schema.json`)
+checks the keys under `siva`, `t-level-signature-filter` and the Spring Boot prefixes SiVa's
+deployment guide names against the configuration metadata the SiVa build emits, so a mistyped
+key fails `helm lint`, `template`, `install` and `upgrade` with its path; prefixes without
+metadata pass. Secrets never go into `config.spring`: a ConfigMap is not a Secret. Reference an
+environment variable from `envFrom.existingSecret` instead
+(`siva.signature-service.pkcs12.password: ${SIVA_PKCS12_PASSWORD}`). The chart's own settings
+(`runtime.*`, `tsl.*`, `trust.*`) are injected as environment variables, which win over the file,
+so an override here cannot drop them.
+
+`config.files` renders further files into the same ConfigMap, mounted read-only beside
+`application.yml` at `config.mountPath`; a change to either rolls the pods through the
+`checksum/config` annotation. The two the docker-compose setup mounts:
+
+```yaml
+config:
+  spring:
+    logging:
+      config: /etc/siva-webapp/logback.xml
+    siva:
+      bdoc:
+        digidoc4j-configuration-file: file:/etc/siva-webapp/siva-digidoc4j.yaml
+  files:
+    logback.xml: |
+      <configuration>
+        <include resource="org/springframework/boot/logging/logback/base.xml"/>
+        ...
+      </configuration>
+    siva-digidoc4j.yaml: |
+      # the whole digidoc4j configuration: it replaces the bundled siva-digidoc4j.yaml
+      ...
+```
+
 ## Trust lists
 
 SiVa validates against the EU list of trusted lists and the member-state lists it points to.
@@ -133,8 +193,9 @@ directory); edit the comments, not this table.
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Affinity rules, as given. |
-| config.applicationYaml | string | actuator probes enabled | Spring Boot configuration override, rendered into a ConfigMap (same mechanism as the project's docker-compose.yaml). Properties here win over the application.yml on the classpath; the `siva.*` keys are documented in the SiVa deployment guide (docs/siva3/deployment_guide.md). Put environment-specific settings in a private overlay. |
+| config.files | object | `{}` | Further files rendered into the same ConfigMap and mounted read-only beside application.yml at mountPath, by file name (no directories; `application.yml` is reserved). Point SiVa at them through config.spring: a Logback configuration as `logging.config: /etc/siva-webapp/logback.xml`, a digidoc4j override as `siva.bdoc.digidoc4j-configuration-file: file:/etc/siva-webapp/siva-digidoc4j.yaml` (the whole file, replacing the bundled one). Like config.spring, a change rolls the pods (checksum annotation). Public configuration only, this is a ConfigMap. |
 | config.mountPath | string | `"/etc/siva-webapp"` | Where the Spring Boot configuration override is mounted; the container gets SPRING_CONFIG_ADDITIONAL_LOCATION=file:<mountPath>/application.yml. |
+| config.spring | object | `{}` | Spring Boot configuration override in application.yml syntax, as a map: rendered with toYaml into the ConfigMap `application.yml` (the mechanism of the project's docker-compose.yaml). Properties here win over the application.yml on the classpath; the `siva.*` keys are listed in the SiVa deployment guide (docs/siva3/deployment_guide.md), in their canonical kebab-case. A map, so `--set config.spring.siva.http.request.max-request-size-limit=27MB` works and two overlays merge key by key; write keys nested, never dotted on one line, and quote strings that look like numbers or booleans ("08", "yes"). The values schema checks the keys SiVa and Spring Boot declare (see the chart README, "Spring configuration"); unknown prefixes pass. Secrets never go here: reference an environment variable from envFrom.existingSecret instead (`password: ${SIVA_PKCS12_PASSWORD}`). Keep the chart's runtime.* and tsl.* settings out of it, they are injected as environment variables so that an override here cannot drop them. Examples of what belongs in a private overlay: `siva: {tsl: {loader: {trusted-territories: [EE, LV, LT]}}}`. |
 | env | list | `[]` | Extra environment variables for the container (plain Kubernetes EnvVar entries). Spring relaxed binding applies, e.g. `{name: SIVA_TSL_LOADER_TRUSTEDTERRITORIES, value: "EE,LV"}` (values are strings: use `--set-string` on the command line). Do not set JAVA_TOOL_OPTIONS or the runtime.* variables here: a later duplicate wins and silently replaces the chart's value; use runtime.* instead. |
 | envFrom.existingSecret | string | `""` | Name of an existing Secret whose keys become environment variables (passwords, keystore passphrases). Not created by the chart. |
 | evictable | bool | `true` | Mark the webapp pods as safe to evict: the descheduler and the cluster autoscaler both skip pods with local storage by default, and /tmp is an emptyDir, so without the annotations `cluster-autoscaler.kubernetes.io/safe-to-evict` and `descheduler.alpha.kubernetes.io/evict` neither would ever move a SiVa pod. Nothing in a pod is worth keeping (the trust-list cache is re-downloaded or re-read from the store); the PodDisruptionBudget still bounds how many pods go at once and graceful shutdown drains the one that goes. The fetcher pods are not marked: a Job interrupted mid-run just retries. |
@@ -283,7 +344,7 @@ the rest, use what your monitoring stack and the Grafana community already maint
 
 | Need | Use | Notes |
 |---|---|---|
-| JVM in depth | [JVM (Micrometer)](https://grafana.com/grafana/dashboards/4701), ID 4701 | 24 of its 27 panels fill against SiVa 3.11. Thread utilisation needs `server.tomcat.mbeanregistry.enabled: true` in `config.applicationYaml`; process memory needs micrometer-jvm-extras, which SiVa does not include; the errors panel stays empty until a request fails with 5xx. |
+| JVM in depth | [JVM (Micrometer)](https://grafana.com/grafana/dashboards/4701), ID 4701 | 24 of its 27 panels fill against SiVa 3.11. Thread utilisation needs `server.tomcat.mbeanregistry.enabled: true` in `config.spring`; process memory needs micrometer-jvm-extras, which SiVa does not include; the errors panel stays empty until a request fails with 5xx. |
 | Spring Boot overview by namespace | [Spring Boot 3.x Statistics](https://grafana.com/grafana/dashboards/19004), ID 19004 | Its six HikariCP panels stay empty: SiVa has no database. |
 | Pod CPU, memory against limits, restarts | kube-prometheus-stack's "Kubernetes / Compute Resources / Pod" | Ships with the stack. |
 | Pod not ready, crash loops | kube-prometheus-stack's `KubePodNotReady`, `KubePodCrashLooping` | The chart does not repeat them; `SivaOomKilled` stays, the stack sees an OOM kill only as a crash loop. |

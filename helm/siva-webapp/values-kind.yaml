@@ -27,6 +27,14 @@ env:
     value: NOT_ALLOWED_COUNTRIES
   - name: t-level-signature-filter.countries
     value: EE
+# Tomcat's MBeans, so the lab's JVM (Micrometer) Grafana dashboard fills its thread-utilisation
+# panel; a Spring property the chart would not set for everyone, hence through config.spring.
+config:
+  spring:
+    server:
+      tomcat:
+        mbeanregistry:
+          enabled: true
 # SiVa's system tests reach the monitoring endpoints through the same host:port as the API, so
 # this overlay keeps the actuator on the traffic port instead of the chart's default split.
 runtime:

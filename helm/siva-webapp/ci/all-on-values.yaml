@@ -27,6 +27,28 @@ config:
       DIGIDOC_LOG4J_CONFIG: /dev/null
 envFrom:
   existingSecret: example-siva-env
+extraVolumes:
+  - name: example-extra
+    emptyDir: {}
+extraVolumeMounts:
+  - name: example-extra
+    mountPath: /var/siva/extra
+    readOnly: true
+extraContainers:
+  - name: tsl-sync
+    image: rclone/rclone:1.68.2
+    args: ["sync", "--interval", "5m", "example-bucket:siva-tsl", "/var/siva/tsl"]
+    volumeMounts:
+      - name: tsl-store
+        mountPath: /var/siva/tsl
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities:
+        drop: [ALL]
+    resources:
+      requests: {cpu: 10m, memory: 32Mi}
+      limits: {memory: 64Mi}
 trust:
   existingConfigMap: example-siva-trust
   caCertificatesBinding: true

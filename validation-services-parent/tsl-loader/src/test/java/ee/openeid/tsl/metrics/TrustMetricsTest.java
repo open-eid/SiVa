@@ -59,7 +59,7 @@ class TrustMetricsTest {
     void countExpiryAndReloadsAreReadFromTheBundleRegistry() throws Exception {
         properties.setSslBundle("tsl");
         properties.setLotlBundle("tsl");
-        KeyStore testStore = testTrustStore();
+        KeyStore testStore = lotlTestTrustStore();
         DefaultSslBundleRegistry bundles = new DefaultSslBundleRegistry("tsl", bundle(testStore));
         when(sslBundles.getIfAvailable()).thenReturn(bundles);
         new TrustMetrics(properties, sslBundles).bindTo(registry);
@@ -84,7 +84,7 @@ class TrustMetricsTest {
         return SslBundle.of(SslStoreBundle.of(null, null, trustStore));
     }
 
-    private static KeyStore testTrustStore() throws Exception {
+    private static KeyStore lotlTestTrustStore() throws Exception {
         KeyStore keyStore = KeyStore.getInstance("PKCS12");
         try (InputStream in = TrustMetricsTest.class.getResourceAsStream("/test-lotl-truststore.p12")) {
             keyStore.load(in, "lotl-truststore-password".toCharArray());

@@ -246,9 +246,13 @@ needs, no support promise. Its README (`helm/siva-webapp/README.md`) documents e
    (in-cluster name, NodePort or LoadBalancer); the smoke tests below then apply to that
    address instead of `localhost:8080`.
 
-3. Configure through values: `config.applicationYaml` takes the `siva.*` keys from this guide
-   as a Spring configuration override; `env` takes environment variables (relaxed binding);
-   `envFrom.existingSecret` sources passwords from a Secret. Ingress objects come from
+3. Configure through values: `config.spring` takes the `siva.*` keys from this guide in
+   application.yml syntax (nested, kebab-case) as a Spring configuration override; the chart's
+   values schema rejects a key SiVa or Spring Boot does not declare. `config.files` mounts further
+   files beside it (a Logback configuration, a digidoc4j override), `env` takes environment
+   variables (relaxed binding), `envFrom.existingSecret` sources passwords from a Secret, and
+   `extraVolumes`, `extraVolumeMounts` and `extraContainers` pass pod spec through for what the
+   chart does not model (a sync sidecar for a snapshot bucket, for example). Ingress objects come from
    `network.ingresses` (set your controller's body-size limit to at least 27 MB). Health with
    details, heartbeat, version and Prometheus metrics are served on the management port (8081)
    through the in-cluster Service `<release>-management`, not through the traffic port or the
@@ -525,6 +529,13 @@ siva.http.request.max-request-size-limit: 15MB
 ```
 
 See the reference list of all common [application properties](http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html) provided by Spring boot
+
+Since 3.11.0 a key under a `siva.*` prefix that SiVa does not declare fails the start, naming the
+key (`The elements [siva.tsl.loader.trusted-territoriez[0]] were left unbound`), so a typo cannot
+pass silently as a default; `siva.bdoc.*` is the exception. Spring's relaxed binding still
+accepts the kebab-case (`trusted-territories`), camelCase (`trustedTerritories`) and
+environment-variable (`SIVA_TSL_LOADER_TRUSTEDTERRITORIES`) spellings of every key, and the
+build ships the keys as Spring configuration metadata, so IDEs complete them.
 
 ## Siva webapp parameters
 

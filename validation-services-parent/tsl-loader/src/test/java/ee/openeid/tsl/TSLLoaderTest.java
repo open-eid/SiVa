@@ -25,7 +25,10 @@ import eu.europa.esig.dss.model.tsl.TLInfo;
 import eu.europa.esig.dss.model.tsl.TLValidationJobSummary;
 import eu.europa.esig.dss.model.tsl.TrustProperties;
 import eu.europa.esig.dss.model.x509.CertificateToken;
+import eu.europa.esig.dss.service.http.commons.CommonsDataLoader;
+import eu.europa.esig.dss.service.http.commons.FileCacheDataLoader;
 import eu.europa.esig.dss.spi.client.http.DSSFileLoader;
+import eu.europa.esig.dss.spi.x509.CertificateSource;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.spi.x509.KeyStoreCertificateSource;
 import eu.europa.esig.dss.tsl.job.TLValidationJob;
@@ -36,11 +39,13 @@ import org.junit.jupiter.api.io.TempDir;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.ssl.DefaultSslBundleRegistry;
 import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.KeyStore;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -53,6 +58,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.lenient;
@@ -346,6 +354,53 @@ class TSLLoaderTest {
 
         assertEquals("20261014T060108Z", tslLoader.getSnapshotId());
         assertNull(tslLoader.getSnapshotCreatedAt());
+    }
+
+    @Test
+    void init_WhenSslBundleIsSet_TheTrustListDownloadsTrustTheBundle() throws Exception {
+        TSLLoaderConfigurationProperties props = createConfigurationProperties(false);
+        props.setSslBundle("tsl");
+        tslLoader.setTslLoaderConfigurationProperties(props);
+        tslLoader.setSslBundles(new DefaultSslBundleRegistry("tsl",
+                SslBundleDataLoaderTest.bundle(SslBundleDataLoaderTest.testTrustStore())));
+
+        tslLoader.init();
+
+        FileCacheDataLoader onlineLoader = (FileCacheDataLoader) tslLoader.onlineLoader();
+        assertTrue(onlineLoader.getDataLoader() instanceof SslBundleDataLoader);
+        assertSame(keyStoreCertificateSource, tslLoader.europeanLOTL().getCertificateSource());
+    }
+
+    @Test
+    void loadTSL_WhenLotlBundleIsSet_TheSignersAreReadFromTheBundleBeforeEveryRefresh() throws Exception {
+        TSLLoaderConfigurationProperties props = createConfigurationProperties(false);
+        props.setLotlBundle("lotl");
+        tslLoader.setTslLoaderConfigurationProperties(props);
+        DefaultSslBundleRegistry registry = new DefaultSslBundleRegistry("lotl",
+                SslBundleDataLoaderTest.bundle(SslBundleDataLoaderTest.testTrustStore()));
+        tslLoader.setSslBundles(registry);
+        tslLoader.init();
+        CertificateSource signers = tslLoader.europeanLOTL().getCertificateSource();
+        assertEquals(1, signers.getCertificates().size());
+        assertTrue(((FileCacheDataLoader) tslLoader.onlineLoader()).getDataLoader() instanceof CommonsDataLoader);
+        KeyStore empty = KeyStore.getInstance("PKCS12");
+        empty.load(null, null);
+        registry.updateBundle("lotl", SslBundleDataLoaderTest.bundle(empty));
+
+        tslLoader.loadTSL();
+
+        verify(tslValidationJob, times(2)).setListOfTrustedListSources(any());
+        assertEquals(0, tslLoader.europeanLOTL().getCertificateSource().getCertificates().size());
+        verifyNoInteractions(keyStoreCertificateSource);
+    }
+
+    @Test
+    void init_WhenABundleIsNamedWithoutSslBundles_InitFails() {
+        TSLLoaderConfigurationProperties props = createConfigurationProperties(false);
+        props.setSslBundle("tsl");
+        tslLoader.setTslLoaderConfigurationProperties(props);
+
+        assertThrows(IllegalStateException.class, tslLoader::init);
     }
 
     private void publish(String id) throws IOException {

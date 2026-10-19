@@ -50,12 +50,18 @@ public class TSLLoaderConfigurationProperties {
     private List<String> mandatoryTerritories = Arrays.asList("EE");
     private List<String> trustedTerritories =   Arrays.asList("AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "EL", "HU", "HR", "IE", "IS", "IT", "LT", "LU", "LV", "LI", "MT", "NO", "NL", "PL", "PT", "RO", "SE", "SI", "SK", "UK");
     private Resource sslTruststorePath;
+    // Name of a Spring SSL bundle (spring.ssl.bundle.pem|jks.<name>) whose trust store replaces sslTruststorePath for
+    // the trust-list downloads; read at every connection, so a bundle with reload-on-update follows its files
+    private String sslBundle;
     private String sslTruststoreType = "PKCS12";
     @SuppressWarnings("squid:S2068") //default password
     private String sslTruststorePassword = "digidoc4j-password";
     private boolean lotlPivotSupportEnabled = true;
     private String lotlTruststoreType = "PKCS12";
     private Resource lotlTruststorePath;
+    // Name of a Spring SSL bundle whose trust store holds the LOTL signer certificates instead of lotlTruststorePath;
+    // read before every refresh
+    private String lotlBundle;
     @SuppressWarnings("squid:S2068") //default password
     private String lotlTruststorePassword = "lotl-truststore-password";
 }

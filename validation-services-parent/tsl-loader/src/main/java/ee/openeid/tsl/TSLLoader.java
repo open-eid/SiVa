@@ -32,6 +32,8 @@ import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
 import eu.europa.esig.dss.spi.client.http.DSSFileLoader;
 import eu.europa.esig.dss.spi.client.http.IgnoreDataLoader;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
+import eu.europa.esig.dss.spi.x509.CertificateSource;
+import eu.europa.esig.dss.spi.x509.CommonCertificateSource;
 import eu.europa.esig.dss.spi.x509.KeyStoreCertificateSource;
 import eu.europa.esig.dss.tsl.function.EULOTLOtherTSLPointer;
 import eu.europa.esig.dss.tsl.function.EUTLOtherTSLPointer;
@@ -48,6 +50,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.digidoc4j.utils.ResourceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ssl.SslBundle;
+import org.springframework.boot.ssl.SslBundles;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.core.io.ClassPathResource;
@@ -58,6 +62,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.cert.Certificate;
+import java.security.cert.X509Certificate;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -98,6 +106,7 @@ public class TSLLoader {
     private TrustedListsCertificateSource trustedListSource;
     private KeyStoreCertificateSource keyStoreCertificateSource;
     private ProxyConfig proxyConfig;
+    private SslBundles sslBundles;
     private TSLSnapshotStore snapshotStore;
     // The snapshot id last refused (missing directory, too old); warned about once, then only at debug.
     private String refusedSnapshotId;
@@ -122,9 +131,27 @@ public class TSLLoader {
         tslValidationJob.setTrustedListCertificateSource(trustedListSource);
         tslValidationJob.setListOfTrustedListSources(europeanLOTL());
         tslValidationJob.setSynchronizationStrategy(new ExpirationAndSignatureCheckStrategy());
+        logBundleReloads(configurationProperties.getSslBundle(), "trust-list download");
+        logBundleReloads(configurationProperties.getLotlBundle(), "LOTL signer");
+    }
+
+    // A reloaded bundle is used by the next download (the data loader reads it per connection) and, for the
+    // signers, by the next refresh (loadTSL rebuilds the LOTL source); the log line is what an operator looks for.
+    private void logBundleReloads(String bundleName, String purpose) {
+        if (hasText(bundleName)) {
+            bundles().addBundleUpdateHandler(bundleName, bundle -> {
+                int count = certificates(bundle).size();
+                log.info("'{}' TSL: {} SSL bundle '{}' reloaded ({} certificates); in use from the next refresh",
+                        tslName, purpose, bundleName, count);
+            });
+        }
     }
 
     void loadTSL() {
+        if (hasText(configurationProperties.getLotlBundle())) {
+            // The signer anchors are read from the bundle again, so a reloaded bundle counts from this refresh on.
+            tslValidationJob.setListOfTrustedListSources(europeanLOTL());
+        }
         if (!configurationProperties.isLoadFromCache()) {
             log.info("Loading '{}' TSL over the network", tslName);
             tslValidationJob.onlineRefresh();
@@ -334,7 +361,7 @@ public class TSLLoader {
         LOTLSource lotlSource = new LOTLSource();
         lotlSource.setUrl(configurationProperties.getUrl());
 
-        lotlSource.setCertificateSource(keyStoreCertificateSource);
+        lotlSource.setCertificateSource(lotlSigners());
         lotlSource.setSigningCertificatesAnnouncementPredicate(new OfficialJournalSchemeInformationURI(configurationProperties.getOjUrl()));
         lotlSource.setPivotSupport(configurationProperties.isLotlPivotSupportEnabled());
         lotlSource.setLotlPredicate(new EULOTLOtherTSLPointer()
@@ -362,8 +389,63 @@ public class TSLLoader {
         return onlineFileLoader;
     }
 
+    // The LOTL signer anchors: the configured SSL bundle's trust store, else the PKCS12 keystore bean.
+    private CertificateSource lotlSigners() {
+        String bundleName = configurationProperties.getLotlBundle();
+        if (!hasText(bundleName)) {
+            return keyStoreCertificateSource;
+        }
+        CommonCertificateSource signers = new CommonCertificateSource();
+        List<X509Certificate> certificates = certificates(bundles().getBundle(bundleName));
+        certificates.forEach(certificate -> signers.addCertificate(new CertificateToken(certificate)));
+        int count = certificates.size();
+        log.info("'{}' TSL: {} LOTL signer certificates from SSL bundle '{}'", tslName, count, bundleName);
+        return signers;
+    }
+
+    private static List<X509Certificate> certificates(SslBundle bundle) {
+        KeyStore trustStore = bundle.getStores().getTrustStore();
+        if (trustStore == null) {
+            return List.of();
+        }
+        try {
+            List<X509Certificate> certificates = new ArrayList<>();
+            for (String alias : Collections.list(trustStore.aliases())) {
+                Certificate certificate = trustStore.getCertificate(alias);
+                if (certificate instanceof X509Certificate x509) {
+                    certificates.add(x509);
+                }
+            }
+            return certificates;
+        } catch (KeyStoreException e) {
+            throw new IllegalStateException("Failed to read the SSL bundle's trust store", e);
+        }
+    }
+
+    private SslBundles bundles() {
+        if (sslBundles == null) {
+            throw new IllegalStateException("siva.tsl.loader.sslBundle/lotlBundle name an SSL bundle, "
+                    + "but Spring Boot's SSL bundles are not available in this context");
+        }
+        return sslBundles;
+    }
+
+    private static boolean hasText(String value) {
+        return value != null && !value.isBlank();
+    }
+
     private CommonsDataLoader createCommonsDataLoader() {
-        CommonsDataLoader commonsDataLoader = new CommonsDataLoader();
+        String bundleName = configurationProperties.getSslBundle();
+        CommonsDataLoader commonsDataLoader;
+        if (hasText(bundleName)) {
+            commonsDataLoader = new SslBundleDataLoader(bundles(), bundleName);
+            int count = certificates(bundles().getBundle(bundleName)).size();
+            log.info("'{}' TSL: trust-list hosts trusted through SSL bundle '{}' ({} certificates)", tslName,
+                    bundleName, count);
+            commonsDataLoader.setProxyConfig(proxyConfig);
+            return commonsDataLoader;
+        }
+        commonsDataLoader = new CommonsDataLoader();
         commonsDataLoader.setProxyConfig(proxyConfig);
 
         Resource truststoreResource = configurationProperties.getSslTruststorePath();
@@ -408,6 +490,11 @@ public class TSLLoader {
     @Autowired
     public void setProxyConfig (ProxyConfig proxyConfig){
         this.proxyConfig = proxyConfig;
+    }
+
+    @Autowired(required = false)
+    public void setSslBundles(SslBundles sslBundles) {
+        this.sslBundles = sslBundles;
     }
 
     @Autowired

@@ -2,6 +2,7 @@ suite: deployment
 templates:
   - deployment.yaml
   - configmap.yaml   # referenced by the checksum annotation
+  - configmap-trust.yaml   # likewise, with the Paketo binding on
 chart:
   appVersion: 9.9.9   # the tests check the "tag defaults to appVersion" logic, not the real release
 tests:
@@ -224,7 +225,7 @@ tests:
           value: Always
       - lengthEqual:
           path: spec.template.spec.containers[0].env
-          count: 13   # 5 chart-owned (no management port: the overlay keeps the actuator on 8080) + 4 snapshot mode + 4
+          count: 19   # 5 chart-owned (no management port: the overlay keeps the actuator on 8080) + 4 snapshot mode + 6 trust bundles + 4
       - contains:
           path: spec.template.spec.containers[0].env
           content:
@@ -800,3 +801,117 @@ tests:
           content:
             name: SIVA_TSL_LOADER_MANDATORYTERRITORIES
             value: EE
+
+  - it: mounts nothing and sets no SSL bundle without trust material
+    template: deployment.yaml
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].env[?(@.name == "SIVA_TSL_LOADER_SSLBUNDLE")]
+      - notExists:
+          path: spec.template.spec.containers[0].env[?(@.name == "SIVA_TSL_LOADER_LOTLBUNDLE")]
+      - notExists:
+          path: spec.template.spec.volumes[?(@.name == "trust")]
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/trust"]
+
+  - it: mounts the PEM files and wires both SSL bundles with reload
+    template: deployment.yaml
+    set:
+      trust:
+        pem:
+          tsl-ca.pem: ca
+          lotl-signers.pem: signer
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SPRING_SSL_BUNDLE_PEM_TSL_TRUSTSTORE_CERTIFICATE
+            value: file:/etc/siva/trust/tsl-ca.pem
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SPRING_SSL_BUNDLE_PEM_TSL_RELOADONUPDATE
+            value: "true"
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_SSLBUNDLE
+            value: tsl
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SPRING_SSL_BUNDLE_PEM_LOTL_TRUSTSTORE_CERTIFICATE
+            value: file:/etc/siva/trust/lotl-signers.pem
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_LOTLBUNDLE
+            value: lotl
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: trust
+            mountPath: /etc/siva/trust
+            readOnly: true
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: trust
+            configMap:
+              name: RELEASE-NAME-siva-webapp-trust
+      - notExists:
+          path: spec.template.spec.containers[0].env[?(@.name == "SERVICE_BINDING_ROOT")]
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/trust"]
+
+  - it: takes the PEM files from an existing Secret and wires only the named file
+    template: deployment.yaml
+    set:
+      trust:
+        existingSecret: my-trust
+        mountPath: /trust
+        tslCa: ""
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].env[?(@.name == "SIVA_TSL_LOADER_SSLBUNDLE")]
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SPRING_SSL_BUNDLE_PEM_LOTL_TRUSTSTORE_CERTIFICATE
+            value: file:/trust/lotl-signers.pem
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: trust
+            secret:
+              secretName: my-trust
+
+  - it: projects the CA file as a Paketo ca-certificates binding when asked
+    template: deployment.yaml
+    set:
+      trust:
+        pem:
+          tsl-ca.pem: ca
+          lotl-signers.pem: signer
+        caCertificatesBinding: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SERVICE_BINDING_ROOT
+            value: /platform/bindings
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: trust-binding
+            mountPath: /platform/bindings/ca-certificates
+            readOnly: true
+      - equal:
+          path: spec.template.spec.volumes[?(@.name == "trust-binding")].projected.sources[0].configMap.name
+          value: RELEASE-NAME-siva-webapp-trust-binding
+      - equal:
+          path: spec.template.spec.volumes[?(@.name == "trust-binding")].projected.sources[1].configMap.items[0].path
+          value: tsl-ca.pem
+      - matchRegex:
+          path: spec.template.metadata.annotations["checksum/trust"]
+          pattern: ^[0-9a-f]{64}$

@@ -26,8 +26,10 @@ bridged by a sync sidecar rather than a CSI driver, is the next step on that pat
   member-state trust lists at startup and on a nightly cron; in snapshot mode only the fetcher
   does (see "Trust lists"). Allow HTTPS egress to those hosts from whichever pods download, and
   from every pod to the OCSP/TSA responders of the certificates you validate.
-- **Trust material.** This iteration uses the truststores shipped on the application classpath.
-  Supplying your own is not wired yet (`trust.*` is a placeholder).
+- **Trust material.** By default the pods use the truststores shipped on the application
+  classpath (the CAs of the trust-list hosts, the LOTL signers), and rotating them means a new
+  image. `trust.*` mounts the same material as PEM files instead and rotates them in place; see
+  "Trust material".
 
 ```sh
 helm install siva ./helm/siva-webapp \
@@ -83,6 +85,26 @@ internet and should hold nothing else. With `network.networkPolicy.egress` on, t
 reach only DNS and the public internet on 80 and 443 (OCSP and timestamp responders) and the
 fetcher pods the same with no ingress at all. The store holds nothing worth backing up: a lost
 store is rebuilt by the next fetch, so leave the claim out of your backup scope.
+
+## Trust material
+
+Two sets of certificates decide what the pods trust before any signature is validated: the CAs
+of the hosts the trust lists are downloaded from (TLS), and the certificates the LOTL is signed
+with (announced in the Official Journal). SiVa ships both as PKCS12 files on its classpath.
+`trust.*` replaces them with PEM files mounted at `trust.mountPath`: `trust.pem` renders the
+files into the ConfigMap `<release>-trust`, `trust.existingConfigMap` or `trust.existingSecret`
+takes an object something else maintains (a trust-manager `Bundle` with a ConfigMap or Secret
+target writes exactly this shape: one concatenated PEM per key). The chart wires each file as a
+Spring SSL bundle with `reload-on-update` and names it to SiVa (`siva.tsl.loader.sslBundle`,
+`lotlBundle`; SiVa 3.11.0 and later), for the webapp and the fetcher alike. A changed file
+reaches the pods within the kubelet's sync period, Spring Boot reloads the bundle and logs it,
+and the trust lists use it from the next download or refresh: no restart, no image.
+
+The CA file is the whole trust for the trust-list downloads, as the classpath truststore is
+today, so it must hold every CA those hosts chain to. It does not touch the JVM's own
+truststore, which the OCSP, AIA and timestamp clients use; `trust.caCertificatesBinding`
+hands the same file to Paketo's ca-certificates helper, which adds it to the JVM truststore at
+launch (Paketo images only, pod restart on change).
 
 ## Values
 
@@ -151,4 +173,5 @@ it (the release's full name) unless `applicationLabel` is false; without the ope
   `runtime.shutdownTimeout`; the chart refuses to render otherwise.
 - Put JVM flags in `runtime.javaToolOptions`, not in `env`: an `env` entry named
   `JAVA_TOOL_OPTIONS` replaces the chart's.
-- Trust material is the classpath default; rotating it means a new image.
+- Trust material comes from the classpath unless `trust.*` is set; the JVM's own truststore
+  (OCSP, AIA, timestamp clients) is only reachable through the Paketo binding, at launch.

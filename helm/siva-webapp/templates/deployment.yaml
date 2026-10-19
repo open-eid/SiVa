@@ -20,6 +20,10 @@ spec:
     metadata:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- if and (include "siva-webapp.trustBinding" .) .Values.trust.pem }}
+        {{- /* The binding is read at launch only; the SSL bundles reload on their own, so no checksum without it. */}}
+        checksum/trust: {{ include (print $.Template.BasePath "/configmap-trust.yaml") . | sha256sum }}
+        {{- end }}
         {{- if .Values.evictable }}
         cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
         descheduler.alpha.kubernetes.io/evict: "true"
@@ -78,6 +82,9 @@ spec:
             {{- end }}
             {{- end }}
             {{- with include "siva-webapp.territoryEnv" . | trim }}
+            {{- . | nindent 12 }}
+            {{- end }}
+            {{- with include "siva-webapp.trustEnv" . | trim }}
             {{- . | nindent 12 }}
             {{- end }}
             {{- with .Values.runtime.javaToolOptions }}
@@ -167,6 +174,9 @@ spec:
               mountPath: {{ .Values.tsl.snapshot.mountPath }}
               readOnly: true
             {{- end }}
+            {{- with include "siva-webapp.trustVolumeMounts" . | trim }}
+            {{- . | nindent 12 }}
+            {{- end }}
       volumes:
         - name: config
           configMap:
@@ -181,6 +191,9 @@ spec:
         {{- if include "siva-webapp.snapshotMode" . }}
         - name: tsl-store
           {{- include "siva-webapp.tslStoreVolumeSource" . | nindent 10 }}
+        {{- end }}
+        {{- with include "siva-webapp.trustVolumes" . | trim }}
+        {{- . | nindent 8 }}
         {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

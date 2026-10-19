@@ -10,6 +10,9 @@ service:
   nodePort: 30080
 envFrom:
   existingSecret: example-siva-env
+trust:
+  existingConfigMap: example-siva-trust
+  caCertificatesBinding: true
 env:
   - name: EXAMPLE_FLAG
     value: "1"

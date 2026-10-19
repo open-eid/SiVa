@@ -23,7 +23,7 @@
     
     
       
-        <title>4. INTERFACES - SiVa 3.10 - Signature Validation Service Documentation</title>
+        <title>4. INTERFACES - SiVa 3.11 - Signature Validation Service Documentation</title>
       
     
     
@@ -82,7 +82,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="SiVa 3.10 - Signature Validation Service Documentation" class="md-header__button md-logo" aria-label="SiVa 3.10 - Signature Validation Service Documentation" data-md-component="logo">
+    <a href="../.." title="SiVa 3.11 - Signature Validation Service Documentation" class="md-header__button md-logo" aria-label="SiVa 3.11 - Signature Validation Service Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -96,7 +96,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            SiVa 3.10 - Signature Validation Service Documentation
+            SiVa 3.11 - Signature Validation Service Documentation
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -192,13 +192,13 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="SiVa 3.10 - Signature Validation Service Documentation" class="md-nav__button md-logo" aria-label="SiVa 3.10 - Signature Validation Service Documentation" data-md-component="logo">
+    <a href="../.." title="SiVa 3.11 - Signature Validation Service Documentation" class="md-nav__button md-logo" aria-label="SiVa 3.11 - Signature Validation Service Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
-    SiVa 3.10 - Signature Validation Service Documentation
+    SiVa 3.11 - Signature Validation Service Documentation
   </label>
   
     <div class="md-nav__source">
@@ -929,6 +929,34 @@
     <span class="md-ellipsis">
       
         The response
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#changes-in-api-compared-to-v3-v3103" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changes in API compared to V3 v3.10.3
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Changes in API compared to V3 v3.10.3">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changes-in-validation-request-for-hashcode-non-breaking-additions-to-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changes in validation request for hashcode (non-breaking additions to protocol)
       
     </span>
   </a>
@@ -3336,6 +3364,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#changes-in-api-compared-to-v3-v3103" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changes in API compared to V3 v3.10.3
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Changes in API compared to V3 v3.10.3">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changes-in-validation-request-for-hashcode-non-breaking-additions-to-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changes in validation request for hashcode (non-breaking additions to protocol)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#changes-in-api-compared-to-v3-v381" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3608,9 +3664,17 @@
 </code></pre></div>
 
 <h3 id="validation-request-parameters_1">Validation request parameters</h3>
-<p>Two different use cases are supported for the hashcode validation. 
-1) Providing the data file name, hash algorithm and hash on validation.
-2) Providing only signature file. <strong>NB! This method requires validation result change on integrator side when the local datafile hashes do not match with hashes returned in validation result!</strong></p>
+<p>Two different use cases are supported for the hashcode validation:</p>
+<ol>
+<li>Providing the data file name, hash algorithm and hash on validation.</li>
+<li>Providing only signature file. <strong>NB! This method requires validation result change on integrator side when the local datafile hashes do not match with hashes returned in validation result!</strong></li>
+</ol>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>It is not possible to successfully validate LTA archive timestamps in hashcode form!
+In order to calculate digests for archive timestamps, access to the contents of datafiles is needed.
+Thus, in hashcode form, archive timestamps are always considered invalid.</p>
+</div>
 <p>Validation request parameters for JSON interface are described in the table below.</p>
 <table>
 <thead>
@@ -3682,6 +3746,12 @@
 <td>String</td>
 <td><br><strong>Possible values:</strong> <br> Simple - default report type. Returns overall validation result (validationConclusion block)<br> Detailed -  returns detailed information about the signatures and their validation results (validationConclusion, validationProcess and validationReportSignature. Two later ones are not supported for hashcode). <br> Diagnostic -  returns diagnostic data about the information contained in the signature itself, it's revocation data and mathematical validity (validationConclusion, diagnosticData block. Last one is not support for hashcode)</td>
 </tr>
+<tr>
+<td>validationLevel</td>
+<td>-</td>
+<td>String</td>
+<td>Can be used to change the target validation level as per <a href="https://www.etsi.org/deliver/etsi_en/319100_319199/31910201/01.04.01_60/en_31910201v010401p.pdf">ETSI EN 319 102-1</a>.<br><strong>Possible values:</strong><br> LongTermData - validation as per "5.5 Validation process for Signatures with Time and Signatures with Long-Term Validation Material". The validation result of signatures <strong>is not affected</strong> by the validation result of archive timestamps.<br> ArchivalData - default validation level. Validation as per "5.6 Validation process for Signatures providing Long Term Availability and Integrity of Validation Material". The validation result of signatures <strong>is affected</strong> by the validation result of archive timestamps.</td>
+</tr>
 </tbody>
 </table>
 <h3 id="sample-json-request-with-mandatory-parameters-datafile-hashcode-match-verification-done-on-integrators-side">Sample JSON request with mandatory parameters (datafile hashcode match verification done on integrators side)</h3>
@@ -3732,7 +3802,8 @@
 <span class="w">        </span><span class="p">}</span>
 <span class="w">    </span><span class="p">],</span>
 <span class="w">    </span><span class="nt">&quot;reportType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Simple&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;signaturePolicy&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;POLv4&quot;</span>
+<span class="w">    </span><span class="nt">&quot;signaturePolicy&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;POLv4&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;validationLevel&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ArchivalData&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
 
@@ -4831,6 +4902,28 @@ by a Prometheus server. For more information, visit <a href="https://docs.spring
 
 <h3 id="the-response_3">The response</h3>
 <p>As a response, default plain text is returned in <a href="https://prometheus.io/docs/instrumenting/exposition_formats/">Prometheus exposition format</a>. </p>
+<h2 id="changes-in-api-compared-to-v3-v3103">Changes in API compared to V3 v3.10.3</h2>
+<h3 id="changes-in-validation-request-for-hashcode-non-breaking-additions-to-protocol">Changes in validation request for hashcode (non-breaking additions to protocol)</h3>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Parameter</th>
+<th>Change</th>
+<th>Link</th>
+<th>Comment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/validateHashcode</td>
+<td>validationLevel</td>
+<td>added</td>
+<td><a href="#validation-request-parameters_1">Link</a></td>
+<td>Optional validation level parameter added.</td>
+</tr>
+</tbody>
+</table>
 <h2 id="changes-in-api-compared-to-v3-v381">Changes in API compared to V3 v3.8.1</h2>
 <h4 id="soap-interface-removed">SOAP interface removed.</h4>
 <p>Discontinued support for following endpoints (incl. respective WSDL definitions):</p>

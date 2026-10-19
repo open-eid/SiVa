@@ -22,7 +22,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.io.File;
 
 @Data
-@ConfigurationProperties(prefix = "siva.tsl.fetcher")
+@ConfigurationProperties(prefix = "siva.tsl.fetcher", ignoreUnknownFields = false)
 public class TSLFetcherConfigurationProperties {
     // Root of the snapshot store (current, snapshots/<id>/); the webapps read it as siva.tsl.loader.snapshotDirectory
     private File outputDirectory;

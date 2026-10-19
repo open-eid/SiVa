@@ -26,7 +26,7 @@ import org.springframework.validation.annotation.Validated;
 @Data
 @Validated
 @Configuration
-@ConfigurationProperties(prefix = "siva.http.request")
+@ConfigurationProperties(prefix = "siva.http.request", ignoreUnknownFields = false)
 public class HttpRequestLimitConfigurationProperties {
     @DataSizeMin(1L)
     private DataSize maxRequestSizeLimit;

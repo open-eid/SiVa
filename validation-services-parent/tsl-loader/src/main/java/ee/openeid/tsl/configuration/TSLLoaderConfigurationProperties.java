@@ -26,7 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Data
-@ConfigurationProperties(prefix = "siva.tsl.loader")
+@ConfigurationProperties(prefix = "siva.tsl.loader", ignoreUnknownFields = false)
 public class TSLLoaderConfigurationProperties {
     private boolean loadFromCache = false;
     // DSS file cache the trusted lists are downloaded into or, with loadFromCache, read from; null = java.io.tmpdir

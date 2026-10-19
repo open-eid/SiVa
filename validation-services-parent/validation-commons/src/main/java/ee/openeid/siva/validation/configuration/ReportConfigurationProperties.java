@@ -24,7 +24,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ConfigurationProperties("siva.report")
+@ConfigurationProperties(prefix = "siva.report", ignoreUnknownFields = false)
 public class ReportConfigurationProperties {
     private boolean reportSignatureEnabled = false;
 }

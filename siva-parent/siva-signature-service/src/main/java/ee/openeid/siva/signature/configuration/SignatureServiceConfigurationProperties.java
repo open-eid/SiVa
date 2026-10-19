@@ -21,7 +21,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 @Data
-@ConfigurationProperties("siva.signature-service")
+@ConfigurationProperties(prefix = "siva.signature-service", ignoreUnknownFields = false)
 public class SignatureServiceConfigurationProperties {
     private String signatureLevel;
     private String tspUrl;

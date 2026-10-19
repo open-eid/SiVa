@@ -35,7 +35,7 @@ import static ee.openeid.validation.service.generic.configuration.properties.TLe
 @Validated
 @ConditionalOnProperty(prefix = PROPERTIES_PREFIX, name = "filter-type")
 @Configuration
-@ConfigurationProperties(prefix = PROPERTIES_PREFIX)
+@ConfigurationProperties(prefix = PROPERTIES_PREFIX, ignoreUnknownFields = false)
 public class TLevelSignatureFilterProperties {
     static final String PROPERTIES_PREFIX = "t-level-signature-filter";
 

@@ -1,12 +1,12 @@
 # chart-testing (ct) configuration: `ct lint --config helm/siva-webapp/ci/ct.yaml --charts
 # helm/siva-webapp` from the repository root (pass --charts: without it ct lints only charts
 # changed since the target branch, which is nothing once the chart has merged). ci/*-values.yaml
-# in the chart are the extra values files ct lints with. The version-increment check compares
-# with target-branch on the remote ct is given (--remote, default origin); maintainers are not
-# validated (no lookup against a code host).
+# in the chart are the extra values files ct lints with. No version-increment check: the chart
+# version is the SiVa version and changes only with it (README, "Versioning"); maintainers are
+# not validated (no lookup against a code host).
 target-branch: develop
 chart-dirs:
   - helm
 validate-maintainers: false
-check-version-increment: true
+check-version-increment: false
 helm-lint-extra-args: --strict

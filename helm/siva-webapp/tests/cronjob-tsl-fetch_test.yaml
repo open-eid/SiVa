@@ -289,3 +289,37 @@ tests:
           content:
             name: SIVA_TSL_LOADER_MANDATORYTERRITORIES
             value: EE
+
+  - it: gives the fetcher the same trust material as the webapp
+    template: cronjob-tsl-fetch.yaml
+    values:
+      - ../ci/all-on-values.yaml
+    asserts:
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_SSLBUNDLE
+            value: tsl
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: SPRING_SSL_BUNDLE_PEM_LOTL_RELOADONUPDATE
+            value: "true"
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].volumeMounts
+          content:
+            name: trust
+            mountPath: /etc/siva/trust
+            readOnly: true
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.volumes
+          content:
+            name: trust
+            configMap:
+              name: example-siva-trust
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].volumeMounts
+          content:
+            name: trust-binding
+            mountPath: /platform/bindings/ca-certificates
+            readOnly: true

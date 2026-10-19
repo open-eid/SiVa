@@ -197,11 +197,30 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "pemConfigMap": {
+        "pem": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "existingConfigMap": {
           "type": "string"
         },
-        "pemSecret": {
+        "existingSecret": {
           "type": "string"
+        },
+        "mountPath": {
+          "type": "string",
+          "pattern": "^/"
+        },
+        "tslCa": {
+          "type": "string"
+        },
+        "lotlSigners": {
+          "type": "string"
+        },
+        "caCertificatesBinding": {
+          "type": "boolean"
         }
       }
     },

@@ -1,6 +1,6 @@
 # siva-webapp
 
-![Version: 0.13.0](https://img.shields.io/badge/Version-0.13.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.11.0-SNAPSHOT](https://img.shields.io/badge/AppVersion-3.11.0--SNAPSHOT-informational?style=flat-square)
+![Version: 0.15.0](https://img.shields.io/badge/Version-0.15.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.11.0-SNAPSHOT](https://img.shields.io/badge/AppVersion-3.11.0--SNAPSHOT-informational?style=flat-square)
 
 Reference deployment of [SiVa](https://github.com/open-eid/SiVa), the Estonian digital-signature
 validation service, on Kubernetes. Like the project's docker-compose file it is a reference, not a
@@ -26,8 +26,10 @@ bridged by a sync sidecar rather than a CSI driver, is the next step on that pat
   member-state trust lists at startup and on a nightly cron; in snapshot mode only the fetcher
   does (see "Trust lists"). Allow HTTPS egress to those hosts from whichever pods download, and
   from every pod to the OCSP/TSA responders of the certificates you validate.
-- **Trust material.** This iteration uses the truststores shipped on the application classpath.
-  Supplying your own is not wired yet (`trust.*` is a placeholder).
+- **Trust material.** By default the pods use the truststores shipped on the application
+  classpath (the CAs of the trust-list hosts, the LOTL signers), and rotating them means a new
+  image. `trust.*` mounts the same material as PEM files instead and rotates them in place; see
+  "Trust material".
 
 ```sh
 helm install siva ./helm/siva-webapp \
@@ -83,6 +85,26 @@ internet and should hold nothing else. With `network.networkPolicy.egress` on, t
 reach only DNS and the public internet on 80 and 443 (OCSP and timestamp responders) and the
 fetcher pods the same with no ingress at all. The store holds nothing worth backing up: a lost
 store is rebuilt by the next fetch, so leave the claim out of your backup scope.
+
+## Trust material
+
+Two sets of certificates decide what the pods trust before any signature is validated: the CAs
+of the hosts the trust lists are downloaded from (TLS), and the certificates the LOTL is signed
+with (announced in the Official Journal). SiVa ships both as PKCS12 files on its classpath.
+`trust.*` replaces them with PEM files mounted at `trust.mountPath`: `trust.pem` renders the
+files into the ConfigMap `<release>-trust`, `trust.existingConfigMap` or `trust.existingSecret`
+takes an object something else maintains (a trust-manager `Bundle` with a ConfigMap or Secret
+target writes exactly this shape: one concatenated PEM per key). The chart wires each file as a
+Spring SSL bundle with `reload-on-update` and names it to SiVa (`siva.tsl.loader.sslBundle`,
+`lotlBundle`; SiVa 3.11.0 and later), for the webapp and the fetcher alike. A changed file
+reaches the pods within the kubelet's sync period, Spring Boot reloads the bundle and logs it,
+and the trust lists use it from the next download or refresh: no restart, no image.
+
+The CA file is the whole trust for the trust-list downloads, as the classpath truststore is
+today, so it must hold every CA those hosts chain to. It does not touch the JVM's own
+truststore, which the OCSP, AIA and timestamp clients use; `trust.caCertificatesBinding`
+hands the same file to Paketo's ca-certificates helper, which adds it to the JVM truststore at
+launch (Paketo images only, pod restart on change).
 
 ## Values
 
@@ -186,8 +208,13 @@ directory); edit the comments, not this table.
 | tmpSizeLimit | string | `"1Gi"` | Size limit of the /tmp emptyDir (trust-list caches, a few tens of MB, and temp files); the pod is evicted when it fills up, so keep headroom. Empty for no limit. |
 | tolerations | list | `[]` | Tolerations. |
 | topologySpreadConstraints | list | one soft constraint on kubernetes.io/hostname | Spread replicas across nodes (soft: scheduling never blocks on it). Each entry is a plain topologySpreadConstraint; labelSelector is filled in by the chart when omitted. Empty list disables. |
-| trust.pemConfigMap | string | `""` | Placeholder, not wired yet: a ConfigMap with PEM trust material. SiVa 3.10 ships its TSL and LOTL truststores on the classpath, which is what this chart uses; nothing is mounted. |
-| trust.pemSecret | string | `""` | Placeholder, not wired yet: a Secret with PEM trust material. |
+| trust.caCertificatesBinding | bool | `false` | Also hand `tslCa` to the JVM's own truststore through Paketo's ca-certificates binding (`/platform/bindings/ca-certificates`), so the OCSP, AIA and timestamp clients trust those CAs on top of the image's. Read once at launch: a changed `pem` rolls the pods (checksum annotation), a changed existing object needs a restart. Paketo images only; an image built another way ignores the binding. |
+| trust.existingConfigMap | string | `""` | An existing ConfigMap with the PEM files, instead of `pem`. |
+| trust.existingSecret | string | `""` | An existing Secret with the PEM files, instead of `pem` (a Secret for public certificates is a convention of the tools that write them, not a secret). |
+| trust.lotlSigners | string | `"lotl-signers.pem"` | File with the LOTL signer certificates (the ones the Official Journal announces), rendered as the SSL bundle `lotl` and siva.tsl.loader.lotlBundle=lotl; read again before every refresh. Empty: the classpath truststore. |
+| trust.mountPath | string | `"/etc/siva/trust"` | Where the files are mounted, read-only, in the webapp and fetcher pods. |
+| trust.pem | object | `{}` | PEM files by name, rendered into the ConfigMap `<release>-trust`: public certificates only, one concatenated PEM per purpose, under the names `tslCa` and `lotlSigners` give. For material managed outside the chart (a trust-manager Bundle, a Secret written by another tool) leave this empty and name the object in existingConfigMap or existingSecret; it must hold the same file names. |
+| trust.tslCa | string | `"tsl-ca.pem"` | File with the CA certificates the trust-list downloads trust (TLS to the LOTL and member-state list hosts), rendered as the Spring SSL bundle `tsl` and siva.tsl.loader.sslBundle=tsl. Like SiVa's classpath truststore it is the whole trust for those downloads, not an addition to the JVM's, so it must hold every CA the list hosts chain to. Empty: the downloads keep the classpath truststore. |
 | tsl.fetcher.activeDeadlineSeconds | int | `1800` | Seconds a fetch may run before it is killed (30 lists take a few minutes). |
 | tsl.fetcher.backoffLimit | int | `2` | Retries of a failed fetch within one schedule slot (a new pod each time). |
 | tsl.fetcher.bootstrapJob | bool | `true` | Also run one fetch as a Job at install and whenever the fetcher pod changes (image, config), so a fresh install has a snapshot without waiting for the schedule. Named after a hash of the pod spec; the finished Job stays until the next change replaces it. |
@@ -275,4 +302,5 @@ it (the release's full name) unless `applicationLabel` is false; without the ope
   `runtime.shutdownTimeout`; the chart refuses to render otherwise.
 - Put JVM flags in `runtime.javaToolOptions`, not in `env`: an `env` entry named
   `JAVA_TOOL_OPTIONS` replaces the chart's.
-- Trust material is the classpath default; rotating it means a new image.
+- Trust material comes from the classpath unless `trust.*` is set; the JVM's own truststore
+  (OCSP, AIA, timestamp clients) is only reachable through the Paketo binding, at launch.

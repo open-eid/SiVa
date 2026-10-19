@@ -1,0 +1,98 @@
+suite: trust material configmap
+templates:
+  - configmap-trust.yaml
+tests:
+  - it: is not rendered without trust material
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders the PEM files from values
+    set:
+      trust:
+        pem:
+          tsl-ca.pem: |
+            -----BEGIN CERTIFICATE-----
+            ca
+            -----END CERTIFICATE-----
+          lotl-signers.pem: |
+            -----BEGIN CERTIFICATE-----
+            signer
+            -----END CERTIFICATE-----
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: ConfigMap
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-siva-webapp-trust
+      - equal:
+          path: data["tsl-ca.pem"]
+          value: |
+            -----BEGIN CERTIFICATE-----
+            ca
+            -----END CERTIFICATE-----
+      - matchRegex:
+          path: data["lotl-signers.pem"]
+          pattern: "^-----BEGIN CERTIFICATE-----\nsigner"
+
+  - it: adds the binding type file when the CA file also goes to the JVM
+    set:
+      trust:
+        pem:
+          tsl-ca.pem: ca
+          lotl-signers.pem: signer
+        caCertificatesBinding: true
+    asserts:
+      - hasDocuments:
+          count: 2
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-siva-webapp-trust-binding
+        documentIndex: 1
+      - equal:
+          path: data.type
+          value: ca-certificates
+        documentIndex: 1
+
+  - it: renders only the binding type file for an existing ConfigMap
+    set:
+      trust:
+        existingConfigMap: my-trust
+        caCertificatesBinding: true
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-siva-webapp-trust-binding
+
+  - it: refuses several sources
+    set:
+      trust:
+        pem:
+          tsl-ca.pem: ca
+        existingSecret: my-trust
+    asserts:
+      - failedTemplate:
+          errorPattern: set one of pem, existingConfigMap and existingSecret
+
+  - it: refuses material with no file wired
+    set:
+      trust:
+        existingConfigMap: my-trust
+        tslCa: ""
+        lotlSigners: ""
+    asserts:
+      - failedTemplate:
+          errorPattern: neither trust.tslCa nor trust.lotlSigners
+
+  - it: refuses pem without the named files
+    set:
+      trust:
+        pem:
+          tsl-ca.pem: ca
+    asserts:
+      - failedTemplate:
+          errorPattern: trust.pem has no file "lotl-signers.pem"

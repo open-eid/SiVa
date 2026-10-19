@@ -211,6 +211,9 @@ spec:
         {{- with include "siva-webapp.territoryEnv" . | trim }}
         {{- . | nindent 8 }}
         {{- end }}
+        {{- with include "siva-webapp.trustEnv" . | trim }}
+        {{- . | nindent 8 }}
+        {{- end }}
         {{- with .Values.runtime.javaToolOptions }}
         - name: JAVA_TOOL_OPTIONS
           value: {{ . | quote }}
@@ -242,6 +245,9 @@ spec:
         - name: tsl-work
           mountPath: /var/siva/tsl-work
         {{- end }}
+        {{- with include "siva-webapp.trustVolumeMounts" . | trim }}
+        {{- . | nindent 8 }}
+        {{- end }}
   volumes:
     - name: config
       configMap:
@@ -258,6 +264,9 @@ spec:
     {{- with .Values.tsl.fetcher.workVolume }}
     - name: tsl-work
       {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with include "siva-webapp.trustVolumes" . | trim }}
+    {{- . | nindent 4 }}
     {{- end }}
   {{- with .Values.nodeSelector }}
   nodeSelector:
@@ -418,5 +427,126 @@ never downloaded.
 {{- with .Values.tsl.territories.mandatory }}
 - name: SIVA_TSL_LOADER_MANDATORYTERRITORIES
   value: {{ join "," . | quote }}
+{{- end }}
+{{- end }}
+
+{{/*
+Trust material (trust.*): non-empty when PEM files are given (`pem`) or an existing ConfigMap or
+Secret is named; exactly one source, and at least one file wired, or the render fails.
+*/}}
+{{- define "siva-webapp.trustEnabled" -}}
+{{- $t := .Values.trust -}}
+{{- $sources := 0 -}}
+{{- if $t.pem }}{{ $sources = add $sources 1 }}{{ end -}}
+{{- if $t.existingConfigMap }}{{ $sources = add $sources 1 }}{{ end -}}
+{{- if $t.existingSecret }}{{ $sources = add $sources 1 }}{{ end -}}
+{{- if gt $sources 1 -}}
+{{- fail "trust: set one of pem, existingConfigMap and existingSecret, not several" -}}
+{{- end -}}
+{{- if eq $sources 1 -}}
+{{- if and (not $t.tslCa) (not $t.lotlSigners) -}}
+{{- fail "trust: material is given but neither trust.tslCa nor trust.lotlSigners names a file in it" -}}
+{{- end -}}
+{{- range $file := list $t.tslCa $t.lotlSigners -}}
+{{- if and $file $t.pem (not (hasKey $t.pem $file)) -}}
+{{- fail (printf "trust.pem has no file %q (named by trust.tslCa / trust.lotlSigners)" $file) -}}
+{{- end -}}
+{{- end -}}
+true
+{{- end -}}
+{{- end }}
+
+{{/*
+Name of the ConfigMap or Secret holding the PEM files (the chart's own when `pem` is given).
+*/}}
+{{- define "siva-webapp.trustSourceName" -}}
+{{- if .Values.trust.pem -}}
+{{ include "siva-webapp.fullname" . }}-trust
+{{- else -}}
+{{ coalesce .Values.trust.existingConfigMap .Values.trust.existingSecret }}
+{{- end -}}
+{{- end }}
+
+{{/*
+Spring SSL bundles over the mounted files and the SiVa properties that select them, as
+environment (relaxed binding: RELOADONUPDATE is reload-on-update, SSLBUNDLE is sslBundle).
+*/}}
+{{- define "siva-webapp.trustEnv" -}}
+{{- if include "siva-webapp.trustEnabled" . }}
+{{- $t := .Values.trust }}
+{{- with $t.tslCa }}
+- name: SPRING_SSL_BUNDLE_PEM_TSL_TRUSTSTORE_CERTIFICATE
+  value: {{ printf "file:%s/%s" $t.mountPath . | quote }}
+- name: SPRING_SSL_BUNDLE_PEM_TSL_RELOADONUPDATE
+  value: "true"
+- name: SIVA_TSL_LOADER_SSLBUNDLE
+  value: tsl
+{{- end }}
+{{- with $t.lotlSigners }}
+- name: SPRING_SSL_BUNDLE_PEM_LOTL_TRUSTSTORE_CERTIFICATE
+  value: {{ printf "file:%s/%s" $t.mountPath . | quote }}
+- name: SPRING_SSL_BUNDLE_PEM_LOTL_RELOADONUPDATE
+  value: "true"
+- name: SIVA_TSL_LOADER_LOTLBUNDLE
+  value: lotl
+{{- end }}
+{{- if include "siva-webapp.trustBinding" . }}
+- name: SERVICE_BINDING_ROOT
+  value: /platform/bindings
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
+Non-empty when the CA file is also handed to the JVM through a Paketo ca-certificates binding.
+*/}}
+{{- define "siva-webapp.trustBinding" -}}
+{{- if and (include "siva-webapp.trustEnabled" .) .Values.trust.caCertificatesBinding .Values.trust.tslCa }}true{{ end }}
+{{- end }}
+
+{{- define "siva-webapp.trustVolumeMounts" -}}
+{{- if include "siva-webapp.trustEnabled" . }}
+- name: trust
+  mountPath: {{ .Values.trust.mountPath }}
+  readOnly: true
+{{- if include "siva-webapp.trustBinding" . }}
+- name: trust-binding
+  mountPath: /platform/bindings/ca-certificates
+  readOnly: true
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
+The PEM files as a volume and, with the binding, a projected directory in the service-binding
+layout: a `type` file (from the chart's `<release>-trust-binding` ConfigMap) next to the CA file.
+*/}}
+{{- define "siva-webapp.trustVolumes" -}}
+{{- if include "siva-webapp.trustEnabled" . }}
+{{- $name := include "siva-webapp.trustSourceName" . }}
+{{- $kind := ternary "secret" "configMap" (not (empty .Values.trust.existingSecret)) }}
+- name: trust
+  {{- if eq $kind "secret" }}
+  secret:
+    secretName: {{ $name }}
+  {{- else }}
+  configMap:
+    name: {{ $name }}
+  {{- end }}
+{{- if include "siva-webapp.trustBinding" . }}
+- name: trust-binding
+  projected:
+    sources:
+      - configMap:
+          name: {{ include "siva-webapp.fullname" . }}-trust-binding
+          items:
+            - key: type
+              path: type
+      - {{ $kind }}:
+          name: {{ $name }}
+          items:
+            - key: {{ .Values.trust.tslCa }}
+              path: {{ .Values.trust.tslCa }}
+{{- end }}
 {{- end }}
 {{- end }}

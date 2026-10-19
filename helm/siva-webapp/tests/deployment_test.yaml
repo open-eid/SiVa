@@ -266,6 +266,71 @@ tests:
             name: t-level-signature-filter.countries
             value: EE
 
+  - it: renders no extra volumes, mounts or containers by default
+    template: deployment.yaml
+    asserts:
+      - lengthEqual:
+          path: spec.template.spec.containers
+          count: 1
+      - lengthEqual:
+          path: spec.template.spec.volumes
+          count: 2   # config, tmp
+      - lengthEqual:
+          path: spec.template.spec.containers[0].volumeMounts
+          count: 2
+
+  - it: passes extra volumes, mounts and containers through after the chart's own
+    template: deployment.yaml
+    set:
+      extraVolumes:
+        - name: extra
+          emptyDir: {}
+      extraVolumeMounts:
+        - name: extra
+          mountPath: /var/siva/extra
+          readOnly: true
+      extraContainers:
+        - name: sidecar
+          image: example.invalid/sidecar:1
+          volumeMounts:
+            - name: extra
+              mountPath: /data
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[1].name
+          value: sidecar
+      - equal:
+          path: spec.template.spec.containers[1].volumeMounts[0].mountPath
+          value: /data
+      - equal:
+          path: spec.template.spec.volumes[-1]
+          value:
+            name: extra
+            emptyDir: {}
+      - equal:
+          path: spec.template.spec.containers[0].volumeMounts[-1]
+          value:
+            name: extra
+            mountPath: /var/siva/extra
+            readOnly: true
+
+  - it: the all-on lint overlay mounts the snapshot store read-write in its sync sidecar
+    template: deployment.yaml
+    values:
+      - ../ci/all-on-values.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[1].name
+          value: tsl-sync
+      - equal:
+          path: spec.template.spec.containers[1].volumeMounts[0].name
+          value: tsl-store
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: example-extra
+            emptyDir: {}
+
   - it: envFrom is only rendered with an existing secret
     template: deployment.yaml
     asserts:

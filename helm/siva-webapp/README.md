@@ -100,6 +100,14 @@ config:
       ...
 ```
 
+`extraVolumes`, `extraVolumeMounts` and `extraContainers` pass pod spec through for what the
+chart does not model (a sidecar, a mounted Secret the container reads itself), on the webapp
+Deployment only. The pods run under the Pod Security "restricted" profile, so an extra container
+needs its own `securityContext` (no privilege escalation, all capabilities dropped, read-only
+root filesystem); with `network.networkPolicy.egress` on it also needs its own
+`additionalRules`. The example under "Trust lists" is a sync sidecar for a snapshot store in a
+bucket.
+
 ## Trust lists
 
 SiVa validates against the EU list of trusted lists and the member-state lists it points to.
@@ -128,6 +136,45 @@ object-store mount without rename (mountpoint-s3) cannot hold it. The fetcher ge
 ConfigMap, `env` and secret as the webapp, so its snapshot matches what the webapp expects
 (same profile, same territories); `tsl.fetcher.env` adds fetcher-only variables. Set the
 countries in `tsl.territories` so both get them.
+
+Clusters without ReadWriteMany storage but with object storage (S3, Azure Blob) bridge the
+store outside SiVa, which has no object-storage client by design: a sync tool in its own
+container copies the published snapshot to the bucket on the fetcher side and, in each webapp
+pod, a sidecar syncs the bucket into a local directory the pod reads. The webapp side is two
+values, the store as a pod-local volume and the sidecar through `extraContainers`; `rclone` is
+one tool that speaks every such API, and the deployer updates it on their own schedule:
+
+```yaml
+tsl:
+  mode: snapshot
+  snapshot:
+    volume:
+      emptyDir: {}
+extraContainers:
+  - name: tsl-sync
+    image: rclone/rclone:1.68.2
+    args: ["sync", "--interval", "5m", "siva-bucket:siva-tsl", "/var/siva/tsl"]
+    envFrom:
+      - secretRef:
+          name: siva-tsl-sync   # RCLONE_CONFIG_SIVA-BUCKET_* or the cloud's workload identity
+    volumeMounts:
+      - name: tsl-store         # the chart's store volume, read-write for the sidecar
+        mountPath: /var/siva/tsl
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities:
+        drop: [ALL]
+    resources:
+      requests: {cpu: 10m, memory: 32Mi}
+      limits: {memory: 64Mi}
+```
+
+The fetcher side (uploading a published snapshot to the bucket) has no hook in the chart yet,
+and a sync has no rename atomicity: `current` can arrive before the last file of the snapshot it
+names, and SiVa does not yet refuse an incomplete snapshot, so order the upload so that
+`snapshots/<id>/` is complete before `current` is written. Freshness on a pod is then the sync
+interval plus `tsl.snapshot.pollInterval`.
 
 `tsl.fetcher.period` (six hours by default, at most a week) is the one setting the rest follows:
 the CronJob schedule, `tsl.snapshot.maxAge` (max(4 x period, 48 h)) and the trust-list alert
@@ -199,6 +246,9 @@ directory); edit the comments, not this table.
 | env | list | `[]` | Extra environment variables for the container (plain Kubernetes EnvVar entries). Spring relaxed binding applies, e.g. `{name: SIVA_TSL_LOADER_TRUSTEDTERRITORIES, value: "EE,LV"}` (values are strings: use `--set-string` on the command line). Do not set JAVA_TOOL_OPTIONS or the runtime.* variables here: a later duplicate wins and silently replaces the chart's value; use runtime.* instead. |
 | envFrom.existingSecret | string | `""` | Name of an existing Secret whose keys become environment variables (passwords, keystore passphrases). Not created by the chart. |
 | evictable | bool | `true` | Mark the webapp pods as safe to evict: the descheduler and the cluster autoscaler both skip pods with local storage by default, and /tmp is an emptyDir, so without the annotations `cluster-autoscaler.kubernetes.io/safe-to-evict` and `descheduler.alpha.kubernetes.io/evict` neither would ever move a SiVa pod. Nothing in a pod is worth keeping (the trust-list cache is re-downloaded or re-read from the store); the PodDisruptionBudget still bounds how many pods go at once and graceful shutdown drains the one that goes. The fetcher pods are not marked: a Job interrupted mid-run just retries. |
+| extraContainers | list | `[]` | Extra containers of the webapp pods (Container entries), rendered after siva-webapp. |
+| extraVolumeMounts | list | `[]` | Extra mounts of the siva-webapp container (VolumeMount entries), of volumes from extraVolumes or the chart's own (`config`, `tmp`, `tsl-store`, `trust`). |
+| extraVolumes | list | `[]` | Extra volumes of the webapp pods (Volume entries). |
 | fullnameOverride | string | `""` | Override the full resource name (release name + chart name). |
 | image.pullPolicy | string | `"IfNotPresent"` | Pull policy. |
 | image.pullSecrets | list | `[]` | imagePullSecrets, e.g. `[{name: my-registry-credentials}]`. |

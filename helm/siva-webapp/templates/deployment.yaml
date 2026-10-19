@@ -177,6 +177,12 @@ spec:
             {{- with include "siva-webapp.trustVolumeMounts" . | trim }}
             {{- . | nindent 12 }}
             {{- end }}
+            {{- with .Values.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+        {{- with .Values.extraContainers }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
       volumes:
         - name: config
           configMap:
@@ -194,6 +200,9 @@ spec:
         {{- end }}
         {{- with include "siva-webapp.trustVolumes" . | trim }}
         {{- . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
         {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

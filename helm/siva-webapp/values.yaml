@@ -111,6 +111,19 @@ envFrom:
   # passphrases). Not created by the chart.
   existingSecret: ""
 
+# Pod spec passed through for what the chart does not model, on the webapp Deployment only (the
+# fetcher pods keep to tsl.fetcher.*). The pods run under the Pod Security "restricted" profile,
+# so an extra container needs its own securityContext (no privilege escalation, all capabilities
+# dropped, read-only root filesystem), and with network.networkPolicy.egress on, its own
+# additionalRules. The README has the sync-sidecar example for a snapshot store in a bucket.
+# -- Extra volumes of the webapp pods (Volume entries).
+extraVolumes: []
+# -- Extra mounts of the siva-webapp container (VolumeMount entries), of volumes from
+# extraVolumes or the chart's own (`config`, `tmp`, `tsl-store`, `trust`).
+extraVolumeMounts: []
+# -- Extra containers of the webapp pods (Container entries), rendered after siva-webapp.
+extraContainers: []
+
 # Trust material as PEM files instead of the PKCS12 truststores on the application classpath:
 # the CA certificates the trust-list downloads trust and the LOTL signer certificates. The
 # files are mounted read-only in the webapp and fetcher pods and wired to SiVa as Spring SSL

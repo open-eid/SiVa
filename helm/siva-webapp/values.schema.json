@@ -115,15 +115,22 @@
       "additionalProperties": false,
       "required": [
         "mountPath",
-        "applicationYaml"
+        "spring",
+        "files"
       ],
       "properties": {
         "mountPath": {
           "type": "string",
           "pattern": "^/"
         },
-        "applicationYaml": {
-          "type": "string"
+        "spring": {
+          "type": "object"
+        },
+        "files": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
         }
       }
     },

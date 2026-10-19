@@ -45,22 +45,28 @@ config:
   # -- Where the Spring Boot configuration override is mounted; the container gets
   # SPRING_CONFIG_ADDITIONAL_LOCATION=file:<mountPath>/application.yml.
   mountPath: /etc/siva-webapp
-  # -- Spring Boot configuration override, rendered into a ConfigMap (same mechanism as the
-  # project's docker-compose.yaml). Properties here win over the application.yml on the
-  # classpath; the `siva.*` keys are documented in the SiVa deployment guide
-  # (docs/siva3/deployment_guide.md). Put environment-specific settings in a private overlay.
-  # @default -- actuator probes enabled
-  applicationYaml: |
-    management:
-      endpoint:
-        health:
-          probes:
-            enabled: true
-    # Examples of what belongs in a private overlay, not here:
-    # siva:
-    #   tsl:
-    #     loader:
-    #       trustedTerritories: [EE, LV, LT]
+  # -- Spring Boot configuration override in application.yml syntax, as a map: rendered with
+  # toYaml into the ConfigMap `application.yml` (the mechanism of the project's
+  # docker-compose.yaml). Properties here win over the application.yml on the classpath; the
+  # `siva.*` keys are listed in the SiVa deployment guide (docs/siva3/deployment_guide.md), in
+  # their canonical kebab-case. A map, so `--set config.spring.siva.http.request.max-request-size-limit=27MB`
+  # works and two overlays merge key by key; write keys nested, never dotted on one line, and
+  # quote strings that look like numbers or booleans ("08", "yes"). The values schema checks the
+  # keys SiVa and Spring Boot declare (see the chart README, "Spring configuration"); unknown
+  # prefixes pass. Secrets never go here: reference an environment variable from
+  # envFrom.existingSecret instead (`password: ${SIVA_PKCS12_PASSWORD}`). Keep the chart's
+  # runtime.* and tsl.* settings out of it, they are injected as environment variables so that an
+  # override here cannot drop them. Examples of what belongs in a private overlay:
+  # `siva: {tsl: {loader: {trusted-territories: [EE, LV, LT]}}}`.
+  spring: {}
+  # -- Further files rendered into the same ConfigMap and mounted read-only beside
+  # application.yml at mountPath, by file name (no directories; `application.yml` is reserved).
+  # Point SiVa at them through config.spring: a Logback configuration as
+  # `logging.config: /etc/siva-webapp/logback.xml`, a digidoc4j override as
+  # `siva.bdoc.digidoc4j-configuration-file: file:/etc/siva-webapp/siva-digidoc4j.yaml`
+  # (the whole file, replacing the bundled one). Like config.spring, a change rolls the pods
+  # (checksum annotation). Public configuration only, this is a ConfigMap.
+  files: {}
 
 # Runtime settings the chart injects as environment variables (Spring relaxed binding). They are
 # kept out of config.applicationYaml so that an override there cannot silently drop them.

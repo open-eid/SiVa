@@ -106,6 +106,25 @@ truststore, which the OCSP, AIA and timestamp clients use; `trust.caCertificates
 hands the same file to Paketo's ca-certificates helper, which adds it to the JVM truststore at
 launch (Paketo images only, pod restart on change).
 
+## Versioning
+
+The chart has no releases of its own: `version` and `appVersion` are the SiVa version (the Maven
+project version, `-SNAPSHOT` included) and change only in SiVa's own version-bump commit. The
+chart from a SiVa checkout is therefore the chart for that SiVa, and `image.tag` left empty
+runs that version.
+
+Lab and other internal builds get a build id, generated at build time and never committed:
+`<SiVa version without its pre-release>-dev.<UTC yyyymmddTHHMMSS>.g<short sha>`, for example
+`3.11.0-dev.20261019T084942.g597535b`. It is both the image tag and the version of the chart
+package pushed with it, so one build is one identifier everywhere. `dev` is constant, the
+fixed-width timestamp is a single alphanumeric identifier that semver compares lexically, so
+later builds sort higher (`T` keeps it alphanumeric: a numeric identifier with a leading zero
+would be invalid), and the sha is for tracing. The `image.tag` in `values-kind.yaml` is the
+placeholder `set-by-chart-push` that the build tooling stamps into its copy of the chart;
+the chart refuses to render the placeholder, so installing that overlay by hand needs
+`--set-string image.tag=<tag>`. A tool that tracks "the newest version" must admit pre-releases
+(a semver constraint such as `>=0.0.0-0`; a bare `*` matches release versions only).
+
 ## Values
 
 Generated from the comments in `values.yaml` by helm-docs (1.14; run `helm-docs` in this

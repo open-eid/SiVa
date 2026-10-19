@@ -37,6 +37,15 @@ tests:
       - notExists:
           path: spec.template.spec.imagePullSecrets
 
+  - it: refuses the placeholder tag the committed kind overlay carries
+    template: deployment.yaml
+    set:
+      image:
+        tag: set-by-chart-push
+    asserts:
+      - failedTemplate:
+          errorPattern: 'image.tag is the placeholder "set-by-chart-push"'
+
   - it: image tag, pull policy and pull secrets come from values
     template: deployment.yaml
     set:
@@ -216,6 +225,9 @@ tests:
     template: deployment.yaml
     values:
       - ../values-kind.yaml
+    set:
+      image:
+        tag: 3.11.0-dev.20261019T084942.g597535b   # what chart-push stamps over the placeholder
     asserts:
       - matchRegex:
           path: spec.template.spec.containers[0].image

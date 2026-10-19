@@ -62,6 +62,21 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
+Image reference: image.repository and image.tag, the tag defaulting to the chart's appVersion
+(the SiVa version). values-kind.yaml carries the placeholder tag "set-by-chart-push" that the
+lab's chart-push replaces in the copy it packages; a render that still sees the placeholder is
+the committed overlay installed by hand, which would pull nothing, so it fails here instead of
+in the cluster. Any other tag, and the default, render as before.
+*/}}
+{{- define "siva-webapp.image" -}}
+{{- $tag := .Values.image.tag | default .Chart.AppVersion -}}
+{{- if eq $tag "set-by-chart-push" -}}
+{{- fail "image.tag is the placeholder \"set-by-chart-push\" (values-kind.yaml as committed, which only the lab's chart-push stamps): set the tag of an image you built, e.g. --set-string image.tag=<tag>" -}}
+{{- end -}}
+{{ .Values.image.repository }}:{{ $tag }}
+{{- end }}
+
+{{/*
 Whether the actuator runs on its own port (management port differs from the traffic port).
 */}}
 {{- define "siva-webapp.managementSplit" -}}
@@ -189,7 +204,7 @@ spec:
   {{- end }}
   containers:
     - name: tsl-fetch
-      image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+      image: "{{ include "siva-webapp.image" . }}"
       imagePullPolicy: {{ .Values.image.pullPolicy }}
       {{- with .Values.security.securityContext }}
       securityContext:

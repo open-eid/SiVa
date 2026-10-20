@@ -35,6 +35,14 @@ config:
       tomcat:
         mbeanregistry:
           enabled: true
+    # The lab's own trust-list server (siva-lab chart, Test-Government/TSL-test-server): a signed
+    # copy of the test LOTL and EE_T list served inside the cluster, so the fetcher never leaves
+    # it and snapshot-flip.sh has a validly signed alternate list. Its signer is the last
+    # certificate in lotl-signers.pem below. Lab only: the signer key is public example material.
+    siva:
+      tsl:
+        loader:
+          url: http://siva-lab-tsl.siva.svc:8080/lotl.xml
 # SiVa's system tests reach the monitoring endpoints through the same host:port as the API, so
 # this overlay keeps the actuator on the traffic port instead of the chart's default split.
 runtime:
@@ -144,6 +152,20 @@ trust:
       BnOmLLSDxKOHXFbFpTET7kirc3GLyxoppjwAfeV/a9Rqm+gdjpbrJuHnutj9xm2j
       AWThELxoNKmluSSf1uPsh3GrxIeH8gbmvKsOWG4CCU+MW+bLufFsx1ZRHzytphb6
       LNVHtgaJ7aUTuZHYBGI3SdZ+ogB/fjo9NM/unYnlfSRXesA8lJP+S5qt
+      -----END CERTIFICATE-----
+      # Signer EC of the lab's trust-list server (siva-lab chart), added 2026-10-20; public example key
+      -----BEGIN CERTIFICATE-----
+      MIIB7DCCAXKgAwIBAgIUVyWAOum+cnl/buHczs8BlkNNZtowCgYIKoZIzj0EAwMw
+      LzELMAkGA1UEBhMCRUUxDDAKBgNVBAsMA1RTTDESMBAGA1UEAwwJU2lnbmVyIEVD
+      MB4XDTI0MTIzMTIyMDAwMFoXDTQ5MTIzMTIyMDAwMFowLzELMAkGA1UEBhMCRUUx
+      DDAKBgNVBAsMA1RTTDESMBAGA1UEAwwJU2lnbmVyIEVDMHYwEAYHKoZIzj0CAQYF
+      K4EEACIDYgAEbx6JrYXUW9a1IdIyTsjENlvc0vuRo/rS5gM5F2K3nnd0rJRoPSr4
+      383fxz2d1WaZhErw6eAnPf9EOX0VD15rrBvsA7Zhbn5A7nKon1AKuo783lNE6rMG
+      w7E18Qe/nmfIo08wTTAMBgNVHRMBAf8EAjAAMB0GA1UdDgQWBBRDSF9l7nHSaFfL
+      XGudRXkihSZu4jALBgNVHQ8EBAMCBsAwEQYDVR0lBAowCAYGBACRNwMAMAoGCCqG
+      SM49BAMDA2gAMGUCMHK8iRhEv/V4LwXxeFTf3Q0N8PLgK6m8U+3B9DPZAIQi3nbV
+      BOV74sqpt/ZRRHweSQIxAKYwm43QmevVZlvzKqHaWW5WSj+lVmz8GMjiV50dG4m+
+      /seCQfdvNQoFs4hLChdiuw==
       -----END CERTIFICATE-----
     tsl-ca.pem: |
       # amazon rsa 2048 m04

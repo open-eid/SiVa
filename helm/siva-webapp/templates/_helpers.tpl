@@ -223,6 +223,13 @@ spec:
           value: {{ .Values.tsl.snapshot.mountPath | quote }}
         - name: SIVA_TSL_FETCHER_KEEPSNAPSHOTS
           value: {{ .Values.tsl.fetcher.keepSnapshots | quote }}
+        - name: SIVA_TSL_FETCHER_PERIOD
+          value: {{ .Values.tsl.fetcher.period | quote }}
+        # A fetch is for downloading: never let DSS's file cache (fresh for an hour by default)
+        # answer instead, or a period under an hour fetches every other run and the download
+        # times the pods publish lag by that hour.
+        - name: SIVA_TSL_LOADER_ONLINECACHEEXPIRATIONTIME
+          value: PT0S
         {{- with include "siva-webapp.territoryEnv" . | trim }}
         {{- . | nindent 8 }}
         {{- end }}
@@ -397,24 +404,6 @@ max(4P, 48 h) in hours.
 {{- end }}
 
 {{/*
-Alert thresholds in seconds (ADR 0004): "stale" = 2P + grace (fetch and snapshot age),
-"expiryWarning" = 2P + lead time, "expiryCritical" = P + 1 day. Call with (list $ "<name>").
-*/}}
-{{- define "siva-webapp.tslAlertSeconds" -}}
-{{- $root := index . 0 -}}
-{{- $which := index . 1 -}}
-{{- $p := include "siva-webapp.tslPeriodSeconds" $root | atoi -}}
-{{- $tsl := $root.Values.monitoring.prometheusRule.tsl -}}
-{{- if eq $which "stale" -}}
-{{- add (mul 2 $p) (include "siva-webapp.isoSeconds" (list "monitoring.prometheusRule.tsl.grace" $tsl.grace) | atoi) -}}
-{{- else if eq $which "expiryWarning" -}}
-{{- add (mul 2 $p) (include "siva-webapp.isoSeconds" (list "monitoring.prometheusRule.tsl.leadTime" $tsl.leadTime) | atoi) -}}
-{{- else -}}
-{{- add $p 86400 -}}
-{{- end -}}
-{{- end }}
-
-{{/*
 Seconds as a short human text for alert summaries: "14 d 1 h", "13 h", "1 h 30 min", "30 min".
 */}}
 {{- define "siva-webapp.humanSeconds" -}}
@@ -564,4 +553,21 @@ layout: a `type` file (from the chart's `<release>-trust-binding` ConfigMap) nex
               path: {{ .Values.trust.tslCa }}
 {{- end }}
 {{- end }}
+{{- end }}
+
+{{/*
+podFailurePolicy of the fetch Jobs. A run that ended below the readiness threshold (exit 1) or
+published from a last copy because a download failed (exit 3) fails for a reason a retry seconds
+later cannot change, so the Job fails at once instead of running backoffLimit more pods (and, for
+3, publishing as many snapshots); a store write failure (2) and container errors keep the retries.
+Needs restartPolicy Never and Kubernetes 1.26+ (the chart's floor).
+*/}}
+{{- define "siva-webapp.fetcherFailurePolicy" -}}
+podFailurePolicy:
+  rules:
+    - action: FailJob
+      onExitCodes:
+        containerName: tsl-fetch
+        operator: In
+        values: [1, 3]
 {{- end }}

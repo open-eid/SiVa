@@ -149,6 +149,7 @@ tsl:
   fetcher:
     period: PT4H
     schedule: "15 */4 * * *"
+    ttlSecondsAfterFinished: 86400
     timeZone: Europe/Tallinn
     startingDeadlineSeconds: 600
     workVolume:

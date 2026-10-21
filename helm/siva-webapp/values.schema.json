@@ -3448,10 +3448,13 @@
                         },
                         "output-directory": {
                           "$ref": "#/definitions/springScalar"
+                        },
+                        "period": {
+                          "$ref": "#/definitions/springScalar"
                         }
                       },
                       "propertyNames": {
-                        "pattern": "^(?i)(keep-?snapshots|output-?directory)$"
+                        "pattern": "^(?i)(keep-?snapshots|output-?directory|period)$"
                       }
                     },
                     "loader": {
@@ -3499,6 +3502,10 @@
                           "$ref": "#/definitions/springScalar",
                           "default": "PT1H"
                         },
+                        "refresh-period": {
+                          "$ref": "#/definitions/springScalar",
+                          "default": "1d"
+                        },
                         "scheduler-cron": {
                           "$ref": "#/definitions/springScalar",
                           "default": "0 0 3 * * ?"
@@ -3536,7 +3543,7 @@
                         }
                       },
                       "propertyNames": {
-                        "pattern": "^(?i)(cache-?directory|load-?from-?cache|lotl-?bundle|lotl-?pivot-?support-?enabled|lotl-?root-?scheme-?info-?uri|lotl-?truststore-?password|lotl-?truststore-?path|lotl-?truststore-?type|mandatory-?territories|oj-?url|online-?cache-?expiration-?time|scheduler-?cron|snapshot-?directory|snapshot-?max-?age|snapshot-?poll-?interval|ssl-?bundle|ssl-?truststore-?password|ssl-?truststore-?path|ssl-?truststore-?type|trusted-?territories|url)$"
+                        "pattern": "^(?i)(cache-?directory|load-?from-?cache|lotl-?bundle|lotl-?pivot-?support-?enabled|lotl-?root-?scheme-?info-?uri|lotl-?truststore-?password|lotl-?truststore-?path|lotl-?truststore-?type|mandatory-?territories|oj-?url|online-?cache-?expiration-?time|refresh-?period|scheduler-?cron|snapshot-?directory|snapshot-?max-?age|snapshot-?poll-?interval|ssl-?bundle|ssl-?truststore-?password|ssl-?truststore-?path|ssl-?truststore-?type|trusted-?territories|url)$"
                       }
                     }
                   },
@@ -5164,6 +5171,14 @@
             "backoffLimit": {
               "type": "integer",
               "minimum": 0
+            },
+            "ttlSecondsAfterFinished": {
+              "type": [
+                "integer",
+                "string"
+              ],
+              "minimum": 0,
+              "pattern": "^[0-9]*$"
             },
             "successfulJobsHistoryLimit": {
               "type": "integer",

@@ -14,6 +14,9 @@ metadata:
 spec:
   backoffLimit: {{ .Values.tsl.fetcher.backoffLimit }}
   activeDeadlineSeconds: {{ .Values.tsl.fetcher.activeDeadlineSeconds }}
+  {{- /* No ttlSecondsAfterFinished here: this Job is a tracked resource, and a GitOps controller
+         would recreate a TTL-deleted one and run the fetch again every TTL. */}}
+  {{- include "siva-webapp.fetcherFailurePolicy" . | nindent 2 }}
   template:
     {{- $template | nindent 4 }}
 {{- end }}

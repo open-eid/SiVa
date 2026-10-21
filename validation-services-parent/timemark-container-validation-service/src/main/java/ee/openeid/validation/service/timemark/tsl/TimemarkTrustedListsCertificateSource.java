@@ -23,6 +23,7 @@ import eu.europa.esig.dss.model.identifier.EntityIdentifier;
 import eu.europa.esig.dss.model.tsl.CertificateTrustTime;
 import eu.europa.esig.dss.model.tsl.TLValidationJobSummary;
 import eu.europa.esig.dss.model.tsl.TrustProperties;
+import eu.europa.esig.dss.model.tsl.TrustPropertiesCertificateSource;
 import eu.europa.esig.dss.model.x509.CertificateToken;
 import eu.europa.esig.dss.model.x509.X500PrincipalHelper;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
@@ -30,6 +31,7 @@ import eu.europa.esig.dss.spi.x509.CertificateRef;
 import eu.europa.esig.dss.spi.x509.CertificateSource;
 import eu.europa.esig.dss.spi.x509.CertificateSourceEntity;
 import eu.europa.esig.dss.spi.x509.SignerIdentifier;
+import eu.europa.esig.dss.spi.x509.TrustedCertificateSource;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.digidoc4j.TSLCertificateSource;
@@ -47,7 +49,8 @@ import java.util.function.Supplier;
  * duration of one validation.
  */
 @RequiredArgsConstructor
-public class TimemarkTrustedListsCertificateSource extends TrustedListsCertificateSource implements TSLCertificateSource {
+public class TimemarkTrustedListsCertificateSource
+        implements TSLCertificateSource, TrustedCertificateSource, TrustPropertiesCertificateSource {
 
     // digidoc4j keeps one TSLCertificateSource in its Configuration for the life of the configuration and reads it
     // per operation, so every read here goes to a published source and nothing is held in this object; the loader
@@ -177,11 +180,6 @@ public class TimemarkTrustedListsCertificateSource extends TrustedListsCertifica
     }
 
     @Override
-    public int getNumberOfEntities() {
-        return source().getNumberOfEntities();
-    }
-
-    @Override
     public boolean isAllSelfSigned() {
         return source().isAllSelfSigned();
     }
@@ -223,11 +221,6 @@ public class TimemarkTrustedListsCertificateSource extends TrustedListsCertifica
 
     @Override
     public void setSummary(TLValidationJobSummary summary) {
-        throw readOnly();
-    }
-
-    @Override
-    public void importAsTrusted(CertificateSource certificateSource) {
         throw readOnly();
     }
 

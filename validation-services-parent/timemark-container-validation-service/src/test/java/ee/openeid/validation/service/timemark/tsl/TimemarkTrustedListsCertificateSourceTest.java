@@ -17,11 +17,11 @@
 package ee.openeid.validation.service.timemark.tsl;
 
 import ee.openeid.tsl.TrustedListsCertificateSourceHolder;
+import eu.europa.esig.dss.model.tsl.TrustPropertiesCertificateSource;
 import eu.europa.esig.dss.model.x509.CertificateToken;
 import eu.europa.esig.dss.model.x509.X500PrincipalHelper;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
-import eu.europa.esig.dss.spi.x509.CommonCertificateSource;
-import eu.europa.esig.dss.spi.x509.CommonTrustedCertificateSource;
+import eu.europa.esig.dss.spi.x509.TrustedCertificateSource;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
@@ -43,6 +43,7 @@ import java.security.spec.ECGenParameterSpec;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -133,21 +134,9 @@ class TimemarkTrustedListsCertificateSourceTest {
         assertThrows(UnsupportedOperationException.class, () -> view.setTrustPropertiesByCertificates(Map.of()));
         assertThrows(UnsupportedOperationException.class, () -> view.setTrustTimeByCertificates(Map.of()));
         assertThrows(UnsupportedOperationException.class, () -> view.setSummary(null));
-        assertThrows(UnsupportedOperationException.class, () -> view.importAsTrusted(new CommonCertificateSource()));
         assertThrows(UnsupportedOperationException.class, view::invalidateCache);
         assertThrows(UnsupportedOperationException.class, view::refresh);
         assertEquals(0, view.getNumberOfCertificates());
-    }
-
-    // A DSS upgrade that adds a public method to the source would otherwise read this view's own, empty state.
-    @Test
-    void everyPublicMethodOfTheDssSourceIsOverridden() {
-        List<String> inherited = dssSourceMethods()
-                .filter(method -> !declaredByTheView(method))
-                .map(method -> method.getDeclaringClass().getSimpleName() + "." + method.getName())
-                .toList();
-
-        assertThat(inherited, is(empty()));
     }
 
     @Test
@@ -155,7 +144,7 @@ class TimemarkTrustedListsCertificateSourceTest {
         TrustedListsCertificateSource source = mock(TrustedListsCertificateSource.class);
         holder.publish(source);
         List<String> notForwarded = new ArrayList<>();
-        for (Method read : dssSourceMethods().filter(method -> !WRITES.contains(method.getName())).toList()) {
+        for (Method read : sourceMethods().filter(method -> !WRITES.contains(method.getName())).toList()) {
             Object[] arguments = Stream.of(read.getParameterTypes()).map(this::argumentOf).toArray();
             read.invoke(view, arguments);
             boolean forwarded = mockingDetails(source).getInvocations().stream()
@@ -179,20 +168,26 @@ class TimemarkTrustedListsCertificateSourceTest {
         });
     }
 
+    // digidoc4j keeps the source as TSLCertificateSource; DSS reads trust services and trust time through
+    // TrustPropertiesCertificateSource (DiagnosticDataBuilder) and trust through TrustedCertificateSource
+    // (SignatureValidationContext).
     @Test
-    void theViewIsADigidoc4jSource() {
+    void theViewIsWhatDigidoc4jAndDssLookFor() {
         assertTrue(TSLCertificateSource.class.isAssignableFrom(TimemarkTrustedListsCertificateSource.class));
+        assertTrue(TrustPropertiesCertificateSource.class.isAssignableFrom(TimemarkTrustedListsCertificateSource.class));
+        assertTrue(TrustedCertificateSource.class.isAssignableFrom(TimemarkTrustedListsCertificateSource.class));
     }
 
-    private static final Set<String> WRITES = Set.of("addCertificate", "setTrustPropertiesByCertificates",
-            "setTrustTimeByCertificates", "setSummary", "importAsTrusted");
+    private static final Set<String> WRITES = Set.of("addCertificate", "addTSLCertificate",
+            "setTrustPropertiesByCertificates", "setTrustTimeByCertificates", "setSummary", "invalidateCache", "refresh");
 
-    private static Stream<Method> dssSourceMethods() {
-        return Stream.of(TrustedListsCertificateSource.class, CommonTrustedCertificateSource.class,
-                        CommonCertificateSource.class)
-                .flatMap(type -> Stream.of(type.getDeclaredMethods()))
-                .filter(method -> Modifier.isPublic(method.getModifiers()) && !Modifier.isStatic(method.getModifiers()))
-                .filter(method -> !method.isSynthetic());
+    // Every abstract method of the two interfaces the view implements, each signature once.
+    private static Stream<Method> sourceMethods() {
+        Set<String> seen = new HashSet<>();
+        return Stream.of(TSLCertificateSource.class, TrustedCertificateSource.class, TrustPropertiesCertificateSource.class)
+                .flatMap(type -> Stream.of(type.getMethods()))
+                .filter(method -> Modifier.isAbstract(method.getModifiers()))
+                .filter(method -> seen.add(method.getName() + Arrays.toString(method.getParameterTypes())));
     }
 
     private Object argumentOf(Class<?> type) {
@@ -208,15 +203,6 @@ class TimemarkTrustedListsCertificateSourceTest {
             return new Date();
         }
         return mock(type);
-    }
-
-    private static boolean declaredByTheView(Method method) {
-        try {
-            TimemarkTrustedListsCertificateSource.class.getDeclaredMethod(method.getName(), method.getParameterTypes());
-            return true;
-        } catch (NoSuchMethodException e) {
-            return false;
-        }
     }
 
     private static CertificateToken selfSigned(String name) throws Exception {

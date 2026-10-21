@@ -53,8 +53,8 @@ config:
   # works and two overlays merge key by key; write keys nested, never dotted on one line, and
   # quote strings that look like numbers or booleans ("08", "yes"). The values schema checks the
   # keys SiVa and Spring Boot declare (see the chart README, "Spring configuration"); unknown
-  # prefixes pass. Secrets never go here: reference an environment variable from
-  # envFrom.existingSecret instead (`password: ${SIVA_PKCS12_PASSWORD}`). Keep the chart's
+  # prefixes pass. Secrets never go here, a ConfigMap is not a Secret: `secrets.existingSecret`
+  # sets the same properties from the files of a mounted Secret. Keep the chart's
   # runtime.* and tsl.* settings out of it, they are injected as environment variables so that an
   # override here cannot drop them. Examples of what belongs in a private overlay:
   # `siva: {tsl: {loader: {trusted-territories: [EE, LV, LT]}}}`.
@@ -116,10 +116,16 @@ runtime:
 # replaces the chart's value; use runtime.* instead.
 env: []
 
-envFrom:
-  # -- Name of an existing Secret whose keys become environment variables (passwords, keystore
-  # passphrases). Not created by the chart.
+secrets:
+  # -- Name of an existing Secret, not created by the chart, mounted read-only at mountPath and
+  # imported as a Spring Boot config tree: every key is a file whose name is the property it
+  # sets (`siva.signature-service.pkcs12.password`), so secrets never enter the environment and
+  # need no placeholder in config.spring. The report-signing keystore goes in as a file too,
+  # its path set through config.spring. Read at startup: a changed Secret reaches SiVa with
+  # the next pod start (README, "Secrets").
   existingSecret: ""
+  # -- Where the Secret is mounted, in the webapp and fetcher pods alike.
+  mountPath: /etc/siva/secrets
 
 # Pod spec passed through for what the chart does not model, on the webapp Deployment only (the
 # fetcher pods keep to tsl.fetcher.*). The pods run under the Pod Security "restricted" profile,
@@ -129,7 +135,7 @@ envFrom:
 # -- Extra volumes of the webapp pods (Volume entries).
 extraVolumes: []
 # -- Extra mounts of the siva-webapp container (VolumeMount entries), of volumes from
-# extraVolumes or the chart's own (`config`, `tmp`, `tsl-store`, `trust`).
+# extraVolumes or the chart's own (`config`, `tmp`, `tsl-store`, `trust`, `secrets`).
 extraVolumeMounts: []
 # -- Extra containers of the webapp pods (Container entries), rendered after siva-webapp.
 extraContainers: []
@@ -286,10 +292,10 @@ tsl:
     # and `runtime.javaToolOptions` (same profile and settings as the webapp, which is what makes
     # its snapshot the one the webapp expects).
     env: []
-    # -- Secret whose keys become the fetcher's environment variables. The fetcher does not get
-    # the webapp's `envFrom.existingSecret`: it parses thirty documents from the internet and
-    # should hold nothing but what that needs (truststore passwords, if you changed them), not
-    # the report-signing key's. Empty: no Secret.
+    # -- Secret mounted as a Spring config tree for the fetcher, like `secrets.existingSecret`
+    # for the webapp (same mountPath). The fetcher does not get the webapp's Secret: it parses
+    # thirty documents from the internet and should hold nothing but what that needs (truststore
+    # passwords, if you changed them), not the report-signing key's. Empty: no Secret.
     existingSecret: ""
 
 # Probes go to the traffic port, so a wedged traffic connector fails readiness and the pod leaves

@@ -72,9 +72,9 @@ checks every key against the configuration metadata the SiVa build emits (SiVa's
 `siva.*` and `t-level-signature-filter.*`, and Spring Boot's `server`, `management`, `logging`
 and `spring`), so a mistyped key fails `helm lint`, `template`, `install` and `upgrade` naming
 the key; a prefix nothing declares (`dss.*`) passes. The fragment is generated from the SiVa
-build and committed, so an upgrade of SiVa regenerates it. Secrets never go into `config.spring`: a ConfigMap is not a Secret. Reference an
-environment variable from `envFrom.existingSecret` instead
-(`siva.signature-service.pkcs12.password: ${SIVA_PKCS12_PASSWORD}`). The chart's own settings
+build and committed, so an upgrade of SiVa regenerates it. Secrets never go into `config.spring`:
+a ConfigMap is not a Secret; `secrets.existingSecret` sets the same properties from the files of
+a mounted Secret (see "Secrets"). The chart's own settings
 (`runtime.*`, `tsl.*`, `trust.*`) are injected as environment variables, which win over the file,
 so an override here cannot drop them.
 
@@ -108,6 +108,88 @@ needs its own `securityContext` (no privilege escalation, all capabilities dropp
 root filesystem); with `network.networkPolicy.egress` on it also needs its own
 `additionalRules`. The example under "Trust lists" is a sync sidecar for a snapshot store in a
 bucket.
+
+A change to `config.spring` or `config.files` rolls the pods: the pod template carries a
+`checksum/config` annotation over the rendered ConfigMap (the fetcher's template too, so the
+bootstrap Job runs again). The ConfigMap itself is replaced in place, so the files in the pods
+still running change as well, before the rollout reaches them. SiVa reads `application.yml` at
+startup, so a running pod keeps its configuration; but a file it re-reads at runtime (a Logback
+configuration with `scan="true"`) switches early, and a pod restarted for another reason while
+a rollout is failing starts on the new files. Roll back with `helm rollback` (or a sync to the
+previous revision in your GitOps tool), which restores the ConfigMap content together with the
+annotation; `kubectl rollout undo` restores only the annotation and starts the "old" pods on the
+new configuration.
+
+## Secrets
+
+Secrets are mounted as files, never put into the environment. `secrets.existingSecret` names a
+Secret, not created by the chart, that is mounted read-only at `secrets.mountPath`
+(`/etc/siva/secrets`) and imported as a Spring Boot config tree
+(`SPRING_CONFIG_IMPORT=configtree:/etc/siva/secrets/`): every key of the Secret is a file whose
+name is the property it sets, so the keys are named like properties and `config.spring` needs
+no placeholder. The report-signing keystore goes into the same Secret as a file, and
+`config.spring` names its path:
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: siva-secrets
+stringData:
+  siva.signature-service.pkcs12.password: "..."
+data:
+  siva-signing.p12: <the PKCS12 file, base64>
+```
+
+```yaml
+secrets:
+  existingSecret: siva-secrets
+config:
+  spring:
+    siva:
+      signature-service:
+        pkcs12:
+          path: /etc/siva/secrets/siva-signing.p12
+```
+
+A file that is not a property (the keystore) is a property nobody reads. A value in the Secret
+wins over the same key in `config.spring`; the chart's own environment variables (`runtime.*`,
+`tsl.*`, `trust.*`) win over both. Whatever writes the Secret is outside the chart; with the
+External Secrets Operator an `ExternalSecret` produces exactly this layout:
+
+```yaml
+apiVersion: external-secrets.io/v1   # v1beta1 on an operator before 0.17
+kind: ExternalSecret
+metadata:
+  name: siva-secrets
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: my-store
+  target:
+    name: siva-secrets               # what secrets.existingSecret names
+  data:
+    - secretKey: siva.signature-service.pkcs12.password
+      remoteRef:
+        key: siva/signing
+        property: password
+    - secretKey: siva-signing.p12
+      remoteRef:
+        key: siva/signing
+        property: keystore
+        decodingStrategy: Base64     # the store holds the file base64-encoded
+```
+
+Rotation: the files in a pod follow the Secret within the kubelet's sync period (about a
+minute), but the process read them at startup, so a changed Secret reaches SiVa with the next
+pod start. The chart renders no checksum for an object it does not render, so that rollout is
+yours: `kubectl rollout restart deployment/<release>-siva-webapp` after rotating, the next
+`helm upgrade`, or, if you run Stakater's Reloader, `podAnnotations:
+{reloader.stakater.com/auto: "true"}`; nothing in the chart depends on it. Until then a pod
+serves with the old value while its files already show the new one. The signing key rotates
+with its certificate, so this is rare. The fetcher pods get a Secret of their own the same way
+(`tsl.fetcher.existingSecret`), never the webapp's: see "Trust lists".
 
 ## Trust lists
 
@@ -215,8 +297,8 @@ Whoever can write the store can point every pod at any snapshot whose lists are 
 their validity window, so treat write access to it as trust-list authority: only the fetcher
 writes, the webapp mounts it read-only, and `tsl.snapshot.maxAge` makes a pod refuse a
 snapshot older than that rather than serve it. The fetcher pod gets its own
-Secret (`tsl.fetcher.existingSecret`), never the webapp's: it parses thirty documents from the
-internet and should hold nothing else. With `network.networkPolicy.egress` on, the webapp pods
+Secret (`tsl.fetcher.existingSecret`, mounted as under "Secrets"), never the webapp's: it parses
+thirty documents from the internet and should hold nothing else. With `network.networkPolicy.egress` on, the webapp pods
 reach only DNS and the public internet on 80 and 443 (OCSP and timestamp responders) and the
 fetcher pods the same with no ingress at all. The store holds nothing worth backing up: a lost
 store is rebuilt by the next fetch, so leave the claim out of your backup scope.
@@ -270,12 +352,11 @@ directory); edit the comments, not this table.
 | affinity | object | `{}` | Affinity rules, as given. |
 | config.files | object | `{}` | Further files rendered into the same ConfigMap and mounted read-only beside application.yml at mountPath, by file name (no directories; `application.yml` is reserved). Point SiVa at them through config.spring: a Logback configuration as `logging.config: /etc/siva-webapp/logback.xml`, a digidoc4j override as `siva.bdoc.digidoc4j-configuration-file: file:/etc/siva-webapp/siva-digidoc4j.yaml` (the whole file, replacing the bundled one). Like config.spring, a change rolls the pods (checksum annotation). Public configuration only, this is a ConfigMap. |
 | config.mountPath | string | `"/etc/siva-webapp"` | Where the Spring Boot configuration override is mounted; the container gets SPRING_CONFIG_ADDITIONAL_LOCATION=file:<mountPath>/application.yml. |
-| config.spring | object | `{}` | Spring Boot configuration override in application.yml syntax, as a map: rendered with toYaml into the ConfigMap `application.yml` (the mechanism of the project's docker-compose.yaml). Properties here win over the application.yml on the classpath; the `siva.*` keys are listed in the SiVa deployment guide (docs/siva3/deployment_guide.md), in their canonical kebab-case. A map, so `--set config.spring.siva.http.request.max-request-size-limit=27MB` works and two overlays merge key by key; write keys nested, never dotted on one line, and quote strings that look like numbers or booleans ("08", "yes"). The values schema checks the keys SiVa and Spring Boot declare (see the chart README, "Spring configuration"); unknown prefixes pass. Secrets never go here: reference an environment variable from envFrom.existingSecret instead (`password: ${SIVA_PKCS12_PASSWORD}`). Keep the chart's runtime.* and tsl.* settings out of it, they are injected as environment variables so that an override here cannot drop them. Examples of what belongs in a private overlay: `siva: {tsl: {loader: {trusted-territories: [EE, LV, LT]}}}`. |
+| config.spring | object | `{}` | Spring Boot configuration override in application.yml syntax, as a map: rendered with toYaml into the ConfigMap `application.yml` (the mechanism of the project's docker-compose.yaml). Properties here win over the application.yml on the classpath; the `siva.*` keys are listed in the SiVa deployment guide (docs/siva3/deployment_guide.md), in their canonical kebab-case. A map, so `--set config.spring.siva.http.request.max-request-size-limit=27MB` works and two overlays merge key by key; write keys nested, never dotted on one line, and quote strings that look like numbers or booleans ("08", "yes"). The values schema checks the keys SiVa and Spring Boot declare (see the chart README, "Spring configuration"); unknown prefixes pass. Secrets never go here, a ConfigMap is not a Secret: `secrets.existingSecret` sets the same properties from the files of a mounted Secret. Keep the chart's runtime.* and tsl.* settings out of it, they are injected as environment variables so that an override here cannot drop them. Examples of what belongs in a private overlay: `siva: {tsl: {loader: {trusted-territories: [EE, LV, LT]}}}`. |
 | env | list | `[]` | Extra environment variables for the container (plain Kubernetes EnvVar entries). Spring relaxed binding applies, e.g. `{name: SIVA_TSL_LOADER_TRUSTEDTERRITORIES, value: "EE,LV"}` (values are strings: use `--set-string` on the command line). Do not set JAVA_TOOL_OPTIONS or the runtime.* variables here: a later duplicate wins and silently replaces the chart's value; use runtime.* instead. |
-| envFrom.existingSecret | string | `""` | Name of an existing Secret whose keys become environment variables (passwords, keystore passphrases). Not created by the chart. |
 | evictable | bool | `true` | Mark the webapp pods as safe to evict: the descheduler and the cluster autoscaler both skip pods with local storage by default, and /tmp is an emptyDir, so without the annotations `cluster-autoscaler.kubernetes.io/safe-to-evict` and `descheduler.alpha.kubernetes.io/evict` neither would ever move a SiVa pod. Nothing in a pod is worth keeping (the trust-list cache is re-downloaded or re-read from the store); the PodDisruptionBudget still bounds how many pods go at once and graceful shutdown drains the one that goes. The fetcher pods are not marked: a Job interrupted mid-run just retries. |
 | extraContainers | list | `[]` | Extra containers of the webapp pods (Container entries), rendered after siva-webapp. |
-| extraVolumeMounts | list | `[]` | Extra mounts of the siva-webapp container (VolumeMount entries), of volumes from extraVolumes or the chart's own (`config`, `tmp`, `tsl-store`, `trust`). |
+| extraVolumeMounts | list | `[]` | Extra mounts of the siva-webapp container (VolumeMount entries), of volumes from extraVolumes or the chart's own (`config`, `tmp`, `tsl-store`, `trust`, `secrets`). |
 | extraVolumes | list | `[]` | Extra volumes of the webapp pods (Volume entries). |
 | fullnameOverride | string | `""` | Override the full resource name (release name + chart name). |
 | image.pullPolicy | string | `"IfNotPresent"` | Pull policy. |
@@ -349,6 +430,8 @@ directory); edit the comments, not this table.
 | scaling.pdb.enabled | bool | `true` | PodDisruptionBudget, rendered only when there is more than one pod to budget (replicaCount > 1, or the HPA is on with minReplicas > 1); with one pod it would block every node drain. |
 | scaling.pdb.maxUnavailable | int or string | `""` | Set (0, a count or a percentage) to use maxUnavailable instead of minAvailable. |
 | scaling.pdb.minAvailable | int or string | `1` | minAvailable (a count or a percentage), used unless maxUnavailable is set. |
+| secrets.existingSecret | string | `""` | Name of an existing Secret, not created by the chart, mounted read-only at mountPath and imported as a Spring Boot config tree: every key is a file whose name is the property it sets (`siva.signature-service.pkcs12.password`), so secrets never enter the environment and need no placeholder in config.spring. The report-signing keystore goes in as a file too, its path set through config.spring. Read at startup: a changed Secret reaches SiVa with the next pod start (README, "Secrets"). |
+| secrets.mountPath | string | `"/etc/siva/secrets"` | Where the Secret is mounted, in the webapp and fetcher pods alike. |
 | security.automountServiceAccountToken | bool | `false` | Mount the ServiceAccount token. The app never talks to the Kubernetes API. |
 | security.podSecurityContext | object | runAsNonRoot, RuntimeDefault seccomp | Pod security context, written to pass Pod Security "restricted" together with securityContext below; overriding a field (or nulling it) relaxes the profile, which only a namespace labelled pod-security.kubernetes.io/enforce=restricted prevents. No runAsUser/runAsGroup: the buildpack image carries a numeric non-root USER (whatever CNB_USER_ID the builder used) and the launcher needs to run as exactly that uid to read /layers; pinning a uid here breaks launch when the image was built as another one. Set them only if your image has no numeric USER. Applies to the fetcher pod too; add `fsGroup` when your storage does not make the snapshot volume writable for the image's user. |
 | security.securityContext | object | no privilege escalation, drop ALL, read-only root | Container security context. The only writable path the app needs is /tmp (java.io.tmpdir: DSS and DigiDoc4J trust-list caches in online mode, temporary policy files; Paketo's certificate loader also copies the JVM truststore there when its layer is read-only) and it is an emptyDir; in snapshot mode the fetcher also writes the store. Logs go to stdout. |
@@ -378,7 +461,7 @@ directory); edit the comments, not this table.
 | tsl.fetcher.backoffLimit | int | `2` | Retries of a failed fetch within one schedule slot (a new pod each time). Not for a run that ended below the mandatory territories (exit 1) or published from a last copy because a download failed (exit 3): those fail the Job at once (podFailurePolicy), a retry seconds later changes nothing, and the cluster's KubeJobFailed-style alert then says so. |
 | tsl.fetcher.bootstrapJob | bool | `true` | Also run one fetch as a Job at install and whenever the fetcher pod changes (image, config), so a fresh install has a snapshot without waiting for the schedule. Named after a hash of the pod spec; the finished Job stays until the next change replaces it. |
 | tsl.fetcher.env | list | `[]` | Extra environment variables for the fetcher only; it already gets `env`, the ConfigMap and `runtime.javaToolOptions` (same profile and settings as the webapp, which is what makes its snapshot the one the webapp expects). |
-| tsl.fetcher.existingSecret | string | `""` | Secret whose keys become the fetcher's environment variables. The fetcher does not get the webapp's `envFrom.existingSecret`: it parses thirty documents from the internet and should hold nothing but what that needs (truststore passwords, if you changed them), not the report-signing key's. Empty: no Secret. |
+| tsl.fetcher.existingSecret | string | `""` | Secret mounted as a Spring config tree for the fetcher, like `secrets.existingSecret` for the webapp (same mountPath). The fetcher does not get the webapp's Secret: it parses thirty documents from the internet and should hold nothing but what that needs (truststore passwords, if you changed them), not the report-signing key's. Empty: no Secret. |
 | tsl.fetcher.failedJobsHistoryLimit | int | `3` | Failed fetch Jobs kept. |
 | tsl.fetcher.keepSnapshots | int | `3` | Snapshots kept besides the current one (siva.tsl.fetcher.keepSnapshots); a pod in the middle of loading an older one is not pulled away. |
 | tsl.fetcher.period | string | `"PT6H"` | How often the trusted lists are fetched (ISO-8601 duration, at most P7D). The schedule and `tsl.snapshot.maxAge` derive from it, and the fetcher writes it into every snapshot (siva.tsl.fetcher.period), from where the pods publish it as siva_tsl_refresh_period_seconds and the trust-list alerts size themselves (table in the deployment guide, "Choosing the fetch period"). Lists can run out within three months of issue, so a longer period is refused at render time. |

@@ -169,7 +169,7 @@ tests:
       - notExists:
           path: spec.jobTemplate.spec.template.spec.volumes[?(@.name == "tsl-work")]
       - notExists:
-          path: spec.jobTemplate.spec.template.spec.containers[0].envFrom
+          path: spec.jobTemplate.spec.template.spec.volumes[?(@.name == "secrets")]
 
   - it: never inherits the webapp's Secret
     template: cronjob-tsl-fetch.yaml
@@ -179,11 +179,13 @@ tests:
         snapshot:
           persistentVolumeClaim:
             create: true
-      envFrom:
+      secrets:
         existingSecret: webapp-secret
     asserts:
       - notExists:
-          path: spec.jobTemplate.spec.template.spec.containers[0].envFrom
+          path: spec.jobTemplate.spec.template.spec.volumes[?(@.name == "secrets")]
+      - notExists:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env[?(@.name == "SPRING_CONFIG_IMPORT")]
 
   - it: takes schedule, time zone, deadlines, a separate working cache and fetcher-only env from values
     template: cronjob-tsl-fetch.yaml
@@ -236,9 +238,20 @@ tests:
       - equal:
           path: spec.jobTemplate.spec.template.spec.imagePullSecrets[0].name
           value: example-registry-credentials
-      - equal:
-          path: spec.jobTemplate.spec.template.spec.containers[0].envFrom[0].secretRef.name
-          value: example-tsl-fetch-env
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.volumes
+          content:
+            name: secrets
+            secret:
+              secretName: example-tsl-fetch-secrets
+              defaultMode: 292
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: SPRING_CONFIG_IMPORT
+            value: configtree:/etc/siva/secrets/
+      - notExists:
+          path: spec.jobTemplate.spec.template.spec.containers[0].envFrom
       - equal:
           path: spec.jobTemplate.spec.template.spec.nodeSelector["kubernetes.io/os"]
           value: linux

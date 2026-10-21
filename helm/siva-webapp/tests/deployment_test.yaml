@@ -201,7 +201,7 @@ tests:
           value: SPRING_CONFIG_ADDITIONAL_LOCATION
       - lengthEqual:
           path: spec.template.spec.containers[0].env
-          count: 9   # 6 chart-owned (Spring location, management port, 4 runtime) + 3
+          count: 10   # 7 chart-owned (Spring location, management port, 5 runtime) + 3
       - contains:
           path: spec.template.spec.containers[0].env
           content:
@@ -237,7 +237,7 @@ tests:
           value: Always
       - lengthEqual:
           path: spec.template.spec.containers[0].env
-          count: 19   # 5 chart-owned (no management port: the overlay keeps the actuator on 8080) + 4 snapshot mode + 6 trust bundles + 4
+          count: 20   # 6 chart-owned (no management port: the overlay keeps the actuator on 8080) + 4 snapshot mode + 6 trust bundles + 4
       - contains:
           path: spec.template.spec.containers[0].env
           content:
@@ -600,6 +600,24 @@ tests:
     asserts:
       - notExists:
           path: spec.template.spec.containers[0].env[?(@.name == "JAVA_TOOL_OPTIONS")]
+
+  - it: turns HTTP keep-alive off by default
+    template: deployment.yaml
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SERVER_TOMCAT_MAX_KEEP_ALIVE_REQUESTS
+            value: "1"
+
+  - it: leaves Tomcat's keep-alive default when httpKeepAlive is on
+    template: deployment.yaml
+    set:
+      runtime:
+        httpKeepAlive: true
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].env[?(@.name == "SERVER_TOMCAT_MAX_KEEP_ALIVE_REQUESTS")]
 
   - it: sleeps in preStop with the kubelet's Sleep action on Kubernetes 1.30+
     template: deployment.yaml

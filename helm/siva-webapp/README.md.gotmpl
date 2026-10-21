@@ -325,7 +325,12 @@ it (the release's full name) unless `applicationLabel` is false; without the ope
   the image. Below 1.30 it execs `sleep`, which Paketo's default tiny run image does not ship:
   there, use a run image that has it or set `runtime.preStopSleepSeconds: 0` (and accept that a
   rollout may refuse a request or two). `terminationGracePeriodSeconds` must exceed sleep +
-  `runtime.shutdownTimeout`; the chart refuses to render otherwise.
+  `runtime.shutdownTimeout`; the chart refuses to render otherwise. The sleep covers new
+  connections only: an idle keep-alive connection a client or ingress still holds to the pod is
+  cut when SIGTERM pauses Tomcat, and a request already on its way over it gets no answer. The
+  chart therefore turns keep-alive off (`runtime.httpKeepAlive`, `Connection: close` on every
+  response); turn it on only for a client that cannot afford a handshake per request, and expect
+  one lost request per idle connection per pod stop.
 - Put JVM flags in `runtime.javaToolOptions`, not in `env`: an `env` entry named
   `JAVA_TOOL_OPTIONS` replaces the chart's.
 - Trust material comes from the classpath unless `trust.*` is set; the JVM's own truststore

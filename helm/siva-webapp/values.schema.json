@@ -4879,6 +4879,7 @@
         "managementPort",
         "shutdownTimeout",
         "preStopSleepSeconds",
+        "httpKeepAlive",
         "forwardHeadersStrategy"
       ],
       "properties": {
@@ -4894,6 +4895,9 @@
         "preStopSleepSeconds": {
           "type": "integer",
           "minimum": 0
+        },
+        "httpKeepAlive": {
+          "type": "boolean"
         },
         "forwardHeadersStrategy": {
           "type": "string",

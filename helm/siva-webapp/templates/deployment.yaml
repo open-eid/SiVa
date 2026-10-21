@@ -69,6 +69,10 @@ spec:
               value: {{ .Values.runtime.shutdownTimeout | quote }}
             - name: SERVER_FORWARD_HEADERS_STRATEGY
               value: {{ .Values.runtime.forwardHeadersStrategy | quote }}
+            {{- if not .Values.runtime.httpKeepAlive }}
+            - name: SERVER_TOMCAT_MAX_KEEP_ALIVE_REQUESTS
+              value: "1"
+            {{- end }}
             {{- if include "siva-webapp.snapshotMode" . }}
             - name: SIVA_TSL_LOADER_LOADFROMCACHE
               value: "true"

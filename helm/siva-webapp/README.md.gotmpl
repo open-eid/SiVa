@@ -326,11 +326,20 @@ it (the release's full name) unless `applicationLabel` is false; without the ope
   there, use a run image that has it or set `runtime.preStopSleepSeconds: 0` (and accept that a
   rollout may refuse a request or two). `terminationGracePeriodSeconds` must exceed sleep +
   `runtime.shutdownTimeout`; the chart refuses to render otherwise. The sleep covers new
-  connections only: an idle keep-alive connection a client or ingress still holds to the pod is
-  cut when SIGTERM pauses Tomcat, and a request already on its way over it gets no answer. The
-  chart therefore turns keep-alive off (`runtime.httpKeepAlive`, `Connection: close` on every
-  response); turn it on only for a client that cannot afford a handshake per request, and expect
-  one lost request per idle connection per pod stop.
+  connections only: an idle HTTP/1.1 keep-alive connection still held to the pod is cut when
+  SIGTERM pauses Tomcat, and a request already on its way over it gets no answer (one lost
+  request per idle connection per pod stop). Who holds such connections depends on what is in
+  front: an L4 load balancer or a NodePort/ClusterIP path keeps established flows on the old pod
+  (conntrack) and every pooled client connection is exposed; a request-aware balancer that
+  watches endpoints (ingress-nginx, Envoy, an ALB target group) stops choosing the pod once its
+  endpoint is gone and its idle pool entries are simply never reused. The chart cannot tell the
+  two apart, so `runtime.httpKeepAlive` is off by default (`Connection: close` on every
+  response), which is right in both. Measured cost on kind at 8 concurrent validations, 600 s
+  each way: +0.4 ms connect time per request, about four more packets each way, CPU within
+  +0.6 to +1.8 % (121 ms per validation either way), memory unchanged, and one SYN lost in
+  36000 requests cost that request a 1 s retransmit. Turn it on behind an endpoint-watching
+  balancer after a rollout under load through that balancer shows no loss; keep it on if TLS
+  ever terminates at the pod, where a handshake per request is no longer cheap.
 - Put JVM flags in `runtime.javaToolOptions`, not in `env`: an `env` entry named
   `JAVA_TOOL_OPTIONS` replaces the chart's.
 - Trust material comes from the classpath unless `trust.*` is set; the JVM's own truststore

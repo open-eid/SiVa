@@ -90,6 +90,13 @@ runtime:
   # Paketo's default tiny run image does not have (the hook then fails and the pause is lost).
   # 0 disables the hook.
   preStopSleepSeconds: 5
+  # -- HTTP keep-alive on the traffic port. Off sets server.tomcat.max-keep-alive-requests=1:
+  # every response says `Connection: close`, so no client or ingress holds an idle connection to
+  # a pod. On, SIGTERM pauses Tomcat while the pod's idle keep-alive connections are still open
+  # and a request already on its way over one of them meets a closed socket instead of an answer
+  # (one lost request per idle pooled connection per pod stop, measured on kind; the preStop
+  # sleep covers new connections only). A validation costs far more than a TCP handshake.
+  httpKeepAlive: false
   # -- server.forward-headers-strategy: `framework` trusts X-Forwarded-* from the Ingress/edge
   # so the app sees the client address and scheme; `none` when nothing in front sets them.
   forwardHeadersStrategy: framework

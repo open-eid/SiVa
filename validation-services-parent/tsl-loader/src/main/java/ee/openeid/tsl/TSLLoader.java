@@ -21,6 +21,7 @@ import ee.openeid.tsl.snapshot.TSLSnapshotManifest;
 import ee.openeid.tsl.snapshot.TSLSnapshotStore;
 import eu.europa.esig.dss.model.DSSDocument;
 import eu.europa.esig.dss.model.InMemoryDocument;
+import eu.europa.esig.dss.model.tsl.LOTLInfo;
 import eu.europa.esig.dss.model.tsl.ParsingInfoRecord;
 import eu.europa.esig.dss.model.tsl.TLInfo;
 import eu.europa.esig.dss.model.tsl.TLValidationJobSummary;
@@ -29,6 +30,7 @@ import eu.europa.esig.dss.model.x509.CertificateToken;
 import eu.europa.esig.dss.service.http.commons.CommonsDataLoader;
 import eu.europa.esig.dss.service.http.commons.FileCacheDataLoader;
 import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
+import eu.europa.esig.dss.spi.DSSUtils;
 import eu.europa.esig.dss.spi.client.http.DSSFileLoader;
 import eu.europa.esig.dss.spi.client.http.IgnoreDataLoader;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
@@ -67,6 +69,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -80,6 +83,9 @@ import java.util.concurrent.atomic.AtomicReference;
 @RequiredArgsConstructor
 public class TSLLoader {
 
+    /** Key of the LOTL in the per-list maps ({@link #getDownloadedAt()}, {@link #getLastCopies()}). */
+    public static final String LOTL_TERRITORY = "EU";
+
     @Getter
     private final @NonNull String tslName;
 
@@ -92,8 +98,10 @@ public class TSLLoader {
 
     private record State(Instant lastRefresh, int numberOfCertificates, Map<String, Integer> certificatesByTerritory,
                          Map<String, Instant> nextUpdateByTerritory, Instant lotlNextUpdate, String snapshotId,
-                         Instant snapshotCreatedAt) {
-        private static final State NONE = new State(null, 0, Map.of(), Map.of(), null, null, null);
+                         Instant snapshotCreatedAt, Map<String, Instant> downloadedAt, Map<String, String> lastCopies,
+                         Duration refreshPeriod) {
+        private static final State NONE = new State(null, 0, Map.of(), Map.of(), null, null, null, Map.of(), Map.of(),
+                null);
     }
 
     private TSLValidationJobFactory tslValidationJobFactory;
@@ -103,7 +111,7 @@ public class TSLLoader {
     private ProxyConfig proxyConfig;
     private SslBundles sslBundles;
     private TSLSnapshotStore snapshotStore;
-    private DSSFileLoader onlineLoader;
+    private LastGoodCopyFileCacheDataLoader onlineLoader;
     // The snapshot id last refused (missing directory, too old); warned about once, then only at debug.
     private String refusedSnapshotId;
 
@@ -144,6 +152,7 @@ public class TSLLoader {
     synchronized void loadTSL() {
         if (!configurationProperties.isLoadFromCache()) {
             TLValidationJob job = validationJob();
+            onlineLoader.resetLastCopies();
             job.setOnlineDataLoader(onlineLoader);
             refresh(job, job::onlineRefresh, "over the network", null);
             return;
@@ -232,13 +241,89 @@ public class TSLLoader {
     }
 
     // The source goes live first, then the state that describes it, so readiness never precedes the anchors.
+    // Where the lists came from is known online (this process downloaded them: the cache files' modification
+    // times and the loader's record of copies served) and in snapshot mode (the fetcher wrote it into the
+    // manifest); a plain cache directory says nothing.
     private void record(TLValidationJobSummary summary, TrustedListsCertificateSource source, String snapshotId) {
-        Instant snapshotCreatedAt = snapshotId == null ? null
-                : snapshotStore.manifest(snapshotId).map(TSLSnapshotManifest::createdAt).orElse(null);
+        Instant snapshotCreatedAt = null;
+        Map<String, Instant> downloadedAt = Map.of();
+        Map<String, String> lastCopies = Map.of();
+        Duration refreshPeriod = null;
+        if (snapshotId != null) {
+            Optional<TSLSnapshotManifest> manifest = snapshotStore.manifest(snapshotId);
+            snapshotCreatedAt = manifest.map(TSLSnapshotManifest::createdAt).orElse(null);
+            downloadedAt = manifest.map(TSLSnapshotManifest::downloadedAt)
+                    .map(byLoader -> byLoader.get(tslName))
+                    .map(Collections::unmodifiableMap)
+                    .orElse(Map.of());
+            refreshPeriod = manifest.map(TSLSnapshotManifest::period).orElse(null);
+        } else if (!configurationProperties.isLoadFromCache()) {
+            downloadedAt = downloadedAt(summary, onlineCacheDirectory());
+            lastCopies = byList(summary, onlineLoader.getLastCopies());
+            refreshPeriod = configurationProperties.getRefreshPeriod();
+        }
         State next = new State(Instant.now(), source.getNumberOfCertificates(), snapshotCertificatesByTerritory(source),
-                nextUpdateByTerritory(summary), lotlNextUpdate(summary), snapshotId, snapshotCreatedAt);
+                nextUpdateByTerritory(summary), lotlNextUpdate(summary), snapshotId, snapshotCreatedAt, downloadedAt,
+                lastCopies, refreshPeriod);
         trustedListsCertificateSource.publish(source);
         state.set(next);
+    }
+
+    private Path onlineCacheDirectory() {
+        File directory = configurationProperties.getCacheDirectory();
+        return directory == null ? Path.of(System.getProperty("java.io.tmpdir")) : directory.toPath();
+    }
+
+    // Modification time of each list's cache file: DSS rewrites the file on every successful download and the
+    // last-copy fallback leaves it alone, so this is when the list was last really downloaded.
+    private static Map<String, Instant> downloadedAt(TLValidationJobSummary summary, Path cacheDirectory) {
+        Map<String, Instant> result = new TreeMap<>();
+        urlsByList(summary).forEach((list, url) -> {
+            Path file = cacheDirectory.resolve(DSSUtils.getNormalizedString(url));
+            try {
+                if (Files.isRegularFile(file)) {
+                    result.put(list, Files.getLastModifiedTime(file).toInstant());
+                }
+            } catch (IOException e) {
+                log.debug("Modification time of {} unreadable", file, e);
+            }
+        });
+        return Collections.unmodifiableMap(result);
+    }
+
+    // Re-keys the loader's URL-keyed copies by list (territory, EU for the LOTL); a URL the summary does not
+    // know keeps its URL as the key rather than being dropped.
+    private static Map<String, String> byList(TLValidationJobSummary summary, Map<String, String> byUrl) {
+        if (byUrl.isEmpty()) {
+            return Map.of();
+        }
+        Map<String, String> listByUrl = new HashMap<>();
+        urlsByList(summary).forEach((list, url) -> listByUrl.put(url, list));
+        Map<String, String> result = new TreeMap<>();
+        byUrl.forEach((url, reason) -> result.put(listByUrl.getOrDefault(url, url), reason));
+        return Collections.unmodifiableMap(result);
+    }
+
+    // List key (territory, EU for the non-pivot LOTL) to URL, for every list the summary parsed a territory for.
+    private static Map<String, String> urlsByList(TLValidationJobSummary summary) {
+        Map<String, String> result = new TreeMap<>();
+        if (summary == null) {
+            return result;
+        }
+        List<TLInfo> trustedLists = new ArrayList<>(summary.getOtherTLInfos());
+        for (LOTLInfo lotl : summary.getLOTLInfos()) {
+            trustedLists.addAll(lotl.getTLInfos());
+            if (!lotl.isPivot() && lotl.getUrl() != null) {
+                result.putIfAbsent(LOTL_TERRITORY, lotl.getUrl());
+            }
+        }
+        for (TLInfo trustedList : trustedLists) {
+            String territory = territoryOf(trustedList);
+            if (territory != null && trustedList.getUrl() != null) {
+                result.putIfAbsent(territory, trustedList.getUrl());
+            }
+        }
+        return result;
     }
 
     /**
@@ -302,6 +387,34 @@ public class TSLLoader {
      */
     public Instant getSnapshotCreatedAt() {
         return state.get().snapshotCreatedAt();
+    }
+
+    /**
+     * When each list was last downloaded from its publisher, by territory ({@link #LOTL_TERRITORY} for the list of
+     * trusted lists): the cache file's modification time in online mode, the manifest's record in snapshot mode. A
+     * list served from its last copy keeps the time of the download that produced the copy, so the age of this value
+     * is how long the publisher has been out of reach. Sorted; empty until the first refresh, when loading a plain
+     * cache directory, and for manifests written before the field existed.
+     */
+    public Map<String, Instant> getDownloadedAt() {
+        return state.get().downloadedAt();
+    }
+
+    /**
+     * The lists the last online refresh served from their last copy because the download failed, by territory
+     * ({@link #LOTL_TERRITORY} for the list of trusted lists; the URL when the summary has no territory for it), with
+     * the reason. Empty when every download succeeded and outside online mode.
+     */
+    public Map<String, String> getLastCopies() {
+        return state.get().lastCopies();
+    }
+
+    /**
+     * How often the lists are refreshed: {@code siva.tsl.loader.refreshPeriod} in online mode, the fetcher's period
+     * from the manifest in snapshot mode; {@code null} until the first refresh or where neither is known.
+     */
+    public Duration getRefreshPeriod() {
+        return state.get().refreshPeriod();
     }
 
     private static Map<String, Instant> nextUpdateByTerritory(TLValidationJobSummary summary) {
@@ -383,8 +496,8 @@ public class TSLLoader {
         return lotlSource;
     }
 
-    public DSSFileLoader onlineLoader() {
-        FileCacheDataLoader onlineFileLoader = new LastGoodCopyFileCacheDataLoader();
+    public LastGoodCopyFileCacheDataLoader onlineLoader() {
+        LastGoodCopyFileCacheDataLoader onlineFileLoader = new LastGoodCopyFileCacheDataLoader();
         cacheDirectory(onlineFileLoader, configurationProperties.getCacheDirectory());
         if (configurationProperties.getOnlineCacheExpirationTime() != null) {
             Duration cacheExpirationTime = configurationProperties.getOnlineCacheExpirationTime();

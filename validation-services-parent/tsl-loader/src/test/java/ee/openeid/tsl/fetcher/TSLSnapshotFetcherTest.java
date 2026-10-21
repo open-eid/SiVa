@@ -16,6 +16,7 @@
 
 package ee.openeid.tsl.fetcher;
 
+import ee.openeid.tsl.TSLLoader;
 import ee.openeid.tsl.configuration.TSLLoaderConfigurationProperties;
 import ee.openeid.tsl.health.TSLHealthIndicator;
 import ee.openeid.tsl.snapshot.TSLSnapshotManifest;
@@ -33,16 +34,20 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Clock;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -53,12 +58,20 @@ class TSLSnapshotFetcherTest {
     private static final Instant NOW = Instant.parse("2026-10-13T18:30:00Z");
     private static final Map<String, Object> DETAILS = Map.of("generic", Map.of("certificates", 32));
 
+    private static final Duration PERIOD = Duration.ofHours(6);
+    private static final Map<String, Instant> DOWNLOADED =
+            Map.of("EE", NOW.minusSeconds(60), "EU", NOW.minusSeconds(30));
+
     @TempDir
     private Path workingCache;
     @Mock
     private TSLSnapshotStore store;
     @Mock
     private TSLHealthIndicator tslHealth;
+    @Mock
+    private TSLLoader genericLoader;
+    @Mock
+    private TSLLoader timemarkLoader;
 
     private TSLSnapshotFetcher fetcher;
 
@@ -68,22 +81,51 @@ class TSLSnapshotFetcherTest {
         Files.writeString(workingCache.resolve("https___lotl_example_eu-lotl_xml"), "lotl");
         TSLLoaderConfigurationProperties loaderProperties = new TSLLoaderConfigurationProperties();
         loaderProperties.setMandatoryTerritories(List.of("EE"));
-        fetcher = new TSLSnapshotFetcher(store, workingCache, tslHealth, loaderProperties,
-                Clock.fixed(NOW, ZoneOffset.UTC), 2);
+        lenient().when(genericLoader.getTslName()).thenReturn("generic");
+        lenient().when(timemarkLoader.getTslName()).thenReturn("timemark");
+        fetcher = new TSLSnapshotFetcher(store, workingCache, tslHealth, Set.of(genericLoader, timemarkLoader),
+                loaderProperties, PERIOD, Clock.fixed(NOW, ZoneOffset.UTC), 2);
     }
 
     @Test
     void fetch_WhenTheTrustListsAreUp_PublishesTheCacheWithAManifestAndPrunes() throws IOException {
         when(tslHealth.health()).thenReturn(Health.up().withDetails(DETAILS).build());
+        when(genericLoader.getDownloadedAt()).thenReturn(DOWNLOADED);
 
         int exitCode = fetcher.fetch();
 
         assertThat(exitCode, is(TSLSnapshotFetcher.EXIT_PUBLISHED));
         ArgumentCaptor<TSLSnapshotManifest> manifest = ArgumentCaptor.forClass(TSLSnapshotManifest.class);
         verify(store).publish(eq(workingCache), manifest.capture());
-        assertThat(manifest.getValue(),
-                is(new TSLSnapshotManifest("20261013T183000Z", NOW, "UP", List.of("EE"), DETAILS, 2)));
+        assertThat(manifest.getValue(), is(new TSLSnapshotManifest("20261013T183000Z", NOW, "UP", List.of("EE"),
+                DETAILS, 2, PERIOD, Map.of("generic", DOWNLOADED))));
         verify(store).prune(2);
+    }
+
+    @Test
+    void fetch_WhenAListCameFromItsLastCopy_PublishesAndExitsWithTheLastCopyCode() throws IOException {
+        when(tslHealth.health()).thenReturn(Health.up().withDetails(DETAILS).build());
+        when(genericLoader.getLastCopies()).thenReturn(Map.of("EU", "Unable to process GET call"));
+
+        int exitCode = fetcher.fetch();
+
+        assertThat(exitCode, is(TSLSnapshotFetcher.EXIT_PUBLISHED_FROM_LAST_COPY));
+        verify(store).publish(eq(workingCache), any());
+        verify(store).prune(2);
+    }
+
+    @Test
+    void fetch_WhenThePeriodIsUnknown_TheManifestCarriesNone() throws IOException {
+        fetcher = new TSLSnapshotFetcher(store, workingCache, tslHealth, Set.of(),
+                new TSLLoaderConfigurationProperties(), null, Clock.fixed(NOW, ZoneOffset.UTC), 2);
+        when(tslHealth.health()).thenReturn(Health.up().build());
+
+        fetcher.fetch();
+
+        ArgumentCaptor<TSLSnapshotManifest> manifest = ArgumentCaptor.forClass(TSLSnapshotManifest.class);
+        verify(store).publish(eq(workingCache), manifest.capture());
+        assertThat(manifest.getValue().period(), nullValue());
+        assertThat(manifest.getValue().downloadedAt(), is(Map.of()));
     }
 
     @Test

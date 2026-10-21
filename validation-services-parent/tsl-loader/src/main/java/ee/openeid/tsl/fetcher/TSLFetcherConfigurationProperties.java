@@ -20,6 +20,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.io.File;
+import java.time.Duration;
 
 @Data
 @ConfigurationProperties(prefix = "siva.tsl.fetcher", ignoreUnknownFields = false)
@@ -28,4 +29,7 @@ public class TSLFetcherConfigurationProperties {
     private File outputDirectory;
     // Snapshots kept besides the current one; older ones are deleted after each successful publish
     private int keepSnapshots = 3;
+    // How often the fetcher is scheduled to run, written into the manifest so that the webapps publish it
+    // (siva_tsl_refresh_period_seconds) and staleness alerts can be sized from the instance. Unset: not reported.
+    private Duration period;
 }

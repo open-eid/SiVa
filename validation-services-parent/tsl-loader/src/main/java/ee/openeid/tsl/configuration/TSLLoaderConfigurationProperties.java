@@ -45,6 +45,10 @@ public class TSLLoaderConfigurationProperties {
     private String ojUrl = "https://eur-lex.europa.eu/eli/C/2026/1944/oj";
     private String lotlRootSchemeInfoUri = "https://ec.europa.eu/tools/lotl/eu-lotl-legalnotice.html";
     private String schedulerCron = "0 0 3 * * ?";
+    // In online mode: how often the lists are refreshed, as the schedulerCron means it; published as the
+    // siva_tsl_refresh_period_seconds gauge so that staleness alerts take the period from the instance instead
+    // of repeating it. In snapshot mode the snapshot's manifest carries the fetcher's period and this is unused.
+    private Duration refreshPeriod = Duration.ofDays(1);
     // Territories whose trusted list must hold at least one anchor for the service to count as ready (tsl health);
     // any other trusted territory may be missing, stale or failing. Empty: any loaded trusted list is enough
     private List<String> mandatoryTerritories = Arrays.asList("EE");

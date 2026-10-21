@@ -44,6 +44,7 @@ public class TSLHealthIndicator implements HealthIndicator {
     public static final String DETAIL_TERRITORIES = "territories";
     public static final String DETAIL_MISSING = "missingMandatoryTerritories";
     public static final String DETAIL_SNAPSHOT = "snapshot";
+    public static final String DETAIL_LAST_COPY = "lastCopy";
 
     private final Set<TSLLoader> loaders;
     private final TSLLoaderConfigurationProperties configurationProperties;
@@ -80,6 +81,10 @@ public class TSLHealthIndicator implements HealthIndicator {
             }
             if (!missing.isEmpty()) {
                 loaderDetails.put(DETAIL_MISSING, missing);
+            }
+            Map<String, String> lastCopies = loader.getLastCopies();
+            if (!lastCopies.isEmpty()) {
+                loaderDetails.put(DETAIL_LAST_COPY, lastCopies);
             }
             details.put(loader.getTslName(), loaderDetails);
         }

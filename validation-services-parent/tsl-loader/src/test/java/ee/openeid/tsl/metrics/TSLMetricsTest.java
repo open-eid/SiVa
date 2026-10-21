@@ -26,6 +26,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.File;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,7 @@ class TSLMetricsTest {
     private static final Instant EE_NEXT_UPDATE = Instant.parse("2026-11-20T00:00:00Z");
     private static final Instant LOTL_NEXT_UPDATE = Instant.parse("2027-03-17T12:04:06Z");
     private static final Instant SNAPSHOT_CREATED = Instant.parse("2026-10-14T06:01:08Z");
+    private static final Instant DOWNLOADED = Instant.parse("2026-10-21T06:00:12Z");
 
     @Mock
     private TSLLoader loader;
@@ -122,6 +124,36 @@ class TSLMetricsTest {
     }
 
     @Test
+    void lastDownloadIsReportedInUnixSecondsPerTerritoryAndForTheLotl() {
+        when(loader.getDownloadedAt()).thenReturn(Map.of("EE", DOWNLOADED, TSLMetrics.LOTL_TERRITORY, DOWNLOADED));
+
+        bind();
+
+        assertThat(downloaded("tl", "EE"), is((double) DOWNLOADED.getEpochSecond()));
+        assertThat(downloaded("lotl", TSLMetrics.LOTL_TERRITORY), is((double) DOWNLOADED.getEpochSecond()));
+        assertThat(Double.isNaN(downloaded("tl", "LV")), is(true));
+    }
+
+    @Test
+    void refreshPeriodIsReportedInSecondsPerLoader() {
+        when(loader.getRefreshPeriod()).thenReturn(Duration.ofHours(6));
+
+        bind();
+
+        assertThat(registry.get(TSLMetrics.REFRESH_PERIOD).tag("loader", "generic").gauge().value(), is(21600.0));
+        assertThat(registry.get(TSLMetrics.REFRESH_PERIOD).gauge().getId().getBaseUnit(), is("seconds"));
+    }
+
+    @Test
+    void refreshPeriodIsNotANumberWhileUnknown() {
+        when(loader.getRefreshPeriod()).thenReturn(null);
+
+        bind();
+
+        assertThat(Double.isNaN(registry.get(TSLMetrics.REFRESH_PERIOD).gauge().value()), is(true));
+    }
+
+    @Test
     void snapshotCreationIsReportedInSnapshotMode() {
         properties.setLoadFromCache(true);
         properties.setSnapshotDirectory(new File("/var/siva/tsl"));
@@ -159,5 +191,9 @@ class TSLMetricsTest {
 
     private double nextUpdate(String kind, String territory) {
         return registry.get(TSLMetrics.NEXT_UPDATE).tag("kind", kind).tag("territory", territory).gauge().value();
+    }
+
+    private double downloaded(String kind, String territory) {
+        return registry.get(TSLMetrics.LIST_DOWNLOADED).tag("kind", kind).tag("territory", territory).gauge().value();
     }
 }

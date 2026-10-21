@@ -16,18 +16,26 @@
 
 package ee.openeid.tsl.snapshot;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
 // manifest.json of a published snapshot: the fetcher's `tsl` health at publication, i.e. per loader the
-// anchors, territories and missing mandatory territories, as a webapp reports them after loading the same files.
+// anchors, territories, missing mandatory territories and lists served from their last copy, as a webapp
+// reports them after loading the same files; plus what only the fetcher knows and the webapps publish as
+// metrics: how often it runs (`period`) and, per loader and territory (`EU` for the list of trusted lists),
+// when each list was last downloaded from its publisher (`downloadedAt`, the cache file's modification time,
+// which a copy served in place of a failed download leaves as it was). The last two are null in manifests
+// written before they existed.
 public record TSLSnapshotManifest(
         String id,
         Instant createdAt,
         String status,
         List<String> mandatoryTerritories,
         Map<String, Object> tsl,
-        int files
+        int files,
+        Duration period,
+        Map<String, Map<String, Instant>> downloadedAt
 ) {
 }

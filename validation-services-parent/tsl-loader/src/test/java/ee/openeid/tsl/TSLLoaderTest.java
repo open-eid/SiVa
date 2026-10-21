@@ -27,7 +27,10 @@ import eu.europa.esig.dss.model.tsl.TrustProperties;
 import eu.europa.esig.dss.model.x509.CertificateToken;
 import eu.europa.esig.dss.service.http.commons.CommonsDataLoader;
 import eu.europa.esig.dss.service.http.commons.FileCacheDataLoader;
+import eu.europa.esig.dss.spi.DSSUtils;
 import eu.europa.esig.dss.spi.client.http.DSSFileLoader;
+import eu.europa.esig.dss.spi.client.http.DataLoader;
+import eu.europa.esig.dss.spi.exception.DSSExternalResourceException;
 import eu.europa.esig.dss.spi.x509.CertificateSource;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.spi.x509.KeyStoreCertificateSource;
@@ -46,8 +49,10 @@ import org.springframework.boot.ssl.DefaultSslBundleRegistry;
 import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
 import java.security.KeyStore;
 import java.time.Duration;
 import java.time.Instant;
@@ -68,6 +73,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.lenient;
@@ -97,6 +103,8 @@ class TSLLoaderTest {
 
     @TempDir
     private Path snapshotRoot;
+    @TempDir
+    private Path cache;
 
     @InjectMocks
     private TSLLoader tslLoader = new TSLLoader("testName");
@@ -427,6 +435,111 @@ class TSLLoaderTest {
     }
 
     @Test
+    void loadTSL_Online_TheDownloadTimeOfEachListIsItsCacheFilesModificationTime() throws IOException {
+        TSLLoaderConfigurationProperties props = createConfigurationProperties(false);
+        props.setCacheDirectory(cache.toFile());
+        props.setRefreshPeriod(Duration.ofHours(6));
+        tslLoader.setTslLoaderConfigurationProperties(props);
+        tslLoader.init();
+        Instant lotlDownloaded = Instant.parse("2026-10-20T06:00:00Z");
+        Instant estonianDownloaded = Instant.parse("2026-10-21T06:00:00Z");
+        cached("https://lotl", lotlDownloaded);
+        cached("https://tl/EE", estonianDownloaded);
+        LOTLInfo lotl = lotl(Instant.parse("2027-03-17T12:04:06Z"), trustedList("EE"), trustedList("LV"));
+        when(tslValidationJob.getSummary()).thenReturn(new TLValidationJobSummary(List.of(lotl), List.of()));
+
+        tslLoader.loadTSL();
+
+        assertEquals(Map.of("EU", lotlDownloaded, "EE", estonianDownloaded), tslLoader.getDownloadedAt());
+        assertEquals(Map.of(), tslLoader.getLastCopies());
+        assertEquals(Duration.ofHours(6), tslLoader.getRefreshPeriod());
+    }
+
+    @Test
+    void loadTSL_Online_AListServedFromItsLastCopyIsRecordedByTerritoryWithTheReason() throws IOException {
+        TSLLoaderConfigurationProperties props = createConfigurationProperties(false);
+        props.setCacheDirectory(cache.toFile());
+        tslLoader.setTslLoaderConfigurationProperties(props);
+        tslLoader.init();
+        cached("https://lotl", Instant.parse("2026-10-20T06:00:00Z"));
+        AtomicReference<LastGoodCopyFileCacheDataLoader> onlineLoader = new AtomicReference<>();
+        doAnswer(invocation -> {
+            LastGoodCopyFileCacheDataLoader loader = invocation.getArgument(0);
+            DataLoader unreachable = mock(DataLoader.class);
+            when(unreachable.get(anyString())).thenThrow(new DSSExternalResourceException("certificate_unknown"));
+            loader.setDataLoader(unreachable);
+            onlineLoader.set(loader);
+            return null;
+        }).when(tslValidationJob).setOnlineDataLoader(any());
+        doAnswer(invocation -> onlineLoader.get().getDocument("https://lotl"))
+                .when(tslValidationJob).onlineRefresh();
+        LOTLInfo lotl = lotl(Instant.parse("2027-03-17T12:04:06Z"), trustedList("EE"));
+        when(tslValidationJob.getSummary()).thenReturn(new TLValidationJobSummary(List.of(lotl), List.of()));
+
+        tslLoader.loadTSL();
+
+        assertEquals(Map.of("EU", "certificate_unknown"), tslLoader.getLastCopies());
+        assertEquals(Map.of("EU", Instant.parse("2026-10-20T06:00:00Z")), tslLoader.getDownloadedAt());
+    }
+
+    @Test
+    void loadTSL_Online_TheNextRefreshForgetsTheCopiesServedBefore() throws IOException {
+        TSLLoaderConfigurationProperties props = createConfigurationProperties(false);
+        props.setCacheDirectory(cache.toFile());
+        tslLoader.setTslLoaderConfigurationProperties(props);
+        tslLoader.init();
+        cached("https://lotl", Instant.parse("2026-10-20T06:00:00Z"));
+        AtomicReference<LastGoodCopyFileCacheDataLoader> onlineLoader = new AtomicReference<>();
+        doAnswer(invocation -> {
+            onlineLoader.set(invocation.getArgument(0));
+            return null;
+        }).when(tslValidationJob).setOnlineDataLoader(any());
+        DataLoader dataLoader = mock(DataLoader.class);
+        when(dataLoader.get(anyString())).thenThrow(new DSSExternalResourceException("unreachable"))
+                .thenReturn("<lotl/>".getBytes(StandardCharsets.UTF_8));
+        doAnswer(invocation -> {
+            onlineLoader.get().setDataLoader(dataLoader);
+            return onlineLoader.get().getDocument("https://lotl");
+        }).when(tslValidationJob).onlineRefresh();
+        LOTLInfo lotl = lotl(Instant.parse("2027-03-17T12:04:06Z"));
+        when(tslValidationJob.getSummary()).thenReturn(new TLValidationJobSummary(List.of(lotl), List.of()));
+        tslLoader.loadTSL();
+        assertEquals(Map.of("EU", "unreachable"), tslLoader.getLastCopies());
+
+        tslLoader.loadTSL();
+
+        assertEquals(Map.of(), tslLoader.getLastCopies());
+    }
+
+    @Test
+    void loadTSL_WhenSnapshotIsLoaded_ItsPeriodAndDownloadTimesAreTakenFromTheManifest() throws IOException {
+        tslLoader.setTslLoaderConfigurationProperties(createSnapshotConfigurationProperties());
+        tslLoader.init();
+        Instant downloaded = Instant.parse("2026-10-21T06:00:12Z");
+        publish("20261021T060108Z", Instant.parse("2026-10-21T06:01:08Z"), Duration.ofHours(6),
+                Map.of("testName", Map.of("EU", downloaded, "EE", downloaded),
+                        "other", Map.of("EE", Instant.EPOCH)));
+
+        tslLoader.loadTSL();
+
+        assertEquals(Map.of("EU", downloaded, "EE", downloaded), tslLoader.getDownloadedAt());
+        assertEquals(Duration.ofHours(6), tslLoader.getRefreshPeriod());
+        assertEquals(Map.of(), tslLoader.getLastCopies());
+    }
+
+    @Test
+    void loadTSL_WhenTheManifestPredatesThePeriodAndDownloadTimes_TheyAreUnknown() throws IOException {
+        tslLoader.setTslLoaderConfigurationProperties(createSnapshotConfigurationProperties());
+        tslLoader.init();
+        publish("20261014T060108Z", Instant.parse("2026-10-14T06:01:08Z"));
+
+        tslLoader.loadTSL();
+
+        assertEquals(Map.of(), tslLoader.getDownloadedAt());
+        assertNull(tslLoader.getRefreshPeriod());
+    }
+
+    @Test
     void init_WhenSslBundleIsSet_TheTrustListDownloadsTrustTheBundle() throws Exception {
         TSLLoaderConfigurationProperties props = createConfigurationProperties(false);
         props.setSslBundle("tsl");
@@ -479,9 +592,22 @@ class TSLLoaderTest {
         Files.writeString(snapshotRoot.resolve("current"), id + "\n");
     }
 
+    // A list file in the online working cache as DSS names it, with the modification time of its download.
+    private void cached(String url, Instant downloadedAt) throws IOException {
+        Path file = cache.resolve(DSSUtils.getNormalizedString(url));
+        Files.writeString(file, "<list/>");
+        Files.setLastModifiedTime(file, FileTime.from(downloadedAt));
+    }
+
     private void publish(String id, Instant createdAt) throws IOException {
+        publish(id, createdAt, null, null);
+    }
+
+    private void publish(String id, Instant createdAt, Duration period,
+                         Map<String, Map<String, Instant>> downloadedAt) throws IOException {
         publish(id);
-        TSLSnapshotManifest manifest = new TSLSnapshotManifest(id, createdAt, "UP", List.of(), Map.of(), 0);
+        TSLSnapshotManifest manifest = new TSLSnapshotManifest(id, createdAt, "UP", List.of(), Map.of(), 0, period,
+                downloadedAt);
         Files.write(snapshotRoot.resolve("snapshots").resolve(id).resolve(TSLSnapshotStore.MANIFEST_FILE),
                 JsonMapper.shared().writeValueAsBytes(manifest));
     }

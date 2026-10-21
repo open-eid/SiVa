@@ -42,6 +42,7 @@ class TSLHealthIndicatorTest {
 
     private static final Instant REFRESHED = Instant.parse("2026-10-12T20:00:00Z");
     private static final Map<String, Integer> EE_AND_LV = Map.of("EE", 32, "LV", 5);
+    private static final String LAST_COPY_REASON = "Unable to process GET call for url [https://lotl]";
 
     @Mock
     private TSLLoader genericLoader;
@@ -77,6 +78,24 @@ class TSLHealthIndicatorTest {
                 TSLHealthIndicator.DETAIL_LAST_REFRESH, "2026-10-12T20:00:00Z",
                 TSLHealthIndicator.DETAIL_TERRITORIES, Map.of("EE", 32),
                 TSLHealthIndicator.DETAIL_SNAPSHOT, "20261013T183000Z")));
+    }
+
+    @Test
+    void health_WhenALoaderServedAListFromItsLastCopy_TheListAndReasonAreReported() {
+        stub(genericLoader, "generic", REFRESHED, 32, Map.of("EE", 32));
+        stub(timemarkLoader, "timemark", REFRESHED, 32, Map.of("EE", 32));
+        when(genericLoader.getLastCopies()).thenReturn(Map.of("EU", LAST_COPY_REASON));
+
+        Health health = indicator(List.of("EE")).health();
+
+        assertThat(health.getStatus(), is(Status.UP));
+        assertThat(health.getDetails().get("generic"), is(Map.of(
+                TSLHealthIndicator.DETAIL_CERTIFICATES, 32,
+                TSLHealthIndicator.DETAIL_LAST_REFRESH, "2026-10-12T20:00:00Z",
+                TSLHealthIndicator.DETAIL_TERRITORIES, Map.of("EE", 32),
+                TSLHealthIndicator.DETAIL_LAST_COPY, Map.of("EU", LAST_COPY_REASON))));
+        assertThat(((Map<?, ?>) health.getDetails().get("timemark")).containsKey(TSLHealthIndicator.DETAIL_LAST_COPY),
+                is(false));
     }
 
     @Test

@@ -16,6 +16,7 @@
 
 package ee.openeid.tsl.fetcher;
 
+import ee.openeid.tsl.TSLLoader;
 import ee.openeid.tsl.configuration.TSLLoaderConfigurationProperties;
 import ee.openeid.tsl.health.TSLHealthIndicator;
 import ee.openeid.tsl.snapshot.TSLSnapshotStore;
@@ -28,6 +29,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import java.time.Clock;
+import java.util.Set;
 
 // The tsl-fetch profile turns the application into a one-shot trust-list fetcher: the loaders refresh online
 // into siva.tsl.loader.cacheDirectory as usual while the context starts, then the runner publishes that cache
@@ -46,7 +48,7 @@ public class TSLFetcherConfiguration {
     @Bean
     public TSLSnapshotFetcher tslSnapshotFetcher(TSLFetcherConfigurationProperties fetcherProperties,
                                                  TSLLoaderConfigurationProperties loaderProperties,
-                                                 TSLHealthIndicator tslHealthIndicator) {
+                                                 TSLHealthIndicator tslHealthIndicator, Set<TSLLoader> loaders) {
         if (loaderProperties.isLoadFromCache()) {
             throw new IllegalStateException("The tsl-fetch profile downloads the trust lists: "
                     + "siva.tsl.loader.loadFromCache must be false");
@@ -61,7 +63,8 @@ public class TSLFetcherConfiguration {
         }
         TSLSnapshotStore store = new TSLSnapshotStore(fetcherProperties.getOutputDirectory().toPath());
         return new TSLSnapshotFetcher(store, loaderProperties.getCacheDirectory().toPath(), tslHealthIndicator,
-                loaderProperties, Clock.systemUTC(), fetcherProperties.getKeepSnapshots());
+                loaders, loaderProperties, fetcherProperties.getPeriod(), Clock.systemUTC(),
+                fetcherProperties.getKeepSnapshots());
     }
 
     @Bean

@@ -43,13 +43,10 @@ abstract class BaseTimeStampTokenValidationServiceTest {
 
     @BeforeEach
     void setUp() {
-        validationService = new TimeStampTokenValidationService();
         policyProperties.initPolicySettings();
-        ConstraintLoadingSignaturePolicyService signaturePolicyService = new ConstraintLoadingSignaturePolicyService(policyProperties);
-        validationService.setSignaturePolicyService(signaturePolicyService);
-        validationService.setTrustedListsCertificateSource(trustedListsCertificateSource);
-        ReportConfigurationProperties reportConfigurationProperties = new ReportConfigurationProperties(true);
-        validationService.setReportConfigurationProperties(reportConfigurationProperties);
+        validationService = new TimeStampTokenValidationService(
+                new ConstraintLoadingSignaturePolicyService(policyProperties), trustedListsCertificateSource,
+                new ReportConfigurationProperties(true));
     }
 
     static ValidationDocument buildValidationDocument(String testFile) {

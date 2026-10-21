@@ -16,6 +16,7 @@
 
 package ee.openeid.validation.service.timestamptoken;
 
+import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.CertificateType;
 import ee.openeid.siva.validation.document.report.Error;
@@ -364,6 +365,7 @@ class TimeStampTokenValidationServiceTestProfileTest extends BaseTimeStampTokenV
         ConstraintLoadingSignaturePolicyService signaturePolicyService = new ConstraintLoadingSignaturePolicyService(policyProperties);
         signaturePolicyService.setSignaturePolicies(Map.of(constraintDefinedPolicy.getName(), constraintDefinedPolicy));
 
-        validationService.setSignaturePolicyService(signaturePolicyService);
+        validationService = new TimeStampTokenValidationService(signaturePolicyService, trustedListsCertificateSource,
+                new ReportConfigurationProperties(true));
     }
 }

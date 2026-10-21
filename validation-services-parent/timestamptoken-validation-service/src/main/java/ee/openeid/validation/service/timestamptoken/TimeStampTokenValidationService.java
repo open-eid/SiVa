@@ -43,7 +43,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -74,9 +73,19 @@ public class TimeStampTokenValidationService implements ValidationService {
     private static final String EVIDENCE_RECORD_FILE_EXTENSION_XML = "EVIDENCERECORD.XML";
     private static final String SIGNATURE_FILE_EXTENSION_XML = "SIGNATURES.XML";
 
-    private ConstraintLoadingSignaturePolicyService signaturePolicyService;
-    private TrustedListsCertificateSourceHolder trustedListsCertificateSource;
-    private ReportConfigurationProperties reportConfigurationProperties;
+    private final ConstraintLoadingSignaturePolicyService signaturePolicyService;
+    private final TrustedListsCertificateSourceHolder trustedListsCertificateSource;
+    private final ReportConfigurationProperties reportConfigurationProperties;
+
+    public TimeStampTokenValidationService(
+            @Qualifier("timestampPolicyService") ConstraintLoadingSignaturePolicyService signaturePolicyService,
+            @Qualifier("genericTrustedListsCertificateSource") TrustedListsCertificateSourceHolder trustedListsCertificateSource,
+            ReportConfigurationProperties reportConfigurationProperties
+    ) {
+        this.signaturePolicyService = signaturePolicyService;
+        this.trustedListsCertificateSource = trustedListsCertificateSource;
+        this.reportConfigurationProperties = reportConfigurationProperties;
+    }
 
 
     @Override
@@ -197,23 +206,6 @@ public class TimeStampTokenValidationService implements ValidationService {
 
     private static String getFileFromFullPath(String path) {
         return path.substring(path.lastIndexOf("/") + 1);
-    }
-
-    @Autowired
-    @Qualifier("timestampPolicyService")
-    public void setSignaturePolicyService(ConstraintLoadingSignaturePolicyService signaturePolicyService) {
-        this.signaturePolicyService = signaturePolicyService;
-    }
-
-    @Autowired
-    @Qualifier(value = "genericTrustedListsCertificateSource")
-    public void setTrustedListsCertificateSource(TrustedListsCertificateSourceHolder trustedListsCertificateSource) {
-        this.trustedListsCertificateSource = trustedListsCertificateSource;
-    }
-
-    @Autowired
-    public void setReportConfigurationProperties(ReportConfigurationProperties reportConfigurationProperties) {
-        this.reportConfigurationProperties = reportConfigurationProperties;
     }
 
 }

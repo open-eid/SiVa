@@ -23,6 +23,7 @@ import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSign
 import ee.openeid.tsl.TSLLoader;
 import ee.openeid.tsl.TSLRefresher;
 import ee.openeid.tsl.TSLValidationJobFactory;
+import ee.openeid.tsl.TrustedListsCertificateSourceHolder;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
 import ee.openeid.validation.service.generic.configuration.GenericValidationServiceConfiguration;
 import ee.openeid.validation.service.generic.configuration.properties.GenericSignaturePolicyProperties;
@@ -30,7 +31,6 @@ import ee.openeid.validation.service.generic.configuration.properties.TLevelSign
 import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
 import ee.openeid.validation.service.generic.validator.ocsp.OCSPSourceFactory;
 import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
-import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ abstract class GenericValidationServiceTestBase {
 
     protected ConstraintLoadingSignaturePolicyService signaturePolicyService;
     @Autowired
-    protected TrustedListsCertificateSource trustedListsCertificateSource;
+    protected TrustedListsCertificateSourceHolder trustedListsCertificateSource;
     @Autowired
     protected GenericSignaturePolicyProperties policySettings;
     @Autowired

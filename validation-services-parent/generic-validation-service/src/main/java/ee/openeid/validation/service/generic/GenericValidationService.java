@@ -26,6 +26,7 @@ import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
+import ee.openeid.tsl.TrustedListsCertificateSourceHolder;
 import ee.openeid.tsl.configuration.AlwaysFailingCRLSource;
 import ee.openeid.validation.service.generic.validator.RevocationFreshnessValidator;
 import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
@@ -43,7 +44,6 @@ import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
 import eu.europa.esig.dss.spi.client.http.NativeHTTPDataLoader;
 import eu.europa.esig.dss.spi.exception.IllegalInputException;
 import eu.europa.esig.dss.spi.policy.SignaturePolicyProvider;
-import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.spi.validation.CommonCertificateVerifier;
 import eu.europa.esig.dss.spi.x509.aia.DefaultAIASource;
 import eu.europa.esig.dss.validation.SignedDocumentValidator;
@@ -66,7 +66,7 @@ public class GenericValidationService implements ValidationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(GenericValidationService.class);
     private static final ValidationLevel DEFAULT_VALIDATION_LEVEL = ValidationLevel.ARCHIVAL_DATA;
 
-    private TrustedListsCertificateSource trustedListsCertificateSource;
+    private TrustedListsCertificateSourceHolder trustedListsCertificateSource;
     private ConstraintLoadingSignaturePolicyService signaturePolicyService;
     private ReportConfigurationProperties reportConfigurationProperties;
     private ProxyConfig proxyConfig;
@@ -133,7 +133,9 @@ public class GenericValidationService implements ValidationService {
         CommonCertificateVerifier certificateVerifier = createCertificateVerifier();
         SignaturePolicyProvider signaturePolicyProvider = createSignaturePolicyProvider();
 
-        LOGGER.debug("Certificate pool size: {}", getCertificatePoolSize(certificateVerifier));
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Certificate pool size: {}", getCertificatePoolSize(certificateVerifier));
+        }
         validator.setCertificateVerifier(certificateVerifier);
         validator.setSignaturePolicyProvider(signaturePolicyProvider);
         validator.setValidationLevel(getValidationLevel(validationDocument));
@@ -167,7 +169,8 @@ public class GenericValidationService implements ValidationService {
 
     private CommonCertificateVerifier createCertificateVerifier() {
         CommonCertificateVerifier certificateVerifier = new CommonCertificateVerifier(true);
-        certificateVerifier.setTrustedCertSources(trustedListsCertificateSource);
+        // Resolved per request: the loader publishes a complete source after each refresh and never changes it.
+        certificateVerifier.setTrustedCertSources(trustedListsCertificateSource.current());
         certificateVerifier.setOcspSource(ocspSourceFactory.create());
         certificateVerifier.setCrlSource(new AlwaysFailingCRLSource());
 
@@ -224,7 +227,7 @@ public class GenericValidationService implements ValidationService {
 
     @Autowired
     @Qualifier(value = GENERIC_TRUSTED_LISTS_CERTIFICATE_SOURCE_BEAN_NAME)
-    public void setTrustedListsCertificateSource(TrustedListsCertificateSource trustedListsCertificateSource) {
+    public void setTrustedListsCertificateSource(TrustedListsCertificateSourceHolder trustedListsCertificateSource) {
         this.trustedListsCertificateSource = trustedListsCertificateSource;
     }
 

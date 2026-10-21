@@ -43,6 +43,11 @@ config:
       tsl:
         loader:
           url: http://siva-lab-tsl.siva.svc:8080/lotl.xml
+# The lab's test Secret (siva-lab chart, `labSecrets`): one property-named key that turns on the
+# per-request "Certificate pool size" debug line, so a pod log shows the config tree was read.
+# Lab only: it holds nothing secret, it exercises the mechanism.
+secrets:
+  existingSecret: siva-lab-secrets
 # SiVa's system tests reach the monitoring endpoints through the same host:port as the API, so
 # this overlay keeps the actuator on the traffic port instead of the chart's default split.
 runtime:

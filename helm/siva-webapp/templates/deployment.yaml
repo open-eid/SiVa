@@ -91,6 +91,9 @@ spec:
             {{- with include "siva-webapp.trustEnv" . | trim }}
             {{- . | nindent 12 }}
             {{- end }}
+            {{- with include "siva-webapp.secretsEnv" (dict "root" . "secret" .Values.secrets.existingSecret) | trim }}
+            {{- . | nindent 12 }}
+            {{- end }}
             {{- with .Values.runtime.javaToolOptions }}
             - name: JAVA_TOOL_OPTIONS
               value: {{ . | quote }}
@@ -98,11 +101,6 @@ spec:
             {{- with .Values.env }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
-          {{- if .Values.envFrom.existingSecret }}
-          envFrom:
-            - secretRef:
-                name: {{ .Values.envFrom.existingSecret }}
-          {{- end }}
           ports:
             - name: http
               containerPort: {{ .Values.service.containerPort }}
@@ -181,6 +179,9 @@ spec:
             {{- with include "siva-webapp.trustVolumeMounts" . | trim }}
             {{- . | nindent 12 }}
             {{- end }}
+            {{- with include "siva-webapp.secretsVolumeMounts" (dict "root" . "secret" .Values.secrets.existingSecret) | trim }}
+            {{- . | nindent 12 }}
+            {{- end }}
             {{- with .Values.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -203,6 +204,9 @@ spec:
           {{- include "siva-webapp.tslStoreVolumeSource" . | nindent 10 }}
         {{- end }}
         {{- with include "siva-webapp.trustVolumes" . | trim }}
+        {{- . | nindent 8 }}
+        {{- end }}
+        {{- with include "siva-webapp.secretsVolumes" (dict "root" . "secret" .Values.secrets.existingSecret) | trim }}
         {{- . | nindent 8 }}
         {{- end }}
         {{- with .Values.extraVolumes }}

@@ -4933,12 +4933,16 @@
         }
       }
     },
-    "envFrom": {
+    "secrets": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
         "existingSecret": {
           "type": "string"
+        },
+        "mountPath": {
+          "type": "string",
+          "pattern": "^/"
         }
       }
     },

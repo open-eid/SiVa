@@ -236,6 +236,9 @@ spec:
         {{- with include "siva-webapp.trustEnv" . | trim }}
         {{- . | nindent 8 }}
         {{- end }}
+        {{- with include "siva-webapp.secretsEnv" (dict "root" . "secret" .Values.tsl.fetcher.existingSecret) | trim }}
+        {{- . | nindent 8 }}
+        {{- end }}
         {{- with .Values.runtime.javaToolOptions }}
         - name: JAVA_TOOL_OPTIONS
           value: {{ . | quote }}
@@ -246,11 +249,6 @@ spec:
         {{- with .Values.tsl.fetcher.env }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- with .Values.tsl.fetcher.existingSecret }}
-      envFrom:
-        - secretRef:
-            name: {{ . }}
-      {{- end }}
       {{- with .Values.tsl.fetcher.resources }}
       resources:
         {{- toYaml . | nindent 8 }}
@@ -268,6 +266,9 @@ spec:
           mountPath: /var/siva/tsl-work
         {{- end }}
         {{- with include "siva-webapp.trustVolumeMounts" . | trim }}
+        {{- . | nindent 8 }}
+        {{- end }}
+        {{- with include "siva-webapp.secretsVolumeMounts" (dict "root" . "secret" .Values.tsl.fetcher.existingSecret) | trim }}
         {{- . | nindent 8 }}
         {{- end }}
   volumes:
@@ -288,6 +289,9 @@ spec:
       {{- toYaml . | nindent 6 }}
     {{- end }}
     {{- with include "siva-webapp.trustVolumes" . | trim }}
+    {{- . | nindent 4 }}
+    {{- end }}
+    {{- with include "siva-webapp.secretsVolumes" (dict "root" . "secret" .Values.tsl.fetcher.existingSecret) | trim }}
     {{- . | nindent 4 }}
     {{- end }}
   {{- with .Values.nodeSelector }}
@@ -570,4 +574,37 @@ podFailurePolicy:
         containerName: tsl-fetch
         operator: In
         values: [1, 3]
+{{- end }}
+
+{{/*
+Secrets as files: the named Secret mounted read-only at secrets.mountPath and imported as a Spring
+config tree, so every key is a file whose name is the property it sets
+(`siva.signature-service.pkcs12.password`) and nothing reaches the environment. Called with a
+dict: `root` (the top-level context) and `secret` (the Secret name, empty for none), so the
+webapp and the fetcher can name different Secrets.
+*/}}
+{{- define "siva-webapp.secretsEnv" -}}
+{{- if .secret }}
+- name: SPRING_CONFIG_IMPORT
+  value: {{ printf "configtree:%s/" (trimSuffix "/" .root.Values.secrets.mountPath) | quote }}
+{{- end }}
+{{- end }}
+
+{{- define "siva-webapp.secretsVolumeMounts" -}}
+{{- if .secret }}
+- name: secrets
+  mountPath: {{ .root.Values.secrets.mountPath }}
+  readOnly: true
+{{- end }}
+{{- end }}
+
+{{- define "siva-webapp.secretsVolumes" -}}
+{{- if .secret }}
+- name: secrets
+  secret:
+    secretName: {{ .secret }}
+    {{- /* Readable by any uid on purpose: the pods run non-root without an fsGroup, so a 0400 file
+           would be unreadable; the mount is read-only and the pod is the boundary. */}}
+    defaultMode: 0444
+{{- end }}
 {{- end }}

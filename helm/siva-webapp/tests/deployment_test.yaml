@@ -331,21 +331,58 @@ tests:
             name: example-extra
             emptyDir: {}
 
-  - it: envFrom is only rendered with an existing secret
+  - it: mounts no Secret and imports no config tree by default
     template: deployment.yaml
     asserts:
       - notExists:
           path: spec.template.spec.containers[0].envFrom
+      - notExists:
+          path: spec.template.spec.volumes[?(@.name == "secrets")]
+      - notExists:
+          path: spec.template.spec.containers[0].env[?(@.name == "SPRING_CONFIG_IMPORT")]
 
-  - it: envFrom references the existing secret when set
+  - it: mounts the named Secret read-only as a Spring config tree, never as environment
     template: deployment.yaml
     set:
-      envFrom:
-        existingSecret: siva-env
+      secrets:
+        existingSecret: siva-secrets
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: secrets
+            secret:
+              secretName: siva-secrets
+              defaultMode: 292
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: secrets
+            mountPath: /etc/siva/secrets
+            readOnly: true
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SPRING_CONFIG_IMPORT
+            value: configtree:/etc/siva/secrets/
+      - notExists:
+          path: spec.template.spec.containers[0].envFrom
+
+  - it: mounts the Secret where secrets.mountPath says and imports it with one trailing slash
+    template: deployment.yaml
+    set:
+      secrets:
+        existingSecret: siva-secrets
+        mountPath: /run/secrets/siva/
     asserts:
       - equal:
-          path: spec.template.spec.containers[0].envFrom[0].secretRef.name
-          value: siva-env
+          path: spec.template.spec.containers[0].volumeMounts[?(@.name == "secrets")].mountPath
+          value: /run/secrets/siva/
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SPRING_CONFIG_IMPORT
+            value: configtree:/run/secrets/siva/
 
   - it: token automount can be switched on for the pod
     template: deployment.yaml

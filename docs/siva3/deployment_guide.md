@@ -250,9 +250,10 @@ needs, no support promise. Its README (`helm/siva-webapp/README.md`) documents e
    application.yml syntax (nested, kebab-case) as a Spring configuration override; the chart's
    values schema rejects a key SiVa or Spring Boot does not declare. `config.files` mounts further
    files beside it (a Logback configuration, a digidoc4j override), `env` takes environment
-   variables (relaxed binding), `envFrom.existingSecret` sources passwords from a Secret, and
-   `extraVolumes`, `extraVolumeMounts` and `extraContainers` pass pod spec through for what the
-   chart does not model (a sync sidecar for a snapshot bucket, for example). Ingress objects come from
+   variables (relaxed binding), `secrets.existingSecret` mounts a Secret whose keys are read as
+   properties (passwords, the signing keystore), and `extraVolumes`, `extraVolumeMounts` and
+   `extraContainers` pass pod spec through for what the chart does not model (a sync sidecar for
+   a snapshot bucket, for example). Ingress objects come from
    `network.ingresses` (set your controller's body-size limit to at least 27 MB). Health with
    details, heartbeat, version and Prometheus metrics are served on the management port (8081)
    through the in-cluster Service `<release>-management`, not through the traffic port or the

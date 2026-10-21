@@ -12,7 +12,7 @@ type: application
 # tag image and chart with a build id derived from it (README, "Versioning").
 version: 3.11.0-SNAPSHOT
 appVersion: "3.11.0-SNAPSHOT"
-kubeVersion: ">=1.25.0-0"
+kubeVersion: ">=1.26.0-0"
 keywords:
   - siva
   - digital-signature

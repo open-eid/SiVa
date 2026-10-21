@@ -115,13 +115,9 @@ class TimemarkContainerValidationServiceValidationTimeTest {
     }
 
     private TimemarkContainerValidationService createValidationService() {
-        TimemarkContainerValidationService service = new TimemarkContainerValidationService();
-        service.setBdocConfigurationService(bDOCConfigurationService);
-        service.setTrustedListsCertificateSource(
+        return new TimemarkContainerValidationService(reportConfigurationProperties, bDOCConfigurationService,
+                timemarkContainerValidationReportBuilderFactory,
                 new TimemarkTrustedListsCertificateSource(new TrustedListsCertificateSourceHolder()));
-        service.setReportConfigurationProperties(reportConfigurationProperties);
-        service.setTimemarkContainerValidationReportBuilderFactory(timemarkContainerValidationReportBuilderFactory);
-        return service;
     }
 
 }

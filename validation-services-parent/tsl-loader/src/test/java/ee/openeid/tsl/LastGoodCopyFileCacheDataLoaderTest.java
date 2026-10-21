@@ -31,6 +31,9 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
+import java.time.Instant;
+import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -75,6 +78,32 @@ class LastGoodCopyFileCacheDataLoaderTest {
         DSSDocument document = loader.getDocument(URL);
 
         assertThat(content(document), is("stale"));
+    }
+
+    @Test
+    void getDocument_WhenTheCopyIsServed_ItIsRecordedWithTheReasonAndTheFileIsLeftAsItWas() throws IOException {
+        Path file = cache.resolve(DSSUtils.getNormalizedString(URL));
+        Files.writeString(file, "stale");
+        FileTime downloaded = FileTime.from(Instant.parse("2026-10-20T06:00:00Z"));
+        Files.setLastModifiedTime(file, downloaded);
+        when(dataLoader.get(URL)).thenThrow(new DSSExternalResourceException("unreachable"));
+        assertThat(loader.getLastCopies(), is(Map.of()));
+
+        loader.getDocument(URL);
+
+        assertThat(loader.getLastCopies(), is(Map.of(URL, "unreachable")));
+        assertThat(Files.getLastModifiedTime(file), is(downloaded));
+    }
+
+    @Test
+    void resetLastCopies_ForgetsTheCopiesServed() throws IOException {
+        Files.writeString(cache.resolve(DSSUtils.getNormalizedString(URL)), "stale");
+        when(dataLoader.get(URL)).thenThrow(new DSSExternalResourceException("unreachable"));
+        loader.getDocument(URL);
+
+        loader.resetLastCopies();
+
+        assertThat(loader.getLastCopies(), is(Map.of()));
     }
 
     @Test

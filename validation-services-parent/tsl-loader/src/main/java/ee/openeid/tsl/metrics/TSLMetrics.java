@@ -25,6 +25,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Set;
@@ -32,19 +33,24 @@ import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.function.ToDoubleFunction;
 
-// Trust-list state per loader for alerting: anchors and list expiry per configured territory, snapshot age.
-// Gauges are registered for the configured territories (trusted and mandatory) up front, so a territory whose
-// list never loaded reads 0 anchors instead of being absent; values are read from the loader's state at scrape
-// time. The anchors carry mandatory=true|false, so alerts take the effective configuration from the metric
-// instead of repeating it. The list of trusted lists is reported as territory EU, kind lotl.
+// Trust-list state per loader for alerting: anchors, list expiry and last download per configured territory,
+// snapshot age, and the refresh period the instance runs on. Gauges are registered for the configured
+// territories (trusted and mandatory) up front, so a territory whose list never loaded reads 0 anchors instead
+// of being absent; values are read from the loader's state at scrape time. The anchors carry
+// mandatory=true|false and the period is a gauge of its own, so alerts take the effective configuration from
+// the metrics instead of repeating it. The list of trusted lists is reported as territory EU, kind lotl.
 @Component
 @RequiredArgsConstructor
 public class TSLMetrics implements MeterBinder {
 
     static final String TRUST_ANCHORS = "siva.tsl.trust.anchors";
     static final String NEXT_UPDATE = "siva.tsl.next.update.timestamp";
+    static final String LIST_DOWNLOADED = "siva.tsl.list.downloaded.timestamp";
     static final String SNAPSHOT_CREATED = "siva.tsl.snapshot.created.timestamp";
-    static final String LOTL_TERRITORY = "EU";
+    static final String REFRESH_PERIOD = "siva.tsl.refresh.period";
+    static final String LOTL_TERRITORY = TSLLoader.LOTL_TERRITORY;
+    private static final String DOWNLOADED_DESCRIPTION = "When the trusted list was last downloaded from its "
+            + "publisher; a copy served after a failed download keeps the earlier time";
 
     private final @NonNull Set<TSLLoader> loaders;
     private final @NonNull TSLLoaderConfigurationProperties configurationProperties;
@@ -68,10 +74,20 @@ public class TSLMetrics implements MeterBinder {
                         l -> l.getNextUpdateByTerritory().get(territory),
                         "NextUpdate of the trusted list; after it the list counts as expired",
                         "loader", name, "kind", "tl", "territory", territory);
+                registerTimestamp(registry, LIST_DOWNLOADED, loader, l -> l.getDownloadedAt().get(territory),
+                        DOWNLOADED_DESCRIPTION, "loader", name, "kind", "tl", "territory", territory);
             }
             registerTimestamp(registry, NEXT_UPDATE, loader, TSLLoader::getLotlNextUpdate,
                     "NextUpdate of the trusted list; after it the list counts as expired",
                     "loader", name, "kind", "lotl", "territory", LOTL_TERRITORY);
+            registerTimestamp(registry, LIST_DOWNLOADED, loader, l -> l.getDownloadedAt().get(LOTL_TERRITORY),
+                    DOWNLOADED_DESCRIPTION, "loader", name, "kind", "lotl", "territory", LOTL_TERRITORY);
+            Gauge.builder(REFRESH_PERIOD, loader, l -> seconds(l.getRefreshPeriod()))
+                    .description("How often the trusted lists are refreshed, as configured (online: "
+                            + "siva.tsl.loader.refreshPeriod; snapshot: the fetcher's period from the manifest)")
+                    .baseUnit("seconds")
+                    .tags("loader", name)
+                    .register(registry);
             if (snapshotMode) {
                 registerTimestamp(registry, SNAPSHOT_CREATED, loader, TSLLoader::getSnapshotCreatedAt,
                         "When the loaded trust-list snapshot was published", "loader", name);
@@ -90,6 +106,11 @@ public class TSLMetrics implements MeterBinder {
         if (territories != null) {
             target.addAll(territories);
         }
+    }
+
+    // Seconds; NaN while the period is unknown (never loaded, a plain cache directory, an older manifest).
+    private static double seconds(Duration duration) {
+        return duration == null ? Double.NaN : duration.toMillis() / 1000.0;
     }
 
     // Unix seconds; NaN while the value is unknown (never loaded, never parsed).

@@ -23,6 +23,7 @@ import org.junit.jupiter.api.io.TempDir;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -30,8 +31,10 @@ import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TSLSnapshotStoreTest {
@@ -131,8 +134,35 @@ class TSLSnapshotStoreTest {
         assertThat(store.prune(0), is(empty()));
     }
 
+    @Test
+    void publish_WritesThePeriodAndTheDownloadTimesAsIsoText() throws IOException {
+        store.publish(source, manifest("20261013T183000Z"));
+
+        String json = Files.readString(store.snapshotDirectory("20261013T183000Z").resolve("manifest.json"));
+
+        assertThat(json, containsString("\"period\" : \"PT6H\""));
+        assertThat(json, containsString("\"EE\" : \"2026-10-13T18:00:00Z\""));
+    }
+
+    @Test
+    void manifest_WrittenBeforeThePeriodAndDownloadTimesExisted_ReadsWithoutThem() throws IOException {
+        Path snapshot = store.snapshotDirectory("20261013T183000Z");
+        Files.createDirectories(snapshot);
+        Files.writeString(snapshot.resolve("manifest.json"), """
+                {"id":"20261013T183000Z","createdAt":"2026-10-13T18:30:00Z","status":"UP","mandatoryTerritories":["EE"],
+                 "tsl":{},"files":2}
+                """);
+
+        Optional<TSLSnapshotManifest> manifest = store.manifest("20261013T183000Z");
+
+        assertThat(manifest.map(TSLSnapshotManifest::createdAt), is(Optional.of(CREATED)));
+        assertThat(manifest.get().period(), nullValue());
+        assertThat(manifest.get().downloadedAt(), nullValue());
+    }
+
     private static TSLSnapshotManifest manifest(String id) {
         return new TSLSnapshotManifest(id, CREATED, "UP", List.of("EE"),
-                Map.of("generic", Map.of("certificates", 32, "territories", Map.of("EE", 32))), 2);
+                Map.of("generic", Map.of("certificates", 32, "territories", Map.of("EE", 32))), 2,
+                Duration.ofHours(6), Map.of("generic", Map.of("EE", Instant.parse("2026-10-13T18:00:00Z"))));
     }
 }

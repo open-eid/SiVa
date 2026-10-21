@@ -25,6 +25,7 @@ import ee.openeid.tsl.TrustedListsCertificateSourceHolder;
 import ee.openeid.validation.service.generic.configuration.properties.GenericSignaturePolicyProperties;
 import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
 import ee.openeid.validation.service.generic.validator.ocsp.OCSPSourceFactory;
+import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,15 +53,9 @@ abstract class HashcodeGenericValidationServiceTestBase {
 
     @BeforeEach
     public void setUp() {
-        validationService = new HashcodeGenericValidationService();
-        validationService.setTrustedListsCertificateSource(trustedListsCertificateSource);
-
         signaturePolicyService = new ConstraintLoadingSignaturePolicyService(policySettings);
-        validationService.setSignaturePolicyService(signaturePolicyService);
-        validationService.setReportConfigurationProperties(new ReportConfigurationProperties(true));
-
-        validationService.setContainerValidatorFactory(containerValidatorFactory);
-        validationService.setOcspSourceFactory(ocspSourceFactory);
+        validationService = new HashcodeGenericValidationService(trustedListsCertificateSource, signaturePolicyService,
+                new ReportConfigurationProperties(true), new ProxyConfig(), containerValidatorFactory, ocspSourceFactory);
     }
 
     protected static ValidationDocument buildValidationDocument(String testFile, Datafile... datafiles) {

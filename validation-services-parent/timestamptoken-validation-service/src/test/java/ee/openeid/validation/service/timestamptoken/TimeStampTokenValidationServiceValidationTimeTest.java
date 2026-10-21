@@ -19,6 +19,7 @@ package ee.openeid.validation.service.timestamptoken;
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
+import ee.openeid.tsl.TrustedListsCertificateSourceHolder;
 import eu.europa.esig.dss.asic.cades.validation.ASiCContainerWithCAdESValidator;
 import eu.europa.esig.dss.diagnostic.jaxb.XmlDiagnosticData;
 import eu.europa.esig.dss.simplereport.jaxb.XmlSimpleReport;
@@ -59,14 +60,13 @@ public class TimeStampTokenValidationServiceValidationTimeTest extends BaseTimeS
     }
 
     private TimeStampTokenValidationServiceFake createServiceFake(ASiCContainerWithCAdESValidator validatorMock) {
-        TimeStampTokenValidationServiceFake validationServiceFake = new TimeStampTokenValidationServiceFake();
+        TimeStampTokenValidationServiceFake validationServiceFake = new TimeStampTokenValidationServiceFake(
+                new ConstraintLoadingSignaturePolicyService(policyProperties), trustedListsCertificateSource,
+                new ReportConfigurationProperties(true));
         when(validatorMock.validateDocument(any(InputStream.class))).thenReturn(
                 new eu.europa.esig.dss.validation.reports.Reports(new XmlDiagnosticData(), null, new XmlSimpleReport(), null)
         );
         validationServiceFake.setValidator(validatorMock);
-
-        validationServiceFake.setSignaturePolicyService(new ConstraintLoadingSignaturePolicyService(policyProperties));
-        validationServiceFake.setReportConfigurationProperties(new ReportConfigurationProperties(true));
 
         return validationServiceFake;
     }
@@ -75,6 +75,14 @@ public class TimeStampTokenValidationServiceValidationTimeTest extends BaseTimeS
 
         @Setter
         private ASiCContainerWithCAdESValidator validator;
+
+        TimeStampTokenValidationServiceFake(
+                ConstraintLoadingSignaturePolicyService signaturePolicyService,
+                TrustedListsCertificateSourceHolder trustedListsCertificateSource,
+                ReportConfigurationProperties reportConfigurationProperties
+        ) {
+            super(signaturePolicyService, trustedListsCertificateSource, reportConfigurationProperties);
+        }
 
         @Override
         protected ASiCContainerWithCAdESValidator createValidatorFromDocument(final ValidationDocument validationDocument) {

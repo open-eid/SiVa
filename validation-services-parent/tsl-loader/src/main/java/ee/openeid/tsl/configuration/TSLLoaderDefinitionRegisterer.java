@@ -17,8 +17,8 @@
 package ee.openeid.tsl.configuration;
 
 import ee.openeid.tsl.TSLLoader;
+import ee.openeid.tsl.TrustedListsCertificateSourceHolder;
 import ee.openeid.tsl.annotation.LoadableTsl;
-import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
@@ -42,16 +42,16 @@ import java.util.Map;
  * annotation, and for each such definition registers a new bean definition of type {@link TSLLoader}, wiring the
  * annotated bean into the loader.
  * <b>NB:</b> All beans having {@link LoadableTsl} annotation are expected to be of type or subtype of
- * {@link TrustedListsCertificateSource}.
+ * {@link TrustedListsCertificateSourceHolder}; the loader publishes the source of each refresh into it.
  * The {@link TSLLoader#getTslName()} property of each TSL loader is assigned from {@link LoadableTsl#name()} attribute
- * of its corresponding trusted lists certificate source bean.
+ * of its corresponding holder bean.
  */
 @Slf4j
 @Component
 public class TSLLoaderDefinitionRegisterer implements BeanDefinitionRegistryPostProcessor {
 
     private static final String ANNOTATION_NAME = LoadableTsl.class.getCanonicalName();
-    private static final String TSL_SOURCE_PROPERTY_NAME = resolvePropertyName(TSLLoader.class, TrustedListsCertificateSource.class);
+    private static final String TSL_SOURCE_PROPERTY_NAME = resolvePropertyName(TSLLoader.class, TrustedListsCertificateSourceHolder.class);
 
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry beanDefinitionRegistry) throws BeansException {

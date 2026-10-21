@@ -68,6 +68,26 @@
             <SignatureDuplicated Level="FAIL" />
             <ProspectiveCertificateChain Level="FAIL"/>
             <SignerInformationStore Level="FAIL" />
+            <ByteRange Level="FAIL" />
+            <ByteRangeCollision Level="WARN" />
+            <PdfSignatureDictionary Level="FAIL" />
+            <PdfPageDifference Level="FAIL" />
+            <PdfAnnotationOverlap Level="WARN" />
+            <PdfVisualDifference Level="WARN" />
+            <DocMDP Level="WARN" />
+            <FieldMDP Level="WARN" />
+            <SigFieldLock Level="WARN" />
+            <UndefinedChanges Level="WARN" />
+            <!-- <TrustServiceTypeIdentifier Level="WARN"> -->
+            <!-- 				<Id>http://uri.etsi.org/TrstSvc/Svctype/CA/QC</Id> -->
+            <!-- </TrustServiceTypeIdentifier> -->
+            <!-- <TrustServiceStatus Level="FAIL"> -->
+            <!-- 				<Id>http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/undersupervision</Id> -->
+            <!-- 				<Id>http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/accredited</Id> -->
+            <!-- 				<Id>http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/supervisionincessation</Id> -->
+            <!-- 				<Id>http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/granted</Id> -->
+            <!-- 				<Id>http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/withdrawn</Id> -->
+            <!-- 			</TrustServiceStatus> -->
             <SigningCertificate>
                 <Recognition Level="FAIL"/>
                 <Signature Level="FAIL"/>

@@ -17,12 +17,34 @@
 package ee.openeid.tsl;
 
 import eu.europa.esig.dss.tsl.job.TLValidationJob;
+import jakarta.annotation.PreDestroy;
 import org.springframework.stereotype.Component;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Component
 public class TSLValidationJobFactory {
 
+    // Every job would otherwise start a thread pool of its own; the loaders create one job per refresh.
+    private final ExecutorService executorService;
+
+    public TSLValidationJobFactory() {
+        this(Executors.newCachedThreadPool());
+    }
+
+    TSLValidationJobFactory(ExecutorService executorService) {
+        this.executorService = executorService;
+    }
+
     public TLValidationJob createValidationJob() {
-        return new TLValidationJob();
+        TLValidationJob job = new TLValidationJob();
+        job.setExecutorService(executorService);
+        return job;
+    }
+
+    @PreDestroy
+    public void shutdown() {
+        executorService.shutdownNow();
     }
 }

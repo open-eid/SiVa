@@ -32,13 +32,16 @@ import eu.europa.esig.dss.spi.x509.CertificateSource;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.spi.x509.KeyStoreCertificateSource;
 import eu.europa.esig.dss.tsl.job.TLValidationJob;
+import eu.europa.esig.dss.tsl.source.LOTLSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.Answer;
 import org.springframework.boot.ssl.DefaultSslBundleRegistry;
 import tools.jackson.databind.json.JsonMapper;
 
@@ -51,17 +54,21 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
@@ -85,9 +92,8 @@ class TSLLoaderTest {
     @Mock
     private TLValidationJob tslValidationJob;
     @Mock
-    private TrustedListsCertificateSource trustedListSource;
-    @Mock
     private KeyStoreCertificateSource keyStoreCertificateSource;
+    private final TrustedListsCertificateSourceHolder holder = new TrustedListsCertificateSourceHolder();
 
     @TempDir
     private Path snapshotRoot;
@@ -97,39 +103,72 @@ class TSLLoaderTest {
 
     @BeforeEach
     public void setUp() throws Exception {
-        when(tslValidationJobFactory.createValidationJob()).thenReturn(tslValidationJob);
+        lenient().when(tslValidationJobFactory.createValidationJob()).thenReturn(tslValidationJob);
+        tslLoader.setTrustedListsCertificateSource(holder);
     }
 
     @Test
-    void loadTSL_WhenRefreshReturns_LastRefreshAndCertificateCountAreRecorded() {
+    void loadTSL_WhenRefreshReturns_LastRefreshAndCertificateCountAreRecorded() throws Exception {
         tslLoader.setTslLoaderConfigurationProperties(createConfigurationProperties(false));
         tslLoader.init();
-        when(trustedListSource.getNumberOfCertificates()).thenReturn(42);
+        filledOnRefresh(TslTestUtils.anchors(3));
         assertNull(tslLoader.getLastRefresh());
         assertEquals(0, tslLoader.getNumberOfCertificates());
+        assertEquals(0, holder.current().getNumberOfCertificates());
         Instant before = Instant.now();
 
         tslLoader.loadTSL();
 
         assertNotNull(tslLoader.getLastRefresh());
         assertFalse(tslLoader.getLastRefresh().isBefore(before));
-        assertEquals(42, tslLoader.getNumberOfCertificates());
+        assertEquals(3, tslLoader.getNumberOfCertificates());
+        assertEquals(3, holder.current().getNumberOfCertificates());
     }
 
     @Test
-    void loadTSL_WhenSourceHoldsAnchors_TheyAreCountedOncePerTerritoryOfTheirTrustedList() {
+    void loadTSL_WhenRefreshedAgain_ANewSourceIsPublishedAndThePreviousOneIsLeftAsItWas() throws Exception {
+        tslLoader.setTslLoaderConfigurationProperties(createConfigurationProperties(true));
+        tslLoader.init();
+        Map<CertificateToken, List<TrustProperties>> first = TslTestUtils.anchors(2);
+        Map<CertificateToken, List<TrustProperties>> second = TslTestUtils.anchors(1);
+        CertificateToken firstAnchor = first.keySet().iterator().next();
+        CertificateToken secondAnchor = second.keySet().iterator().next();
+        filledOnRefresh(first);
+        tslLoader.loadTSL();
+        TrustedListsCertificateSource published = holder.current();
+        assertTrue(published.isTrusted(firstAnchor));
+        filledOnRefresh(second);
+
+        tslLoader.loadTSL();
+
+        assertNotSame(published, holder.current());
+        assertTrue(holder.current().isTrusted(secondAnchor));
+        assertFalse(holder.current().isTrusted(firstAnchor));
+        assertEquals(2, published.getNumberOfCertificates());
+        assertTrue(published.isTrusted(firstAnchor));
+        assertEquals(1, tslLoader.getNumberOfCertificates());
+        ArgumentCaptor<TrustedListsCertificateSource> given =
+                ArgumentCaptor.forClass(TrustedListsCertificateSource.class);
+        verify(tslValidationJob, times(2)).setTrustedListCertificateSource(given.capture());
+        assertNotSame(given.getAllValues().get(0), given.getAllValues().get(1));
+    }
+
+    @Test
+    void loadTSL_WhenSourceHoldsAnchors_TheyAreCountedOncePerTerritoryOfTheirTrustedList() throws Exception {
         tslLoader.setTslLoaderConfigurationProperties(createConfigurationProperties(false));
         tslLoader.init();
         TLInfo estonian = trustedList("EE");
         TLInfo estonianMirror = trustedList("EE");
         TLInfo latvian = trustedList("LV");
         TLInfo unparsed = new TLInfo(null, null, null, "https://tl/none");
-        CertificateToken ca1 = anchor("ca1", trust(estonian), trust(estonianMirror));
-        CertificateToken ca2 = anchor("ca2", trust(estonian), trust(latvian));
-        CertificateToken ca3 = anchor("ca3", trust(latvian));
-        CertificateToken orphan = anchor("orphan");
-        CertificateToken unplaced = anchor("unplaced", trust(unparsed), trust(null));
-        when(trustedListSource.getCertificates()).thenReturn(List.of(ca1, ca2, ca3, orphan, unplaced));
+        List<CertificateToken> tokens = List.copyOf(TslTestUtils.anchors(5).keySet());
+        Map<CertificateToken, List<TrustProperties>> anchors = new LinkedHashMap<>();
+        anchors.put(tokens.get(0), List.of(trust(estonian), trust(estonianMirror)));
+        anchors.put(tokens.get(1), List.of(trust(estonian), trust(latvian)));
+        anchors.put(tokens.get(2), List.of(trust(latvian)));
+        anchors.put(tokens.get(3), List.of());
+        anchors.put(tokens.get(4), List.of(trust(unparsed), trust(null)));
+        filledOnRefresh(anchors);
         assertEquals(Map.of(), tslLoader.getCertificatesByTerritory());
 
         tslLoader.loadTSL();
@@ -157,14 +196,12 @@ class TSLLoaderTest {
 
         verify(tslValidationJobFactory).createValidationJob();
         verify(tslValidationJob).setOfflineDataLoader(any(DSSFileLoader.class));
-        verify(tslValidationJob).setTrustedListCertificateSource(trustedListSource);
+        verify(tslValidationJob).setTrustedListCertificateSource(any(TrustedListsCertificateSource.class));
         verify(tslValidationJob).setListOfTrustedListSources(any());
         verify(tslValidationJob).setSynchronizationStrategy(any());
         verify(tslValidationJob).offlineRefresh();
         verify(tslValidationJob).getSummary();
-        verify(trustedListSource).getNumberOfCertificates();
-        verify(trustedListSource).getCertificates();
-        verifyNoMoreInteractions(tslValidationJobFactory, tslValidationJob, trustedListSource);
+        verifyNoMoreInteractions(tslValidationJobFactory, tslValidationJob);
         verifyNoInteractions(keyStoreCertificateSource);
     }
 
@@ -177,14 +214,12 @@ class TSLLoaderTest {
 
         verify(tslValidationJobFactory).createValidationJob();
         verify(tslValidationJob).setOnlineDataLoader(any(DSSFileLoader.class));
-        verify(tslValidationJob).setTrustedListCertificateSource(trustedListSource);
+        verify(tslValidationJob).setTrustedListCertificateSource(any(TrustedListsCertificateSource.class));
         verify(tslValidationJob).setListOfTrustedListSources(any());
         verify(tslValidationJob).setSynchronizationStrategy(any());
         verify(tslValidationJob).onlineRefresh();
         verify(tslValidationJob).getSummary();
-        verify(trustedListSource).getNumberOfCertificates();
-        verify(trustedListSource).getCertificates();
-        verifyNoMoreInteractions(tslValidationJobFactory, tslValidationJob, trustedListSource);
+        verifyNoMoreInteractions(tslValidationJobFactory, tslValidationJob);
         verifyNoInteractions(keyStoreCertificateSource);
     }
 
@@ -240,6 +275,41 @@ class TSLLoaderTest {
         tslLoader.refreshIfSnapshotChanged();
 
         verify(tslValidationJob, times(2)).offlineRefresh();
+        assertEquals("20261014T000000Z", tslLoader.getSnapshotId());
+    }
+
+    @Test
+    void refreshIfSnapshotChanged_WhenCurrentNamesAnotherSnapshot_TheOldSourceServesUntilTheSwap() throws Exception {
+        tslLoader.setTslLoaderConfigurationProperties(createSnapshotConfigurationProperties());
+        tslLoader.init();
+        Map<CertificateToken, List<TrustProperties>> first = TslTestUtils.anchors(1);
+        Map<CertificateToken, List<TrustProperties>> second = TslTestUtils.anchors(1);
+        CertificateToken firstAnchor = first.keySet().iterator().next();
+        CertificateToken secondAnchor = second.keySet().iterator().next();
+        filledOnRefresh(first);
+        publish("20261013T183000Z");
+        tslLoader.loadTSL();
+        TrustedListsCertificateSource published = holder.current();
+        publish("20261014T000000Z");
+        // A reader during the second load, while the job fills the fresh source: the holder still serves the old.
+        AtomicReference<TrustedListsCertificateSource> fresh = new AtomicReference<>();
+        doAnswer(invocation -> {
+            fresh.set(invocation.getArgument(0));
+            return null;
+        }).when(tslValidationJob).setTrustedListCertificateSource(any());
+        doAnswer(invocation -> {
+            assertSame(published, holder.current());
+            assertTrue(holder.current().isTrusted(firstAnchor));
+            assertNotSame(published, fresh.get());
+            fresh.get().setTrustPropertiesByCertificates(second);
+            return null;
+        }).when(tslValidationJob).offlineRefresh();
+
+        tslLoader.refreshIfSnapshotChanged();
+
+        assertNotSame(published, holder.current());
+        assertTrue(holder.current().isTrusted(secondAnchor));
+        assertFalse(holder.current().isTrusted(firstAnchor));
         assertEquals("20261014T000000Z", tslLoader.getSnapshotId());
     }
 
@@ -389,8 +459,9 @@ class TSLLoaderTest {
 
         tslLoader.loadTSL();
 
-        verify(tslValidationJob, times(2)).setListOfTrustedListSources(any());
-        assertEquals(0, tslLoader.europeanLOTL().getCertificateSource().getCertificates().size());
+        ArgumentCaptor<LOTLSource> lotl = ArgumentCaptor.forClass(LOTLSource.class);
+        verify(tslValidationJob).setListOfTrustedListSources(lotl.capture());
+        assertEquals(0, lotl.getValue().getCertificateSource().getCertificates().size());
         verifyNoInteractions(keyStoreCertificateSource);
     }
 
@@ -448,11 +519,19 @@ class TSLLoaderTest {
         return trustProperties;
     }
 
-    private CertificateToken anchor(String id, TrustProperties... trustProperties) {
-        CertificateToken token = mock(CertificateToken.class);
-        when(trustedListSource.getTrustServices(token)).thenReturn(List.of(trustProperties));
-        lenient().when(token.getDSSIdAsString()).thenReturn(id);
-        return token;
+    // What the job does during a refresh: fills the source it was given.
+    private void filledOnRefresh(Map<CertificateToken, List<TrustProperties>> anchors) {
+        AtomicReference<TrustedListsCertificateSource> given = new AtomicReference<>();
+        doAnswer(invocation -> {
+            given.set(invocation.getArgument(0));
+            return null;
+        }).when(tslValidationJob).setTrustedListCertificateSource(any());
+        Answer<Void> fill = invocation -> {
+            given.get().setTrustPropertiesByCertificates(anchors);
+            return null;
+        };
+        lenient().doAnswer(fill).when(tslValidationJob).onlineRefresh();
+        lenient().doAnswer(fill).when(tslValidationJob).offlineRefresh();
     }
 
     private static TSLLoaderConfigurationProperties createConfigurationProperties(boolean loadFromCache) {

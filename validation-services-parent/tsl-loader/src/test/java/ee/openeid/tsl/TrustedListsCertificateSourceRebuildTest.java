@@ -19,91 +19,100 @@ package ee.openeid.tsl;
 import eu.europa.esig.dss.model.tsl.TrustProperties;
 import eu.europa.esig.dss.model.x509.CertificateToken;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
-import org.bouncycastle.asn1.x500.X500Name;
-import org.bouncycastle.cert.X509CertificateHolder;
-import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
-import org.bouncycastle.cert.jcajce.JcaX509v3CertificateBuilder;
-import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
-import java.math.BigInteger;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.spec.ECGenParameterSpec;
-import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.BooleanSupplier;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-// Reproduces open-eid/SiVa#6 at the DSS level: a trust-list refresh that changed a list rebuilds the
-// trust source with setTrustPropertiesByCertificates, which clears the lookup maps and re-adds every
-// anchor under the source's monitor, while the reads a validation takes (isKnown, getBySubject, ...)
-// hold no lock. A validation in flight during the refill finds no, or not all, trust anchors.
-// Fails on DSS 6.2 (sd-dss 6.2.d4j.1); enable with -Dsiva.tsl.rebuildRace=true. Passes once the
-// source swaps complete maps in instead of refilling in place (DSS) or SiVa reads through a
-// reference it replaces after each refresh.
+// open-eid/SiVa#6: a trust-list refresh that changed a list used to rebuild the one trust source in place,
+// with setTrustPropertiesByCertificates clearing the lookup maps and re-adding every anchor under the source's
+// monitor, while the reads a validation takes (isKnown, getBySubject, ...) hold no lock; a validation in flight
+// during the refill found no, or not all, trust anchors. TSLLoader now fills a fresh source per refresh and
+// publishes it through TrustedListsCertificateSourceHolder, which readers resolve per use. The first test pins
+// that; the second shows the DSS behaviour it steps around (fails on sd-dss 6.2.d4j.1, enabled with
+// -Dsiva.tsl.rebuildRace=true) so that a return to a shared source is caught.
 class TrustedListsCertificateSourceRebuildTest {
 
     private static final int ANCHORS = 200;
     private static final int REBUILDS = 200;
 
     @Test
+    void anchorsStayTrustedWhileFreshSourcesArePublished() throws Exception {
+        Map<CertificateToken, List<TrustProperties>> anchors = TslTestUtils.anchors(ANCHORS);
+        CertificateToken probe = lastOf(anchors);
+        TrustedListsCertificateSourceHolder holder = new TrustedListsCertificateSourceHolder();
+        holder.publish(TslTestUtils.filled(anchors));
+        assertTrue(holder.current().isTrusted(probe));
+
+        Misses misses = countMisses(() -> holder.current().isTrusted(probe), () -> {
+            for (int i = 0; i < REBUILDS; i++) {
+                holder.publish(TslTestUtils.filled(anchors));
+            }
+        });
+
+        assertTrue(holder.current().isTrusted(probe));
+        assertEquals(0, misses.misses(), () -> misses + " during " + REBUILDS + " published sources of "
+                + ANCHORS + " anchors");
+    }
+
+    @Test
     @EnabledIfSystemProperty(named = "siva.tsl.rebuildRace", matches = "true")
-    void anchorsStayTrustedWhileTheSourceIsRebuilt() throws Exception {
-        Map<CertificateToken, List<TrustProperties>> anchors = anchors(ANCHORS);
-        // The last anchor added: the one a reader misses for the whole refill, not just its start.
-        CertificateToken probe = anchors.keySet().stream().reduce((first, second) -> second).orElseThrow();
-        TrustedListsCertificateSource source = new TrustedListsCertificateSource();
-        source.setTrustPropertiesByCertificates(anchors);
+    void anchorsAreMissedWhileOneSourceIsRebuiltInPlace() throws Exception {
+        Map<CertificateToken, List<TrustProperties>> anchors = TslTestUtils.anchors(ANCHORS);
+        CertificateToken probe = lastOf(anchors);
+        TrustedListsCertificateSource source = TslTestUtils.filled(anchors);
         assertTrue(source.isTrusted(probe));
 
-        AtomicBoolean rebuilding = new AtomicBoolean(true);
+        long start = System.nanoTime();
+        Misses misses = countMisses(() -> source.isTrusted(probe), () -> {
+            for (int i = 0; i < REBUILDS; i++) {
+                source.setTrustPropertiesByCertificates(anchors);
+            }
+        });
+        long rebuildMicros = (System.nanoTime() - start) / 1_000 / REBUILDS;
+
+        assertTrue(source.isTrusted(probe));
+        assertEquals(0, misses.misses(), () -> misses + " during " + REBUILDS + " in-place rebuilds of "
+                + ANCHORS + " anchors (" + rebuildMicros + " us per rebuild)");
+    }
+
+    private record Misses(long misses, long reads) {
+        @Override
+        public String toString() {
+            return misses + " of " + reads + " isTrusted answers were false";
+        }
+    }
+
+    // Reads as fast as one thread can while the writer runs; a miss is a false answer about a trusted anchor.
+    private static Misses countMisses(BooleanSupplier read, Runnable write) throws InterruptedException {
+        AtomicBoolean writing = new AtomicBoolean(true);
         AtomicLong reads = new AtomicLong();
         AtomicLong misses = new AtomicLong();
         Thread reader = new Thread(() -> {
-            while (rebuilding.get()) {
+            while (writing.get()) {
                 reads.incrementAndGet();
-                if (!source.isTrusted(probe)) {
+                if (!read.getAsBoolean()) {
                     misses.incrementAndGet();
                 }
             }
         }, "validation");
         reader.start();
-        long start = System.nanoTime();
-        for (int i = 0; i < REBUILDS; i++) {
-            source.setTrustPropertiesByCertificates(anchors);
-        }
-        long rebuildMicros = (System.nanoTime() - start) / 1_000 / REBUILDS;
-        rebuilding.set(false);
+        write.run();
+        writing.set(false);
         reader.join();
-
-        assertTrue(source.isTrusted(probe));
-        assertEquals(0, misses.get(), () -> misses + " of " + reads + " isTrusted answers were false during "
-                + REBUILDS + " rebuilds of " + ANCHORS + " anchors (" + rebuildMicros + " us per rebuild)");
+        return new Misses(misses.get(), reads.get());
     }
 
-    // Self-signed EC certificates with distinct subjects; no trust properties needed, the source treats an
-    // anchor without them as trusted without a time limit.
-    private static Map<CertificateToken, List<TrustProperties>> anchors(int count) throws Exception {
-        KeyPairGenerator generator = KeyPairGenerator.getInstance("EC");
-        generator.initialize(new ECGenParameterSpec("secp256r1"));
-        Date notBefore = new Date(System.currentTimeMillis() - 60_000);
-        Date notAfter = new Date(System.currentTimeMillis() + 3_600_000);
-        Map<CertificateToken, List<TrustProperties>> anchors = new LinkedHashMap<>();
-        for (int i = 0; i < count; i++) {
-            KeyPair keys = generator.generateKeyPair();
-            X500Name name = new X500Name("CN=anchor-" + i + ",C=EE");
-            X509CertificateHolder holder = new JcaX509v3CertificateBuilder(name, BigInteger.valueOf(i + 1), notBefore,
-                    notAfter, name, keys.getPublic())
-                    .build(new JcaContentSignerBuilder("SHA256withECDSA").build(keys.getPrivate()));
-            anchors.put(new CertificateToken(new JcaX509CertificateConverter().getCertificate(holder)), List.of());
-        }
-        return anchors;
+    // The last anchor added: the one a reader misses for a whole in-place refill, not just its start.
+    private static CertificateToken lastOf(Map<CertificateToken, List<TrustProperties>> anchors) {
+        return anchors.keySet().stream().reduce((first, second) -> second).orElseThrow();
     }
+
 }

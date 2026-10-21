@@ -97,13 +97,13 @@ public class TSLLoader {
     }
 
     private TSLValidationJobFactory tslValidationJobFactory;
-    private TLValidationJob tslValidationJob;
     private TSLLoaderConfigurationProperties configurationProperties;
-    private TrustedListsCertificateSource trustedListSource;
+    private TrustedListsCertificateSourceHolder trustedListsCertificateSource;
     private KeyStoreCertificateSource keyStoreCertificateSource;
     private ProxyConfig proxyConfig;
     private SslBundles sslBundles;
     private TSLSnapshotStore snapshotStore;
+    private DSSFileLoader onlineLoader;
     // The snapshot id last refused (missing directory, too old); warned about once, then only at debug.
     private String refusedSnapshotId;
 
@@ -115,18 +115,12 @@ public class TSLLoader {
             log.warn("'{}' TSL: mandatory territories {} are not all among the trusted territories {}; "
                     + "readiness can never be reached (codes are case-sensitive)", tslName, mandatory, trusted);
         }
-        tslValidationJob = tslValidationJobFactory.createValidationJob();
         if (!configurationProperties.isLoadFromCache()) {
-            tslValidationJob.setOnlineDataLoader(onlineLoader());
+            // Job-independent, and its data loader reads a reloaded bundle per connection: built once.
+            onlineLoader = onlineLoader();
         } else if (configurationProperties.getSnapshotDirectory() != null) {
-            // The offline loader is created per refresh, on whichever snapshot `current` names then.
             snapshotStore = new TSLSnapshotStore(configurationProperties.getSnapshotDirectory().toPath());
-        } else {
-            tslValidationJob.setOfflineDataLoader(offlineLoader());
         }
-        tslValidationJob.setTrustedListCertificateSource(trustedListSource);
-        tslValidationJob.setListOfTrustedListSources(europeanLOTL());
-        tslValidationJob.setSynchronizationStrategy(new ExpirationAndSignatureCheckStrategy());
         logBundleReloads(configurationProperties.getSslBundle(), "trust-list download");
         logBundleReloads(configurationProperties.getLotlBundle(), "LOTL signer");
     }
@@ -143,19 +137,19 @@ public class TSLLoader {
         }
     }
 
-    void loadTSL() {
-        if (hasText(configurationProperties.getLotlBundle())) {
-            // The signer anchors are read from the bundle again, so a reloaded bundle counts from this refresh on.
-            tslValidationJob.setListOfTrustedListSources(europeanLOTL());
-        }
+    // One refresh is one DSS validation job filling a fresh source, published when the job is done: a new job
+    // starts with empty caches, so it parses every list again and always synchronizes into that source, which is
+    // never written again (open-eid/SiVa#6 was the reused job refilling the source being read). Synchronized so
+    // that the scheduled refresh and the snapshot poll do not load at the same time.
+    synchronized void loadTSL() {
         if (!configurationProperties.isLoadFromCache()) {
-            log.info("Loading '{}' TSL over the network", tslName);
-            tslValidationJob.onlineRefresh();
-            log.info("Finished loading '{}' TSL over the network", tslName);
-            record(null);
+            TLValidationJob job = validationJob();
+            job.setOnlineDataLoader(onlineLoader);
+            refresh(job, job::onlineRefresh, "over the network", null);
             return;
         }
         String snapshotId = null;
+        Path directory = null;
         if (snapshotStore != null) {
             Optional<String> current = snapshotStore.currentId();
             if (current.isEmpty()) {
@@ -164,17 +158,32 @@ public class TSLLoader {
                 return;
             }
             snapshotId = current.get();
-            Path directory = snapshotStore.snapshotDirectory(snapshotId);
+            directory = snapshotStore.snapshotDirectory(snapshotId);
             if (!acceptable(snapshotId, directory)) {
                 return;
             }
-            tslValidationJob.setOfflineDataLoader(offlineLoader(directory));
         }
-        String source = snapshotId == null ? "cache" : "snapshot " + snapshotId;
-        log.info("Loading '{}' TSL from {}", tslName, source);
-        tslValidationJob.offlineRefresh();
-        log.info("Finished loading '{}' TSL from {}", tslName, source);
-        record(snapshotId);
+        TLValidationJob job = validationJob();
+        job.setOfflineDataLoader(directory == null ? offlineLoader() : offlineLoader(directory));
+        String origin = snapshotId == null ? "from cache" : "from snapshot " + snapshotId;
+        refresh(job, job::offlineRefresh, origin, snapshotId);
+    }
+
+    // The LOTL source is built per job, so a reloaded signer bundle counts from the next refresh on.
+    private TLValidationJob validationJob() {
+        TLValidationJob job = tslValidationJobFactory.createValidationJob();
+        job.setListOfTrustedListSources(europeanLOTL());
+        job.setSynchronizationStrategy(new ExpirationAndSignatureCheckStrategy());
+        return job;
+    }
+
+    private void refresh(TLValidationJob job, Runnable refresh, String origin, String snapshotId) {
+        TrustedListsCertificateSource source = new TrustedListsCertificateSource();
+        job.setTrustedListCertificateSource(source);
+        log.info("Loading '{}' TSL {}", tslName, origin);
+        refresh.run();
+        log.info("Finished loading '{}' TSL {}", tslName, origin);
+        record(job.getSummary(), source, snapshotId);
     }
 
     /**
@@ -222,13 +231,14 @@ public class TSLLoader {
         return false;
     }
 
-    private void record(String snapshotId) {
-        TLValidationJobSummary summary = tslValidationJob.getSummary();
+    // The source goes live first, then the state that describes it, so readiness never precedes the anchors.
+    private void record(TLValidationJobSummary summary, TrustedListsCertificateSource source, String snapshotId) {
         Instant snapshotCreatedAt = snapshotId == null ? null
                 : snapshotStore.manifest(snapshotId).map(TSLSnapshotManifest::createdAt).orElse(null);
-        state.set(new State(Instant.now(), trustedListSource.getNumberOfCertificates(),
-                snapshotCertificatesByTerritory(trustedListSource), nextUpdateByTerritory(summary),
-                lotlNextUpdate(summary), snapshotId, snapshotCreatedAt));
+        State next = new State(Instant.now(), source.getNumberOfCertificates(), snapshotCertificatesByTerritory(source),
+                nextUpdateByTerritory(summary), lotlNextUpdate(summary), snapshotId, snapshotCreatedAt);
+        trustedListsCertificateSource.publish(source);
+        state.set(next);
     }
 
     /**
@@ -249,11 +259,10 @@ public class TSLLoader {
     }
 
     /**
-     * Number of trust anchors this TSL held when its last refresh attempt finished, zero until then or
-     * when the refresh left nothing (nothing can be validated). A snapshot on purpose: the DSS source
-     * is emptied and refilled while a refresh runs, so reading it live would flicker. With
-     * {@code loadFromCache} a pod that started with an empty cache stays at zero until the cache is
-     * filled and the next scheduled refresh runs.
+     * Number of trust anchors in the source the last refresh attempt published, zero until then or when the
+     * refresh left nothing (nothing can be validated). Recorded with the source, so the health view and the
+     * metrics describe what validations use. With {@code loadFromCache} a pod that started with an empty
+     * cache stays at zero until the cache is filled and the next scheduled refresh runs.
      */
     public int getNumberOfCertificates() {
         return state.get().numberOfCertificates();
@@ -262,8 +271,8 @@ public class TSLLoader {
     /**
      * Trust anchors per territory (scheme territory code of the trusted list they came from) when the last
      * refresh attempt finished: what the certificate source actually holds after DSS synchronized it, so it
-     * follows DSS's own acceptance of lists and lists of lists (expiry, signature, LOTL-level rejection) and
-     * keeps a list whose re-download failed exactly as long as DSS keeps its anchors. An anchor listed by
+     * follows DSS's own acceptance of lists and lists of lists (expiry, signature, LOTL-level rejection); a list
+     * whose re-download failed counts as long as its last good copy on disk, or the snapshot, is accepted. An anchor listed by
      * several trusted lists counts once per territory. Sorted by territory; empty until the first refresh.
      */
     public Map<String, Integer> getCertificatesByTerritory() {
@@ -490,8 +499,8 @@ public class TSLLoader {
     }
 
     @Autowired
-    public void setTrustedListsCertificateSource(TrustedListsCertificateSource trustedListSource) {
-        this.trustedListSource = trustedListSource;
+    public void setTrustedListsCertificateSource(TrustedListsCertificateSourceHolder trustedListsCertificateSource) {
+        this.trustedListsCertificateSource = trustedListsCertificateSource;
     }
 
 }

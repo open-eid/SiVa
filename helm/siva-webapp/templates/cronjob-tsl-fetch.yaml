@@ -2,7 +2,9 @@
 # The trust-list fetcher: the webapp image in SiVa's tsl-fetch profile, downloading the lists
 # into its working cache and publishing them as a snapshot the webapp pods pick up within
 # tsl.snapshot.pollInterval. One at a time (Forbid); a run that ends below the mandatory
-# territories exits non-zero and publishes nothing, so `current` keeps the last good snapshot.
+# territories exits 1 and publishes nothing, so `current` keeps the last good snapshot; a run
+# that had to serve a list from its last copy publishes and exits 3. Both fail the Job at once
+# (podFailurePolicy), so the cluster's own Job alerts see a fetch that did not fetch.
 apiVersion: batch/v1
 kind: CronJob
 metadata:
@@ -27,6 +29,10 @@ spec:
     spec:
       backoffLimit: {{ .Values.tsl.fetcher.backoffLimit }}
       activeDeadlineSeconds: {{ .Values.tsl.fetcher.activeDeadlineSeconds }}
+      {{- with .Values.tsl.fetcher.ttlSecondsAfterFinished }}
+      ttlSecondsAfterFinished: {{ . }}
+      {{- end }}
+      {{- include "siva-webapp.fetcherFailurePolicy" . | nindent 6 }}
       template:
         {{- include "siva-webapp.fetcherPodTemplate" . | nindent 8 }}
 {{- end }}

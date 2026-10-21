@@ -16,7 +16,7 @@ tests:
           of: PrometheusRule
       - lengthEqual:
           path: spec.groups[0].rules
-          count: 6
+          count: 7
       - equal:
           path: spec.groups[0].rules[0].alert
           value: SivaValidationErrorRate
@@ -66,18 +66,18 @@ tests:
           value: monitoring
       - lengthEqual:
           path: spec.groups[0].rules
-          count: 9
-      - equal:
-          path: spec.groups[0].rules[6].alert
-          value: SivaRequestRejectedSize
+          count: 10
       - equal:
           path: spec.groups[0].rules[7].alert
-          value: SivaOcspTsaFailures
+          value: SivaRequestRejectedSize
       - equal:
           path: spec.groups[0].rules[8].alert
+          value: SivaOcspTsaFailures
+      - equal:
+          path: spec.groups[0].rules[9].alert
           value: SivaCustom
 
-  - it: watches the fetch cronjob in snapshot mode
+  - it: adds the snapshot-age rule in snapshot mode, sized from SiVa's period gauge
     set:
       monitoring:
         prometheusRule:
@@ -95,31 +95,42 @@ tests:
           count: 8
       - equal:
           path: spec.groups[0].rules[7].alert
-          value: SivaTslFetchFailing
-      - equal:   # 2 x 12 h + 1 h grace
+          value: SivaTslSnapshotStale
+      - equal:   # 2 x the period the pod reports + 1 h grace; no period is rendered in
           path: spec.groups[0].rules[7].expr
-          value: time() - max(kube_cronjob_status_last_successful_time{namespace="NAMESPACE",cronjob="RELEASE-NAME-siva-webapp-tsl-fetch"}) > 90000
+          value: time() - siva_tsl_snapshot_created_timestamp_seconds{namespace="NAMESPACE",pod=~"RELEASE-NAME-siva-webapp-[a-z0-9]+-[a-z0-9]+"} > on (namespace, pod, loader) (2 * siva_tsl_refresh_period_seconds{namespace="NAMESPACE",pod=~"RELEASE-NAME-siva-webapp-[a-z0-9]+-[a-z0-9]+"} + 3600)
       - equal:
           path: spec.groups[0].rules[7].labels.severity
           value: warning
       - equal:
           path: spec.groups[0].rules[7].annotations.summary
-          value: SiVa trust-list fetch has not succeeded for 1 d 1 h
-      - equal:
-          path: spec.groups[0].rules[6].alert
-          value: SivaTslSnapshotStale
-      - equal:
-          path: spec.groups[0].rules[6].expr
-          value: time() - siva_tsl_snapshot_created_timestamp_seconds{namespace="NAMESPACE",pod=~"RELEASE-NAME-siva-webapp-[a-z0-9]+-[a-z0-9]+"} > 90000
+          value: SiVa pod {{ $labels.pod }} runs on a snapshot older than two fetch periods plus 1 h
+      - matchRegex:
+          path: spec.groups[0].rules[7].annotations.description
+          pattern: kubectl -n NAMESPACE logs job/<newest RELEASE-NAME-siva-webapp-tsl-fetch-\.\.\.>
+      - notExists:
+          path: spec.groups[0].rules[?(@.alert == "SivaTslFetchFailing")]
 
-  - it: has no fetch rule in online mode
+  - it: has no snapshot rule in online mode but watches downloads there too
     set:
       monitoring:
         prometheusRule:
           enabled: true
     asserts:
       - notExists:
-          path: spec.groups[0].rules[?(@.alert == "SivaTslFetchFailing")]
+          path: spec.groups[0].rules[?(@.alert == "SivaTslSnapshotStale")]
+      - equal:
+          path: spec.groups[0].rules[6].alert
+          value: SivaTslListNotDownloaded
+      - equal:   # 2 x the period the pod reports (one day by SiVa's default online) + 1 h grace
+          path: spec.groups[0].rules[6].expr
+          value: time() - siva_tsl_list_downloaded_timestamp_seconds{namespace="NAMESPACE",pod=~"RELEASE-NAME-siva-webapp-[a-z0-9]+-[a-z0-9]+"} > on (namespace, pod, loader) group_left () (2 * siva_tsl_refresh_period_seconds{namespace="NAMESPACE",pod=~"RELEASE-NAME-siva-webapp-[a-z0-9]+-[a-z0-9]+"} + 3600)
+      - equal:
+          path: spec.groups[0].rules[6].labels.severity
+          value: warning
+      - equal:
+          path: spec.groups[0].rules[6].annotations.summary
+          value: SiVa serves the {{ $labels.territory }} trusted list ({{ $labels.kind }}) from a copy older than two refresh periods plus 1 h
 
   - it: alerts on configured territories without anchors by the metric's mandatory label
     set:
@@ -146,23 +157,26 @@ tests:
           path: spec.groups[0].rules[3].labels.severity
           value: warning
 
-  - it: sizes list-expiry alerts on one day in online mode
+  - it: sizes list-expiry alerts from SiVa's period gauge plus the lead time and a day
     set:
       monitoring:
         prometheusRule:
           enabled: true
     asserts:
-      - equal:   # 2 x 1 d + 7 d lead time
+      - equal:   # 2 x period + 7 d lead time
           path: spec.groups[0].rules[4].expr
-          value: siva_tsl_next_update_timestamp_seconds{namespace="NAMESPACE",pod=~"RELEASE-NAME-siva-webapp-[a-z0-9]+-[a-z0-9]+"} - time() < 777600
-      - equal:   # 1 d + 1 d
+          value: siva_tsl_next_update_timestamp_seconds{namespace="NAMESPACE",pod=~"RELEASE-NAME-siva-webapp-[a-z0-9]+-[a-z0-9]+"} - time() < on (namespace, pod, loader) group_left () (2 * siva_tsl_refresh_period_seconds{namespace="NAMESPACE",pod=~"RELEASE-NAME-siva-webapp-[a-z0-9]+-[a-z0-9]+"} + 604800)
+      - equal:
+          path: spec.groups[0].rules[4].annotations.summary
+          value: The {{ $labels.territory }} trusted list ({{ $labels.kind }}) runs out within two refresh periods plus 7 d
+      - equal:   # period + 1 d
           path: spec.groups[0].rules[5].expr
-          value: siva_tsl_next_update_timestamp_seconds{namespace="NAMESPACE",pod=~"RELEASE-NAME-siva-webapp-[a-z0-9]+-[a-z0-9]+"} - time() < 172800
+          value: siva_tsl_next_update_timestamp_seconds{namespace="NAMESPACE",pod=~"RELEASE-NAME-siva-webapp-[a-z0-9]+-[a-z0-9]+"} - time() < on (namespace, pod, loader) group_left () (siva_tsl_refresh_period_seconds{namespace="NAMESPACE",pod=~"RELEASE-NAME-siva-webapp-[a-z0-9]+-[a-z0-9]+"} + 86400)
       - equal:
           path: spec.groups[0].rules[5].labels.severity
           value: critical
 
-  - it: sizes every trust-list threshold from a weekly fetch period, grace and lead time
+  - it: renders grace and lead time into the rules and nothing of the fetch period
     set:
       monitoring:
         prometheusRule:
@@ -178,18 +192,23 @@ tests:
         fetcher:
           period: P7D
     asserts:
-      - matchRegex:   # 2 x 7 d + 14 d
+      - matchRegex:   # 14 d lead time
           path: spec.groups[0].rules[4].expr
-          pattern: ' < 2419200$'
+          pattern: ' \+ 1209600\)$'
       - equal:
           path: spec.groups[0].rules[4].annotations.summary
-          value: The {{ $labels.territory }} trusted list ({{ $labels.kind }}) runs out within 28 d
-      - matchRegex:   # 7 d + 1 d
-          path: spec.groups[0].rules[5].expr
-          pattern: ' < 691200$'
-      - matchRegex:   # 2 x 7 d + 6 h
+          value: The {{ $labels.territory }} trusted list ({{ $labels.kind }}) runs out within two refresh periods plus 14 d
+      - matchRegex:   # 6 h grace
           path: spec.groups[0].rules[6].expr
-          pattern: ' > 1231200$'
+          pattern: ' \+ 21600\)$'
       - equal:
           path: spec.groups[0].rules[6].annotations.summary
-          value: SiVa pod {{ $labels.pod }} runs on a snapshot older than 14 d 6 h
+          value: SiVa serves the {{ $labels.territory }} trusted list ({{ $labels.kind }}) from a copy older than two refresh periods plus 6 h
+      - matchRegex:
+          path: spec.groups[0].rules[7].expr
+          pattern: ' \+ 21600\)$'
+      - equal:
+          path: spec.groups[0].rules[7].annotations.summary
+          value: SiVa pod {{ $labels.pod }} runs on a snapshot older than two fetch periods plus 6 h
+      - notExists:
+          path: spec.groups[0].rules[?(@.expr =~ /604800/)]

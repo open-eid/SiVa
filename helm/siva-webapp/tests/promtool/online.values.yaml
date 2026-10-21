@@ -1,4 +1,4 @@
-# Online mode: the refresh period is SiVa's nightly reload (one day); no snapshot rules.
+# Online mode: the pods report SiVa's default refresh period (one day, the nightly reload); no snapshot rule.
 monitoring:
   prometheusRule:
     enabled: true

@@ -125,9 +125,10 @@ The chart offers two ways to get them into the pods:
   against the same anchors, and the webapp needs no egress to the list hosts. The fetcher
   publishes only when the mandatory territories (`siva.tsl.loader.mandatoryTerritories`) came
   through, so `current` always names the last good snapshot; a list whose download fails keeps
-  its last copy in the working cache. A Job runs one fetch at install (and whenever the fetcher
-  pod changes), so the pods have something to load before the first schedule. Needs a SiVa
-  build with the fetcher (3.11.0 and later).
+  its last copy in the working cache, and a run that had to use one still publishes but fails
+  its Job (see "Fetch Job outcomes" below). A Job runs one fetch at install (and whenever the
+  fetcher pod changes), so the pods have something to load before the first schedule. Needs a
+  SiVa build with the fetcher (3.11.0 and later).
 
 Snapshot mode needs a store the fetcher can write and every webapp pod can read: a
 ReadWriteMany claim you bring (`tsl.snapshot.volume`) or one the chart creates
@@ -178,11 +179,37 @@ names, and SiVa does not yet refuse an incomplete snapshot, so order the upload 
 interval plus `tsl.snapshot.pollInterval`.
 
 `tsl.fetcher.period` (six hours by default, at most a week) is the one setting the rest follows:
-the CronJob schedule, `tsl.snapshot.maxAge` (max(4 x period, 48 h)) and the trust-list alert
-thresholds derive from it, so a weekly fetch is one value. A snapshot that goes stale degrades
-every replica at once, and member-state lists run out within three to six months of issue,
-which is why a period beyond a week is refused. The deployment guide's "Choosing the fetch
-period" has the table.
+the CronJob schedule and `tsl.snapshot.maxAge` (max(4 x period, 48 h)) derive from it, and the
+fetcher writes it into every snapshot, from where the pods publish it as
+`siva_tsl_refresh_period_seconds`; the trust-list alerts take their thresholds from that gauge
+(two periods plus `monitoring.prometheusRule.tsl.grace` for a stale snapshot or a list served
+from its last copy, two periods plus the lead time before a list expires), so the rules carry
+no period of their own and hold for a plain-cron deployment that sets `siva.tsl.fetcher.period`
+itself. A snapshot that goes stale degrades every replica at once, and member-state lists run
+out within three to six months of issue, which is why a period beyond a week is refused. The
+deployment guide's "Choosing the fetch period" has the table.
+
+### Fetch Job outcomes
+
+The fetcher's exit code is the Job's result, and the Job is what the cluster's own alerts
+watch (kube-prometheus-stack's `KubeJobFailed`), so the chart adds no fetch alert of its own:
+
+| Exit | Meaning | Job |
+|---|---|---|
+| 0 | Every list downloaded, snapshot published | Complete |
+| 1 | A mandatory territory's list is missing, expired or badly signed; nothing published, `current` unchanged | Failed at once |
+| 2 | The store could not be written | Failed after `tsl.fetcher.backoffLimit` retries |
+| 3 | A list's download failed and the run published its last good copy (the fetch log's `using the last copy on disk` line names the list and the reason) | Failed at once |
+
+Exit 1 and 3 fail for reasons a retry seconds later cannot change, so a `podFailurePolicy`
+fails the Job without the usual retries (Kubernetes 1.26 and later, the chart's floor). After
+exit 3 the pods keep validating on good lists and `SivaTslListNotDownloaded` says which list
+has not been downloaded for two periods; the next successful run clears it. `KubeJobFailed`
+stays on until the Failed Job object is gone: the history limits rotate failed Jobs out only
+as newer ones fail, so after an outage delete the Job once you have read its log, or set
+`tsl.fetcher.ttlSecondsAfterFinished` to have them expire (then the log goes with them). The
+bootstrap Job gets no TTL: it is a tracked resource, and a GitOps controller would recreate
+and re-run it.
 
 Whoever can write the store can point every pod at any snapshot whose lists are still inside
 their validity window, so treat write access to it as trust-list authority: only the fetcher
@@ -260,11 +287,11 @@ directory); edit the comments, not this table.
 | monitoring.grafanaDashboard.labels | object | `{"grafana_dashboard":"1"}` | Labels the sidecar selects dashboards by. |
 | monitoring.grafanaDashboard.namespace | string | `""` | Namespace to create it in (empty: the release namespace). |
 | monitoring.prometheusRule.additionalRules | list | `[]` | Extra rules appended to the group, as given. |
-| monitoring.prometheusRule.enabled | bool | `false` | Alert rules (PrometheusRule CRD): SivaValidationErrorRate and SivaOomKilled from Spring Boot's http_server_requests metrics and kube-state-metrics (pod readiness and crash loops are left to the cluster's own rules, e.g. kube-prometheus-stack's); the trust-list rules (a configured territory without anchors, a list close to its NextUpdate, in snapshot mode a stale snapshot or failing fetch) from SiVa's siva_tsl_* gauges. |
+| monitoring.prometheusRule.enabled | bool | `false` | Alert rules (PrometheusRule CRD): SivaValidationErrorRate and SivaOomKilled from Spring Boot's http_server_requests metrics and kube-state-metrics (pod readiness, crash loops and failed fetch Jobs are left to the cluster's own rules, e.g. kube-prometheus-stack's); the trust-list rules (a configured territory without anchors, a list close to its NextUpdate or served from its last copy, in snapshot mode a stale snapshot) from SiVa's siva_tsl_* gauges, with the refresh period read from siva_tsl_refresh_period_seconds rather than rendered in. |
 | monitoring.prometheusRule.labels | object | `{}` | Labels your Prometheus selects PrometheusRules by. |
 | monitoring.prometheusRule.namespace | string | `""` | Namespace to create it in (empty: the release namespace). |
 | monitoring.prometheusRule.pendingRules | bool | `false` | Rules for signals the application does not publish yet: oversized requests (answered 400 today, no 413) and OCSP/TSA failures. Off until it does. |
-| monitoring.prometheusRule.tsl.grace | string | `"PT1H"` | Added to two refresh periods before SivaTslSnapshotStale and SivaTslFetchFailing fire (ISO-8601). Add the interval of any sync that copies the store to the pods. |
+| monitoring.prometheusRule.tsl.grace | string | `"PT1H"` | Added to two refresh periods before SivaTslSnapshotStale and SivaTslListNotDownloaded fire (ISO-8601). Add the interval of any sync that copies the store to the pods. |
 | monitoring.prometheusRule.tsl.leadTime | string | `"P7D"` | Time you give yourself to react before a list expires: SivaTslListExpiringSoon fires at two refresh periods plus this before its NextUpdate (ISO-8601). |
 | monitoring.serviceMonitor.applicationLabel | bool | `true` | Add an `application` label (the release's full name) to every scraped series: the label Micrometer's community Grafana dashboards select by (see the README's "Dashboards and alerts that pair with SiVa"). Turn it off when SiVa's own config sets `management.metrics.tags.application`. |
 | monitoring.serviceMonitor.enabled | bool | `false` | Prometheus-operator ServiceMonitor scraping /monitoring/prometheus on the management Service (the traffic Service when the actuator is not split). Needs the CRD. |
@@ -347,18 +374,19 @@ directory); edit the comments, not this table.
 | trust.pem | object | `{}` | PEM files by name, rendered into the ConfigMap `<release>-trust`: public certificates only, one concatenated PEM per purpose, under the names `tslCa` and `lotlSigners` give. For material managed outside the chart (a trust-manager Bundle, a Secret written by another tool) leave this empty and name the object in existingConfigMap or existingSecret; it must hold the same file names. |
 | trust.tslCa | string | `"tsl-ca.pem"` | File with the CA certificates the trust-list downloads trust (TLS to the LOTL and member-state list hosts), rendered as the Spring SSL bundle `tsl` and siva.tsl.loader.sslBundle=tsl. Like SiVa's classpath truststore it is the whole trust for those downloads, not an addition to the JVM's, so it must hold every CA the list hosts chain to. Empty: the downloads keep the classpath truststore. |
 | tsl.fetcher.activeDeadlineSeconds | int | `1800` | Seconds a fetch may run before it is killed (30 lists take a few minutes). |
-| tsl.fetcher.backoffLimit | int | `2` | Retries of a failed fetch within one schedule slot (a new pod each time). |
+| tsl.fetcher.backoffLimit | int | `2` | Retries of a failed fetch within one schedule slot (a new pod each time). Not for a run that ended below the mandatory territories (exit 1) or published from a last copy because a download failed (exit 3): those fail the Job at once (podFailurePolicy), a retry seconds later changes nothing, and the cluster's KubeJobFailed-style alert then says so. |
 | tsl.fetcher.bootstrapJob | bool | `true` | Also run one fetch as a Job at install and whenever the fetcher pod changes (image, config), so a fresh install has a snapshot without waiting for the schedule. Named after a hash of the pod spec; the finished Job stays until the next change replaces it. |
 | tsl.fetcher.env | list | `[]` | Extra environment variables for the fetcher only; it already gets `env`, the ConfigMap and `runtime.javaToolOptions` (same profile and settings as the webapp, which is what makes its snapshot the one the webapp expects). |
 | tsl.fetcher.existingSecret | string | `""` | Secret whose keys become the fetcher's environment variables. The fetcher does not get the webapp's `envFrom.existingSecret`: it parses thirty documents from the internet and should hold nothing but what that needs (truststore passwords, if you changed them), not the report-signing key's. Empty: no Secret. |
 | tsl.fetcher.failedJobsHistoryLimit | int | `3` | Failed fetch Jobs kept. |
 | tsl.fetcher.keepSnapshots | int | `3` | Snapshots kept besides the current one (siva.tsl.fetcher.keepSnapshots); a pod in the middle of loading an older one is not pulled away. |
-| tsl.fetcher.period | string | `"PT6H"` | How often the trusted lists are fetched (ISO-8601 duration, at most P7D). The schedule, `tsl.snapshot.maxAge` and the trust-list alert thresholds derive from it (ADR 0004; table in the deployment guide, "Choosing the fetch period"). Lists can run out within three months of issue, so a longer period is refused at render time. |
+| tsl.fetcher.period | string | `"PT6H"` | How often the trusted lists are fetched (ISO-8601 duration, at most P7D). The schedule and `tsl.snapshot.maxAge` derive from it, and the fetcher writes it into every snapshot (siva.tsl.fetcher.period), from where the pods publish it as siva_tsl_refresh_period_seconds and the trust-list alerts size themselves (table in the deployment guide, "Choosing the fetch period"). Lists can run out within three months of issue, so a longer period is refused at render time. |
 | tsl.fetcher.resources | object | requests 250m / 512Mi, limit 1Gi memory | Resources of the fetcher pod; the JVM is sized from the memory limit as for the webapp. |
 | tsl.fetcher.schedule | string | derived from period | Cron schedule of the fetch. Empty: derived from `period` (minutes dividing an hour, hours dividing a day, P1D at 03:00, P7D Mondays 03:00). When you set it, keep `period` saying what it means: the alerts are sized from `period`, not from this. |
 | tsl.fetcher.startingDeadlineSeconds | string | `""` | Seconds after a missed schedule the fetch may still start; empty for the default. |
 | tsl.fetcher.successfulJobsHistoryLimit | int | `3` | Finished fetch Jobs kept for `kubectl get jobs` and the alert rule. |
 | tsl.fetcher.timeZone | string | `""` | IANA time zone of the schedule (Kubernetes 1.27+); empty for the controller's. |
+| tsl.fetcher.ttlSecondsAfterFinished | string | `""` | Seconds a finished fetch Job is kept (its pod and log with it) before the TTL controller deletes it; empty keeps them until the history limits below rotate them out. A Failed Job is what the standard KubeJobFailed alert fires on, and its log is what names the host that failed, so leave this empty unless your logs are shipped elsewhere. Never applied to the bootstrap Job (a GitOps controller would recreate and re-run it). |
 | tsl.fetcher.workVolume | object | `{}` | Working cache the fetcher downloads into, kept between runs so that a list whose download fails keeps its last copy: a volume source as above, or empty for a `work/` directory inside the store. |
 | tsl.mode | string | `"online"` | `online`: every pod downloads the lists itself at startup and on SiVa's nightly cron (needs HTTPS egress to ~30 hosts, minutes until ready, replicas started at different times can hold different trust states). `snapshot`: a CronJob running this image in SiVa's `tsl-fetch` profile downloads them, publishes a snapshot into a shared volume and every pod reads that (ready in seconds, identical trust state, no egress to the list hosts from the webapp); the fetcher publishes only when the mandatory territories came through, so `current` always names the last good snapshot. Needs a SiVa build with the fetcher (3.11.0+). |
 | tsl.snapshot.maxAge | string | max(4 x period, PT48H) | Refuse a snapshot older than this (ISO-8601 duration; siva.tsl.loader.snapshotMaxAge) and keep the loaded state: a store that stopped being refreshed, or was pointed at an old snapshot by whoever can write it, cannot feed a fresh pod lists older than you allow. It only stops new pods from loading (a pod with nothing loaded stays not-ready), so it is lenient on purpose and the alerts catch staleness earlier. Empty: max(4 x tsl.fetcher.period, 48 h); `none` disables the check. |
@@ -399,6 +427,7 @@ the rest, use what your monitoring stack and the Grafana community already maint
 | Spring Boot overview by namespace | [Spring Boot 3.x Statistics](https://grafana.com/grafana/dashboards/19004), ID 19004 | Its six HikariCP panels stay empty: SiVa has no database. |
 | Pod CPU, memory against limits, restarts | kube-prometheus-stack's "Kubernetes / Compute Resources / Pod" | Ships with the stack. |
 | Pod not ready, crash loops | kube-prometheus-stack's `KubePodNotReady`, `KubePodCrashLooping` | The chart does not repeat them; `SivaOomKilled` stays, the stack sees an OOM kill only as a crash loop. |
+| A fetch Job that failed | kube-prometheus-stack's `KubeJobFailed` | The fetcher fails its Job when it could not fetch (see "Fetch Job outcomes"); the chart's `SivaTslListNotDownloaded` then names the list. |
 
 Both community dashboards select by an `application` label. `monitoring.serviceMonitor` adds
 it (the release's full name) unless `applicationLabel` is false; without the operator, set

@@ -220,10 +220,12 @@ tsl:
     # @default -- max(4 x period, PT48H)
     maxAge: ""
   fetcher:
-    # -- How often the trusted lists are fetched (ISO-8601 duration, at most P7D). The schedule,
-    # `tsl.snapshot.maxAge` and the trust-list alert thresholds derive from it (ADR 0004; table in
-    # the deployment guide, "Choosing the fetch period"). Lists can run out within three months of
-    # issue, so a longer period is refused at render time.
+    # -- How often the trusted lists are fetched (ISO-8601 duration, at most P7D). The schedule
+    # and `tsl.snapshot.maxAge` derive from it, and the fetcher writes it into every snapshot
+    # (siva.tsl.fetcher.period), from where the pods publish it as siva_tsl_refresh_period_seconds
+    # and the trust-list alerts size themselves (table in the deployment guide, "Choosing the
+    # fetch period"). Lists can run out within three months of issue, so a longer period is
+    # refused at render time.
     period: PT6H
     # -- Cron schedule of the fetch. Empty: derived from `period` (minutes dividing an hour, hours
     # dividing a day, P1D at 03:00, P7D Mondays 03:00). When you set it, keep `period` saying what
@@ -239,8 +241,17 @@ tsl:
     keepSnapshots: 3
     # -- Seconds a fetch may run before it is killed (30 lists take a few minutes).
     activeDeadlineSeconds: 1800
-    # -- Retries of a failed fetch within one schedule slot (a new pod each time).
+    # -- Retries of a failed fetch within one schedule slot (a new pod each time). Not for a run
+    # that ended below the mandatory territories (exit 1) or published from a last copy because
+    # a download failed (exit 3): those fail the Job at once (podFailurePolicy), a retry seconds
+    # later changes nothing, and the cluster's KubeJobFailed-style alert then says so.
     backoffLimit: 2
+    # -- Seconds a finished fetch Job is kept (its pod and log with it) before the TTL controller
+    # deletes it; empty keeps them until the history limits below rotate them out. A Failed Job is
+    # what the standard KubeJobFailed alert fires on, and its log is what names the host that
+    # failed, so leave this empty unless your logs are shipped elsewhere. Never applied to the
+    # bootstrap Job (a GitOps controller would recreate and re-run it).
+    ttlSecondsAfterFinished: ""
     # -- Finished fetch Jobs kept for `kubectl get jobs` and the alert rule.
     successfulJobsHistoryLimit: 3
     # -- Failed fetch Jobs kept.
@@ -432,13 +443,15 @@ monitoring:
     relabelings: []
   prometheusRule:
     # -- Alert rules (PrometheusRule CRD): SivaValidationErrorRate and SivaOomKilled from Spring
-    # Boot's http_server_requests metrics and kube-state-metrics (pod readiness and crash loops
-    # are left to the cluster's own rules, e.g. kube-prometheus-stack's); the trust-list rules (a configured territory without anchors, a list close to its NextUpdate,
-    # in snapshot mode a stale snapshot or failing fetch) from SiVa's siva_tsl_* gauges.
+    # Boot's http_server_requests metrics and kube-state-metrics (pod readiness, crash loops and
+    # failed fetch Jobs are left to the cluster's own rules, e.g. kube-prometheus-stack's); the
+    # trust-list rules (a configured territory without anchors, a list close to its NextUpdate or
+    # served from its last copy, in snapshot mode a stale snapshot) from SiVa's siva_tsl_* gauges,
+    # with the refresh period read from siva_tsl_refresh_period_seconds rather than rendered in.
     enabled: false
     tsl:
-      # -- Added to two refresh periods before SivaTslSnapshotStale and SivaTslFetchFailing fire
-      # (ISO-8601). Add the interval of any sync that copies the store to the pods.
+      # -- Added to two refresh periods before SivaTslSnapshotStale and SivaTslListNotDownloaded
+      # fire (ISO-8601). Add the interval of any sync that copies the store to the pods.
       grace: PT1H
       # -- Time you give yourself to react before a list expires: SivaTslListExpiringSoon fires at
       # two refresh periods plus this before its NextUpdate (ISO-8601).

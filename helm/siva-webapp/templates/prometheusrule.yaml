@@ -45,12 +45,16 @@ spec:
           annotations:
             summary: "SiVa pod {{ "{{ $labels.pod }}" }} was OOM-killed in the last 30 minutes"
             description: "Raise resources.limits.memory (Paketo sizes the heap from it) or lower the thread count."
-        {{- $stale := include "siva-webapp.tslAlertSeconds" (list $ "stale") }}
-        {{- $expiryWarning := include "siva-webapp.tslAlertSeconds" (list $ "expiryWarning") }}
-        {{- $expiryCritical := include "siva-webapp.tslAlertSeconds" (list $ "expiryCritical") }}
+        {{- $grace := include "siva-webapp.isoSeconds" (list "monitoring.prometheusRule.tsl.grace" .Values.monitoring.prometheusRule.tsl.grace) }}
+        {{- $leadTime := include "siva-webapp.isoSeconds" (list "monitoring.prometheusRule.tsl.leadTime" .Values.monitoring.prometheusRule.tsl.leadTime) }}
+        {{- $period := printf "siva_tsl_refresh_period_seconds{%s}" $kube }}
+        {{- $byLoader := "on (namespace, pod, loader)" }}
         # SiVa's trust-list gauges: one series per configured territory (trusted and mandatory, as
-        # SiVa itself resolved them), so these rules repeat no country list. Thresholds derive from
-        # the refresh period: tsl.fetcher.period in snapshot mode, one day online (ADR 0004).
+        # SiVa itself resolved them), so these rules repeat no country list, and the refresh period
+        # each instance runs on (siva_tsl_refresh_period_seconds: the fetcher's period from the
+        # snapshot's manifest, siva.tsl.loader.refreshPeriod online), so they render no period
+        # either; only grace and lead time are the deployer's (ADR 0004). Thresholds are joined to
+        # the list series by instance and loader.
         - alert: SivaTslMandatoryTerritoryNotValidating
           expr: siva_tsl_trust_anchors{{ "{" }}{{ $kube }},mandatory="true"} == 0
           for: 15m
@@ -68,37 +72,37 @@ spec:
             summary: "SiVa holds no trust anchors for territory {{ "{{ $labels.territory }}" }} ({{ "{{ $labels.loader }}" }} loader)"
             description: "Signatures from {{ "{{ $labels.territory }}" }} validate as untrusted until its list loads again; other territories are unaffected."
         - alert: SivaTslListExpiringSoon
-          expr: siva_tsl_next_update_timestamp_seconds{{ "{" }}{{ $kube }}} - time() < {{ $expiryWarning }}
+          expr: siva_tsl_next_update_timestamp_seconds{{ "{" }}{{ $kube }}} - time() < {{ $byLoader }} group_left () (2 * {{ $period }} + {{ $leadTime }})
           labels:
             severity: warning
           annotations:
-            summary: "The {{ "{{ $labels.territory }}" }} trusted list ({{ "{{ $labels.kind }}" }}) runs out within {{ include "siva-webapp.humanSeconds" $expiryWarning }}"
+            summary: "The {{ "{{ $labels.territory }}" }} trusted list ({{ "{{ $labels.kind }}" }}) runs out within two refresh periods plus {{ include "siva-webapp.humanSeconds" $leadTime }}"
             description: "Its NextUpdate is close and SiVa has not received a newer version. Once it passes, signatures relying on it lose qualification (POLv4 fails them) and, at the next reload, their trust anchors."
         - alert: SivaTslListExpiring
-          expr: siva_tsl_next_update_timestamp_seconds{{ "{" }}{{ $kube }}} - time() < {{ $expiryCritical }}
+          expr: siva_tsl_next_update_timestamp_seconds{{ "{" }}{{ $kube }}} - time() < {{ $byLoader }} group_left () ({{ $period }} + 86400)
           labels:
             severity: critical
           annotations:
-            summary: "The {{ "{{ $labels.territory }}" }} trusted list ({{ "{{ $labels.kind }}" }}) runs out within {{ include "siva-webapp.humanSeconds" $expiryCritical }}"
+            summary: "The {{ "{{ $labels.territory }}" }} trusted list ({{ "{{ $labels.kind }}" }}) runs out within one refresh period plus a day"
             description: "Less than one refresh period plus a day is left. Check that the publisher has issued a newer list and that the refresh picks it up."
+        # A download that keeps failing is invisible to the Job: the fetcher serves the list from its
+        # last copy and publishes. The copy's download time stays where it was, so its age is how
+        # long the publisher has been out of reach.
+        - alert: SivaTslListNotDownloaded
+          expr: time() - siva_tsl_list_downloaded_timestamp_seconds{{ "{" }}{{ $kube }}} > {{ $byLoader }} group_left () (2 * {{ $period }} + {{ $grace }})
+          labels:
+            severity: warning
+          annotations:
+            summary: "SiVa serves the {{ "{{ $labels.territory }}" }} trusted list ({{ "{{ $labels.kind }}" }}) from a copy older than two refresh periods plus {{ include "siva-webapp.humanSeconds" $grace }}"
+            description: "Every recent download of it failed and the {{ "{{ $labels.loader }}" }} loader runs on the last copy: the publisher is unreachable or redirecting. The fetch (or pod) log names the reason in its 'using the last copy on disk' line; a certificate error there after a redirect belongs to the redirect target, not the publisher. The copy stays valid until the list's NextUpdate, which SivaTslListExpiring watches."
         {{- if include "siva-webapp.snapshotMode" . }}
         - alert: SivaTslSnapshotStale
-          expr: time() - siva_tsl_snapshot_created_timestamp_seconds{{ "{" }}{{ $kube }}} > {{ $stale }}
+          expr: time() - siva_tsl_snapshot_created_timestamp_seconds{{ "{" }}{{ $kube }}} > {{ $byLoader }} (2 * {{ $period }} + {{ $grace }})
           labels:
             severity: warning
           annotations:
-            summary: "SiVa pod {{ "{{ $labels.pod }}" }} runs on a snapshot older than {{ include "siva-webapp.humanSeconds" $stale }}"
-            description: "Two fetch periods without a newer snapshot reaching the pod: the fetch, a sync between store and pod, or the pod's refusal of a newer snapshot (see its log)."
-        # kube-state-metrics' view of the fetch CronJob: 0 until the first success, then the
-        # epoch seconds of the last one.
-        - alert: SivaTslFetchFailing
-          expr: >-
-            time() - max(kube_cronjob_status_last_successful_time{namespace="{{ $ns }}",cronjob="{{ include "siva-webapp.fetcherName" . }}"}) > {{ $stale }}
-          labels:
-            severity: warning
-          annotations:
-            summary: "SiVa trust-list fetch has not succeeded for {{ include "siva-webapp.humanSeconds" $stale }}"
-            description: "The pods keep validating on the last published snapshot; its lists expire one by one. Check the fetch Job's logs: kubectl -n {{ $ns }} logs job/<newest {{ include "siva-webapp.fetcherName" . }}-...>."
+            summary: "SiVa pod {{ "{{ $labels.pod }}" }} runs on a snapshot older than two fetch periods plus {{ include "siva-webapp.humanSeconds" $grace }}"
+            description: "Two fetch periods without a newer snapshot reaching the pod: the fetch (a Failed fetch Job says why: kubectl -n {{ $ns }} logs job/<newest {{ include "siva-webapp.fetcherName" . }}-...>), a sync between store and pod, or the pod's refusal of a newer snapshot (see its log)."
         {{- end }}
         {{- if .Values.monitoring.prometheusRule.pendingRules }}
         # Signals the application does not publish yet: oversized requests are answered 400 like

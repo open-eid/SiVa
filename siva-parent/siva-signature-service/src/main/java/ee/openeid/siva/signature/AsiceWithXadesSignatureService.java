@@ -22,6 +22,7 @@ import ee.openeid.siva.signature.configuration.SignatureServiceConfigurationProp
 import ee.openeid.siva.signature.exception.SignatureServiceException;
 import ee.openeid.siva.signature.ocsp.SkOcspSource;
 import ee.openeid.siva.signature.tsp.SKTimestampDataLoader;
+import ee.openeid.tsl.TrustedListsCertificateSourceHolder;
 import eu.europa.esig.dss.asic.xades.ASiCWithXAdESSignatureParameters;
 import eu.europa.esig.dss.asic.xades.signature.ASiCWithXAdESService;
 import eu.europa.esig.dss.enumerations.ASiCContainerType;
@@ -35,7 +36,6 @@ import eu.europa.esig.dss.model.InMemoryDocument;
 import eu.europa.esig.dss.model.SignatureValue;
 import eu.europa.esig.dss.model.ToBeSigned;
 import eu.europa.esig.dss.service.tsp.OnlineTSPSource;
-import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.spi.validation.CommonCertificateVerifier;
 import eu.europa.esig.dss.spi.x509.revocation.ocsp.OCSPSource;
 import eu.europa.esig.dss.spi.x509.tsp.TSPSource;
@@ -63,11 +63,11 @@ public class AsiceWithXadesSignatureService implements SignatureService {
     @Getter
     private final SignatureServiceConfigurationProperties properties;
 
-    private final TrustedListsCertificateSource trustedListSource;
+    private final TrustedListsCertificateSourceHolder trustedListSource;
 
     public AsiceWithXadesSignatureService(
             SignatureServiceConfigurationProperties properties,
-            @Qualifier("genericTrustedListsCertificateSource") TrustedListsCertificateSource trustedListSource
+            @Qualifier("genericTrustedListsCertificateSource") TrustedListsCertificateSourceHolder trustedListSource
     ) {
         this.properties = properties;
         this.trustedListSource = trustedListSource;
@@ -96,7 +96,7 @@ public class AsiceWithXadesSignatureService implements SignatureService {
         CommonCertificateVerifier commonCertificateVerifier = new CommonCertificateVerifier();
         OCSPSource ocspSource = getOcspSource(properties.getOcspUrl());
         commonCertificateVerifier.setOcspSource(ocspSource);
-        commonCertificateVerifier.setTrustedCertSources(trustedListSource);
+        commonCertificateVerifier.setTrustedCertSources(trustedListSource.current());
 
         ASiCWithXAdESService service = new ASiCWithXAdESService(commonCertificateVerifier);
         TSPSource tspSource = getTspSource(properties.getTspUrl());

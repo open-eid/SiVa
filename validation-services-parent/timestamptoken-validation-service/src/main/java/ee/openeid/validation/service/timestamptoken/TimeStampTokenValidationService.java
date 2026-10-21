@@ -26,6 +26,7 @@ import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
+import ee.openeid.tsl.TrustedListsCertificateSourceHolder;
 import ee.openeid.tsl.configuration.AlwaysFailingCRLSource;
 import ee.openeid.tsl.configuration.AlwaysFailingOCSPSource;
 import ee.openeid.validation.service.timestamptoken.util.TimestampNotGrantedValidationUtils;
@@ -37,7 +38,6 @@ import eu.europa.esig.dss.enumerations.ValidationLevel;
 import eu.europa.esig.dss.model.DSSDocument;
 import eu.europa.esig.dss.model.DSSException;
 import eu.europa.esig.dss.model.InMemoryDocument;
-import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.spi.validation.CommonCertificateVerifier;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -75,7 +75,7 @@ public class TimeStampTokenValidationService implements ValidationService {
     private static final String SIGNATURE_FILE_EXTENSION_XML = "SIGNATURES.XML";
 
     private ConstraintLoadingSignaturePolicyService signaturePolicyService;
-    private TrustedListsCertificateSource trustedListsCertificateSource;
+    private TrustedListsCertificateSourceHolder trustedListsCertificateSource;
     private ReportConfigurationProperties reportConfigurationProperties;
 
 
@@ -113,7 +113,9 @@ public class TimeStampTokenValidationService implements ValidationService {
         ASiCContainerWithCAdESValidator validator = new ASiCContainerWithCAdESValidator(dssDocument);
         CommonCertificateVerifier certificateVerifier = createCertificateVerifier();
 
-        LOGGER.debug("Certificate pool size: {}", certificateVerifier.getTrustedCertSources().getNumberOfCertificates());
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Certificate pool size: {}", certificateVerifier.getTrustedCertSources().getNumberOfCertificates());
+        }
         validator.setCertificateVerifier(certificateVerifier);
         validator.setValidationLevel(VALIDATION_LEVEL);
 
@@ -139,7 +141,8 @@ public class TimeStampTokenValidationService implements ValidationService {
 
     private CommonCertificateVerifier createCertificateVerifier() {
         CommonCertificateVerifier certificateVerifier = new CommonCertificateVerifier(true);
-        certificateVerifier.setTrustedCertSources(trustedListsCertificateSource);
+        // Resolved per request: the loader publishes a complete source after each refresh and never changes it.
+        certificateVerifier.setTrustedCertSources(trustedListsCertificateSource.current());
         certificateVerifier.setOcspSource(new AlwaysFailingOCSPSource());
         certificateVerifier.setCrlSource(new AlwaysFailingCRLSource());
 
@@ -204,7 +207,7 @@ public class TimeStampTokenValidationService implements ValidationService {
 
     @Autowired
     @Qualifier(value = "genericTrustedListsCertificateSource")
-    public void setTrustedListsCertificateSource(TrustedListsCertificateSource trustedListsCertificateSource) {
+    public void setTrustedListsCertificateSource(TrustedListsCertificateSourceHolder trustedListsCertificateSource) {
         this.trustedListsCertificateSource = trustedListsCertificateSource;
     }
 

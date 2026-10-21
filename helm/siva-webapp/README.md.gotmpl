@@ -315,7 +315,11 @@ target writes exactly this shape: one concatenated PEM per key). The chart wires
 Spring SSL bundle with `reload-on-update` and names it to SiVa (`siva.tsl.loader.sslBundle`,
 `lotlBundle`; SiVa 3.11.0 and later), for the webapp and the fetcher alike. A changed file
 reaches the pods within the kubelet's sync period, Spring Boot reloads the bundle and logs it,
-and the trust lists use it from the next download or refresh: no restart, no image.
+and the trust lists use it from the next download or refresh: no restart, no image. A file that
+does not parse replaces the bundle all the same (Spring Boot swaps it before it runs its update
+handlers): the loaders log the reload error, the next download or snapshot load fails until the
+file is fixed, a fetcher started on it fails its Job, and the lists already loaded stay in use.
+It reaches every pod within the minute, so validate the material before you publish it.
 
 The CA file is the whole trust for the trust-list downloads, as the classpath truststore is
 today, so it must hold every CA those hosts chain to. It does not touch the JVM's own

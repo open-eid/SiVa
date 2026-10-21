@@ -20,11 +20,11 @@ import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
-import ee.openeid.tsl.TSLLoader;
 import ee.openeid.tsl.TSLRefresher;
 import ee.openeid.tsl.TSLValidationJobFactory;
 import ee.openeid.tsl.TrustedListsCertificateSourceHolder;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
+import ee.openeid.tsl.configuration.TSLLoaderDefinitionRegisterer;
 import ee.openeid.validation.service.generic.configuration.GenericValidationServiceConfiguration;
 import ee.openeid.validation.service.generic.configuration.properties.GenericSignaturePolicyProperties;
 import ee.openeid.validation.service.generic.configuration.properties.TLevelSignatureFilterProperties;
@@ -84,6 +84,7 @@ abstract class GenericValidationServiceTestBase {
             TLevelSignatureFilterProperties.class,
 
             TSLLoaderConfiguration.class,
+            TSLLoaderDefinitionRegisterer.class,
             GenericValidationServiceConfiguration.class
     })
     public static class TestConfiguration {
@@ -91,11 +92,6 @@ abstract class GenericValidationServiceTestBase {
         @Bean
         public ProxyConfig proxyConfig() {
             return new ProxyConfig();
-        }
-
-        @Bean
-        public TSLLoader tslLoader() {
-            return new TSLLoader("testName");
         }
 
         @Bean

@@ -26,11 +26,11 @@ import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.SubjectDistinguishedName;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
-import ee.openeid.tsl.TSLLoader;
 import ee.openeid.tsl.TSLRefresher;
 import ee.openeid.tsl.TSLValidationJobFactory;
 import ee.openeid.tsl.TrustedListsCertificateSourceHolder;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
+import ee.openeid.tsl.configuration.TSLLoaderDefinitionRegisterer;
 import ee.openeid.validation.service.generic.configuration.properties.GenericSignaturePolicyProperties;
 import ee.openeid.validation.service.generic.configuration.GenericValidationServiceConfiguration;
 import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
@@ -176,16 +176,13 @@ class PDFValidationServiceTest {
 
     @Import({
             TSLLoaderConfiguration.class,
+            TSLLoaderDefinitionRegisterer.class,
             GenericValidationServiceConfiguration.class
     })
     public static class TestConfiguration {
         @Bean
         ProxyConfig proxyConfig(){
             return new ProxyConfig();
-        }
-        @Bean
-        public TSLLoader tslLoader() {
-            return new TSLLoader("testName");
         }
         @Bean
         public TSLRefresher tslRefresher() {

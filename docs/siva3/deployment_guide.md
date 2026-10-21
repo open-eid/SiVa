@@ -566,6 +566,15 @@ build ships the keys as Spring configuration metadata, so IDEs complete them.
 | **siva.tsl.loader.lotlTruststorePassword** | Truststore password <ul><li>Default: **lotl-truststore-password**</li></ul> |
 | **siva.tsl.loader.lotlBundle** | Name of a Spring SSL bundle whose trust store holds the LOTL signer certificates, used instead of `lotlTruststorePath`; the certificates are read again before every refresh, so with `reload-on-update` a changed PEM file counts from the next refresh on. <ul><li>Default: not set (`lotlTruststorePath` is used)</li></ul> |
 
+What a refresh does (since 3.11.0): every refresh, the scheduled one and the one a new snapshot triggers, parses
+the lists into a fresh in-memory trust source and swaps it in when it is complete. Requests resolve the current
+source per call, so a validation never reads a source that is being refilled; a changed list takes effect for
+all requests at the swap. Earlier releases refilled the one source in place, and a request in flight during a
+refresh that changed a list could miss trust anchors (INDETERMINATE or TOTAL-FAILED for a valid signature) or fail
+with an internal error (open-eid/SiVa#6). Because every refresh parses all lists again, it takes seconds for the EU
+LOTL set, on the scheduler thread, with requests served from the previous source meanwhile; two sources exist in
+memory for that time.
+
 !!! note
     When updating the siva-keystore.jks it is needed to delete the "temp" keystore from default/specified location. Deleting the "temp" keystore is also needed when upgrading your deployment to newer SIVA version!
 

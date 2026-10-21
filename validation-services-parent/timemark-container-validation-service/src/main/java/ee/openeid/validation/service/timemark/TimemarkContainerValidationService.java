@@ -26,6 +26,8 @@ import ee.openeid.validation.service.timemark.signature.policy.BDOCConfiguration
 import ee.openeid.validation.service.timemark.signature.policy.PolicyConfigurationWrapper;
 import ee.openeid.validation.service.timemark.tsl.TimemarkTrustedListsCertificateSource;
 import eu.europa.esig.dss.model.DSSException;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 import org.digidoc4j.Configuration;
 import org.digidoc4j.Container;
@@ -35,20 +37,20 @@ import org.digidoc4j.exceptions.DigiDoc4JException;
 import org.digidoc4j.impl.ValidatableContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 @Service
+@RequiredArgsConstructor
 public class TimemarkContainerValidationService implements ValidationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TimemarkContainerValidationService.class);
 
-    private ReportConfigurationProperties reportConfigurationProperties;
-    private BDOCConfigurationService bdocConfigurationService;
-    private TimemarkContainerValidationReportBuilderFactory timemarkContainerValidationReportBuilderFactory;
-    private TimemarkTrustedListsCertificateSource trustedListsCertificateSource;
+    private final @NonNull ReportConfigurationProperties reportConfigurationProperties;
+    private final @NonNull BDOCConfigurationService bdocConfigurationService;
+    private final @NonNull TimemarkContainerValidationReportBuilderFactory timemarkContainerValidationReportBuilderFactory;
+    private final @NonNull TimemarkTrustedListsCertificateSource trustedListsCertificateSource;
     private static final String DDOC_FORMAT = "DDOC";
 
     @Override
@@ -97,28 +99,6 @@ public class TimemarkContainerValidationService implements ValidationService {
                 .fromStream(containerInputStream)
                 .withConfiguration(configuration)
                 .build();
-    }
-
-    @Autowired
-    public void setBdocConfigurationService(BDOCConfigurationService bdocConfigurationService) {
-        this.bdocConfigurationService = bdocConfigurationService;
-    }
-
-    @Autowired
-    public void setReportConfigurationProperties(ReportConfigurationProperties reportConfigurationProperties) {
-        this.reportConfigurationProperties = reportConfigurationProperties;
-    }
-
-    @Autowired
-    public void setTrustedListsCertificateSource(TimemarkTrustedListsCertificateSource trustedListsCertificateSource) {
-        this.trustedListsCertificateSource = trustedListsCertificateSource;
-    }
-
-    @Autowired
-    public void setTimemarkContainerValidationReportBuilderFactory(
-        TimemarkContainerValidationReportBuilderFactory timemarkContainerValidationReportBuilderFactory
-    ) {
-        this.timemarkContainerValidationReportBuilderFactory = timemarkContainerValidationReportBuilderFactory;
     }
 
 }

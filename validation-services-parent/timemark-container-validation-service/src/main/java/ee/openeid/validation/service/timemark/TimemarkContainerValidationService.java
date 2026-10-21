@@ -24,6 +24,7 @@ import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.validation.service.timemark.signature.policy.BDOCConfigurationService;
 import ee.openeid.validation.service.timemark.signature.policy.PolicyConfigurationWrapper;
+import ee.openeid.validation.service.timemark.tsl.TimemarkTrustedListsCertificateSource;
 import eu.europa.esig.dss.model.DSSException;
 import org.apache.commons.io.FilenameUtils;
 import org.digidoc4j.Configuration;
@@ -47,6 +48,7 @@ public class TimemarkContainerValidationService implements ValidationService {
     private ReportConfigurationProperties reportConfigurationProperties;
     private BDOCConfigurationService bdocConfigurationService;
     private TimemarkContainerValidationReportBuilderFactory timemarkContainerValidationReportBuilderFactory;
+    private TimemarkTrustedListsCertificateSource trustedListsCertificateSource;
     private static final String DDOC_FORMAT = "DDOC";
 
     @Override
@@ -54,6 +56,11 @@ public class TimemarkContainerValidationService implements ValidationService {
         if (DDOC_FORMAT.equalsIgnoreCase(FilenameUtils.getExtension(validationDocument.getName()))) {
             XMLEntityAttackValidator.validateAgainstXMLEntityAttacks(validationDocument.getBytes());
         }
+        // digidoc4j reads the trust source per operation; one validation must see one published source throughout.
+        return trustedListsCertificateSource.withPinnedSource(() -> validate(validationDocument));
+    }
+
+    private Reports validate(ValidationDocument validationDocument) {
         PolicyConfigurationWrapper policyConfiguration = bdocConfigurationService.loadPolicyConfiguration(validationDocument.getSignaturePolicy());
         Container container;
         try {
@@ -100,6 +107,11 @@ public class TimemarkContainerValidationService implements ValidationService {
     @Autowired
     public void setReportConfigurationProperties(ReportConfigurationProperties reportConfigurationProperties) {
         this.reportConfigurationProperties = reportConfigurationProperties;
+    }
+
+    @Autowired
+    public void setTrustedListsCertificateSource(TimemarkTrustedListsCertificateSource trustedListsCertificateSource) {
+        this.trustedListsCertificateSource = trustedListsCertificateSource;
     }
 
     @Autowired

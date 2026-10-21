@@ -18,6 +18,8 @@ package ee.openeid.validation.service.timemark.configuration;
 
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.siva.validation.util.ResourceUtil;
+import ee.openeid.tsl.TrustedListsCertificateSourceHolder;
+import ee.openeid.tsl.annotation.LoadableTsl;
 import ee.openeid.validation.service.timemark.TimemarkContainerValidationReportBuilderFactory;
 import ee.openeid.validation.service.timemark.tsl.TimemarkTrustedListsCertificateSource;
 import lombok.NonNull;
@@ -36,6 +38,7 @@ import java.util.Optional;
 
 import static ee.openeid.validation.service.timemark.TimemarkValidationConstants.TM_POLICY_SERVICE_BEAN_NAME;
 import static ee.openeid.validation.service.timemark.TimemarkValidationConstants.TM_TRUSTED_LISTS_CERTIFICATE_SOURCE_BEAN_NAME;
+import static ee.openeid.validation.service.timemark.TimemarkValidationConstants.TM_TSL_NAME;
 
 @RequiredArgsConstructor
 @SpringBootConfiguration
@@ -58,11 +61,22 @@ public class TimemarkContainerValidationServiceConfiguration {
         return new TimemarkContainerValidationReportBuilderFactory();
     }
 
+    @LoadableTsl(name = TM_TSL_NAME)
+    @Bean(name = TM_TRUSTED_LISTS_CERTIFICATE_SOURCE_BEAN_NAME)
+    public TrustedListsCertificateSourceHolder timemarkTrustedListsCertificateSource() {
+        return new TrustedListsCertificateSourceHolder();
+    }
+
+    @Bean
+    public TimemarkTrustedListsCertificateSource timemarkTrustedListsCertificateSourceView(
+            @Qualifier(TM_TRUSTED_LISTS_CERTIFICATE_SOURCE_BEAN_NAME) TrustedListsCertificateSourceHolder trustedListsCertificateSource
+    ) {
+        return new TimemarkTrustedListsCertificateSource(trustedListsCertificateSource);
+    }
+
     @Bean
     @Profile("test")
-    public Configuration testDigiDoc4JConfiguration(
-            @Qualifier(TM_TRUSTED_LISTS_CERTIFICATE_SOURCE_BEAN_NAME) TimemarkTrustedListsCertificateSource trustedListsCertificateSource
-    ) {
+    public Configuration testDigiDoc4JConfiguration(TimemarkTrustedListsCertificateSource trustedListsCertificateSource) {
         Configuration configuration = Configuration.of(Configuration.Mode.TEST);
         ResourceUtil.loadResourceTo(getResourceOrDefault("/siva-digidoc4j-test.yaml"), configuration::loadConfiguration);
         configuration.setTSL(trustedListsCertificateSource);
@@ -71,9 +85,7 @@ public class TimemarkContainerValidationServiceConfiguration {
 
     @Bean
     @Profile("!test")
-    public Configuration prodDigiDoc4JConfiguration(
-            @Qualifier(TM_TRUSTED_LISTS_CERTIFICATE_SOURCE_BEAN_NAME) TimemarkTrustedListsCertificateSource trustedListsCertificateSource
-    ) {
+    public Configuration prodDigiDoc4JConfiguration(TimemarkTrustedListsCertificateSource trustedListsCertificateSource) {
         Configuration configuration = Configuration.of(Configuration.Mode.PROD);
         ResourceUtil.loadResourceTo(getResourceOrDefault("/siva-digidoc4j.yaml"), configuration::loadConfiguration);
         configuration.setTSL(trustedListsCertificateSource);

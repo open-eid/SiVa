@@ -237,12 +237,20 @@ tests:
           value: Always
       - lengthEqual:
           path: spec.template.spec.containers[0].env
-          count: 20   # 6 chart-owned (no management port: the overlay keeps the actuator on 8080) + 4 snapshot mode + 6 trust bundles + 4
+          count: 21   # 6 chart-owned (no management port: the overlay keeps the actuator on 8080) + 4 snapshot mode + 6 trust bundles + the lab Secret's import + 4
       - contains:
           path: spec.template.spec.containers[0].env
           content:
             name: SIVA_TSL_LOADER_SNAPSHOTPOLLINTERVAL
             value: PT30S
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SPRING_CONFIG_IMPORT
+            value: configtree:/etc/siva/secrets/
+      - equal:
+          path: spec.template.spec.volumes[?(@.name == "secrets")].secret.secretName
+          value: siva-lab-secrets
       - notExists:
           path: spec.template.spec.containers[0].env[?(@.name == "MANAGEMENT_SERVER_PORT")]
       - contains:

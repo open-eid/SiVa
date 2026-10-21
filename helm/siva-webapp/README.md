@@ -1,6 +1,6 @@
 # siva-webapp
 
-![Version: 3.11.0-SNAPSHOT](https://img.shields.io/badge/Version-3.11.0--SNAPSHOT-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.11.0-SNAPSHOT](https://img.shields.io/badge/AppVersion-3.11.0--SNAPSHOT-informational?style=flat-square)
+![Version: 3.11.0](https://img.shields.io/badge/Version-3.11.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.11.0](https://img.shields.io/badge/AppVersion-3.11.0-informational?style=flat-square)
 
 Reference deployment of [SiVa](https://github.com/open-eid/SiVa), the Estonian digital-signature
 validation service, on Kubernetes. Like the project's docker-compose file it is a reference, not a

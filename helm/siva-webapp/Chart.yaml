@@ -10,8 +10,8 @@ type: application
 # The chart is versioned with SiVa: version and appVersion are the Maven project version and
 # change only in SiVa's version-bump commit (no chart releases of their own). Internal builds
 # tag image and chart with a build id derived from it (README, "Versioning").
-version: 3.11.0-SNAPSHOT
-appVersion: "3.11.0-SNAPSHOT"
+version: 3.11.0
+appVersion: "3.11.0"
 kubeVersion: ">=1.26.0-0"
 keywords:
   - siva

@@ -73,15 +73,9 @@ class PDFValidationServiceTest {
 
     @BeforeEach
     public void setUp() {
-        validationService = new GenericValidationService();
-        validationService.setTrustedListsCertificateSource(trustedListsCertificateSource);
-
         signaturePolicyService = new ConstraintLoadingSignaturePolicyService(policySettings);
-        validationService.setSignaturePolicyService(signaturePolicyService);
-        validationService.setReportConfigurationProperties(new ReportConfigurationProperties(true));
-
-        validationService.setContainerValidatorFactory(containerValidatorFactory);
-        validationService.setOcspSourceFactory(ocspSourceFactory);
+        validationService = new GenericValidationService(trustedListsCertificateSource, signaturePolicyService,
+                new ReportConfigurationProperties(true), new ProxyConfig(), containerValidatorFactory, ocspSourceFactory);
     }
 
     @Test

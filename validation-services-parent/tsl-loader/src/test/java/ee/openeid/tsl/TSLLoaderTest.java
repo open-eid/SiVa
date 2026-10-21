@@ -27,6 +27,7 @@ import eu.europa.esig.dss.model.tsl.TrustProperties;
 import eu.europa.esig.dss.model.x509.CertificateToken;
 import eu.europa.esig.dss.service.http.commons.CommonsDataLoader;
 import eu.europa.esig.dss.service.http.commons.FileCacheDataLoader;
+import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
 import eu.europa.esig.dss.spi.DSSUtils;
 import eu.europa.esig.dss.spi.client.http.DSSFileLoader;
 import eu.europa.esig.dss.spi.client.http.DataLoader;
@@ -41,11 +42,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.ssl.DefaultSslBundleRegistry;
+import org.springframework.boot.ssl.SslBundles;
 import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
@@ -99,6 +101,8 @@ class TSLLoaderTest {
     private TLValidationJob tslValidationJob;
     @Mock
     private KeyStoreCertificateSource keyStoreCertificateSource;
+    @Mock
+    private ObjectProvider<SslBundles> sslBundles;
     private final TrustedListsCertificateSourceHolder holder = new TrustedListsCertificateSourceHolder();
 
     @TempDir
@@ -106,18 +110,21 @@ class TSLLoaderTest {
     @TempDir
     private Path cache;
 
-    @InjectMocks
-    private TSLLoader tslLoader = new TSLLoader("testName");
+    private TSLLoader tslLoader;
 
     @BeforeEach
     public void setUp() throws Exception {
         lenient().when(tslValidationJobFactory.createValidationJob()).thenReturn(tslValidationJob);
-        tslLoader.setTrustedListsCertificateSource(holder);
+    }
+
+    private TSLLoader loader(TSLLoaderConfigurationProperties properties) {
+        return new TSLLoader("testName", holder, tslValidationJobFactory, properties, keyStoreCertificateSource,
+                new ProxyConfig(), sslBundles);
     }
 
     @Test
     void loadTSL_WhenRefreshReturns_LastRefreshAndCertificateCountAreRecorded() throws Exception {
-        tslLoader.setTslLoaderConfigurationProperties(createConfigurationProperties(false));
+        tslLoader = loader(createConfigurationProperties(false));
         tslLoader.init();
         filledOnRefresh(TslTestUtils.anchors(3));
         assertNull(tslLoader.getLastRefresh());
@@ -135,7 +142,7 @@ class TSLLoaderTest {
 
     @Test
     void loadTSL_WhenRefreshedAgain_ANewSourceIsPublishedAndThePreviousOneIsLeftAsItWas() throws Exception {
-        tslLoader.setTslLoaderConfigurationProperties(createConfigurationProperties(true));
+        tslLoader = loader(createConfigurationProperties(true));
         tslLoader.init();
         Map<CertificateToken, List<TrustProperties>> first = TslTestUtils.anchors(2);
         Map<CertificateToken, List<TrustProperties>> second = TslTestUtils.anchors(1);
@@ -163,7 +170,7 @@ class TSLLoaderTest {
 
     @Test
     void loadTSL_WhenSourceHoldsAnchors_TheyAreCountedOncePerTerritoryOfTheirTrustedList() throws Exception {
-        tslLoader.setTslLoaderConfigurationProperties(createConfigurationProperties(false));
+        tslLoader = loader(createConfigurationProperties(false));
         tslLoader.init();
         TLInfo estonian = trustedList("EE");
         TLInfo estonianMirror = trustedList("EE");
@@ -187,7 +194,7 @@ class TSLLoaderTest {
 
     @Test
     void loadTSL_WhenSourceIsEmpty_NoTerritoriesAreRecorded() {
-        tslLoader.setTslLoaderConfigurationProperties(createConfigurationProperties(false));
+        tslLoader = loader(createConfigurationProperties(false));
         tslLoader.init();
 
         tslLoader.loadTSL();
@@ -197,7 +204,7 @@ class TSLLoaderTest {
 
     @Test
     void loadTSL_WhenLoadFromCacheIsTrue_OfflineDataLoaderIsUsed() {
-        tslLoader.setTslLoaderConfigurationProperties(createConfigurationProperties(true));
+        tslLoader = loader(createConfigurationProperties(true));
         tslLoader.init();
 
         tslLoader.loadTSL();
@@ -215,7 +222,7 @@ class TSLLoaderTest {
 
     @Test
     void loadTSL_WhenLoadFromCacheIsFalse_OnlineDataLoaderIsUsed() {
-        tslLoader.setTslLoaderConfigurationProperties(createConfigurationProperties(false));
+        tslLoader = loader(createConfigurationProperties(false));
         tslLoader.init();
 
         tslLoader.loadTSL();
@@ -233,7 +240,7 @@ class TSLLoaderTest {
 
     @Test
     void loadTSL_WhenSnapshotStoreHasNoCurrentSnapshot_NothingIsLoaded() {
-        tslLoader.setTslLoaderConfigurationProperties(createSnapshotConfigurationProperties());
+        tslLoader = loader(createSnapshotConfigurationProperties());
         tslLoader.init();
 
         tslLoader.loadTSL();
@@ -246,7 +253,7 @@ class TSLLoaderTest {
 
     @Test
     void loadTSL_WhenSnapshotStoreNamesASnapshot_ItIsLoadedAndRecorded() throws IOException {
-        tslLoader.setTslLoaderConfigurationProperties(createSnapshotConfigurationProperties());
+        tslLoader = loader(createSnapshotConfigurationProperties());
         tslLoader.init();
         publish("20261013T183000Z");
 
@@ -262,7 +269,7 @@ class TSLLoaderTest {
 
     @Test
     void refreshIfSnapshotChanged_WhenCurrentStillNamesTheLoadedSnapshot_NothingHappens() throws IOException {
-        tslLoader.setTslLoaderConfigurationProperties(createSnapshotConfigurationProperties());
+        tslLoader = loader(createSnapshotConfigurationProperties());
         tslLoader.init();
         publish("20261013T183000Z");
         tslLoader.loadTSL();
@@ -274,7 +281,7 @@ class TSLLoaderTest {
 
     @Test
     void refreshIfSnapshotChanged_WhenCurrentNamesAnotherSnapshot_ItIsLoaded() throws IOException {
-        tslLoader.setTslLoaderConfigurationProperties(createSnapshotConfigurationProperties());
+        tslLoader = loader(createSnapshotConfigurationProperties());
         tslLoader.init();
         publish("20261013T183000Z");
         tslLoader.loadTSL();
@@ -288,7 +295,7 @@ class TSLLoaderTest {
 
     @Test
     void refreshIfSnapshotChanged_WhenCurrentNamesAnotherSnapshot_TheOldSourceServesUntilTheSwap() throws Exception {
-        tslLoader.setTslLoaderConfigurationProperties(createSnapshotConfigurationProperties());
+        tslLoader = loader(createSnapshotConfigurationProperties());
         tslLoader.init();
         Map<CertificateToken, List<TrustProperties>> first = TslTestUtils.anchors(1);
         Map<CertificateToken, List<TrustProperties>> second = TslTestUtils.anchors(1);
@@ -323,7 +330,7 @@ class TSLLoaderTest {
 
     @Test
     void refreshIfSnapshotChanged_OutsideSnapshotMode_NothingHappens() {
-        tslLoader.setTslLoaderConfigurationProperties(createConfigurationProperties(true));
+        tslLoader = loader(createConfigurationProperties(true));
         tslLoader.init();
 
         tslLoader.refreshIfSnapshotChanged();
@@ -333,7 +340,7 @@ class TSLLoaderTest {
 
     @Test
     void loadTSL_WhenCurrentNamesAMissingDirectory_NothingIsLoadedAndStartupSurvives() throws IOException {
-        tslLoader.setTslLoaderConfigurationProperties(createSnapshotConfigurationProperties());
+        tslLoader = loader(createSnapshotConfigurationProperties());
         tslLoader.init();
         Files.writeString(snapshotRoot.resolve("current"), "20261013T183000Z\n");
 
@@ -347,7 +354,7 @@ class TSLLoaderTest {
     void loadTSL_WhenSnapshotIsOlderThanMaxAge_ItIsRefusedAndTheLoadedStateKept() throws IOException {
         TSLLoaderConfigurationProperties props = createSnapshotConfigurationProperties();
         props.setSnapshotMaxAge(Duration.ofDays(2));
-        tslLoader.setTslLoaderConfigurationProperties(props);
+        tslLoader = loader(props);
         tslLoader.init();
         Instant keptCreatedAt = Instant.now().minus(Duration.ofHours(1)).truncatedTo(ChronoUnit.SECONDS);
         publish("20261013T183000Z", keptCreatedAt);
@@ -367,7 +374,7 @@ class TSLLoaderTest {
     void loadTSL_WhenMaxAgeIsSetAndTheManifestIsMissing_TheSnapshotIsRefused() throws IOException {
         TSLLoaderConfigurationProperties props = createSnapshotConfigurationProperties();
         props.setSnapshotMaxAge(Duration.ofDays(2));
-        tslLoader.setTslLoaderConfigurationProperties(props);
+        tslLoader = loader(props);
         tslLoader.init();
         publish("20261013T183000Z");
 
@@ -380,7 +387,7 @@ class TSLLoaderTest {
     void loadTSL_WhenSnapshotIsYoungerThanMaxAge_ItIsLoaded() throws IOException {
         TSLLoaderConfigurationProperties props = createSnapshotConfigurationProperties();
         props.setSnapshotMaxAge(Duration.ofDays(2));
-        tslLoader.setTslLoaderConfigurationProperties(props);
+        tslLoader = loader(props);
         tslLoader.init();
         publish("20261013T183000Z", Instant.now().minus(Duration.ofHours(1)));
 
@@ -392,7 +399,7 @@ class TSLLoaderTest {
 
     @Test
     void loadTSL_WhenListsWereParsed_TheEarliestNextUpdatePerTerritoryAndTheLotlsAreRecorded() {
-        tslLoader.setTslLoaderConfigurationProperties(createConfigurationProperties(false));
+        tslLoader = loader(createConfigurationProperties(false));
         tslLoader.init();
         Instant estonianSoon = Instant.parse("2026-11-20T00:00:00Z");
         Instant later = Instant.parse("2027-04-08T00:00:00Z");
@@ -412,7 +419,7 @@ class TSLLoaderTest {
 
     @Test
     void loadTSL_WhenSnapshotIsLoaded_ItsCreationTimeIsRecorded() throws IOException {
-        tslLoader.setTslLoaderConfigurationProperties(createSnapshotConfigurationProperties());
+        tslLoader = loader(createSnapshotConfigurationProperties());
         tslLoader.init();
         Instant createdAt = Instant.parse("2026-10-14T06:01:08Z");
         publish("20261014T060108Z", createdAt);
@@ -424,7 +431,7 @@ class TSLLoaderTest {
 
     @Test
     void loadTSL_WhenSnapshotHasNoManifest_ItsCreationTimeIsUnknown() throws IOException {
-        tslLoader.setTslLoaderConfigurationProperties(createSnapshotConfigurationProperties());
+        tslLoader = loader(createSnapshotConfigurationProperties());
         tslLoader.init();
         publish("20261014T060108Z");
 
@@ -439,7 +446,7 @@ class TSLLoaderTest {
         TSLLoaderConfigurationProperties props = createConfigurationProperties(false);
         props.setCacheDirectory(cache.toFile());
         props.setRefreshPeriod(Duration.ofHours(6));
-        tslLoader.setTslLoaderConfigurationProperties(props);
+        tslLoader = loader(props);
         tslLoader.init();
         Instant lotlDownloaded = Instant.parse("2026-10-20T06:00:00Z");
         Instant estonianDownloaded = Instant.parse("2026-10-21T06:00:00Z");
@@ -459,7 +466,7 @@ class TSLLoaderTest {
     void loadTSL_Online_AListServedFromItsLastCopyIsRecordedByTerritoryWithTheReason() throws IOException {
         TSLLoaderConfigurationProperties props = createConfigurationProperties(false);
         props.setCacheDirectory(cache.toFile());
-        tslLoader.setTslLoaderConfigurationProperties(props);
+        tslLoader = loader(props);
         tslLoader.init();
         cached("https://lotl", Instant.parse("2026-10-20T06:00:00Z"));
         AtomicReference<LastGoodCopyFileCacheDataLoader> onlineLoader = new AtomicReference<>();
@@ -486,7 +493,7 @@ class TSLLoaderTest {
     void loadTSL_Online_TheNextRefreshForgetsTheCopiesServedBefore() throws IOException {
         TSLLoaderConfigurationProperties props = createConfigurationProperties(false);
         props.setCacheDirectory(cache.toFile());
-        tslLoader.setTslLoaderConfigurationProperties(props);
+        tslLoader = loader(props);
         tslLoader.init();
         cached("https://lotl", Instant.parse("2026-10-20T06:00:00Z"));
         AtomicReference<LastGoodCopyFileCacheDataLoader> onlineLoader = new AtomicReference<>();
@@ -513,7 +520,7 @@ class TSLLoaderTest {
 
     @Test
     void loadTSL_WhenSnapshotIsLoaded_ItsPeriodAndDownloadTimesAreTakenFromTheManifest() throws IOException {
-        tslLoader.setTslLoaderConfigurationProperties(createSnapshotConfigurationProperties());
+        tslLoader = loader(createSnapshotConfigurationProperties());
         tslLoader.init();
         Instant downloaded = Instant.parse("2026-10-21T06:00:12Z");
         publish("20261021T060108Z", Instant.parse("2026-10-21T06:01:08Z"), Duration.ofHours(6),
@@ -529,7 +536,7 @@ class TSLLoaderTest {
 
     @Test
     void loadTSL_WhenTheManifestPredatesThePeriodAndDownloadTimes_TheyAreUnknown() throws IOException {
-        tslLoader.setTslLoaderConfigurationProperties(createSnapshotConfigurationProperties());
+        tslLoader = loader(createSnapshotConfigurationProperties());
         tslLoader.init();
         publish("20261014T060108Z", Instant.parse("2026-10-14T06:01:08Z"));
 
@@ -543,8 +550,8 @@ class TSLLoaderTest {
     void init_WhenSslBundleIsSet_TheTrustListDownloadsTrustTheBundle() throws Exception {
         TSLLoaderConfigurationProperties props = createConfigurationProperties(false);
         props.setSslBundle("tsl");
-        tslLoader.setTslLoaderConfigurationProperties(props);
-        tslLoader.setSslBundles(new DefaultSslBundleRegistry("tsl",
+        tslLoader = loader(props);
+        when(sslBundles.getIfAvailable()).thenReturn(new DefaultSslBundleRegistry("tsl",
                 SslBundleDataLoaderTest.bundle(SslBundleDataLoaderTest.lotlTestTrustStore())));
 
         tslLoader.init();
@@ -558,10 +565,10 @@ class TSLLoaderTest {
     void loadTSL_WhenLotlBundleIsSet_TheSignersAreReadFromTheBundleBeforeEveryRefresh() throws Exception {
         TSLLoaderConfigurationProperties props = createConfigurationProperties(false);
         props.setLotlBundle("lotl");
-        tslLoader.setTslLoaderConfigurationProperties(props);
+        tslLoader = loader(props);
         DefaultSslBundleRegistry registry = new DefaultSslBundleRegistry("lotl",
                 SslBundleDataLoaderTest.bundle(SslBundleDataLoaderTest.lotlTestTrustStore()));
-        tslLoader.setSslBundles(registry);
+        when(sslBundles.getIfAvailable()).thenReturn(registry);
         tslLoader.init();
         CertificateSource signers = tslLoader.europeanLOTL().getCertificateSource();
         assertEquals(1, signers.getCertificates().size());
@@ -582,7 +589,7 @@ class TSLLoaderTest {
     void init_WhenABundleIsNamedWithoutSslBundles_InitFails() {
         TSLLoaderConfigurationProperties props = createConfigurationProperties(false);
         props.setSslBundle("tsl");
-        tslLoader.setTslLoaderConfigurationProperties(props);
+        tslLoader = loader(props);
 
         assertThrows(IllegalStateException.class, tslLoader::init);
     }

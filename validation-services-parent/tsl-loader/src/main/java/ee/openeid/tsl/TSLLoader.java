@@ -51,7 +51,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.digidoc4j.utils.ResourceUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.ssl.SslBundles;
 
 import jakarta.annotation.PostConstruct;
@@ -104,12 +104,14 @@ public class TSLLoader {
                 null);
     }
 
-    private TSLValidationJobFactory tslValidationJobFactory;
-    private TSLLoaderConfigurationProperties configurationProperties;
-    private TrustedListsCertificateSourceHolder trustedListsCertificateSource;
-    private KeyStoreCertificateSource keyStoreCertificateSource;
-    private ProxyConfig proxyConfig;
-    private SslBundles sslBundles;
+    // The registerer passes the name and the holder as the first two constructor arguments; the rest is autowired.
+    private final @NonNull TrustedListsCertificateSourceHolder trustedListsCertificateSource;
+    private final @NonNull TSLValidationJobFactory tslValidationJobFactory;
+    private final @NonNull TSLLoaderConfigurationProperties configurationProperties;
+    private final @NonNull KeyStoreCertificateSource keyStoreCertificateSource;
+    private final @NonNull ProxyConfig proxyConfig;
+    // Absent in a context without Spring Boot's SSL auto-configuration; needed only when a bundle is named.
+    private final @NonNull ObjectProvider<SslBundles> sslBundles;
     private TSLSnapshotStore snapshotStore;
     private LastGoodCopyFileCacheDataLoader onlineLoader;
     // The snapshot id last refused (missing directory, too old); warned about once, then only at debug.
@@ -522,11 +524,12 @@ public class TSLLoader {
     }
 
     private SslBundles bundles() {
-        if (sslBundles == null) {
+        SslBundles bundles = sslBundles.getIfAvailable();
+        if (bundles == null) {
             throw new IllegalStateException("siva.tsl.loader.sslBundle/lotlBundle name an SSL bundle, "
                     + "but Spring Boot's SSL bundles are not available in this context");
         }
-        return sslBundles;
+        return bundles;
     }
 
     private static boolean hasText(String value) {
@@ -584,36 +587,6 @@ public class TSLLoader {
         if (directory != null) {
             loader.setFileCacheDirectory(directory);
         }
-    }
-
-    @Autowired
-    public void setProxyConfig (ProxyConfig proxyConfig){
-        this.proxyConfig = proxyConfig;
-    }
-
-    @Autowired(required = false)
-    public void setSslBundles(SslBundles sslBundles) {
-        this.sslBundles = sslBundles;
-    }
-
-    @Autowired
-    public void setTslValidationJobFactory(TSLValidationJobFactory tslValidationJobFactory) {
-        this.tslValidationJobFactory = tslValidationJobFactory;
-    }
-
-    @Autowired
-    public void setTslLoaderConfigurationProperties(TSLLoaderConfigurationProperties configurationProperties) {
-        this.configurationProperties = configurationProperties;
-    }
-
-    @Autowired
-    public void setKeyStoreCertificateSource(KeyStoreCertificateSource keyStoreCertificateSource) {
-        this.keyStoreCertificateSource = keyStoreCertificateSource;
-    }
-
-    @Autowired
-    public void setTrustedListsCertificateSource(TrustedListsCertificateSourceHolder trustedListsCertificateSource) {
-        this.trustedListsCertificateSource = trustedListsCertificateSource;
     }
 
 }

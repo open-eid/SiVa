@@ -6,6 +6,7 @@
 {{- fail (printf "config.files: %q is not a usable file name (application.yml is the chart's own; no directories)" $name) }}
 {{- end }}
 {{- end }}
+{{- include "siva-webapp.springSecretGuard" (dict "path" "" "map" .Values.config.spring) -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:

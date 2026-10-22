@@ -62,11 +62,41 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
-Image reference: image.repository and image.tag, the tag defaulting to the chart's appVersion
-(the SiVa version).
+Image reference from an image map (repository, tag, digest): repository:tag, and @digest appended
+when the digest is set (the tag is then a label, the digest is what is pulled). Call with
+(list <image map> <tag when the map's is empty>).
+*/}}
+{{- define "siva-webapp.imageRef" -}}
+{{- $image := index . 0 -}}
+{{- printf "%s:%s" $image.repository ($image.tag | default (index . 1)) -}}
+{{- with $image.digest }}@{{ . }}{{ end -}}
+{{- end }}
+
+{{/*
+The webapp image: image.repository, image.tag (defaulting to the chart's appVersion, the SiVa
+version) and image.digest.
 */}}
 {{- define "siva-webapp.image" -}}
-{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}
+{{ include "siva-webapp.imageRef" (list .Values.image .Chart.AppVersion) }}
+{{- end }}
+
+{{/*
+Refuse secret-looking keys in config.spring, a ConfigMap being no Secret: a leaf key whose name ends
+in password, passwd, secret, token, api-key or private-key (kebab- or camelCase) fails the render
+pointing at secrets.existingSecret. logging.level names packages and is skipped. Recursive; call
+with (dict "path" "" "map" .Values.config.spring).
+*/}}
+{{- define "siva-webapp.springSecretGuard" -}}
+{{- $path := .path -}}
+{{- range $key, $value := .map -}}
+{{- $full := ternary $key (printf "%s.%s" $path $key) (eq $path "") -}}
+{{- if eq $full "logging.level" -}}
+{{- else if kindIs "map" $value -}}
+{{- include "siva-webapp.springSecretGuard" (dict "path" $full "map" $value) -}}
+{{- else if regexMatch `(?i)(password|passwd|secret|token|api-?key|private-?key)$` $key -}}
+{{- fail (printf "config.spring.%s names a secret and would land in a ConfigMap: put it in the Secret that secrets.existingSecret names, as a file called %s (README, \"Secrets\")" $full $full) -}}
+{{- end -}}
+{{- end -}}
 {{- end }}
 
 {{/*
@@ -181,7 +211,7 @@ the Secret, a /tmp of its own. Called with a dict: `root`, `mode` (down, up or p
 {{- define "siva-webapp.syncContainer" -}}
 {{- $sync := .root.Values.tsl.snapshot.sync -}}
 - name: {{ .name }}
-  image: "{{ $sync.image.repository }}:{{ $sync.image.tag }}"
+  image: {{ include "siva-webapp.imageRef" (list $sync.image "") | quote }}
   imagePullPolicy: {{ $sync.image.pullPolicy }}
   command: ["sh", "/etc/siva-tsl-sync/tsl-sync.sh", {{ .mode | quote }}]
   securityContext:

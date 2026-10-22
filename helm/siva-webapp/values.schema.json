@@ -64,6 +64,10 @@
               }
             }
           }
+        },
+        "digest": {
+          "type": "string",
+          "pattern": "^(sha256:[0-9a-f]{64})?$"
         }
       }
     },
@@ -5182,6 +5186,10 @@
                         "IfNotPresent",
                         "Never"
                       ]
+                    },
+                    "digest": {
+                      "type": "string",
+                      "pattern": "^(sha256:[0-9a-f]{64})?$"
                     }
                   }
                 },
@@ -5929,8 +5937,26 @@
           "type": "boolean"
         },
         "image": {
-          "type": "string",
-          "minLength": 1
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "repository",
+            "tag"
+          ],
+          "properties": {
+            "repository": {
+              "type": "string",
+              "minLength": 1
+            },
+            "tag": {
+              "type": "string",
+              "minLength": 1
+            },
+            "digest": {
+              "type": "string",
+              "pattern": "^(sha256:[0-9a-f]{64})?$"
+            }
+          }
         },
         "runAsUser": {
           "type": "integer",

@@ -78,3 +78,17 @@ tests:
       - equal:
           path: spec.containers[0].securityContext.allowPrivilegeEscalation
           value: false
+  - it: runs busybox by tag, and by digest next to the tag when tests.image.digest is set
+    asserts:
+      - equal:
+          path: spec.containers[0].image
+          value: busybox:1.37.0
+  - it: pins the test image by digest
+    set:
+      tests:
+        image:
+          digest: sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+    asserts:
+      - equal:
+          path: spec.containers[0].image
+          value: busybox:1.37.0@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef

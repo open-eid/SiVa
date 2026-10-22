@@ -92,3 +92,49 @@ tests:
     asserts:
       - failedTemplate:
           errorPattern: "config.files: \"conf/logback.xml\" is not a usable file name"
+
+  - it: refuses a config.spring key named like a secret, pointing at the Secret mechanism
+    set:
+      config:
+        spring:
+          siva:
+            signature-service:
+              pkcs12:
+                password: "hunter2"
+    asserts:
+      - failedTemplate:
+          errorPattern: config.spring.siva.signature-service.pkcs12.password names a secret .* secrets.existingSecret .* a file called siva.signature-service.pkcs12.password
+
+  - it: refuses the camelCase spelling of a secret-like key too
+    set:
+      config:
+        spring:
+          server:
+            ssl:
+              keyStorePassword: "x"
+    asserts:
+      - failedTemplate:
+          errorPattern: config.spring.server.ssl.keyStorePassword names a secret
+
+  - it: renders benign keys beside a secret-like one, and package names under logging.level
+    set:
+      config:
+        spring:
+          siva:
+            signature-service:
+              pkcs12:
+                path: /etc/siva/secrets/siva-signing.p12
+          server:
+            tomcat:
+              remoteip:
+                internal-proxies: 10\.0\.0\.1
+          logging:
+            level:
+              ee.openeid.some.token: DEBUG
+    asserts:
+      - matchRegex:
+          path: data["application.yml"]
+          pattern: "path: /etc/siva/secrets/siva-signing.p12"
+      - matchRegex:
+          path: data["application.yml"]
+          pattern: "ee.openeid.some.token: DEBUG"

@@ -21,7 +21,11 @@ rclone containers mirror, never a CSI or FUSE mount (`tsl.snapshot.sync`).
 
 - **Build your own image.** SiVa publishes source only. `./mvnw spring-boot:build-image` in the
   SiVa checkout produces a Paketo image of `siva-webapp`; push it to a registry your cluster can
-  pull from and set `image.repository` / `image.tag`.
+  pull from and set `image.repository` to its full name there (`registry.example.invalid/siva-webapp`)
+  and `image.tag`. The default `siva-webapp` names no registry: it keeps the chart rendering
+  without one, and the install notes warn while it stands. `image.digest` pins the image by
+  content (`repository:tag@sha256:...`); the rclone image of `tsl.snapshot.sync` and the
+  `helm test` pod's busybox take a `digest` the same way.
 - **Egress.** In the default `tsl.mode: online` each pod downloads the EU LOTL and the
   member-state trust lists at startup and on a nightly cron; in snapshot mode only the fetcher
   does (see "Trust lists"). Allow HTTPS egress to those hosts from whichever pods download, and
@@ -76,7 +80,10 @@ and `spring`), so a mistyped key fails `helm lint`, `template`, `install` and `u
 the key; a prefix nothing declares (`dss.*`) passes. The fragment is generated from the SiVa
 build and committed, so an upgrade of SiVa regenerates it. Secrets never go into `config.spring`:
 a ConfigMap is not a Secret; `secrets.existingSecret` sets the same properties from the files of
-a mounted Secret (see "Secrets"). The chart's own settings
+a mounted Secret (see "Secrets"), and the chart refuses to render a key here whose name ends in
+`password`, `passwd`, `secret`, `token`, `api-key` or `private-key` (in either spelling:
+`siva.signature-service.pkcs12.password`, `server.ssl.keyStorePassword`), naming the file to
+put in that Secret instead; `logging.level.*` names packages and is exempt. The chart's own settings
 (`runtime.*`, `tsl.*`, `trust.*`) are injected as environment variables, which win over the file,
 so an override here cannot drop them.
 
@@ -153,7 +160,9 @@ config:
           path: /etc/siva/secrets/siva-signing.p12
 ```
 
-A file that is not a property (the keystore) is a property nobody reads. A value in the Secret
+A file that is not a property (the keystore) is a property nobody reads. The same key written
+into `config.spring` would land in a ConfigMap, so the chart refuses to render one named like a
+secret (see "Configuration"). A value in the Secret
 wins over the same key in `config.spring`; the chart's own environment variables (`runtime.*`,
 `tsl.*`, `trust.*`) win over both. Whatever writes the Secret is outside the chart; with the
 External Secrets Operator an `ExternalSecret` produces exactly this layout:

@@ -48,7 +48,8 @@ import java.util.stream.Stream;
 //   snapshots/<id>/           the DSS file cache of one fetch (file name = URL with non-alphanumerics as '_')
 //   snapshots/<id>/manifest.json
 //   fetch.lock                held by the fetcher that is downloading and publishing right now
-// A snapshot directory is complete before `current` names it, so a reader never sees a half-written one;
+// A snapshot directory is complete before `current` names it, so a reader never sees a half-written one (and a
+// copy of the store made file by file, through object storage, is checked against the manifest's file list);
 // older snapshots stay until pruned so a reader in the middle of loading one is not pulled away.
 @Slf4j
 @RequiredArgsConstructor
@@ -118,6 +119,17 @@ public class TSLSnapshotStore {
             log.warn("Trust-list snapshot manifest {} is unreadable: {}", manifest, reason);
             return Optional.empty();
         }
+    }
+
+    // The files the manifest lists that are not in the snapshot directory: a copy made without rename atomicity (a
+    // sync into object storage and back into a pod) can deliver `current` before the last file of the snapshot it
+    // names, and this is how a reader tells. Empty for a manifest written before the list existed.
+    public List<String> missingFiles(String id, TSLSnapshotManifest manifest) {
+        if (manifest.fileNames() == null) {
+            return List.of();
+        }
+        Path directory = snapshotDirectory(id);
+        return manifest.fileNames().stream().filter(name -> !Files.isRegularFile(directory.resolve(name))).toList();
     }
 
     public static String newId(Instant createdAt) {

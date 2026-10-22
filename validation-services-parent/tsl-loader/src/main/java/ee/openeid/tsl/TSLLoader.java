@@ -218,19 +218,28 @@ public class TSLLoader {
     }
 
     // A snapshot is loaded only when its directory is there (a pointer at a missing one must not take the startup
-    // refresh down) and, with snapshotMaxAge set, when its manifest says it is young enough.
+    // refresh down), when every file its manifest lists is there (a store copied file by file, through object
+    // storage, can deliver `current` before the last file: the next poll finds it complete) and, with
+    // snapshotMaxAge set, when its manifest says it is young enough.
     private boolean acceptable(String snapshotId, Path directory) {
         String reason = null;
         if (!Files.isDirectory(directory)) {
             reason = "its directory " + directory + " does not exist";
-        } else if (configurationProperties.getSnapshotMaxAge() != null) {
-            Instant oldest = Instant.now().minus(configurationProperties.getSnapshotMaxAge());
-            Instant createdAt = snapshotStore.manifest(snapshotId).map(TSLSnapshotManifest::createdAt).orElse(null);
-            if (createdAt == null) {
-                reason = "its manifest is missing or unreadable and snapshotMaxAge is set";
-            } else if (createdAt.isBefore(oldest)) {
-                reason = "it was created " + createdAt + ", older than snapshotMaxAge "
-                        + configurationProperties.getSnapshotMaxAge();
+        } else {
+            Optional<TSLSnapshotManifest> manifest = snapshotStore.manifest(snapshotId);
+            List<String> missing = manifest.map(m -> snapshotStore.missingFiles(snapshotId, m)).orElse(List.of());
+            Instant createdAt = manifest.map(TSLSnapshotManifest::createdAt).orElse(null);
+            if (!missing.isEmpty()) {
+                reason = "it is incomplete, " + missing.size() + " of the files its manifest lists are not there yet: "
+                        + missing;
+            } else if (configurationProperties.getSnapshotMaxAge() != null) {
+                Instant oldest = Instant.now().minus(configurationProperties.getSnapshotMaxAge());
+                if (createdAt == null) {
+                    reason = "its manifest is missing or unreadable and snapshotMaxAge is set";
+                } else if (createdAt.isBefore(oldest)) {
+                    reason = "it was created " + createdAt + ", older than snapshotMaxAge "
+                            + configurationProperties.getSnapshotMaxAge();
+                }
             }
         }
         if (reason == null) {

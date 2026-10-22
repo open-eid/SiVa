@@ -37,8 +37,9 @@ public class TSLLoaderConfigurationProperties {
     // How often a loader in snapshot mode checks `current` for another snapshot; zero or null = scheduled refresh only
     private Duration snapshotPollInterval = Duration.ofMinutes(1);
     // In snapshot mode: refuse a snapshot whose manifest is older than this (or has no readable manifest) and keep
-    // the loaded state, so a store that stopped being refreshed, or was pointed at an old snapshot, cannot feed a
-    // fresh pod lists older than the operator allows. Null = no age limit
+    // the loaded state, so a store that stopped being refreshed cannot feed a fresh pod lists older than the
+    // operator allows. The age is the manifest's own createdAt, so this catches a dead fetcher, not a store
+    // writer. Null = no age limit
     private Duration snapshotMaxAge;
     private Duration onlineCacheExpirationTime = Duration.parse("PT1H");
     private String url = "https://ec.europa.eu/tools/lotl/eu-lotl.xml";

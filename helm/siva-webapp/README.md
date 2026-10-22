@@ -306,9 +306,12 @@ bootstrap Job gets no TTL: it is a tracked resource, and a GitOps controller wou
 and re-run it.
 
 Whoever can write the store can point every pod at any snapshot whose lists are still inside
-their validity window, so treat write access to it as trust-list authority: only the fetcher
-writes, the webapp mounts it read-only, and `tsl.snapshot.maxAge` makes a pod refuse a
-snapshot older than that rather than serve it. The fetcher pods get their own
+their validity window (a rollback or a freeze; forging a list is not possible, the pods verify
+every list's signature against the LOTL signers), so treat write access to it as trust-list
+authority: only the fetcher writes, the webapp mounts it read-only. `tsl.snapshot.maxAge` is
+not a defence against such a writer: the age it checks is the manifest's own `createdAt`,
+which the writer sets. It makes a pod refuse a snapshot from a fetcher that stopped
+running rather than serve it. The fetcher pods get their own
 ServiceAccount (`tsl.fetcher.serviceAccount`), so an identity that may write the store (a
 cloud role for the bucket) is never the webapp's, and their own
 Secret (`tsl.fetcher.existingSecret`, mounted as under "Secrets"), never the webapp's: they parse
@@ -492,7 +495,7 @@ directory); edit the comments, not this table.
 | tsl.fetcher.ttlSecondsAfterFinished | string | `""` | Seconds a finished fetch Job is kept (its pod and log with it) before the TTL controller deletes it; empty keeps them until the history limits below rotate them out. A Failed Job is what the standard KubeJobFailed alert fires on, and its log is what names the host that failed, so leave this empty unless your logs are shipped elsewhere. Never applied to the bootstrap Job (a GitOps controller would recreate and re-run it). |
 | tsl.fetcher.workVolume | object | `{}` | Working cache the fetcher downloads into, kept between runs so that a list whose download fails keeps its last copy: a volume source as above, or empty for a `work/` directory inside the store. |
 | tsl.mode | string | `"online"` | `online`: every pod downloads the lists itself at startup and on SiVa's nightly cron (needs HTTPS egress to ~30 hosts, minutes until ready, replicas started at different times can hold different trust states). `snapshot`: a CronJob running this image in SiVa's `tsl-fetch` profile downloads them, publishes a snapshot into a shared volume and every pod reads that (ready in seconds, identical trust state, no egress to the list hosts from the webapp); the fetcher publishes only when the mandatory territories came through, so `current` always names the last good snapshot. Needs a SiVa build with the fetcher (3.11.0+). |
-| tsl.snapshot.maxAge | string | max(4 x period, PT48H) | Refuse a snapshot older than this (ISO-8601 duration; siva.tsl.loader.snapshotMaxAge) and keep the loaded state: a store that stopped being refreshed, or was pointed at an old snapshot by whoever can write it, cannot feed a fresh pod lists older than you allow. It only stops new pods from loading (a pod with nothing loaded stays not-ready), so it is lenient on purpose and the alerts catch staleness earlier. Empty: max(4 x tsl.fetcher.period, 48 h); `none` disables the check. |
+| tsl.snapshot.maxAge | string | max(4 x period, PT48H) | Refuse a snapshot whose manifest is older than this (ISO-8601 duration; siva.tsl.loader.snapshotMaxAge) and keep the loaded state: a store that stopped being refreshed cannot feed a fresh pod lists older than you allow. The age is the manifest's own `createdAt`, written by whoever wrote the snapshot, so this is a staleness check, not a defence against a store writer (the README's "Trust lists" says what one can do). It only stops new pods from loading (a pod with nothing loaded stays not-ready), so it is lenient on purpose and the alerts catch staleness earlier. Empty: max(4 x tsl.fetcher.period, 48 h); `none` disables the check. |
 | tsl.snapshot.mountPath | string | `"/var/siva/tsl"` | Where the snapshot store is mounted (read-only in the webapp pods, read-write in the fetcher). |
 | tsl.snapshot.persistentVolumeClaim.accessModes | list | `["ReadWriteMany"]` | Access modes of the claim. |
 | tsl.snapshot.persistentVolumeClaim.annotations | object | `{}` | Claim annotations. |

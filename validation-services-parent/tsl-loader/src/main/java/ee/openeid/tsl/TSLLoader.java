@@ -91,15 +91,21 @@ public class TSLLoader {
     /**
      * What the last refresh attempt left behind, published as one immutable value so that a reader (the
      * health indicator, on a request thread) never sees the count of one refresh with the territories of
-     * another. {@link State#NONE} until the first refresh.
+     * another: a reader that needs several values takes {@link #getState()} once. {@link State#NONE} until the
+     * first refresh.
      */
     private final AtomicReference<State> state = new AtomicReference<>(State.NONE);
 
-    private record State(Instant lastRefresh, int numberOfCertificates, Map<String, Integer> certificatesByTerritory,
-                         Map<String, Instant> nextUpdateByTerritory, Instant lotlNextUpdate, String snapshotId,
-                         Instant snapshotCreatedAt, Map<String, Instant> downloadedAt, Map<String, String> lastCopies,
-                         Duration refreshPeriod) {
-        private static final State NONE = new State(null, 0, Map.of(), Map.of(), null, null, null, Map.of(), Map.of(),
+    /**
+     * One refresh attempt's outcome, every value from the same refresh; the getters below each read one component
+     * of the current state and document it.
+     */
+    public record State(Instant lastRefresh, int numberOfCertificates, Map<String, Integer> certificatesByTerritory,
+                        Map<String, Instant> nextUpdateByTerritory, Instant lotlNextUpdate, String snapshotId,
+                        Instant snapshotCreatedAt, Map<String, Instant> downloadedAt, Map<String, String> lastCopies,
+                        Duration refreshPeriod) {
+        /** Before the first refresh: nothing loaded, no times, no lists. */
+        public static final State NONE = new State(null, 0, Map.of(), Map.of(), null, null, null, Map.of(), Map.of(),
                 null);
     }
 
@@ -379,6 +385,11 @@ public class TSLLoader {
         return result;
     }
 
+    /** The current state as one value, for a reader that reports several of its components together. */
+    public State getState() {
+        return state.get();
+    }
+
     /**
      * When the last refresh attempt finished, {@code null} until the first one. DSS does not throw on
      * download failures, so this says "attempted", not "succeeded"; {@link #getNumberOfCertificates()}
@@ -456,7 +467,8 @@ public class TSLLoader {
     /**
      * The lists the last online refresh served from their last copy because the download failed, by territory
      * ({@link #LOTL_TERRITORY} for the list of trusted lists; the URL when the summary has no territory for it), with
-     * the reason. Empty when every download succeeded and outside online mode.
+     * the kind of failure (a {@link LastCopyReason} name; the failure itself is in the log). Empty when every download
+     * succeeded and outside online mode.
      */
     public Map<String, String> getLastCopies() {
         return state.get().lastCopies();

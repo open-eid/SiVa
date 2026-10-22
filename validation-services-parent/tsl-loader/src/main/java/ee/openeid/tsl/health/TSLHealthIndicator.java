@@ -34,7 +34,9 @@ import java.util.Set;
  * territories ({@code siva.tsl.loader.mandatoryTerritories}), each with at least one trust anchor. Other
  * territories are reported but never decide the status, so one member state's list being unreachable for a
  * while does not take the service out of rotation. With no mandatory territory configured, a loader is UP once
- * it holds any trust anchor at all. Member of the {@code readiness} probe group.
+ * it holds any trust anchor at all. Member of the {@code readiness} probe group. Each loader's details come from
+ * one {@link TSLLoader.State}, so they describe one refresh; a list served from its last copy is reported with the
+ * kind of failure only, the failure itself is in the log.
  */
 @Component("tslHealthIndicator")
 public class TSLHealthIndicator implements HealthIndicator {
@@ -61,9 +63,10 @@ public class TSLHealthIndicator implements HealthIndicator {
         boolean up = !loaders.isEmpty();
         Map<String, Object> details = new LinkedHashMap<>();
         for (TSLLoader loader : loaders.stream().sorted(Comparator.comparing(TSLLoader::getTslName)).toList()) {
-            Instant lastRefresh = loader.getLastRefresh();
-            int certificates = loader.getNumberOfCertificates();
-            Map<String, Integer> territories = loader.getCertificatesByTerritory();
+            TSLLoader.State state = loader.getState();
+            Instant lastRefresh = state.lastRefresh();
+            int certificates = state.numberOfCertificates();
+            Map<String, Integer> territories = state.certificatesByTerritory();
             List<String> missing = mandatory.stream()
                     .filter(territory -> territories.getOrDefault(territory, 0) <= 0)
                     .toList();
@@ -76,13 +79,13 @@ public class TSLHealthIndicator implements HealthIndicator {
                 loaderDetails.put(DETAIL_LAST_REFRESH, lastRefresh.toString());
             }
             loaderDetails.put(DETAIL_TERRITORIES, territories);
-            if (loader.getSnapshotId() != null) {
-                loaderDetails.put(DETAIL_SNAPSHOT, loader.getSnapshotId());
+            if (state.snapshotId() != null) {
+                loaderDetails.put(DETAIL_SNAPSHOT, state.snapshotId());
             }
             if (!missing.isEmpty()) {
                 loaderDetails.put(DETAIL_MISSING, missing);
             }
-            Map<String, String> lastCopies = loader.getLastCopies();
+            Map<String, String> lastCopies = state.lastCopies();
             if (!lastCopies.isEmpty()) {
                 loaderDetails.put(DETAIL_LAST_COPY, lastCopies);
             }

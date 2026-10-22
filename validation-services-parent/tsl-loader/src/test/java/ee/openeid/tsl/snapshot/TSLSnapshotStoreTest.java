@@ -217,13 +217,27 @@ class TSLSnapshotStoreTest {
         Optional<TSLSnapshotManifest> manifest = store.manifest("20261013T183000Z");
 
         assertThat(manifest.map(TSLSnapshotManifest::createdAt), is(Optional.of(CREATED)));
+        assertThat(manifest.get().fileNames(), nullValue());
         assertThat(manifest.get().period(), nullValue());
         assertThat(manifest.get().downloadedAt(), nullValue());
+        assertThat(store.missingFiles("20261013T183000Z", manifest.get()), is(empty()));
+    }
+
+    @Test
+    void missingFiles_NamesTheListedFilesTheDirectoryLacks() throws IOException {
+        TSLSnapshotManifest manifest = manifest("20261013T183000Z");
+        store.publish(source, manifest);
+        assertThat(store.missingFiles("20261013T183000Z", manifest), is(empty()));
+
+        Files.delete(store.snapshotDirectory("20261013T183000Z").resolve("https___tl_example_EE_xml"));
+
+        assertThat(store.missingFiles("20261013T183000Z", manifest), contains("https___tl_example_EE_xml"));
     }
 
     private static TSLSnapshotManifest manifest(String id) {
         return new TSLSnapshotManifest(id, CREATED, "UP", List.of("EE"),
                 Map.of("generic", Map.of("certificates", 32, "territories", Map.of("EE", 32))), 2,
+                List.of("https___lotl_example_eu-lotl_xml", "https___tl_example_EE_xml"),
                 Duration.ofHours(6), Map.of("generic", Map.of("EE", Instant.parse("2026-10-13T18:00:00Z"))));
     }
 }

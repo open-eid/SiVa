@@ -151,12 +151,16 @@ public class TSLSnapshotFetcher {
         Instant createdAt = clock.instant();
         List<String> mandatory = loaderProperties.getMandatoryTerritories() == null
                 ? List.of() : List.copyOf(loaderProperties.getMandatoryTerritories());
-        int files;
+        List<String> fileNames;
         try (Stream<Path> entries = Files.list(workingCache)) {
-            files = (int) entries.filter(Files::isRegularFile).count();
+            fileNames = entries.filter(Files::isRegularFile)
+                    .map(file -> file.getFileName().toString())
+                    .sorted()
+                    .toList();
         }
         return new TSLSnapshotManifest(TSLSnapshotStore.newId(createdAt), createdAt, health.getStatus().getCode(),
-                mandatory, health.getDetails(), files, period, perLoader(TSLLoader::getDownloadedAt));
+                mandatory, health.getDetails(), fileNames.size(), fileNames, period,
+                perLoader(TSLLoader::getDownloadedAt));
     }
 
     // Loader name to the loader's per-list map, for the loaders whose map is not empty; sorted by name.

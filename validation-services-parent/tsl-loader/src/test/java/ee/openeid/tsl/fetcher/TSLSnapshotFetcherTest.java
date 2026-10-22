@@ -157,7 +157,8 @@ class TSLSnapshotFetcherTest {
         ArgumentCaptor<TSLSnapshotManifest> manifest = ArgumentCaptor.forClass(TSLSnapshotManifest.class);
         verify(store).publish(eq(workingCache), manifest.capture());
         assertThat(manifest.getValue(), is(new TSLSnapshotManifest("20261013T183000Z", NOW, "UP", List.of("EE"),
-                DETAILS, 2, PERIOD, Map.of("generic", DOWNLOADED))));
+                DETAILS, 2, List.of("https___lotl_example_eu-lotl_xml", "https___tl_example_EE_xml"), PERIOD,
+                Map.of("generic", DOWNLOADED))));
         verify(store).prune(2);
     }
 

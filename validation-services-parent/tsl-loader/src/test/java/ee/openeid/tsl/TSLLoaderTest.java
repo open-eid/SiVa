@@ -475,6 +475,25 @@ class TSLLoaderTest {
     }
 
     @Test
+    void loadTSL_WhenSnapshotLacksAFileItsManifestLists_ItIsRefusedUntilTheFileArrives() throws IOException {
+        tslLoader = loader(createSnapshotConfigurationProperties());
+        tslLoader.init();
+        List<String> files = List.of("https___lotl_example_eu-lotl_xml", "https___tl_example_EE_xml");
+        publish("20261013T183000Z", files, files.subList(0, 1));
+
+        tslLoader.loadTSL();
+        tslLoader.refreshIfSnapshotChanged();
+        verify(tslValidationJob, never()).offlineRefresh();
+        assertNull(tslLoader.getSnapshotId());
+
+        Files.writeString(snapshotRoot.resolve("snapshots/20261013T183000Z/https___tl_example_EE_xml"), "<list/>");
+        tslLoader.refreshIfSnapshotChanged();
+
+        verify(tslValidationJob).offlineRefresh();
+        assertEquals("20261013T183000Z", tslLoader.getSnapshotId());
+    }
+
+    @Test
     void loadTSL_WhenMaxAgeIsSetAndTheManifestIsMissing_TheSnapshotIsRefused() throws IOException {
         TSLLoaderConfigurationProperties props = createSnapshotConfigurationProperties();
         props.setSnapshotMaxAge(Duration.ofDays(2));
@@ -716,9 +735,22 @@ class TSLLoaderTest {
 
     private void publish(String id, Instant createdAt, Duration period,
                          Map<String, Map<String, Instant>> downloadedAt) throws IOException {
+        publish(id, createdAt, null, period, downloadedAt);
+    }
+
+    // A snapshot whose manifest lists `fileNames`, of which only `present` have arrived.
+    private void publish(String id, List<String> fileNames, List<String> present) throws IOException {
+        publish(id, Instant.now(), fileNames, null, null);
+        for (String name : present) {
+            Files.writeString(snapshotRoot.resolve("snapshots").resolve(id).resolve(name), "<list/>");
+        }
+    }
+
+    private void publish(String id, Instant createdAt, List<String> fileNames, Duration period,
+                         Map<String, Map<String, Instant>> downloadedAt) throws IOException {
         publish(id);
-        TSLSnapshotManifest manifest = new TSLSnapshotManifest(id, createdAt, "UP", List.of(), Map.of(), 0, period,
-                downloadedAt);
+        TSLSnapshotManifest manifest = new TSLSnapshotManifest(id, createdAt, "UP", List.of(), Map.of(),
+                fileNames == null ? 0 : fileNames.size(), fileNames, period, downloadedAt);
         Files.write(snapshotRoot.resolve("snapshots").resolve(id).resolve(TSLSnapshotStore.MANIFEST_FILE),
                 JsonMapper.shared().writeValueAsBytes(manifest));
     }

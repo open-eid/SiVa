@@ -26,7 +26,9 @@ import java.util.Map;
 // reports them after loading the same files; plus what only the fetcher knows and the webapps publish as
 // metrics: how often it runs (`period`) and, per loader and territory (`EU` for the list of trusted lists),
 // when each list was last downloaded from its publisher (`downloadedAt`, the cache file's modification time,
-// which a copy served in place of a failed download leaves as it was). The last two are null in manifests
+// which a copy served in place of a failed download leaves as it was); and the names of the snapshot's files
+// (`fileNames`), so that a reader can tell a complete snapshot from one a copy without rename atomicity (a sync
+// through object storage) is still delivering. `fileNames`, `period` and `downloadedAt` are null in manifests
 // written before they existed.
 public record TSLSnapshotManifest(
         String id,
@@ -35,6 +37,7 @@ public record TSLSnapshotManifest(
         List<String> mandatoryTerritories,
         Map<String, Object> tsl,
         int files,
+        List<String> fileNames,
         Duration period,
         Map<String, Map<String, Instant>> downloadedAt
 ) {

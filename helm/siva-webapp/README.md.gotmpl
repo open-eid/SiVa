@@ -282,9 +282,14 @@ watch (kube-prometheus-stack's `KubeJobFailed`), so the chart adds no fetch aler
 | 1 | A mandatory territory's list is missing, expired or badly signed; nothing published, `current` unchanged | Failed at once |
 | 2 | The store could not be written | Failed after `tsl.fetcher.backoffLimit` retries |
 | 3 | A list's download failed and the run published its last good copy (the fetch log's `using the last copy on disk` line names the list and the reason) | Failed at once |
+| 4 | Another fetch held the store's lock for the whole ten-minute wait; nothing downloaded, nothing published | Failed after `tsl.fetcher.backoffLimit` retries |
 
 Exit 1 and 3 fail for reasons a retry seconds later cannot change, so a `podFailurePolicy`
-fails the Job without the usual retries (Kubernetes 1.26 and later, the chart's floor). After
+fails the Job without the usual retries (Kubernetes 1.26 and later, the chart's floor). One
+fetcher runs per store at a time: the CronJob forbids overlapping runs of its own, and the
+fetcher takes a lock file in the store (`fetch.lock`) so that the bootstrap Job, or a run
+started by hand, waits for a running fetch instead of sharing its working cache; a lock older
+than an hour is taken over as left by a run that was killed. After
 exit 3 the pods keep validating on good lists and `SivaTslListNotDownloaded` says which list
 has not been downloaded for two periods; the next successful run clears it. `KubeJobFailed`
 stays on until the Failed Job object is gone: the history limits rotate failed Jobs out only

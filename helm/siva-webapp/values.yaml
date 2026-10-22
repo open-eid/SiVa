@@ -257,10 +257,12 @@ tsl:
     keepSnapshots: 3
     # -- Seconds a fetch may run before it is killed (30 lists take a few minutes).
     activeDeadlineSeconds: 1800
-    # -- Retries of a failed fetch within one schedule slot (a new pod each time). Not for a run
-    # that ended below the mandatory territories (exit 1) or published from a last copy because
-    # a download failed (exit 3): those fail the Job at once (podFailurePolicy), a retry seconds
-    # later changes nothing, and the cluster's KubeJobFailed-style alert then says so.
+    # -- Retries of a failed fetch within one schedule slot (a new pod each time), for a store
+    # that could not be written (exit 2) or was held by another fetch for the whole wait (exit
+    # 4). Not for a run that ended below the mandatory territories (exit 1) or published from a
+    # last copy because a download failed (exit 3): those fail the Job at once
+    # (podFailurePolicy), a retry seconds later changes nothing, and the cluster's
+    # KubeJobFailed-style alert then says so.
     backoffLimit: 2
     # -- Seconds a finished fetch Job is kept (its pod and log with it) before the TTL controller
     # deletes it; empty keeps them until the history limits below rotate them out. A Failed Job is

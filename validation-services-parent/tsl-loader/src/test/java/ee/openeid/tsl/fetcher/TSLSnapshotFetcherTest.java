@@ -39,17 +39,22 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -72,6 +77,8 @@ class TSLSnapshotFetcherTest {
     private TSLLoader genericLoader;
     @Mock
     private TSLLoader timemarkLoader;
+    @Mock
+    private TSLSnapshotStore.FetchLock lock;
 
     private TSLSnapshotFetcher fetcher;
 
@@ -83,8 +90,60 @@ class TSLSnapshotFetcherTest {
         loaderProperties.setMandatoryTerritories(List.of("EE"));
         lenient().when(genericLoader.getTslName()).thenReturn("generic");
         lenient().when(timemarkLoader.getTslName()).thenReturn("timemark");
+        lenient().when(store.tryLock(any(), any())).thenReturn(Optional.of(lock));
         fetcher = new TSLSnapshotFetcher(store, workingCache, tslHealth, Set.of(genericLoader, timemarkLoader),
-                loaderProperties, PERIOD, Clock.fixed(NOW, ZoneOffset.UTC), 2);
+                loaderProperties, PERIOD, Clock.fixed(NOW, ZoneOffset.UTC), 2, Duration.ZERO);
+    }
+
+    @Test
+    void fetch_RefreshesTheLoadersUnderTheStoreLockAndReleasesIt() throws IOException {
+        when(tslHealth.health()).thenReturn(Health.up().build());
+
+        fetcher.fetch();
+
+        for (TSLLoader loader : List.of(genericLoader, timemarkLoader)) {
+            var order = inOrder(store, loader, lock);
+            order.verify(store).tryLock(any(), eq(TSLSnapshotFetcher.LOCK_STALE_AFTER));
+            order.verify(loader).loadTSL();
+            order.verify(store).publish(eq(workingCache), any());
+            order.verify(lock).close();
+        }
+    }
+
+    @Test
+    void fetch_WhenAnotherRunHoldsTheStore_FetchesNothingAndSaysSo() throws IOException {
+        when(store.tryLock(any(), any())).thenReturn(Optional.empty());
+
+        int exitCode = fetcher.fetch();
+
+        assertThat(exitCode, is(TSLSnapshotFetcher.EXIT_STORE_LOCKED));
+        verify(genericLoader, never()).loadTSL();
+        verify(store, never()).publish(any(), any());
+        verifyNoInteractions(tslHealth);
+    }
+
+    @Test
+    void fetch_WhenTheLockIsReleasedWhileWaiting_GoesOn() throws IOException {
+        fetcher = new TSLSnapshotFetcher(store, workingCache, tslHealth, Set.of(genericLoader),
+                new TSLLoaderConfigurationProperties(), PERIOD, Clock.systemUTC(), 2, Duration.ofSeconds(30));
+        when(store.tryLock(any(), any())).thenReturn(Optional.empty(), Optional.of(lock));
+        when(tslHealth.health()).thenReturn(Health.up().build());
+
+        int exitCode = fetcher.fetch();
+
+        assertThat(exitCode, is(TSLSnapshotFetcher.EXIT_PUBLISHED));
+        verify(store, times(2)).tryLock(any(), any());
+        verify(genericLoader).loadTSL();
+    }
+
+    @Test
+    void fetch_WhenTheLockIsLostOnTheWayOut_ReportsIt() throws IOException {
+        when(tslHealth.health()).thenReturn(Health.up().build());
+        doThrow(new IOException("gone")).when(lock).close();
+
+        int exitCode = fetcher.fetch();
+
+        assertThat(exitCode, is(TSLSnapshotFetcher.EXIT_PUBLISH_FAILED));
     }
 
     @Test
@@ -117,7 +176,7 @@ class TSLSnapshotFetcherTest {
     @Test
     void fetch_WhenThePeriodIsUnknown_TheManifestCarriesNone() throws IOException {
         fetcher = new TSLSnapshotFetcher(store, workingCache, tslHealth, Set.of(),
-                new TSLLoaderConfigurationProperties(), null, Clock.fixed(NOW, ZoneOffset.UTC), 2);
+                new TSLLoaderConfigurationProperties(), null, Clock.fixed(NOW, ZoneOffset.UTC), 2, Duration.ZERO);
         when(tslHealth.health()).thenReturn(Health.up().build());
 
         fetcher.fetch();
@@ -129,13 +188,14 @@ class TSLSnapshotFetcherTest {
     }
 
     @Test
-    void fetch_WhenTheTrustListsAreBelowTheThreshold_PublishesNothing() {
+    void fetch_WhenTheTrustListsAreBelowTheThreshold_PublishesNothing() throws IOException {
         when(tslHealth.health()).thenReturn(Health.down().withDetails(DETAILS).build());
 
         int exitCode = fetcher.fetch();
 
         assertThat(exitCode, is(TSLSnapshotFetcher.EXIT_BELOW_THRESHOLD));
-        verifyNoMoreInteractions(store);
+        verify(store, never()).publish(any(), any());
+        verify(store, never()).prune(anyInt());
     }
 
     @Test

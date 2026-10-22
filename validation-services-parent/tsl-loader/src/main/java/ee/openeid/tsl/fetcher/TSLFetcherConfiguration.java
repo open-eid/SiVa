@@ -29,16 +29,21 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import java.time.Clock;
+import java.time.Duration;
 import java.util.Set;
 
-// The tsl-fetch profile turns the application into a one-shot trust-list fetcher: the loaders refresh online
-// into siva.tsl.loader.cacheDirectory as usual while the context starts, then the runner publishes that cache
-// into siva.tsl.fetcher.outputDirectory and ends the JVM with the fetcher's exit code (the webapp's
-// application-tsl-fetch.yml keeps the servlet context but binds no port).
+// The tsl-fetch profile turns the application into a one-shot trust-list fetcher: the runner locks the store,
+// has the loaders refresh online into siva.tsl.loader.cacheDirectory (TSLRefresher leaves the start-up refresh
+// to it), publishes that cache into siva.tsl.fetcher.outputDirectory and ends the JVM with the fetcher's exit
+// code (the webapp's application-tsl-fetch.yml keeps the servlet context but binds no port).
 @Slf4j
 @Configuration
 @Profile("tsl-fetch")
 public class TSLFetcherConfiguration {
+
+    // A fetch takes minutes; a run that finds the store locked (the bootstrap Job next to the CronJob) waits for
+    // the other to finish rather than failing its Job.
+    static final Duration LOCK_WAIT = Duration.ofMinutes(10);
 
     @Bean
     public TSLFetcherConfigurationProperties tslFetcherConfigurationProperties() {
@@ -64,7 +69,7 @@ public class TSLFetcherConfiguration {
         TSLSnapshotStore store = new TSLSnapshotStore(fetcherProperties.getOutputDirectory().toPath());
         return new TSLSnapshotFetcher(store, loaderProperties.getCacheDirectory().toPath(), tslHealthIndicator,
                 loaders, loaderProperties, fetcherProperties.getPeriod(), Clock.systemUTC(),
-                fetcherProperties.getKeepSnapshots());
+                fetcherProperties.getKeepSnapshots(), LOCK_WAIT);
     }
 
     @Bean

@@ -27,9 +27,12 @@ import tools.jackson.databind.json.JsonMapper;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -44,6 +47,7 @@ import java.util.stream.Stream;
 //   current                   id of the snapshot to load (one line), replaced atomically
 //   snapshots/<id>/           the DSS file cache of one fetch (file name = URL with non-alphanumerics as '_')
 //   snapshots/<id>/manifest.json
+//   fetch.lock                held by the fetcher that is downloading and publishing right now
 // A snapshot directory is complete before `current` names it, so a reader never sees a half-written one;
 // older snapshots stay until pruned so a reader in the middle of loading one is not pulled away.
 @Slf4j
@@ -53,6 +57,7 @@ public class TSLSnapshotStore {
     public static final String CURRENT_FILE = "current";
     public static final String SNAPSHOTS_DIRECTORY = "snapshots";
     public static final String MANIFEST_FILE = "manifest.json";
+    public static final String LOCK_FILE = "fetch.lock";
 
     private static final String TEMPORARY_SUFFIX = ".tmp";
     // The pointer is one id; the manifest is a few kilobytes. Anything larger is not ours and is not read.
@@ -141,8 +146,67 @@ public class TSLSnapshotStore {
         log.info("Published trust-list snapshot {} ({} files) to {}", id, files, root);
     }
 
-    // Deletes every snapshot but the current one and the `keep` newest, plus staging directories a crashed
-    // publish left behind. Returns the ids removed.
+    /**
+     * Takes the store's fetch lock for one fetcher run, or returns empty while another run holds it. One fetcher
+     * at a time per store: the working cache the lists are downloaded into and the staging directories are shared,
+     * and a second run (the bootstrap Job next to the CronJob, a run started by hand) would copy half-written files
+     * or prune the other's staging directory. The lock file is created atomically and names its owner; one older
+     * than {@code staleAfter} was left by a run that died without releasing it (the orchestrator's deadline killed
+     * it) and is taken over.
+     */
+    public Optional<FetchLock> tryLock(String owner, Duration staleAfter) throws IOException {
+        Files.createDirectories(root);
+        Path lock = root.resolve(LOCK_FILE);
+        for (int attempt = 0; attempt < 2; attempt++) {
+            try {
+                Files.writeString(lock, owner + " " + Instant.now() + System.lineSeparator(), StandardCharsets.UTF_8,
+                        StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
+                return Optional.of(new FetchLock(lock));
+            } catch (FileAlreadyExistsException e) {
+                Instant stale = Instant.now().minus(staleAfter);
+                Instant heldSince;
+                try {
+                    heldSince = Files.getLastModifiedTime(lock).toInstant();
+                } catch (IOException gone) {
+                    continue; // released between the two calls: try again
+                }
+                String holder = holder(lock);
+                if (heldSince.isAfter(stale)) {
+                    log.info("Trust-list store {} is locked by {} since {}", root, holder, heldSince);
+                    return Optional.empty();
+                }
+                log.warn("Trust-list store {} lock from {} is older than {}; taking it over from {}", root, heldSince,
+                        staleAfter, holder);
+                Files.deleteIfExists(lock);
+            }
+        }
+        return Optional.empty();
+    }
+
+    private static String holder(Path lock) {
+        try {
+            return Files.readString(lock, StandardCharsets.UTF_8).trim();
+        } catch (IOException e) {
+            return "an unknown holder";
+        }
+    }
+
+    /** The fetch lock while held; closing it releases the store to the next run. */
+    public static final class FetchLock implements AutoCloseable {
+        private final Path file;
+
+        private FetchLock(Path file) {
+            this.file = file;
+        }
+
+        @Override
+        public void close() throws IOException {
+            Files.deleteIfExists(file);
+        }
+    }
+
+    // Deletes every snapshot but the current one and the `keep` newest besides it, plus staging directories a
+    // crashed publish left behind (the lock keeps a running publish out). Returns the ids removed.
     public List<String> prune(int keep) throws IOException {
         Path snapshots = root.resolve(SNAPSHOTS_DIRECTORY);
         if (!Files.isDirectory(snapshots)) {
@@ -166,7 +230,10 @@ public class TSLSnapshotStore {
         int kept = 0;
         for (Path directory : published) {
             String id = directory.getFileName().toString();
-            if (id.equals(current) || kept < keep) {
+            if (id.equals(current)) {
+                continue;
+            }
+            if (kept < keep) {
                 kept++;
                 continue;
             }

@@ -26,11 +26,13 @@ import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.document.report.SubjectDistinguishedName;
 import ee.openeid.siva.validation.exception.ValidationServiceException;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
+import ee.openeid.tsl.TSLLoader;
 import ee.openeid.tsl.TSLRefresher;
 import ee.openeid.tsl.TSLValidationJobFactory;
 import ee.openeid.tsl.TrustedListsCertificateSourceHolder;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
 import ee.openeid.tsl.configuration.TSLLoaderDefinitionRegisterer;
+import ee.openeid.tsl.fetcher.TSLSnapshotFetcher;
 import ee.openeid.validation.service.generic.configuration.properties.GenericSignaturePolicyProperties;
 import ee.openeid.validation.service.generic.configuration.GenericValidationServiceConfiguration;
 import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
@@ -39,6 +41,7 @@ import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
@@ -46,6 +49,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Date;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -179,8 +183,8 @@ class PDFValidationServiceTest {
             return new ProxyConfig();
         }
         @Bean
-        public TSLRefresher tslRefresher() {
-            return new TSLRefresher();
+        public TSLRefresher tslRefresher(Set<TSLLoader> loaders, ObjectProvider<TSLSnapshotFetcher> fetcher) {
+            return new TSLRefresher(loaders, fetcher);
         }
         @Bean
         public TSLValidationJobFactory tslValidationJobFactory() {

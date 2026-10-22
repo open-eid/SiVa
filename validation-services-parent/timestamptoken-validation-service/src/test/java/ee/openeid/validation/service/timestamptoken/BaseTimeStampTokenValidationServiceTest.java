@@ -19,19 +19,23 @@ package ee.openeid.validation.service.timestamptoken;
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
+import ee.openeid.tsl.TSLLoader;
 import ee.openeid.tsl.TSLRefresher;
 import ee.openeid.tsl.TSLValidationJobFactory;
 import ee.openeid.tsl.TrustedListsCertificateSourceHolder;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
 import ee.openeid.tsl.configuration.TSLLoaderDefinitionRegisterer;
+import ee.openeid.tsl.fetcher.TSLSnapshotFetcher;
 import ee.openeid.validation.service.generic.configuration.GenericValidationServiceConfiguration;
 import ee.openeid.validation.service.timestamptoken.configuration.TimeStampTokenSignaturePolicyProperties;
 import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
 import org.junit.jupiter.api.BeforeEach;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import java.util.Set;
 
 @SpringBootTest(classes = {BaseTimeStampTokenValidationServiceTest.TestConfiguration.class})
 abstract class BaseTimeStampTokenValidationServiceTest {
@@ -66,8 +70,8 @@ abstract class BaseTimeStampTokenValidationServiceTest {
         }
 
         @Bean
-        public TSLRefresher tslRefresher() {
-            return new TSLRefresher();
+        public TSLRefresher tslRefresher(Set<TSLLoader> loaders, ObjectProvider<TSLSnapshotFetcher> fetcher) {
+            return new TSLRefresher(loaders, fetcher);
         }
 
         @Bean

@@ -23,6 +23,7 @@ import org.junit.jupiter.api.io.TempDir;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
@@ -126,6 +127,66 @@ class TSLSnapshotStoreTest {
         assertThat(Files.isDirectory(store.snapshotDirectory("20261013T020000Z")), is(true));
         assertThat(Files.exists(store.snapshotDirectory("20261013T030000Z")), is(false));
         assertThat(Files.exists(root.resolve("snapshots/20261013T050000Z.tmp")), is(false));
+    }
+
+    // Right after a publish the current snapshot is also the newest; it must not use up one of the `keep` slots.
+    @Test
+    void prune_WhenTheCurrentSnapshotIsTheNewest_KeepsAsManyOlderOnesAsAsked() throws IOException {
+        for (String id : List.of("20261013T010000Z", "20261013T020000Z", "20261013T030000Z")) {
+            store.publish(source, manifest(id));
+        }
+
+        List<String> removed = store.prune(1);
+
+        assertThat(removed, contains("20261013T010000Z"));
+        assertThat(Files.isDirectory(store.snapshotDirectory("20261013T030000Z")), is(true));
+        assertThat(Files.isDirectory(store.snapshotDirectory("20261013T020000Z")), is(true));
+    }
+
+    @Test
+    void prune_WithZeroToKeep_LeavesOnlyTheCurrentSnapshot() throws IOException {
+        for (String id : List.of("20261013T010000Z", "20261013T020000Z")) {
+            store.publish(source, manifest(id));
+        }
+
+        List<String> removed = store.prune(0);
+
+        assertThat(removed, contains("20261013T010000Z"));
+        assertThat(Files.isDirectory(store.snapshotDirectory("20261013T020000Z")), is(true));
+    }
+
+    @Test
+    void tryLock_IsHeldByOneRunAtATimeAndReleasedByClosing() throws IOException {
+        Optional<TSLSnapshotStore.FetchLock> first = store.tryLock("fetch-1", Duration.ofHours(1));
+        Optional<TSLSnapshotStore.FetchLock> second = store.tryLock("fetch-2", Duration.ofHours(1));
+
+        assertThat(first.isPresent(), is(true));
+        assertThat(second.isPresent(), is(false));
+        assertThat(Files.readString(root.resolve(TSLSnapshotStore.LOCK_FILE)), containsString("fetch-1"));
+
+        first.get().close();
+
+        assertThat(store.tryLock("fetch-2", Duration.ofHours(1)).isPresent(), is(true));
+    }
+
+    @Test
+    void tryLock_WhenTheLockIsOlderThanStaleAfter_TakesItOver() throws IOException {
+        store.tryLock("died", Duration.ofHours(1));
+        Path lock = root.resolve(TSLSnapshotStore.LOCK_FILE);
+        Files.setLastModifiedTime(lock, FileTime.from(Instant.now().minus(Duration.ofHours(2))));
+
+        Optional<TSLSnapshotStore.FetchLock> taken = store.tryLock("fetch-2", Duration.ofHours(1));
+
+        assertThat(taken.isPresent(), is(true));
+        assertThat(Files.readString(lock), containsString("fetch-2"));
+    }
+
+    @Test
+    void tryLock_WhenTheStoreDoesNotExistYet_CreatesIt() throws IOException {
+        TSLSnapshotStore fresh = new TSLSnapshotStore(root.resolve("new"));
+
+        assertThat(fresh.tryLock("fetch-1", Duration.ofHours(1)).isPresent(), is(true));
+        assertThat(Files.isRegularFile(root.resolve("new").resolve(TSLSnapshotStore.LOCK_FILE)), is(true));
     }
 
     @Test

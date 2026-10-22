@@ -14,8 +14,8 @@ the deployment is friendly to the descheduler, to daily rolling restarts, to aut
 preemptible nodes; every replica validates against the same anchors. The pods carry the
 safe-to-evict annotations the descheduler and the cluster autoscaler look for (`evictable`),
 and the PodDisruptionBudget bounds how many go at once; which descheduler, and on what policy,
-is yours to choose. Object storage as the store,
-bridged by a sync sidecar rather than a CSI driver, is the next step on that path.
+is yours to choose. Without ReadWriteMany storage the store lives in a bucket that the chart's
+rclone containers mirror, never a CSI or FUSE mount (`tsl.snapshot.sync`).
 
 ## Before you install
 
@@ -106,8 +106,7 @@ chart does not model (a sidecar, a mounted Secret the container reads itself), o
 Deployment only. The pods run under the Pod Security "restricted" profile, so an extra container
 needs its own `securityContext` (no privilege escalation, all capabilities dropped, read-only
 root filesystem); with `network.networkPolicy.egress` on it also needs its own
-`additionalRules`. The example under "Trust lists" is a sync sidecar for a snapshot store in a
-bucket.
+`additionalRules`.
 
 A change to `config.spring` or `config.files` rolls the pods: the pod template carries a
 `checksum/config` annotation over the rendered ConfigMap (the fetcher's template too, so the
@@ -213,52 +212,60 @@ The chart offers two ways to get them into the pods:
   SiVa build with the fetcher (3.11.0 and later).
 
 Snapshot mode needs a store the fetcher can write and every webapp pod can read: a
-ReadWriteMany claim you bring (`tsl.snapshot.volume`) or one the chart creates
-(`tsl.snapshot.persistentVolumeClaim.create`, ReadWriteOnce is enough on a single node). The
-fetcher renames files and directories in it, so the filesystem must support rename; an
-object-store mount without rename (mountpoint-s3) cannot hold it. The fetcher gets the same
+ReadWriteMany claim you bring (`tsl.snapshot.volume`), one the chart creates
+(`tsl.snapshot.persistentVolumeClaim.create`, ReadWriteOnce is enough on a single node), or a
+bucket (`tsl.snapshot.sync`, below). The fetcher renames files and directories in a volume
+store, so its filesystem must support rename; an object-store mount without rename
+(mountpoint-s3) cannot hold it, which is what the sync is for. The fetcher gets the same
 ConfigMap, `env` and secret as the webapp, so its snapshot matches what the webapp expects
 (same profile, same territories); `tsl.fetcher.env` adds fetcher-only variables. Set the
 countries in `tsl.territories` so both get them.
 
-Clusters without ReadWriteMany storage but with object storage (S3, Azure Blob) bridge the
-store outside SiVa, which has no object-storage client by design: a sync tool in its own
-container copies the published snapshot to the bucket on the fetcher side and, in each webapp
-pod, a sidecar syncs the bucket into a local directory the pod reads. The webapp side is two
-values, the store as a pod-local volume and the sidecar through `extraContainers`; `rclone` is
-one tool that speaks every such API, and the deployer updates it on their own schedule:
+Clusters without ReadWriteMany storage but with object storage (S3, Azure Blob, GCS, Swift:
+anything rclone speaks) keep the store in a bucket instead (`tsl.snapshot.sync`). SiVa has no
+object-storage client by design and keeps reading and writing a directory; the chart adds
+rclone containers that mirror that directory and the bucket, which holds the store in the same
+layout (`current`, `snapshots/<id>/`, `work/`):
+
+- In the fetcher pod an init container downloads the bucket into a pod-local store before the
+  fetch, so the fetch sees the last snapshot and its working cache (a list whose download fails
+  keeps its last copy), and a second container uploads the result after it: `snapshots/` first,
+  `current` last, the working cache after. It knows the fetch is over when the fetcher's JVM is
+  gone (the fetcher pod shares its process namespace for that), so a run that publishes from a
+  last copy (exit 3) is uploaded before its Job fails.
+- In every webapp pod a sidecar (a restartable init container on Kubernetes 1.29+, a plain
+  container below) reads the bucket's `current` every `interval` seconds, downloads the
+  snapshot it names and, once every file the manifest counts is there, points the pod's own
+  `current` at it; SiVa polls that file as it does on a shared volume. A snapshot still being
+  uploaded is never current, and SiVa refuses a snapshot missing a file its manifest lists as
+  well, so a copy without rename atomicity cannot feed a pod half a snapshot.
 
 ```yaml
 tsl:
   mode: snapshot
   snapshot:
-    volume:
-      emptyDir: {}
-extraContainers:
-  - name: tsl-sync
-    image: rclone/rclone:1.68.2
-    args: ["sync", "--interval", "5m", "siva-bucket:siva-tsl", "/var/siva/tsl"]
-    envFrom:
-      - secretRef:
-          name: siva-tsl-sync   # RCLONE_CONFIG_SIVA-BUCKET_* or the cloud's workload identity
-    volumeMounts:
-      - name: tsl-store         # the chart's store volume, read-write for the sidecar
-        mountPath: /var/siva/tsl
-    securityContext:
-      allowPrivilegeEscalation: false
-      readOnlyRootFilesystem: true
-      capabilities:
-        drop: [ALL]
-    resources:
-      requests: {cpu: 10m, memory: 32Mi}
-      limits: {memory: 64Mi}
+    sync:
+      enabled: true
+      remote: bucket:siva/tsl          # <remote>:<bucket>/<prefix>
+      existingSecret: siva-tsl-rclone  # key rclone.conf: the [bucket] section and its keys
+      interval: 60
 ```
 
-The fetcher side (uploading a published snapshot to the bucket) has no hook in the chart yet,
-and a sync has no rename atomicity: `current` can arrive before the last file of the snapshot it
-names, and SiVa does not yet refuse an incomplete snapshot, so order the upload so that
-`snapshots/<id>/` is complete before `current` is written. Freshness on a pod is then the sync
-interval plus `tsl.snapshot.pollInterval`.
+The rclone configuration comes as a file, never as environment: a Secret with the key
+`rclone.conf` for static keys, or `config` (rendered into a ConfigMap) when it holds none
+because the cloud's workload identity or instance role signs the requests (`env_auth = true`;
+bind the identity with write access to the fetcher's ServiceAccount,
+`tsl.fetcher.serviceAccount.annotations`, and one with read access to the webapp's). `env`
+passes rclone flags as `RCLONE_*` variables (`RCLONE_S3_NO_CHECK_BUCKET=true` for keys that
+may not create the bucket), the cloud's identity variables or a proxy. The sync containers run
+rclone's own image as the SiVa image's uid (`runAsUser`, `runAsGroup`: the fetcher writes into
+the directory the init container downloaded) under the chart's restricted security context,
+and the deployer updates that image on their own schedule. With `network.networkPolicy.egress`
+on, add the bucket endpoint to `additionalRules` unless it is on the public internet. Freshness
+on a pod is `interval` plus `tsl.snapshot.pollInterval`, and the chart adds `interval` to the
+alerts' grace. The store lock cannot serialise two fetchers in bucket mode (each run has its
+own copy of the store): the CronJob forbids overlapping runs of its own, and the bootstrap Job
+overlapping a scheduled run means two uploads of complete snapshots, the later one winning.
 
 `tsl.fetcher.period` (six hours by default, at most a week) is the one setting the rest follows:
 the CronJob schedule and `tsl.snapshot.maxAge` (max(4 x period, 48 h)) derive from it, and the
@@ -301,8 +308,10 @@ and re-run it.
 Whoever can write the store can point every pod at any snapshot whose lists are still inside
 their validity window, so treat write access to it as trust-list authority: only the fetcher
 writes, the webapp mounts it read-only, and `tsl.snapshot.maxAge` makes a pod refuse a
-snapshot older than that rather than serve it. The fetcher pod gets its own
-Secret (`tsl.fetcher.existingSecret`, mounted as under "Secrets"), never the webapp's: it parses
+snapshot older than that rather than serve it. The fetcher pods get their own
+ServiceAccount (`tsl.fetcher.serviceAccount`), so an identity that may write the store (a
+cloud role for the bucket) is never the webapp's, and their own
+Secret (`tsl.fetcher.existingSecret`, mounted as under "Secrets"), never the webapp's: they parse
 thirty documents from the internet and should hold nothing else. With `network.networkPolicy.egress` on, the webapp pods
 reach only DNS and the public internet on 80 and 443 (OCSP and timestamp responders) and the
 fetcher pods the same with no ingress at all. The store holds nothing worth backing up: a lost

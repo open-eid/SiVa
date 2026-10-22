@@ -260,17 +260,17 @@ tests:
             mountPath: /var/siva/extra
             readOnly: true
 
-  - it: the all-on lint overlay mounts the snapshot store read-write in its sync sidecar
+  - it: the all-on lint overlay passes a sidecar through on the extra volume
     template: deployment.yaml
     values:
       - ../ci/all-on-values.yaml
     asserts:
       - equal:
           path: spec.template.spec.containers[1].name
-          value: tsl-sync
+          value: example-sidecar
       - equal:
           path: spec.template.spec.containers[1].volumeMounts[0].name
-          value: tsl-store
+          value: example-extra
       - contains:
           path: spec.template.spec.volumes
           content:

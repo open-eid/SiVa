@@ -1,0 +1,19 @@
+{{- if include "siva-webapp.syncEnabled" . }}
+# The sync script the rclone containers run (files/tsl-sync.sh) and, when given inline, the
+# rclone configuration of the bucket remote. A Secret (tsl.snapshot.sync.existingSecret) carries
+# the configuration instead when it holds keys.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "siva-webapp.syncConfigName" . }}
+  labels:
+    {{- include "siva-webapp.labels" . | nindent 4 }}
+    app.kubernetes.io/component: tsl-sync
+data:
+  tsl-sync.sh: |
+    {{- .Files.Get "files/tsl-sync.sh" | nindent 4 }}
+  {{- with .Values.tsl.snapshot.sync.config }}
+  rclone.conf: |
+    {{- . | nindent 4 }}
+  {{- end }}
+{{- end }}

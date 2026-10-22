@@ -289,9 +289,11 @@ tsl:
     # siva.tsl.loader.snapshotPollInterval). Replicas converge within this of a publish; the
     # nightly refresh stays as the safety net.
     pollInterval: PT1M
-    # -- Refuse a snapshot older than this (ISO-8601 duration; siva.tsl.loader.snapshotMaxAge)
-    # and keep the loaded state: a store that stopped being refreshed, or was pointed at an old
-    # snapshot by whoever can write it, cannot feed a fresh pod lists older than you allow. It only
+    # -- Refuse a snapshot whose manifest is older than this (ISO-8601 duration;
+    # siva.tsl.loader.snapshotMaxAge) and keep the loaded state: a store that stopped being
+    # refreshed cannot feed a fresh pod lists older than you allow. The age is the manifest's
+    # own `createdAt`, written by whoever wrote the snapshot, so this is a staleness check, not
+    # a defence against a store writer (the README's "Trust lists" says what one can do). It only
     # stops new pods from loading (a pod with nothing loaded stays not-ready), so it is lenient on
     # purpose and the alerts catch staleness earlier. Empty: max(4 x tsl.fetcher.period, 48 h);
     # `none` disables the check.

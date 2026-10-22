@@ -306,9 +306,12 @@ bootstrap Job gets no TTL: it is a tracked resource, and a GitOps controller wou
 and re-run it.
 
 Whoever can write the store can point every pod at any snapshot whose lists are still inside
-their validity window, so treat write access to it as trust-list authority: only the fetcher
-writes, the webapp mounts it read-only, and `tsl.snapshot.maxAge` makes a pod refuse a
-snapshot older than that rather than serve it. The fetcher pods get their own
+their validity window (a rollback or a freeze; forging a list is not possible, the pods verify
+every list's signature against the LOTL signers), so treat write access to it as trust-list
+authority: only the fetcher writes, the webapp mounts it read-only. `tsl.snapshot.maxAge` is
+not a defence against such a writer: the age it checks is the manifest's own `createdAt`,
+which the writer sets. It makes a pod refuse a snapshot from a fetcher that stopped
+running rather than serve it. The fetcher pods get their own
 ServiceAccount (`tsl.fetcher.serviceAccount`), so an identity that may write the store (a
 cloud role for the bucket) is never the webapp's, and their own
 Secret (`tsl.fetcher.existingSecret`, mounted as under "Secrets"), never the webapp's: they parse

@@ -92,14 +92,3 @@ tests:
     asserts:
       - failedTemplate:
           errorPattern: "config.files: \"conf/logback.xml\" is not a usable file name"
-
-  - it: the kind overlay registers Tomcat's MBeans for the JVM dashboard
-    values:
-      - ../values-kind.yaml
-    set:
-      image:
-        tag: 3.11.0-dev.20261019T084942.g597535b
-    asserts:
-      - matchRegex:
-          path: data["application.yml"]
-          pattern: "server:\\n  tomcat:\\n    mbeanregistry:\\n      enabled: true"

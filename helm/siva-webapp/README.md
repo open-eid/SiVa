@@ -339,17 +339,15 @@ project version, `-SNAPSHOT` included) and change only in SiVa's own version-bum
 chart from a SiVa checkout is therefore the chart for that SiVa, and `image.tag` left empty
 runs that version.
 
-Lab and other internal builds get a build id, generated at build time and never committed:
+Internal builds get a build id, generated at build time and never committed:
 `<SiVa version without its pre-release>-dev.<UTC yyyymmddTHHMMSS>.g<short sha>`, for example
 `3.11.0-dev.20261019T084942.g597535b`. It is both the image tag and the version of the chart
 package pushed with it, so one build is one identifier everywhere. `dev` is constant, the
 fixed-width timestamp is a single alphanumeric identifier that semver compares lexically, so
 later builds sort higher (`T` keeps it alphanumeric: a numeric identifier with a leading zero
-would be invalid), and the sha is for tracing. The `image.tag` in `values-kind.yaml` is the
-placeholder `set-by-chart-push` that the build tooling stamps into its copy of the chart;
-the chart refuses to render the placeholder, so installing that overlay by hand needs
-`--set-string image.tag=<tag>`. A tool that tracks "the newest version" must admit pre-releases
-(a semver constraint such as `>=0.0.0-0`; a bare `*` matches release versions only).
+would be invalid), and the sha is for tracing. A tool that tracks "the newest version" must
+admit pre-releases (a semver constraint such as `>=0.0.0-0`; a bare `*` matches release
+versions only).
 
 ## Values
 
@@ -424,7 +422,7 @@ directory); edit the comments, not this table.
 | replicaCount | int | `1` | Number of webapp replicas (ignored when scaling.hpa is on). In `tsl.mode: online` each replica downloads the trust lists itself at startup (minutes); in snapshot mode it reads the published snapshot (seconds). |
 | resources | object | requests 500m / 1Gi, limit 2Gi memory | Container resources. Paketo's memory calculator sizes the JVM heap from the memory LIMIT (it reads the cgroup), so the limit is the knob, not the request. The default handles a 20 MB document with headroom; no CPU limit on purpose (JVM startup and TSL parsing are bursty). |
 | runtime.forwardHeadersStrategy | string | `"framework"` | server.forward-headers-strategy: `framework` trusts X-Forwarded-* from the Ingress/edge so the app sees the client address and scheme; `none` when nothing in front sets them. |
-| runtime.httpKeepAlive | bool | `false` | HTTP/1.1 keep-alive on the traffic port, which is the balancer-to-pod hop (clients' HTTP/2 ends at the edge). Off sets server.tomcat.max-keep-alive-requests=1: every response says `Connection: close`, so nothing holds an idle connection to a pod. On, SIGTERM pauses Tomcat while idle keep-alive connections are still open and a request already on its way over one meets a closed socket instead of an answer: one lost request per idle pooled connection per pod stop behind an L4 balancer or a Service path (the preStop sleep covers new connections only); behind an endpoint-watching L7 balancer the idle entries are just never reused. Cost of off, measured on kind: +0.4 ms connect per request, four more packets each way, CPU within +0.6 to +1.8 % of a 121 ms validation, memory unchanged (README "Known limits"). |
+| runtime.httpKeepAlive | bool | `false` | HTTP/1.1 keep-alive on the traffic port, which is the balancer-to-pod hop (clients' HTTP/2 ends at the edge). Off sets server.tomcat.max-keep-alive-requests=1: every response says `Connection: close`, so nothing holds an idle connection to a pod. On, SIGTERM pauses Tomcat while idle keep-alive connections are still open and a request already on its way over one meets a closed socket instead of an answer: one lost request per idle pooled connection per pod stop behind an L4 balancer or a Service path (the preStop sleep covers new connections only); behind an endpoint-watching L7 balancer the idle entries are just never reused. Cost of off, measured: +0.4 ms connect per request, four more packets each way, CPU within +0.6 to +1.8 % of a 121 ms validation, memory unchanged (README "Known limits"). |
 | runtime.javaToolOptions | string | `"-XX:+ExitOnOutOfMemoryError"` | JAVA_TOOL_OPTIONS for the JVM; Paketo's memory calculator appends its own flags. ExitOnOutOfMemoryError makes a JVM that ran out of heap exit so Kubernetes restarts it instead of letting it limp along (Paketo's Liberica buildpack sets it too; the duplicate is harmless and the chart value also covers images built another way). |
 | runtime.managementPort | int | `8081` | Actuator (health with details, Prometheus, heartbeat, version) on its own port. The traffic Service and the Ingresses never carry it; a ClusterIP Service `<release>-management` exposes it in-cluster for scraping and `helm test`. The traffic port keeps the status-only probe paths /readyz and /livez for the kubelet and external load balancers. Set it equal to service.containerPort to keep the whole actuator on the traffic port (the layout SiVa's docker-compose and system tests expect; the probes then use /monitoring/health/*). |
 | runtime.preStopSleepSeconds | int | `5` | Seconds the pod sleeps in preStop before SIGTERM, so endpoint removal has propagated and no new request lands on a pod that is stopping. On Kubernetes 1.30+ this is the kubelet's own Sleep action and needs nothing in the image; on older clusters it execs `sleep`, which Paketo's default tiny run image does not have (the hook then fails and the pause is lost). 0 disables the hook. |
@@ -486,7 +484,7 @@ directory); edit the comments, not this table.
 | tsl.snapshot.mountPath | string | `"/var/siva/tsl"` | Where the snapshot store is mounted (read-only in the webapp pods, read-write in the fetcher). |
 | tsl.snapshot.persistentVolumeClaim.accessModes | list | `["ReadWriteMany"]` | Access modes of the claim. |
 | tsl.snapshot.persistentVolumeClaim.annotations | object | `{}` | Claim annotations. |
-| tsl.snapshot.persistentVolumeClaim.create | bool | `false` | Create the claim (`<release>-tsl`, kept on uninstall). ReadWriteMany when the fetcher and the webapp pods may land on different nodes; ReadWriteOnce is enough on a single node (kind). |
+| tsl.snapshot.persistentVolumeClaim.create | bool | `false` | Create the claim (`<release>-tsl`, kept on uninstall). ReadWriteMany when the fetcher and the webapp pods may land on different nodes; ReadWriteOnce is enough on a single node. |
 | tsl.snapshot.persistentVolumeClaim.size | string | `"1Gi"` | Requested size; a snapshot is about 10 MB, keepSnapshots + 1 of them are kept. |
 | tsl.snapshot.persistentVolumeClaim.storageClassName | string | `""` | StorageClass; empty for the cluster default. |
 | tsl.snapshot.pollInterval | string | `"PT1M"` | How often a pod checks `current` for a new snapshot (ISO-8601 duration; siva.tsl.loader.snapshotPollInterval). Replicas converge within this of a publish; the nightly refresh stays as the safety net. |
@@ -494,7 +492,7 @@ directory); edit the comments, not this table.
 | tsl.territories.mandatory | list | `[]` | Countries that must have trust anchors before a pod is ready and before the fetcher publishes (siva.tsl.loader.mandatoryTerritories); their absence alerts as critical, other trusted countries' as warning. Empty: SiVa's default, `EE` (`EE_T` under the `test` profile). |
 | tsl.territories.trusted | list | `[]` | Countries whose trusted lists SiVa downloads and trusts (siva.tsl.loader.trustedTerritories), for webapp and fetcher alike. Empty: SiVa's default list (the `test` profile: everything the test LOTL points to). Set them here rather than in config.applicationYaml; the alerts read SiVa's resolved configuration from its metrics either way. |
 
-## Verifying on a NodePort (kind or any node you can reach)
+## Verifying on a NodePort
 
 ```sh
 helm install siva ./helm/siva-webapp --set image.repository=<your-registry>/siva-webapp \
@@ -504,9 +502,6 @@ curl -X POST -H 'Content-Type: application/json' \
      --data @build-helpers/sample-requests/<any>.json http://<node>:30080/validate
 helm test siva
 ```
-
-On kind, `<node>` is the control-plane container (`<cluster>-control-plane`) from the kind
-network, or `localhost` if the cluster was created with an `extraPortMappings` entry for 30080.
 
 ## Dashboards and alerts that pair with SiVa
 
@@ -546,7 +541,7 @@ it (the release's full name) unless `applicationLabel` is false; without the ope
   traffic port answers 404 under `/monitoring` and serves only the status-only `/readyz` and
   `/livez`, which the kubelet probes and an external load balancer's health check use. SiVa's
   own system tests expect everything on the traffic port, so a test instance sets
-  `runtime.managementPort` to the traffic port (see `values-kind.yaml`); the probes then use
+  `runtime.managementPort` to the traffic port; the probes then use
   `/monitoring/health/readiness` and `/liveness`.
 - The preStop pause uses the kubelet's Sleep action on Kubernetes 1.30+ and needs nothing in
   the image. Below 1.30 it execs `sleep`, which Paketo's default tiny run image does not ship:
@@ -561,7 +556,7 @@ it (the release's full name) unless `applicationLabel` is false; without the ope
   watches endpoints (ingress-nginx, Envoy, an ALB target group) stops choosing the pod once its
   endpoint is gone and its idle pool entries are simply never reused. The chart cannot tell the
   two apart, so `runtime.httpKeepAlive` is off by default (`Connection: close` on every
-  response), which is right in both. Measured cost on kind at 8 concurrent validations, 600 s
+  response), which is right in both. Measured cost at 8 concurrent validations, 600 s
   each way: +0.4 ms connect time per request, about four more packets each way, CPU within
   +0.6 to +1.8 % (121 ms per validation either way), memory unchanged, and one SYN lost in
   36000 requests cost that request a 1 s retransmit. Turn it on behind an endpoint-watching

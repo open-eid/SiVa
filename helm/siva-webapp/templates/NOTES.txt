@@ -44,7 +44,6 @@ Reaching the service:
   export NODE_PORT=$(kubectl -n {{ .Release.Namespace }} get svc {{ include "siva-webapp.fullname" . }} -o jsonpath='{.spec.ports[0].nodePort}')
   export NODE_IP=$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}')
   curl -X POST http://$NODE_IP:$NODE_PORT/validate   # expect 400 on an empty body
-  (on kind the node is also reachable by its container name, e.g. <cluster>-control-plane:$NODE_PORT)
 {{- else if eq .Values.service.type "LoadBalancer" }}
   kubectl -n {{ .Release.Namespace }} get svc -w {{ include "siva-webapp.fullname" . }}
   curl -X POST http://<EXTERNAL-IP>:{{ .Values.service.port }}/validate   # expect 400 on an empty body

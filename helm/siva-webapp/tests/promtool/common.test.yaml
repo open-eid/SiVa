@@ -1,6 +1,6 @@
-# promtool tests that hold for every variant: the trust-anchor rules and the selectors. Run by the
-# lab's rule-test script with each <variant>.values.yaml rendered into rules.yaml, release
-# siva-webapp in namespace siva (pods siva-webapp-<replicaset>-<pod>).
+# promtool tests that hold for every variant: the trust-anchor rules and the selectors. Run
+# with each <variant>.values.yaml rendered into rules.yaml, release siva-webapp in namespace
+# siva (pods siva-webapp-<replicaset>-<pod>).
 rule_files:
   - rules.yaml
 evaluation_interval: 1m

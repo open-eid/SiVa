@@ -45,9 +45,3 @@ tests:
     asserts:
       - hasDocuments:
           count: 0
-  - it: is not rendered by the kind overlay
-    values:
-      - ../values-kind.yaml
-    asserts:
-      - hasDocuments:
-          count: 0

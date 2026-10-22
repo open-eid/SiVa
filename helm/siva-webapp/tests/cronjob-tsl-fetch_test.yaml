@@ -11,20 +11,6 @@ tests:
       - hasDocuments:
           count: 0
 
-  - it: refuses the placeholder tag the committed kind overlay carries
-    template: cronjob-tsl-fetch.yaml
-    set:
-      tsl:
-        mode: snapshot
-        snapshot:
-          persistentVolumeClaim:
-            create: true
-      image:
-        tag: set-by-chart-push
-    asserts:
-      - failedTemplate:
-          errorPattern: 'image.tag is the placeholder "set-by-chart-push"'
-
   - it: runs the webapp image in the tsl-fetch profile against the store, one at a time
     template: cronjob-tsl-fetch.yaml
     set:

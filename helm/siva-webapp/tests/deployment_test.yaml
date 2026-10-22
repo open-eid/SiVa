@@ -37,15 +37,6 @@ tests:
       - notExists:
           path: spec.template.spec.imagePullSecrets
 
-  - it: refuses the placeholder tag the committed kind overlay carries
-    template: deployment.yaml
-    set:
-      image:
-        tag: set-by-chart-push
-    asserts:
-      - failedTemplate:
-          errorPattern: 'image.tag is the placeholder "set-by-chart-push"'
-
   - it: image tag, pull policy and pull secrets come from values
     template: deployment.yaml
     set:
@@ -220,59 +211,6 @@ tests:
               secretKeyRef:
                 name: siva-signing
                 key: password
-
-  - it: the kind overlay sets the test profile, compose-parity env and a re-pulled image
-    template: deployment.yaml
-    values:
-      - ../values-kind.yaml
-    set:
-      image:
-        tag: 3.11.0-dev.20261019T084942.g597535b   # what chart-push stamps over the placeholder
-    asserts:
-      - matchRegex:
-          path: spec.template.spec.containers[0].image
-          pattern: ^[^:]+(:[0-9]+)?/siva-webapp:[A-Za-z0-9._-]+$
-      - equal:
-          path: spec.template.spec.containers[0].imagePullPolicy
-          value: Always
-      - lengthEqual:
-          path: spec.template.spec.containers[0].env
-          count: 21   # 6 chart-owned (no management port: the overlay keeps the actuator on 8080) + 4 snapshot mode + 6 trust bundles + the lab Secret's import + 4
-      - contains:
-          path: spec.template.spec.containers[0].env
-          content:
-            name: SIVA_TSL_LOADER_SNAPSHOTPOLLINTERVAL
-            value: PT30S
-      - contains:
-          path: spec.template.spec.containers[0].env
-          content:
-            name: SPRING_CONFIG_IMPORT
-            value: configtree:/etc/siva/secrets/
-      - equal:
-          path: spec.template.spec.volumes[?(@.name == "secrets")].secret.secretName
-          value: siva-lab-secrets
-      - notExists:
-          path: spec.template.spec.containers[0].env[?(@.name == "MANAGEMENT_SERVER_PORT")]
-      - contains:
-          path: spec.template.spec.containers[0].env
-          content:
-            name: SPRING_PROFILES_ACTIVE
-            value: test
-      - contains:
-          path: spec.template.spec.containers[0].env
-          content:
-            name: TZ
-            value: Europe/Tallinn
-      - contains:
-          path: spec.template.spec.containers[0].env
-          content:
-            name: t-level-signature-filter.filter-type
-            value: NOT_ALLOWED_COUNTRIES
-      - contains:
-          path: spec.template.spec.containers[0].env
-          content:
-            name: t-level-signature-filter.countries
-            value: EE
 
   - it: renders no extra volumes, mounts or containers by default
     template: deployment.yaml

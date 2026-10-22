@@ -116,6 +116,9 @@ public class TSLLoader {
     private LastGoodCopyFileCacheDataLoader onlineLoader;
     // The snapshot id last refused (missing directory, too old); warned about once, then only at debug.
     private String refusedSnapshotId;
+    // The snapshot id last rejected after loading (a mandatory territory missing); the poll leaves it alone, the
+    // scheduled refresh tries it again.
+    private String rejectedSnapshotId;
 
     @PostConstruct
     public void init() {
@@ -150,8 +153,9 @@ public class TSLLoader {
     // One refresh is one DSS validation job filling a fresh source, published when the job is done: a new job
     // starts with empty caches, so it parses every list again and always synchronizes into that source, which is
     // never written again (open-eid/SiVa#6 was the reused job refilling the source being read). Synchronized so
-    // that the scheduled refresh and the snapshot poll do not load at the same time.
-    synchronized void loadTSL() {
+    // that the scheduled refresh and the snapshot poll do not load at the same time. Called by the refresher
+    // (start-up, schedule) and by the fetcher under its store lock.
+    public synchronized void loadTSL() {
         if (!configurationProperties.isLoadFromCache()) {
             TLValidationJob job = validationJob();
             onlineLoader.resetLastCopies();
@@ -207,7 +211,7 @@ public class TSLLoader {
         }
         String loaded = state.get().snapshotId();
         String published = snapshotStore.currentId().orElse(null);
-        if (published != null && !published.equals(loaded)) {
+        if (published != null && !published.equals(loaded) && !published.equals(rejectedSnapshotId)) {
             log.info("'{}' TSL: snapshot {} published, replacing {}", tslName, published, loaded);
             loadTSL();
         }
@@ -264,11 +268,50 @@ public class TSLLoader {
             lastCopies = byList(summary, onlineLoader.getLastCopies());
             refreshPeriod = configurationProperties.getRefreshPeriod();
         }
-        State next = new State(Instant.now(), source.getNumberOfCertificates(), snapshotCertificatesByTerritory(source),
+        Map<String, Integer> certificatesByTerritory = snapshotCertificatesByTerritory(source);
+        if (snapshotId != null && rejected(snapshotId, source.getNumberOfCertificates(), certificatesByTerritory)) {
+            return;
+        }
+        State next = new State(Instant.now(), source.getNumberOfCertificates(), certificatesByTerritory,
                 nextUpdateByTerritory(summary), lotlNextUpdate(summary), snapshotId, snapshotCreatedAt, downloadedAt,
                 lastCopies, refreshPeriod);
         trustedListsCertificateSource.publish(source);
         state.set(next);
+    }
+
+    // A snapshot the fetcher accepted can still come out short here: a list that expired between fetch and load,
+    // a file damaged on the way, another signer bundle. Replacing a source that satisfies the readiness condition
+    // (anchors for every mandatory territory) with one that does not would take every replica down at the same
+    // poll, so the loaded source is kept, with its state and its ages (the staleness and expiry alerts keep
+    // counting from them), and the snapshot is rejected until the fetcher publishes the next one. A pod that is
+    // not ready has nothing to keep: whatever came out goes live and the readiness gate reports it.
+    private boolean rejected(String snapshotId, int numberOfCertificates, Map<String, Integer> certificatesByTerritory) {
+        State loaded = state.get();
+        if (!ready(loaded.numberOfCertificates(), loaded.certificatesByTerritory())) {
+            return false;
+        }
+        if (ready(numberOfCertificates, certificatesByTerritory)) {
+            rejectedSnapshotId = null;
+            return false;
+        }
+        String reason = numberOfCertificates == 0 ? "it holds no trust anchors"
+                : "it holds " + certificatesByTerritory + ", mandatory are " + configurationProperties.getMandatoryTerritories();
+        if (snapshotId.equals(rejectedSnapshotId)) {
+            log.debug("'{}' TSL: still rejecting snapshot {}: {}", tslName, snapshotId, reason);
+        } else {
+            String kept = loaded.snapshotId();
+            log.warn("'{}' TSL: rejecting snapshot {}: {}; keeping the loaded source from snapshot {}", tslName,
+                    snapshotId, reason, kept);
+            rejectedSnapshotId = snapshotId;
+        }
+        return true;
+    }
+
+    // The readiness condition the health indicator applies: anchors, and some for every mandatory territory.
+    private boolean ready(int numberOfCertificates, Map<String, Integer> certificatesByTerritory) {
+        List<String> mandatory = configurationProperties.getMandatoryTerritories();
+        return numberOfCertificates > 0
+                && (mandatory == null || certificatesByTerritory.keySet().containsAll(mandatory));
     }
 
     private Path onlineCacheDirectory() {

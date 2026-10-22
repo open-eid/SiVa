@@ -329,6 +329,110 @@ class TSLLoaderTest {
     }
 
     @Test
+    void refreshIfSnapshotChanged_WhenTheNewSnapshotLacksAMandatoryTerritory_TheLoadedSourceIsKept() throws Exception {
+        tslLoader = loader(createSnapshotConfigurationProperties());
+        tslLoader.init();
+        Map<CertificateToken, List<TrustProperties>> estonian = anchorsOf("EE");
+        filledOnRefresh(estonian);
+        publish("20261013T183000Z", Instant.parse("2026-10-13T18:30:00Z"));
+        tslLoader.loadTSL();
+        filledOnRefresh(anchorsOf("LV"));
+        publish("20261014T000000Z", Instant.parse("2026-10-14T00:00:00Z"));
+
+        tslLoader.refreshIfSnapshotChanged();
+        tslLoader.refreshIfSnapshotChanged();
+
+        // Loaded once, rejected, and the poll leaves it alone afterwards.
+        verify(tslValidationJob, times(2)).offlineRefresh();
+        assertEquals("20261013T183000Z", tslLoader.getSnapshotId());
+        assertEquals(Instant.parse("2026-10-13T18:30:00Z"), tslLoader.getSnapshotCreatedAt());
+        assertEquals(Map.of("EE", 1), tslLoader.getCertificatesByTerritory());
+        assertTrue(holder.current().isTrusted(estonian.keySet().iterator().next()));
+    }
+
+    @Test
+    void refreshIfSnapshotChanged_WhenTheNewSnapshotIsEmpty_TheLoadedSourceIsKept() throws Exception {
+        tslLoader = loader(createSnapshotConfigurationProperties());
+        tslLoader.init();
+        filledOnRefresh(anchorsOf("EE"));
+        publish("20261013T183000Z");
+        tslLoader.loadTSL();
+        filledOnRefresh(Map.of());
+        publish("20261014T000000Z");
+
+        tslLoader.refreshIfSnapshotChanged();
+
+        assertEquals("20261013T183000Z", tslLoader.getSnapshotId());
+        assertEquals(1, tslLoader.getNumberOfCertificates());
+    }
+
+    @Test
+    void refreshIfSnapshotChanged_AfterARejectedSnapshot_TheNextGoodOneIsLoaded() throws Exception {
+        tslLoader = loader(createSnapshotConfigurationProperties());
+        tslLoader.init();
+        filledOnRefresh(anchorsOf("EE"));
+        publish("20261013T183000Z");
+        tslLoader.loadTSL();
+        filledOnRefresh(anchorsOf("LV"));
+        publish("20261014T000000Z");
+        tslLoader.refreshIfSnapshotChanged();
+        filledOnRefresh(anchorsOf("EE"));
+        publish("20261014T060000Z");
+
+        tslLoader.refreshIfSnapshotChanged();
+
+        assertEquals("20261014T060000Z", tslLoader.getSnapshotId());
+    }
+
+    @Test
+    void loadTSL_TheScheduledRefreshTriesARejectedSnapshotAgain() throws Exception {
+        tslLoader = loader(createSnapshotConfigurationProperties());
+        tslLoader.init();
+        filledOnRefresh(anchorsOf("EE"));
+        publish("20261013T183000Z");
+        tslLoader.loadTSL();
+        filledOnRefresh(anchorsOf("LV"));
+        publish("20261014T000000Z");
+        tslLoader.refreshIfSnapshotChanged();
+        filledOnRefresh(anchorsOf("EE"));
+
+        tslLoader.loadTSL();
+
+        verify(tslValidationJob, times(3)).offlineRefresh();
+        assertEquals("20261014T000000Z", tslLoader.getSnapshotId());
+    }
+
+    @Test
+    void loadTSL_WhenTheFirstSnapshotLacksAMandatoryTerritory_ItGoesLiveAndIsReported() throws Exception {
+        tslLoader = loader(createSnapshotConfigurationProperties());
+        tslLoader.init();
+        filledOnRefresh(anchorsOf("LV"));
+        publish("20261013T183000Z");
+
+        tslLoader.loadTSL();
+
+        assertEquals("20261013T183000Z", tslLoader.getSnapshotId());
+        assertEquals(Map.of("LV", 1), tslLoader.getCertificatesByTerritory());
+    }
+
+    @Test
+    void loadTSL_WhenNoTerritoryIsMandatory_AnySnapshotWithAnchorsIsLoaded() throws Exception {
+        TSLLoaderConfigurationProperties props = createSnapshotConfigurationProperties();
+        props.setMandatoryTerritories(List.of());
+        tslLoader = loader(props);
+        tslLoader.init();
+        filledOnRefresh(anchorsOf("EE"));
+        publish("20261013T183000Z");
+        tslLoader.loadTSL();
+        filledOnRefresh(anchorsOf("LV"));
+        publish("20261014T000000Z");
+
+        tslLoader.refreshIfSnapshotChanged();
+
+        assertEquals("20261014T000000Z", tslLoader.getSnapshotId());
+    }
+
+    @Test
     void refreshIfSnapshotChanged_OutsideSnapshotMode_NothingHappens() {
         tslLoader = loader(createConfigurationProperties(true));
         tslLoader.init();
@@ -623,6 +727,12 @@ class TSLLoaderTest {
         TSLLoaderConfigurationProperties props = createConfigurationProperties(true);
         props.setSnapshotDirectory(snapshotRoot.toFile());
         return props;
+    }
+
+    // One anchor listed by the trusted list of `territory`.
+    private static Map<CertificateToken, List<TrustProperties>> anchorsOf(String territory) throws Exception {
+        CertificateToken token = TslTestUtils.anchors(1).keySet().iterator().next();
+        return Map.of(token, List.of(trust(trustedList(territory))));
     }
 
     private static TLInfo trustedList(String territory) {

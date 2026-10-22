@@ -458,6 +458,10 @@ Egress rules shared by the webapp and the fetcher NetworkPolicies (network.netwo
       protocol: UDP
     - port: 53
       protocol: TCP
+  {{- with .dnsTo }}
+  to:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 {{- end }}
 - ports:
     {{- range .ports }}

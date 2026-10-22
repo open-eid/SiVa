@@ -1,7 +1,8 @@
 {{- if .Values.network.networkPolicy.enabled }}
 {{- /* Who may reach the traffic port and the management port, and (egress.enabled) what the
-       pods may reach: DNS plus public HTTP/HTTPS for OCSP, TSA and (online mode) the trust
-       lists, never the private ranges or the metadata address. */ -}}
+       pods may reach: DNS plus public HTTP/HTTPS for the AIA, policy and OCSP URLs the documents
+       carry and (online mode) the trust lists, never the private ranges, the carrier-grade NAT
+       range or the metadata address. */ -}}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:

@@ -109,8 +109,12 @@ tests:
               protocol: UDP
             - port: 53
               protocol: TCP
-      - notExists:
+      - equal:
           path: spec.egress[0].to
+          value:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: kube-system
       - equal:
           path: spec.egress[1].ports
           value:
@@ -121,9 +125,24 @@ tests:
       - equal:
           path: spec.egress[1].to[0].ipBlock.cidr
           value: 0.0.0.0/0
-      - contains:
+      - equal:
           path: spec.egress[1].to[0].ipBlock.except
-          content: 169.254.169.254/32
+          value: [10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 100.64.0.0/10, 169.254.169.254/32]
+
+  - it: lets DNS go anywhere when dnsTo is empty
+    set:
+      network:
+        networkPolicy:
+          enabled: true
+          egress:
+            enabled: true
+            dnsTo: []
+    asserts:
+      - notExists:
+          path: spec.egress[0].to
+      - equal:
+          path: spec.egress[0].ports[0].port
+          value: 53
 
   - it: appends extra egress rules and can drop DNS
     values:

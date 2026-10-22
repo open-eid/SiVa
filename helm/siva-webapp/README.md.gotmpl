@@ -25,7 +25,9 @@ rclone containers mirror, never a CSI or FUSE mount (`tsl.snapshot.sync`).
 - **Egress.** In the default `tsl.mode: online` each pod downloads the EU LOTL and the
   member-state trust lists at startup and on a nightly cron; in snapshot mode only the fetcher
   does (see "Trust lists"). Allow HTTPS egress to those hosts from whichever pods download, and
-  from every pod to the OCSP/TSA responders of the certificates you validate.
+  from every webapp pod to the AIA and OCSP URLs of the certificates you validate and the policy
+  URLs signatures name: the public internet, in practice (what the webapp connects to, and when,
+  is under "Trust lists").
 - **Trust material.** By default the pods use the truststores shipped on the application
   classpath (the CAs of the trust-list hosts, the LOTL signers), and rotating them means a new
   image. `trust.*` mounts the same material as PEM files instead and rotates them in place; see
@@ -315,10 +317,20 @@ running rather than serve it. The fetcher pods get their own
 ServiceAccount (`tsl.fetcher.serviceAccount`), so an identity that may write the store (a
 cloud role for the bucket) is never the webapp's, and their own
 Secret (`tsl.fetcher.existingSecret`, mounted as under "Secrets"), never the webapp's: they parse
-thirty documents from the internet and should hold nothing else. With `network.networkPolicy.egress` on, the webapp pods
-reach only DNS and the public internet on 80 and 443 (OCSP and timestamp responders) and the
-fetcher pods the same with no ingress at all. The store holds nothing worth backing up: a lost
-store is rebuilt by the next fetch, so leave the claim out of your backup scope.
+thirty documents from the internet and should hold nothing else. The store holds nothing worth
+backing up: a lost store is rebuilt by the next fetch, so leave the claim out of your backup
+scope.
+
+What a webapp pod fetches while validating comes with the document: missing issuer
+certificates from the AIA URLs the certificates carry, the signature policy from the URL a
+signature names, and OCSP responses for chains that reach a trusted-list anchor, the latter only
+when the T-level country filter is configured. CRLs are never fetched, and validation makes no
+timestamp request (report signing, off by default, is the only TSA or OCSP client, at
+operator-chosen URLs). With `network.networkPolicy.egress` on, the webapp pods reach DNS (the
+`kube-system` namespace by default, `egress.dnsTo`) and the public internet on 80 and 443,
+never the private ranges, the carrier-grade NAT range or the cloud metadata address, and the
+fetcher pods the same with no ingress at all; tighten `to` to your responders' addresses if
+your CNI cannot resolve names, or route through an egress proxy with `additionalRules`.
 
 ## Trust material
 

@@ -123,7 +123,10 @@ config:
 
 `extraVolumes`, `extraVolumeMounts` and `extraContainers` pass pod spec through for what the
 chart does not model (a sidecar, a mounted Secret the container reads itself), on the webapp
-Deployment only. The pods run under the Pod Security "restricted" profile, so an extra container
+Deployment only; the fetcher pods take `tsl.fetcher.extraVolumes` and
+`tsl.fetcher.extraVolumeMounts` of their own (a proxy's CA, a cloud credential file) and no
+extra containers, since a Job completes only when every container has exited. The pods run
+under the Pod Security "restricted" profile, so an extra container
 needs its own `securityContext` (no privilege escalation, all capabilities dropped, read-only
 root filesystem); with `network.networkPolicy.egress` on it also needs its own
 `additionalRules`.

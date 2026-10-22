@@ -364,3 +364,45 @@ tests:
             name: trust-binding
             mountPath: /platform/bindings/ca-certificates
             readOnly: true
+
+  - it: passes the fetcher's own extra volumes and mounts through after the chart's, never the webapp's
+    template: cronjob-tsl-fetch.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+        fetcher:
+          extraVolumes:
+            - name: proxy-ca
+              configMap:
+                name: proxy-ca
+          extraVolumeMounts:
+            - name: proxy-ca
+              mountPath: /etc/siva/proxy-ca
+              readOnly: true
+      extraVolumes:
+        - name: webapp-only
+          emptyDir: {}
+      extraVolumeMounts:
+        - name: webapp-only
+          mountPath: /var/siva/webapp-only
+    asserts:
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.volumes[-1]
+          value:
+            name: proxy-ca
+            configMap:
+              name: proxy-ca
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.containers[0].volumeMounts[-1]
+          value:
+            name: proxy-ca
+            mountPath: /etc/siva/proxy-ca
+            readOnly: true
+      - notExists:
+          path: spec.jobTemplate.spec.template.spec.volumes[?(@.name == "webapp-only")]
+      - notExists:
+          path: spec.jobTemplate.spec.template.spec.containers[0].volumeMounts[?(@.name == "webapp-only")]
+

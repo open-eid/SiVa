@@ -28,6 +28,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -81,17 +82,18 @@ class LastGoodCopyFileCacheDataLoaderTest {
     }
 
     @Test
-    void getDocument_WhenTheCopyIsServed_ItIsRecordedWithTheReasonAndTheFileIsLeftAsItWas() throws IOException {
+    void getDocument_WhenTheCopyIsServed_ItIsRecordedWithTheKindOfFailureAndTheFileIsLeftAsItWas() throws IOException {
         Path file = cache.resolve(DSSUtils.getNormalizedString(URL));
         Files.writeString(file, "stale");
         FileTime downloaded = FileTime.from(Instant.parse("2026-10-20T06:00:00Z"));
         Files.setLastModifiedTime(file, downloaded);
-        when(dataLoader.get(URL)).thenThrow(new DSSExternalResourceException("unreachable"));
+        when(dataLoader.get(URL)).thenThrow(new DSSExternalResourceException("Unable to process GET call for url",
+                new UnknownHostException("tl.example")));
         assertThat(loader.getLastCopies(), is(Map.of()));
 
         loader.getDocument(URL);
 
-        assertThat(loader.getLastCopies(), is(Map.of(URL, "unreachable")));
+        assertThat(loader.getLastCopies(), is(Map.of(URL, "UNREACHABLE")));
         assertThat(Files.getLastModifiedTime(file), is(downloaded));
     }
 

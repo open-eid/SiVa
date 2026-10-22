@@ -32,14 +32,14 @@ import java.util.concurrent.ConcurrentHashMap;
 // signature), so a stale copy is never trusted longer than the list allows.
 // The copy is served without touching the file, so its modification time stays the time of the last successful
 // download; the URLs served this way are kept per refresh for the loader to report (DSS sees a normal document
-// and records nothing).
+// and records nothing), each with the kind of failure (LastCopyReason); the failure itself goes to the log.
 @Slf4j
 public class LastGoodCopyFileCacheDataLoader extends FileCacheDataLoader {
 
     private static final long serialVersionUID = 1L;
 
-    // URL to the reason the download failed, for the lists served from their copy since the last reset. DSS
-    // downloads on several threads.
+    // URL to the kind of failure (a LastCopyReason name), for the lists served from their copy since the last
+    // reset. DSS downloads on several threads.
     private final Map<String, String> lastCopies = new ConcurrentHashMap<>();
 
     @Override
@@ -51,15 +51,16 @@ public class LastGoodCopyFileCacheDataLoader extends FileCacheDataLoader {
             if (lastGoodCopy == null) {
                 throw e;
             }
-            String reason = e.getMessage();
-            lastCopies.put(url, reason == null ? e.getClass().getSimpleName() : reason);
-            log.warn("Download of '{}' failed ({}); using the last copy on disk", url, reason);
+            LastCopyReason reason = LastCopyReason.of(e);
+            String failure = e.getMessage();
+            lastCopies.put(url, reason.name());
+            log.warn("Download of '{}' failed, {} ({}); using the last copy on disk", url, reason, failure);
             return lastGoodCopy;
         }
     }
 
-    // The lists served from their last copy since resetLastCopies(): URL to the reason the download failed.
-    // Sorted by URL; empty when every download succeeded.
+    // The lists served from their last copy since resetLastCopies(): URL to the kind of failure (a LastCopyReason
+    // name). Sorted by URL; empty when every download succeeded.
     public Map<String, String> getLastCopies() {
         return Collections.unmodifiableMap(new TreeMap<>(lastCopies));
     }

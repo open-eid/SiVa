@@ -35,6 +35,8 @@ import static org.hamcrest.Matchers.anEmptyMap;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -42,7 +44,6 @@ class TSLHealthIndicatorTest {
 
     private static final Instant REFRESHED = Instant.parse("2026-10-12T20:00:00Z");
     private static final Map<String, Integer> EE_AND_LV = Map.of("EE", 32, "LV", 5);
-    private static final String LAST_COPY_REASON = "Unable to process GET call for url [https://lotl]";
 
     @Mock
     private TSLLoader genericLoader;
@@ -65,10 +66,26 @@ class TSLHealthIndicatorTest {
     }
 
     @Test
-    void health_WhenALoaderRunsOnAPublishedSnapshot_ItsIdIsReported() {
+    void health_ReadsEachLoadersStateOnce() {
         stub(genericLoader, "generic", REFRESHED, 32, Map.of("EE", 32));
         stub(timemarkLoader, "timemark", REFRESHED, 32, Map.of("EE", 32));
-        when(genericLoader.getSnapshotId()).thenReturn("20261013T183000Z");
+
+        indicator(List.of("EE")).health();
+
+        for (TSLLoader loader : List.of(genericLoader, timemarkLoader)) {
+            verify(loader).getState();
+            verify(loader, never()).getLastRefresh();
+            verify(loader, never()).getNumberOfCertificates();
+            verify(loader, never()).getCertificatesByTerritory();
+            verify(loader, never()).getSnapshotId();
+            verify(loader, never()).getLastCopies();
+        }
+    }
+
+    @Test
+    void health_WhenALoaderRunsOnAPublishedSnapshot_ItsIdIsReported() {
+        stub(genericLoader, "generic", state(REFRESHED, 32, Map.of("EE", 32), "20261013T183000Z", Map.of()));
+        stub(timemarkLoader, "timemark", REFRESHED, 32, Map.of("EE", 32));
 
         Health health = indicator(List.of("EE")).health();
 
@@ -81,10 +98,9 @@ class TSLHealthIndicatorTest {
     }
 
     @Test
-    void health_WhenALoaderServedAListFromItsLastCopy_TheListAndReasonAreReported() {
-        stub(genericLoader, "generic", REFRESHED, 32, Map.of("EE", 32));
+    void health_WhenALoaderServedAListFromItsLastCopy_TheListAndTheKindOfFailureAreReported() {
+        stub(genericLoader, "generic", state(REFRESHED, 32, Map.of("EE", 32), null, Map.of("EU", "UNREACHABLE")));
         stub(timemarkLoader, "timemark", REFRESHED, 32, Map.of("EE", 32));
-        when(genericLoader.getLastCopies()).thenReturn(Map.of("EU", LAST_COPY_REASON));
 
         Health health = indicator(List.of("EE")).health();
 
@@ -93,7 +109,7 @@ class TSLHealthIndicatorTest {
                 TSLHealthIndicator.DETAIL_CERTIFICATES, 32,
                 TSLHealthIndicator.DETAIL_LAST_REFRESH, "2026-10-12T20:00:00Z",
                 TSLHealthIndicator.DETAIL_TERRITORIES, Map.of("EE", 32),
-                TSLHealthIndicator.DETAIL_LAST_COPY, Map.of("EU", LAST_COPY_REASON))));
+                TSLHealthIndicator.DETAIL_LAST_COPY, Map.of("EU", "UNREACHABLE"))));
         assertThat(((Map<?, ?>) health.getDetails().get("timemark")).containsKey(TSLHealthIndicator.DETAIL_LAST_COPY),
                 is(false));
     }
@@ -208,10 +224,19 @@ class TSLHealthIndicatorTest {
         return properties;
     }
 
-    private static void stub(TSLLoader loader, String name, Instant lastRefresh, int certificates, Map<String, Integer> territories) {
+    private static void stub(TSLLoader loader, String name, Instant lastRefresh, int certificates,
+                             Map<String, Integer> territories) {
+        stub(loader, name, state(lastRefresh, certificates, territories, null, Map.of()));
+    }
+
+    private static void stub(TSLLoader loader, String name, TSLLoader.State state) {
         when(loader.getTslName()).thenReturn(name);
-        when(loader.getLastRefresh()).thenReturn(lastRefresh);
-        when(loader.getNumberOfCertificates()).thenReturn(certificates);
-        when(loader.getCertificatesByTerritory()).thenReturn(territories);
+        when(loader.getState()).thenReturn(state);
+    }
+
+    private static TSLLoader.State state(Instant lastRefresh, int certificates, Map<String, Integer> territories,
+                                         String snapshotId, Map<String, String> lastCopies) {
+        return new TSLLoader.State(lastRefresh, certificates, territories, Map.of(), null, snapshotId, null, Map.of(),
+                lastCopies, null);
     }
 }

@@ -42,11 +42,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.AbstractExecutorService;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 /**
  * The trust source as digidoc4j sees it: a read-only view of what the loader last published, pinned for the
- * duration of one validation.
+ * duration of one validation on every thread that validation runs on.
  */
 @RequiredArgsConstructor
 public class TimemarkTrustedListsCertificateSource
@@ -59,18 +62,85 @@ public class TimemarkTrustedListsCertificateSource
     private final transient @NonNull TrustedListsCertificateSourceHolder holder;
 
     // A validation makes many reads; all of them must see the same source, or a swap in the middle lets DSS
-    // look up a trusted list of one source in the summary of another. Validation stays on one thread.
+    // look up a trusted list of one source in the summary of another. The pin is per thread: the request thread
+    // holds it for the validation, and digidoc4j's signature-validation threads get it from the executor below.
     private final transient ThreadLocal<TrustedListsCertificateSource> pinned = new ThreadLocal<>();
 
     /**
      * Runs {@code validation} with the source published at its start, whatever the loader publishes meanwhile.
      */
     public <T> T withPinnedSource(Supplier<T> validation) {
-        pinned.set(holder.current());
+        return withPinnedSource(holder.current(), validation);
+    }
+
+    private <T> T withPinnedSource(TrustedListsCertificateSource source, Supplier<T> validation) {
+        TrustedListsCertificateSource outer = pinned.get();
+        pinned.set(source);
         try {
             return validation.get();
         } finally {
-            pinned.remove();
+            if (outer == null) {
+                pinned.remove();
+            } else {
+                pinned.set(outer);
+            }
+        }
+    }
+
+    /**
+     * The executor digidoc4j validates signatures on ({@code Configuration.setThreadExecutor}): every task runs
+     * with the source pinned on the thread that submitted it, so a container's signatures are validated against the
+     * source its validation started with even when the loader publishes another one meanwhile. A task submitted
+     * outside a validation reads the current source as the submitting thread would.
+     */
+    public ExecutorService pinning(ExecutorService delegate) {
+        return new PinningExecutor(delegate);
+    }
+
+    private final class PinningExecutor extends AbstractExecutorService {
+
+        private final ExecutorService delegate;
+
+        private PinningExecutor(ExecutorService delegate) {
+            this.delegate = delegate;
+        }
+
+        @Override
+        public void execute(Runnable task) {
+            TrustedListsCertificateSource source = pinned.get();
+            if (source == null) {
+                delegate.execute(task);
+                return;
+            }
+            delegate.execute(() -> withPinnedSource(source, () -> {
+                task.run();
+                return null;
+            }));
+        }
+
+        @Override
+        public void shutdown() {
+            delegate.shutdown();
+        }
+
+        @Override
+        public List<Runnable> shutdownNow() {
+            return delegate.shutdownNow();
+        }
+
+        @Override
+        public boolean isShutdown() {
+            return delegate.isShutdown();
+        }
+
+        @Override
+        public boolean isTerminated() {
+            return delegate.isTerminated();
+        }
+
+        @Override
+        public boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
+            return delegate.awaitTermination(timeout, unit);
         }
     }
 

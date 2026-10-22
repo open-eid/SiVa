@@ -206,7 +206,7 @@
                     <rulesets>
                         <ruleset>${maven.multiModuleProjectDirectory}/pmd-ruleset.xml</ruleset>
                     </rulesets>
-                    <!-- Violations in code that predates the gate (class=rule,rule); still reported, not failing. -->
+                    <!-- Violations in code that predates the gate (class=rule,rule); neither reported nor failing. -->
                     <excludeFromFailureFile>${maven.multiModuleProjectDirectory}/pmd-exclude.properties</excludeFromFailureFile>
                 </configuration>
                 <executions>

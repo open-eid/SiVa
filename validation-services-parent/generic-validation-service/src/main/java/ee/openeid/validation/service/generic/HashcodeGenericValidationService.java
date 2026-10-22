@@ -61,7 +61,7 @@ public class HashcodeGenericValidationService extends GenericValidationService {
     }
 
     public Reports validate(List<ValidationDocument> validationDocuments) {
-        List<Reports> reports = validationDocuments.stream().map(validationDocument -> validateDocument(validationDocument)).collect(Collectors.toList());
+        List<Reports> reports = validationDocuments.stream().map(this::validateDocument).collect(Collectors.toList());
         return mergeReportsToOne(reports);
     }
 

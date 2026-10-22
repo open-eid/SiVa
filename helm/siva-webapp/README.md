@@ -282,9 +282,14 @@ watch (kube-prometheus-stack's `KubeJobFailed`), so the chart adds no fetch aler
 | 1 | A mandatory territory's list is missing, expired or badly signed; nothing published, `current` unchanged | Failed at once |
 | 2 | The store could not be written | Failed after `tsl.fetcher.backoffLimit` retries |
 | 3 | A list's download failed and the run published its last good copy (the fetch log's `using the last copy on disk` line names the list and the reason) | Failed at once |
+| 4 | Another fetch held the store's lock for the whole ten-minute wait; nothing downloaded, nothing published | Failed after `tsl.fetcher.backoffLimit` retries |
 
 Exit 1 and 3 fail for reasons a retry seconds later cannot change, so a `podFailurePolicy`
-fails the Job without the usual retries (Kubernetes 1.26 and later, the chart's floor). After
+fails the Job without the usual retries (Kubernetes 1.26 and later, the chart's floor). One
+fetcher runs per store at a time: the CronJob forbids overlapping runs of its own, and the
+fetcher takes a lock file in the store (`fetch.lock`) so that the bootstrap Job, or a run
+started by hand, waits for a running fetch instead of sharing its working cache; a lock older
+than an hour is taken over as left by a run that was killed. After
 exit 3 the pods keep validating on good lists and `SivaTslListNotDownloaded` says which list
 has not been downloaded for two periods; the next successful run clears it. `KubeJobFailed`
 stays on until the Failed Job object is gone: the history limits rotate failed Jobs out only
@@ -462,7 +467,7 @@ directory); edit the comments, not this table.
 | trust.pem | object | `{}` | PEM files by name, rendered into the ConfigMap `<release>-trust`: public certificates only, one concatenated PEM per purpose, under the names `tslCa` and `lotlSigners` give. For material managed outside the chart (a trust-manager Bundle, a Secret written by another tool) leave this empty and name the object in existingConfigMap or existingSecret; it must hold the same file names. |
 | trust.tslCa | string | `"tsl-ca.pem"` | File with the CA certificates the trust-list downloads trust (TLS to the LOTL and member-state list hosts), rendered as the Spring SSL bundle `tsl` and siva.tsl.loader.sslBundle=tsl. Like SiVa's classpath truststore it is the whole trust for those downloads, not an addition to the JVM's, so it must hold every CA the list hosts chain to. Empty: the downloads keep the classpath truststore. |
 | tsl.fetcher.activeDeadlineSeconds | int | `1800` | Seconds a fetch may run before it is killed (30 lists take a few minutes). |
-| tsl.fetcher.backoffLimit | int | `2` | Retries of a failed fetch within one schedule slot (a new pod each time). Not for a run that ended below the mandatory territories (exit 1) or published from a last copy because a download failed (exit 3): those fail the Job at once (podFailurePolicy), a retry seconds later changes nothing, and the cluster's KubeJobFailed-style alert then says so. |
+| tsl.fetcher.backoffLimit | int | `2` | Retries of a failed fetch within one schedule slot (a new pod each time), for a store that could not be written (exit 2) or was held by another fetch for the whole wait (exit 4). Not for a run that ended below the mandatory territories (exit 1) or published from a last copy because a download failed (exit 3): those fail the Job at once (podFailurePolicy), a retry seconds later changes nothing, and the cluster's KubeJobFailed-style alert then says so. |
 | tsl.fetcher.bootstrapJob | bool | `true` | Also run one fetch as a Job at install and whenever the fetcher pod changes (image, config), so a fresh install has a snapshot without waiting for the schedule. Named after a hash of the pod spec; the finished Job stays until the next change replaces it. |
 | tsl.fetcher.env | list | `[]` | Extra environment variables for the fetcher only; it already gets `env`, the ConfigMap and `runtime.javaToolOptions` (same profile and settings as the webapp, which is what makes its snapshot the one the webapp expects). |
 | tsl.fetcher.existingSecret | string | `""` | Secret mounted as a Spring config tree for the fetcher, like `secrets.existingSecret` for the webapp (same mountPath). The fetcher does not get the webapp's Secret: it parses thirty documents from the internet and should hold nothing but what that needs (truststore passwords, if you changed them), not the report-signing key's. Empty: no Secret. |

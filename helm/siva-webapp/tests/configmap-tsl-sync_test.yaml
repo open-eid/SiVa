@@ -413,3 +413,20 @@ tests:
       - matchRegex:
           path: spec.groups[0].rules[?(@.alert == "SivaTslSnapshotStale")].annotations.summary
           pattern: 'plus 1 h 2 min'
+
+  - it: pins the rclone image by digest next to its tag
+    template: deployment.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          sync:
+            enabled: true
+            remote: lab:siva-tsl/store
+            config: "[lab]\ntype = s3\n"
+            image:
+              digest: sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+    asserts:
+      - equal:
+          path: spec.template.spec.initContainers[0].image
+          value: rclone/rclone:1.75.2@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef

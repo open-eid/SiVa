@@ -19,7 +19,7 @@ spec:
       type: RuntimeDefault
   containers:
     - name: wget
-      image: {{ .Values.tests.image }}
+      image: {{ include "siva-webapp.imageRef" (list .Values.tests.image "") | quote }}
       securityContext:
         allowPrivilegeEscalation: false
         readOnlyRootFilesystem: true

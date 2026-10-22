@@ -993,3 +993,25 @@ tests:
       - matchRegex:
           path: spec.template.metadata.annotations["checksum/trust"]
           pattern: ^[0-9a-f]{64}$
+
+  - it: pins the image by digest next to the tag when image.digest is set
+    template: deployment.yaml
+    set:
+      image:
+        repository: registry.example.invalid/siva-webapp
+        tag: v1
+        digest: sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: registry.example.invalid/siva-webapp:v1@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+
+  - it: refuses an image digest that is not sha256 and 64 hex digits
+    template: deployment.yaml
+    set:
+      image:
+        digest: sha256:abc
+    asserts:
+      - failedTemplate:
+          errorPattern: (?i)image.*digest.*does not match pattern
+

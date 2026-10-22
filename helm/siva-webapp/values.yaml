@@ -17,12 +17,19 @@ fullnameOverride: ""
 replicaCount: 1
 
 image:
-  # -- Image to run. SiVa publishes no image: build one with `./mvnw spring-boot:build-image`
-  # (Paketo buildpacks), push it to a registry your cluster can pull from and set this to it.
+  # -- Image to run, as the full name in your registry (`registry.example.invalid/siva-webapp`).
+  # SiVa publishes no image: build one with `./mvnw spring-boot:build-image` (Paketo
+  # buildpacks), push it to a registry your cluster can pull from and set this to it. The bare
+  # default names no registry and pulls from nowhere (NOTES warns); it is kept so the chart
+  # lints and renders without one.
   repository: siva-webapp
   # -- Image tag; empty means the chart's appVersion (the SiVa release this chart was written
   # for). Numeric-looking tags need `--set-string`.
   tag: ""
+  # -- Image digest (`sha256:<64 hex>`) to pin the image by content: set, the reference is
+  # `repository:tag@digest` (the tag is then a label, the digest is what is pulled), empty, it is
+  # `repository:tag`. `crane digest <image>` or your registry prints it.
+  digest: ""
   # -- Pull policy.
   pullPolicy: IfNotPresent
   # -- imagePullSecrets, e.g. `[{name: my-registry-credentials}]`.
@@ -54,7 +61,10 @@ config:
   # quote strings that look like numbers or booleans ("08", "yes"). The values schema checks the
   # keys SiVa and Spring Boot declare (see the chart README, "Spring configuration"); unknown
   # prefixes pass. Secrets never go here, a ConfigMap is not a Secret: `secrets.existingSecret`
-  # sets the same properties from the files of a mounted Secret. Keep the chart's
+  # sets the same properties from the files of a mounted Secret, and the chart refuses to
+  # render a key here whose name ends in password, passwd, secret, token, api-key or
+  # private-key (`siva.signature-service.pkcs12.password`, `server.ssl.key-store-password`;
+  # `logging.level.*` names packages and is exempt). Keep the chart's
   # runtime.* and tsl.* settings out of it, they are injected as environment variables so that an
   # override here cannot drop them. Examples of what belongs in a private overlay:
   # `siva: {tsl: {loader: {trusted-territories: [EE, LV, LT]}}}`.
@@ -261,6 +271,9 @@ tsl:
         repository: rclone/rclone
         # -- Image tag.
         tag: 1.75.2
+        # -- Image digest (`sha256:<64 hex>`) to pin it by content, as `image.digest`; empty
+        # pulls by tag.
+        digest: ""
         # -- Pull policy.
         pullPolicy: IfNotPresent
       # -- Numeric uid the sync containers run as: rclone's image declares no user and the pods
@@ -665,8 +678,14 @@ tests:
   # -- Render the `helm test` pod, which GETs /monitoring/health through the management (or
   # traffic) Service.
   enabled: true
-  # -- Image for the test pod (needs wget).
-  image: busybox:1.37.0
+  image:
+    # -- Image of the test pod (needs wget).
+    repository: busybox
+    # -- Image tag.
+    tag: 1.37.0
+    # -- Image digest (`sha256:<64 hex>`) to pin it by content, as `image.digest`; empty pulls
+    # by tag.
+    digest: ""
   # -- uid/gid of the test pod: busybox carries no numeric USER, so runAsNonRoot needs one
   # (65534 = nobody). The pod's restricted context is fixed in its template; this is its only knob.
   runAsUser: 65534

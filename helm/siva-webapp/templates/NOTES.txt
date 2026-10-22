@@ -3,7 +3,9 @@ SiVa webapp {{ .Chart.AppVersion }} (chart {{ .Chart.Version }}) released as {{ 
 Image: {{ include "siva-webapp.image" . }}
 {{- if not (contains "/" .Values.image.repository) }}
   WARNING: image.repository is the bare default. SiVa publishes no image; build one and set
-  image.repository (and image.tag) to it, or the pod will stay in ImagePullBackOff.
+  image.repository to its full name in your registry (and image.tag), or the pod will stay in
+  ImagePullBackOff.
+{{- end }}
 {{- end }}
 
 {{- if include "siva-webapp.snapshotMode" . }}

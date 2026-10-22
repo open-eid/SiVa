@@ -33,6 +33,7 @@ import org.springframework.boot.health.contributor.Health;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
@@ -41,6 +42,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -48,10 +55,12 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -69,6 +78,8 @@ class TSLSnapshotFetcherTest {
 
     @TempDir
     private Path workingCache;
+    @TempDir
+    private Path root;
     @Mock
     private TSLSnapshotStore store;
     @Mock
@@ -81,6 +92,11 @@ class TSLSnapshotFetcherTest {
     private TSLSnapshotStore.FetchLock lock;
 
     private TSLSnapshotFetcher fetcher;
+
+    private TSLSnapshotFetcher fetcher(TSLSnapshotStore store, Set<TSLLoader> loaders, Clock clock, Duration lockWait) {
+        return new TSLSnapshotFetcher(store, workingCache, tslHealth, loaders, new TSLLoaderConfigurationProperties(),
+                PERIOD, clock, 2, lockWait);
+    }
 
     @BeforeEach
     void setUp() throws IOException {
@@ -136,6 +152,88 @@ class TSLSnapshotFetcherTest {
         verify(genericLoader).loadTSL();
     }
 
+    // Two runs on one real store (the bootstrap Job next to the CronJob): the second finds the lock, waits, and
+    // fetches only after the first has published and released it.
+    @Test
+    void fetch_WhenTwoRunsShareAStore_TheSecondWaitsForTheFirstToRelease() throws Exception {
+        TSLSnapshotStore shared = spy(new TSLSnapshotStore(root));
+        CountDownLatch firstHolds = new CountDownLatch(1);
+        CountDownLatch firstMayFinish = new CountDownLatch(1);
+        CountDownLatch secondWaits = new CountDownLatch(1);
+        doAnswer(invocation -> {
+            firstHolds.countDown();
+            firstMayFinish.await(10, TimeUnit.SECONDS);
+            return null;
+        }).when(genericLoader).loadTSL();
+        doAnswer(invocation -> {
+            Optional<?> lock = (Optional<?>) invocation.callRealMethod();
+            if (lock.isEmpty()) {
+                secondWaits.countDown();
+            }
+            return lock;
+        }).when(shared).tryLock(any(), any());
+        when(tslHealth.health()).thenReturn(Health.up().build());
+        TSLSnapshotFetcher first = fetcher(shared, Set.of(genericLoader), Clock.systemUTC(), Duration.ofSeconds(30));
+        TSLSnapshotFetcher second = fetcher(shared, Set.of(timemarkLoader), Clock.systemUTC(), Duration.ofSeconds(30));
+        ExecutorService runs = Executors.newFixedThreadPool(2);
+        try {
+            Future<Integer> firstExit = runs.submit(first::fetch);
+            assertThat(firstHolds.await(5, TimeUnit.SECONDS), is(true));
+            Future<Integer> secondExit = runs.submit(second::fetch);
+            assertThat(secondWaits.await(5, TimeUnit.SECONDS), is(true));
+            verify(timemarkLoader, never()).loadTSL();
+
+            firstMayFinish.countDown();
+
+            assertThat(firstExit.get(10, TimeUnit.SECONDS), is(TSLSnapshotFetcher.EXIT_PUBLISHED));
+            assertThat(secondExit.get(15, TimeUnit.SECONDS), is(TSLSnapshotFetcher.EXIT_PUBLISHED));
+        } finally {
+            runs.shutdownNow();
+        }
+        var order = inOrder(genericLoader, timemarkLoader);
+        order.verify(genericLoader).loadTSL();
+        order.verify(timemarkLoader).loadTSL();
+        try (Stream<Path> snapshots = Files.list(root.resolve(TSLSnapshotStore.SNAPSHOTS_DIRECTORY))) {
+            List<String> ids = snapshots.map(path -> path.getFileName().toString()).sorted().toList();
+            assertThat(ids.size(), is(2));
+            assertThat(shared.currentId(), is(Optional.of(ids.get(1))));
+        }
+        assertThat(Files.exists(root.resolve(TSLSnapshotStore.LOCK_FILE)), is(false));
+    }
+
+    @Test
+    void fetch_WhenTheStoreLockIsStale_TakesItOverAndFetches() throws IOException {
+        TSLSnapshotStore real = new TSLSnapshotStore(root);
+        Path lock = root.resolve(TSLSnapshotStore.LOCK_FILE);
+        Files.writeString(lock, "died 2026-10-13T12:00:00Z\n");
+        Files.setLastModifiedTime(lock, FileTime.from(Instant.now().minus(TSLSnapshotFetcher.LOCK_STALE_AFTER)
+                .minusSeconds(60)));
+        when(tslHealth.health()).thenReturn(Health.up().build());
+        fetcher = fetcher(real, Set.of(genericLoader), Clock.fixed(NOW, ZoneOffset.UTC), Duration.ZERO);
+
+        int exitCode = fetcher.fetch();
+
+        assertThat(exitCode, is(TSLSnapshotFetcher.EXIT_PUBLISHED));
+        verify(genericLoader).loadTSL();
+        assertThat(real.currentId(), is(Optional.of("20261013T183000Z")));
+        assertThat(Files.exists(lock), is(false));
+    }
+
+    @Test
+    void fetch_WhenTheStoreLockIsHeldByALiveRun_LeavesItAlone() throws IOException {
+        TSLSnapshotStore real = new TSLSnapshotStore(root);
+        Path lock = root.resolve(TSLSnapshotStore.LOCK_FILE);
+        Files.writeString(lock, "running 2026-10-13T18:29:00Z\n");
+        fetcher = fetcher(real, Set.of(genericLoader), Clock.fixed(NOW, ZoneOffset.UTC), Duration.ZERO);
+
+        int exitCode = fetcher.fetch();
+
+        assertThat(exitCode, is(TSLSnapshotFetcher.EXIT_STORE_LOCKED));
+        verify(genericLoader, never()).loadTSL();
+        assertThat(Files.readString(lock), is("running 2026-10-13T18:29:00Z\n"));
+        assertThat(real.currentId(), is(Optional.empty()));
+    }
+
     @Test
     void fetch_WhenTheLockIsLostOnTheWayOut_ReportsIt() throws IOException {
         when(tslHealth.health()).thenReturn(Health.up().build());
@@ -165,7 +263,7 @@ class TSLSnapshotFetcherTest {
     @Test
     void fetch_WhenAListCameFromItsLastCopy_PublishesAndExitsWithTheLastCopyCode() throws IOException {
         when(tslHealth.health()).thenReturn(Health.up().withDetails(DETAILS).build());
-        when(genericLoader.getLastCopies()).thenReturn(Map.of("EU", "Unable to process GET call"));
+        when(genericLoader.getLastCopies()).thenReturn(Map.of("EU", "UNREACHABLE"));
 
         int exitCode = fetcher.fetch();
 

@@ -19,6 +19,8 @@ package ee.openeid.tsl.snapshot;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -129,30 +131,30 @@ class TSLSnapshotStoreTest {
         assertThat(Files.exists(root.resolve("snapshots/20261013T050000Z.tmp")), is(false));
     }
 
-    // Right after a publish the current snapshot is also the newest; it must not use up one of the `keep` slots.
-    @Test
-    void prune_WhenTheCurrentSnapshotIsTheNewest_KeepsAsManyOlderOnesAsAsked() throws IOException {
-        for (String id : List.of("20261013T010000Z", "20261013T020000Z", "20261013T030000Z")) {
+    // Right after a publish the current snapshot is also the newest; it must not use up one of the `keep` slots:
+    // keep=1 leaves the previous snapshot, the one a reader in the middle of loading may still be on.
+    @ParameterizedTest(name = "keep {0}")
+    @CsvSource({
+            "0, '20261013T030000Z 20261013T020000Z 20261013T010000Z'",
+            "1, '20261013T020000Z 20261013T010000Z'",
+            "2, '20261013T010000Z'",
+            "3, ''",
+            "4, ''"})
+    void prune_WhenTheCurrentSnapshotIsTheNewest_KeepsItAndAsManyOlderOnesAsAsked(int keep, String older)
+            throws IOException {
+        List<String> ids = List.of("20261013T010000Z", "20261013T020000Z", "20261013T030000Z", "20261013T040000Z");
+        for (String id : ids) {
             store.publish(source, manifest(id));
         }
+        List<String> expected = older.isEmpty() ? List.of() : List.of(older.split(" "));
 
-        List<String> removed = store.prune(1);
+        List<String> removed = store.prune(keep);
 
-        assertThat(removed, contains("20261013T010000Z"));
-        assertThat(Files.isDirectory(store.snapshotDirectory("20261013T030000Z")), is(true));
-        assertThat(Files.isDirectory(store.snapshotDirectory("20261013T020000Z")), is(true));
-    }
-
-    @Test
-    void prune_WithZeroToKeep_LeavesOnlyTheCurrentSnapshot() throws IOException {
-        for (String id : List.of("20261013T010000Z", "20261013T020000Z")) {
-            store.publish(source, manifest(id));
+        assertThat(removed, is(expected));
+        assertThat(store.currentId(), is(Optional.of("20261013T040000Z")));
+        for (String id : ids) {
+            assertThat(id, Files.isDirectory(store.snapshotDirectory(id)), is(!expected.contains(id)));
         }
-
-        List<String> removed = store.prune(0);
-
-        assertThat(removed, contains("20261013T010000Z"));
-        assertThat(Files.isDirectory(store.snapshotDirectory("20261013T020000Z")), is(true));
     }
 
     @Test

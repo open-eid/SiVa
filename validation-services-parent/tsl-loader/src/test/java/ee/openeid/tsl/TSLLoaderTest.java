@@ -368,6 +368,47 @@ class TSLLoaderTest {
     }
 
     @Test
+    void refreshIfSnapshotChanged_WhenTheNewSnapshotDropsANonMandatoryTerritory_ItIsLoaded() throws Exception {
+        tslLoader = loader(createSnapshotConfigurationProperties());
+        tslLoader.init();
+        filledOnRefresh(anchorsOf("EE", "LV"));
+        publish("20261013T183000Z");
+        tslLoader.loadTSL();
+        filledOnRefresh(anchorsOf("EE"));
+        publish("20261014T000000Z");
+
+        tslLoader.refreshIfSnapshotChanged();
+
+        assertEquals("20261014T000000Z", tslLoader.getSnapshotId());
+        assertEquals(Map.of("EE", 1), tslLoader.getCertificatesByTerritory());
+    }
+
+    @Test
+    void refreshIfSnapshotChanged_WhenOneOfSeveralMandatoryTerritoriesIsMissing_TheLoadedSourceAndItsAgesAreKept()
+            throws Exception {
+        TSLLoaderConfigurationProperties props = createSnapshotConfigurationProperties();
+        props.setMandatoryTerritories(List.of("EE", "LV"));
+        tslLoader = loader(props);
+        tslLoader.init();
+        filledOnRefresh(anchorsOf("EE", "LV"));
+        publish("20261013T183000Z", Instant.parse("2026-10-13T18:30:00Z"));
+        tslLoader.loadTSL();
+        TrustedListsCertificateSource published = holder.current();
+        Instant loadedAt = tslLoader.getLastRefresh();
+        filledOnRefresh(anchorsOf("EE"));
+        publish("20261014T000000Z", Instant.parse("2026-10-14T00:00:00Z"));
+
+        tslLoader.refreshIfSnapshotChanged();
+
+        verify(tslValidationJob, times(2)).offlineRefresh();
+        assertSame(published, holder.current());
+        assertEquals("20261013T183000Z", tslLoader.getSnapshotId());
+        assertEquals(loadedAt, tslLoader.getLastRefresh());
+        assertEquals(Instant.parse("2026-10-13T18:30:00Z"), tslLoader.getSnapshotCreatedAt());
+        assertEquals(Map.of("EE", 1, "LV", 1), tslLoader.getCertificatesByTerritory());
+    }
+
+    @Test
     void refreshIfSnapshotChanged_AfterARejectedSnapshot_TheNextGoodOneIsLoaded() throws Exception {
         tslLoader = loader(createSnapshotConfigurationProperties());
         tslLoader.init();
@@ -587,7 +628,7 @@ class TSLLoaderTest {
     }
 
     @Test
-    void loadTSL_Online_AListServedFromItsLastCopyIsRecordedByTerritoryWithTheReason() throws IOException {
+    void loadTSL_Online_AListServedFromItsLastCopyIsRecordedByTerritoryWithTheKindOfFailure() throws IOException {
         TSLLoaderConfigurationProperties props = createConfigurationProperties(false);
         props.setCacheDirectory(cache.toFile());
         tslLoader = loader(props);
@@ -597,7 +638,8 @@ class TSLLoaderTest {
         doAnswer(invocation -> {
             LastGoodCopyFileCacheDataLoader loader = invocation.getArgument(0);
             DataLoader unreachable = mock(DataLoader.class);
-            when(unreachable.get(anyString())).thenThrow(new DSSExternalResourceException("certificate_unknown"));
+            when(unreachable.get(anyString())).thenThrow(new DSSExternalResourceException("Unable to process GET call",
+                    new SSLHandshakeException("certificate_unknown")));
             loader.setDataLoader(unreachable);
             onlineLoader.set(loader);
             return null;
@@ -609,7 +651,7 @@ class TSLLoaderTest {
 
         tslLoader.loadTSL();
 
-        assertEquals(Map.of("EU", "certificate_unknown"), tslLoader.getLastCopies());
+        assertEquals(Map.of("EU", "TLS_FAILED"), tslLoader.getLastCopies());
         assertEquals(Map.of("EU", Instant.parse("2026-10-20T06:00:00Z")), tslLoader.getDownloadedAt());
     }
 
@@ -635,7 +677,7 @@ class TSLLoaderTest {
         LOTLInfo lotl = lotl(Instant.parse("2027-03-17T12:04:06Z"));
         when(tslValidationJob.getSummary()).thenReturn(new TLValidationJobSummary(List.of(lotl), List.of()));
         tslLoader.loadTSL();
-        assertEquals(Map.of("EU", "unreachable"), tslLoader.getLastCopies());
+        assertEquals(Map.of("EU", "DOWNLOAD_FAILED"), tslLoader.getLastCopies());
 
         tslLoader.loadTSL();
 
@@ -762,10 +804,14 @@ class TSLLoaderTest {
         return props;
     }
 
-    // One anchor listed by the trusted list of `territory`.
-    private static Map<CertificateToken, List<TrustProperties>> anchorsOf(String territory) throws Exception {
-        CertificateToken token = TslTestUtils.anchors(1).keySet().iterator().next();
-        return Map.of(token, List.of(trust(trustedList(territory))));
+    // One anchor per territory, each listed by that territory's trusted list.
+    private static Map<CertificateToken, List<TrustProperties>> anchorsOf(String... territories) throws Exception {
+        List<CertificateToken> tokens = List.copyOf(TslTestUtils.anchors(territories.length).keySet());
+        Map<CertificateToken, List<TrustProperties>> anchors = new LinkedHashMap<>();
+        for (int i = 0; i < territories.length; i++) {
+            anchors.put(tokens.get(i), List.of(trust(trustedList(territories[i]))));
+        }
+        return anchors;
     }
 
     private static TLInfo trustedList(String territory) {

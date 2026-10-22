@@ -45,7 +45,8 @@ spec:
           annotations:
             summary: "SiVa pod {{ "{{ $labels.pod }}" }} was OOM-killed in the last 30 minutes"
             description: "Raise resources.limits.memory (Paketo sizes the heap from it) or lower the thread count."
-        {{- $grace := include "siva-webapp.isoSeconds" (list "monitoring.prometheusRule.tsl.grace" .Values.monitoring.prometheusRule.tsl.grace) }}
+        {{- /* With the store synced through a bucket, a pod sees a snapshot one sync interval later: counted into the grace. */}}
+        {{- $grace := add (include "siva-webapp.isoSeconds" (list "monitoring.prometheusRule.tsl.grace" .Values.monitoring.prometheusRule.tsl.grace) | int) (ternary (int .Values.tsl.snapshot.sync.interval) 0 (not (empty (include "siva-webapp.syncEnabled" .)))) }}
         {{- $leadTime := include "siva-webapp.isoSeconds" (list "monitoring.prometheusRule.tsl.leadTime" .Values.monitoring.prometheusRule.tsl.leadTime) }}
         {{- $period := printf "siva_tsl_refresh_period_seconds{%s}" $kube }}
         {{- $byLoader := "on (namespace, pod, loader)" }}

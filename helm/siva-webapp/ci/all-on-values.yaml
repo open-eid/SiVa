@@ -35,12 +35,11 @@ extraVolumeMounts:
     mountPath: /var/siva/extra
     readOnly: true
 extraContainers:
-  - name: tsl-sync
-    image: rclone/rclone:1.68.2
-    args: ["sync", "--interval", "5m", "example-bucket:siva-tsl", "/var/siva/tsl"]
+  - name: example-sidecar
+    image: example.invalid/sidecar:1
     volumeMounts:
-      - name: tsl-store
-        mountPath: /var/siva/tsl
+      - name: example-extra
+        mountPath: /var/siva/extra
     securityContext:
       allowPrivilegeEscalation: false
       readOnlyRootFilesystem: true

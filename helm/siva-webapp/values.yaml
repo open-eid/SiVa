@@ -131,7 +131,7 @@ secrets:
 # fetcher pods keep to tsl.fetcher.*). The pods run under the Pod Security "restricted" profile,
 # so an extra container needs its own securityContext (no privilege escalation, all capabilities
 # dropped, read-only root filesystem), and with network.networkPolicy.egress on, its own
-# additionalRules. The README has the sync-sidecar example for a snapshot store in a bucket.
+# additionalRules.
 # -- Extra volumes of the webapp pods (Volume entries).
 extraVolumes: []
 # -- Extra mounts of the siva-webapp container (VolumeMount entries), of volumes from
@@ -206,9 +206,10 @@ tsl:
     mountPath: /var/siva/tsl
     # -- The store: a volume source without the `name`, for example
     # `persistentVolumeClaim: {claimName: siva-tsl}` for a ReadWriteMany claim you created, or
-    # a CSI bucket mount. Ignored when persistentVolumeClaim.create is on. The fetcher renames
-    # files and directories in it, so the filesystem must support rename; an object-store
-    # mount that does not (mountpoint-s3) cannot hold it.
+    # a CSI bucket mount. Ignored when persistentVolumeClaim.create is on; unused with sync
+    # (below), where the store is a pod-local directory. The fetcher renames files and
+    # directories in it, so the filesystem must support rename; an object-store mount that
+    # does not (mountpoint-s3) cannot hold it: use sync for a bucket.
     volume: {}
     persistentVolumeClaim:
       # -- Create the claim (`<release>-tsl`, kept on uninstall). ReadWriteMany when the
@@ -223,6 +224,67 @@ tsl:
       storageClassName: ""
       # -- Claim annotations.
       annotations: {}
+    # The store in object storage (S3, Azure Blob, GCS, Swift: anything rclone speaks), for
+    # clusters without ReadWriteMany storage. SiVa keeps reading and writing a directory; the
+    # chart adds rclone containers that mirror it: in the fetcher pod an init container
+    # downloads the bucket into a pod-local store before the fetch and a second container
+    # uploads the result after it (snapshots first, `current` last), and in every webapp pod a
+    # sidecar fetches the snapshot the bucket's `current` names and makes it current locally
+    # once it is complete. The bucket holds the store in its own layout (`current`,
+    # `snapshots/<id>/`, `work/`); SiVa refuses a snapshot missing a file its manifest lists, so
+    # a copy still arriving is never loaded. Freshness on a pod is `interval` plus
+    # `pollInterval`; the chart adds `interval` to the alerts' grace. Needs SiVa 3.11.0+.
+    sync:
+      # -- Bridge the store through object storage. The claim and volume settings above are
+      # then unused (the chart refuses a created claim), and so is `tsl.fetcher.workVolume`: the
+      # working cache travels with the store.
+      enabled: false
+      # -- rclone path of the store in the bucket: `<remote>:<bucket>/<prefix>`, the remote being
+      # the section name in the rclone configuration below.
+      remote: ""
+      # -- rclone configuration file content (one `[<remote>]` section) when it holds no secret:
+      # a cloud's workload identity or instance role (`env_auth = true`), or a public endpoint
+      # with credentials from `env`. Rendered into a ConfigMap. Exactly one of `config` and
+      # `existingSecret`.
+      config: ""
+      # -- An existing Secret with the configuration in its key `rclone.conf` (static keys).
+      # Mounted read-only in the sync containers only.
+      existingSecret: ""
+      # -- Seconds between a webapp pod's downloads of `current`.
+      interval: 60
+      # -- Snapshots a webapp pod keeps besides the current one (a loader may still be reading
+      # one when the next arrives).
+      keep: 1
+      image:
+        # -- rclone's image, or another with rclone and busybox (sh, pgrep, sed). The deployer
+        # updates it on their own schedule, independently of SiVa releases.
+        repository: rclone/rclone
+        # -- Image tag.
+        tag: 1.75.2
+        # -- Pull policy.
+        pullPolicy: IfNotPresent
+      # -- Numeric uid the sync containers run as: rclone's image declares no user and the pods
+      # run as non-root. The fetcher writes into the directory the init container downloaded,
+      # so this must be the SiVa image's uid (1002 for the Paketo Java builder, `crane config`
+      # or `docker inspect` shows yours).
+      runAsUser: 1002
+      # -- Group of the sync containers, the SiVa image's (1001 for the Paketo Java builder).
+      runAsGroup: 1001
+      # -- Extra environment of the sync containers: rclone flags as `RCLONE_*` variables (for
+      # example `RCLONE_S3_NO_CHECK_BUCKET=true` for a bucket the keys may not create), the
+      # cloud's identity variables, a proxy.
+      env: []
+      # -- Resources of each sync container.
+      # @default -- requests 10m / 32Mi, limit 128Mi memory
+      resources:
+        requests:
+          cpu: 10m
+          memory: 32Mi
+        limits:
+          memory: 128Mi
+      # -- Size limit of the pod-local store (emptyDir): a snapshot is about 10 MB, a webapp pod
+      # keeps `keep` + 1, the fetcher pod the bucket's whole store. Empty for no limit.
+      sizeLimit: 256Mi
     # -- How often a pod checks `current` for a new snapshot (ISO-8601 duration;
     # siva.tsl.loader.snapshotPollInterval). Replicas converge within this of a publish; the
     # nightly refresh stays as the safety net.
@@ -299,6 +361,16 @@ tsl:
     # thirty documents from the internet and should hold nothing but what that needs (truststore
     # passwords, if you changed them), not the report-signing key's. Empty: no Secret.
     existingSecret: ""
+    # The fetcher pods' own ServiceAccount, so that an identity that may write the store (a
+    # cloud role for the bucket, through annotations) is never the webapp's.
+    serviceAccount:
+      # -- Create `<release>-tsl-fetch` for the fetcher pods; off, the fetcher uses `name`, or
+      # the webapp's account when that is empty.
+      create: true
+      # -- Name of the account to create or use.
+      name: ""
+      # -- Annotations, for example the cloud's workload-identity binding for the bucket.
+      annotations: {}
 
 # Probes go to the traffic port, so a wedged traffic connector fails readiness and the pod leaves
 # the Service. Readiness is Spring Boot's readiness group plus SiVa's `tsl` component: a pod is

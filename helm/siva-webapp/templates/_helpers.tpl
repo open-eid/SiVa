@@ -123,17 +123,140 @@ into a shared volume, pods read it). Non-empty when snapshot.
 {{- end }}
 
 {{/*
-Volume source (without the name) of the snapshot store: the chart's own claim, or the one given.
+Non-empty when the store is bridged through object storage (snapshot mode with tsl.snapshot.sync
+on). Checks the settings that only make sense together: a remote, one source of rclone
+configuration, and none of the shared-volume settings, which would otherwise create or mount a
+store nobody uses.
+*/}}
+{{- define "siva-webapp.syncEnabled" -}}
+{{- if and (include "siva-webapp.snapshotMode" .) .Values.tsl.snapshot.sync.enabled -}}
+{{- $sync := .Values.tsl.snapshot.sync -}}
+{{- if not $sync.remote -}}
+{{- fail "tsl.snapshot.sync.remote must name the store in the bucket (<remote>:<bucket>/<prefix>)" -}}
+{{- end -}}
+{{- if eq (empty $sync.config) (empty $sync.existingSecret) -}}
+{{- fail "tsl.snapshot.sync needs exactly one of config (rclone.conf content without secrets) and existingSecret (a Secret with the key rclone.conf)" -}}
+{{- end -}}
+{{- if or .Values.tsl.snapshot.persistentVolumeClaim.create .Values.tsl.snapshot.volume -}}
+{{- fail "tsl.snapshot.sync replaces the shared volume: leave tsl.snapshot.persistentVolumeClaim.create off and tsl.snapshot.volume empty" -}}
+{{- end -}}
+{{- if .Values.tsl.fetcher.workVolume -}}
+{{- fail "tsl.fetcher.workVolume is unused with tsl.snapshot.sync: the working cache travels with the store" -}}
+{{- end -}}
+true
+{{- end -}}
+{{- end }}
+
+{{/*
+Volume source (without the name) of the snapshot store: a pod-local directory with sync, else the
+chart's own claim, or the one given.
 */}}
 {{- define "siva-webapp.tslStoreVolumeSource" -}}
-{{- if .Values.tsl.snapshot.persistentVolumeClaim.create -}}
+{{- if include "siva-webapp.syncEnabled" . -}}
+emptyDir:
+  {{- with .Values.tsl.snapshot.sync.sizeLimit }}
+  sizeLimit: {{ . }}
+  {{- else }}
+  {}
+  {{- end }}
+{{- else if .Values.tsl.snapshot.persistentVolumeClaim.create -}}
 persistentVolumeClaim:
   claimName: {{ include "siva-webapp.tslClaimName" . }}
 {{- else if .Values.tsl.snapshot.volume -}}
 {{ toYaml .Values.tsl.snapshot.volume }}
 {{- else -}}
-{{- fail "tsl.mode snapshot needs a store: set tsl.snapshot.volume (an existing ReadWriteMany claim or a CSI mount) or tsl.snapshot.persistentVolumeClaim.create" -}}
+{{- fail "tsl.mode snapshot needs a store: set tsl.snapshot.volume (an existing ReadWriteMany claim or a CSI mount), tsl.snapshot.persistentVolumeClaim.create, or tsl.snapshot.sync for a bucket" -}}
 {{- end -}}
+{{- end }}
+
+{{- define "siva-webapp.syncConfigName" -}}
+{{ include "siva-webapp.fullname" . }}-tsl-sync
+{{- end }}
+
+{{/*
+One rclone container of the sync (tsl.snapshot.sync): the script from the chart's ConfigMap in
+the mode given, the store read-write, the rclone configuration read-only from the ConfigMap or
+the Secret, a /tmp of its own. Called with a dict: `root`, `mode` (down, up or pod) and `name`.
+*/}}
+{{- define "siva-webapp.syncContainer" -}}
+{{- $sync := .root.Values.tsl.snapshot.sync -}}
+- name: {{ .name }}
+  image: "{{ $sync.image.repository }}:{{ $sync.image.tag }}"
+  imagePullPolicy: {{ $sync.image.pullPolicy }}
+  command: ["sh", "/etc/siva-tsl-sync/tsl-sync.sh", {{ .mode | quote }}]
+  securityContext:
+    {{- toYaml (merge (dict "runAsUser" $sync.runAsUser "runAsGroup" $sync.runAsGroup) (deepCopy .root.Values.security.securityContext)) | nindent 4 }}
+  env:
+    - name: STORE
+      value: {{ .root.Values.tsl.snapshot.mountPath | quote }}
+    - name: REMOTE
+      value: {{ $sync.remote | quote }}
+    - name: INTERVAL
+      value: {{ $sync.interval | quote }}
+    - name: KEEP
+      value: {{ $sync.keep | quote }}
+    - name: RCLONE_CONFIG
+      value: /etc/rclone/rclone.conf
+    - name: RCLONE_CACHE_DIR
+      value: /tmp/rclone
+    {{- with $sync.env }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with $sync.resources }}
+  resources:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  volumeMounts:
+    - name: tsl-store
+      mountPath: {{ .root.Values.tsl.snapshot.mountPath }}
+    - name: tsl-sync
+      mountPath: /etc/siva-tsl-sync
+      readOnly: true
+    - name: rclone-config
+      mountPath: /etc/rclone
+      readOnly: true
+    - name: tsl-sync-tmp
+      mountPath: /tmp
+{{- end }}
+
+{{/*
+The volumes the sync containers mount besides the store.
+*/}}
+{{- define "siva-webapp.syncVolumes" -}}
+{{- $sync := .Values.tsl.snapshot.sync -}}
+- name: tsl-sync
+  configMap:
+    name: {{ include "siva-webapp.syncConfigName" . }}
+    items:
+      - key: tsl-sync.sh
+        path: tsl-sync.sh
+- name: rclone-config
+  {{- if $sync.existingSecret }}
+  secret:
+    secretName: {{ $sync.existingSecret }}
+    items:
+      - key: rclone.conf
+        path: rclone.conf
+    {{- /* Readable by the sync containers' uid, which is not necessarily the Secret's; the mount is read-only. */}}
+    defaultMode: 0444
+  {{- else }}
+  configMap:
+    name: {{ include "siva-webapp.syncConfigName" . }}
+    items:
+      - key: rclone.conf
+        path: rclone.conf
+  {{- end }}
+- name: tsl-sync-tmp
+  emptyDir:
+    sizeLimit: 64Mi
+{{- end }}
+
+{{/*
+Whether the kubelet runs a sidecar as a restartable init container (Kubernetes 1.29+, where it
+starts before the app container and stops after it); below that the sidecar is a plain container.
+*/}}
+{{- define "siva-webapp.nativeSidecars" -}}
+{{- if semverCompare ">=1.29.0-0" .Capabilities.KubeVersion.Version }}true{{ end }}
 {{- end }}
 
 {{- define "siva-webapp.fetcherName" -}}
@@ -160,10 +283,24 @@ app.kubernetes.io/component: tsl-fetch
 {{- end }}
 
 {{/*
-The fetcher's working cache: its own volume when given, else a directory inside the store.
+The fetcher's working cache: its own volume when given, else a directory inside the store (with
+sync always the store, which carries it to the bucket and back).
 */}}
 {{- define "siva-webapp.fetcherWorkDir" -}}
-{{- if .Values.tsl.fetcher.workVolume -}}/var/siva/tsl-work{{- else -}}{{ .Values.tsl.snapshot.mountPath }}/work{{- end -}}
+{{- if and .Values.tsl.fetcher.workVolume (not (include "siva-webapp.syncEnabled" .)) -}}/var/siva/tsl-work{{- else -}}{{ .Values.tsl.snapshot.mountPath }}/work{{- end -}}
+{{- end }}
+
+{{/*
+The fetcher pods' ServiceAccount: their own by default (an identity that may write the store is
+never the webapp's), a named one, or the webapp's.
+*/}}
+{{- define "siva-webapp.fetcherServiceAccountName" -}}
+{{- $sa := .Values.tsl.fetcher.serviceAccount -}}
+{{- if $sa.create -}}
+{{- default (include "siva-webapp.fetcherName" .) $sa.name }}
+{{- else -}}
+{{- default (include "siva-webapp.serviceAccountName" .) $sa.name }}
+{{- end -}}
 {{- end }}
 
 {{/*
@@ -189,11 +326,18 @@ spec:
   imagePullSecrets:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  serviceAccountName: {{ include "siva-webapp.serviceAccountName" . }}
+  serviceAccountName: {{ include "siva-webapp.fetcherServiceAccountName" . }}
   automountServiceAccountToken: {{ .Values.security.automountServiceAccountToken }}
   {{- with .Values.security.podSecurityContext }}
   securityContext:
     {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- if include "siva-webapp.syncEnabled" . }}
+  {{- /* The uploader waits for the fetcher's JVM to exit; that is the one signal a container has
+         of another's end without the API, and the store is at rest once it is gone. */}}
+  shareProcessNamespace: true
+  initContainers:
+    {{- include "siva-webapp.syncContainer" (dict "root" . "mode" "down" "name" "tsl-sync-down") | nindent 4 }}
   {{- end }}
   containers:
     - name: tsl-fetch
@@ -264,6 +408,9 @@ spec:
         {{- with include "siva-webapp.secretsVolumeMounts" (dict "root" . "secret" .Values.tsl.fetcher.existingSecret) | trim }}
         {{- . | nindent 8 }}
         {{- end }}
+    {{- if include "siva-webapp.syncEnabled" . }}
+    {{- include "siva-webapp.syncContainer" (dict "root" . "mode" "up" "name" "tsl-sync-up") | nindent 4 }}
+    {{- end }}
   volumes:
     - name: config
       configMap:
@@ -277,6 +424,9 @@ spec:
         {{- end }}
     - name: tsl-store
       {{- include "siva-webapp.tslStoreVolumeSource" . | nindent 6 }}
+    {{- if include "siva-webapp.syncEnabled" . }}
+    {{- include "siva-webapp.syncVolumes" . | nindent 4 }}
+    {{- end }}
     {{- with .Values.tsl.fetcher.workVolume }}
     - name: tsl-work
       {{- toYaml . | nindent 6 }}

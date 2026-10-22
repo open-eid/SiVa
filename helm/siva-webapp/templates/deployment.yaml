@@ -48,6 +48,11 @@ spec:
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if and (include "siva-webapp.syncEnabled" .) (include "siva-webapp.nativeSidecars" .) }}
+      initContainers:
+        {{- include "siva-webapp.syncContainer" (dict "root" . "mode" "pod" "name" "tsl-sync") | nindent 8 }}
+          restartPolicy: Always
+      {{- end }}
       containers:
         - name: siva-webapp
           image: "{{ include "siva-webapp.image" . }}"
@@ -185,6 +190,9 @@ spec:
             {{- with .Values.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
+        {{- if and (include "siva-webapp.syncEnabled" .) (not (include "siva-webapp.nativeSidecars" .)) }}
+        {{- include "siva-webapp.syncContainer" (dict "root" . "mode" "pod" "name" "tsl-sync") | nindent 8 }}
+        {{- end }}
         {{- with .Values.extraContainers }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -202,6 +210,9 @@ spec:
         {{- if include "siva-webapp.snapshotMode" . }}
         - name: tsl-store
           {{- include "siva-webapp.tslStoreVolumeSource" . | nindent 10 }}
+        {{- end }}
+        {{- if include "siva-webapp.syncEnabled" . }}
+        {{- include "siva-webapp.syncVolumes" . | nindent 8 }}
         {{- end }}
         {{- with include "siva-webapp.trustVolumes" . | trim }}
         {{- . | nindent 8 }}

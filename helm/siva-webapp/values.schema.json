@@ -5126,6 +5126,91 @@
                 }
               }
             },
+            "sync": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "enabled",
+                "remote",
+                "interval",
+                "keep",
+                "image",
+                "runAsUser",
+                "runAsGroup"
+              ],
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "remote": {
+                  "type": "string"
+                },
+                "config": {
+                  "type": "string"
+                },
+                "existingSecret": {
+                  "type": "string"
+                },
+                "interval": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "keep": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "image": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "repository",
+                    "tag"
+                  ],
+                  "properties": {
+                    "repository": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "tag": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "pullPolicy": {
+                      "type": "string",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent",
+                        "Never"
+                      ]
+                    }
+                  }
+                },
+                "runAsUser": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "runAsGroup": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "env": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                },
+                "resources": {
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "sizeLimit": {
+                  "type": "string",
+                  "pattern": "^([0-9]+(\\.[0-9]+)?(Ei|Pi|Ti|Gi|Mi|Ki|E|P|T|G|M|k|m)?)?$"
+                }
+              }
+            },
             "pollInterval": {
               "type": "string",
               "pattern": "^P([0-9]+D)?(T([0-9]+H)?([0-9]+M)?([0-9]+(\\.[0-9]+)?S)?)?$"
@@ -5231,6 +5316,27 @@
             },
             "existingSecret": {
               "type": "string"
+            },
+            "serviceAccount": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "create"
+              ],
+              "properties": {
+                "create": {
+                  "type": "boolean"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "annotations": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
             }
           }
         }

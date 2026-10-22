@@ -225,6 +225,25 @@ class TSLSnapshotStoreTest {
         assertThat(store.missingFiles("20261013T183000Z", manifest.get()), is(empty()));
     }
 
+    // A rollback runs an older SiVa against a store a newer fetcher wrote: fields this version does not know
+    // are skipped, the ones it knows are read, so the snapshot still loads.
+    @Test
+    void manifest_WrittenByANewerVersionWithFieldsThisOneDoesNotKnow_ReadsTheOnesItKnows() throws IOException {
+        Path snapshot = store.snapshotDirectory("20261013T183000Z");
+        Files.createDirectories(snapshot);
+        Files.writeString(snapshot.resolve("manifest.json"), """
+                {"id":"20261013T183000Z","createdAt":"2026-10-13T18:30:00Z","status":"UP","mandatoryTerritories":["EE"],
+                 "tsl":{},"files":0,"fileNames":[],"period":"PT6H","downloadedAt":{},
+                 "layout":2,"checksums":{"manifest.json":"sha256:00"}}
+                """);
+
+        Optional<TSLSnapshotManifest> manifest = store.manifest("20261013T183000Z");
+
+        assertThat(manifest.map(TSLSnapshotManifest::createdAt), is(Optional.of(CREATED)));
+        assertThat(manifest.get().period(), is(Duration.ofHours(6)));
+        assertThat(store.missingFiles("20261013T183000Z", manifest.get()), is(empty()));
+    }
+
     @Test
     void missingFiles_NamesTheListedFilesTheDirectoryLacks() throws IOException {
         TSLSnapshotManifest manifest = manifest("20261013T183000Z");

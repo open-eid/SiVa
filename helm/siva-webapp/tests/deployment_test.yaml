@@ -1015,3 +1015,44 @@ tests:
       - failedTemplate:
           errorPattern: (?i)image.*digest.*does not match pattern
 
+  - it: refuses a snapshot poll interval with no component (PT), which the JVM would refuse at startup
+    template: deployment.yaml
+    set:
+      tsl:
+        snapshot:
+          pollInterval: PT
+    asserts:
+      - failedTemplate:
+          errorPattern: (?i)pollInterval.*does not match pattern
+
+  - it: refuses a snapshot max age with a dangling T (P1DT)
+    template: deployment.yaml
+    set:
+      tsl:
+        snapshot:
+          maxAge: P1DT
+    asserts:
+      - failedTemplate:
+          errorPattern: (?i)maxAge.*does not match pattern
+
+  - it: renders a poll interval with fractional seconds and a day-and-time max age
+    template: deployment.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+          pollInterval: PT1M30.5S
+          maxAge: P1DT12H
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_SNAPSHOTPOLLINTERVAL
+            value: PT1M30.5S
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_SNAPSHOTMAXAGE
+            value: P1DT12H

@@ -406,3 +406,31 @@ tests:
       - notExists:
           path: spec.jobTemplate.spec.template.spec.containers[0].volumeMounts[?(@.name == "webapp-only")]
 
+  - it: refuses a fetch period with no component (P)
+    template: cronjob-tsl-fetch.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+        fetcher:
+          period: P
+    asserts:
+      - failedTemplate:
+          errorPattern: (?i)period.*does not match pattern
+
+  - it: renders a fetch period given in days
+    template: cronjob-tsl-fetch.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+        fetcher:
+          period: P1D
+    asserts:
+      - equal:
+          path: spec.schedule
+          value: 0 3 * * *

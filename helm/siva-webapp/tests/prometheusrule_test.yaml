@@ -212,3 +212,39 @@ tests:
           value: SiVa pod {{ $labels.pod }} runs on a snapshot older than two fetch periods plus 6 h
       - notExists:
           path: spec.groups[0].rules[?(@.expr =~ /604800/)]
+
+  - it: refuses a grace with no component (P)
+    set:
+      monitoring:
+        prometheusRule:
+          enabled: true
+          tsl:
+            grace: P
+    asserts:
+      - failedTemplate:
+          errorPattern: (?i)grace.*does not match pattern
+
+  - it: refuses a lead time with no component (PT)
+    set:
+      monitoring:
+        prometheusRule:
+          enabled: true
+          tsl:
+            leadTime: PT
+    asserts:
+      - failedTemplate:
+          errorPattern: (?i)leadTime.*does not match pattern
+
+  - it: renders a grace in minutes and a lead time in days
+    set:
+      monitoring:
+        prometheusRule:
+          enabled: true
+          tsl:
+            grace: PT90M
+            leadTime: P7D
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: PrometheusRule

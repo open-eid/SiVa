@@ -554,7 +554,8 @@ key (`The elements [siva.tsl.loader.trusted-territoriez[0]] were left unbound`),
 pass silently as a default; `siva.bdoc.*` is the exception. Spring's relaxed binding still
 accepts the kebab-case (`trusted-territories`), camelCase (`trustedTerritories`) and
 environment-variable (`SIVA_TSL_LOADER_TRUSTEDTERRITORIES`) spellings of every key, and the
-build ships the keys as Spring configuration metadata, so IDEs complete them.
+build ships the keys as Spring configuration metadata, so IDEs complete them. Before upgrading,
+remove or correct any `siva.*` key that this guide does not list; the start-up message names each one.
 
 ## Siva webapp parameters
 

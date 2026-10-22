@@ -47,6 +47,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -110,6 +114,46 @@ class TimemarkTrustedListsCertificateSourceTest {
 
         assertTrue(trustedThroughout);
         assertFalse(view.isTrusted(anchor));
+    }
+
+    // digidoc4j validates each signature on its executor's threads; the pin must reach them.
+    @Test
+    void pinning_ATaskSubmittedDuringAValidationReadsTheSourcePinnedByIt() throws Exception {
+        ExecutorService pool = Executors.newSingleThreadExecutor();
+        ExecutorService pinning = view.pinning(pool);
+        try {
+            TrustedListsCertificateSource first = new TrustedListsCertificateSource();
+            first.setTrustPropertiesByCertificates(Map.of(anchor, List.of()));
+            holder.publish(first);
+
+            boolean trustedOnTheWorker = view.withPinnedSource(() -> {
+                holder.publish(new TrustedListsCertificateSource());
+                try {
+                    return pinning.submit(() -> view.isTrusted(anchor)).get();
+                } catch (InterruptedException | ExecutionException e) {
+                    throw new IllegalStateException(e);
+                }
+            });
+
+            assertTrue(trustedOnTheWorker);
+            // Outside a validation the worker reads what is published, and keeps nothing from the task before.
+            assertFalse(pinning.submit(() -> view.isTrusted(anchor)).get());
+        } finally {
+            pinning.shutdownNow();
+        }
+    }
+
+    @Test
+    void pinning_ForwardsTheLifecycleToTheDelegate() throws Exception {
+        ExecutorService pool = Executors.newSingleThreadExecutor();
+        ExecutorService pinning = view.pinning(pool);
+
+        assertFalse(pinning.isShutdown());
+        pinning.shutdown();
+
+        assertTrue(pool.isShutdown());
+        assertTrue(pinning.awaitTermination(5, TimeUnit.SECONDS));
+        assertTrue(pinning.isTerminated());
     }
 
     @Test

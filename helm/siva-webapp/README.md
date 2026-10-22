@@ -21,7 +21,22 @@ rclone containers mirror, never a CSI or FUSE mount (`tsl.snapshot.sync`).
 
 - **Build your own image.** SiVa publishes source only. `./mvnw spring-boot:build-image` in the
   SiVa checkout produces a Paketo image of `siva-webapp`; push it to a registry your cluster can
-  pull from and set `image.repository` / `image.tag`.
+  pull from and set `image.repository` to its full name there (`registry.example.invalid/siva-webapp`)
+  and `image.tag`. The default `siva-webapp` names no registry: it keeps the chart rendering
+  without one, and the install notes warn while it stands. `image.digest` pins the image by
+  content (`repository:tag@sha256:...`); the rclone image of `tsl.snapshot.sync` and the
+  `helm test` pod's busybox take a `digest` the same way.
+- **In front of the pods.** `runtime.forwardHeadersStrategy` is `framework` by default: SiVa
+  takes the client address and scheme (for its logs and the validation report) from the
+  `X-Forwarded-*` headers of whatever connects to the pod. That is right behind an ingress
+  controller or edge proxy that sets them, provided only that proxy reaches the traffic port:
+  list its namespace or pods in `network.networkPolicy.ingressFrom` (with
+  `network.networkPolicy.enabled`). Reachable from elsewhere (a NodePort, a LoadBalancer, an
+  open policy), every client chooses what it is logged as; the install notes say so while the
+  policy is open. When the proxy addresses are known, `native` is the alternative: Tomcat's
+  RemoteIpValve honours the headers only from `server.tomcat.remoteip.internal-proxies` (a
+  regular expression over the proxy addresses, set through `config.spring`; Spring Boot's
+  default covers the private ranges). `none` when nothing in front sets them.
 - **Egress.** In the default `tsl.mode: online` each pod downloads the EU LOTL and the
   member-state trust lists at startup and on a nightly cron; in snapshot mode only the fetcher
   does (see "Trust lists"). Allow HTTPS egress to those hosts from whichever pods download, and
@@ -76,7 +91,10 @@ and `spring`), so a mistyped key fails `helm lint`, `template`, `install` and `u
 the key; a prefix nothing declares (`dss.*`) passes. The fragment is generated from the SiVa
 build and committed, so an upgrade of SiVa regenerates it. Secrets never go into `config.spring`:
 a ConfigMap is not a Secret; `secrets.existingSecret` sets the same properties from the files of
-a mounted Secret (see "Secrets"). The chart's own settings
+a mounted Secret (see "Secrets"), and the chart refuses to render a key here whose name ends in
+`password`, `passwd`, `secret`, `token`, `api-key` or `private-key` (in either spelling:
+`siva.signature-service.pkcs12.password`, `server.ssl.keyStorePassword`), naming the file to
+put in that Secret instead; `logging.level.*` names packages and is exempt. The chart's own settings
 (`runtime.*`, `tsl.*`, `trust.*`) are injected as environment variables, which win over the file,
 so an override here cannot drop them.
 
@@ -105,7 +123,10 @@ config:
 
 `extraVolumes`, `extraVolumeMounts` and `extraContainers` pass pod spec through for what the
 chart does not model (a sidecar, a mounted Secret the container reads itself), on the webapp
-Deployment only. The pods run under the Pod Security "restricted" profile, so an extra container
+Deployment only; the fetcher pods take `tsl.fetcher.extraVolumes` and
+`tsl.fetcher.extraVolumeMounts` of their own (a proxy's CA, a cloud credential file) and no
+extra containers, since a Job completes only when every container has exited. The pods run
+under the Pod Security "restricted" profile, so an extra container
 needs its own `securityContext` (no privilege escalation, all capabilities dropped, read-only
 root filesystem); with `network.networkPolicy.egress` on it also needs its own
 `additionalRules`.
@@ -153,7 +174,9 @@ config:
           path: /etc/siva/secrets/siva-signing.p12
 ```
 
-A file that is not a property (the keystore) is a property nobody reads. A value in the Secret
+A file that is not a property (the keystore) is a property nobody reads. The same key written
+into `config.spring` would land in a ConfigMap, so the chart refuses to render one named like a
+secret (see "Configuration"). A value in the Secret
 wins over the same key in `config.spring`; the chart's own environment variables (`runtime.*`,
 `tsl.*`, `trust.*`) win over both. Whatever writes the Secret is outside the chart; with the
 External Secrets Operator an `ExternalSecret` produces exactly this layout:
@@ -383,16 +406,17 @@ directory); edit the comments, not this table.
 | affinity | object | `{}` | Affinity rules, as given. |
 | config.files | object | `{}` | Further files rendered into the same ConfigMap and mounted read-only beside application.yml at mountPath, by file name (no directories; `application.yml` is reserved). Point SiVa at them through config.spring: a Logback configuration as `logging.config: /etc/siva-webapp/logback.xml`, a digidoc4j override as `siva.bdoc.digidoc4j-configuration-file: file:/etc/siva-webapp/siva-digidoc4j.yaml` (the whole file, replacing the bundled one). Like config.spring, a change rolls the pods (checksum annotation). Public configuration only, this is a ConfigMap. |
 | config.mountPath | string | `"/etc/siva-webapp"` | Where the Spring Boot configuration override is mounted; the container gets SPRING_CONFIG_ADDITIONAL_LOCATION=file:<mountPath>/application.yml. |
-| config.spring | object | `{}` | Spring Boot configuration override in application.yml syntax, as a map: rendered with toYaml into the ConfigMap `application.yml` (the mechanism of the project's docker-compose.yaml). Properties here win over the application.yml on the classpath; the `siva.*` keys are listed in the SiVa deployment guide (docs/siva3/deployment_guide.md), in their canonical kebab-case. A map, so `--set config.spring.siva.http.request.max-request-size-limit=27MB` works and two overlays merge key by key; write keys nested, never dotted on one line, and quote strings that look like numbers or booleans ("08", "yes"). The values schema checks the keys SiVa and Spring Boot declare (see the chart README, "Spring configuration"); unknown prefixes pass. Secrets never go here, a ConfigMap is not a Secret: `secrets.existingSecret` sets the same properties from the files of a mounted Secret. Keep the chart's runtime.* and tsl.* settings out of it, they are injected as environment variables so that an override here cannot drop them. Examples of what belongs in a private overlay: `siva: {tsl: {loader: {trusted-territories: [EE, LV, LT]}}}`. |
+| config.spring | object | `{}` | Spring Boot configuration override in application.yml syntax, as a map: rendered with toYaml into the ConfigMap `application.yml` (the mechanism of the project's docker-compose.yaml). Properties here win over the application.yml on the classpath; the `siva.*` keys are listed in the SiVa deployment guide (docs/siva3/deployment_guide.md), in their canonical kebab-case. A map, so `--set config.spring.siva.http.request.max-request-size-limit=27MB` works and two overlays merge key by key; write keys nested, never dotted on one line, and quote strings that look like numbers or booleans ("08", "yes"). The values schema checks the keys SiVa and Spring Boot declare (see the chart README, "Spring configuration"); unknown prefixes pass. Secrets never go here, a ConfigMap is not a Secret: `secrets.existingSecret` sets the same properties from the files of a mounted Secret, and the chart refuses to render a key here whose name ends in password, passwd, secret, token, api-key or private-key (`siva.signature-service.pkcs12.password`, `server.ssl.key-store-password`; `logging.level.*` names packages and is exempt). Keep the chart's runtime.* and tsl.* settings out of it, they are injected as environment variables so that an override here cannot drop them. Examples of what belongs in a private overlay: `siva: {tsl: {loader: {trusted-territories: [EE, LV, LT]}}}`. |
 | env | list | `[]` | Extra environment variables for the container (plain Kubernetes EnvVar entries). Spring relaxed binding applies, e.g. `{name: SIVA_TSL_LOADER_TRUSTEDTERRITORIES, value: "EE,LV"}` (values are strings: use `--set-string` on the command line). Do not set JAVA_TOOL_OPTIONS or the runtime.* variables here: a later duplicate wins and silently replaces the chart's value; use runtime.* instead. |
 | evictable | bool | `true` | Mark the webapp pods as safe to evict: the descheduler and the cluster autoscaler both skip pods with local storage by default, and /tmp is an emptyDir, so without the annotations `cluster-autoscaler.kubernetes.io/safe-to-evict` and `descheduler.alpha.kubernetes.io/evict` neither would ever move a SiVa pod. Nothing in a pod is worth keeping (the trust-list cache is re-downloaded or re-read from the store); the PodDisruptionBudget still bounds how many pods go at once and graceful shutdown drains the one that goes. The fetcher pods are not marked: a Job interrupted mid-run just retries. |
 | extraContainers | list | `[]` | Extra containers of the webapp pods (Container entries), rendered after siva-webapp. |
 | extraVolumeMounts | list | `[]` | Extra mounts of the siva-webapp container (VolumeMount entries), of volumes from extraVolumes or the chart's own (`config`, `tmp`, `tsl-store`, `trust`, `secrets`). |
 | extraVolumes | list | `[]` | Extra volumes of the webapp pods (Volume entries). |
 | fullnameOverride | string | `""` | Override the full resource name (release name + chart name). |
+| image.digest | string | `""` | Image digest (`sha256:<64 hex>`) to pin the image by content: set, the reference is `repository:tag@digest` (the tag is then a label, the digest is what is pulled), empty, it is `repository:tag`. `crane digest <image>` or your registry prints it. |
 | image.pullPolicy | string | `"IfNotPresent"` | Pull policy. |
 | image.pullSecrets | list | `[]` | imagePullSecrets, e.g. `[{name: my-registry-credentials}]`. |
-| image.repository | string | `"siva-webapp"` | Image to run. SiVa publishes no image: build one with `./mvnw spring-boot:build-image` (Paketo buildpacks), push it to a registry your cluster can pull from and set this to it. |
+| image.repository | string | `"siva-webapp"` | Image to run, as the full name in your registry (`registry.example.invalid/siva-webapp`). SiVa publishes no image: build one with `./mvnw spring-boot:build-image` (Paketo buildpacks), push it to a registry your cluster can pull from and set this to it. The bare default names no registry and pulls from nowhere (NOTES warns); it is kept so the chart lints and renders without one. |
 | image.tag | string | `""` | Image tag; empty means the chart's appVersion (the SiVa release this chart was written for). Numeric-looking tags need `--set-string`. |
 | monitoring.grafanaDashboard.annotations | object | `{}` | Annotations, e.g. `{grafana_folder: SiVa}`. |
 | monitoring.grafanaDashboard.enabled | bool | `false` | Dashboard ConfigMap for the Grafana sidecar (kube-prometheus-stack picks up the label). Generic by design: one dashboard, namespace and pod variables select the release. The latency panel shows mean and max; for percentiles set `management.metrics.distribution.percentiles-histogram.http.server.requests: true` in config.applicationYaml (adds histogram buckets per uri) and use http_server_requests_seconds_bucket. |
@@ -446,7 +470,7 @@ directory); edit the comments, not this table.
 | probes.startup.timeoutSeconds | int | `5` | Seconds before a probe counts as failed. |
 | replicaCount | int | `1` | Number of webapp replicas (ignored when scaling.hpa is on). In `tsl.mode: online` each replica downloads the trust lists itself at startup (minutes); in snapshot mode it reads the published snapshot (seconds). |
 | resources | object | requests 500m / 1Gi, limit 2Gi memory | Container resources. Paketo's memory calculator sizes the JVM heap from the memory LIMIT (it reads the cgroup), so the limit is the knob, not the request. The default handles a 20 MB document with headroom; no CPU limit on purpose (JVM startup and TSL parsing are bursty). |
-| runtime.forwardHeadersStrategy | string | `"framework"` | server.forward-headers-strategy: `framework` trusts X-Forwarded-* from the Ingress/edge so the app sees the client address and scheme; `none` when nothing in front sets them. |
+| runtime.forwardHeadersStrategy | string | `"framework"` | server.forward-headers-strategy. `framework` takes the client address and scheme from the X-Forwarded-* headers of whatever reaches the pod, so it belongs behind an ingress controller or edge proxy that sets them and a NetworkPolicy that admits only that proxy to the traffic port (`network.networkPolicy.ingressFrom`); with the pod reachable from elsewhere (a NodePort, a LoadBalancer, an open policy) any client chooses what the logs and the report show as its address. NOTES says so at install. `native` is Tomcat's RemoteIpValve, which honours the headers only from `server.tomcat.remoteip.internal-proxies` (a regular expression over the proxy addresses, set through config.spring; the default is the private ranges), for when the proxy addresses are known. `none` when nothing in front sets them. |
 | runtime.httpKeepAlive | bool | `false` | HTTP/1.1 keep-alive on the traffic port, which is the balancer-to-pod hop (clients' HTTP/2 ends at the edge). Off sets server.tomcat.max-keep-alive-requests=1: every response says `Connection: close`, so nothing holds an idle connection to a pod. On, SIGTERM pauses Tomcat while idle keep-alive connections are still open and a request already on its way over one meets a closed socket instead of an answer: one lost request per idle pooled connection per pod stop behind an L4 balancer or a Service path (the preStop sleep covers new connections only); behind an endpoint-watching L7 balancer the idle entries are just never reused. Cost of off, measured: +0.4 ms connect per request, four more packets each way, CPU within +0.6 to +1.8 % of a 121 ms validation, memory unchanged (README "Known limits"). |
 | runtime.javaToolOptions | string | `"-XX:+ExitOnOutOfMemoryError"` | JAVA_TOOL_OPTIONS for the JVM; Paketo's memory calculator appends its own flags. ExitOnOutOfMemoryError makes a JVM that ran out of heap exit so Kubernetes restarts it instead of letting it limp along (Paketo's Liberica buildpack sets it too; the duplicate is harmless and the chart value also covers images built another way). |
 | runtime.managementPort | int | `8081` | Actuator (health with details, Prometheus, heartbeat, version) on its own port. The traffic Service and the Ingresses never carry it; a ClusterIP Service `<release>-management` exposes it in-cluster for scraping and `helm test`. The traffic port keeps the status-only probe paths /readyz and /livez for the kubelet and external load balancers. Set it equal to service.containerPort to keep the whole actuator on the traffic port (the layout SiVa's docker-compose and system tests expect; the probes then use /monitoring/health/*). |
@@ -477,7 +501,9 @@ directory); edit the comments, not this table.
 | serviceAccount.name | string | `""` | Name of the ServiceAccount to create or use (empty: the release's full name, or `default` when not created). |
 | terminationGracePeriodSeconds | int | `60` | Grace period on pod deletion. Must exceed runtime.preStopSleepSeconds + runtime.shutdownTimeout, or Kubernetes SIGKILLs the JVM while it is still draining. |
 | tests.enabled | bool | `true` | Render the `helm test` pod, which GETs /monitoring/health through the management (or traffic) Service. |
-| tests.image | string | `"busybox:1.37.0"` | Image for the test pod (needs wget). |
+| tests.image.digest | string | `""` | Image digest (`sha256:<64 hex>`) to pin it by content, as `image.digest`; empty pulls by tag. |
+| tests.image.repository | string | `"busybox"` | Image of the test pod (needs wget). |
+| tests.image.tag | string | `"1.37.0"` | Image tag. |
 | tests.runAsUser | int | `65534` | uid/gid of the test pod: busybox carries no numeric USER, so runAsNonRoot needs one (65534 = nobody). The pod's restricted context is fixed in its template; this is its only knob. |
 | tmpSizeLimit | string | `"1Gi"` | Size limit of the /tmp emptyDir (trust-list caches, a few tens of MB, and temp files); the pod is evicted when it fills up, so keep headroom. Empty for no limit. |
 | tolerations | list | `[]` | Tolerations. |
@@ -494,6 +520,8 @@ directory); edit the comments, not this table.
 | tsl.fetcher.bootstrapJob | bool | `true` | Also run one fetch as a Job at install and whenever the fetcher pod changes (image, config), so a fresh install has a snapshot without waiting for the schedule. Named after a hash of the pod spec; the finished Job stays until the next change replaces it. |
 | tsl.fetcher.env | list | `[]` | Extra environment variables for the fetcher only; it already gets `env`, the ConfigMap and `runtime.javaToolOptions` (same profile and settings as the webapp, which is what makes its snapshot the one the webapp expects). |
 | tsl.fetcher.existingSecret | string | `""` | Secret mounted as a Spring config tree for the fetcher, like `secrets.existingSecret` for the webapp (same mountPath). The fetcher does not get the webapp's Secret: it parses thirty documents from the internet and should hold nothing but what that needs (truststore passwords, if you changed them), not the report-signing key's. Empty: no Secret. |
+| tsl.fetcher.extraVolumeMounts | list | `[]` | Extra mounts of the tsl-fetch container (VolumeMount entries), of volumes from `tsl.fetcher.extraVolumes` or the chart's own (`config`, `tmp`, `tsl-store`, `tsl-work`, `trust`, `secrets`). |
+| tsl.fetcher.extraVolumes | list | `[]` | Extra volumes of the fetcher pods (Volume entries), like `extraVolumes` for the webapp; the webapp's do not flow here, the fetcher mounts only what a fetch needs (a proxy's CA, a cloud credential file). |
 | tsl.fetcher.failedJobsHistoryLimit | int | `3` | Failed fetch Jobs kept. |
 | tsl.fetcher.keepSnapshots | int | `3` | Snapshots kept besides the current one (siva.tsl.fetcher.keepSnapshots); a pod in the middle of loading an older one is not pulled away. |
 | tsl.fetcher.period | string | `"PT6H"` | How often the trusted lists are fetched (ISO-8601 duration, at most P7D). The schedule and `tsl.snapshot.maxAge` derive from it, and the fetcher writes it into every snapshot (siva.tsl.fetcher.period), from where the pods publish it as siva_tsl_refresh_period_seconds and the trust-list alerts size themselves (table in the deployment guide, "Choosing the fetch period"). Lists can run out within three months of issue, so a longer period is refused at render time. |
@@ -520,6 +548,7 @@ directory); edit the comments, not this table.
 | tsl.snapshot.sync.enabled | bool | `false` | Bridge the store through object storage. The claim and volume settings above are then unused (the chart refuses a created claim), and so is `tsl.fetcher.workVolume`: the working cache travels with the store. |
 | tsl.snapshot.sync.env | list | `[]` | Extra environment of the sync containers: rclone flags as `RCLONE_*` variables (for example `RCLONE_S3_NO_CHECK_BUCKET=true` for a bucket the keys may not create), the cloud's identity variables, a proxy. |
 | tsl.snapshot.sync.existingSecret | string | `""` | An existing Secret with the configuration in its key `rclone.conf` (static keys). Mounted read-only in the sync containers only. |
+| tsl.snapshot.sync.image.digest | string | `""` | Image digest (`sha256:<64 hex>`) to pin it by content, as `image.digest`; empty pulls by tag. |
 | tsl.snapshot.sync.image.pullPolicy | string | `"IfNotPresent"` | Pull policy. |
 | tsl.snapshot.sync.image.repository | string | `"rclone/rclone"` | rclone's image, or another with rclone and busybox (sh, pgrep, sed). The deployer updates it on their own schedule, independently of SiVa releases. |
 | tsl.snapshot.sync.image.tag | string | `"1.75.2"` | Image tag. |

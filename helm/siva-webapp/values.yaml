@@ -110,8 +110,15 @@ runtime:
   # of off, measured: +0.4 ms connect per request, four more packets each way, CPU
   # within +0.6 to +1.8 % of a 121 ms validation, memory unchanged (README "Known limits").
   httpKeepAlive: false
-  # -- server.forward-headers-strategy: `framework` trusts X-Forwarded-* from the Ingress/edge
-  # so the app sees the client address and scheme; `none` when nothing in front sets them.
+  # -- server.forward-headers-strategy. `framework` takes the client address and scheme from the
+  # X-Forwarded-* headers of whatever reaches the pod, so it belongs behind an ingress controller
+  # or edge proxy that sets them and a NetworkPolicy that admits only that proxy to the traffic
+  # port (`network.networkPolicy.ingressFrom`); with the pod reachable from elsewhere (a NodePort,
+  # a LoadBalancer, an open policy) any client chooses what the logs and the report show as its
+  # address. NOTES says so at install. `native` is Tomcat's RemoteIpValve, which honours the
+  # headers only from `server.tomcat.remoteip.internal-proxies` (a regular expression over the
+  # proxy addresses, set through config.spring; the default is the private ranges), for when
+  # the proxy addresses are known. `none` when nothing in front sets them.
   forwardHeadersStrategy: framework
   # -- JAVA_TOOL_OPTIONS for the JVM; Paketo's memory calculator appends its own flags.
   # ExitOnOutOfMemoryError makes a JVM that ran out of heap exit so Kubernetes restarts it

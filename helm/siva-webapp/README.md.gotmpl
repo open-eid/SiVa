@@ -26,6 +26,17 @@ rclone containers mirror, never a CSI or FUSE mount (`tsl.snapshot.sync`).
   without one, and the install notes warn while it stands. `image.digest` pins the image by
   content (`repository:tag@sha256:...`); the rclone image of `tsl.snapshot.sync` and the
   `helm test` pod's busybox take a `digest` the same way.
+- **In front of the pods.** `runtime.forwardHeadersStrategy` is `framework` by default: SiVa
+  takes the client address and scheme (for its logs and the validation report) from the
+  `X-Forwarded-*` headers of whatever connects to the pod. That is right behind an ingress
+  controller or edge proxy that sets them, provided only that proxy reaches the traffic port:
+  list its namespace or pods in `network.networkPolicy.ingressFrom` (with
+  `network.networkPolicy.enabled`). Reachable from elsewhere (a NodePort, a LoadBalancer, an
+  open policy), every client chooses what it is logged as; the install notes say so while the
+  policy is open. When the proxy addresses are known, `native` is the alternative: Tomcat's
+  RemoteIpValve honours the headers only from `server.tomcat.remoteip.internal-proxies` (a
+  regular expression over the proxy addresses, set through `config.spring`; Spring Boot's
+  default covers the private ranges). `none` when nothing in front sets them.
 - **Egress.** In the default `tsl.mode: online` each pod downloads the EU LOTL and the
   member-state trust lists at startup and on a nightly cron; in snapshot mode only the fetcher
   does (see "Trust lists"). Allow HTTPS egress to those hosts from whichever pods download, and

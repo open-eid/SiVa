@@ -6,6 +6,13 @@ Image: {{ include "siva-webapp.image" . }}
   image.repository to its full name in your registry (and image.tag), or the pod will stay in
   ImagePullBackOff.
 {{- end }}
+{{- if and (eq .Values.runtime.forwardHeadersStrategy "framework") (not (and .Values.network.networkPolicy.enabled .Values.network.networkPolicy.ingressFrom)) }}
+
+NOTE: runtime.forwardHeadersStrategy is "framework" and no NetworkPolicy limits who reaches the
+traffic port (network.networkPolicy.enabled with ingressFrom set): the client address and scheme
+SiVa logs and reports are whatever X-Forwarded-* headers the connecting client sends. Admit only
+your ingress controller through network.networkPolicy.ingressFrom, or switch to "native" and name
+the proxies in server.tomcat.remoteip.internal-proxies (config.spring).
 {{- end }}
 
 {{- if include "siva-webapp.snapshotMode" . }}

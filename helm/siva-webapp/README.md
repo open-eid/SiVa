@@ -25,7 +25,9 @@ rclone containers mirror, never a CSI or FUSE mount (`tsl.snapshot.sync`).
 - **Egress.** In the default `tsl.mode: online` each pod downloads the EU LOTL and the
   member-state trust lists at startup and on a nightly cron; in snapshot mode only the fetcher
   does (see "Trust lists"). Allow HTTPS egress to those hosts from whichever pods download, and
-  from every pod to the OCSP/TSA responders of the certificates you validate.
+  from every webapp pod to the AIA and OCSP URLs of the certificates you validate and the policy
+  URLs signatures name: the public internet, in practice (what the webapp connects to, and when,
+  is under "Trust lists").
 - **Trust material.** By default the pods use the truststores shipped on the application
   classpath (the CAs of the trust-list hosts, the LOTL signers), and rotating them means a new
   image. `trust.*` mounts the same material as PEM files instead and rotates them in place; see
@@ -315,10 +317,20 @@ running rather than serve it. The fetcher pods get their own
 ServiceAccount (`tsl.fetcher.serviceAccount`), so an identity that may write the store (a
 cloud role for the bucket) is never the webapp's, and their own
 Secret (`tsl.fetcher.existingSecret`, mounted as under "Secrets"), never the webapp's: they parse
-thirty documents from the internet and should hold nothing else. With `network.networkPolicy.egress` on, the webapp pods
-reach only DNS and the public internet on 80 and 443 (OCSP and timestamp responders) and the
-fetcher pods the same with no ingress at all. The store holds nothing worth backing up: a lost
-store is rebuilt by the next fetch, so leave the claim out of your backup scope.
+thirty documents from the internet and should hold nothing else. The store holds nothing worth
+backing up: a lost store is rebuilt by the next fetch, so leave the claim out of your backup
+scope.
+
+What a webapp pod fetches while validating comes with the document: missing issuer
+certificates from the AIA URLs the certificates carry, the signature policy from the URL a
+signature names, and OCSP responses for chains that reach a trusted-list anchor, the latter only
+when the T-level country filter is configured. CRLs are never fetched, and validation makes no
+timestamp request (report signing, off by default, is the only TSA or OCSP client, at
+operator-chosen URLs). With `network.networkPolicy.egress` on, the webapp pods reach DNS (the
+`kube-system` namespace by default, `egress.dnsTo`) and the public internet on 80 and 443,
+never the private ranges, the carrier-grade NAT range or the cloud metadata address, and the
+fetcher pods the same with no ingress at all; tighten `to` to your responders' addresses if
+your CNI cannot resolve names, or route through an egress proxy with `additionalRules`.
 
 ## Trust material
 
@@ -403,10 +415,11 @@ directory); edit the comments, not this table.
 | nameOverride | string | `""` | Override the chart name used in resource names. |
 | network.ingresses | list | `[]` | Ingress objects to create, one per entry, named `<release-fullname>-<name>`. Keys: name, className, annotations, hosts (host + paths with path and optional pathType), tls. Set your controller's body-size limit to at least 27 MB (e.g. `nginx.ingress.kubernetes.io/proxy-body-size: 28m`). Example in ci/all-on-values.yaml. |
 | network.networkPolicy.egress.additionalRules | list | `[]` | Extra NetworkPolicyEgressRule entries appended as given (for example a private OCSP responder or an egress proxy). |
-| network.networkPolicy.egress.dns | bool | `true` | Allow DNS (UDP and TCP 53) to any destination. |
-| network.networkPolicy.egress.enabled | bool | `false` | Also restrict egress. The webapp then reaches only DNS and `to` on `ports` (OCSP and timestamp responders, and in online mode the trust-list hosts: public HTTPS and, for some OCSP responders, HTTP); the fetcher pods get the same rules in their own policy (`<release>-tsl-fetch`, no ingress at all). The default `to` is the whole internet minus the private ranges and the cloud metadata address, so a compromised pod cannot reach cluster services or the node; tighten it to your responders' addresses if your CNI cannot resolve names. |
+| network.networkPolicy.egress.dns | bool | `true` | Allow DNS (UDP and TCP 53) to `dnsTo`. |
+| network.networkPolicy.egress.dnsTo | list | the `kube-system` namespace (namespaceSelector on kubernetes.io/metadata.name) | NetworkPolicyPeer entries DNS may go to; empty for any destination. |
+| network.networkPolicy.egress.enabled | bool | `false` | Also restrict egress. The webapp then reaches only DNS and `to` on `ports`; the fetcher pods get the same rules in their own policy (`<release>-tsl-fetch`, no ingress at all). What the webapp fetches while validating: issuer certificates from the AIA URLs of the certificates in the document, the signature policy from the URL a signature names, and OCSP responses for chains that reach a trusted-list anchor when the T-level country filter is configured; no CRLs, no timestamp requests (README, "Trust lists"). Those URLs come with the documents, so the default `to` is the public internet minus the private ranges, the carrier-grade NAT range and the cloud metadata address: nothing a document names reaches cluster services or the node. Tighten it to your responders' addresses if your CNI cannot resolve names, or route through an egress proxy with `additionalRules`. |
 | network.networkPolicy.egress.ports | list | `[80,443]` | Ports the pods may reach on `to`. |
-| network.networkPolicy.egress.to | list | 0.0.0.0/0 except 10/8, 172.16/12, 192.168/16, 169.254.169.254/32 | NetworkPolicyPeer entries the pods may reach on `ports`. |
+| network.networkPolicy.egress.to | list | 0.0.0.0/0 except 10/8, 172.16/12, 192.168/16, 100.64/10, 169.254.169.254/32 | NetworkPolicyPeer entries the pods may reach on `ports`. |
 | network.networkPolicy.enabled | bool | `false` | NetworkPolicy for the webapp pods: ingress to the two ports from the peers below and, with egress.enabled, egress limited to DNS and the public internet. Needs a CNI that enforces policies. |
 | network.networkPolicy.ingressFrom | list | `[]` | NetworkPolicyPeer entries allowed to the traffic port (namespaceSelector, podSelector, ipBlock). Empty: any source, in or outside the cluster (NodePort/LoadBalancer traffic included); list your Ingress controller's namespace to narrow it. |
 | network.networkPolicy.managementFrom | list | `[]` | Peers allowed to the management port when the actuator is split: Prometheus, and the `helm test` pod if you still want it to pass (the kubelet probes use the traffic port). Empty: any source. Without the split the actuator sits on the traffic port and ingressFrom governs it; this list is then unused. |

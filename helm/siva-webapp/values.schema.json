@@ -5636,6 +5636,12 @@
                 "dns": {
                   "type": "boolean"
                 },
+                "dnsTo": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                },
                 "ports": {
                   "type": "array",
                   "items": {

@@ -487,20 +487,30 @@ network:
     # ingressFrom governs it; this list is then unused.
     managementFrom: []
     egress:
-      # -- Also restrict egress. The webapp then reaches only DNS and `to` on `ports` (OCSP and
-      # timestamp responders, and in online mode the trust-list hosts: public HTTPS and, for
-      # some OCSP responders, HTTP); the fetcher pods get the same rules in their own policy
-      # (`<release>-tsl-fetch`, no ingress at all). The default `to` is the whole internet minus
-      # the private ranges and the cloud metadata address, so a compromised pod cannot reach
-      # cluster services or the node; tighten it to your responders' addresses if your CNI
-      # cannot resolve names.
+      # -- Also restrict egress. The webapp then reaches only DNS and `to` on `ports`; the
+      # fetcher pods get the same rules in their own policy (`<release>-tsl-fetch`, no ingress
+      # at all). What the webapp fetches while validating: issuer certificates from the AIA
+      # URLs of the certificates in the document, the signature policy from the URL a signature
+      # names, and OCSP responses for chains that reach a trusted-list anchor when the T-level
+      # country filter is configured; no CRLs, no timestamp requests (README, "Trust lists").
+      # Those URLs come with the documents, so the default `to` is the public internet minus the
+      # private ranges, the carrier-grade NAT range and the cloud metadata address: nothing a
+      # document names reaches cluster services or the node. Tighten it to your responders'
+      # addresses if your CNI cannot resolve names, or route through an egress proxy with
+      # `additionalRules`.
       enabled: false
-      # -- Allow DNS (UDP and TCP 53) to any destination.
+      # -- Allow DNS (UDP and TCP 53) to `dnsTo`.
       dns: true
+      # -- NetworkPolicyPeer entries DNS may go to; empty for any destination.
+      # @default -- the `kube-system` namespace (namespaceSelector on kubernetes.io/metadata.name)
+      dnsTo:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
       # -- Ports the pods may reach on `to`.
       ports: [80, 443]
       # -- NetworkPolicyPeer entries the pods may reach on `ports`.
-      # @default -- 0.0.0.0/0 except 10/8, 172.16/12, 192.168/16, 169.254.169.254/32
+      # @default -- 0.0.0.0/0 except 10/8, 172.16/12, 192.168/16, 100.64/10, 169.254.169.254/32
       to:
         - ipBlock:
             cidr: 0.0.0.0/0
@@ -508,6 +518,7 @@ network:
               - 10.0.0.0/8
               - 172.16.0.0/12
               - 192.168.0.0/16
+              - 100.64.0.0/10
               - 169.254.169.254/32
       # -- Extra NetworkPolicyEgressRule entries appended as given (for example a private OCSP
       # responder or an egress proxy).

@@ -4862,7 +4862,7 @@
               "$ref": "#/definitions/springScalar"
             }
           },
-          "description": "Spring Boot configuration override (application.yml syntax). Generated from the configuration metadata of the SiVa build by the lab's spring-schema.py; do not edit."
+          "description": "Spring Boot configuration override (application.yml syntax). Generated from the configuration metadata of the SiVa build; do not edit."
         },
         "files": {
           "type": "object",

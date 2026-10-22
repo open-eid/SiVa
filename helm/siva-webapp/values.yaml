@@ -97,7 +97,7 @@ runtime:
   # meets a closed socket instead of an answer: one lost request per idle pooled connection per
   # pod stop behind an L4 balancer or a Service path (the preStop sleep covers new connections
   # only); behind an endpoint-watching L7 balancer the idle entries are just never reused. Cost
-  # of off, measured on kind: +0.4 ms connect per request, four more packets each way, CPU
+  # of off, measured: +0.4 ms connect per request, four more packets each way, CPU
   # within +0.6 to +1.8 % of a 121 ms validation, memory unchanged (README "Known limits").
   httpKeepAlive: false
   # -- server.forward-headers-strategy: `framework` trusts X-Forwarded-* from the Ingress/edge
@@ -213,7 +213,7 @@ tsl:
     persistentVolumeClaim:
       # -- Create the claim (`<release>-tsl`, kept on uninstall). ReadWriteMany when the
       # fetcher and the webapp pods may land on different nodes; ReadWriteOnce is enough on a
-      # single node (kind).
+      # single node.
       create: false
       # -- Access modes of the claim.
       accessModes: [ReadWriteMany]

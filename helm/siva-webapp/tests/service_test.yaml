@@ -67,16 +67,6 @@ tests:
     asserts:
       - notExists:
           path: spec.ports[0].nodePort
-  - it: the kind overlay exposes a fixed NodePort
-    values:
-      - ../values-kind.yaml
-    asserts:
-      - equal:
-          path: spec.type
-          value: NodePort
-      - equal:
-          path: spec.ports[0].nodePort
-          value: 30080
 
   - it: renders annotations
     set:

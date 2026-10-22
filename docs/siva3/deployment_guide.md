@@ -274,17 +274,32 @@ the snapshot age limit and the alert thresholds together (see
 A test instance (SiVa-Test, the demo application) needs what the docker-compose file gives the
 webapp: SiVa's `test` Spring profile (the open-eid test trust list and truststore shipped in the
 jar), `TZ=Europe/Tallinn` and the Estonian T-level signature filter, and the monitoring
-endpoints on the API port because the system tests address both through one host:port. The
-chart's `values-kind.yaml` is that profile for a local kind cluster:
+endpoints on the API port because the system tests address both through one host:port. As an
+overlay:
+
+```yaml
+# test-values.yaml
+env:
+  - name: SPRING_PROFILES_ACTIVE
+    value: test
+  - name: TZ
+    value: Europe/Tallinn
+  - name: t-level-signature-filter.filter-type
+    value: NOT_ALLOWED_COUNTRIES
+  - name: t-level-signature-filter.countries
+    value: EE
+runtime:
+  managementPort: 8080
+```
 
 ```bash
-helm install siva ./helm/siva-webapp -f helm/siva-webapp/values-kind.yaml \
+helm install siva ./helm/siva-webapp -f test-values.yaml \
   --set image.repository=<registry>/siva-webapp --set-string image.tag=<version>
 ```
 
-Reach it at `<kind node>:30080`. A number of SiVa-Test specifications need a trust list that
-mixes production and test anchors and is not published; they fail against this instance and
-against a production one alike, which is expected.
+A number of SiVa-Test specifications need a trust list that mixes production and test anchors
+and is not published; they fail against this instance and against a production one alike,
+which is expected.
 
 ## Smoke testing your deployed system
 

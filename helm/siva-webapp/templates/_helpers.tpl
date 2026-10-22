@@ -335,8 +335,9 @@ never the webapp's), a named one, or the webapp's.
 
 {{/*
 Pod template (metadata + spec) shared by the fetch CronJob and the bootstrap Job: the webapp
-image and settings (ConfigMap, env, secret, JVM flags, restricted security context) plus SiVa's
-tsl-fetch profile, the store mounted read-write and no listening port.
+image and settings (ConfigMap, env, JVM flags, restricted security context) plus SiVa's
+tsl-fetch profile, the store mounted read-write and no listening port. The Secret, extra volumes
+and mounts are the fetcher's own (tsl.fetcher.*), never the webapp's.
 */}}
 {{- define "siva-webapp.fetcherPodTemplate" -}}
 metadata:
@@ -438,6 +439,9 @@ spec:
         {{- with include "siva-webapp.secretsVolumeMounts" (dict "root" . "secret" .Values.tsl.fetcher.existingSecret) | trim }}
         {{- . | nindent 8 }}
         {{- end }}
+        {{- with .Values.tsl.fetcher.extraVolumeMounts }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     {{- if include "siva-webapp.syncEnabled" . }}
     {{- include "siva-webapp.syncContainer" (dict "root" . "mode" "up" "name" "tsl-sync-up") | nindent 4 }}
     {{- end }}
@@ -466,6 +470,9 @@ spec:
     {{- end }}
     {{- with include "siva-webapp.secretsVolumes" (dict "root" . "secret" .Values.tsl.fetcher.existingSecret) | trim }}
     {{- . | nindent 4 }}
+    {{- end }}
+    {{- with .Values.tsl.fetcher.extraVolumes }}
+    {{- toYaml . | nindent 4 }}
     {{- end }}
   {{- with .Values.nodeSelector }}
   nodeSelector:

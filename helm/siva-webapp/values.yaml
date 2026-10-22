@@ -145,7 +145,8 @@ secrets:
   mountPath: /etc/siva/secrets
 
 # Pod spec passed through for what the chart does not model, on the webapp Deployment only (the
-# fetcher pods keep to tsl.fetcher.*). The pods run under the Pod Security "restricted" profile,
+# fetcher pods keep to tsl.fetcher.*, which has extra volumes and mounts of its own). The pods
+# run under the Pod Security "restricted" profile,
 # so an extra container needs its own securityContext (no privilege escalation, all capabilities
 # dropped, read-only root filesystem), and with network.networkPolicy.egress on, its own
 # additionalRules.
@@ -383,6 +384,14 @@ tsl:
     # thirty documents from the internet and should hold nothing but what that needs (truststore
     # passwords, if you changed them), not the report-signing key's. Empty: no Secret.
     existingSecret: ""
+    # -- Extra volumes of the fetcher pods (Volume entries), like `extraVolumes` for the webapp;
+    # the webapp's do not flow here, the fetcher mounts only what a fetch needs (a proxy's CA,
+    # a cloud credential file).
+    extraVolumes: []
+    # -- Extra mounts of the tsl-fetch container (VolumeMount entries), of volumes from
+    # `tsl.fetcher.extraVolumes` or the chart's own (`config`, `tmp`, `tsl-store`, `tsl-work`,
+    # `trust`, `secrets`).
+    extraVolumeMounts: []
     # The fetcher pods' own ServiceAccount, so that an identity that may write the store (a
     # cloud role for the bucket, through annotations) is never the webapp's.
     serviceAccount:

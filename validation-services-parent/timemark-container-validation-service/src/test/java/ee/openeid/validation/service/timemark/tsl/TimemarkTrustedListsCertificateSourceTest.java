@@ -47,16 +47,22 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -143,6 +149,68 @@ class TimemarkTrustedListsCertificateSourceTest {
         }
     }
 
+    // A container's signatures validate at once on several pool threads; a snapshot switch meanwhile must reach
+    // none of them, and must leave no pin behind on any of them.
+    @Test
+    void tasksOnEveryPoolThreadReadTheSourcePinnedByTheValidationThatSubmittedThem() throws Exception {
+        ExecutorService pool = Executors.newFixedThreadPool(THREADS);
+        ExecutorService pinning = view.pinning(pool);
+        try {
+            TrustedListsCertificateSource first = new TrustedListsCertificateSource();
+            first.setTrustPropertiesByCertificates(Map.of(anchor, List.of()));
+            holder.publish(first);
+            CountDownLatch occupied = new CountDownLatch(THREADS);
+            CountDownLatch swapped = new CountDownLatch(1);
+            Set<Thread> workers = ConcurrentHashMap.newKeySet();
+
+            List<Future<Boolean>> reads = view.withPinnedSource(() -> {
+                List<Future<Boolean>> submitted = submitReads(pinning, THREADS * 8, occupied, swapped, workers);
+                await(occupied);
+                publishFromAnotherThread(new TrustedListsCertificateSource());
+                swapped.countDown();
+                return submitted;
+            });
+
+            for (Future<Boolean> read : reads) {
+                assertTrue(read.get(5, TimeUnit.SECONDS));
+            }
+            assertThat(workers, hasSize(THREADS));
+            assertThat(workers, not(hasItem(Thread.currentThread())));
+            // After the validation every worker reads what is published, so no pin stayed on any of them.
+            CountDownLatch occupiedAgain = new CountDownLatch(THREADS);
+            for (Future<Boolean> read : submitReads(pinning, THREADS, occupiedAgain, occupiedAgain, workers)) {
+                assertFalse(read.get(5, TimeUnit.SECONDS));
+            }
+        } finally {
+            pinning.shutdownNow();
+        }
+    }
+
+    @Test
+    void tasksSubmittedOutsideAValidationReadTheSourceCurrentWhenTheyRun() throws Exception {
+        ExecutorService pool = Executors.newFixedThreadPool(THREADS);
+        ExecutorService pinning = view.pinning(pool);
+        try {
+            CountDownLatch occupied = new CountDownLatch(THREADS);
+            CountDownLatch swapped = new CountDownLatch(1);
+            Set<Thread> workers = ConcurrentHashMap.newKeySet();
+            List<Future<Boolean>> reads = submitReads(pinning, THREADS * 8, occupied, swapped, workers);
+            await(occupied);
+            TrustedListsCertificateSource filled = new TrustedListsCertificateSource();
+            filled.setTrustPropertiesByCertificates(Map.of(anchor, List.of()));
+
+            publishFromAnotherThread(filled);
+            swapped.countDown();
+
+            for (Future<Boolean> read : reads) {
+                assertTrue(read.get(5, TimeUnit.SECONDS));
+            }
+            assertThat(workers, hasSize(THREADS));
+        } finally {
+            pinning.shutdownNow();
+        }
+    }
+
     @Test
     void pinning_ForwardsTheLifecycleToTheDelegate() throws Exception {
         ExecutorService pool = Executors.newSingleThreadExecutor();
@@ -220,6 +288,45 @@ class TimemarkTrustedListsCertificateSourceTest {
         assertTrue(TSLCertificateSource.class.isAssignableFrom(TimemarkTrustedListsCertificateSource.class));
         assertTrue(TrustPropertiesCertificateSource.class.isAssignableFrom(TimemarkTrustedListsCertificateSource.class));
         assertTrue(TrustedCertificateSource.class.isAssignableFrom(TimemarkTrustedListsCertificateSource.class));
+    }
+
+    private static final int THREADS = 4;
+
+    // Each read parks on its pool thread until released, so the first THREADS of them hold every thread of the pool
+    // once occupied is open; a read is true when it saw the source that trusts the anchor from start to end.
+    private List<Future<Boolean>> submitReads(ExecutorService executor, int count, CountDownLatch occupied,
+                                              CountDownLatch released, Set<Thread> workers) {
+        List<Future<Boolean>> reads = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            reads.add(executor.submit(() -> {
+                workers.add(Thread.currentThread());
+                occupied.countDown();
+                await(released);
+                return view.isTrusted(anchor) && view.getNumberOfCertificates() == 1;
+            }));
+        }
+        return reads;
+    }
+
+    private void publishFromAnotherThread(TrustedListsCertificateSource source) {
+        Thread loader = new Thread(() -> holder.publish(source), "loader");
+        loader.start();
+        try {
+            loader.join(5_000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException(e);
+        }
+        assertFalse(loader.isAlive());
+    }
+
+    private static void await(CountDownLatch latch) {
+        try {
+            assertTrue(latch.await(5, TimeUnit.SECONDS), "latch still closed after 5 s");
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException(e);
+        }
     }
 
     private static final Set<String> WRITES = Set.of("addCertificate", "addTSLCertificate",

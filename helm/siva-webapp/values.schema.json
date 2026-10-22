@@ -5559,6 +5559,20 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "edge": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "maxBodyMiB": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "timeoutSeconds": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
         "ingresses": {
           "type": "array",
           "items": {
@@ -5576,6 +5590,13 @@
               },
               "className": {
                 "type": "string"
+              },
+              "edgeAnnotations": {
+                "type": "string",
+                "enum": [
+                  "",
+                  "nginx"
+                ]
               },
               "annotations": {
                 "type": "object",

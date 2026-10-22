@@ -792,3 +792,12 @@ webapp and the fetcher can name different Secrets.
     defaultMode: 0444
 {{- end }}
 {{- end }}
+
+{{/*
+Seconds the edge must wait for an answer: network.edge.timeoutSeconds, or the drain timeout
+(runtime.shutdownTimeout, whole seconds) when that is 0, since both are "the slowest validation".
+*/}}
+{{- define "siva-webapp.edgeTimeoutSeconds" -}}
+{{- $t := int .Values.network.edge.timeoutSeconds -}}
+{{- if gt $t 0 }}{{ $t }}{{ else }}{{ int (trimSuffix "s" .Values.runtime.shutdownTimeout) }}{{ end -}}
+{{- end }}

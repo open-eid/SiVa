@@ -142,3 +142,70 @@ tests:
           value: [siva.example.invalid]
       - notExists:
           path: spec.tls[0].secretName
+  - it: renders no edge annotations unless an entry asks for them
+    set:
+      network:
+        ingresses:
+          - name: public
+            hosts:
+              - host: siva.example.invalid
+                paths:
+                  - path: /
+    asserts:
+      - notExists:
+          path: metadata.annotations
+  - it: renders the two edge numbers as ingress-nginx annotations, the timeout from runtime.shutdownTimeout by default
+    set:
+      runtime:
+        shutdownTimeout: 45s
+      network:
+        ingresses:
+          - name: public
+            edgeAnnotations: nginx
+            hosts:
+              - host: siva.example.invalid
+                paths:
+                  - path: /
+    asserts:
+      - equal:
+          path: metadata.annotations
+          value:
+            nginx.ingress.kubernetes.io/proxy-body-size: 27m
+            nginx.ingress.kubernetes.io/proxy-read-timeout: "45"
+            nginx.ingress.kubernetes.io/proxy-send-timeout: "45"
+  - it: takes network.edge when set and lets the entry's own annotations win
+    set:
+      network:
+        edge:
+          maxBodyMiB: 40
+          timeoutSeconds: 120
+        ingresses:
+          - name: public
+            edgeAnnotations: nginx
+            annotations:
+              nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+              example.invalid/other: kept
+            hosts:
+              - host: siva.example.invalid
+                paths:
+                  - path: /
+    asserts:
+      - equal:
+          path: metadata.annotations
+          value:
+            nginx.ingress.kubernetes.io/proxy-body-size: 40m
+            nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+            nginx.ingress.kubernetes.io/proxy-send-timeout: "120"
+            example.invalid/other: kept
+  - it: refuses an unknown edgeAnnotations controller
+    set:
+      network:
+        ingresses:
+          - name: public
+            edgeAnnotations: traefik
+            hosts:
+              - host: siva.example.invalid
+                paths:
+                  - path: /
+    asserts:
+      - failedTemplate: {}

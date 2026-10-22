@@ -62,6 +62,10 @@ Reaching the service:
                 curl -X POST http://localhost:8080/validate   # expect 400 on an empty body
 {{- end }}
 
+Whatever sits in front of the pods (ingress controller, load balancer, API gateway) must accept
+request bodies of {{ .Values.network.edge.maxBodyMiB }} MiB and wait {{ include "siva-webapp.edgeTimeoutSeconds" . }} s for an answer (network.edge;
+ingress-nginx annotations are rendered by network.ingresses[].edgeAnnotations: nginx).
+
 Try a validation (sample bodies in build-helpers/sample-requests/ of the SiVa repository):
   curl -X POST -H 'Content-Type: application/json' --data @sample.json <base-url>/validate
 

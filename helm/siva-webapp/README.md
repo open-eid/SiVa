@@ -37,6 +37,15 @@ rclone containers mirror, never a CSI or FUSE mount (`tsl.snapshot.sync`).
   RemoteIpValve honours the headers only from `server.tomcat.remoteip.internal-proxies` (a
   regular expression over the proxy addresses, set through `config.spring`; Spring Boot's
   default covers the private ranges). `none` when nothing in front sets them.
+- **The two edge numbers.** Whatever sits in front of the pods must accept request bodies of
+  27 MiB (SiVa's `siva.http.request.max-request-size-limit`: a 20 MB file plus its base64
+  overhead; the edge answers 413 first if it allows less) and wait for the slowest validation
+  before giving up on the upstream (or it answers 504 for a validation SiVa finishes). Both are
+  values, `network.edge.maxBodyMiB` and `network.edge.timeoutSeconds` (0 = the drain timeout,
+  `runtime.shutdownTimeout`, which is sized by the same number), the install notes print them,
+  and an entry in `network.ingresses` with `edgeAnnotations: nginx` renders them as the
+  ingress-nginx annotations (`proxy-body-size`, `proxy-read-timeout`, `proxy-send-timeout`); for
+  another controller or a load balancer in front, set its own spelling of the two.
 - **Egress.** In the default `tsl.mode: online` each pod downloads the EU LOTL and the
   member-state trust lists at startup and on a nightly cron; in snapshot mode only the fetcher
   does (see "Trust lists"). Allow HTTPS egress to those hosts from whichever pods download, and
@@ -437,7 +446,9 @@ directory); edit the comments, not this table.
 | monitoring.serviceMonitor.relabelings | list | `[]` | Relabelings for the endpoint, as given (after the application label). |
 | monitoring.serviceMonitor.scrapeTimeout | string | `"10s"` | Scrape timeout (Prometheus duration). |
 | nameOverride | string | `""` | Override the chart name used in resource names. |
-| network.ingresses | list | `[]` | Ingress objects to create, one per entry, named `<release-fullname>-<name>`. Keys: name, className, annotations, hosts (host + paths with path and optional pathType), tls. Set your controller's body-size limit to at least 27 MB (e.g. `nginx.ingress.kubernetes.io/proxy-body-size: 28m`). Example in ci/all-on-values.yaml. |
+| network.edge.maxBodyMiB | int | `27` | The two numbers whatever sits in front of the pods (ingress controller, load balancer, API gateway) must be set to, printed by the install notes. Largest request body, in MiB: SiVa's own limit is `siva.http.request.max-request-size-limit` (27 MB, a 20 MB file plus its base64 overhead); an edge that allows less answers 413 before SiVa does, so raise this together with the SiVa key when you change it through config.spring. |
+| network.edge.timeoutSeconds | int | `0` | Seconds the edge waits for SiVa's answer (upstream read timeout): at least your slowest validation, the same number runtime.shutdownTimeout sizes the drain by, which is why 0 takes it from there. An edge that waits less answers 504 for a validation SiVa finishes. |
+| network.ingresses | list | `[]` | Ingress objects to create, one per entry, named `<release-fullname>-<name>`. Keys: name, className, annotations, hosts (host + paths with path and optional pathType), tls, and edgeAnnotations: `nginx` renders the ingress-nginx annotations for network.edge (proxy-body-size, proxy-read-timeout, proxy-send-timeout; an entry in annotations with the same name wins); for another controller put its spelling of the two numbers in annotations. Example in ci/all-on-values.yaml. |
 | network.networkPolicy.egress.additionalRules | list | `[]` | Extra NetworkPolicyEgressRule entries appended as given (for example a private OCSP responder or an egress proxy). |
 | network.networkPolicy.egress.dns | bool | `true` | Allow DNS (UDP and TCP 53) to `dnsTo`. |
 | network.networkPolicy.egress.dnsTo | list | the `kube-system` namespace (namespaceSelector on kubernetes.io/metadata.name) | NetworkPolicyPeer entries DNS may go to; empty for any destination. |

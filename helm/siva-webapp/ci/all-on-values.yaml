@@ -74,11 +74,15 @@ network:
           ports:
             - port: 8080
               protocol: TCP
+  edge:
+    maxBodyMiB: 28
+    timeoutSeconds: 120
   ingresses:
     - name: public
       className: nginx
+      edgeAnnotations: nginx
       annotations:
-        nginx.ingress.kubernetes.io/proxy-body-size: 28m
+        nginx.ingress.kubernetes.io/proxy-read-timeout: "180"
       hosts:
         - host: siva.example.invalid
           paths:

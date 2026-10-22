@@ -496,10 +496,23 @@ scaling:
     behavior: {}
 
 network:
+  edge:
+    # -- The two numbers whatever sits in front of the pods (ingress controller, load balancer,
+    # API gateway) must be set to, printed by the install notes. Largest request body, in MiB:
+    # SiVa's own limit is `siva.http.request.max-request-size-limit` (27 MB, a 20 MB file plus
+    # its base64 overhead); an edge that allows less answers 413 before SiVa does, so raise
+    # this together with the SiVa key when you change it through config.spring.
+    maxBodyMiB: 27
+    # -- Seconds the edge waits for SiVa's answer (upstream read timeout): at least your slowest
+    # validation, the same number runtime.shutdownTimeout sizes the drain by, which is why 0
+    # takes it from there. An edge that waits less answers 504 for a validation SiVa finishes.
+    timeoutSeconds: 0
   # -- Ingress objects to create, one per entry, named `<release-fullname>-<name>`. Keys:
-  # name, className, annotations, hosts (host + paths with path and optional pathType), tls.
-  # Set your controller's body-size limit to at least 27 MB
-  # (e.g. `nginx.ingress.kubernetes.io/proxy-body-size: 28m`). Example in ci/all-on-values.yaml.
+  # name, className, annotations, hosts (host + paths with path and optional pathType), tls,
+  # and edgeAnnotations: `nginx` renders the ingress-nginx annotations for network.edge
+  # (proxy-body-size, proxy-read-timeout, proxy-send-timeout; an entry in annotations with the
+  # same name wins); for another controller put its spelling of the two numbers in annotations.
+  # Example in ci/all-on-values.yaml.
   ingresses: []
   networkPolicy:
     # -- NetworkPolicy for the webapp pods: ingress to the two ports from the peers below and,

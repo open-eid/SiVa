@@ -37,6 +37,15 @@ rclone containers mirror, never a CSI or FUSE mount (`tsl.snapshot.sync`).
   RemoteIpValve honours the headers only from `server.tomcat.remoteip.internal-proxies` (a
   regular expression over the proxy addresses, set through `config.spring`; Spring Boot's
   default covers the private ranges). `none` when nothing in front sets them.
+- **The two edge numbers.** Whatever sits in front of the pods must accept request bodies of
+  27 MiB (SiVa's `siva.http.request.max-request-size-limit`: a 20 MB file plus its base64
+  overhead; the edge answers 413 first if it allows less) and wait for the slowest validation
+  before giving up on the upstream (or it answers 504 for a validation SiVa finishes). Both are
+  values, `network.edge.maxBodyMiB` and `network.edge.timeoutSeconds` (0 = the drain timeout,
+  `runtime.shutdownTimeout`, which is sized by the same number), the install notes print them,
+  and an entry in `network.ingresses` with `edgeAnnotations: nginx` renders them as the
+  ingress-nginx annotations (`proxy-body-size`, `proxy-read-timeout`, `proxy-send-timeout`); for
+  another controller or a load balancer in front, set its own spelling of the two.
 - **Egress.** In the default `tsl.mode: online` each pod downloads the EU LOTL and the
   member-state trust lists at startup and on a nightly cron; in snapshot mode only the fetcher
   does (see "Trust lists"). Allow HTTPS egress to those hosts from whichever pods download, and

@@ -254,7 +254,9 @@ needs, no support promise. Its README (`helm/siva-webapp/README.md`) documents e
    properties (passwords, the signing keystore), and `extraVolumes`, `extraVolumeMounts` and
    `extraContainers` pass pod spec through for what the chart does not model (a log shipper,
    for example). Ingress objects come from
-   `network.ingresses` (set your controller's body-size limit to at least 27 MB). Health with
+   `network.ingresses`; `network.edge` holds the two numbers the edge in front must match (a
+   27 MiB request body, the slowest validation as upstream timeout), printed by the install
+   notes and rendered as ingress-nginx annotations on request. Health with
    details, heartbeat, version and Prometheus metrics are served on the management port (8081)
    through the in-cluster Service `<release>-management`, not through the traffic port or the
    Ingress; the traffic port answers only the status-only probes `/readyz` and `/livez`, which

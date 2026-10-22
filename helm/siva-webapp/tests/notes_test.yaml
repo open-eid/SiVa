@@ -46,3 +46,18 @@ tests:
     asserts:
       - notMatchRegexRaw:
           pattern: bare default
+
+  - it: names the two edge numbers, the timeout following runtime.shutdownTimeout
+    asserts:
+      - matchRegexRaw:
+          pattern: 'must accept\nrequest bodies of 27 MiB and wait 30 s for an answer'
+
+  - it: names the edge timeout set in network.edge
+    set:
+      network:
+        edge:
+          maxBodyMiB: 28
+          timeoutSeconds: 120
+    asserts:
+      - matchRegexRaw:
+          pattern: 'request bodies of 28 MiB and wait 120 s for an answer'

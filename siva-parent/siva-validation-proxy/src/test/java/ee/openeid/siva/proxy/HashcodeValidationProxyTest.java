@@ -133,6 +133,11 @@ class HashcodeValidationProxyTest {
 
         Reports reports;
 
+        // The spy answers validateDocument itself; the service's dependencies are never reached.
+        ValidationServiceSpy() {
+            super(null, null, null, null, null, null);
+        }
+
         @Override
         public Reports validateDocument(ValidationDocument validationDocument) {
             reports = createDummyReports();

@@ -18,9 +18,9 @@ package ee.openeid.tsl.configuration;
 
 import ee.openeid.tsl.TSLLoader;
 import ee.openeid.tsl.TSLValidationJobFactory;
+import ee.openeid.tsl.TrustedListsCertificateSourceHolder;
 import ee.openeid.tsl.annotation.LoadableTsl;
 import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
-import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -64,20 +64,20 @@ class TSLLoaderDefinitionRegistererSpringBootTest {
     static class ConfigurationForTesting {
 
         @Bean
-        TrustedListsCertificateSource tslCertificateSourceWithoutAnnotation() {
-            return new TrustedListsCertificateSource();
+        TrustedListsCertificateSourceHolder tslCertificateSourceWithoutAnnotation() {
+            return new TrustedListsCertificateSourceHolder();
         }
 
         @Bean
         @LoadableTsl(name = "test-tsl-name")
-        TrustedListsCertificateSource tslCertificateSourceWithAnnotation() {
-            return new TrustedListsCertificateSource();
+        TrustedListsCertificateSourceHolder tslCertificateSourceWithAnnotation() {
+            return new TrustedListsCertificateSourceHolder();
         }
 
         @Bean(name = "shortName")
         @LoadableTsl(name = "another-tsl-name")
-        TrustedListsCertificateSource anotherTslCertificateSourceWithAnnotation() {
-            return new TrustedListsCertificateSource();
+        TrustedListsCertificateSourceHolder anotherTslCertificateSourceWithAnnotation() {
+            return new TrustedListsCertificateSourceHolder();
         }
 
         @Bean

@@ -1,0 +1,250 @@
+suite: prometheus rule
+templates:
+  - prometheusrule.yaml
+tests:
+  - it: is off by default
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: renders the base and trust-list rules, scoped to the release's pods and namespace
+    set:
+      monitoring:
+        prometheusRule:
+          enabled: true
+    asserts:
+      - isKind:
+          of: PrometheusRule
+      - lengthEqual:
+          path: spec.groups[0].rules
+          count: 7
+      - equal:
+          path: spec.groups[0].rules[0].alert
+          value: SivaValidationErrorRate
+      - matchRegex:
+          path: spec.groups[0].rules[0].expr
+          pattern: ^sum\(rate\(http_server_requests_seconds_count\{namespace="NAMESPACE",pod=~"RELEASE-NAME-siva-webapp-\[a-z0-9\]\+-\[a-z0-9\]\+",uri!~"/monitoring\.\*",status=~"5\.\."\}\[10m\]\)\)\s+/ sum\(rate\(http_server_requests_seconds_count\{namespace="NAMESPACE",pod=~"[^"]+",uri!~"/monitoring\.\*"\}\[10m\]\)\) > 0\.05$
+      - equal:
+          path: spec.groups[0].rules[1].alert
+          value: SivaOomKilled
+      - matchRegex:
+          path: spec.groups[0].rules[1].expr
+          pattern: reason="OOMKilled"\} == 1\s+and on \(namespace, pod, container\) increase\(kube_pod_container_status_restarts_total\{[^}]+\}\[30m\]\) > 0$
+      - equal:
+          path: spec.groups[0].rules[1].labels.severity
+          value: critical
+      - matchRegex:
+          path: spec.groups[0].rules[1].annotations.summary
+          pattern: "\\{\\{ \\$labels.pod \\}\\}"
+      - notExists:
+          path: spec.groups[0].rules[?(@.alert == "SivaNotReady")]
+      - notExists:
+          path: spec.groups[0].rules[?(@.alert == "SivaRestarts")]
+  - it: escapes dots in the release name inside the pod regex
+    release:
+      name: siva.v2
+    set:
+      monitoring:
+        prometheusRule:
+          enabled: true
+    asserts:
+      - matchRegex:
+          path: spec.groups[0].rules[0].expr
+          pattern: 'pod=~"siva\\\\\.v2-siva-webapp-'   # rendered text is siva\\.v2 (PromQL string escape of \.)
+  - it: adds the pending rules and extra rules when asked
+    set:
+      monitoring:
+        prometheusRule:
+          enabled: true
+          pendingRules: true
+          namespace: monitoring
+          additionalRules:
+            - alert: SivaCustom
+              expr: vector(1)
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: monitoring
+      - lengthEqual:
+          path: spec.groups[0].rules
+          count: 10
+      - equal:
+          path: spec.groups[0].rules[7].alert
+          value: SivaRequestRejectedSize
+      - equal:
+          path: spec.groups[0].rules[8].alert
+          value: SivaOcspTsaFailures
+      - equal:
+          path: spec.groups[0].rules[9].alert
+          value: SivaCustom
+
+  - it: adds the snapshot-age rule in snapshot mode, sized from SiVa's period gauge
+    set:
+      monitoring:
+        prometheusRule:
+          enabled: true
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+        fetcher:
+          period: PT12H
+    asserts:
+      - lengthEqual:
+          path: spec.groups[0].rules
+          count: 8
+      - equal:
+          path: spec.groups[0].rules[7].alert
+          value: SivaTslSnapshotStale
+      - equal:   # 2 x the period the pod reports + 1 h grace; no period is rendered in
+          path: spec.groups[0].rules[7].expr
+          value: time() - siva_tsl_snapshot_created_timestamp_seconds{namespace="NAMESPACE",pod=~"RELEASE-NAME-siva-webapp-[a-z0-9]+-[a-z0-9]+"} > on (namespace, pod, loader) (2 * siva_tsl_refresh_period_seconds{namespace="NAMESPACE",pod=~"RELEASE-NAME-siva-webapp-[a-z0-9]+-[a-z0-9]+"} + 3600)
+      - equal:
+          path: spec.groups[0].rules[7].labels.severity
+          value: warning
+      - equal:
+          path: spec.groups[0].rules[7].annotations.summary
+          value: SiVa pod {{ $labels.pod }} runs on a snapshot older than two fetch periods plus 1 h
+      - matchRegex:
+          path: spec.groups[0].rules[7].annotations.description
+          pattern: kubectl -n NAMESPACE logs job/<newest RELEASE-NAME-siva-webapp-tsl-fetch-\.\.\.>
+      - notExists:
+          path: spec.groups[0].rules[?(@.alert == "SivaTslFetchFailing")]
+
+  - it: has no snapshot rule in online mode but watches downloads there too
+    set:
+      monitoring:
+        prometheusRule:
+          enabled: true
+    asserts:
+      - notExists:
+          path: spec.groups[0].rules[?(@.alert == "SivaTslSnapshotStale")]
+      - equal:
+          path: spec.groups[0].rules[6].alert
+          value: SivaTslListNotDownloaded
+      - equal:   # 2 x the period the pod reports (one day by SiVa's default online) + 1 h grace
+          path: spec.groups[0].rules[6].expr
+          value: time() - siva_tsl_list_downloaded_timestamp_seconds{namespace="NAMESPACE",pod=~"RELEASE-NAME-siva-webapp-[a-z0-9]+-[a-z0-9]+"} > on (namespace, pod, loader) group_left () (2 * siva_tsl_refresh_period_seconds{namespace="NAMESPACE",pod=~"RELEASE-NAME-siva-webapp-[a-z0-9]+-[a-z0-9]+"} + 3600)
+      - equal:
+          path: spec.groups[0].rules[6].labels.severity
+          value: warning
+      - equal:
+          path: spec.groups[0].rules[6].annotations.summary
+          value: SiVa serves the {{ $labels.territory }} trusted list ({{ $labels.kind }}) from a copy older than two refresh periods plus 1 h
+
+  - it: alerts on configured territories without anchors by the metric's mandatory label
+    set:
+      monitoring:
+        prometheusRule:
+          enabled: true
+    asserts:
+      - equal:
+          path: spec.groups[0].rules[2].alert
+          value: SivaTslMandatoryTerritoryNotValidating
+      - equal:
+          path: spec.groups[0].rules[2].expr
+          value: siva_tsl_trust_anchors{namespace="NAMESPACE",pod=~"RELEASE-NAME-siva-webapp-[a-z0-9]+-[a-z0-9]+",mandatory="true"} == 0
+      - equal:
+          path: spec.groups[0].rules[2].labels.severity
+          value: critical
+      - equal:
+          path: spec.groups[0].rules[3].alert
+          value: SivaTslTerritoryNotValidating
+      - matchRegex:
+          path: spec.groups[0].rules[3].expr
+          pattern: ',mandatory="false"\} == 0$'
+      - equal:
+          path: spec.groups[0].rules[3].labels.severity
+          value: warning
+
+  - it: sizes list-expiry alerts from SiVa's period gauge plus the lead time and a day
+    set:
+      monitoring:
+        prometheusRule:
+          enabled: true
+    asserts:
+      - equal:   # 2 x period + 7 d lead time
+          path: spec.groups[0].rules[4].expr
+          value: siva_tsl_next_update_timestamp_seconds{namespace="NAMESPACE",pod=~"RELEASE-NAME-siva-webapp-[a-z0-9]+-[a-z0-9]+"} - time() < on (namespace, pod, loader) group_left () (2 * siva_tsl_refresh_period_seconds{namespace="NAMESPACE",pod=~"RELEASE-NAME-siva-webapp-[a-z0-9]+-[a-z0-9]+"} + 604800)
+      - equal:
+          path: spec.groups[0].rules[4].annotations.summary
+          value: The {{ $labels.territory }} trusted list ({{ $labels.kind }}) runs out within two refresh periods plus 7 d
+      - equal:   # period + 1 d
+          path: spec.groups[0].rules[5].expr
+          value: siva_tsl_next_update_timestamp_seconds{namespace="NAMESPACE",pod=~"RELEASE-NAME-siva-webapp-[a-z0-9]+-[a-z0-9]+"} - time() < on (namespace, pod, loader) group_left () (siva_tsl_refresh_period_seconds{namespace="NAMESPACE",pod=~"RELEASE-NAME-siva-webapp-[a-z0-9]+-[a-z0-9]+"} + 86400)
+      - equal:
+          path: spec.groups[0].rules[5].labels.severity
+          value: critical
+
+  - it: renders grace and lead time into the rules and nothing of the fetch period
+    set:
+      monitoring:
+        prometheusRule:
+          enabled: true
+          tsl:
+            grace: PT6H
+            leadTime: P14D
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+        fetcher:
+          period: P7D
+    asserts:
+      - matchRegex:   # 14 d lead time
+          path: spec.groups[0].rules[4].expr
+          pattern: ' \+ 1209600\)$'
+      - equal:
+          path: spec.groups[0].rules[4].annotations.summary
+          value: The {{ $labels.territory }} trusted list ({{ $labels.kind }}) runs out within two refresh periods plus 14 d
+      - matchRegex:   # 6 h grace
+          path: spec.groups[0].rules[6].expr
+          pattern: ' \+ 21600\)$'
+      - equal:
+          path: spec.groups[0].rules[6].annotations.summary
+          value: SiVa serves the {{ $labels.territory }} trusted list ({{ $labels.kind }}) from a copy older than two refresh periods plus 6 h
+      - matchRegex:
+          path: spec.groups[0].rules[7].expr
+          pattern: ' \+ 21600\)$'
+      - equal:
+          path: spec.groups[0].rules[7].annotations.summary
+          value: SiVa pod {{ $labels.pod }} runs on a snapshot older than two fetch periods plus 6 h
+      - notExists:
+          path: spec.groups[0].rules[?(@.expr =~ /604800/)]
+
+  - it: refuses a grace with no component (P)
+    set:
+      monitoring:
+        prometheusRule:
+          enabled: true
+          tsl:
+            grace: P
+    asserts:
+      - failedTemplate:
+          errorPattern: (?i)grace.*does not match pattern
+
+  - it: refuses a lead time with no component (PT)
+    set:
+      monitoring:
+        prometheusRule:
+          enabled: true
+          tsl:
+            leadTime: PT
+    asserts:
+      - failedTemplate:
+          errorPattern: (?i)leadTime.*does not match pattern
+
+  - it: renders a grace in minutes and a lead time in days
+    set:
+      monitoring:
+        prometheusRule:
+          enabled: true
+          tsl:
+            grace: PT90M
+            leadTime: P7D
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: PrometheusRule

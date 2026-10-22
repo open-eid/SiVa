@@ -1,0 +1,94 @@
+suite: helm test pod
+templates:
+  - tests/test-connection.yaml
+tests:
+  - it: renders the test hook against the management service by default
+    asserts:
+      - isKind:
+          of: Pod
+      - equal:
+          path: metadata.annotations["helm.sh/hook"]
+          value: test
+      - contains:
+          path: spec.containers[0].args
+          content: http://RELEASE-NAME-siva-webapp-management:8081/monitoring/health
+  - it: targets the traffic service and service.port without the split
+    set:
+      service:
+        port: 80
+      runtime:
+        managementPort: 8080
+    asserts:
+      - contains:
+          path: spec.containers[0].args
+          content: http://RELEASE-NAME-siva-webapp:80/monitoring/health
+  - it: can be switched off
+    set:
+      tests:
+        enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: runs under the restricted context with an explicit non-root uid and no token
+    asserts:
+      - equal:
+          path: spec.automountServiceAccountToken
+          value: false
+      - equal:
+          path: spec.securityContext.runAsNonRoot
+          value: true
+      - equal:
+          path: spec.securityContext.runAsUser
+          value: 65534
+      - equal:
+          path: spec.securityContext.runAsGroup
+          value: 65534
+      - equal:
+          path: spec.securityContext.seccompProfile.type
+          value: RuntimeDefault
+      - equal:
+          path: spec.containers[0].securityContext.allowPrivilegeEscalation
+          value: false
+      - equal:
+          path: spec.containers[0].securityContext.readOnlyRootFilesystem
+          value: true
+      - contains:
+          path: spec.containers[0].securityContext.capabilities.drop
+          content: ALL
+  - it: takes a different uid
+    set:
+      tests:
+        runAsUser: 1000
+    asserts:
+      - equal:
+          path: spec.securityContext.runAsUser
+          value: 1000
+  - it: keeps its restricted context even when the app's security contexts are nulled
+    set:
+      security:
+        podSecurityContext: null
+        securityContext: null
+    asserts:
+      - equal:
+          path: spec.securityContext.runAsUser
+          value: 65534
+      - equal:
+          path: spec.securityContext.seccompProfile.type
+          value: RuntimeDefault
+      - equal:
+          path: spec.containers[0].securityContext.allowPrivilegeEscalation
+          value: false
+  - it: runs busybox by tag, and by digest next to the tag when tests.image.digest is set
+    asserts:
+      - equal:
+          path: spec.containers[0].image
+          value: busybox:1.37.0
+  - it: pins the test image by digest
+    set:
+      tests:
+        image:
+          digest: sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+    asserts:
+      - equal:
+          path: spec.containers[0].image
+          value: busybox:1.37.0@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef

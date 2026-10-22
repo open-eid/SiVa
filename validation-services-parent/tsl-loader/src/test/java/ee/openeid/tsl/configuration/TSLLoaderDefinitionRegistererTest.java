@@ -30,6 +30,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.ConstructorArgumentValues;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
+import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.core.type.AnnotationMetadata;
@@ -39,7 +40,6 @@ import java.util.Collections;
 import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.arrayWithSize;
 import static org.hamcrest.Matchers.emptyIterable;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasEntry;
@@ -287,24 +287,16 @@ class TSLLoaderDefinitionRegistererTest {
                 equalTo(0),
                 samePropertyValuesAs(new ConstructorArgumentValues.ValueHolder(TEST_TSL_NAME))
         ));
-        assertThat(registeredBeanDefinition.hasPropertyValues(), is(true));
-        assertThat(registeredBeanDefinition.getPropertyValues().getPropertyValues(), arrayWithSize(1));
-        assertThat(
-                registeredBeanDefinition.getPropertyValues().getPropertyValues()[0].getName(),
-                equalTo("trustedListsCertificateSource")
-        );
-        assertThat(
-                registeredBeanDefinition.getPropertyValues().getPropertyValues()[0].getValue(),
-                instanceOf(RuntimeBeanReference.class)
-        );
-        assertThat(
-                registeredBeanDefinition.getPropertyValues().getPropertyValues()[0].getValue(),
-                samePropertyValuesAs(new RuntimeBeanReference(TEST_BEAN_NAME))
-        );
+        ConstructorArgumentValues.ValueHolder holderArgument = registeredBeanDefinition.getConstructorArgumentValues()
+                .getIndexedArgumentValue(1, null);
+        assertThat(holderArgument.getValue(), instanceOf(RuntimeBeanReference.class));
+        assertThat(holderArgument.getValue(), samePropertyValuesAs(new RuntimeBeanReference(TEST_BEAN_NAME)));
+        assertThat(registeredBeanDefinition.hasPropertyValues(), is(false));
 
         assertThat(registeredBeanDefinition, instanceOf(GenericBeanDefinition.class));
         GenericBeanDefinition genericBeanDefinition = (GenericBeanDefinition) registeredBeanDefinition;
         assertThat(genericBeanDefinition.getBeanClass(), is(TSLLoader.class));
+        assertThat(genericBeanDefinition.getAutowireMode(), is(AbstractBeanDefinition.AUTOWIRE_CONSTRUCTOR));
     }
 
 }

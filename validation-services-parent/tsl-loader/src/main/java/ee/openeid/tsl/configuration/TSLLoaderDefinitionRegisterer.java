@@ -17,13 +17,14 @@
 package ee.openeid.tsl.configuration;
 
 import ee.openeid.tsl.TSLLoader;
+import ee.openeid.tsl.TrustedListsCertificateSourceHolder;
 import ee.openeid.tsl.annotation.LoadableTsl;
-import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
@@ -31,27 +32,22 @@ import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.core.type.MethodMetadata;
 import org.springframework.stereotype.Component;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.util.Map;
 
 /**
  * A bean definition registry post-processor that finds all the existing bean definitions with {@link LoadableTsl}
- * annotation, and for each such definition registers a new bean definition of type {@link TSLLoader}, wiring the
- * annotated bean into the loader.
+ * annotation, and for each such definition registers a new bean definition of type {@link TSLLoader}, passing the
+ * annotated bean to the loader's constructor; the loader's other constructor arguments are autowired.
  * <b>NB:</b> All beans having {@link LoadableTsl} annotation are expected to be of type or subtype of
- * {@link TrustedListsCertificateSource}.
- * The {@link TSLLoader#getTslName()} property of each TSL loader is assigned from {@link LoadableTsl#name()} attribute
- * of its corresponding trusted lists certificate source bean.
+ * {@link TrustedListsCertificateSourceHolder}; the loader publishes the source of each refresh into it.
+ * The {@link TSLLoader#getTslName()} of each TSL loader is assigned from {@link LoadableTsl#name()} attribute
+ * of its corresponding holder bean.
  */
 @Slf4j
 @Component
 public class TSLLoaderDefinitionRegisterer implements BeanDefinitionRegistryPostProcessor {
 
     private static final String ANNOTATION_NAME = LoadableTsl.class.getCanonicalName();
-    private static final String TSL_SOURCE_PROPERTY_NAME = resolvePropertyName(TSLLoader.class, TrustedListsCertificateSource.class);
 
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry beanDefinitionRegistry) throws BeansException {
@@ -71,7 +67,8 @@ public class TSLLoaderDefinitionRegisterer implements BeanDefinitionRegistryPost
             beanDefinitionRegistry.registerBeanDefinition(loaderBeanDefinitionName, BeanDefinitionBuilder
                     .genericBeanDefinition(TSLLoader.class)
                     .addConstructorArgValue(tslName)
-                    .addPropertyReference(TSL_SOURCE_PROPERTY_NAME, beanDefinitionName)
+                    .addConstructorArgReference(beanDefinitionName)
+                    .setAutowireMode(AbstractBeanDefinition.AUTOWIRE_CONSTRUCTOR)
                     .getBeanDefinition());
         }
     }
@@ -106,23 +103,6 @@ public class TSLLoaderDefinitionRegisterer implements BeanDefinitionRegistryPost
             return type.cast(attributeValue);
         }
         throw new IllegalStateException(String.format("Attribute '%s' is not of type %s", name, type.getName()));
-    }
-
-    private static String resolvePropertyName(Class<?> beanType, Class<?> propertyType) {
-        try {
-            BeanInfo beanInfo = Introspector.getBeanInfo(beanType);
-            for (PropertyDescriptor propertyDescriptor : beanInfo.getPropertyDescriptors()) {
-                if (propertyType.isAssignableFrom(propertyDescriptor.getPropertyType())) {
-                    return propertyDescriptor.getName();
-                }
-            }
-        } catch (IntrospectionException e) {
-            throw new IllegalStateException("Failed to introspect " + beanType.getName(), e);
-        }
-        throw new IllegalStateException(String.format(
-                "Failed to find property of type %s from %s",
-                propertyType.getName(), beanType.getName()
-        ));
     }
 
 }

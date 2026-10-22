@@ -1,0 +1,25 @@
+{{- /* application.yml is always present (SPRING_CONFIG_ADDITIONAL_LOCATION names it without `optional:`);
+       an empty config.spring renders an empty document, which Spring Boot accepts. The extra files
+       share the ConfigMap, so one mount and one checksum cover them all. */ -}}
+{{- range $name, $_ := .Values.config.files }}
+{{- if or (eq $name "application.yml") (contains "/" $name) (eq $name "") }}
+{{- fail (printf "config.files: %q is not a usable file name (application.yml is the chart's own; no directories)" $name) }}
+{{- end }}
+{{- end }}
+{{- include "siva-webapp.springSecretGuard" (dict "path" "" "map" .Values.config.spring) -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "siva-webapp.fullname" . }}
+  labels:
+    {{- include "siva-webapp.labels" . | nindent 4 }}
+data:
+  application.yml: |
+    # Spring Boot configuration override from the chart's config.spring (release {{ .Release.Name }}).
+    {{- with .Values.config.spring }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- range $name, $content := .Values.config.files }}
+  {{ $name | quote }}: |
+    {{- $content | toString | nindent 4 }}
+  {{- end }}

@@ -4,6 +4,7 @@ dependency-reduced-pom.xml
 .*
 !.gitignore
 !.mvn
+!/helm/*/.helmignore
 *.iml
 .idea
 .mvn/wrapper/maven-wrapper.jar

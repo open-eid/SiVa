@@ -24,6 +24,11 @@ import org.mockito.Mock;
 import org.mockito.internal.verification.VerificationModeFactory;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.File;
+import java.time.Duration;
+
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -45,5 +50,30 @@ class TSLRefreshConfigurationTest {
         when(properties.getSchedulerCron()).thenReturn(SCHEDULER_CRON);
         tslRefreshConfiguration.tslRefreshTask();
         verify(properties, VerificationModeFactory.times(1)).getSchedulerCron();
+        verify(refresher, never()).refreshChangedSnapshots();
+    }
+
+    @Test
+    void tslRefreshTask_InSnapshotMode_PollsTheSnapshotStoreAtTheConfiguredInterval() {
+        when(properties.getSchedulerCron()).thenReturn(SCHEDULER_CRON);
+        when(properties.isLoadFromCache()).thenReturn(true);
+        when(properties.getSnapshotDirectory()).thenReturn(new File("snapshots"));
+        when(properties.getSnapshotPollInterval()).thenReturn(Duration.ofMillis(10));
+
+        tslRefreshConfiguration.tslRefreshTask();
+
+        verify(refresher, timeout(5000).atLeastOnce()).refreshChangedSnapshots();
+    }
+
+    @Test
+    void tslRefreshTask_InSnapshotModeWithoutAPollInterval_OnlyTheCronIsScheduled() {
+        when(properties.getSchedulerCron()).thenReturn(SCHEDULER_CRON);
+        when(properties.isLoadFromCache()).thenReturn(true);
+        when(properties.getSnapshotDirectory()).thenReturn(new File("snapshots"));
+        when(properties.getSnapshotPollInterval()).thenReturn(Duration.ZERO);
+
+        tslRefreshConfiguration.tslRefreshTask();
+
+        verify(refresher, never()).refreshChangedSnapshots();
     }
 }

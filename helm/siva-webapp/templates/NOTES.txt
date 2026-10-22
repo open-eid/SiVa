@@ -1,0 +1,68 @@
+SiVa webapp {{ .Chart.AppVersion }} (chart {{ .Chart.Version }}) released as {{ .Release.Name }} in namespace {{ .Release.Namespace }}.
+
+Image: {{ include "siva-webapp.image" . }}
+{{- if not (contains "/" .Values.image.repository) }}
+  WARNING: image.repository is the bare default. SiVa publishes no image; build one and set
+  image.repository to its full name in your registry (and image.tag), or the pod will stay in
+  ImagePullBackOff.
+{{- end }}
+{{- if and (eq .Values.runtime.forwardHeadersStrategy "framework") (not (and .Values.network.networkPolicy.enabled .Values.network.networkPolicy.ingressFrom)) }}
+
+NOTE: runtime.forwardHeadersStrategy is "framework" and no NetworkPolicy limits who reaches the
+traffic port (network.networkPolicy.enabled with ingressFrom set): the client address and scheme
+SiVa logs and reports are whatever X-Forwarded-* headers the connecting client sends. Admit only
+your ingress controller through network.networkPolicy.ingressFrom, or switch to "native" and name
+the proxies in server.tomcat.remoteip.internal-proxies (config.spring).
+{{- end }}
+
+{{- if include "siva-webapp.snapshotMode" . }}
+Trust lists come from a snapshot: the fetch Job runs first (then the CronJob
+{{ include "siva-webapp.fetcherName" . }} on "{{ include "siva-webapp.fetcherSchedule" . }}"), the pods load it
+within {{ .Values.tsl.snapshot.pollInterval }} and become ready in seconds. Watch it with
+  kubectl -n {{ .Release.Namespace }} get jobs,cronjobs -l app.kubernetes.io/component=tsl-fetch
+  kubectl -n {{ .Release.Namespace }} logs -l app.kubernetes.io/component=tsl-fetch --tail=20
+  kubectl -n {{ .Release.Namespace }} rollout status deployment/{{ include "siva-webapp.fullname" . }}
+{{- else }}
+Startup downloads the EU trust lists and takes a few minutes; watch it with
+  kubectl -n {{ .Release.Namespace }} rollout status deployment/{{ include "siva-webapp.fullname" . }}
+  kubectl -n {{ .Release.Namespace }} logs deployment/{{ include "siva-webapp.fullname" . }} -f
+{{- end }}
+
+{{- if include "siva-webapp.managementSplit" . }}
+
+Health with details and Prometheus metrics are on the management port, not on the traffic
+port (which answers only the status-only probes /readyz and /livez):
+  in-cluster {{ include "siva-webapp.healthUrl" . }}
+  (never exposed through the Service below or an Ingress; from outside the cluster:
+   kubectl -n {{ .Release.Namespace }} port-forward svc/{{ include "siva-webapp.fullname" . }}-management {{ .Values.runtime.managementPort }}
+   curl http://localhost:{{ .Values.runtime.managementPort }}/monitoring/health)
+{{- end }}
+
+Reaching the service:
+{{- if .Values.network.ingresses }}
+{{- range .Values.network.ingresses }}
+{{- $scheme := ternary "https" "http" (not (empty .tls)) }}
+{{- range .hosts }}
+{{- $host := .host }}
+{{- range .paths }}
+  {{ $scheme }}://{{ $host }}{{ .path | trimSuffix "/" }}/validate  (POST)
+{{- end }}
+{{- end }}
+{{- end }}
+{{- else if eq .Values.service.type "NodePort" }}
+  export NODE_PORT=$(kubectl -n {{ .Release.Namespace }} get svc {{ include "siva-webapp.fullname" . }} -o jsonpath='{.spec.ports[0].nodePort}')
+  export NODE_IP=$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}')
+  curl -X POST http://$NODE_IP:$NODE_PORT/validate   # expect 400 on an empty body
+{{- else if eq .Values.service.type "LoadBalancer" }}
+  kubectl -n {{ .Release.Namespace }} get svc -w {{ include "siva-webapp.fullname" . }}
+  curl -X POST http://<EXTERNAL-IP>:{{ .Values.service.port }}/validate   # expect 400 on an empty body
+{{- else }}
+  In-cluster: http://{{ include "siva-webapp.fullname" . }}.{{ .Release.Namespace }}.svc:{{ .Values.service.port }}
+  From outside: kubectl -n {{ .Release.Namespace }} port-forward svc/{{ include "siva-webapp.fullname" . }} 8080:{{ .Values.service.port }}
+                curl -X POST http://localhost:8080/validate   # expect 400 on an empty body
+{{- end }}
+
+Try a validation (sample bodies in build-helpers/sample-requests/ of the SiVa repository):
+  curl -X POST -H 'Content-Type: application/json' --data @sample.json <base-url>/validate
+
+Run the connectivity test:  helm -n {{ .Release.Namespace }} test {{ .Release.Name }}

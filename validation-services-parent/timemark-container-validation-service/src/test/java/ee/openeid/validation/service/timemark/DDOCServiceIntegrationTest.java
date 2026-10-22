@@ -41,7 +41,6 @@ import ee.openeid.tsl.configuration.TSLLoaderDefinitionRegisterer;
 import ee.openeid.validation.service.timemark.configuration.TimemarkContainerValidationServiceConfiguration;
 import ee.openeid.validation.service.timemark.signature.policy.BDOCConfigurationService;
 import ee.openeid.validation.service.timemark.signature.policy.BDOCSignaturePolicyService;
-import ee.openeid.validation.service.timemark.tsl.TimemarkTrustedListsCertificateSource;
 import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.util.encoders.Base64;
@@ -78,7 +77,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
         TSLLoaderDefinitionRegisterer.class,
         TSLRefresher.class,
         TSLValidationJobFactory.class,
-        TimemarkTrustedListsCertificateSource.class,
         TimemarkContainerValidationServiceConfiguration.class,
         TimemarkContainerValidationService.class,
         DDOCDataFilesService.class,

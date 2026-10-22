@@ -9,7 +9,7 @@ Libraries license information was obtained using the following command:
 ./mvnw license:aggregate-add-third-party
 ```
 
-Lists of 46 third-party dependencies.
+Lists of 50 third-party dependencies.
      (The Apache Software License, Version 2.0) co.elastic.logging:logback-ecs-encoder (co.elastic.logging:logback-ecs-encoder:1.8.0 - https://github.com/elastic/ecs-logging-java/logback-ecs-encoder)
      (Apache License, Version 2.0) Guava: Google Core Libraries for Java (com.google.guava:guava:33.7.2-jre - https://github.com/google/guava)
      (3-Clause BSD License) jcabi-manifests (com.jcabi:jcabi-manifests:2.2.0 - https://www.jcabi.com/jcabi-manifests)
@@ -24,6 +24,7 @@ Lists of 46 third-party dependencies.
      (European Union Public License 1.1) TimeStampToken Validation Service (ee.openid.siva:timestamptoken-validation-service:3.11.0 - https://github.com/open-eid/SiVa/validation-services-parent/timestamptoken-validation-service)
      (European Union Public License 1.1) tsl-loader (ee.openid.siva:tsl-loader:3.11.0 - https://github.com/open-eid/SiVa/validation-services-parent/tsl-loader)
      (European Union Public License 1.1) validation-commons (ee.openid.siva:validation-commons:3.11.0 - https://github.com/open-eid/SiVa/validation-services-parent/validation-commons)
+     (The Apache Software License, Version 2.0) micrometer-core (io.micrometer:micrometer-core:1.17.1 - https://github.com/micrometer-metrics/micrometer-commercial)
      (The Apache Software License, Version 2.0) micrometer-registry-prometheus (io.micrometer:micrometer-registry-prometheus:1.17.1 - https://github.com/micrometer-metrics/micrometer-commercial)
      (Apache-2.0) Apache Commons Collections (org.apache.commons:commons-collections4:4.6.0 - https://commons.apache.org/proper/commons-collections/)
      (Apache-2.0) Apache Commons Lang (org.apache.commons:commons-lang3:3.20.0 - https://commons.apache.org/proper/commons-lang/)
@@ -47,6 +48,8 @@ Lists of 46 third-party dependencies.
      (GNU Lesser General Public License) DSS Validation (org.digidoc4j.dss:dss-validation:6.2.d4j.1 - https://github.com/open-eid/sd-dss/dss-validation)
      (The Apache Software License, Version 2.0) JetBrains Java Annotations (org.jetbrains:annotations:26.1.0 - https://github.com/JetBrains/java-annotations)
      (The MIT License) Project Lombok (org.projectlombok:lombok:1.18.46 - https://projectlombok.org)
+     (Apache License, Version 2.0) spring-boot-configuration-processor (org.springframework.boot:spring-boot-configuration-processor:4.1.1 - https://spring.io/projects/spring-boot)
+     (Apache License, Version 2.0) spring-boot-health (org.springframework.boot:spring-boot-health:4.1.1 - https://spring.io/projects/spring-boot)
      (Apache License, Version 2.0) spring-boot-starter (org.springframework.boot:spring-boot-starter:4.1.1 - https://spring.io/projects/spring-boot)
      (Apache License, Version 2.0) spring-boot-starter-actuator (org.springframework.boot:spring-boot-starter-actuator:4.1.1 - https://spring.io/projects/spring-boot)
      (Apache License, Version 2.0) spring-boot-starter-logging (org.springframework.boot:spring-boot-starter-logging:4.1.1 - https://spring.io/projects/spring-boot)
@@ -56,3 +59,4 @@ Lists of 46 third-party dependencies.
      (Apache License, Version 2.0) spring-boot-starter-validation-test (org.springframework.boot:spring-boot-starter-validation-test:4.1.1 - https://spring.io/projects/spring-boot)
      (Apache License, Version 2.0) spring-boot-starter-webmvc (org.springframework.boot:spring-boot-starter-webmvc:4.1.1 - https://spring.io/projects/spring-boot)
      (Apache License, Version 2.0) spring-boot-starter-webmvc-test (org.springframework.boot:spring-boot-starter-webmvc-test:4.1.1 - https://spring.io/projects/spring-boot)
+     (The Apache Software License, Version 2.0) jackson-databind (tools.jackson.core:jackson-databind:3.2.3 - https://github.com/FasterXML/jackson)

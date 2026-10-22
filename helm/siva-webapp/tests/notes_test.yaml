@@ -1,0 +1,48 @@
+suite: install notes
+templates:
+  - NOTES.txt
+tests:
+  - it: says that the forwarded headers are taken from whoever reaches the pod while no policy limits that
+    asserts:
+      - matchRegexRaw:
+          pattern: 'runtime.forwardHeadersStrategy is "framework" and no NetworkPolicy limits who reaches'
+      - matchRegexRaw:
+          pattern: 'image.repository is the bare default'
+
+  - it: is quiet about forwarded headers once the policy admits only the named peers
+    set:
+      network:
+        networkPolicy:
+          enabled: true
+          ingressFrom:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: ingress-nginx
+    asserts:
+      - notMatchRegexRaw:
+          pattern: forwardHeadersStrategy
+
+  - it: still says so with the policy on but ingressFrom empty, which admits any source
+    set:
+      network:
+        networkPolicy:
+          enabled: true
+    asserts:
+      - matchRegexRaw:
+          pattern: no NetworkPolicy limits who reaches
+
+  - it: is quiet about forwarded headers under the native and none strategies
+    set:
+      runtime:
+        forwardHeadersStrategy: native
+    asserts:
+      - notMatchRegexRaw:
+          pattern: forwardHeadersStrategy
+
+  - it: is quiet about the image once the repository names a registry
+    set:
+      image:
+        repository: registry.example.invalid/siva-webapp
+    asserts:
+      - notMatchRegexRaw:
+          pattern: bare default

@@ -51,7 +51,9 @@ public class BDOCConfigurationService {
     protected void loadAllBDOCConfigurations() {
         properties.getAbstractPolicies().forEach(policy -> {
             Configuration tempConfiguration = configuration.copy();
-            tempConfiguration.setTSL(configuration.getTSL()); // Use TSL from the central configuration bean
+            // The copy is a serialized round trip: the TSL source and the executor are transient and set again
+            tempConfiguration.setTSL(configuration.getTSL());
+            tempConfiguration.setThreadExecutor(configuration.getThreadExecutor());
             tempConfiguration.setValidationPolicy(policyService.getAbsolutePath(policy.getName()));
             log.info("Adding BDOC validation policy: {}", policy.getName());
             policyList.putIfAbsent(policy.getName(), new PolicyConfigurationWrapper(tempConfiguration, policy));

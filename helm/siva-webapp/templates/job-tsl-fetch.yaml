@@ -1,0 +1,22 @@
+{{- if and (include "siva-webapp.snapshotMode" .) .Values.tsl.fetcher.bootstrapJob }}
+{{- $template := include "siva-webapp.fetcherPodTemplate" . }}
+# One fetch at install, and again whenever the fetcher pod changes (the name carries a hash of
+# the pod template, so an upgrade with a new image or config replaces the finished Job with a
+# fresh run). A plain resource, not a hook: a post-install hook would wait for the Deployment
+# to be healthy, which needs the snapshot this Job produces, and a pre-install hook would run
+# before the claim exists. The webapp pods poll the store and become ready once it has run.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "siva-webapp.fetcherName" . }}-{{ $template | sha256sum | trunc 8 }}
+  labels:
+    {{- include "siva-webapp.fetcherLabels" . | nindent 4 }}
+spec:
+  backoffLimit: {{ .Values.tsl.fetcher.backoffLimit }}
+  activeDeadlineSeconds: {{ .Values.tsl.fetcher.activeDeadlineSeconds }}
+  {{- /* No ttlSecondsAfterFinished here: this Job is a tracked resource, and a GitOps controller
+         would recreate a TTL-deleted one and run the fetch again every TTL. */}}
+  {{- include "siva-webapp.fetcherFailurePolicy" . | nindent 2 }}
+  template:
+    {{- $template | nindent 4 }}
+{{- end }}

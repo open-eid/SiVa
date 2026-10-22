@@ -1,0 +1,11 @@
+# Snapshot mode, fetch period P1D (thresholds in snapshot-p1d.test.yaml).
+tsl:
+  mode: snapshot
+  snapshot:
+    persistentVolumeClaim:
+      create: true
+  fetcher:
+    period: P1D
+monitoring:
+  prometheusRule:
+    enabled: true

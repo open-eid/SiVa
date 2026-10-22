@@ -1,0 +1,12 @@
+# Snapshot mode, default period PT6H, grace and lead time moved off their defaults.
+tsl:
+  mode: snapshot
+  snapshot:
+    persistentVolumeClaim:
+      create: true
+monitoring:
+  prometheusRule:
+    enabled: true
+    tsl:
+      grace: PT3H
+      leadTime: P14D

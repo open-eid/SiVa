@@ -73,11 +73,11 @@
             <PdfSignatureDictionary Level="FAIL" />
             <PdfPageDifference Level="FAIL" />
             <PdfAnnotationOverlap Level="WARN" />
-            <PdfVisualDifference Level="WARN" />
+            <PdfVisualDifference Level="FAIL" />
             <DocMDP Level="WARN" />
             <FieldMDP Level="WARN" />
             <SigFieldLock Level="WARN" />
-            <UndefinedChanges Level="WARN" />
+            <UndefinedChanges Level="FAIL" />
             <!-- <TrustServiceTypeIdentifier Level="WARN"> -->
             <!-- 				<Id>http://uri.etsi.org/TrstSvc/Svctype/CA/QC</Id> -->
             <!-- </TrustServiceTypeIdentifier> -->
@@ -363,11 +363,11 @@
             <PdfSignatureDictionary Level="FAIL" />
             <PdfPageDifference Level="FAIL" />
             <PdfAnnotationOverlap Level="WARN" />
-            <PdfVisualDifference Level="WARN" />
+            <PdfVisualDifference Level="FAIL" />
             <DocMDP Level="WARN" />
             <FieldMDP Level="WARN" />
             <SigFieldLock Level="WARN" />
-            <UndefinedChanges Level="WARN" />
+            <UndefinedChanges Level="FAIL" />
             <TrustServiceTypeIdentifier Level="FAIL">
                 <Id>http://uri.etsi.org/TrstSvc/Svctype/TSA/QTST</Id>
             </TrustServiceTypeIdentifier>

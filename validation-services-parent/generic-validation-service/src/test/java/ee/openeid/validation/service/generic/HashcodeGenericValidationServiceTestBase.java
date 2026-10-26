@@ -21,10 +21,11 @@ import ee.openeid.siva.validation.document.Datafile;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
+import ee.openeid.tsl.TrustedListsCertificateSourceHolder;
 import ee.openeid.validation.service.generic.configuration.properties.GenericSignaturePolicyProperties;
 import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
 import ee.openeid.validation.service.generic.validator.ocsp.OCSPSourceFactory;
-import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
+import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ abstract class HashcodeGenericValidationServiceTestBase {
     protected HashcodeGenericValidationService validationService;
     protected ConstraintLoadingSignaturePolicyService signaturePolicyService;
     @Autowired
-    protected TrustedListsCertificateSource trustedListsCertificateSource;
+    protected TrustedListsCertificateSourceHolder trustedListsCertificateSource;
     @Autowired
     protected GenericSignaturePolicyProperties policySettings;
     @Autowired
@@ -52,15 +53,9 @@ abstract class HashcodeGenericValidationServiceTestBase {
 
     @BeforeEach
     public void setUp() {
-        validationService = new HashcodeGenericValidationService();
-        validationService.setTrustedListsCertificateSource(trustedListsCertificateSource);
-
         signaturePolicyService = new ConstraintLoadingSignaturePolicyService(policySettings);
-        validationService.setSignaturePolicyService(signaturePolicyService);
-        validationService.setReportConfigurationProperties(new ReportConfigurationProperties(true));
-
-        validationService.setContainerValidatorFactory(containerValidatorFactory);
-        validationService.setOcspSourceFactory(ocspSourceFactory);
+        validationService = new HashcodeGenericValidationService(trustedListsCertificateSource, signaturePolicyService,
+                new ReportConfigurationProperties(true), new ProxyConfig(), containerValidatorFactory, ocspSourceFactory);
     }
 
     protected static ValidationDocument buildValidationDocument(String testFile, Datafile... datafiles) {

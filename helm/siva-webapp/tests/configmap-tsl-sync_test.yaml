@@ -1,0 +1,432 @@
+suite: trust-list store sync
+templates:
+  - configmap-tsl-sync.yaml
+  - deployment.yaml
+  - cronjob-tsl-fetch.yaml
+  - job-tsl-fetch.yaml
+  - prometheusrule.yaml
+  - configmap.yaml   # referenced by the checksum annotation
+tests:
+  - it: renders no sync objects by default
+    asserts:
+      - hasDocuments:
+          count: 0
+        template: configmap-tsl-sync.yaml
+      - notExists:
+          path: spec.template.spec.initContainers
+        template: deployment.yaml
+      - notExists:
+          path: spec.template.spec.volumes[?(@.name == "rclone-config")]
+        template: deployment.yaml
+
+  - it: ships the script and an inline rclone configuration in one ConfigMap
+    template: configmap-tsl-sync.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          sync:
+            enabled: true
+            remote: bucket:siva/tsl
+            config: |
+              [bucket]
+              type = s3
+              provider = AWS
+              env_auth = true
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: ConfigMap
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-siva-webapp-tsl-sync
+      - matchRegex:
+          path: data["tsl-sync.sh"]
+          pattern: '(?s)^#!/bin/sh\n.*case "\$mode" in\n  down\) down ;;\n  up\) up ;;\n  pod\) pod ;;'
+      - matchRegex:
+          path: data["rclone.conf"]
+          pattern: '^\[bucket\]\ntype = s3\nprovider = AWS\nenv_auth = true\n$'
+
+  - it: ships no rclone configuration when a Secret carries it
+    template: configmap-tsl-sync.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          sync:
+            enabled: true
+            remote: bucket:siva/tsl
+            existingSecret: my-rclone
+    asserts:
+      - notExists:
+          path: data["rclone.conf"]
+      - exists:
+          path: data["tsl-sync.sh"]
+
+  - it: needs a remote
+    template: job-tsl-fetch.yaml   # the first template rendered that asks
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          sync:
+            enabled: true
+            existingSecret: my-rclone
+    asserts:
+      - failedTemplate:
+          errorPattern: tsl.snapshot.sync.remote must name the store
+
+  - it: needs exactly one source of rclone configuration
+    template: job-tsl-fetch.yaml   # the first template rendered that asks
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          sync:
+            enabled: true
+            remote: bucket:siva/tsl
+    asserts:
+      - failedTemplate:
+          errorPattern: exactly one of config .* and existingSecret
+
+  - it: refuses the shared-volume settings beside it
+    template: job-tsl-fetch.yaml   # the first template rendered that asks
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+          sync:
+            enabled: true
+            remote: bucket:siva/tsl
+            existingSecret: my-rclone
+    asserts:
+      - failedTemplate:
+          errorPattern: tsl.snapshot.sync replaces the shared volume
+
+  - it: refuses a separate working cache beside it
+    template: job-tsl-fetch.yaml   # the first template rendered that asks
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          sync:
+            enabled: true
+            remote: bucket:siva/tsl
+            existingSecret: my-rclone
+        fetcher:
+          workVolume:
+            emptyDir: {}
+    asserts:
+      - failedTemplate:
+          errorPattern: tsl.fetcher.workVolume is unused with tsl.snapshot.sync
+
+  - it: is off in online mode even when enabled
+    template: configmap-tsl-sync.yaml
+    set:
+      tsl:
+        snapshot:
+          sync:
+            enabled: true
+            remote: bucket:siva/tsl
+            existingSecret: my-rclone
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: runs the download loop as a native sidecar over a pod-local store in the webapp pods
+    template: deployment.yaml
+    capabilities:
+      majorVersion: 1
+      minorVersion: 31
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          sync:
+            enabled: true
+            remote: bucket:siva/tsl
+            interval: 15
+            keep: 2
+            existingSecret: my-rclone
+            env:
+              - name: RCLONE_S3_NO_CHECK_BUCKET
+                value: "true"
+    asserts:
+      - lengthEqual:
+          path: spec.template.spec.initContainers
+          count: 1
+      - equal:
+          path: spec.template.spec.initContainers[0].name
+          value: tsl-sync
+      - equal:
+          path: spec.template.spec.initContainers[0].restartPolicy
+          value: Always
+      - equal:
+          path: spec.template.spec.initContainers[0].image
+          value: rclone/rclone:1.75.2
+      - equal:
+          path: spec.template.spec.initContainers[0].command
+          value: ["sh", "/etc/siva-tsl-sync/tsl-sync.sh", "pod"]
+      - equal:
+          path: spec.template.spec.initContainers[0].securityContext
+          value:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+            readOnlyRootFilesystem: true
+            runAsUser: 1002
+            runAsGroup: 1001
+      - equal:
+          path: spec.template.spec.initContainers[0].env
+          value:
+            - name: STORE
+              value: /var/siva/tsl
+            - name: REMOTE
+              value: bucket:siva/tsl
+            - name: INTERVAL
+              value: "15"
+            - name: KEEP
+              value: "2"
+            - name: RCLONE_CONFIG
+              value: /etc/rclone/rclone.conf
+            - name: RCLONE_CACHE_DIR
+              value: /tmp/rclone
+            - name: RCLONE_S3_NO_CHECK_BUCKET
+              value: "true"
+      - equal:
+          path: spec.template.spec.initContainers[0].volumeMounts
+          value:
+            - name: tsl-store
+              mountPath: /var/siva/tsl
+            - name: tsl-sync
+              mountPath: /etc/siva-tsl-sync
+              readOnly: true
+            - name: rclone-config
+              mountPath: /etc/rclone
+              readOnly: true
+            - name: tsl-sync-tmp
+              mountPath: /tmp
+      - lengthEqual:
+          path: spec.template.spec.containers
+          count: 1
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: tsl-store
+            mountPath: /var/siva/tsl
+            readOnly: true
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: tsl-store
+            emptyDir:
+              sizeLimit: 256Mi
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: rclone-config
+            secret:
+              secretName: my-rclone
+              items:
+                - key: rclone.conf
+                  path: rclone.conf
+              defaultMode: 0444
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: tsl-sync
+            configMap:
+              name: RELEASE-NAME-siva-webapp-tsl-sync
+              items:
+                - key: tsl-sync.sh
+                  path: tsl-sync.sh
+      - notExists:
+          path: spec.template.spec.containers[0].env[?(@.name == "REMOTE")]
+
+  - it: mounts an inline configuration from the ConfigMap and takes an unlimited store
+    template: deployment.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          sync:
+            enabled: true
+            remote: bucket:siva/tsl
+            config: "[bucket]\ntype = s3\n"
+            sizeLimit: ""
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: rclone-config
+            configMap:
+              name: RELEASE-NAME-siva-webapp-tsl-sync
+              items:
+                - key: rclone.conf
+                  path: rclone.conf
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: tsl-store
+            emptyDir: {}
+
+  - it: runs the sidecar as a plain container before extraContainers on clusters without native sidecars
+    template: deployment.yaml
+    capabilities:
+      majorVersion: 1
+      minorVersion: 28
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          sync:
+            enabled: true
+            remote: bucket:siva/tsl
+            existingSecret: my-rclone
+      extraContainers:
+        - name: extra
+          image: example.invalid/extra:1
+    asserts:
+      - notExists:
+          path: spec.template.spec.initContainers
+      - equal:
+          path: spec.template.spec.containers[1].name
+          value: tsl-sync
+      - notExists:
+          path: spec.template.spec.containers[1].restartPolicy
+      - equal:
+          path: spec.template.spec.containers[2].name
+          value: extra
+
+  - it: brackets the fetch with a download and an upload in a shared process namespace
+    template: cronjob-tsl-fetch.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          sync:
+            enabled: true
+            remote: bucket:siva/tsl
+            existingSecret: my-rclone
+    asserts:
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.shareProcessNamespace
+          value: true
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.initContainers[0].name
+          value: tsl-sync-down
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.initContainers[0].command
+          value: ["sh", "/etc/siva-tsl-sync/tsl-sync.sh", "down"]
+      - notExists:
+          path: spec.jobTemplate.spec.template.spec.initContainers[0].restartPolicy
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.containers[0].name
+          value: tsl-fetch
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.containers[1].name
+          value: tsl-sync-up
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.containers[1].command
+          value: ["sh", "/etc/siva-tsl-sync/tsl-sync.sh", "up"]
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_CACHEDIRECTORY
+            value: /var/siva/tsl/work
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[1].volumeMounts
+          content:
+            name: tsl-store
+            mountPath: /var/siva/tsl
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.volumes
+          content:
+            name: tsl-store
+            emptyDir:
+              sizeLimit: 256Mi
+      - notExists:
+          path: spec.jobTemplate.spec.template.spec.volumes[?(@.name == "tsl-work")]
+      - equal:
+          path: spec.jobTemplate.spec.podFailurePolicy.rules[0].onExitCodes.containerName
+          value: tsl-fetch
+
+  - it: gives the bootstrap Job the same bracket
+    template: job-tsl-fetch.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          sync:
+            enabled: true
+            remote: bucket:siva/tsl
+            existingSecret: my-rclone
+    asserts:
+      - equal:
+          path: spec.template.spec.shareProcessNamespace
+          value: true
+      - equal:
+          path: spec.template.spec.initContainers[0].name
+          value: tsl-sync-down
+      - equal:
+          path: spec.template.spec.containers[1].name
+          value: tsl-sync-up
+
+  - it: keeps the fetcher pods out of the shared process namespace without sync
+    template: cronjob-tsl-fetch.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+    asserts:
+      - notExists:
+          path: spec.jobTemplate.spec.template.spec.shareProcessNamespace
+      - notExists:
+          path: spec.jobTemplate.spec.template.spec.initContainers
+      - lengthEqual:
+          path: spec.jobTemplate.spec.template.spec.containers
+          count: 1
+
+  - it: adds the sync interval to the alerts' grace
+    template: prometheusrule.yaml
+    set:
+      monitoring:
+        prometheusRule:
+          enabled: true
+      tsl:
+        mode: snapshot
+        snapshot:
+          sync:
+            enabled: true
+            remote: bucket:siva/tsl
+            existingSecret: my-rclone
+            interval: 120
+    asserts:
+      - matchRegex:
+          path: spec.groups[0].rules[?(@.alert == "SivaTslSnapshotStale")].expr
+          pattern: '\+ 3720\)$'
+      - matchRegex:
+          path: spec.groups[0].rules[?(@.alert == "SivaTslSnapshotStale")].annotations.summary
+          pattern: 'plus 1 h 2 min'
+
+  - it: pins the rclone image by digest next to its tag
+    template: deployment.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          sync:
+            enabled: true
+            remote: lab:siva-tsl/store
+            config: "[lab]\ntype = s3\n"
+            image:
+              digest: sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+    asserts:
+      - equal:
+          path: spec.template.spec.initContainers[0].image
+          value: rclone/rclone:1.75.2@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef

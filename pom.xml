@@ -134,12 +134,15 @@
 
         <build-helper-maven-plugin.version>3.6.2</build-helper-maven-plugin.version>
         <coveralls-maven-plugin.version>4.3.0</coveralls-maven-plugin.version>
-        <findbugs-maven-plugin.version>3.0.5</findbugs-maven-plugin.version>
+        <findsecbugs-plugin.version>1.14.0</findsecbugs-plugin.version>
         <jacoco-maven-plugin.version>0.8.15</jacoco-maven-plugin.version>
         <license-maven-plugin.version>2.7.1</license-maven-plugin.version>
         <maven-enforcer-plugin.version>3.6.3</maven-enforcer-plugin.version>
         <maven-pmd-plugin.version>3.28.0</maven-pmd-plugin.version>
         <maven-release-plugin.version>3.3.1</maven-release-plugin.version>
+        <pitest-maven.version>1.30.0</pitest-maven.version>
+        <pitest-junit5-plugin.version>1.2.3</pitest-junit5-plugin.version>
+        <spotbugs-maven-plugin.version>4.9.8.5</spotbugs-maven-plugin.version>
 
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
@@ -152,26 +155,6 @@
         <jackson-2-bom.version>2.22.1</jackson-2-bom.version> <!-- CVE-2026-59889 -->
     </properties>
 
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <version>${findbugs-maven-plugin.version}</version>
-                <configuration>
-                    <effort>Max</effort>
-                    <threshold>Low</threshold>
-                    <xmlOutput>true</xmlOutput>
-                    <findbugsXmlOutputDirectory>${project.build.directory}/findbugs</findbugsXmlOutputDirectory>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <version>${maven-pmd-plugin.version}</version>
-            </plugin>
-        </plugins>
-    </reporting>
-
     <build>
         <plugins>
             <plugin>
@@ -181,6 +164,60 @@
                 <configuration>
                     <includeTransitiveDependencies>false</includeTransitiveDependencies>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>${spotbugs-maven-plugin.version}</version>
+                <configuration>
+                    <effort>Max</effort>
+                    <!-- Only High-confidence findings fail the build; the rest stay in the report. -->
+                    <threshold>High</threshold>
+                    <xmlOutput>true</xmlOutput>
+                    <!-- Findings in code that predates the gate; remove entries as the code is touched. -->
+                    <excludeFilterFile>${maven.multiModuleProjectDirectory}/spotbugs-exclude.xml</excludeFilterFile>
+                    <plugins>
+                        <plugin>
+                            <groupId>com.h3xstream.findsecbugs</groupId>
+                            <artifactId>findsecbugs-plugin</artifactId>
+                            <version>${findsecbugs-plugin.version}</version>
+                        </plugin>
+                    </plugins>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>spotbugs-check</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>${maven-pmd-plugin.version}</version>
+                <configuration>
+                    <targetJdk>${language.level}</targetJdk>
+                    <includeTests>false</includeTests>
+                    <printFailingErrors>true</printFailingErrors>
+                    <linkXRef>false</linkXRef>
+                    <rulesets>
+                        <ruleset>${maven.multiModuleProjectDirectory}/pmd-ruleset.xml</ruleset>
+                    </rulesets>
+                    <!-- Violations in code that predates the gate (class=rule,rule); neither reported nor failing. -->
+                    <excludeFromFailureFile>${maven.multiModuleProjectDirectory}/pmd-exclude.properties</excludeFromFailureFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>pmd-check</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -221,6 +258,18 @@
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <formats>
+                                <format>XML</format>
+                                <format>HTML</format>
+                            </formats>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -269,33 +318,38 @@
     </build>
 
     <profiles>
+        <!-- Mutation testing (PIT), off by default: slow, meant for the modules a change touches.
+             ./mvnw -Pmutation -pl <module> org.pitest:pitest-maven:mutationCoverage -->
         <profile>
-            <id>coverage</id>
+            <id>mutation</id>
+            <properties>
+                <!-- Without jacoco:prepare-agent the surefire argLine would carry a literal ${argLine}. -->
+                <argLine></argLine>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>${jacoco-maven-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>prepare-agent</id>
-                                <goals>
-                                    <goal>prepare-agent</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>report</id>
-                                <goals>
-                                    <goal>report</goal>
-                                </goals>
-                                <configuration>
-                                    <formats>
-                                        <format>XML</format>
-                                    </formats>
-                                </configuration>
-                            </execution>
-                        </executions>
+                        <groupId>org.pitest</groupId>
+                        <artifactId>pitest-maven</artifactId>
+                        <version>${pitest-maven.version}</version>
+                        <configuration>
+                            <targetClasses>
+                                <param>ee.openeid.*</param>
+                            </targetClasses>
+                            <outputFormats>
+                                <param>XML</param>
+                                <param>HTML</param>
+                            </outputFormats>
+                            <timestampedReports>false</timestampedReports>
+                            <threads>4</threads>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.pitest</groupId>
+                                <artifactId>pitest-junit5-plugin</artifactId>
+                                <version>${pitest-junit5-plugin.version}</version>
+                            </dependency>
+                        </dependencies>
                     </plugin>
                 </plugins>
             </build>

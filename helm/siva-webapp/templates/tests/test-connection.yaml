@@ -1,0 +1,32 @@
+{{- if .Values.tests.enabled }}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "siva-webapp.fullname" . }}-test-connection"
+  labels:
+    {{- include "siva-webapp.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  automountServiceAccountToken: false
+  # A fixed-purpose pod: the restricted profile is spelled out here rather than inherited from
+  # security.*, and busybox has no numeric USER, so the uid is explicit (tests.runAsUser).
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: {{ .Values.tests.runAsUser }}
+    runAsGroup: {{ .Values.tests.runAsUser }}
+    seccompProfile:
+      type: RuntimeDefault
+  containers:
+    - name: wget
+      image: {{ include "siva-webapp.imageRef" (list .Values.tests.image "") | quote }}
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities:
+          drop:
+            - ALL
+      command: ['wget']
+      args: ['-q', '-O-', {{ include "siva-webapp.healthUrl" . | quote }}]
+  restartPolicy: Never
+{{- end }}

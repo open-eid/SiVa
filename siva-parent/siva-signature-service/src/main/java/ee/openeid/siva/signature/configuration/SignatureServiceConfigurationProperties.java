@@ -18,13 +18,16 @@ package ee.openeid.siva.signature.configuration;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 @Data
-@ConfigurationProperties("siva.signature-service")
+@ConfigurationProperties(prefix = "siva.signature-service", ignoreUnknownFields = false)
 public class SignatureServiceConfigurationProperties {
     private String signatureLevel;
     private String tspUrl;
     private String ocspUrl;
+    @NestedConfigurationProperty
     private Pkcs11Properties pkcs11;
+    @NestedConfigurationProperty
     private Pkcs12Properties pkcs12;
 }

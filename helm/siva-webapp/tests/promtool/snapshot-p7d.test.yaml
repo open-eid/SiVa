@@ -1,0 +1,164 @@
+# promtool threshold tests for snapshot-p7d.values.yaml. Snapshot mode, period P7D (the longest allowed). Warning 2P + lead time (7 d) = 21 d,
+# critical P + 1 d = 8 d, stale and not-downloaded 2P + grace (1 h) = 14 d 1 h.
+# The period comes from siva_tsl_refresh_period_seconds, which every test feeds; minutes below are the
+# thresholds written out, not recomputed from the chart. Rules are evaluated every 10 minutes (14 days
+# at 1m take a minute); each boundary is probed 10 minutes either side.
+rule_files:
+  - rules.yaml
+evaluation_interval: 10m
+
+tests:
+  # EE's list and the LOTL both have NextUpdate at 30300m: warning from 30240m before it (after 60m),
+  # critical from 11520m before it (after 18780m), each alert per list. The pod reports its period.
+  - interval: 1m
+    input_series:
+      - series: 'siva_tsl_next_update_timestamp_seconds{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",loader="generic",kind="tl",territory="EE"}'
+        values: '1818000x18790'
+      - series: 'siva_tsl_next_update_timestamp_seconds{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",loader="generic",kind="lotl",territory="EU"}'
+        values: '1818000x18790'
+      - series: 'siva_tsl_refresh_period_seconds{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",loader="generic"}'
+        values: '604800x18790'
+    alert_rule_test:
+      - eval_time: 50m
+        alertname: SivaTslListExpiringSoon
+        exp_alerts: []
+      - eval_time: 70m
+        alertname: SivaTslListExpiringSoon
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              namespace: siva
+              pod: siva-webapp-7d9f8b6c4-x2k9p
+              loader: generic
+              kind: tl
+              territory: EE
+            exp_annotations:
+              summary: "The EE trusted list (tl) runs out within two refresh periods plus 7 d"
+              description: "Its NextUpdate is close and SiVa has not received a newer version. Once it passes, signatures relying on it lose qualification (POLv4 fails them) and, at the next reload, their trust anchors."
+          - exp_labels:
+              severity: warning
+              namespace: siva
+              pod: siva-webapp-7d9f8b6c4-x2k9p
+              loader: generic
+              kind: lotl
+              territory: EU
+            exp_annotations:
+              summary: "The EU trusted list (lotl) runs out within two refresh periods plus 7 d"
+              description: "Its NextUpdate is close and SiVa has not received a newer version. Once it passes, signatures relying on it lose qualification (POLv4 fails them) and, at the next reload, their trust anchors."
+      - eval_time: 70m
+        alertname: SivaTslListExpiring
+        exp_alerts: []
+      - eval_time: 18770m
+        alertname: SivaTslListExpiring
+        exp_alerts: []
+      - eval_time: 18790m
+        alertname: SivaTslListExpiring
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              namespace: siva
+              pod: siva-webapp-7d9f8b6c4-x2k9p
+              loader: generic
+              kind: tl
+              territory: EE
+            exp_annotations:
+              summary: "The EE trusted list (tl) runs out within one refresh period plus a day"
+              description: "Less than one refresh period plus a day is left. Check that the publisher has issued a newer list and that the refresh picks it up."
+          - exp_labels:
+              severity: critical
+              namespace: siva
+              pod: siva-webapp-7d9f8b6c4-x2k9p
+              loader: generic
+              kind: lotl
+              territory: EU
+            exp_annotations:
+              summary: "The EU trusted list (lotl) runs out within one refresh period plus a day"
+              description: "Less than one refresh period plus a day is left. Check that the publisher has issued a newer list and that the refresh picks it up."
+
+  # Without the period gauge nothing can be sized: the same lists stay quiet.
+  - interval: 1m
+    input_series:
+      - series: 'siva_tsl_next_update_timestamp_seconds{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",loader="generic",kind="tl",territory="EE"}'
+        values: '1818000x18790'
+    alert_rule_test:
+      - eval_time: 18790m
+        alertname: SivaTslListExpiring
+        exp_alerts: []
+      - eval_time: 70m
+        alertname: SivaTslListExpiringSoon
+        exp_alerts: []
+
+  # EE's list and the LOTL were last downloaded at 10080m (one period), then every download fails:
+  # served from the copy, the alert comes after 30300m, not at 29940m. LV keeps being downloaded
+  # (its time follows the clock) and never fires.
+  - interval: 1m
+    input_series:
+      - series: 'siva_tsl_list_downloaded_timestamp_seconds{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",loader="generic",kind="tl",territory="EE"}'
+        values: '0x10079 604800x20230'
+      - series: 'siva_tsl_list_downloaded_timestamp_seconds{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",loader="generic",kind="lotl",territory="EU"}'
+        values: '0x10079 604800x20230'
+      - series: 'siva_tsl_list_downloaded_timestamp_seconds{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",loader="generic",kind="tl",territory="LV"}'
+        values: '0+60x30310'
+      - series: 'siva_tsl_refresh_period_seconds{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",loader="generic"}'
+        values: '604800x30310'
+    alert_rule_test:
+      - eval_time: 29940m
+        alertname: SivaTslListNotDownloaded
+        exp_alerts: []
+      - eval_time: 30290m
+        alertname: SivaTslListNotDownloaded
+        exp_alerts: []
+      - eval_time: 30310m
+        alertname: SivaTslListNotDownloaded
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              namespace: siva
+              pod: siva-webapp-7d9f8b6c4-x2k9p
+              loader: generic
+              kind: tl
+              territory: EE
+            exp_annotations:
+              summary: "SiVa serves the EE trusted list (tl) from a copy older than two refresh periods plus 1 h"
+              description: "Every recent download of it failed and the generic loader runs on the last copy: the publisher is unreachable or redirecting. The fetch (or pod) log names the reason in its 'using the last copy on disk' line; a certificate error there after a redirect belongs to the redirect target, not the publisher. The copy stays valid until the list's NextUpdate, which SivaTslListExpiring watches."
+          - exp_labels:
+              severity: warning
+              namespace: siva
+              pod: siva-webapp-7d9f8b6c4-x2k9p
+              loader: generic
+              kind: lotl
+              territory: EU
+            exp_annotations:
+              summary: "SiVa serves the EU trusted list (lotl) from a copy older than two refresh periods plus 1 h"
+              description: "Every recent download of it failed and the generic loader runs on the last copy: the publisher is unreachable or redirecting. The fetch (or pod) log names the reason in its 'using the last copy on disk' line; a certificate error there after a redirect belongs to the redirect target, not the publisher. The copy stays valid until the list's NextUpdate, which SivaTslListExpiring watches."
+
+  # The pod's snapshot is renewed at 10080m (one period), then frozen: stale only after 30300m, not at
+  # 29940m. Another namespace's snapshot, frozen at 0 with its own period, never fires.
+  - interval: 1m
+    input_series:
+      - series: 'siva_tsl_snapshot_created_timestamp_seconds{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",loader="generic"}'
+        values: '0x10079 604800x20230'
+      - series: 'siva_tsl_refresh_period_seconds{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",loader="generic"}'
+        values: '604800x30310'
+      - series: 'siva_tsl_snapshot_created_timestamp_seconds{namespace="other",pod="siva-webapp-7d9f8b6c4-x2k9p",loader="generic"}'
+        values: '0x30310'
+      - series: 'siva_tsl_refresh_period_seconds{namespace="other",pod="siva-webapp-7d9f8b6c4-x2k9p",loader="generic"}'
+        values: '604800x30310'
+    alert_rule_test:
+      - eval_time: 29940m
+        alertname: SivaTslSnapshotStale
+        exp_alerts: []
+      - eval_time: 30290m
+        alertname: SivaTslSnapshotStale
+        exp_alerts: []
+      - eval_time: 30310m
+        alertname: SivaTslSnapshotStale
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              namespace: siva
+              pod: siva-webapp-7d9f8b6c4-x2k9p
+              loader: generic
+            exp_annotations:
+              summary: "SiVa pod siva-webapp-7d9f8b6c4-x2k9p runs on a snapshot older than two fetch periods plus 1 h"
+              description: "Two fetch periods without a newer snapshot reaching the pod: the fetch (a Failed fetch Job says why: kubectl -n siva logs job/<newest siva-webapp-tsl-fetch-...>), a sync between store and pod, or the pod's refusal of a newer snapshot (see its log)."

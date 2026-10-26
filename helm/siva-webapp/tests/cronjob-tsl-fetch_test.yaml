@@ -1,0 +1,436 @@
+suite: trust-list fetch cronjob
+templates:
+  - cronjob-tsl-fetch.yaml
+  - configmap.yaml   # referenced by the checksum annotation
+chart:
+  appVersion: 9.9.9
+tests:
+  - it: is not rendered in online mode
+    template: cronjob-tsl-fetch.yaml
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: runs the webapp image in the tsl-fetch profile against the store, one at a time
+    template: cronjob-tsl-fetch.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+      env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: test
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: CronJob
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-siva-webapp-tsl-fetch
+      - equal:
+          path: metadata.labels["app.kubernetes.io/name"]
+          value: siva-webapp-tsl-fetch
+      - equal:
+          path: metadata.labels["app.kubernetes.io/component"]
+          value: tsl-fetch
+      - equal:
+          path: spec.schedule
+          value: "0 */6 * * *"
+      - equal:
+          path: spec.concurrencyPolicy
+          value: Forbid
+      - notExists:
+          path: spec.timeZone
+      - notExists:
+          path: spec.startingDeadlineSeconds
+      - equal:
+          path: spec.successfulJobsHistoryLimit
+          value: 3
+      - equal:
+          path: spec.jobTemplate.spec.backoffLimit
+          value: 2
+      - equal:
+          path: spec.jobTemplate.spec.activeDeadlineSeconds
+          value: 1800
+      - notExists:
+          path: spec.jobTemplate.spec.ttlSecondsAfterFinished
+      - equal:   # below threshold (1) and published from a last copy (3) fail the Job at once
+          path: spec.jobTemplate.spec.podFailurePolicy.rules
+          value:
+            - action: FailJob
+              onExitCodes:
+                containerName: tsl-fetch
+                operator: In
+                values: [1, 3]
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.restartPolicy
+          value: Never
+      - equal:
+          path: spec.jobTemplate.spec.template.metadata.labels["app.kubernetes.io/name"]
+          value: siva-webapp-tsl-fetch
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.containers[0].image
+          value: siva-webapp:9.9.9
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.containers[0].name
+          value: tsl-fetch
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: SPRING_PROFILES_INCLUDE
+            value: tsl-fetch
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_LOADFROMCACHE
+            value: "false"
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_CACHEDIRECTORY
+            value: /var/siva/tsl/work
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_FETCHER_OUTPUTDIRECTORY
+            value: /var/siva/tsl
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_FETCHER_KEEPSNAPSHOTS
+            value: "3"
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_FETCHER_PERIOD
+            value: PT6H
+      - contains:   # every run downloads; the cache never answers for it
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_ONLINECACHEEXPIRATIONTIME
+            value: PT0S
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: SPRING_PROFILES_ACTIVE
+            value: test
+      - notExists:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env[?(@.name == "MANAGEMENT_SERVER_PORT")]
+      - notExists:
+          path: spec.jobTemplate.spec.template.spec.containers[0].ports
+      - notExists:
+          path: spec.jobTemplate.spec.template.spec.containers[0].readinessProbe
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.containers[0].securityContext.readOnlyRootFilesystem
+          value: true
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.securityContext.runAsNonRoot
+          value: true
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.automountServiceAccountToken
+          value: false
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.containers[0].resources.limits.memory
+          value: 1Gi
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].volumeMounts
+          content:
+            name: tsl-store
+            mountPath: /var/siva/tsl
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].volumeMounts
+          content:
+            name: config
+            mountPath: /etc/siva-webapp
+            readOnly: true
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.volumes
+          content:
+            name: tsl-store
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-siva-webapp-tsl
+      - notExists:
+          path: spec.jobTemplate.spec.template.spec.volumes[?(@.name == "tsl-work")]
+      - notExists:
+          path: spec.jobTemplate.spec.template.spec.volumes[?(@.name == "secrets")]
+
+  - it: never inherits the webapp's Secret
+    template: cronjob-tsl-fetch.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+      secrets:
+        existingSecret: webapp-secret
+    asserts:
+      - notExists:
+          path: spec.jobTemplate.spec.template.spec.volumes[?(@.name == "secrets")]
+      - notExists:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env[?(@.name == "SPRING_CONFIG_IMPORT")]
+
+  - it: takes schedule, time zone, deadlines, a separate working cache and fetcher-only env from values
+    template: cronjob-tsl-fetch.yaml
+    values:
+      - ../ci/all-on-values.yaml
+    asserts:
+      - equal:
+          path: spec.schedule
+          value: "15 */4 * * *"
+      - equal:
+          path: spec.timeZone
+          value: Europe/Tallinn
+      - equal:
+          path: spec.startingDeadlineSeconds
+          value: 600
+      - equal:
+          path: spec.jobTemplate.spec.ttlSecondsAfterFinished
+          value: 86400
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_FETCHER_PERIOD
+            value: PT4H
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_CACHEDIRECTORY
+            value: /var/siva/tsl-work
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: EXAMPLE_FETCHER_FLAG
+            value: "1"
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: EXAMPLE_FLAG
+            value: "1"
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].volumeMounts
+          content:
+            name: tsl-work
+            mountPath: /var/siva/tsl-work
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.volumes
+          content:
+            name: tsl-work
+            persistentVolumeClaim:
+              claimName: example-tsl-work
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.imagePullSecrets[0].name
+          value: example-registry-credentials
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.volumes
+          content:
+            name: secrets
+            secret:
+              secretName: example-tsl-fetch-secrets
+              defaultMode: 292
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: SPRING_CONFIG_IMPORT
+            value: configtree:/etc/siva/secrets/
+      - notExists:
+          path: spec.jobTemplate.spec.template.spec.containers[0].envFrom
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.nodeSelector["kubernetes.io/os"]
+          value: linux
+
+  - it: derives the schedule from the fetch period
+    template: cronjob-tsl-fetch.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+        fetcher:
+          period: P7D
+    asserts:
+      - equal:
+          path: spec.schedule
+          value: "0 3 * * 1"
+
+  - it: derives a daily schedule at 03:00
+    template: cronjob-tsl-fetch.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+        fetcher:
+          period: P1D
+    asserts:
+      - equal:
+          path: spec.schedule
+          value: "0 3 * * *"
+
+  - it: derives a schedule in minutes for periods under an hour
+    template: cronjob-tsl-fetch.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+        fetcher:
+          period: PT30M
+    asserts:
+      - equal:
+          path: spec.schedule
+          value: "*/30 * * * *"
+
+  - it: refuses a fetch period longer than a week
+    template: cronjob-tsl-fetch.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+        fetcher:
+          period: P30D
+    asserts:
+      - failedTemplate:
+          errorPattern: tsl.fetcher.period must be more than zero and at most P7D
+
+  - it: asks for an explicit schedule when the period has no derived one
+    template: cronjob-tsl-fetch.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+        fetcher:
+          period: PT5H
+    asserts:
+      - failedTemplate:
+          errorPattern: set tsl.fetcher.schedule to match it
+
+  - it: gives the fetcher the same territories as the webapp
+    template: cronjob-tsl-fetch.yaml
+    values:
+      - ../ci/all-on-values.yaml
+    asserts:
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_TRUSTEDTERRITORIES
+            value: EE,LV,LT
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_MANDATORYTERRITORIES
+            value: EE
+
+  - it: gives the fetcher the same trust material as the webapp
+    template: cronjob-tsl-fetch.yaml
+    values:
+      - ../ci/all-on-values.yaml
+    asserts:
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_SSLBUNDLE
+            value: tsl
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].env
+          content:
+            name: SPRING_SSL_BUNDLE_PEM_LOTL_RELOADONUPDATE
+            value: "true"
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].volumeMounts
+          content:
+            name: trust
+            mountPath: /etc/siva/trust
+            readOnly: true
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.volumes
+          content:
+            name: trust
+            configMap:
+              name: example-siva-trust
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[0].volumeMounts
+          content:
+            name: trust-binding
+            mountPath: /platform/bindings/ca-certificates
+            readOnly: true
+
+  - it: passes the fetcher's own extra volumes and mounts through after the chart's, never the webapp's
+    template: cronjob-tsl-fetch.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+        fetcher:
+          extraVolumes:
+            - name: proxy-ca
+              configMap:
+                name: proxy-ca
+          extraVolumeMounts:
+            - name: proxy-ca
+              mountPath: /etc/siva/proxy-ca
+              readOnly: true
+      extraVolumes:
+        - name: webapp-only
+          emptyDir: {}
+      extraVolumeMounts:
+        - name: webapp-only
+          mountPath: /var/siva/webapp-only
+    asserts:
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.volumes[-1]
+          value:
+            name: proxy-ca
+            configMap:
+              name: proxy-ca
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.containers[0].volumeMounts[-1]
+          value:
+            name: proxy-ca
+            mountPath: /etc/siva/proxy-ca
+            readOnly: true
+      - notExists:
+          path: spec.jobTemplate.spec.template.spec.volumes[?(@.name == "webapp-only")]
+      - notExists:
+          path: spec.jobTemplate.spec.template.spec.containers[0].volumeMounts[?(@.name == "webapp-only")]
+
+  - it: refuses a fetch period with no component (P)
+    template: cronjob-tsl-fetch.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+        fetcher:
+          period: P
+    asserts:
+      - failedTemplate:
+          errorPattern: (?i)period.*does not match pattern
+
+  - it: renders a fetch period given in days
+    template: cronjob-tsl-fetch.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+        fetcher:
+          period: P1D
+    asserts:
+      - equal:
+          path: spec.schedule
+          value: 0 3 * * *

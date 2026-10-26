@@ -1,0 +1,132 @@
+{{- if .Values.monitoring.prometheusRule.enabled }}
+{{- $name := include "siva-webapp.fullname" . }}
+{{- $ns := .Release.Namespace }}
+{{- /* Deployment pods are <fullname>-<replicaset hash>-<pod hash>. A dot in the name must reach
+       the regex as \. and PromQL's double-quoted string needs that backslash doubled. */ -}}
+{{- $pods := printf "%s-[a-z0-9]+-[a-z0-9]+" ($name | replace "." "\\\\.") }}
+{{- $app := printf `namespace="%s",pod=~"%s",uri!~"/monitoring.*"` $ns $pods }}
+{{- $kube := printf `namespace="%s",pod=~"%s"` $ns $pods }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ $name }}
+  {{- with .Values.monitoring.prometheusRule.namespace }}
+  namespace: {{ . }}
+  {{- end }}
+  labels:
+    {{- include "siva-webapp.labels" . | nindent 4 }}
+    {{- with .Values.monitoring.prometheusRule.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  groups:
+    - name: {{ $name }}
+      rules:
+        # Spring Boot's http_server_requests metrics (scraped through the ServiceMonitor; the
+        # actuator's own requests are excluded by uri) and kube-state-metrics pod metrics. Pod
+        # readiness and crash loops are left to the cluster's own rules (kube-prometheus-stack's
+        # KubePodNotReady and KubePodCrashLooping); an OOM kill shows there only as a crash loop.
+        - alert: SivaValidationErrorRate
+          expr: >-
+            sum(rate(http_server_requests_seconds_count{{ "{" }}{{ $app }},status=~"5.."}[10m]))
+              / sum(rate(http_server_requests_seconds_count{{ "{" }}{{ $app }}}[10m])) > 0.05
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "SiVa 5xx ratio above 5 % for 10 minutes"
+            description: "More than 5 % of API requests fail with a 5xx; check the pod logs."
+        - alert: SivaOomKilled
+          expr: >-
+            kube_pod_container_status_last_terminated_reason{{ "{" }}{{ $kube }},reason="OOMKilled"} == 1
+              and on (namespace, pod, container) increase(kube_pod_container_status_restarts_total{{ "{" }}{{ $kube }}}[30m]) > 0
+          labels:
+            severity: critical
+          annotations:
+            summary: "SiVa pod {{ "{{ $labels.pod }}" }} was OOM-killed in the last 30 minutes"
+            description: "Raise resources.limits.memory (Paketo sizes the heap from it) or lower the thread count."
+        {{- /* With the store synced through a bucket, a pod sees a snapshot one sync interval later: counted into the grace. */}}
+        {{- $grace := add (include "siva-webapp.isoSeconds" (list "monitoring.prometheusRule.tsl.grace" .Values.monitoring.prometheusRule.tsl.grace) | int) (ternary (int .Values.tsl.snapshot.sync.interval) 0 (not (empty (include "siva-webapp.syncEnabled" .)))) }}
+        {{- $leadTime := include "siva-webapp.isoSeconds" (list "monitoring.prometheusRule.tsl.leadTime" .Values.monitoring.prometheusRule.tsl.leadTime) }}
+        {{- $period := printf "siva_tsl_refresh_period_seconds{%s}" $kube }}
+        {{- $byLoader := "on (namespace, pod, loader)" }}
+        # SiVa's trust-list gauges: one series per configured territory (trusted and mandatory, as
+        # SiVa itself resolved them), so these rules repeat no country list, and the refresh period
+        # each instance runs on (siva_tsl_refresh_period_seconds: the fetcher's period from the
+        # snapshot's manifest, siva.tsl.loader.refreshPeriod online), so they render no period
+        # either; only grace and lead time are the deployer's (ADR 0004). Thresholds are joined to
+        # the list series by instance and loader.
+        - alert: SivaTslMandatoryTerritoryNotValidating
+          expr: siva_tsl_trust_anchors{{ "{" }}{{ $kube }},mandatory="true"} == 0
+          for: 15m
+          labels:
+            severity: critical
+          annotations:
+            summary: "SiVa holds no trust anchors for mandatory territory {{ "{{ $labels.territory }}" }} ({{ "{{ $labels.loader }}" }} loader)"
+            description: "Signatures from {{ "{{ $labels.territory }}" }} cannot be validated as trusted and the pod is not ready. Its list is missing, expired or badly signed: check the tsl health detail and, in snapshot mode, the fetch Job's log."
+        - alert: SivaTslTerritoryNotValidating
+          expr: siva_tsl_trust_anchors{{ "{" }}{{ $kube }},mandatory="false"} == 0
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: "SiVa holds no trust anchors for territory {{ "{{ $labels.territory }}" }} ({{ "{{ $labels.loader }}" }} loader)"
+            description: "Signatures from {{ "{{ $labels.territory }}" }} validate as untrusted until its list loads again; other territories are unaffected."
+        - alert: SivaTslListExpiringSoon
+          expr: siva_tsl_next_update_timestamp_seconds{{ "{" }}{{ $kube }}} - time() < {{ $byLoader }} group_left () (2 * {{ $period }} + {{ $leadTime }})
+          labels:
+            severity: warning
+          annotations:
+            summary: "The {{ "{{ $labels.territory }}" }} trusted list ({{ "{{ $labels.kind }}" }}) runs out within two refresh periods plus {{ include "siva-webapp.humanSeconds" $leadTime }}"
+            description: "Its NextUpdate is close and SiVa has not received a newer version. Once it passes, signatures relying on it lose qualification (POLv4 fails them) and, at the next reload, their trust anchors."
+        - alert: SivaTslListExpiring
+          expr: siva_tsl_next_update_timestamp_seconds{{ "{" }}{{ $kube }}} - time() < {{ $byLoader }} group_left () ({{ $period }} + 86400)
+          labels:
+            severity: critical
+          annotations:
+            summary: "The {{ "{{ $labels.territory }}" }} trusted list ({{ "{{ $labels.kind }}" }}) runs out within one refresh period plus a day"
+            description: "Less than one refresh period plus a day is left. Check that the publisher has issued a newer list and that the refresh picks it up."
+        # A download that keeps failing is invisible to the Job: the fetcher serves the list from its
+        # last copy and publishes. The copy's download time stays where it was, so its age is how
+        # long the publisher has been out of reach.
+        - alert: SivaTslListNotDownloaded
+          expr: time() - siva_tsl_list_downloaded_timestamp_seconds{{ "{" }}{{ $kube }}} > {{ $byLoader }} group_left () (2 * {{ $period }} + {{ $grace }})
+          labels:
+            severity: warning
+          annotations:
+            summary: "SiVa serves the {{ "{{ $labels.territory }}" }} trusted list ({{ "{{ $labels.kind }}" }}) from a copy older than two refresh periods plus {{ include "siva-webapp.humanSeconds" $grace }}"
+            description: "Every recent download of it failed and the {{ "{{ $labels.loader }}" }} loader runs on the last copy: the publisher is unreachable or redirecting. The fetch (or pod) log names the reason in its 'using the last copy on disk' line; a certificate error there after a redirect belongs to the redirect target, not the publisher. The copy stays valid until the list's NextUpdate, which SivaTslListExpiring watches."
+        {{- if include "siva-webapp.snapshotMode" . }}
+        - alert: SivaTslSnapshotStale
+          expr: time() - siva_tsl_snapshot_created_timestamp_seconds{{ "{" }}{{ $kube }}} > {{ $byLoader }} (2 * {{ $period }} + {{ $grace }})
+          labels:
+            severity: warning
+          annotations:
+            summary: "SiVa pod {{ "{{ $labels.pod }}" }} runs on a snapshot older than two fetch periods plus {{ include "siva-webapp.humanSeconds" $grace }}"
+            description: "Two fetch periods without a newer snapshot reaching the pod: the fetch (a Failed fetch Job says why: kubectl -n {{ $ns }} logs job/<newest {{ include "siva-webapp.fetcherName" . }}-...>), a sync between store and pod, or the pod's refusal of a newer snapshot (see its log)."
+        {{- end }}
+        {{- if .Values.monitoring.prometheusRule.pendingRules }}
+        # Signals the application does not publish yet: oversized requests are answered 400 like
+        # any other bad request (no 413, no counter), and OCSP/TSA failures have no metric. The names and expressions are the agreed ones; switch
+        # pendingRules on once the application exposes them.
+        - alert: SivaRequestRejectedSize
+          expr: >-
+            increase(http_server_requests_seconds_count{{ "{" }}{{ $app }},status="413"}[15m]) > 0
+          labels:
+            severity: info
+          annotations:
+            summary: "SiVa rejects oversized requests"
+            description: "Clients send containers above the request size limit (27 MB by default)."
+        - alert: SivaOcspTsaFailures
+          expr: rate(siva_ocsp_tsa_failures_total{{ "{" }}{{ $kube }}}[15m]) > 0
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: "OCSP or timestamp responders failing"
+            description: "Revocation or timestamp checks fail; LT/LTA validations degrade."
+        {{- end }}
+        {{- with .Values.monitoring.prometheusRule.additionalRules }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+{{- end }}

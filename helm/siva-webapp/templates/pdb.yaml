@@ -1,0 +1,21 @@
+{{- /* A budget only makes sense with more than one pod: with replicaCount 1 it would block every drain. */ -}}
+{{- $pods := ternary (int .Values.scaling.hpa.minReplicas) (int .Values.replicaCount) .Values.scaling.hpa.enabled }}
+{{- if and .Values.scaling.pdb.enabled (gt $pods 1) }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "siva-webapp.fullname" . }}
+  labels:
+    {{- include "siva-webapp.labels" . | nindent 4 }}
+spec:
+  {{- if and (not (kindIs "invalid" .Values.scaling.pdb.maxUnavailable)) (not (kindIs "string" .Values.scaling.pdb.maxUnavailable)) }}
+  maxUnavailable: {{ .Values.scaling.pdb.maxUnavailable }}
+  {{- else if .Values.scaling.pdb.maxUnavailable }}
+  maxUnavailable: {{ .Values.scaling.pdb.maxUnavailable | quote }}
+  {{- else }}
+  minAvailable: {{ .Values.scaling.pdb.minAvailable }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "siva-webapp.selectorLabels" . | nindent 6 }}
+{{- end }}

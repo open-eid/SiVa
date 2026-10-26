@@ -1,0 +1,248 @@
+{{- /* The drain must fit the grace period, or Kubernetes SIGKILLs the JVM mid-shutdown. */ -}}
+{{- $drain := add (int .Values.runtime.preStopSleepSeconds) (int (trimSuffix "s" .Values.runtime.shutdownTimeout)) -}}
+{{- if ge $drain (int .Values.terminationGracePeriodSeconds) -}}
+{{- fail (printf "terminationGracePeriodSeconds (%d) must exceed runtime.preStopSleepSeconds + runtime.shutdownTimeout (%d s)" (int .Values.terminationGracePeriodSeconds) $drain) -}}
+{{- end -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "siva-webapp.fullname" . }}
+  labels:
+    {{- include "siva-webapp.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.scaling.hpa.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "siva-webapp.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- if and (include "siva-webapp.trustBinding" .) .Values.trust.pem }}
+        {{- /* The binding is read at launch only; the SSL bundles reload on their own, so no checksum without it. */}}
+        checksum/trust: {{ include (print $.Template.BasePath "/configmap-trust.yaml") . | sha256sum }}
+        {{- end }}
+        {{- if .Values.evictable }}
+        cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
+        descheduler.alpha.kubernetes.io/evict: "true"
+        {{- end }}
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- include "siva-webapp.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.image.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "siva-webapp.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.security.automountServiceAccountToken }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      {{- with .Values.security.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if and (include "siva-webapp.syncEnabled" .) (include "siva-webapp.nativeSidecars" .) }}
+      initContainers:
+        {{- include "siva-webapp.syncContainer" (dict "root" . "mode" "pod" "name" "tsl-sync") | nindent 8 }}
+          restartPolicy: Always
+      {{- end }}
+      containers:
+        - name: siva-webapp
+          image: "{{ include "siva-webapp.image" . }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- with .Values.security.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          env:
+            - name: SPRING_CONFIG_ADDITIONAL_LOCATION
+              value: "file:{{ .Values.config.mountPath }}/application.yml"
+            {{- if include "siva-webapp.managementSplit" . }}
+            - name: MANAGEMENT_SERVER_PORT
+              value: {{ .Values.runtime.managementPort | quote }}
+            {{- end }}
+            - name: SERVER_SHUTDOWN
+              value: graceful
+            - name: SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE
+              value: {{ .Values.runtime.shutdownTimeout | quote }}
+            - name: SERVER_FORWARD_HEADERS_STRATEGY
+              value: {{ .Values.runtime.forwardHeadersStrategy | quote }}
+            {{- if not .Values.runtime.httpKeepAlive }}
+            - name: SERVER_TOMCAT_MAX_KEEP_ALIVE_REQUESTS
+              value: "1"
+            {{- end }}
+            {{- if include "siva-webapp.snapshotMode" . }}
+            - name: SIVA_TSL_LOADER_LOADFROMCACHE
+              value: "true"
+            - name: SIVA_TSL_LOADER_SNAPSHOTDIRECTORY
+              value: {{ .Values.tsl.snapshot.mountPath | quote }}
+            - name: SIVA_TSL_LOADER_SNAPSHOTPOLLINTERVAL
+              value: {{ .Values.tsl.snapshot.pollInterval | quote }}
+            {{- with include "siva-webapp.snapshotMaxAge" . }}
+            - name: SIVA_TSL_LOADER_SNAPSHOTMAXAGE
+              value: {{ . | quote }}
+            {{- end }}
+            {{- end }}
+            {{- with include "siva-webapp.territoryEnv" . | trim }}
+            {{- . | nindent 12 }}
+            {{- end }}
+            {{- with include "siva-webapp.trustEnv" . | trim }}
+            {{- . | nindent 12 }}
+            {{- end }}
+            {{- with include "siva-webapp.secretsEnv" (dict "root" . "secret" .Values.secrets.existingSecret) | trim }}
+            {{- . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.runtime.javaToolOptions }}
+            - name: JAVA_TOOL_OPTIONS
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.env }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.containerPort }}
+              protocol: TCP
+            {{- if include "siva-webapp.managementSplit" . }}
+            - name: management
+              containerPort: {{ .Values.runtime.managementPort }}
+              protocol: TCP
+            {{- end }}
+          {{- if gt (int .Values.runtime.preStopSleepSeconds) 0 }}
+          lifecycle:
+            preStop:
+              {{- /* The kubelet's own Sleep action (GA in 1.30) needs no binary in the image; Paketo's
+                     default tiny run image has no `sleep`, and an exec hook that fails is a no-op
+                     that lets SIGTERM race the endpoint removal. Exec only on older clusters. */}}
+              {{- if semverCompare ">=1.30.0-0" .Capabilities.KubeVersion.Version }}
+              sleep:
+                seconds: {{ .Values.runtime.preStopSleepSeconds }}
+              {{- else }}
+              exec:
+                command: ["sleep", {{ .Values.runtime.preStopSleepSeconds | quote }}]
+              {{- end }}
+          {{- end }}
+          {{- with .Values.probes.startup }}
+          {{- if .enabled }}
+          startupProbe:
+            httpGet:
+              path: {{ include "siva-webapp.probePath" (dict "root" $ "group" "liveness" "path" .path) | quote }}
+              port: http
+            initialDelaySeconds: {{ .initialDelaySeconds }}
+            periodSeconds: {{ .periodSeconds }}
+            timeoutSeconds: {{ .timeoutSeconds }}
+            failureThreshold: {{ .failureThreshold }}
+          {{- end }}
+          {{- end }}
+          {{- with .Values.probes.readiness }}
+          {{- if .enabled }}
+          readinessProbe:
+            httpGet:
+              path: {{ include "siva-webapp.probePath" (dict "root" $ "group" "readiness" "path" .path) | quote }}
+              port: http
+            initialDelaySeconds: {{ .initialDelaySeconds }}
+            periodSeconds: {{ .periodSeconds }}
+            timeoutSeconds: {{ .timeoutSeconds }}
+            failureThreshold: {{ .failureThreshold }}
+          {{- end }}
+          {{- end }}
+          {{- with .Values.probes.liveness }}
+          {{- if .enabled }}
+          livenessProbe:
+            httpGet:
+              path: {{ include "siva-webapp.probePath" (dict "root" $ "group" "liveness" "path" .path) | quote }}
+              port: http
+            initialDelaySeconds: {{ .initialDelaySeconds }}
+            periodSeconds: {{ .periodSeconds }}
+            timeoutSeconds: {{ .timeoutSeconds }}
+            failureThreshold: {{ .failureThreshold }}
+          {{- end }}
+          {{- end }}
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: config
+              mountPath: {{ .Values.config.mountPath }}
+              readOnly: true
+            # Trust-list cache (online mode) and JVM temp files live under java.io.tmpdir.
+            - name: tmp
+              mountPath: /tmp
+            {{- if include "siva-webapp.snapshotMode" . }}
+            - name: tsl-store
+              mountPath: {{ .Values.tsl.snapshot.mountPath }}
+              readOnly: true
+            {{- end }}
+            {{- with include "siva-webapp.trustVolumeMounts" . | trim }}
+            {{- . | nindent 12 }}
+            {{- end }}
+            {{- with include "siva-webapp.secretsVolumeMounts" (dict "root" . "secret" .Values.secrets.existingSecret) | trim }}
+            {{- . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+        {{- if and (include "siva-webapp.syncEnabled" .) (not (include "siva-webapp.nativeSidecars" .)) }}
+        {{- include "siva-webapp.syncContainer" (dict "root" . "mode" "pod" "name" "tsl-sync") | nindent 8 }}
+        {{- end }}
+        {{- with .Values.extraContainers }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "siva-webapp.fullname" . }}
+        - name: tmp
+          emptyDir:
+            {{- with .Values.tmpSizeLimit }}
+            sizeLimit: {{ . }}
+            {{- else }}
+            {}
+            {{- end }}
+        {{- if include "siva-webapp.snapshotMode" . }}
+        - name: tsl-store
+          {{- include "siva-webapp.tslStoreVolumeSource" . | nindent 10 }}
+        {{- end }}
+        {{- if include "siva-webapp.syncEnabled" . }}
+        {{- include "siva-webapp.syncVolumes" . | nindent 8 }}
+        {{- end }}
+        {{- with include "siva-webapp.trustVolumes" . | trim }}
+        {{- . | nindent 8 }}
+        {{- end }}
+        {{- with include "siva-webapp.secretsVolumes" (dict "root" . "secret" .Values.secrets.existingSecret) | trim }}
+        {{- . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.topologySpreadConstraints }}
+      {{- $selector := dict "matchLabels" (fromYaml (include "siva-webapp.selectorLabels" $)) }}
+      {{- $constraints := list }}
+      {{- range . }}
+      {{- $c := deepCopy . }}
+      {{- if not $c.labelSelector }}{{- $_ := set $c "labelSelector" (deepCopy $selector) }}{{- end }}
+      {{- $constraints = append $constraints $c }}
+      {{- end }}
+      topologySpreadConstraints:
+        {{- toYaml $constraints | nindent 8 }}
+      {{- end }}

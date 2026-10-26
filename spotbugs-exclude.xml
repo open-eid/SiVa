@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    SpotBugs baseline: High-confidence findings in code that predates the gate (spotbugs-maven-plugin,
+    threshold High). Remove an entry when the code it covers is touched; new code gets no entry.
+-->
+<FindBugsFilter xmlns="https://github.com/spotbugs/filter/3.0.0">
+    <Match>
+        <Class name="ee.openeid.siva.signature.ocsp.SkOcspSource"/>
+        <Method name="generateRandomNonce"/>
+        <Bug pattern="DMI_RANDOM_USED_ONLY_ONCE"/>
+    </Match>
+    <Match>
+        <Class name="ee.openeid.siva.webapp.interceptor.ReportSignatureInterceptor"/>
+        <Method name="beforeBodyWrite"/>
+        <Bug pattern="DM_DEFAULT_ENCODING"/>
+    </Match>
+</FindBugsFilter>

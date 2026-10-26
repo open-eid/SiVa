@@ -1,0 +1,175 @@
+# chart-testing / lint overlay: every optional object switched on with neutral example values, so
+# `helm template | kubeconform -strict` covers the templates the defaults leave out. Never a
+# deployment profile; nothing in here is a real host, class or secret.
+replicaCount: 2
+image:
+  pullSecrets:
+    - name: example-registry-credentials
+service:
+  type: NodePort
+  nodePort: 30080
+config:
+  spring:
+    logging:
+      config: /etc/siva-webapp/logback.xml
+    siva:
+      bdoc:
+        digidoc4j-configuration-file: file:/etc/siva-webapp/siva-digidoc4j.yaml
+      http:
+        request:
+          max-request-size-limit: 27MB
+  files:
+    logback.xml: |
+      <configuration>
+        <include resource="org/springframework/boot/logging/logback/base.xml"/>
+      </configuration>
+    siva-digidoc4j.yaml: |
+      DIGIDOC_LOG4J_CONFIG: /dev/null
+secrets:
+  existingSecret: example-siva-secrets
+extraVolumes:
+  - name: example-extra
+    emptyDir: {}
+extraVolumeMounts:
+  - name: example-extra
+    mountPath: /var/siva/extra
+    readOnly: true
+extraContainers:
+  - name: example-sidecar
+    image: example.invalid/sidecar:1
+    volumeMounts:
+      - name: example-extra
+        mountPath: /var/siva/extra
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities:
+        drop: [ALL]
+    resources:
+      requests: {cpu: 10m, memory: 32Mi}
+      limits: {memory: 64Mi}
+trust:
+  existingConfigMap: example-siva-trust
+  caCertificatesBinding: true
+env:
+  - name: EXAMPLE_FLAG
+    value: "1"
+network:
+  networkPolicy:
+    enabled: true
+    ingressFrom:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: ingress-nginx
+    managementFrom:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: monitoring
+    egress:
+      enabled: true
+      additionalRules:
+        - to:
+            - ipBlock:
+                cidr: 192.0.2.10/32
+          ports:
+            - port: 8080
+              protocol: TCP
+  ingresses:
+    - name: public
+      className: nginx
+      annotations:
+        nginx.ingress.kubernetes.io/proxy-body-size: 28m
+      hosts:
+        - host: siva.example.invalid
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - secretName: siva-example-invalid-tls
+          hosts: [siva.example.invalid]
+    - name: internal
+      hosts:
+        - host: siva.internal.example.invalid
+          paths:
+            - path: /
+podAnnotations:
+  example.invalid/annotation: "yes"
+podLabels:
+  example.invalid/label: "yes"
+nodeSelector:
+  kubernetes.io/os: linux
+tolerations:
+  - key: example.invalid/taint
+    operator: Exists
+    effect: NoSchedule
+serviceAccount:
+  annotations:
+    example.invalid/sa: "yes"
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          topologyKey: kubernetes.io/hostname
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: siva-webapp
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: topology.kubernetes.io/zone
+    whenUnsatisfiable: DoNotSchedule
+  - maxSkew: 1
+    topologyKey: kubernetes.io/hostname
+    whenUnsatisfiable: ScheduleAnyway
+    labelSelector:
+      matchLabels:
+        app.kubernetes.io/name: siva-webapp
+scaling:
+  pdb:
+    enabled: true
+  hpa:
+    enabled: true
+    targetMemoryUtilizationPercentage: 80
+    behavior:
+      scaleDown:
+        stabilizationWindowSeconds: 600
+tsl:
+  territories:
+    trusted: [EE, LV, LT]
+    mandatory: [EE]
+  mode: snapshot
+  snapshot:
+    persistentVolumeClaim:
+      create: true
+      storageClassName: example-rwx
+      annotations:
+        example.invalid/claim: "yes"
+    pollInterval: PT30S
+  fetcher:
+    period: PT4H
+    schedule: "15 */4 * * *"
+    ttlSecondsAfterFinished: 86400
+    timeZone: Europe/Tallinn
+    startingDeadlineSeconds: 600
+    workVolume:
+      persistentVolumeClaim:
+        claimName: example-tsl-work
+    env:
+      - name: EXAMPLE_FETCHER_FLAG
+        value: "1"
+    existingSecret: example-tsl-fetch-secrets
+monitoring:
+  serviceMonitor:
+    enabled: true
+    labels:
+      release: kube-prometheus-stack
+  prometheusRule:
+    enabled: true
+    pendingRules: true
+    tsl:
+      grace: PT2H
+      leadTime: P10D
+    labels:
+      release: kube-prometheus-stack
+  grafanaDashboard:
+    enabled: true

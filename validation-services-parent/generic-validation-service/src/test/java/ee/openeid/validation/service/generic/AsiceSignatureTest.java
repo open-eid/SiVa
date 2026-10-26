@@ -22,10 +22,11 @@ import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilde
 import ee.openeid.siva.validation.document.report.Info;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
+import ee.openeid.tsl.TrustedListsCertificateSourceHolder;
 import ee.openeid.validation.service.generic.configuration.properties.GenericSignaturePolicyProperties;
 import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
 import ee.openeid.validation.service.generic.validator.ocsp.OCSPSourceFactory;
-import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
+import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -55,7 +56,7 @@ class AsiceSignatureTest {
     private ConstraintLoadingSignaturePolicyService signaturePolicyService;
 
     @Autowired
-    private TrustedListsCertificateSource trustedListsCertificateSource;
+    private TrustedListsCertificateSourceHolder trustedListsCertificateSource;
 
     @Autowired
     private GenericSignaturePolicyProperties policySettings;
@@ -68,15 +69,9 @@ class AsiceSignatureTest {
 
     @BeforeEach
     public void setUp() {
-        validationService = new GenericValidationService();
-        validationService.setTrustedListsCertificateSource(trustedListsCertificateSource);
-
         signaturePolicyService = new ConstraintLoadingSignaturePolicyService(policySettings);
-        validationService.setSignaturePolicyService(signaturePolicyService);
-        validationService.setReportConfigurationProperties(new ReportConfigurationProperties(true));
-
-        validationService.setContainerValidatorFactory(containerValidatorFactory);
-        validationService.setOcspSourceFactory(ocspSourceFactory);
+        validationService = new GenericValidationService(trustedListsCertificateSource, signaturePolicyService,
+                new ReportConfigurationProperties(true), new ProxyConfig(), containerValidatorFactory, ocspSourceFactory);
     }
 
     @Test

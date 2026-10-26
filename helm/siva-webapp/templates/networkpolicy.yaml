@@ -1,0 +1,42 @@
+{{- if .Values.network.networkPolicy.enabled }}
+{{- /* Who may reach the traffic port and the management port, and (egress.enabled) what the
+       pods may reach: DNS plus public HTTP/HTTPS for the AIA, policy and OCSP URLs the documents
+       carry and (online mode) the trust lists, never the private ranges, the carrier-grade NAT
+       range or the metadata address. */ -}}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "siva-webapp.fullname" . }}
+  labels:
+    {{- include "siva-webapp.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "siva-webapp.selectorLabels" . | nindent 6 }}
+  policyTypes:
+    - Ingress
+    {{- if .Values.network.networkPolicy.egress.enabled }}
+    - Egress
+    {{- end }}
+  ingress:
+    - ports:
+        - port: http
+          protocol: TCP
+      {{- with .Values.network.networkPolicy.ingressFrom }}
+      from:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- if include "siva-webapp.managementSplit" . }}
+    - ports:
+        - port: management
+          protocol: TCP
+      {{- with .Values.network.networkPolicy.managementFrom }}
+      from:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- end }}
+  {{- if .Values.network.networkPolicy.egress.enabled }}
+  egress:
+    {{- include "siva-webapp.egressRules" . | nindent 4 }}
+  {{- end }}
+{{- end }}

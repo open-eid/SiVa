@@ -71,13 +71,13 @@
             <ByteRange Level="FAIL" />
             <ByteRangeCollision Level="WARN" />
             <PdfSignatureDictionary Level="FAIL" />
-            <PdfPageDifference Level="FAIL" />
+            <PdfPageDifference Level="WARN" />
             <PdfAnnotationOverlap Level="WARN" />
-            <PdfVisualDifference Level="FAIL" />
+            <PdfVisualDifference Level="WARN" />
             <DocMDP Level="WARN" />
             <FieldMDP Level="WARN" />
             <SigFieldLock Level="WARN" />
-            <UndefinedChanges Level="FAIL" />
+            <UndefinedChanges Level="WARN" />
             <!-- <TrustServiceTypeIdentifier Level="WARN"> -->
             <!-- 				<Id>http://uri.etsi.org/TrstSvc/Svctype/CA/QC</Id> -->
             <!-- </TrustServiceTypeIdentifier> -->
@@ -361,13 +361,13 @@
             <ByteRange Level="FAIL" />
             <ByteRangeCollision Level="WARN" />
             <PdfSignatureDictionary Level="FAIL" />
-            <PdfPageDifference Level="FAIL" />
+            <PdfPageDifference Level="WARN" />
             <PdfAnnotationOverlap Level="WARN" />
-            <PdfVisualDifference Level="FAIL" />
+            <PdfVisualDifference Level="WARN" />
             <DocMDP Level="WARN" />
             <FieldMDP Level="WARN" />
             <SigFieldLock Level="WARN" />
-            <UndefinedChanges Level="FAIL" />
+            <UndefinedChanges Level="WARN" />
             <TrustServiceTypeIdentifier Level="FAIL">
                 <Id>http://uri.etsi.org/TrstSvc/Svctype/TSA/QTST</Id>
             </TrustServiceTypeIdentifier>

@@ -1,0 +1,1058 @@
+suite: deployment
+templates:
+  - deployment.yaml
+  - configmap.yaml   # referenced by the checksum annotation
+  - configmap-trust.yaml   # likewise, with the Paketo binding on
+chart:
+  appVersion: 9.9.9   # the tests check the "tag defaults to appVersion" logic, not the real release
+tests:
+  - it: renders one Deployment with the chart defaults
+    template: deployment.yaml
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Deployment
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-siva-webapp
+      - equal:
+          path: spec.replicas
+          value: 1
+      - isSubset:
+          path: spec.selector.matchLabels
+          content:
+            app.kubernetes.io/name: siva-webapp
+            app.kubernetes.io/instance: RELEASE-NAME
+
+  - it: image defaults to repository:appVersion with IfNotPresent
+    template: deployment.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: siva-webapp:9.9.9
+      - equal:
+          path: spec.template.spec.containers[0].imagePullPolicy
+          value: IfNotPresent
+      - notExists:
+          path: spec.template.spec.imagePullSecrets
+
+  - it: image tag, pull policy and pull secrets come from values
+    template: deployment.yaml
+    set:
+      image:
+        repository: registry.example.invalid/siva-webapp
+        tag: v1
+        pullPolicy: Always
+        pullSecrets:
+          - name: regcred
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: registry.example.invalid/siva-webapp:v1
+      - equal:
+          path: spec.template.spec.containers[0].imagePullPolicy
+          value: Always
+      - equal:
+          path: spec.template.spec.imagePullSecrets[0].name
+          value: regcred
+
+  - it: probes hit Spring Boot's additional probe paths on the traffic port when the actuator is split
+    template: deployment.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].startupProbe.httpGet.path
+          value: /livez
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.path
+          value: /readyz
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet.path
+          value: /livez
+      - equal:
+          path: spec.template.spec.containers[0].startupProbe.httpGet.port
+          value: http
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.port
+          value: http
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet.port
+          value: http
+      - equal:
+          path: spec.template.spec.containers[0].startupProbe.failureThreshold
+          value: 60
+
+  - it: probe paths and timings are overridable per probe
+    template: deployment.yaml
+    set:
+      probes:
+        readiness:
+          path: /custom/ready
+        liveness:
+          periodSeconds: 7
+          failureThreshold: 9
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.path
+          value: /custom/ready
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe.periodSeconds
+          value: 7
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe.failureThreshold
+          value: 9
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet.path
+          value: /livez
+
+  - it: the container port follows service.containerPort, independently of service.port
+    template: deployment.yaml
+    set:
+      service:
+        port: 80
+        containerPort: 9090
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].ports[0]
+          value:
+            name: http
+            containerPort: 9090
+            protocol: TCP
+
+  - it: disabled probes are omitted
+    template: deployment.yaml
+    set:
+      probes:
+        startup: {enabled: false}
+        readiness: {enabled: false}
+        liveness: {enabled: false}
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].startupProbe
+      - notExists:
+          path: spec.template.spec.containers[0].readinessProbe
+      - notExists:
+          path: spec.template.spec.containers[0].livenessProbe
+
+  - it: mounts the ConfigMap and points Spring at it
+    template: deployment.yaml
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SPRING_CONFIG_ADDITIONAL_LOCATION
+            value: file:/etc/siva-webapp/application.yml
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: config
+            mountPath: /etc/siva-webapp
+            readOnly: true
+      - equal:
+          path: spec.template.spec.volumes[?(@.name == "config")].configMap.name
+          value: RELEASE-NAME-siva-webapp
+      - matchRegex:
+          path: spec.template.metadata.annotations["checksum/config"]
+          pattern: ^[a-f0-9]{64}$   # sha256 of the rendered ConfigMap (change-on-edit is not testable here)
+
+  - it: config mount path moves the mount and the Spring location together
+    template: deployment.yaml
+    set:
+      config:
+        mountPath: /config
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SPRING_CONFIG_ADDITIONAL_LOCATION
+            value: file:/config/application.yml
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: config
+            mountPath: /config
+            readOnly: true
+
+  - it: passes extra env through as plain EnvVar entries, dotted names and valueFrom included
+    template: deployment.yaml
+    set:
+      env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: test
+        - name: t-level-signature-filter.countries
+          value: EE
+        - name: SIVA_SIGNATURESERVICE_PKCS12_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: siva-signing
+              key: password
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].env[0].name
+          value: SPRING_CONFIG_ADDITIONAL_LOCATION
+      - lengthEqual:
+          path: spec.template.spec.containers[0].env
+          count: 10   # 7 chart-owned (Spring location, management port, 5 runtime) + 3
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SPRING_PROFILES_ACTIVE
+            value: test
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: t-level-signature-filter.countries
+            value: EE
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SIVA_SIGNATURESERVICE_PKCS12_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: siva-signing
+                key: password
+
+  - it: renders no extra volumes, mounts or containers by default
+    template: deployment.yaml
+    asserts:
+      - lengthEqual:
+          path: spec.template.spec.containers
+          count: 1
+      - lengthEqual:
+          path: spec.template.spec.volumes
+          count: 2   # config, tmp
+      - lengthEqual:
+          path: spec.template.spec.containers[0].volumeMounts
+          count: 2
+
+  - it: passes extra volumes, mounts and containers through after the chart's own
+    template: deployment.yaml
+    set:
+      extraVolumes:
+        - name: extra
+          emptyDir: {}
+      extraVolumeMounts:
+        - name: extra
+          mountPath: /var/siva/extra
+          readOnly: true
+      extraContainers:
+        - name: sidecar
+          image: example.invalid/sidecar:1
+          volumeMounts:
+            - name: extra
+              mountPath: /data
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[1].name
+          value: sidecar
+      - equal:
+          path: spec.template.spec.containers[1].volumeMounts[0].mountPath
+          value: /data
+      - equal:
+          path: spec.template.spec.volumes[-1]
+          value:
+            name: extra
+            emptyDir: {}
+      - equal:
+          path: spec.template.spec.containers[0].volumeMounts[-1]
+          value:
+            name: extra
+            mountPath: /var/siva/extra
+            readOnly: true
+
+  - it: the all-on lint overlay passes a sidecar through on the extra volume
+    template: deployment.yaml
+    values:
+      - ../ci/all-on-values.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[1].name
+          value: example-sidecar
+      - equal:
+          path: spec.template.spec.containers[1].volumeMounts[0].name
+          value: example-extra
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: example-extra
+            emptyDir: {}
+
+  - it: mounts no Secret and imports no config tree by default
+    template: deployment.yaml
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].envFrom
+      - notExists:
+          path: spec.template.spec.volumes[?(@.name == "secrets")]
+      - notExists:
+          path: spec.template.spec.containers[0].env[?(@.name == "SPRING_CONFIG_IMPORT")]
+
+  - it: mounts the named Secret read-only as a Spring config tree, never as environment
+    template: deployment.yaml
+    set:
+      secrets:
+        existingSecret: siva-secrets
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: secrets
+            secret:
+              secretName: siva-secrets
+              defaultMode: 292
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: secrets
+            mountPath: /etc/siva/secrets
+            readOnly: true
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SPRING_CONFIG_IMPORT
+            value: configtree:/etc/siva/secrets/
+      - notExists:
+          path: spec.template.spec.containers[0].envFrom
+
+  - it: mounts the Secret where secrets.mountPath says and imports it with one trailing slash
+    template: deployment.yaml
+    set:
+      secrets:
+        existingSecret: siva-secrets
+        mountPath: /run/secrets/siva/
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].volumeMounts[?(@.name == "secrets")].mountPath
+          value: /run/secrets/siva/
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SPRING_CONFIG_IMPORT
+            value: configtree:/run/secrets/siva/
+
+  - it: token automount can be switched on for the pod
+    template: deployment.yaml
+    set:
+      security:
+        automountServiceAccountToken: true
+    asserts:
+      - equal:
+          path: spec.template.spec.automountServiceAccountToken
+          value: true
+
+  - it: security contexts and token automount follow values
+    template: deployment.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.automountServiceAccountToken
+          value: false
+      - equal:
+          path: spec.template.spec.securityContext.runAsNonRoot
+          value: true
+      - equal:
+          path: spec.template.spec.securityContext.seccompProfile.type
+          value: RuntimeDefault
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.allowPrivilegeEscalation
+          value: false
+      - contains:
+          path: spec.template.spec.containers[0].securityContext.capabilities.drop
+          content: ALL
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.readOnlyRootFilesystem
+          value: true
+      - equal:
+          path: spec.template.spec.terminationGracePeriodSeconds
+          value: 60
+
+  - it: resources and a size-limited /tmp emptyDir are present by default
+    template: deployment.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].resources.limits.memory
+          value: 2Gi
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: tmp
+            emptyDir:
+              sizeLimit: 1Gi
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: tmp
+            mountPath: /tmp
+
+  - it: the /tmp size limit can be dropped
+    template: deployment.yaml
+    set:
+      tmpSizeLimit: ""
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: tmp
+            emptyDir: {}
+
+  - it: spreads replicas over nodes softly by default, selecting its own pods
+    template: deployment.yaml
+    asserts:
+      - lengthEqual:
+          path: spec.template.spec.topologySpreadConstraints
+          count: 1
+      - equal:
+          path: spec.template.spec.topologySpreadConstraints[0]
+          value:
+            maxSkew: 1
+            topologyKey: kubernetes.io/hostname
+            whenUnsatisfiable: ScheduleAnyway
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: siva-webapp
+                app.kubernetes.io/instance: RELEASE-NAME
+
+  - it: keeps an explicit labelSelector on a spread constraint
+    template: deployment.yaml
+    set:
+      topologySpreadConstraints:
+        - maxSkew: 2
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              custom: selector
+    asserts:
+      - equal:
+          path: spec.template.spec.topologySpreadConstraints[0].labelSelector.matchLabels
+          value:
+            custom: selector
+      - equal:
+          path: spec.template.spec.topologySpreadConstraints[0].maxSkew
+          value: 2
+
+  - it: renders no spread constraints when the list is empty
+    template: deployment.yaml
+    set:
+      topologySpreadConstraints: []
+    asserts:
+      - notExists:
+          path: spec.template.spec.topologySpreadConstraints
+
+  - it: scheduling knobs, pod annotations and labels are only rendered when set
+    template: deployment.yaml
+    asserts:
+      - notExists:
+          path: spec.template.spec.nodeSelector
+      - notExists:
+          path: spec.template.spec.tolerations
+      - notExists:
+          path: spec.template.spec.affinity
+      - notExists:
+          path: spec.template.metadata.labels["example.invalid/label"]
+      - notExists:
+          path: spec.template.metadata.annotations["example.invalid/annotation"]
+
+  - it: the all-on lint overlay renders every scheduling knob, pod annotation and label
+    template: deployment.yaml
+    values:
+      - ../ci/all-on-values.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.nodeSelector["kubernetes.io/os"]
+          value: linux
+      - equal:
+          path: spec.template.spec.tolerations[0].key
+          value: example.invalid/taint
+      - equal:
+          path: spec.template.spec.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].weight
+          value: 100
+      - equal:
+          path: spec.template.metadata.labels["example.invalid/label"]
+          value: "yes"
+      - equal:
+          path: spec.template.metadata.annotations["example.invalid/annotation"]
+          value: "yes"
+      - equal:
+          path: spec.template.spec.imagePullSecrets[0].name
+          value: example-registry-credentials
+      - notExists:
+          path: spec.replicas   # the all-on overlay turns the HPA on
+
+  - it: splits the actuator onto the management port by default
+    template: deployment.yaml
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: MANAGEMENT_SERVER_PORT
+            value: "8081"
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: management
+            containerPort: 8081
+            protocol: TCP
+      - lengthEqual:
+          path: spec.template.spec.containers[0].ports
+          count: 2
+
+  - it: keeps the actuator on the traffic port when managementPort equals containerPort
+    template: deployment.yaml
+    set:
+      runtime:
+        managementPort: 8080
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].env[?(@.name == "MANAGEMENT_SERVER_PORT")]
+      - lengthEqual:
+          path: spec.template.spec.containers[0].ports
+          count: 1
+      - equal:
+          path: spec.template.spec.containers[0].startupProbe.httpGet.path
+          value: /monitoring/health/liveness
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.path
+          value: /monitoring/health/readiness
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet.path
+          value: /monitoring/health/liveness
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.port
+          value: http
+
+  - it: refuses an explicit /monitoring probe path while the actuator is split
+    template: deployment.yaml
+    set:
+      probes:
+        readiness:
+          path: /monitoring/health/readiness
+    asserts:
+      - failedTemplate:
+          errorPattern: "probes.readiness.path .* under /monitoring"
+
+  - it: an explicit probe path wins over the layout default without the split
+    template: deployment.yaml
+    set:
+      runtime:
+        managementPort: 8080
+      probes:
+        readiness:
+          path: /custom/ready
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.path
+          value: /custom/ready
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet.path
+          value: /monitoring/health/liveness
+
+  - it: configures graceful shutdown, forward headers and the JVM through env
+    template: deployment.yaml
+    set:
+      runtime:
+        shutdownTimeout: 45s
+        forwardHeadersStrategy: native
+        javaToolOptions: "-XX:+ExitOnOutOfMemoryError -Xss512k"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SERVER_SHUTDOWN
+            value: graceful
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE
+            value: 45s
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SERVER_FORWARD_HEADERS_STRATEGY
+            value: native
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: JAVA_TOOL_OPTIONS
+            value: "-XX:+ExitOnOutOfMemoryError -Xss512k"
+
+  - it: omits JAVA_TOOL_OPTIONS when empty
+    template: deployment.yaml
+    set:
+      runtime:
+        javaToolOptions: ""
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].env[?(@.name == "JAVA_TOOL_OPTIONS")]
+
+  - it: turns HTTP keep-alive off by default
+    template: deployment.yaml
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SERVER_TOMCAT_MAX_KEEP_ALIVE_REQUESTS
+            value: "1"
+
+  - it: leaves Tomcat's keep-alive default when httpKeepAlive is on
+    template: deployment.yaml
+    set:
+      runtime:
+        httpKeepAlive: true
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].env[?(@.name == "SERVER_TOMCAT_MAX_KEEP_ALIVE_REQUESTS")]
+
+  - it: sleeps in preStop with the kubelet's Sleep action on Kubernetes 1.30+
+    template: deployment.yaml
+    capabilities:
+      majorVersion: 1
+      minorVersion: 30
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].lifecycle.preStop.sleep.seconds
+          value: 5
+      - notExists:
+          path: spec.template.spec.containers[0].lifecycle.preStop.exec
+
+  - it: falls back to exec sleep below Kubernetes 1.30
+    template: deployment.yaml
+    capabilities:
+      majorVersion: 1
+      minorVersion: 29
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].lifecycle.preStop.exec.command
+          value: ["sleep", "5"]
+      - notExists:
+          path: spec.template.spec.containers[0].lifecycle.preStop.sleep
+
+  - it: drops the preStop hook when the sleep is 0
+    template: deployment.yaml
+    set:
+      runtime:
+        preStopSleepSeconds: 0
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].lifecycle
+
+  - it: refuses to render when sleep + shutdown timeout reach the grace period
+    template: deployment.yaml
+    set:
+      runtime:
+        preStopSleepSeconds: 10
+        shutdownTimeout: 50s
+      terminationGracePeriodSeconds: 60
+    asserts:
+      - failedTemplate:
+          errorPattern: terminationGracePeriodSeconds \(60\) must exceed
+
+  - it: defaults the selector per entry and passes other constraint fields through
+    template: deployment.yaml
+    set:
+      nameOverride: validator
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: DoNotSchedule
+          minDomains: 2
+          matchLabelKeys: [pod-template-hash]
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchExpressions:
+              - key: custom
+                operator: Exists
+    asserts:
+      - lengthEqual:
+          path: spec.template.spec.topologySpreadConstraints
+          count: 2
+      - equal:
+          path: spec.template.spec.topologySpreadConstraints[0].labelSelector.matchLabels
+          value:
+            app.kubernetes.io/name: validator
+            app.kubernetes.io/instance: RELEASE-NAME
+      - equal:
+          path: spec.template.spec.topologySpreadConstraints[0].minDomains
+          value: 2
+      - equal:
+          path: spec.template.spec.topologySpreadConstraints[0].matchLabelKeys
+          value: [pod-template-hash]
+      - equal:
+          path: spec.template.spec.topologySpreadConstraints[1].labelSelector
+          value:
+            matchExpressions:
+              - key: custom
+                operator: Exists
+      - notExists:
+          path: spec.template.spec.topologySpreadConstraints[1].labelSelector.matchLabels
+
+  - it: runs online by default, with no trust-list store mounted
+    template: deployment.yaml
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].env[?(@.name == "SIVA_TSL_LOADER_LOADFROMCACHE")]
+      - notExists:
+          path: spec.template.spec.volumes[?(@.name == "tsl-store")]
+      - lengthEqual:
+          path: spec.template.spec.containers[0].volumeMounts
+          count: 2
+
+  - it: in snapshot mode reads the store read-only and follows its current snapshot
+    template: deployment.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          volume:
+            persistentVolumeClaim:
+              claimName: my-tsl
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_LOADFROMCACHE
+            value: "true"
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_SNAPSHOTDIRECTORY
+            value: /var/siva/tsl
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_SNAPSHOTPOLLINTERVAL
+            value: PT1M
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_SNAPSHOTMAXAGE
+            value: PT48H
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: tsl-store
+            mountPath: /var/siva/tsl
+            readOnly: true
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: tsl-store
+            persistentVolumeClaim:
+              claimName: my-tsl
+
+  - it: in snapshot mode mounts the chart's own claim when it creates one
+    template: deployment.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          mountPath: /mnt/tsl
+          persistentVolumeClaim:
+            create: true
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: tsl-store
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-siva-webapp-tsl
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_SNAPSHOTDIRECTORY
+            value: /mnt/tsl
+
+  - it: refuses snapshot mode without a store
+    template: deployment.yaml
+    set:
+      tsl:
+        mode: snapshot
+    asserts:
+      - failedTemplate:
+          errorPattern: tsl.mode snapshot needs a store
+
+  - it: marks the pods safe to evict for the descheduler and the cluster autoscaler by default
+    template: deployment.yaml
+    asserts:
+      - equal:
+          path: spec.template.metadata.annotations["cluster-autoscaler.kubernetes.io/safe-to-evict"]
+          value: "true"
+      - equal:
+          path: spec.template.metadata.annotations["descheduler.alpha.kubernetes.io/evict"]
+          value: "true"
+
+  - it: drops the eviction annotations when evictable is off
+    template: deployment.yaml
+    set:
+      evictable: false
+    asserts:
+      - notExists:
+          path: spec.template.metadata.annotations["cluster-autoscaler.kubernetes.io/safe-to-evict"]
+      - notExists:
+          path: spec.template.metadata.annotations["descheduler.alpha.kubernetes.io/evict"]
+
+  - it: omits the snapshot max age when set to none
+    template: deployment.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          maxAge: none
+          persistentVolumeClaim:
+            create: true
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].env[?(@.name == "SIVA_TSL_LOADER_SNAPSHOTMAXAGE")]
+
+  - it: derives the snapshot max age as max(4 x period, 48 h)
+    template: deployment.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_SNAPSHOTMAXAGE
+            value: PT48H
+
+  - it: derives four weeks of snapshot max age from a weekly period
+    template: deployment.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+        fetcher:
+          period: P7D
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_SNAPSHOTMAXAGE
+            value: PT672H
+
+  - it: keeps an explicit snapshot max age
+    template: deployment.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          maxAge: P3D
+          persistentVolumeClaim:
+            create: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_SNAPSHOTMAXAGE
+            value: P3D
+
+  - it: leaves the territories to SiVa by default
+    template: deployment.yaml
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].env[?(@.name == "SIVA_TSL_LOADER_TRUSTEDTERRITORIES")]
+      - notExists:
+          path: spec.template.spec.containers[0].env[?(@.name == "SIVA_TSL_LOADER_MANDATORYTERRITORIES")]
+
+  - it: passes configured territories to SiVa
+    template: deployment.yaml
+    set:
+      tsl:
+        territories:
+          trusted: [EE, LV, LT]
+          mandatory: [EE]
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_TRUSTEDTERRITORIES
+            value: EE,LV,LT
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_MANDATORYTERRITORIES
+            value: EE
+
+  - it: mounts nothing and sets no SSL bundle without trust material
+    template: deployment.yaml
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].env[?(@.name == "SIVA_TSL_LOADER_SSLBUNDLE")]
+      - notExists:
+          path: spec.template.spec.containers[0].env[?(@.name == "SIVA_TSL_LOADER_LOTLBUNDLE")]
+      - notExists:
+          path: spec.template.spec.volumes[?(@.name == "trust")]
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/trust"]
+
+  - it: mounts the PEM files and wires both SSL bundles with reload
+    template: deployment.yaml
+    set:
+      trust:
+        pem:
+          tsl-ca.pem: ca
+          lotl-signers.pem: signer
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SPRING_SSL_BUNDLE_PEM_TSL_TRUSTSTORE_CERTIFICATE
+            value: file:/etc/siva/trust/tsl-ca.pem
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SPRING_SSL_BUNDLE_PEM_TSL_RELOADONUPDATE
+            value: "true"
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_SSLBUNDLE
+            value: tsl
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SPRING_SSL_BUNDLE_PEM_LOTL_TRUSTSTORE_CERTIFICATE
+            value: file:/etc/siva/trust/lotl-signers.pem
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_LOTLBUNDLE
+            value: lotl
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: trust
+            mountPath: /etc/siva/trust
+            readOnly: true
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: trust
+            configMap:
+              name: RELEASE-NAME-siva-webapp-trust
+      - notExists:
+          path: spec.template.spec.containers[0].env[?(@.name == "SERVICE_BINDING_ROOT")]
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/trust"]
+
+  - it: takes the PEM files from an existing Secret and wires only the named file
+    template: deployment.yaml
+    set:
+      trust:
+        existingSecret: my-trust
+        mountPath: /trust
+        tslCa: ""
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].env[?(@.name == "SIVA_TSL_LOADER_SSLBUNDLE")]
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SPRING_SSL_BUNDLE_PEM_LOTL_TRUSTSTORE_CERTIFICATE
+            value: file:/trust/lotl-signers.pem
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: trust
+            secret:
+              secretName: my-trust
+
+  - it: projects the CA file as a Paketo ca-certificates binding when asked
+    template: deployment.yaml
+    set:
+      trust:
+        pem:
+          tsl-ca.pem: ca
+          lotl-signers.pem: signer
+        caCertificatesBinding: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SERVICE_BINDING_ROOT
+            value: /platform/bindings
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: trust-binding
+            mountPath: /platform/bindings/ca-certificates
+            readOnly: true
+      - equal:
+          path: spec.template.spec.volumes[?(@.name == "trust-binding")].projected.sources[0].configMap.name
+          value: RELEASE-NAME-siva-webapp-trust-binding
+      - equal:
+          path: spec.template.spec.volumes[?(@.name == "trust-binding")].projected.sources[1].configMap.items[0].path
+          value: tsl-ca.pem
+      - matchRegex:
+          path: spec.template.metadata.annotations["checksum/trust"]
+          pattern: ^[0-9a-f]{64}$
+
+  - it: pins the image by digest next to the tag when image.digest is set
+    template: deployment.yaml
+    set:
+      image:
+        repository: registry.example.invalid/siva-webapp
+        tag: v1
+        digest: sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: registry.example.invalid/siva-webapp:v1@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+
+  - it: refuses an image digest that is not sha256 and 64 hex digits
+    template: deployment.yaml
+    set:
+      image:
+        digest: sha256:abc
+    asserts:
+      - failedTemplate:
+          errorPattern: (?i)image.*digest.*does not match pattern
+
+  - it: refuses a snapshot poll interval with no component (PT), which the JVM would refuse at startup
+    template: deployment.yaml
+    set:
+      tsl:
+        snapshot:
+          pollInterval: PT
+    asserts:
+      - failedTemplate:
+          errorPattern: (?i)pollInterval.*does not match pattern
+
+  - it: refuses a snapshot max age with a dangling T (P1DT)
+    template: deployment.yaml
+    set:
+      tsl:
+        snapshot:
+          maxAge: P1DT
+    asserts:
+      - failedTemplate:
+          errorPattern: (?i)maxAge.*does not match pattern
+
+  - it: renders a poll interval with fractional seconds and a day-and-time max age
+    template: deployment.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+          pollInterval: PT1M30.5S
+          maxAge: P1DT12H
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_SNAPSHOTPOLLINTERVAL
+            value: PT1M30.5S
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SIVA_TSL_LOADER_SNAPSHOTMAXAGE
+            value: P1DT12H

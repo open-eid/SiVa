@@ -1,0 +1,11 @@
+# Snapshot mode, fetch period PT6H (thresholds in snapshot-pt6h.test.yaml).
+tsl:
+  mode: snapshot
+  snapshot:
+    persistentVolumeClaim:
+      create: true
+  fetcher:
+    period: PT6H
+monitoring:
+  prometheusRule:
+    enabled: true

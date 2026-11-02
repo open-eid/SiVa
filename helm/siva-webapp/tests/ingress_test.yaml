@@ -1,0 +1,144 @@
+suite: ingress
+templates:
+  - ingress.yaml
+tests:
+  - it: renders no Ingress by default
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: renders one Ingress per list entry, named after the release and entry
+    set:
+      network:
+        ingresses:
+          - name: public
+            className: nginx
+            annotations:
+              nginx.ingress.kubernetes.io/proxy-body-size: 28m
+            hosts:
+              - host: siva.example.invalid
+                paths:
+                  - path: /
+                    pathType: Prefix
+              - host: siva2.example.invalid
+                paths:
+                  - path: /validate
+                    pathType: Exact
+            tls:
+              - secretName: siva-tls
+                hosts: [siva.example.invalid, siva2.example.invalid]
+          - name: internal
+            hosts:
+              - host: siva.internal.invalid
+                paths:
+                  - path: /
+    asserts:
+      - hasDocuments:
+          count: 2
+      - isKind:
+          of: Ingress
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-siva-webapp-public
+        documentIndex: 0
+      - equal:
+          path: spec.ingressClassName
+          value: nginx
+        documentIndex: 0
+      - lengthEqual:
+          path: spec.rules
+          count: 2
+        documentIndex: 0
+      - equal:
+          path: spec.rules[0].http.paths[0].pathType
+          value: Prefix
+        documentIndex: 0
+      - equal:
+          path: spec.rules[1].http.paths[0].pathType
+          value: Exact
+        documentIndex: 0
+      - equal:
+          path: spec.rules[0].http.paths[0].pathType
+          value: Prefix
+        documentIndex: 1
+      - equal:
+          path: spec.rules[0].host
+          value: siva.internal.invalid
+        documentIndex: 1
+      - equal:
+          path: spec.rules[0].http.paths[0].backend.service.port.number
+          value: 8080
+        documentIndex: 1
+      - equal:
+          path: spec.rules[0].http.paths[0].backend.service
+          value:
+            name: RELEASE-NAME-siva-webapp
+            port:
+              number: 8080
+        documentIndex: 0
+      - equal:
+          path: spec.tls[0].secretName
+          value: siva-tls
+        documentIndex: 0
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-siva-webapp-internal
+        documentIndex: 1
+      - notExists:
+          path: spec.ingressClassName
+        documentIndex: 1
+      - notExists:
+          path: spec.tls
+        documentIndex: 1
+      - equal:
+          path: metadata.annotations["nginx.ingress.kubernetes.io/proxy-body-size"]
+          value: 28m
+        documentIndex: 0
+  - it: never routes to the management port
+    set:
+      network:
+        ingresses:
+          - name: public
+            hosts:
+              - host: siva.example.invalid
+                paths:
+                  - path: /
+                  - path: /validate
+    asserts:
+      - notExists:
+          path: spec.rules[0].http.paths[?(@.backend.service.port.number == 8081)]
+      - equal:
+          path: spec.rules[0].http.paths[1].backend.service.port.number
+          value: 8080
+  - it: backends use service.port, not the container port
+    set:
+      service:
+        port: 80
+        containerPort: 9090
+      network:
+        ingresses:
+          - name: public
+            hosts:
+              - host: siva.example.invalid
+                paths:
+                  - path: /
+    asserts:
+      - equal:
+          path: spec.rules[0].http.paths[0].backend.service.port.number
+          value: 80
+  - it: allows TLS without a secretName (controller default certificate)
+    set:
+      network:
+        ingresses:
+          - name: public
+            hosts:
+              - host: siva.example.invalid
+                paths:
+                  - path: /
+            tls:
+              - hosts: [siva.example.invalid]
+    asserts:
+      - equal:
+          path: spec.tls[0].hosts
+          value: [siva.example.invalid]
+      - notExists:
+          path: spec.tls[0].secretName

@@ -37,7 +37,7 @@ import static ee.openeid.siva.validation.service.signature.policy.PredefinedVali
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@ConfigurationProperties(prefix = "siva.europe.signature-policy")
+@ConfigurationProperties(prefix = "siva.europe.signature-policy", ignoreUnknownFields = false)
 public class GenericSignaturePolicyProperties extends SignaturePolicyProperties<ConstraintDefinedPolicy> {
 
     private static final Resource ADES_CONSTRAINT = new ClassPathResource("generic_constraint_ades.xml");

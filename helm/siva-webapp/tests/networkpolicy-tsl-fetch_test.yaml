@@ -1,0 +1,45 @@
+suite: trust-list fetcher network policy
+templates:
+  - networkpolicy-tsl-fetch.yaml
+tests:
+  - it: is not rendered without snapshot mode, the policy and egress all on
+    set:
+      network:
+        networkPolicy:
+          enabled: true
+          egress:
+            enabled: true
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: denies all ingress and allows the webapp's egress for the fetcher pods
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+      network:
+        networkPolicy:
+          enabled: true
+          egress:
+            enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-siva-webapp-tsl-fetch
+      - equal:
+          path: spec.podSelector.matchLabels["app.kubernetes.io/name"]
+          value: siva-webapp-tsl-fetch
+      - equal:
+          path: spec.policyTypes
+          value: [Ingress, Egress]
+      - equal:
+          path: spec.ingress
+          value: []
+      - lengthEqual:
+          path: spec.egress
+          count: 2

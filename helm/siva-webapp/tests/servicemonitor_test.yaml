@@ -1,0 +1,81 @@
+suite: service monitor
+templates:
+  - servicemonitor.yaml
+tests:
+  - it: is off by default
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: scrapes the management Service's management port in the release namespace
+    set:
+      monitoring:
+        serviceMonitor:
+          enabled: true
+          labels:
+            release: kube-prometheus-stack
+    asserts:
+      - isKind:
+          of: ServiceMonitor
+      - isAPIVersion:
+          of: monitoring.coreos.com/v1
+      - notExists:
+          path: metadata.namespace
+      - equal:
+          path: metadata.labels.release
+          value: kube-prometheus-stack
+      - equal:
+          path: spec.namespaceSelector.matchNames
+          value: [NAMESPACE]
+      - equal:
+          path: spec.selector.matchLabels
+          value:
+            app.kubernetes.io/name: siva-webapp
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/component: management
+      - equal:
+          path: spec.endpoints[0]
+          value:
+            port: management
+            path: /monitoring/prometheus
+            interval: 30s
+            scrapeTimeout: 10s
+            relabelings:
+              - action: replace
+                targetLabel: application
+                replacement: RELEASE-NAME-siva-webapp
+  - it: leaves the application label to SiVa's config when asked
+    set:
+      monitoring:
+        serviceMonitor:
+          enabled: true
+          applicationLabel: false
+    asserts:
+      - notExists:
+          path: spec.endpoints[0].relabelings
+  - it: scrapes the traffic Service's http port without the split, in another namespace
+    set:
+      monitoring:
+        serviceMonitor:
+          enabled: true
+          namespace: monitoring
+          relabelings:
+            - action: replace
+              targetLabel: app
+              replacement: siva
+      runtime:
+        managementPort: 8080
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: monitoring
+      - equal:
+          path: spec.endpoints[0].port
+          value: http
+      - notExists:
+          path: spec.selector.matchLabels["app.kubernetes.io/component"]
+      - equal:
+          path: spec.endpoints[0].relabelings[0].targetLabel
+          value: application
+      - equal:
+          path: spec.endpoints[0].relabelings[1].targetLabel
+          value: app

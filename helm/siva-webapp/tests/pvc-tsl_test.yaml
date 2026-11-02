@@ -1,0 +1,73 @@
+suite: trust-list store claim
+templates:
+  - pvc-tsl.yaml
+tests:
+  - it: is not rendered in online mode
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: is not rendered when the store is brought by the user
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          volume:
+            persistentVolumeClaim:
+              claimName: my-tsl
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: is a kept ReadWriteMany claim of the configured size when the chart creates it
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: PersistentVolumeClaim
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-siva-webapp-tsl
+      - equal:
+          path: metadata.annotations["helm.sh/resource-policy"]
+          value: keep
+      - equal:
+          path: spec.accessModes
+          value: [ReadWriteMany]
+      - equal:
+          path: spec.resources.requests.storage
+          value: 1Gi
+      - notExists:
+          path: spec.storageClassName
+
+  - it: takes access modes, size, class and annotations from values
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+            accessModes: [ReadWriteOnce]
+            size: 5Gi
+            storageClassName: fast
+            annotations:
+              example.invalid/claim: "yes"
+    asserts:
+      - equal:
+          path: spec.accessModes
+          value: [ReadWriteOnce]
+      - equal:
+          path: spec.resources.requests.storage
+          value: 5Gi
+      - equal:
+          path: spec.storageClassName
+          value: fast
+      - equal:
+          path: metadata.annotations["example.invalid/claim"]
+          value: "yes"

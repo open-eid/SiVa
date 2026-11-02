@@ -1,0 +1,3 @@
+# ct lints once per ci/*-values.yaml and skips the plain defaults otherwise; this empty
+# overlay makes it lint values.yaml as is.
+{}

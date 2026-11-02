@@ -21,6 +21,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.core.io.Resource;
 
 @Data
+// Unknown keys cannot be refused here: siva.bdoc.signature-policy.* is bound by BDOCSignaturePolicyProperties
+// and would count as unbound under this prefix (Spring Boot checks the whole subtree per class)
 @ConfigurationProperties(prefix = "siva.bdoc")
 public class BDOCValidationServiceProperties {
     private Resource digidoc4JConfigurationFile;

@@ -22,16 +22,20 @@ import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSign
 import ee.openeid.tsl.TSLLoader;
 import ee.openeid.tsl.TSLRefresher;
 import ee.openeid.tsl.TSLValidationJobFactory;
+import ee.openeid.tsl.TrustedListsCertificateSourceHolder;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
+import ee.openeid.tsl.configuration.TSLLoaderDefinitionRegisterer;
+import ee.openeid.tsl.fetcher.TSLSnapshotFetcher;
 import ee.openeid.validation.service.generic.configuration.GenericValidationServiceConfiguration;
 import ee.openeid.validation.service.timestamptoken.configuration.TimeStampTokenSignaturePolicyProperties;
 import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
-import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import org.junit.jupiter.api.BeforeEach;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import java.util.Set;
 
 @SpringBootTest(classes = {BaseTimeStampTokenValidationServiceTest.TestConfiguration.class})
 abstract class BaseTimeStampTokenValidationServiceTest {
@@ -39,17 +43,14 @@ abstract class BaseTimeStampTokenValidationServiceTest {
     final TimeStampTokenSignaturePolicyProperties policyProperties = new TimeStampTokenSignaturePolicyProperties();
 
     @Autowired
-    TrustedListsCertificateSource trustedListsCertificateSource;
+    TrustedListsCertificateSourceHolder trustedListsCertificateSource;
 
     @BeforeEach
     void setUp() {
-        validationService = new TimeStampTokenValidationService();
         policyProperties.initPolicySettings();
-        ConstraintLoadingSignaturePolicyService signaturePolicyService = new ConstraintLoadingSignaturePolicyService(policyProperties);
-        validationService.setSignaturePolicyService(signaturePolicyService);
-        validationService.setTrustedListsCertificateSource(trustedListsCertificateSource);
-        ReportConfigurationProperties reportConfigurationProperties = new ReportConfigurationProperties(true);
-        validationService.setReportConfigurationProperties(reportConfigurationProperties);
+        validationService = new TimeStampTokenValidationService(
+                new ConstraintLoadingSignaturePolicyService(policyProperties), trustedListsCertificateSource,
+                new ReportConfigurationProperties(true));
     }
 
     static ValidationDocument buildValidationDocument(String testFile) {
@@ -58,6 +59,7 @@ abstract class BaseTimeStampTokenValidationServiceTest {
 
     @Import({
             TSLLoaderConfiguration.class,
+            TSLLoaderDefinitionRegisterer.class,
             GenericValidationServiceConfiguration.class
     })
     public static class TestConfiguration {
@@ -68,13 +70,8 @@ abstract class BaseTimeStampTokenValidationServiceTest {
         }
 
         @Bean
-        public TSLLoader tslLoader() {
-            return new TSLLoader("testName");
-        }
-
-        @Bean
-        public TSLRefresher tslRefresher() {
-            return new TSLRefresher();
+        public TSLRefresher tslRefresher(Set<TSLLoader> loaders, ObjectProvider<TSLSnapshotFetcher> fetcher) {
+            return new TSLRefresher(loaders, fetcher);
         }
 
         @Bean

@@ -29,16 +29,19 @@ import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSign
 import ee.openeid.tsl.TSLLoader;
 import ee.openeid.tsl.TSLRefresher;
 import ee.openeid.tsl.TSLValidationJobFactory;
+import ee.openeid.tsl.TrustedListsCertificateSourceHolder;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
+import ee.openeid.tsl.configuration.TSLLoaderDefinitionRegisterer;
+import ee.openeid.tsl.fetcher.TSLSnapshotFetcher;
 import ee.openeid.validation.service.generic.configuration.properties.GenericSignaturePolicyProperties;
 import ee.openeid.validation.service.generic.configuration.GenericValidationServiceConfiguration;
 import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
 import ee.openeid.validation.service.generic.validator.ocsp.OCSPSourceFactory;
 import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
-import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
@@ -46,6 +49,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Date;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -63,7 +67,7 @@ class PDFValidationServiceTest {
 
     private ConstraintLoadingSignaturePolicyService signaturePolicyService;
     @Autowired
-    private TrustedListsCertificateSource trustedListsCertificateSource;
+    private TrustedListsCertificateSourceHolder trustedListsCertificateSource;
     @Autowired
     private GenericSignaturePolicyProperties policySettings;
     @Autowired
@@ -73,15 +77,9 @@ class PDFValidationServiceTest {
 
     @BeforeEach
     public void setUp() {
-        validationService = new GenericValidationService();
-        validationService.setTrustedListsCertificateSource(trustedListsCertificateSource);
-
         signaturePolicyService = new ConstraintLoadingSignaturePolicyService(policySettings);
-        validationService.setSignaturePolicyService(signaturePolicyService);
-        validationService.setReportConfigurationProperties(new ReportConfigurationProperties(true));
-
-        validationService.setContainerValidatorFactory(containerValidatorFactory);
-        validationService.setOcspSourceFactory(ocspSourceFactory);
+        validationService = new GenericValidationService(trustedListsCertificateSource, signaturePolicyService,
+                new ReportConfigurationProperties(true), new ProxyConfig(), containerValidatorFactory, ocspSourceFactory);
     }
 
     @Test
@@ -176,6 +174,7 @@ class PDFValidationServiceTest {
 
     @Import({
             TSLLoaderConfiguration.class,
+            TSLLoaderDefinitionRegisterer.class,
             GenericValidationServiceConfiguration.class
     })
     public static class TestConfiguration {
@@ -184,12 +183,8 @@ class PDFValidationServiceTest {
             return new ProxyConfig();
         }
         @Bean
-        public TSLLoader tslLoader() {
-            return new TSLLoader("testName");
-        }
-        @Bean
-        public TSLRefresher tslRefresher() {
-            return new TSLRefresher();
+        public TSLRefresher tslRefresher(Set<TSLLoader> loaders, ObjectProvider<TSLSnapshotFetcher> fetcher) {
+            return new TSLRefresher(loaders, fetcher);
         }
         @Bean
         public TSLValidationJobFactory tslValidationJobFactory() {

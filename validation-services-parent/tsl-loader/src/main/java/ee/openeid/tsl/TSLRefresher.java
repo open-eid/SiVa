@@ -16,8 +16,11 @@
 
 package ee.openeid.tsl;
 
+import ee.openeid.tsl.fetcher.TSLSnapshotFetcher;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
 
 import jakarta.annotation.PostConstruct;
@@ -25,13 +28,20 @@ import java.util.Set;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class TSLRefresher implements Runnable {
 
-    private Set<TSLLoader> loaders;
+    private final @NonNull Set<TSLLoader> loaders;
+    // Present in the tsl-fetch profile only
+    private final @NonNull ObjectProvider<TSLSnapshotFetcher> fetcher;
 
     @PostConstruct
     public void init() {
-        run();
+        // The fetcher refreshes under the store's lock (TSLSnapshotFetcher.fetch); a start-up refresh here would
+        // download before the lock is held.
+        if (fetcher.getIfAvailable() == null) {
+            run();
+        }
     }
 
     @Override
@@ -41,9 +51,13 @@ public class TSLRefresher implements Runnable {
         log.info("Finished TSL refresh process...");
     }
 
-    @Autowired
-    public void setLoaders(Set<TSLLoader> loaders) {
-        this.loaders = loaders;
+    /**
+     * Loaders in snapshot mode reload when the store's {@code current} names another snapshot; the others
+     * do nothing. Polled between scheduled refreshes so every replica converges on a new snapshot within
+     * the poll interval instead of at its own cron.
+     */
+    public void refreshChangedSnapshots() {
+        loaders.forEach(TSLLoader::refreshIfSnapshotChanged);
     }
 
 }

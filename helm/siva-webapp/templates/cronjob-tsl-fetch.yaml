@@ -1,0 +1,39 @@
+{{- if include "siva-webapp.snapshotMode" . }}
+# The trust-list fetcher: the webapp image in SiVa's tsl-fetch profile, downloading the lists
+# into its working cache and publishing them as a snapshot the webapp pods pick up within
+# tsl.snapshot.pollInterval. One at a time (Forbid here, and the fetcher's own lock in the
+# store against the bootstrap Job); a run that ends below the mandatory territories exits 1
+# and publishes nothing, so `current` keeps the last good snapshot; a run that had to serve a
+# list from its last copy publishes and exits 3. Both fail the Job at once (podFailurePolicy),
+# so the cluster's own Job alerts see a fetch that did not fetch.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "siva-webapp.fetcherName" . }}
+  labels:
+    {{- include "siva-webapp.fetcherLabels" . | nindent 4 }}
+spec:
+  schedule: {{ include "siva-webapp.fetcherSchedule" . | quote }}
+  {{- with .Values.tsl.fetcher.timeZone }}
+  timeZone: {{ . | quote }}
+  {{- end }}
+  concurrencyPolicy: Forbid
+  {{- with .Values.tsl.fetcher.startingDeadlineSeconds }}
+  startingDeadlineSeconds: {{ . }}
+  {{- end }}
+  successfulJobsHistoryLimit: {{ .Values.tsl.fetcher.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.tsl.fetcher.failedJobsHistoryLimit }}
+  jobTemplate:
+    metadata:
+      labels:
+        {{- include "siva-webapp.fetcherLabels" . | nindent 8 }}
+    spec:
+      backoffLimit: {{ .Values.tsl.fetcher.backoffLimit }}
+      activeDeadlineSeconds: {{ .Values.tsl.fetcher.activeDeadlineSeconds }}
+      {{- with .Values.tsl.fetcher.ttlSecondsAfterFinished }}
+      ttlSecondsAfterFinished: {{ . }}
+      {{- end }}
+      {{- include "siva-webapp.fetcherFailurePolicy" . | nindent 6 }}
+      template:
+        {{- include "siva-webapp.fetcherPodTemplate" . | nindent 8 }}
+{{- end }}

@@ -24,6 +24,8 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 
+import java.time.Duration;
+
 @Configuration
 public class TSLRefreshConfiguration {
     private TSLRefresher refresher;
@@ -33,6 +35,12 @@ public class TSLRefreshConfiguration {
     public TaskScheduler tslRefreshTask() {
         final TaskScheduler scheduler = new ConcurrentTaskScheduler();
         scheduler.schedule(refresher, new CronTrigger(loaderConfigurationProperties.getSchedulerCron()));
+        Duration poll = loaderConfigurationProperties.getSnapshotPollInterval();
+        boolean snapshotMode = loaderConfigurationProperties.isLoadFromCache()
+                && loaderConfigurationProperties.getSnapshotDirectory() != null;
+        if (snapshotMode && poll != null && !poll.isNegative() && !poll.isZero()) {
+            scheduler.scheduleWithFixedDelay(refresher::refreshChangedSnapshots, poll);
+        }
 
         return scheduler;
     }

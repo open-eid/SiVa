@@ -1,0 +1,161 @@
+suite: network policy
+templates:
+  - networkpolicy.yaml
+tests:
+  - it: is off by default
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: is ingress-only, selects the chart's pods and opens both ports to any in-cluster source
+    set:
+      network:
+        networkPolicy:
+          enabled: true
+    asserts:
+      - isKind:
+          of: NetworkPolicy
+      - equal:
+          path: spec.policyTypes
+          value: [Ingress]
+      - notExists:
+          path: spec.egress
+      - equal:
+          path: spec.podSelector.matchLabels
+          value:
+            app.kubernetes.io/name: siva-webapp
+            app.kubernetes.io/instance: RELEASE-NAME
+      - lengthEqual:
+          path: spec.ingress
+          count: 2
+      - equal:
+          path: spec.ingress[0].ports[0]
+          value:
+            port: http
+            protocol: TCP
+      - notExists:
+          path: spec.ingress[0].from
+      - equal:
+          path: spec.ingress[1].ports[0].port
+          value: management
+  - it: restricts sources per port when peers are given
+    set:
+      network:
+        networkPolicy:
+          enabled: true
+          ingressFrom:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: ingress-nginx
+          managementFrom:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: monitoring
+              podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: prometheus
+    asserts:
+      - equal:
+          path: spec.ingress[0].from[0].namespaceSelector.matchLabels["kubernetes.io/metadata.name"]
+          value: ingress-nginx
+      - equal:
+          path: spec.ingress[1].from[0].podSelector.matchLabels["app.kubernetes.io/name"]
+          value: prometheus
+  - it: has a single rule without the management split and ignores managementFrom
+    set:
+      network:
+        networkPolicy:
+          enabled: true
+          managementFrom:
+            - podSelector: {}
+      runtime:
+        managementPort: 8080
+    asserts:
+      - lengthEqual:
+          path: spec.ingress
+          count: 1
+      - notExists:
+          path: spec.ingress[0].from
+
+  - it: stays ingress-only unless egress is switched on
+    set:
+      network:
+        networkPolicy:
+          enabled: true
+    asserts:
+      - equal:
+          path: spec.policyTypes
+          value: [Ingress]
+      - notExists:
+          path: spec.egress
+
+  - it: with egress on allows DNS, the public internet on 80 and 443 and nothing private
+    set:
+      network:
+        networkPolicy:
+          enabled: true
+          egress:
+            enabled: true
+    asserts:
+      - equal:
+          path: spec.policyTypes
+          value: [Ingress, Egress]
+      - lengthEqual:
+          path: spec.egress
+          count: 2
+      - equal:
+          path: spec.egress[0].ports
+          value:
+            - port: 53
+              protocol: UDP
+            - port: 53
+              protocol: TCP
+      - equal:
+          path: spec.egress[0].to
+          value:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: kube-system
+      - equal:
+          path: spec.egress[1].ports
+          value:
+            - port: 80
+              protocol: TCP
+            - port: 443
+              protocol: TCP
+      - equal:
+          path: spec.egress[1].to[0].ipBlock.cidr
+          value: 0.0.0.0/0
+      - equal:
+          path: spec.egress[1].to[0].ipBlock.except
+          value: [10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 100.64.0.0/10, 169.254.169.254/32]
+
+  - it: lets DNS go anywhere when dnsTo is empty
+    set:
+      network:
+        networkPolicy:
+          enabled: true
+          egress:
+            enabled: true
+            dnsTo: []
+    asserts:
+      - notExists:
+          path: spec.egress[0].to
+      - equal:
+          path: spec.egress[0].ports[0].port
+          value: 53
+
+  - it: appends extra egress rules and can drop DNS
+    values:
+      - ../ci/all-on-values.yaml
+    set:
+      network:
+        networkPolicy:
+          egress:
+            dns: false
+    asserts:
+      - lengthEqual:
+          path: spec.egress
+          count: 2
+      - equal:
+          path: spec.egress[1].to[0].ipBlock.cidr
+          value: 192.0.2.10/32

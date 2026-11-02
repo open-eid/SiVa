@@ -36,7 +36,7 @@ import static ee.openeid.siva.validation.service.signature.policy.PredefinedVali
 
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "siva.timestamp.signature-policy")
+@ConfigurationProperties(prefix = "siva.timestamp.signature-policy", ignoreUnknownFields = false)
 public class TimeStampTokenSignaturePolicyProperties extends SignaturePolicyProperties<ConstraintDefinedPolicy> {
 
     private static final Resource TST_QES_CONSTRAINT = new ClassPathResource("tst_constraint_qes.xml");

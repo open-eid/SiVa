@@ -81,12 +81,13 @@ config:
 # Runtime settings the chart injects as environment variables (Spring relaxed binding). They are
 # kept out of config.applicationYaml so that an override there cannot silently drop them.
 runtime:
-  # -- Actuator (health with details, Prometheus, heartbeat, version) on its own port. The
-  # traffic Service and the Ingresses never carry it; a ClusterIP Service `<release>-management`
-  # exposes it in-cluster for scraping and `helm test`. The traffic port keeps the status-only
-  # probe paths /readyz and /livez for the kubelet and external load balancers. Set it equal to
-  # service.containerPort to keep the whole actuator on the traffic port (the layout SiVa's
-  # docker-compose and system tests expect; the probes then use /monitoring/health/*).
+  # -- Actuator (health, Prometheus, heartbeat, version) on its own port. The traffic Service
+  # and the Ingresses never carry it; a ClusterIP Service `<release>-management` exposes it
+  # in-cluster for scraping and `helm test`. The traffic port keeps SiVa's documented monitoring
+  # URLs (/monitoring/health, /monitoring/heartbeat, /monitoring/version, same answers) and the
+  # status-only probe paths /readyz and /livez for the kubelet and external load balancers;
+  # metrics are on the management port only. Set it equal to service.containerPort to keep the
+  # whole actuator on the traffic port (the probes then use /monitoring/health/*).
   managementPort: 8081
   # -- Graceful shutdown (server.shutdown=graceful): on SIGTERM the server stops accepting new
   # connections and waits up to this long for in-flight validations

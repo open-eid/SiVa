@@ -110,14 +110,13 @@ Whether the actuator runs on its own port (management port differs from the traf
 Path of a probe on the traffic port. An explicit value wins; otherwise Spring Boot's /readyz and
 /livez when the actuator is split (management.endpoint.health.probes.add-additional-paths publishes
 the two probe groups on the traffic port only when there is a separate management port), or the
-groups under /monitoring/health when the actuator shares the traffic port.
+groups under /monitoring/health when the actuator shares the traffic port. SiVa serves
+/monitoring/health and its groups on the traffic port in both layouts, so an explicit path there
+works too; /readyz and /livez are the lighter default.
 Usage: include "siva-webapp.probePath" (dict "root" $ "group" "readiness" "path" .path)
 */}}
 {{- define "siva-webapp.probePath" -}}
 {{- if .path -}}
-{{- if and (include "siva-webapp.managementSplit" .root) (hasPrefix "/monitoring/" .path) -}}
-{{- fail (printf "probes.%s.path %q is under /monitoring, which the traffic port does not serve while the actuator is on its own port (runtime.managementPort); leave the path empty for /readyz and /livez" .group .path) -}}
-{{- end -}}
 {{ .path }}
 {{- else if include "siva-webapp.managementSplit" .root -}}
 {{ ternary "/readyz" "/livez" (eq .group "readiness") }}

@@ -456,12 +456,14 @@ it (the release's full name) unless `applicationLabel` is false; without the ope
   `siva_tsl_*` gauges, which exist for exactly the configured countries and mark the mandatory
   ones, so the rules carry no country list; request-size rejections and OCSP/TSA failures have
   no metric yet (`monitoring.prometheusRule.pendingRules`).
-- Health with details, heartbeat, version and metrics live on the management port (`8081` by
-  default) and are reachable only inside the cluster through `<release>-management`; the
-  traffic port answers 404 under `/monitoring` and serves only the status-only `/readyz` and
-  `/livez`, which the kubelet probes and an external load balancer's health check use. SiVa's
-  own system tests expect everything on the traffic port, so a test instance sets
-  `runtime.managementPort` to the traffic port; the probes then use
+- The actuator lives on the management port (`8081` by default), reachable only inside the
+  cluster through `<release>-management`. The traffic port serves SiVa's documented monitoring
+  URLs (`/monitoring/health` with its groups, `/monitoring/heartbeat`, `/monitoring/version`,
+  the same answers and status codes, 503 on DOWN; SiVa 3.11.1 and later, an older image answers
+  404 there) and the status-only `/readyz` and `/livez`, which the kubelet probes and an
+  external load balancer's health check use and which work with any image; `/monitoring/
+  prometheus` answers 404 there. An Ingress that should not expose the detailed health lists
+  the paths it allows. With `runtime.managementPort` equal to the traffic port the probes use
   `/monitoring/health/readiness` and `/liveness`.
 - The preStop pause uses the kubelet's Sleep action on Kubernetes 1.30+ and needs nothing in
   the image. Below 1.30 it execs `sleep`, which Paketo's default tiny run image does not ship:

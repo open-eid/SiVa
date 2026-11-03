@@ -520,15 +520,16 @@ tests:
           path: spec.template.spec.containers[0].readinessProbe.httpGet.port
           value: http
 
-  - it: refuses an explicit /monitoring probe path while the actuator is split
+  - it: accepts an explicit /monitoring probe path while the actuator is split
     template: deployment.yaml
     set:
       probes:
         readiness:
           path: /monitoring/health/readiness
     asserts:
-      - failedTemplate:
-          errorPattern: "probes.readiness.path .* under /monitoring"
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.path
+          value: /monitoring/health/readiness
 
   - it: an explicit probe path wins over the layout default without the split
     template: deployment.yaml

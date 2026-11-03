@@ -515,6 +515,18 @@ network:
   # same name wins); for another controller put its spelling of the two numbers in annotations.
   # Example in ci/all-on-values.yaml.
   ingresses: []
+  # -- Gateway API HTTPRoute objects to create, one per entry, named `<release-fullname>-<name>`;
+  # the routing model to prefer, Ingress being frozen. Keys: name, parentRefs (the Gateway:
+  # name, namespace, sectionName, port), hostnames, paths (path with optional type PathPrefix or
+  # Exact; `/` PathPrefix when absent), annotations, labels. One rule forwards every match to the
+  # traffic Service; network.edge.timeoutSeconds (or the drain timeout) is rendered as the rule's
+  # `timeouts.request` (standard channel since Gateway API v1.1; a v1.0 API server drops the
+  # field without a word and the Gateway's own default applies), the body limit has no Gateway
+  # API field and is set on the Gateway's implementation. Needs the Gateway API CRDs
+  # (gateway.networking.k8s.io/v1, standard channel, v1.1 or later for the timeout), a Gateway
+  # that allows routes from this namespace, and labels that do not reuse the chart's own
+  # (the chart's win). Example in ci/all-on-values.yaml.
+  httpRoutes: []
   networkPolicy:
     # -- NetworkPolicy for the webapp pods: ingress to the two ports from the peers below and,
     # with egress.enabled, egress limited to DNS and the public internet. Needs a CNI that

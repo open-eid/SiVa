@@ -61,3 +61,31 @@ tests:
     asserts:
       - matchRegexRaw:
           pattern: 'request bodies of 28 MiB and wait 120 s for an answer'
+
+  - it: prints an Exact route path as it is and appends /validate to a prefix
+    set:
+      network:
+        httpRoutes:
+          - name: exact
+            parentRefs:
+              - name: g
+            paths:
+              - path: /validate
+                type: Exact
+          - name: prefix
+            parentRefs:
+              - name: g
+            paths:
+              - path: /api/
+          - name: bare
+            parentRefs:
+              - name: g
+    asserts:
+      - matchRegexRaw:
+          pattern: 'HTTPRoute RELEASE-NAME-siva-webapp-exact on Gateway g: POST <gateway address>/validate\n'
+      - matchRegexRaw:
+          pattern: 'HTTPRoute RELEASE-NAME-siva-webapp-prefix on Gateway g: POST <gateway address>/api/validate\n'
+      - matchRegexRaw:
+          pattern: 'HTTPRoute RELEASE-NAME-siva-webapp-bare on Gateway g: POST <gateway address>/validate\n'
+      - notMatchRegexRaw:
+          pattern: '/validate/validate'

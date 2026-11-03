@@ -43,9 +43,17 @@ rclone containers mirror, never a CSI or FUSE mount (`tsl.snapshot.sync`).
   before giving up on the upstream (or it answers 504 for a validation SiVa finishes). Both are
   values, `network.edge.maxBodyMiB` and `network.edge.timeoutSeconds` (0 = the drain timeout,
   `runtime.shutdownTimeout`, which is sized by the same number), the install notes print them,
-  and an entry in `network.ingresses` with `edgeAnnotations: nginx` renders them as the
-  ingress-nginx annotations (`proxy-body-size`, `proxy-read-timeout`, `proxy-send-timeout`); for
-  another controller or a load balancer in front, set its own spelling of the two.
+  an entry in `network.httpRoutes` renders the wait as the route's `timeouts.request` (the body
+  limit has no Gateway API field: set it on the Gateway's implementation), and an entry in
+  `network.ingresses` with `edgeAnnotations: nginx` renders both as the ingress-nginx
+  annotations (`proxy-body-size`, `proxy-read-timeout`, `proxy-send-timeout`); for another
+  controller or a load balancer in front, set its own spelling of the two.
+- **Routing.** `network.httpRoutes` renders Gateway API HTTPRoutes (gateway.networking.k8s.io/v1,
+  the standard channel; v1.1 or later, since a v1.0 API server prunes the route's
+  `timeouts.request` silently) that forward to the traffic Service, one per entry with its parent
+  Gateway, hostnames and path matches; this is the model to prefer, Ingress being frozen
+  upstream. `network.ingresses` renders Ingress objects for clusters that still route that way.
+  Neither carries the management port.
 - **Egress.** In the default `tsl.mode: online` each pod downloads the EU LOTL and the
   member-state trust lists at startup and on a nightly cron; in snapshot mode only the fetcher
   does (see "Trust lists"). Allow HTTPS egress to those hosts from whichever pods download, and
@@ -448,6 +456,7 @@ directory); edit the comments, not this table.
 | nameOverride | string | `""` | Override the chart name used in resource names. |
 | network.edge.maxBodyMiB | int | `27` | The two numbers whatever sits in front of the pods (ingress controller, load balancer, API gateway) must be set to, printed by the install notes. Largest request body, in MiB: SiVa's own limit is `siva.http.request.max-request-size-limit` (27 MB, a 20 MB file plus its base64 overhead); an edge that allows less answers 413 before SiVa does, so raise this together with the SiVa key when you change it through config.spring. |
 | network.edge.timeoutSeconds | int | `0` | Seconds the edge waits for SiVa's answer (upstream read timeout): at least your slowest validation, the same number runtime.shutdownTimeout sizes the drain by, which is why 0 takes it from there. An edge that waits less answers 504 for a validation SiVa finishes. |
+| network.httpRoutes | list | `[]` | Gateway API HTTPRoute objects to create, one per entry, named `<release-fullname>-<name>`; the routing model to prefer, Ingress being frozen. Keys: name, parentRefs (the Gateway: name, namespace, sectionName, port), hostnames, paths (path with optional type PathPrefix or Exact; `/` PathPrefix when absent), annotations, labels. One rule forwards every match to the traffic Service; network.edge.timeoutSeconds (or the drain timeout) is rendered as the rule's `timeouts.request` (standard channel since Gateway API v1.1; a v1.0 API server drops the field without a word and the Gateway's own default applies), the body limit has no Gateway API field and is set on the Gateway's implementation. Needs the Gateway API CRDs (gateway.networking.k8s.io/v1, standard channel, v1.1 or later for the timeout), a Gateway that allows routes from this namespace, and labels that do not reuse the chart's own (the chart's win). Example in ci/all-on-values.yaml. |
 | network.ingresses | list | `[]` | Ingress objects to create, one per entry, named `<release-fullname>-<name>`. Keys: name, className, annotations, hosts (host + paths with path and optional pathType), tls, and edgeAnnotations: `nginx` renders the ingress-nginx annotations for network.edge (proxy-body-size, proxy-read-timeout, proxy-send-timeout; an entry in annotations with the same name wins); for another controller put its spelling of the two numbers in annotations. Example in ci/all-on-values.yaml. |
 | network.networkPolicy.egress.additionalRules | list | `[]` | Extra NetworkPolicyEgressRule entries appended as given (for example a private OCSP responder or an egress proxy). |
 | network.networkPolicy.egress.dns | bool | `true` | Allow DNS (UDP and TCP 53) to `dnsTo`. |

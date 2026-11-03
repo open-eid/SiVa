@@ -96,6 +96,21 @@ network:
         - host: siva.internal.example.invalid
           paths:
             - path: /
+  httpRoutes:
+    - name: public
+      parentRefs:
+        - name: public-gateway
+          namespace: gateway-system
+          sectionName: https
+      hostnames: [siva.example.invalid]
+      paths:
+        - path: /validate
+          type: Exact
+        - path: /monitoring/heartbeat
+          type: Exact
+    - name: internal
+      parentRefs:
+        - name: internal-gateway
 podAnnotations:
   example.invalid/annotation: "yes"
 podLabels:

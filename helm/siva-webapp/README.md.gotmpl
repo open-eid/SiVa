@@ -43,9 +43,17 @@ rclone containers mirror, never a CSI or FUSE mount (`tsl.snapshot.sync`).
   before giving up on the upstream (or it answers 504 for a validation SiVa finishes). Both are
   values, `network.edge.maxBodyMiB` and `network.edge.timeoutSeconds` (0 = the drain timeout,
   `runtime.shutdownTimeout`, which is sized by the same number), the install notes print them,
-  and an entry in `network.ingresses` with `edgeAnnotations: nginx` renders them as the
-  ingress-nginx annotations (`proxy-body-size`, `proxy-read-timeout`, `proxy-send-timeout`); for
-  another controller or a load balancer in front, set its own spelling of the two.
+  an entry in `network.httpRoutes` renders the wait as the route's `timeouts.request` (the body
+  limit has no Gateway API field: set it on the Gateway's implementation), and an entry in
+  `network.ingresses` with `edgeAnnotations: nginx` renders both as the ingress-nginx
+  annotations (`proxy-body-size`, `proxy-read-timeout`, `proxy-send-timeout`); for another
+  controller or a load balancer in front, set its own spelling of the two.
+- **Routing.** `network.httpRoutes` renders Gateway API HTTPRoutes (gateway.networking.k8s.io/v1,
+  the standard channel; v1.1 or later, since a v1.0 API server prunes the route's
+  `timeouts.request` silently) that forward to the traffic Service, one per entry with its parent
+  Gateway, hostnames and path matches; this is the model to prefer, Ingress being frozen
+  upstream. `network.ingresses` renders Ingress objects for clusters that still route that way.
+  Neither carries the management port.
 - **Egress.** In the default `tsl.mode: online` each pod downloads the EU LOTL and the
   member-state trust lists at startup and on a nightly cron; in snapshot mode only the fetcher
   does (see "Trust lists"). Allow HTTPS egress to those hosts from whichever pods download, and

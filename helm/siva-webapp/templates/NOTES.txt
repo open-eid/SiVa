@@ -39,6 +39,11 @@ port (which answers only the status-only probes /readyz and /livez):
 {{- end }}
 
 Reaching the service:
+{{- if .Values.network.httpRoutes }}
+{{- range .Values.network.httpRoutes }}
+  HTTPRoute {{ include "siva-webapp.fullname" $ }}-{{ .name }} on Gateway {{ range $i, $p := .parentRefs }}{{ if $i }}, {{ end }}{{ with $p.namespace }}{{ . }}/{{ end }}{{ $p.name }}{{ end }}{{ with .hostnames }} for {{ join ", " . }}{{ end }}: POST <gateway address>{{ $first := dict }}{{ with .paths }}{{ $first = index . 0 }}{{ end }}{{ if eq ($first.type | default "PathPrefix") "Exact" }}{{ $first.path }}{{ else }}{{ $first.path | default "" | trimSuffix "/" }}/validate{{ end }}
+{{- end }}
+{{- end }}
 {{- if .Values.network.ingresses }}
 {{- range .Values.network.ingresses }}
 {{- $scheme := ternary "https" "http" (not (empty .tls)) }}
@@ -49,14 +54,14 @@ Reaching the service:
 {{- end }}
 {{- end }}
 {{- end }}
-{{- else if eq .Values.service.type "NodePort" }}
+{{- else if and (not .Values.network.httpRoutes) (eq .Values.service.type "NodePort") }}
   export NODE_PORT=$(kubectl -n {{ .Release.Namespace }} get svc {{ include "siva-webapp.fullname" . }} -o jsonpath='{.spec.ports[0].nodePort}')
   export NODE_IP=$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}')
   curl -X POST http://$NODE_IP:$NODE_PORT/validate   # expect 400 on an empty body
-{{- else if eq .Values.service.type "LoadBalancer" }}
+{{- else if and (not .Values.network.httpRoutes) (eq .Values.service.type "LoadBalancer") }}
   kubectl -n {{ .Release.Namespace }} get svc -w {{ include "siva-webapp.fullname" . }}
   curl -X POST http://<EXTERNAL-IP>:{{ .Values.service.port }}/validate   # expect 400 on an empty body
-{{- else }}
+{{- else if not .Values.network.httpRoutes }}
   In-cluster: http://{{ include "siva-webapp.fullname" . }}.{{ .Release.Namespace }}.svc:{{ .Values.service.port }}
   From outside: kubectl -n {{ .Release.Namespace }} port-forward svc/{{ include "siva-webapp.fullname" . }} 8080:{{ .Values.service.port }}
                 curl -X POST http://localhost:8080/validate   # expect 400 on an empty body
@@ -64,7 +69,8 @@ Reaching the service:
 
 Whatever sits in front of the pods (ingress controller, load balancer, API gateway) must accept
 request bodies of {{ .Values.network.edge.maxBodyMiB }} MiB and wait {{ include "siva-webapp.edgeTimeoutSeconds" . }} s for an answer (network.edge;
-ingress-nginx annotations are rendered by network.ingresses[].edgeAnnotations: nginx).
+an HTTPRoute carries the wait as its request timeout, the body limit is the Gateway implementation's
+setting; ingress-nginx annotations are rendered by network.ingresses[].edgeAnnotations: nginx).
 
 Try a validation (sample bodies in build-helpers/sample-requests/ of the SiVa repository):
   curl -X POST -H 'Content-Type: application/json' --data @sample.json <base-url>/validate

@@ -256,11 +256,13 @@ needs, no support promise. Its README (`helm/siva-webapp/README.md`) documents e
    for example). Ingress objects come from
    `network.ingresses`; `network.edge` holds the two numbers the edge in front must match (a
    27 MiB request body, the slowest validation as upstream timeout), printed by the install
-   notes and rendered as ingress-nginx annotations on request. Health with
-   details, heartbeat, version and Prometheus metrics are served on the management port (8081)
-   through the in-cluster Service `<release>-management`, not through the traffic port or the
-   Ingress; the traffic port answers only the status-only probes `/readyz` and `/livez`, which
-   the kubelet and an external load balancer's health check use.
+   notes and rendered as ingress-nginx annotations on request. The actuator, Prometheus
+   metrics included, is served on the management port (8081) through the in-cluster Service
+   `<release>-management`, never through the Ingress; the traffic port serves the three
+   documented monitoring URLs (`/monitoring/health`, `/monitoring/heartbeat`,
+   `/monitoring/version`, the same answers as on the management port) and the status-only
+   probes `/readyz` and `/livez`, which the kubelet and an external load balancer's health
+   check use.
 
 Optional objects, all off by default: HorizontalPodAutoscaler, NetworkPolicy, ServiceMonitor,
 PrometheusRule and a Grafana dashboard (`scaling.*`, `network.networkPolicy.*`,
@@ -409,9 +411,36 @@ These links to dependent web services have been preconfigured. For example, the 
 
 The `tsl` component reports, per trusted-list loader, the number of trust anchors, when the last refresh finished, the anchors per territory and, after an online refresh that had to serve a list from its last copy, `lastCopy` (territory, `EU` for the list of trusted lists, to the kind of failure: `UNREACHABLE`, `TIMED_OUT`, `TLS_FAILED` or `DOWNLOAD_FAILED`; the log's `using the last copy on disk` line carries the failure itself) (what the certificate source holds after DSS synchronized the lists it accepts, so a list whose re-download failed keeps counting as long as DSS keeps its anchors). It is DOWN until each loader has refreshed once and holds every mandatory territory (`siva.tsl.loader.mandatoryTerritories`, `EE` by default) with at least one anchor, naming the missing ones in `missingMandatoryTerritories`; other territories never decide the status, so one member state's list being unreachable does not take the service out of rotation. In snapshot mode (see [Trust-list snapshots](#trust-list-snapshots)) each loader also reports the `snapshot` id it loaded. The overall health and the heartbeat follow it. It is part of the `readiness` probe group (`/monitoring/health/readiness`), so a Kubernetes pod in that state receives no traffic.
 
+* **Status codes**
+
+The HTTP status code follows the overall status: `200` for `UP`, `503` for `DOWN` and `OUT_OF_SERVICE` (Spring Boot's default `management.endpoint.health.status.http-mapping`). This holds for the health endpoint, its groups, the probes and the heartbeat alike, so an automated check needs the status code only; the body is for people. An instance before its first trust-list load and one that lost a mandatory territory both answer `DOWN`; the `tsl` details tell them apart: a loader that has never refreshed has no `lastRefresh`, one that refreshed without the territory names it in `missingMandatoryTerritories`. A `DOWN` answer, shortened to the components that matter:
+
+```json
+{
+  "status": "DOWN",
+  "components": {
+    "tsl": {
+      "status": "DOWN",
+      "details": {
+        "generic": { "certificates": 0, "lastRefresh": "2026-11-03T01:00:00Z", "territories": {}, "missingMandatoryTerritories": ["EE"] },
+        "timemark": { "certificates": 0, "lastRefresh": "2026-11-03T01:00:00Z", "territories": {}, "missingMandatoryTerritories": ["EE"] }
+      }
+    },
+    "livenessState": { "status": "UP" },
+    "readinessState": { "status": "UP" }
+  }
+}
+```
+
+The health checks do no I/O of their own: the `tsl` indicator reads the state the last refresh published, so a probe never waits on a trust-list download and is safe to call every few seconds. An indicator added to the `readiness` group must keep that property. The `liveness` group holds only Spring's `livenessState` and depends on nothing outside the process.
+
 * **Probe paths on the application port**
 
 When the actuator runs on its own port (`management.server.port`), the `liveness` and `readiness` groups are also served on the application port as `/livez` and `/readyz` (`management.endpoint.health.probes.add-additional-paths`, on by default). They return the status only, nothing else, which makes them the right target for a load balancer's health check and for Kubernetes probes. Without a separate management port the groups stay under `/monitoring/health/liveness` and `/monitoring/health/readiness`.
+
+* **Monitoring URLs on the application port**
+
+The three monitoring URLs the [Interfaces section](../siva3/interfaces.md#service-health-monitoring) documents, `/monitoring/health` (its groups included), `/monitoring/heartbeat` and `/monitoring/version`, are public API and stay on the application port when the actuator moves to its own: the application serves them there from the same endpoints, with the same bodies, groups, detail settings and status codes as on the management port. The Prometheus endpoint does not follow; it is reachable on the management port only. An edge that should not expose the detailed health can still restrict `/monitoring/health` to its own network and leave `/monitoring/heartbeat` and `/monitoring/version` open.
 
 ## Trust-list metrics
 
@@ -435,7 +464,7 @@ Because the series exist exactly for the configured countries and say which are 
 !!! note
     Note that this endpoint requires the health endpoint to be enabled and exposed in order to function.
 
-The url for accessing JSON formatted heartbeat information with HTTP GET is `/monitoring/heartbeat`. See the [Interfaces section](../siva3/interfaces.md#simplified-health-monitoring) for response structure and details.
+The url for accessing JSON formatted heartbeat information with HTTP GET is `/monitoring/heartbeat`. See the [Interfaces section](../siva3/interfaces.md#simplified-health-monitoring) for response structure and details. The HTTP status code follows the status (`200` for `UP`, `503` for `DOWN`, the health endpoint's mapping), so a load balancer's health check can use it.
 
 * **Enabling and exposing the heartbeat monitoring endpoint**
 

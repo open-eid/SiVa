@@ -517,7 +517,10 @@ GET https://<server url>/monitoring/health
 ### The response
 The response is provided and documented by Spring Boot Actuator — see the [Spring Boot health endpoint](https://docs.spring.io/spring-boot/reference/actuator/endpoints.html#actuator.endpoints.health).
 Exact shape depends on the Spring Boot version and the [active configuration](https://github.com/open-eid/SiVa/blob/master/siva-parent/siva-webapp/src/main/resources/application.yml). 
-SiVa contributes one additional health indicator, `components.health`, with the following details:
+The HTTP status code follows the overall `status`: **200** for `UP`, **503** for `DOWN` and `OUT_OF_SERVICE` (Spring Boot's default mapping), so a monitor can rely on the status code alone.
+The three monitoring URLs described here (`/monitoring/health`, `/monitoring/heartbeat`, `/monitoring/version`) are served on the application port also when the actuator runs on a separate management port (see the [deployment guide](../siva3/deployment_guide.md#health-endpoint)).
+
+SiVa contributes two health indicators: `components.tsl`, the state of the trust lists (`DOWN` until the mandatory trust lists are loaded; details in the [deployment guide](../siva3/deployment_guide.md#health-endpoint)), and `components.health` with the following details:
 
 | Field | Description                                                                                                                |
 | ---------|----------------------------------------------------------------------------------------------------------------------------|
@@ -546,7 +549,14 @@ Sample response:
     "ping": { "status": "UP" },
     "livenessState": { "status": "UP" },
     "readinessState": { "status": "UP" },
-    "ssl": { "status": "UP", "details": { "expiringChains": [], "invalidChains": [], "validChains": [] } }
+    "ssl": { "status": "UP", "details": { "expiringChains": [], "invalidChains": [], "validChains": [] } },
+    "tsl": {
+      "status": "UP",
+      "details": {
+        "generic": { "certificates": 1812, "lastRefresh": "2026-11-02T13:49:54Z", "territories": { "EE": 23 } },
+        "timemark": { "certificates": 1812, "lastRefresh": "2026-11-02T13:49:55Z", "territories": { "EE": 23 } }
+      }
+    }
   },
   "groups": ["liveness", "readiness"],
   "status": "UP"
@@ -571,7 +581,9 @@ As a response, a JSON object is returned with the following information:
 
 | Field | Description |
 | ---------| --------------- |
-| status | General status of the webapp. <br/>Possible values: <ul><li>**DOWN** - when the webapp or any of its dependencies down.</li><li>**UP** - the default value. </li></ul> |
+| status | General status of the webapp. <br/>Possible values: <ul><li>**DOWN** - when the webapp or any of its dependencies down (the trust lists count: `DOWN` until the mandatory ones are loaded).</li><li>**UP** - the default value. </li></ul> |
+
+The HTTP status code follows `status`: **200** for `UP`, **503** for `DOWN`, so a load balancer's health check can use the endpoint without reading the body.
 
 Sample response:
 

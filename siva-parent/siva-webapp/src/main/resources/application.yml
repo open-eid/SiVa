@@ -9,7 +9,8 @@ management:
         include:
           - health
           - prometheus
-          # TODO: When Kubernetes is live, remove custom heartbeat endpoint if it is not used
+          # heartbeat and version are public API (interfaces.md) and stay; with a separate management port
+          # (MANAGEMENT_SERVER_PORT) the application port keeps serving them and health (TrafficPortMonitoringController).
           - heartbeat
           - version
   endpoint:

@@ -494,5 +494,14 @@ it (the release's full name) unless `applicationLabel` is false; without the ope
   ever terminates at the pod, where a handshake per request is no longer cheap.
 - Put JVM flags in `runtime.javaToolOptions`, not in `env`: an `env` entry named
   `JAVA_TOOL_OPTIONS` replaces the chart's.
+- A larger Tomcat pool needs Paketo told about it. Paketo's memory calculator sizes the heap
+  from the memory limit after reserving one stack per thread it assumes, `BPL_JVM_THREAD_COUNT`
+  (250 by default). Raising `server.tomcat.threads.max` above that (through `config.spring`; a
+  deployment whose validations wait on slow external responders may want a larger pool)
+  without raising `BPL_JVM_THREAD_COUNT` in `env` to match means the calculator does not
+  account for the extra threads' stacks. Raising it takes the same share from the heap at an
+  unchanged `resources.limits.memory` (1 MB per thread by default), and the calculator refuses
+  to start when the limit cannot hold what it reserves. Set the two together and size the
+  limit from them.
 - Trust material comes from the classpath unless `trust.*` is set; the JVM's own truststore
   (OCSP, AIA, timestamp clients) is only reachable through the Paketo binding, at launch.

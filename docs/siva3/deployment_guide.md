@@ -230,6 +230,15 @@ needs, no support promise. Its README (`helm/siva-webapp/README.md`) documents e
    docker push <registry>/siva-webapp:<version>
    ```
 
+   Paketo's memory calculator sizes the JVM heap from the container's memory limit after
+   reserving a stack for each thread it assumes, `BPL_JVM_THREAD_COUNT` (250 by default). A
+   deployment that raises Tomcat's pool (`server.tomcat.threads.max`, 200 by default) above
+   that, as one whose validations wait on slow external responders may, sets
+   `BPL_JVM_THREAD_COUNT` to the same number and gives the container a memory limit that holds
+   the heap and every stack; otherwise the calculator does not account for the extra threads'
+   stacks. Each assumed thread takes 1 MB from the heap by default, and the calculator refuses
+   to start when the limit cannot hold what it reserves.
+
 2. Install, pointing the chart at the image:
 
    ```bash

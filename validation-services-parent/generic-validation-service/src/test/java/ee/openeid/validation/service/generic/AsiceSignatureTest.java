@@ -16,12 +16,16 @@
 
 package ee.openeid.validation.service.generic;
 
+import ee.openeid.siva.validation.configuration.AIALoaderConfiguration;
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
+import ee.openeid.siva.validation.configuration.SignaturePolicyDocumentLoaderConfiguration;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
 import ee.openeid.siva.validation.document.report.Info;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
+import ee.openeid.siva.validation.validator.AIASourceFactory;
+import ee.openeid.siva.validation.validator.SignaturePolicyProviderFactory;
 import ee.openeid.validation.service.generic.configuration.properties.GenericSignaturePolicyProperties;
 import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
 import ee.openeid.validation.service.generic.validator.ocsp.OCSPSourceFactory;
@@ -43,7 +47,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
-@SpringBootTest(classes = {PDFValidationServiceTest.TestConfiguration.class})
+@SpringBootTest(classes = {
+        PDFValidationServiceTest.TestConfiguration.class,
+        AIALoaderConfiguration.class,
+        SignaturePolicyDocumentLoaderConfiguration.class
+})
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
 class AsiceSignatureTest {
@@ -66,6 +74,12 @@ class AsiceSignatureTest {
     @Autowired
     private OCSPSourceFactory ocspSourceFactory;
 
+    @Autowired
+    private AIASourceFactory aiaSourceFactory;
+
+    @Autowired
+    private SignaturePolicyProviderFactory signaturePolicyProviderFactory;
+
     @BeforeEach
     public void setUp() {
         validationService = new GenericValidationService();
@@ -77,6 +91,8 @@ class AsiceSignatureTest {
 
         validationService.setContainerValidatorFactory(containerValidatorFactory);
         validationService.setOcspSourceFactory(ocspSourceFactory);
+        validationService.setAiaSourceFactory(aiaSourceFactory);
+        validationService.setSignaturePolicyProviderFactory(signaturePolicyProviderFactory);
     }
 
     @Test

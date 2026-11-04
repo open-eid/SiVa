@@ -26,6 +26,8 @@ import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
+import ee.openeid.siva.validation.validator.AIASourceFactory;
+import ee.openeid.siva.validation.validator.SignaturePolicyProviderFactory;
 import ee.openeid.tsl.configuration.AlwaysFailingCRLSource;
 import ee.openeid.validation.service.generic.validator.RevocationFreshnessValidator;
 import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
@@ -38,14 +40,10 @@ import eu.europa.esig.dss.enumerations.ValidationLevel;
 import eu.europa.esig.dss.model.DSSDocument;
 import eu.europa.esig.dss.model.DSSException;
 import eu.europa.esig.dss.model.InMemoryDocument;
-import eu.europa.esig.dss.service.http.commons.CommonsDataLoader;
-import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
-import eu.europa.esig.dss.spi.client.http.NativeHTTPDataLoader;
 import eu.europa.esig.dss.spi.exception.IllegalInputException;
 import eu.europa.esig.dss.spi.policy.SignaturePolicyProvider;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.spi.validation.CommonCertificateVerifier;
-import eu.europa.esig.dss.spi.x509.aia.DefaultAIASource;
 import eu.europa.esig.dss.validation.SignedDocumentValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.impl.asic.xades.XadesValidationReportProcessor;
@@ -69,7 +67,8 @@ public class GenericValidationService implements ValidationService {
     private TrustedListsCertificateSource trustedListsCertificateSource;
     private ConstraintLoadingSignaturePolicyService signaturePolicyService;
     private ReportConfigurationProperties reportConfigurationProperties;
-    private ProxyConfig proxyConfig;
+    private AIASourceFactory aiaSourceFactory;
+    private SignaturePolicyProviderFactory signaturePolicyProviderFactory;
     private ContainerValidatorFactory containerValidatorFactory;
     private OCSPSourceFactory ocspSourceFactory;
 
@@ -131,7 +130,7 @@ public class GenericValidationService implements ValidationService {
         final DSSDocument dssDocument = createDssDocument(validationDocument);
         SignedDocumentValidator validator = createSignedDocumentValidator(dssDocument);
         CommonCertificateVerifier certificateVerifier = createCertificateVerifier();
-        SignaturePolicyProvider signaturePolicyProvider = createSignaturePolicyProvider();
+        SignaturePolicyProvider signaturePolicyProvider = signaturePolicyProviderFactory.create();
 
         LOGGER.debug("Certificate pool size: {}", getCertificatePoolSize(certificateVerifier));
         validator.setCertificateVerifier(certificateVerifier);
@@ -170,24 +169,8 @@ public class GenericValidationService implements ValidationService {
         certificateVerifier.setTrustedCertSources(trustedListsCertificateSource);
         certificateVerifier.setOcspSource(ocspSourceFactory.create());
         certificateVerifier.setCrlSource(new AlwaysFailingCRLSource());
-
-        CommonsDataLoader dataLoader = new CommonsDataLoader();
-        dataLoader.setProxyConfig(proxyConfig);
-
-        DefaultAIASource aiaSource = new DefaultAIASource(dataLoader);
-        certificateVerifier.setAIASource(aiaSource);
-
+        certificateVerifier.setAIASource(aiaSourceFactory.create());
         return certificateVerifier;
-    }
-
-    private static SignaturePolicyProvider createSignaturePolicyProvider() {
-        // Create and configure SignaturePolicyProvider explicitly in order to restore DSS 6.0.1 behavior where
-        //  signature policy is reliably accessible for all signature validation stages requiring its presence.
-        // This implementation is based on:
-        //  https://github.com/open-eid/sd-dss/blob/dss-6.0.1.d4j.1/dss-document/src/main/java/eu/europa/esig/dss/validation/SignedDocumentValidator.java#L754-L755
-        SignaturePolicyProvider signaturePolicyProvider = new SignaturePolicyProvider();
-        signaturePolicyProvider.setDataLoader(new NativeHTTPDataLoader());
-        return signaturePolicyProvider;
     }
 
     private static ValidationLevel getValidationLevel(ValidationDocument validationDocument) {
@@ -209,11 +192,6 @@ public class GenericValidationService implements ValidationService {
     private void endExceptionally(Exception e) {
         LOGGER.error(e.getMessage(), e);
         LOGGER.info("WsValidateDocument: end with exception");
-    }
-
-    @Autowired
-    public void setProxyConfig(ProxyConfig proxyConfig){
-        this.proxyConfig = proxyConfig;
     }
 
     @Autowired
@@ -241,5 +219,15 @@ public class GenericValidationService implements ValidationService {
     @Autowired
     public void setOcspSourceFactory(OCSPSourceFactory ocspSourceFactory) {
         this.ocspSourceFactory = ocspSourceFactory;
+    }
+
+    @Autowired
+    public void setAiaSourceFactory(AIASourceFactory aiaSourceFactory) {
+        this.aiaSourceFactory = aiaSourceFactory;
+    }
+
+    @Autowired
+    public void setSignaturePolicyProviderFactory(SignaturePolicyProviderFactory signaturePolicyProviderFactory) {
+        this.signaturePolicyProviderFactory = signaturePolicyProviderFactory;
     }
 }

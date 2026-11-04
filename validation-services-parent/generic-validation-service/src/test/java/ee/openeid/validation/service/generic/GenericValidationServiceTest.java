@@ -26,14 +26,18 @@ import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.util.CertUtil;
 import eu.europa.esig.dss.enumerations.Indication;
 import eu.europa.esig.dss.model.DSSDocument;
+import eu.europa.esig.dss.spi.x509.aia.AIASource;
 import eu.europa.esig.dss.validation.SignedDocumentValidator;
 import org.bouncycastle.util.encoders.Base64;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.test.context.ActiveProfiles;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.json.JsonMapper;
@@ -57,14 +61,19 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 @ActiveProfiles("test")
+@ExtendWith(OutputCaptureExtension.class)
 class GenericValidationServiceTest extends GenericValidationServiceTestBase {
 
     @Test
@@ -172,6 +181,25 @@ class GenericValidationServiceTest extends GenericValidationServiceTestBase {
             assertThat(archiveTimeStamp.getCountry(), equalTo("EE"));
             assertThat(archiveTimeStamp.getContent(), equalTo(loadTimestampContent("timestamp_content.txt")));
         }
+    }
+
+    @Test
+    void validateDocument_WhenSignaturePolicyUrlIsFileUrl_RejectsWithoutReading(CapturedOutput output) {
+        validationService.validateDocument(buildValidationDocument("xades-signature-policy-uri-file-dev-zero.asice"));
+
+        assertThat(output.getAll(), containsString("The requested url protocol is not supported: file:///dev/zero"));
+        assertThat(output.getAll(), not(containsString("An error occurred while reading from url 'file:///dev/zero'")));
+    }
+
+    @Test
+    void validateDocument_WhenCertificateAiaUrlIsFileUrl_DoesNotReadIt(CapturedOutput output) {
+        AIASource aiaSource = spy(aiaSourceFactory.create());
+        validationService.setAiaSourceFactory(() -> aiaSource);
+
+        validationService.validateDocument(buildValidationDocument("xades-signature-certificate-aia-url-file-dev-zero.asice"));
+
+        verify(aiaSource, atLeastOnce()).getCertificatesByAIA(any());
+        assertThat(output.getAll(), not(containsString("Unable to retrieve AIA certificates with URL 'file:///dev/zero'")));
     }
 
     @ParameterizedTest

@@ -16,7 +16,9 @@
 
 package ee.openeid.validation.service.generic;
 
+import ee.openeid.siva.validation.configuration.AIALoaderConfiguration;
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
+import ee.openeid.siva.validation.configuration.SignaturePolicyDocumentLoaderConfiguration;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
@@ -28,6 +30,8 @@ import ee.openeid.validation.service.generic.configuration.GenericValidationServ
 import ee.openeid.validation.service.generic.configuration.properties.GenericSignaturePolicyProperties;
 import ee.openeid.validation.service.generic.configuration.properties.TLevelSignatureFilterProperties;
 import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
+import ee.openeid.siva.validation.validator.AIASourceFactory;
+import ee.openeid.siva.validation.validator.SignaturePolicyProviderFactory;
 import ee.openeid.validation.service.generic.validator.ocsp.OCSPSourceFactory;
 import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
@@ -40,7 +44,11 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {GenericValidationServiceTestBase.TestConfiguration.class})
+@SpringBootTest(classes = {
+        GenericValidationServiceTestBase.TestConfiguration.class,
+        AIALoaderConfiguration.class,
+        SignaturePolicyDocumentLoaderConfiguration.class
+})
 abstract class GenericValidationServiceTestBase {
 
     protected static final String TEST_FILES_LOCATION = "test-files/";
@@ -56,6 +64,10 @@ abstract class GenericValidationServiceTestBase {
     protected ContainerValidatorFactory containerValidatorFactory;
     @Autowired
     protected OCSPSourceFactory ocspSourceFactory;
+    @Autowired
+    protected AIASourceFactory aiaSourceFactory;
+    @Autowired
+    protected SignaturePolicyProviderFactory signaturePolicyProviderFactory;
 
     @BeforeEach
     protected void setUp() {
@@ -68,6 +80,8 @@ abstract class GenericValidationServiceTestBase {
 
         validationService.setContainerValidatorFactory(containerValidatorFactory);
         validationService.setOcspSourceFactory(ocspSourceFactory);
+        validationService.setAiaSourceFactory(aiaSourceFactory);
+        validationService.setSignaturePolicyProviderFactory(signaturePolicyProviderFactory);
     }
 
     protected static ValidationDocument buildValidationDocument(String testFile) {

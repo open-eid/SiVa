@@ -17,6 +17,7 @@
 package ee.openeid.validation.service.timemark.signature.policy;
 
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
+import ee.openeid.siva.validation.validator.AIASourceFactory;
 import ee.openeid.validation.service.timemark.configuration.BDOCSignaturePolicyProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -35,16 +36,19 @@ public class BDOCConfigurationService {
     private final BDOCSignaturePolicyProperties properties;
     private final BDOCSignaturePolicyService policyService;
     private final Configuration configuration;
+    private final AIASourceFactory aiaSourceFactory;
 
     private final Map<String, PolicyConfigurationWrapper> policyList = new ConcurrentSkipListMap<>(String.CASE_INSENSITIVE_ORDER);
 
     @Autowired
     public BDOCConfigurationService(BDOCSignaturePolicyService policyService,
             BDOCSignaturePolicyProperties properties,
-            Configuration configuration) {
+            Configuration configuration,
+            AIASourceFactory aiaSourceFactory) {
         this.policyService = policyService;
         this.properties = properties;
         this.configuration = configuration;
+        this.aiaSourceFactory = aiaSourceFactory;
     }
 
     @PostConstruct
@@ -52,6 +56,7 @@ public class BDOCConfigurationService {
         properties.getAbstractPolicies().forEach(policy -> {
             Configuration tempConfiguration = configuration.copy();
             tempConfiguration.setTSL(configuration.getTSL()); // Use TSL from the central configuration bean
+            tempConfiguration.setAiaSourceFactory(aiaSourceFactory::create);
             tempConfiguration.setValidationPolicy(policyService.getAbsolutePath(policy.getName()));
             log.info("Adding BDOC validation policy: {}", policy.getName());
             policyList.putIfAbsent(policy.getName(), new PolicyConfigurationWrapper(tempConfiguration, policy));

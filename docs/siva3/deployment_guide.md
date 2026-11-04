@@ -549,7 +549,39 @@ t-level-signature-filter.countries[1] = LT
 !!! note
     Revocation requests are only executed when using the Generic validator and are not applied to BDOC or DDOC validation,
     where revocation handling follows container-specific rules.
-   
+
+### Fetching AIA certificates and signature policy documents
+
+During validation, SiVa may download missing issuer certificates from the AIA (caIssuers) URL of a certificate
+and signature policy documents from the policy URL of a signature. These URLs come from the validated document,
+so SiVa restricts which protocols are used and how long and how much it reads.
+AIA settings apply to both the Generic and the TimeMark (BDOC) validator; signature policy document settings apply to the Generic validator.
+
+| Property | Description |
+| -------- | ----------- |
+| **siva.externalResources.aia.acceptedProtocols** | Protocols allowed in AIA URLs. URLs with any other protocol are skipped without a request. Only HTTP and HTTPS should be used. <ul><li>Default: **HTTP, HTTPS**</li></ul> |
+| **siva.externalResources.aia.connectTimeout** | Timeout for establishing the connection. <ul><li>Default: **5s**</li></ul> |
+| **siva.externalResources.aia.readTimeout** | Maximum wait for the next data while reading the response. This is not a limit on the total download time. <ul><li>Default: **10s**</li></ul> |
+| **siva.externalResources.aia.maxResponseSize** | Maximum response size. Reading stops when the limit is exceeded and the certificate is not used. <ul><li>Default: **1MB**</li></ul> |
+| **siva.externalResources.signaturePolicyDocument.acceptedProtocols** | Same as above, for signature policy documents. <ul><li>Default: **HTTP, HTTPS**</li></ul> |
+| **siva.externalResources.signaturePolicyDocument.connectTimeout** | <ul><li>Default: **5s**</li></ul> |
+| **siva.externalResources.signaturePolicyDocument.readTimeout** | <ul><li>Default: **10s**</li></ul> |
+| **siva.externalResources.signaturePolicyDocument.maxResponseSize** | <ul><li>Default: **4MB**</li></ul> |
+
+Example:
+```text
+siva.externalResources.signaturePolicyDocument.readTimeout=15s
+siva.externalResources.aia.readTimeout=5s
+```
+
+!!! note
+    Always specify a unit (5s, 500ms, 512KB). Values without a unit are read as milliseconds or bytes.
+    Timeouts and sizes must be positive and at most 2147483647 milliseconds or bytes (about 24 days or 2 GB),
+    otherwise SiVa fails to start.
+
+!!! note
+    For BDOC validation, these AIA settings replace the AIA-related settings in the digidoc4j configuration file.
+
 ## Demo webapp parameters
 
 * Linking to SiVa webapp

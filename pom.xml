@@ -131,6 +131,7 @@
         <jcabi-manifests.version>2.2.0</jcabi-manifests.version>
         <jetbrains-annotations.version>26.1.0</jetbrains-annotations.version>
         <logback-ecs-encoder.version>1.8.0</logback-ecs-encoder.version>
+        <wiremock.version>3.13.2</wiremock.version>
 
         <build-helper-maven-plugin.version>3.7.0</build-helper-maven-plugin.version>
         <coveralls-maven-plugin.version>4.3.0</coveralls-maven-plugin.version>

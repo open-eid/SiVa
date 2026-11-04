@@ -549,7 +549,40 @@ t-level-signature-filter.countries[1] = LT
 !!! note
     Revocation requests are only executed when using the Generic validator and are not applied to BDOC or DDOC validation,
     where revocation handling follows container-specific rules.
-   
+
+### Fetching AIA certificates and signature policy documents
+
+During validation, SiVa may download missing issuer certificates from the AIA (caIssuers) URL of a certificate
+and signature policy documents from the policy URL of a signature. These URLs come from the validated document,
+so SiVa restricts which protocols are used and how long and how much it reads.
+AIA settings apply to both the Generic and the TimeMark (BDOC) validator; signature policy document settings apply to the Generic validator.
+
+| Property | Description |
+| -------- | ----------- |
+| **siva.externalResources.aia.acceptedProtocols** | Comma-separated list of protocols allowed in AIA URLs. Possible values: `HTTP`, `HTTPS`, `FTP`, `LDAP`, `FILE`. URLs with any other protocol are skipped without a request. Only HTTP and HTTPS should be used. Only the URL in the certificate is checked; redirects returned by the server are followed, also from HTTPS to HTTP. <ul><li>Default: **HTTP, HTTPS**</li></ul> |
+| **siva.externalResources.aia.connectTimeout** | Timeout for establishing the connection. <ul><li>Default: **5s**</li></ul> |
+| **siva.externalResources.aia.readTimeout** | Maximum wait for the next data while reading the response. This is not a limit on the total download time. <ul><li>Default: **10s**</li></ul> |
+| **siva.externalResources.aia.maxResponseSize** | Maximum response size. Reading stops when the limit is exceeded and the certificate is not used. <ul><li>Default: **1MB**</li></ul> |
+| **siva.externalResources.signaturePolicyDocument.acceptedProtocols** | Comma-separated list of protocols allowed in signature policy document URLs. Possible values: `HTTP`, `HTTPS`, `FTP`, `FILE`. Only HTTP and HTTPS should be used. Redirects are followed only to the same protocol. <ul><li>Default: **HTTP, HTTPS**</li></ul> |
+| **siva.externalResources.signaturePolicyDocument.connectTimeout** | Timeout for establishing the connection. <ul><li>Default: **5s**</li></ul> |
+| **siva.externalResources.signaturePolicyDocument.readTimeout** | Maximum wait for the next data while reading the response. This is not a limit on the total download time. <ul><li>Default: **10s**</li></ul> |
+| **siva.externalResources.signaturePolicyDocument.maxResponseSize** | Maximum response size. Reading stops when the limit is exceeded and the signature policy document is not used. <ul><li>Default: **4MB**</li></ul> |
+
+Example:
+```text
+siva.externalResources.signaturePolicyDocument.readTimeout=15s
+siva.externalResources.aia.readTimeout=5s
+```
+
+!!! note
+    Timeouts take a whole number with a unit `ms`, `s`, `m`, `h` or `d` (for example `500ms`, `10s`), or an ISO-8601 duration (for example `PT10S`, `PT1.5S`). Decimals need the ISO-8601 form: `1.5s` is rejected.
+    Sizes take a whole number with an upper-case unit `B`, `KB`, `MB` or `GB` (for example `512KB`); 1KB is 1024 bytes.
+    A value without a unit is read as milliseconds or bytes.
+    Values must be positive and at most 2147483647 milliseconds (about 24.8 days) or 2147483647 bytes (one byte less than `2GB`), otherwise SiVa fails to start.
+
+!!! note
+    For BDOC validation, these AIA settings replace the AIA-related settings in the digidoc4j configuration file.
+
 ## Demo webapp parameters
 
 * Linking to SiVa webapp

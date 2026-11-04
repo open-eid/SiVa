@@ -16,6 +16,7 @@
 
 package ee.openeid.validation.service.timemark;
 
+import ee.openeid.siva.validation.configuration.AIALoaderConfiguration;
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.DataFilesDocument;
 import ee.openeid.siva.validation.document.ValidationDocument;
@@ -86,7 +87,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
         ConstraintLoadingSignaturePolicyService.class,
         BDOCConfigurationService.class,
         ReportConfigurationProperties.class,
-        ProxyConfig.class
+        ProxyConfig.class,
+        AIALoaderConfiguration.class
 })
 @ActiveProfiles("test")
 class DDOCServiceIntegrationTest {

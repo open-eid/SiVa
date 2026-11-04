@@ -17,11 +17,12 @@
 package ee.openeid.validation.service.timemark.signature.policy;
 
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
+import ee.openeid.siva.validation.validator.AIASourceFactory;
 import ee.openeid.validation.service.timemark.configuration.BDOCSignaturePolicyProperties;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.Configuration;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import jakarta.annotation.PostConstruct;
@@ -30,28 +31,22 @@ import java.util.concurrent.ConcurrentSkipListMap;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class BDOCConfigurationService {
 
     private final BDOCSignaturePolicyProperties properties;
     private final BDOCSignaturePolicyService policyService;
     private final Configuration configuration;
+    private final AIASourceFactory aiaSourceFactory;
 
     private final Map<String, PolicyConfigurationWrapper> policyList = new ConcurrentSkipListMap<>(String.CASE_INSENSITIVE_ORDER);
-
-    @Autowired
-    public BDOCConfigurationService(BDOCSignaturePolicyService policyService,
-            BDOCSignaturePolicyProperties properties,
-            Configuration configuration) {
-        this.policyService = policyService;
-        this.properties = properties;
-        this.configuration = configuration;
-    }
 
     @PostConstruct
     protected void loadAllBDOCConfigurations() {
         properties.getAbstractPolicies().forEach(policy -> {
             Configuration tempConfiguration = configuration.copy();
             tempConfiguration.setTSL(configuration.getTSL()); // Use TSL from the central configuration bean
+            tempConfiguration.setAiaSourceFactory(aiaSourceFactory::create);
             tempConfiguration.setValidationPolicy(policyService.getAbsolutePath(policy.getName()));
             log.info("Adding BDOC validation policy: {}", policy.getName());
             policyList.putIfAbsent(policy.getName(), new PolicyConfigurationWrapper(tempConfiguration, policy));

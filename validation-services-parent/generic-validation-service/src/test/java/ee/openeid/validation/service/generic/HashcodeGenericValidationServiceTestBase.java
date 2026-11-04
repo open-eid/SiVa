@@ -16,13 +16,17 @@
 
 package ee.openeid.validation.service.generic;
 
+import ee.openeid.siva.validation.configuration.AIALoaderConfiguration;
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
+import ee.openeid.siva.validation.configuration.SignaturePolicyDocumentLoaderConfiguration;
 import ee.openeid.siva.validation.document.Datafile;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.validation.service.generic.configuration.properties.GenericSignaturePolicyProperties;
 import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
+import ee.openeid.siva.validation.validator.AIASourceFactory;
+import ee.openeid.siva.validation.validator.SignaturePolicyProviderFactory;
 import ee.openeid.validation.service.generic.validator.ocsp.OCSPSourceFactory;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +38,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.List;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {GenericValidationServiceTestBase.TestConfiguration.class})
+@SpringBootTest(classes = {
+        GenericValidationServiceTestBase.TestConfiguration.class,
+        AIALoaderConfiguration.class,
+        SignaturePolicyDocumentLoaderConfiguration.class
+})
 abstract class HashcodeGenericValidationServiceTestBase {
 
     protected static final String TEST_FILES_LOCATION = "test-files/";
@@ -49,6 +57,10 @@ abstract class HashcodeGenericValidationServiceTestBase {
     protected ContainerValidatorFactory containerValidatorFactory;
     @Autowired
     protected OCSPSourceFactory ocspSourceFactory;
+    @Autowired
+    protected AIASourceFactory aiaSourceFactory;
+    @Autowired
+    protected SignaturePolicyProviderFactory signaturePolicyProviderFactory;
 
     @BeforeEach
     public void setUp() {
@@ -61,6 +73,8 @@ abstract class HashcodeGenericValidationServiceTestBase {
 
         validationService.setContainerValidatorFactory(containerValidatorFactory);
         validationService.setOcspSourceFactory(ocspSourceFactory);
+        validationService.setAiaSourceFactory(aiaSourceFactory);
+        validationService.setSignaturePolicyProviderFactory(signaturePolicyProviderFactory);
     }
 
     protected static ValidationDocument buildValidationDocument(String testFile, Datafile... datafiles) {

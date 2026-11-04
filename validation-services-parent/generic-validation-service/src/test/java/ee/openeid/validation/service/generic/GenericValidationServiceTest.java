@@ -26,14 +26,21 @@ import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.util.CertUtil;
 import eu.europa.esig.dss.enumerations.Indication;
 import eu.europa.esig.dss.model.DSSDocument;
+import eu.europa.esig.dss.spi.CertificateExtensionsUtils;
+import eu.europa.esig.dss.spi.client.http.DataLoader;
+import eu.europa.esig.dss.spi.x509.aia.AIASource;
+import eu.europa.esig.dss.spi.x509.aia.DefaultAIASource;
 import eu.europa.esig.dss.validation.SignedDocumentValidator;
 import org.bouncycastle.util.encoders.Base64;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.test.context.ActiveProfiles;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.json.JsonMapper;
@@ -57,15 +64,23 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 @ActiveProfiles("test")
+@ExtendWith(OutputCaptureExtension.class)
 class GenericValidationServiceTest extends GenericValidationServiceTestBase {
+
+    private static final String FORBIDDEN_URL = "file:///dev/zero";
 
     @Test
     void certificatePresent_asice() throws Exception {
@@ -174,6 +189,32 @@ class GenericValidationServiceTest extends GenericValidationServiceTestBase {
         }
     }
 
+    @MethodSource("documentsWithForbiddenPolicyUrl")
+    @ParameterizedTest
+    void validateDocument_WhenSignaturePolicyUrlIsFileUrl_RejectsWithoutReading(String file, CapturedOutput output) {
+        validationService.validateDocument(buildValidationDocument(file));
+
+        assertThat(output.getAll(), containsString("The requested url protocol is not supported: " + FORBIDDEN_URL));
+        assertThat(output.getAll(), not(containsString("An error occurred while reading from url '" + FORBIDDEN_URL + "'")));
+    }
+
+    @ParameterizedTest
+    @MethodSource("documentsWithForbiddenAiaUrl")
+    void validateDocument_WhenCertificateAiaUrlIsFileUrl_DoesNotFetchIt(String file) {
+        DefaultAIASource configuredSource = (DefaultAIASource) aiaSourceFactory.create();
+        DataLoader dataLoader = Mockito.mock(DataLoader.class);
+        configuredSource.setDataLoader(dataLoader);
+        AIASource aiaSource = spy(configuredSource);
+        validationService.setAiaSourceFactory(() -> aiaSource);
+
+        validationService.validateDocument(buildValidationDocument(file));
+
+        verify(aiaSource, atLeastOnce()).getCertificatesByAIA(argThat(certificate ->
+                certificate != null && CertificateExtensionsUtils.getCAIssuersAccessUrls(certificate)
+                        .contains(FORBIDDEN_URL)));
+        verify(dataLoader, never()).get(FORBIDDEN_URL);
+    }
+
     @ParameterizedTest
     @MethodSource("timestampProvider")
     void validateAsiceContainer_ProfileLevelIsLTA_ArchiveTimestampsBlockIsPresentForMultipleTimestamps(String signedTime, String expectedContent, int iterator) {
@@ -225,6 +266,22 @@ class GenericValidationServiceTest extends GenericValidationServiceTestBase {
 
         return IntStream.range(0, signedTimes.size())
                 .mapToObj(i -> Arguments.of(signedTimes.get(i), expectedContents.get(i), i));
+    }
+
+    private static Stream<String> documentsWithForbiddenPolicyUrl() {
+        return Stream.of(
+                "xades-signature-policy-uri-file-dev-zero.asice",
+                "cades-signature-policy-uri-file-dev-zero.p7m",
+                "pades-signature-policy-uri-file-dev-zero.pdf"
+        );
+    }
+
+    private static Stream<String> documentsWithForbiddenAiaUrl() {
+        return Stream.of(
+                "xades-signature-certificate-aia-url-file-dev-zero.asice",
+                "cades-signature-certificate-aia-url-file-dev-zero.p7m",
+                "pades-signature-certificate-aia-url-file-dev-zero.pdf"
+        );
     }
 
 }

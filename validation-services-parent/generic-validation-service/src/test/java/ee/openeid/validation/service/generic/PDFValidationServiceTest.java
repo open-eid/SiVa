@@ -16,7 +16,9 @@
 
 package ee.openeid.validation.service.generic;
 
+import ee.openeid.siva.validation.configuration.AIALoaderConfiguration;
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
+import ee.openeid.siva.validation.configuration.SignaturePolicyDocumentLoaderConfiguration;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.builder.DummyValidationDocumentBuilder;
 import ee.openeid.siva.validation.document.report.Reports;
@@ -33,6 +35,8 @@ import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
 import ee.openeid.validation.service.generic.configuration.properties.GenericSignaturePolicyProperties;
 import ee.openeid.validation.service.generic.configuration.GenericValidationServiceConfiguration;
 import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
+import ee.openeid.siva.validation.validator.AIASourceFactory;
+import ee.openeid.siva.validation.validator.SignaturePolicyProviderFactory;
 import ee.openeid.validation.service.generic.validator.ocsp.OCSPSourceFactory;
 import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
@@ -52,7 +56,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SpringBootTest(classes = {PDFValidationServiceTest.TestConfiguration.class})
+@SpringBootTest(classes = {
+        PDFValidationServiceTest.TestConfiguration.class,
+        AIALoaderConfiguration.class,
+        SignaturePolicyDocumentLoaderConfiguration.class
+})
 @ExtendWith(SpringExtension.class)
 class PDFValidationServiceTest {
 
@@ -70,6 +78,10 @@ class PDFValidationServiceTest {
     private ContainerValidatorFactory containerValidatorFactory;
     @Autowired
     private OCSPSourceFactory ocspSourceFactory;
+    @Autowired
+    private AIASourceFactory aiaSourceFactory;
+    @Autowired
+    private SignaturePolicyProviderFactory signaturePolicyProviderFactory;
 
     @BeforeEach
     public void setUp() {
@@ -82,6 +94,8 @@ class PDFValidationServiceTest {
 
         validationService.setContainerValidatorFactory(containerValidatorFactory);
         validationService.setOcspSourceFactory(ocspSourceFactory);
+        validationService.setAiaSourceFactory(aiaSourceFactory);
+        validationService.setSignaturePolicyProviderFactory(signaturePolicyProviderFactory);
     }
 
     @Test

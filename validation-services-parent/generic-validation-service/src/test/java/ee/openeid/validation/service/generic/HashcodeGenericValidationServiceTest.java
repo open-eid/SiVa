@@ -25,8 +25,16 @@ import ee.openeid.siva.validation.document.report.SignatureProductionPlace;
 import ee.openeid.siva.validation.document.report.SignatureValidationData;
 import ee.openeid.siva.validation.document.report.SignerRole;
 import ee.openeid.siva.validation.util.CertUtil;
+import eu.europa.esig.dss.spi.CertificateExtensionsUtils;
+import eu.europa.esig.dss.spi.client.http.DataLoader;
+import eu.europa.esig.dss.spi.x509.aia.AIASource;
+import eu.europa.esig.dss.spi.x509.aia.DefaultAIASource;
 import org.bouncycastle.util.encoders.Base64;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 
 import java.io.ByteArrayInputStream;
 import java.security.cert.Certificate;
@@ -35,11 +43,22 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
+@ExtendWith(OutputCaptureExtension.class)
 class HashcodeGenericValidationServiceTest extends HashcodeGenericValidationServiceTestBase {
+
+    private static final String FORBIDDEN_URL = "file:///dev/zero";
 
     @Test
     void validHashcodeRequest() {
@@ -142,6 +161,30 @@ class HashcodeGenericValidationServiceTest extends HashcodeGenericValidationServ
         Reports reports = validationService.validate(getValidationDocumentSingletonList());
         assertEquals("MDEwDQYJYIZIAWUDBAIBBQAEIBf8So+lfR/lrfzu5i+SZwguJGakhr/W+eHwrAQJ0acJ",
                 reports.getSimpleReport().getValidationConclusion().getSignatures().get(0).getInfo().getTimeAssertionMessageImprint());
+    }
+
+    @Test
+    void validateDocument_WhenSignaturePolicyUrlIsFileUrl_RejectsWithoutReading(CapturedOutput output) {
+        validationService.validateDocument(buildValidationDocument("xades-hashcode-signature-policy-uri-file-dev-zero.xml"));
+
+        assertThat(output.getAll(), containsString("The requested url protocol is not supported: " + FORBIDDEN_URL));
+        assertThat(output.getAll(), not(containsString("An error occurred while reading from url '" + FORBIDDEN_URL + "'")));
+    }
+
+    @Test
+    void validateDocument_WhenCertificateAiaUrlIsFileUrl_DoesNotFetchIt() {
+        DefaultAIASource configuredSource = (DefaultAIASource) aiaSourceFactory.create();
+        DataLoader dataLoader = Mockito.mock(DataLoader.class);
+        configuredSource.setDataLoader(dataLoader);
+        AIASource aiaSource = spy(configuredSource);
+        validationService.setAiaSourceFactory(() -> aiaSource);
+
+        validationService.validateDocument(buildValidationDocument("xades-signature-certificate-aia-url-file-dev-zero.xml"));
+
+        verify(aiaSource, atLeastOnce()).getCertificatesByAIA(argThat(certificate ->
+                certificate != null && CertificateExtensionsUtils.getCAIssuersAccessUrls(certificate)
+                        .contains(FORBIDDEN_URL)));
+        verify(dataLoader, never()).get(FORBIDDEN_URL);
     }
 
     private static List<ValidationDocument> getValidationDocumentSingletonList() {

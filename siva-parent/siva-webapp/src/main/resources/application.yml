@@ -36,6 +36,13 @@ management:
     version:
       enabled: true
 
+logging:
+  pattern:
+    # Boot's correlation slot in the text pattern: the request id TraceIdLoggingFilter puts in the MDC, printed
+    # between the thread and the logger, so one grep over the id gives a request's record. Structured output
+    # (logging.structured.format.console) carries the same MDC entry as a field.
+    correlation: "[%X{trace.id:-}] "
+
 siva:
   http:
     request:

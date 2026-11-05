@@ -1,6 +1,6 @@
 # siva-webapp
 
-![Version: 3.11.1-SNAPSHOT](https://img.shields.io/badge/Version-3.11.1--SNAPSHOT-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.11.1-SNAPSHOT](https://img.shields.io/badge/AppVersion-3.11.1--SNAPSHOT-informational?style=flat-square)
+Chart version 3.11.1-SNAPSHOT, for SiVa 3.11.1-SNAPSHOT (the two are always equal, see "Versioning").
 
 Reference deployment of [SiVa](https://github.com/open-eid/SiVa), the Estonian digital-signature
 validation service, on Kubernetes. Like the project's docker-compose file it is a reference, not a
@@ -37,6 +37,12 @@ rclone containers mirror, never a CSI or FUSE mount (`tsl.snapshot.sync`).
   RemoteIpValve honours the headers only from `server.tomcat.remoteip.internal-proxies` (a
   regular expression over the proxy addresses, set through `config.spring`; Spring Boot's
   default covers the private ranges). `none` when nothing in front sets them.
+- **The request id.** Have the edge set or forward `X-Request-ID`: SiVa takes an incoming
+  `X-Request-ID` first, then the trace-id of a W3C `traceparent`, mints one otherwise, and echoes
+  the id as `X-Request-ID` on every response, so the edge's access log, the pod log (every line
+  of a request carries it, the stage lines included) and the client's ticket join on one value.
+  ingress-nginx sets the header from its `$req_id`; Gateway API implementations vary, so check
+  yours. The id is logged as received: an opaque value, never a user or session identifier.
 - **The two edge numbers.** Whatever sits in front of the pods must accept request bodies of
   27 MiB (SiVa's `siva.http.request.max-request-size-limit`: a 20 MB file plus its base64
   overhead; the edge answers 413 first if it allows less) and wait for the slowest validation
@@ -393,9 +399,10 @@ when the T-level country filter is configured. CRLs are never fetched, and valid
 timestamp request (report signing, off by default, is the only TSA or OCSP client, at
 operator-chosen URLs). With `network.networkPolicy.egress` on, the webapp pods reach DNS (the
 `kube-system` namespace by default, `egress.dnsTo`) and the public internet on 80 and 443,
-never the private ranges, the carrier-grade NAT range or the cloud metadata address, and the
-fetcher pods the same with no ingress at all; tighten `to` to your responders' addresses if
-your CNI cannot resolve names, or route through an egress proxy with `additionalRules`.
+never the private ranges, the carrier-grade NAT range or the link-local range (`169.254.0.0/16`,
+where the cloud providers' metadata endpoints live), and the fetcher pods the same with no
+ingress at all; tighten `to` to your responders' addresses if your CNI cannot resolve names, or
+route through an egress proxy with `additionalRules`.
 
 ## Trust material
 
@@ -461,18 +468,18 @@ directory); edit the comments, not this table.
 | image.repository | string | `"siva-webapp"` | Image to run, as the full name in your registry (`registry.example.invalid/siva-webapp`). SiVa publishes no image: build one with `./mvnw spring-boot:build-image` (Paketo buildpacks), push it to a registry your cluster can pull from and set this to it. The bare default names no registry and pulls from nowhere (NOTES warns); it is kept so the chart lints and renders without one. |
 | image.tag | string | `""` | Image tag; empty means the chart's appVersion (the SiVa release this chart was written for). Numeric-looking tags need `--set-string`. |
 | monitoring.grafanaDashboard.annotations | object | `{}` | Annotations, e.g. `{grafana_folder: SiVa}`. |
-| monitoring.grafanaDashboard.enabled | bool | `false` | Dashboard ConfigMap for the Grafana sidecar (kube-prometheus-stack picks up the label). Generic by design: one dashboard, namespace and pod variables select the release. The latency panel shows mean and max; for percentiles set `management.metrics.distribution.percentiles-histogram.http.server.requests: true` in config.applicationYaml (adds histogram buckets per uri) and use http_server_requests_seconds_bucket. |
+| monitoring.grafanaDashboard.enabled | bool | `false` | Dashboard ConfigMap for the Grafana sidecar (kube-prometheus-stack picks up the label). Generic by design: one dashboard, namespace and pod variables select the release. The latency panels show means and maxima (http_server_requests_seconds per uri, SiVa's own siva_validation_seconds timer by report type); for percentiles set `management.metrics.distribution.percentiles-histogram.siva.validation: true` (and `.http.server.requests` for the per-uri timer) in config.spring, which adds the histogram buckets `histogram_quantile` needs (siva_validation_seconds_bucket). |
 | monitoring.grafanaDashboard.labels | object | `{"grafana_dashboard":"1"}` | Labels the sidecar selects dashboards by. |
 | monitoring.grafanaDashboard.namespace | string | `""` | Namespace to create it in (empty: the release namespace). |
 | monitoring.prometheusRule.additionalRules | list | `[]` | Extra rules appended to the group, as given. |
-| monitoring.prometheusRule.enabled | bool | `false` | Alert rules (PrometheusRule CRD): SivaValidationErrorRate and SivaOomKilled from Spring Boot's http_server_requests metrics and kube-state-metrics (pod readiness, crash loops and failed fetch Jobs are left to the cluster's own rules, e.g. kube-prometheus-stack's); the trust-list rules (a configured territory without anchors, a list close to its NextUpdate or served from its last copy, in snapshot mode a stale snapshot) from SiVa's siva_tsl_* gauges, with the refresh period read from siva_tsl_refresh_period_seconds rather than rendered in. |
+| monitoring.prometheusRule.enabled | bool | `false` | Alert rules (PrometheusRule CRD): SivaValidationErrorRate and SivaOomKilled from Spring Boot's http_server_requests metrics and kube-state-metrics (pod readiness, crash loops and failed fetch Jobs are left to the cluster's own rules, e.g. kube-prometheus-stack's); the trust-list rules (a configured territory without anchors, a list close to its NextUpdate or served from its last copy, in snapshot mode a stale snapshot) from SiVa's siva_tsl_* gauges, with the refresh period read from siva_tsl_refresh_period_seconds rather than rendered in. Needs the Prometheus Operator CRDs (monitoring.coreos.com/v1) like the ServiceMonitor: the object is rendered regardless, the API server refuses the install without them. |
 | monitoring.prometheusRule.labels | object | `{}` | Labels your Prometheus selects PrometheusRules by. |
 | monitoring.prometheusRule.namespace | string | `""` | Namespace to create it in (empty: the release namespace). |
 | monitoring.prometheusRule.pendingRules | bool | `false` | Rules for signals the application does not publish yet: oversized requests (answered 400 today, no 413) and OCSP/TSA failures. Off until it does. |
 | monitoring.prometheusRule.tsl.grace | string | `"PT1H"` | Added to two refresh periods before SivaTslSnapshotStale and SivaTslListNotDownloaded fire (ISO-8601). Add the interval of any sync that copies the store to the pods. |
 | monitoring.prometheusRule.tsl.leadTime | string | `"P7D"` | Time you give yourself to react before a list expires: SivaTslListExpiringSoon fires at two refresh periods plus this before its NextUpdate (ISO-8601). |
 | monitoring.serviceMonitor.applicationLabel | bool | `true` | Add an `application` label (the release's full name) to every scraped series: the label Micrometer's community Grafana dashboards select by (see the README's "Dashboards and alerts that pair with SiVa"). Turn it off when SiVa's own config sets `management.metrics.tags.application`. |
-| monitoring.serviceMonitor.enabled | bool | `false` | Prometheus-operator ServiceMonitor scraping /monitoring/prometheus on the management Service (the traffic Service when the actuator is not split). Needs the CRD. |
+| monitoring.serviceMonitor.enabled | bool | `false` | Prometheus-operator ServiceMonitor scraping /monitoring/prometheus on the management Service (the traffic Service when the actuator is not split). Needs the Prometheus Operator CRDs (monitoring.coreos.com/v1): the chart renders the object regardless, and without them the API server refuses the install ("no matches for kind ServiceMonitor"). |
 | monitoring.serviceMonitor.interval | string | `"30s"` | Scrape interval (Prometheus duration). |
 | monitoring.serviceMonitor.labels | object | `{}` | Labels your Prometheus selects ServiceMonitors by, e.g. `{release: kube-prometheus-stack}`. |
 | monitoring.serviceMonitor.namespace | string | `""` | Namespace to create it in (empty: the release namespace). |
@@ -486,9 +493,9 @@ directory); edit the comments, not this table.
 | network.networkPolicy.egress.additionalRules | list | `[]` | Extra NetworkPolicyEgressRule entries appended as given (for example a private OCSP responder or an egress proxy). |
 | network.networkPolicy.egress.dns | bool | `true` | Allow DNS (UDP and TCP 53) to `dnsTo`. |
 | network.networkPolicy.egress.dnsTo | list | the `kube-system` namespace (namespaceSelector on kubernetes.io/metadata.name) | NetworkPolicyPeer entries DNS may go to; empty for any destination. |
-| network.networkPolicy.egress.enabled | bool | `false` | Also restrict egress. The webapp then reaches only DNS and `to` on `ports`; the fetcher pods get the same rules in their own policy (`<release>-tsl-fetch`, no ingress at all). What the webapp fetches while validating: issuer certificates from the AIA URLs of the certificates in the document, the signature policy from the URL a signature names, and OCSP responses for chains that reach a trusted-list anchor when the T-level country filter is configured; no CRLs, no timestamp requests (README, "Trust lists"). Those URLs come with the documents, so the default `to` is the public internet minus the private ranges, the carrier-grade NAT range and the cloud metadata address: nothing a document names reaches cluster services or the node. Tighten it to your responders' addresses if your CNI cannot resolve names, or route through an egress proxy with `additionalRules`. |
+| network.networkPolicy.egress.enabled | bool | `false` | Also restrict egress. The webapp then reaches only DNS and `to` on `ports`; the fetcher pods get the same rules in their own policy (`<release>-tsl-fetch`, no ingress at all). What the webapp fetches while validating: issuer certificates from the AIA URLs of the certificates in the document, the signature policy from the URL a signature names, and OCSP responses for chains that reach a trusted-list anchor when the T-level country filter is configured; no CRLs, no timestamp requests (README, "Trust lists"). Those URLs come with the documents, so the default `to` is the public internet minus the private ranges, the carrier-grade NAT range and the link-local range (169.254.0.0/16, where the cloud providers' metadata endpoints live): nothing a document names reaches cluster services, the node or its metadata. Tighten it to your responders' addresses if your CNI cannot resolve names, or route through an egress proxy with `additionalRules`. |
 | network.networkPolicy.egress.ports | list | `[80,443]` | Ports the pods may reach on `to`. |
-| network.networkPolicy.egress.to | list | 0.0.0.0/0 except 10/8, 172.16/12, 192.168/16, 100.64/10, 169.254.169.254/32 | NetworkPolicyPeer entries the pods may reach on `ports`. |
+| network.networkPolicy.egress.to | list | 0.0.0.0/0 except 10/8, 172.16/12, 192.168/16, 100.64/10, 169.254/16 | NetworkPolicyPeer entries the pods may reach on `ports`. |
 | network.networkPolicy.enabled | bool | `false` | NetworkPolicy for the webapp pods: ingress to the two ports from the peers below and, with egress.enabled, egress limited to DNS and the public internet. Needs a CNI that enforces policies. |
 | network.networkPolicy.ingressFrom | list | `[]` | NetworkPolicyPeer entries allowed to the traffic port (namespaceSelector, podSelector, ipBlock). Empty: any source, in or outside the cluster (NodePort/LoadBalancer traffic included); list your Ingress controller's namespace to narrow it. |
 | network.networkPolicy.managementFrom | list | `[]` | Peers allowed to the management port when the actuator is split: Prometheus, and the `helm test` pod if you still want it to pass (the kubelet probes use the traffic port). Empty: any source. Without the split the actuator sits on the traffic port and ingressFrom governs it; this list is then unused. |
@@ -564,7 +571,7 @@ directory); edit the comments, not this table.
 | tsl.fetcher.activeDeadlineSeconds | int | `1800` | Seconds a fetch may run before it is killed (30 lists take a few minutes). |
 | tsl.fetcher.backoffLimit | int | `2` | Retries of a failed fetch within one schedule slot (a new pod each time), for a store that could not be written (exit 2) or was held by another fetch for the whole wait (exit 4). Not for a run that ended below the mandatory territories (exit 1) or published from a last copy because a download failed (exit 3): those fail the Job at once (podFailurePolicy), a retry seconds later changes nothing, and the cluster's KubeJobFailed-style alert then says so. |
 | tsl.fetcher.bootstrapJob | bool | `true` | Also run one fetch as a Job at install and whenever the fetcher pod changes (image, config), so a fresh install has a snapshot without waiting for the schedule. Named after a hash of the pod spec; the finished Job stays until the next change replaces it. |
-| tsl.fetcher.dnsConfig | object | `{}` | DNS settings of the fetcher pods (a Kubernetes PodDNSConfig: `options`, `searches`, `nameservers`), rendered as given; empty keeps the cluster's. A fetch resolves some thirty public list hosts and nothing in the cluster but DNS itself, and under the cluster default `ndots:5` each of those names (`ec.europa.eu` has two dots) is first tried with every search domain appended (`<name>.<namespace>.svc.cluster.local` and the rest, a round trip to the cluster DNS each) before the name itself. `options: [{name: ndots, value: "2"}]` sends a name with two dots or more straight out; a one-word Service name still goes through the search list (README, "Trust lists"). The webapp pods keep the cluster default, a sidecar or extra container of yours may count on it. |
+| tsl.fetcher.dnsConfig | object | `{}` | DNS settings of the fetcher pods (a Kubernetes PodDNSConfig: `options`, `searches`, `nameservers`), rendered as given; empty keeps the cluster's. A fetch resolves some thirty public list hosts and nothing in the cluster but DNS itself, and under the cluster default `ndots:5` each of those names (`ec.europa.eu` has two dots) is first tried with every search domain appended (`<name>.<namespace>.svc.cluster.local` and the rest, a round trip to the cluster DNS each) before the name itself. `options: [{name: ndots, value: "2"}]` sends a name with two dots or more straight out; a one-word Service name still goes through the search list (README, "Trust lists"). The webapp pods keep the cluster default, a sidecar or extra container of yours may count on it. `nameservers` outside the cluster also need an entry in `network.networkPolicy.egress.dnsTo` while the egress policy is on (by default it lets DNS reach the `kube-system` namespace only). |
 | tsl.fetcher.env | list | `[]` | Extra environment variables for the fetcher only; it already gets `env`, the ConfigMap and `runtime.javaToolOptions` (same profile and settings as the webapp, which is what makes its snapshot the one the webapp expects). |
 | tsl.fetcher.existingSecret | string | `""` | Secret mounted as a Spring config tree for the fetcher, like `secrets.existingSecret` for the webapp (same mountPath). The fetcher does not get the webapp's Secret: it parses thirty documents from the internet and should hold nothing but what that needs (truststore passwords, if you changed them), not the report-signing key's. Empty: no Secret. |
 | tsl.fetcher.extraVolumeMounts | list | `[]` | Extra mounts of the tsl-fetch container (VolumeMount entries), of volumes from `tsl.fetcher.extraVolumes` or the chart's own (`config`, `tmp`, `tsl-store`, `tsl-work`, `trust`, `secrets`). |
@@ -608,7 +615,7 @@ directory); edit the comments, not this table.
 | tsl.snapshot.sync.sizeLimit | string | `"256Mi"` | Size limit of the pod-local store (emptyDir): a snapshot is about 10 MB, a webapp pod keeps `keep` + 1, the fetcher pod the bucket's whole store. Empty for no limit. |
 | tsl.snapshot.volume | object | `{}` | The store: a volume source without the `name`, for example `persistentVolumeClaim: {claimName: siva-tsl}` for a ReadWriteMany claim you created, or a CSI bucket mount. Ignored when persistentVolumeClaim.create is on; unused with sync (below), where the store is a pod-local directory. The fetcher renames files and directories in it, so the filesystem must support rename; an object-store mount that does not (mountpoint-s3) cannot hold it: use sync for a bucket. |
 | tsl.territories.mandatory | list | `[]` | Countries that must have trust anchors before a pod is ready and before the fetcher publishes (siva.tsl.loader.mandatoryTerritories); their absence alerts as critical, other trusted countries' as warning. Empty: SiVa's default, `EE` (`EE_T` under the `test` profile). |
-| tsl.territories.trusted | list | `[]` | Countries whose trusted lists SiVa downloads and trusts (siva.tsl.loader.trustedTerritories), for webapp and fetcher alike. Empty: SiVa's default list (the `test` profile: everything the test LOTL points to). Set them here rather than in config.applicationYaml; the alerts read SiVa's resolved configuration from its metrics either way. |
+| tsl.territories.trusted | list | `[]` | Countries whose trusted lists SiVa downloads and trusts (siva.tsl.loader.trustedTerritories), for webapp and fetcher alike. Empty: SiVa's default list (the `test` profile: everything the test LOTL points to). Set them here rather than in config.spring; the alerts read SiVa's resolved configuration from its metrics either way. |
 
 ## Verifying on a NodePort
 
@@ -624,8 +631,11 @@ helm test siva
 ## Dashboards and alerts that pair with SiVa
 
 The chart ships only what needs SiVa's knowledge: the trust-list and error-rate alerts
-(`monitoring.prometheusRule`) and one overview dashboard (`monitoring.grafanaDashboard`). For
-the rest, use what your monitoring stack and the Grafana community already maintain:
+(`monitoring.prometheusRule`) and one overview dashboard (`monitoring.grafanaDashboard`). The
+ServiceMonitor and the PrometheusRule need the Prometheus Operator CRDs
+(`monitoring.coreos.com/v1`): the chart renders them whenever they are enabled, and without the
+CRDs the API server refuses the install with "no matches for kind ServiceMonitor". For the
+rest, use what your monitoring stack and the Grafana community already maintain:
 
 | Need | Use | Notes |
 |---|---|---|
@@ -638,6 +648,28 @@ the rest, use what your monitoring stack and the Grafana community already maint
 Both community dashboards select by an `application` label. `monitoring.serviceMonitor` adds
 it (the release's full name) unless `applicationLabel` is false; without the operator, set
 `management.metrics.tags.application` in SiVa's config instead.
+
+The chart's own dashboard reads SiVa's validation timer, `siva_validation_seconds` (one
+observation per `/validate` or `/validateHashcode` request, labels `request`, `report_type`,
+`container_type` and `error`; the deployment guide, "The stages of a request"), as a mean by
+report type. SiVa publishes it as `_count`, `_sum` and `_max` only; percentiles need the
+histogram buckets, which one Spring Boot switch in `config.spring` adds:
+
+```yaml
+config:
+  spring:
+    management:
+      metrics:
+        distribution:
+          percentiles-histogram:
+            siva:
+              validation: true
+```
+
+That turns `siva_validation_seconds` (and, by prefix, `siva_validation_service_seconds`, the
+per-validator timer) into `siva_validation_seconds_bucket` series for
+`histogram_quantile(0.95, sum by (le, report_type) (rate(siva_validation_seconds_bucket[5m])))`,
+at the cost of one series per bucket and label combination.
 
 ### Alert runbooks
 

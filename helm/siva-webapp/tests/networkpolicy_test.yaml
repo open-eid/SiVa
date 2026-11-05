@@ -127,7 +127,7 @@ tests:
           value: 0.0.0.0/0
       - equal:
           path: spec.egress[1].to[0].ipBlock.except
-          value: [10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 100.64.0.0/10, 169.254.169.254/32]
+          value: [10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 100.64.0.0/10, 169.254.0.0/16]
 
   - it: lets DNS go anywhere when dnsTo is empty
     set:

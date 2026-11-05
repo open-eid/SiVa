@@ -28,3 +28,6 @@ tests:
       - matchRegex:
           path: data["siva-webapp.json"]
           pattern: '"uid": "siva-webapp"'
+      - matchRegex:
+          path: data["siva-webapp.json"]
+          pattern: 'rate\(siva_validation_seconds_sum\{'

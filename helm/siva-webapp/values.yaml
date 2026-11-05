@@ -79,7 +79,7 @@ config:
   files: {}
 
 # Runtime settings the chart injects as environment variables (Spring relaxed binding). They are
-# kept out of config.applicationYaml so that an override there cannot silently drop them.
+# kept out of config.spring so that an override there cannot silently drop them.
 runtime:
   # -- Actuator (health, Prometheus, heartbeat, version) on its own port. The traffic Service
   # and the Ingresses never carry it; a ClusterIP Service `<release>-management` exposes it
@@ -212,7 +212,7 @@ tsl:
   territories:
     # -- Countries whose trusted lists SiVa downloads and trusts (siva.tsl.loader.trustedTerritories),
     # for webapp and fetcher alike. Empty: SiVa's default list (the `test` profile: everything the
-    # test LOTL points to). Set them here rather than in config.applicationYaml; the alerts read
+    # test LOTL points to). Set them here rather than in config.spring; the alerts read
     # SiVa's resolved configuration from its metrics either way.
     trusted: []
     # -- Countries that must have trust anchors before a pod is ready and before the fetcher
@@ -401,7 +401,9 @@ tsl:
     # to the cluster DNS each) before the name itself. `options: [{name: ndots, value: "2"}]`
     # sends a name with two dots or more straight out; a one-word Service name still goes
     # through the search list (README, "Trust lists"). The webapp pods keep the cluster default,
-    # a sidecar or extra container of yours may count on it.
+    # a sidecar or extra container of yours may count on it. `nameservers` outside the cluster
+    # also need an entry in `network.networkPolicy.egress.dnsTo` while the egress policy is on
+    # (by default it lets DNS reach the `kube-system` namespace only).
     dnsConfig: {}
     # The fetcher pods' own ServiceAccount, so that an identity that may write the store (a
     # cloud role for the bucket, through annotations) is never the webapp's.
@@ -559,10 +561,10 @@ network:
       # names, and OCSP responses for chains that reach a trusted-list anchor when the T-level
       # country filter is configured; no CRLs, no timestamp requests (README, "Trust lists").
       # Those URLs come with the documents, so the default `to` is the public internet minus the
-      # private ranges, the carrier-grade NAT range and the cloud metadata address: nothing a
-      # document names reaches cluster services or the node. Tighten it to your responders'
-      # addresses if your CNI cannot resolve names, or route through an egress proxy with
-      # `additionalRules`.
+      # private ranges, the carrier-grade NAT range and the link-local range (169.254.0.0/16, where
+      # the cloud providers' metadata endpoints live): nothing a document names reaches cluster
+      # services, the node or its metadata. Tighten it to your responders' addresses if your CNI
+      # cannot resolve names, or route through an egress proxy with `additionalRules`.
       enabled: false
       # -- Allow DNS (UDP and TCP 53) to `dnsTo`.
       dns: true
@@ -575,7 +577,7 @@ network:
       # -- Ports the pods may reach on `to`.
       ports: [80, 443]
       # -- NetworkPolicyPeer entries the pods may reach on `ports`.
-      # @default -- 0.0.0.0/0 except 10/8, 172.16/12, 192.168/16, 100.64/10, 169.254.169.254/32
+      # @default -- 0.0.0.0/0 except 10/8, 172.16/12, 192.168/16, 100.64/10, 169.254/16
       to:
         - ipBlock:
             cidr: 0.0.0.0/0
@@ -584,7 +586,7 @@ network:
               - 172.16.0.0/12
               - 192.168.0.0/16
               - 100.64.0.0/10
-              - 169.254.169.254/32
+              - 169.254.0.0/16
       # -- Extra NetworkPolicyEgressRule entries appended as given (for example a private OCSP
       # responder or an egress proxy).
       additionalRules: []
@@ -592,7 +594,9 @@ network:
 monitoring:
   serviceMonitor:
     # -- Prometheus-operator ServiceMonitor scraping /monitoring/prometheus on the management
-    # Service (the traffic Service when the actuator is not split). Needs the CRD.
+    # Service (the traffic Service when the actuator is not split). Needs the Prometheus Operator
+    # CRDs (monitoring.coreos.com/v1): the chart renders the object regardless, and without them
+    # the API server refuses the install ("no matches for kind ServiceMonitor").
     enabled: false
     # -- Scrape interval (Prometheus duration).
     interval: 30s
@@ -616,6 +620,8 @@ monitoring:
     # trust-list rules (a configured territory without anchors, a list close to its NextUpdate or
     # served from its last copy, in snapshot mode a stale snapshot) from SiVa's siva_tsl_* gauges,
     # with the refresh period read from siva_tsl_refresh_period_seconds rather than rendered in.
+    # Needs the Prometheus Operator CRDs (monitoring.coreos.com/v1) like the ServiceMonitor: the
+    # object is rendered regardless, the API server refuses the install without them.
     enabled: false
     tsl:
       # -- Added to two refresh periods before SivaTslSnapshotStale and SivaTslListNotDownloaded
@@ -636,10 +642,11 @@ monitoring:
   grafanaDashboard:
     # -- Dashboard ConfigMap for the Grafana sidecar (kube-prometheus-stack picks up the label).
     # Generic by design: one dashboard, namespace and pod variables select the release. The
-    # latency panel shows mean and max; for percentiles set
-    # `management.metrics.distribution.percentiles-histogram.http.server.requests: true` in
-    # config.applicationYaml (adds histogram buckets per uri) and use
-    # http_server_requests_seconds_bucket.
+    # latency panels show means and maxima (http_server_requests_seconds per uri, SiVa's own
+    # siva_validation_seconds timer by report type); for percentiles set
+    # `management.metrics.distribution.percentiles-histogram.siva.validation: true` (and
+    # `.http.server.requests` for the per-uri timer) in config.spring, which adds the histogram
+    # buckets `histogram_quantile` needs (siva_validation_seconds_bucket).
     enabled: false
     # -- Labels the sidecar selects dashboards by.
     labels:

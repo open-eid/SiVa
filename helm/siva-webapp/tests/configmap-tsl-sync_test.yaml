@@ -422,8 +422,8 @@ tests:
         snapshot:
           sync:
             enabled: true
-            remote: lab:siva-tsl/store
-            config: "[lab]\ntype = s3\n"
+            remote: store:siva-tsl/store
+            config: "[store]\ntype = s3\n"
             image:
               digest: sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
     asserts:

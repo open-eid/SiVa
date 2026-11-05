@@ -279,6 +279,35 @@
           "legendFormat": "{{pod}}"
         }
       ]
+    },
+    {
+      "id": 9,
+      "type": "timeseries",
+      "title": "Validation time by report type (mean)",
+      "description": "SiVa's siva_validation_seconds timer, one observation per /validate or /validateHashcode request. For a p95, set management.metrics.distribution.percentiles-histogram.siva.validation=true in config.spring and use histogram_quantile(0.95, sum by (le, report_type) (rate(siva_validation_seconds_bucket{namespace=\"$namespace\",pod=~\"$pod\"}[5m]))).",
+      "gridPos": {
+        "x": 0,
+        "y": 32,
+        "w": 12,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (report_type) (rate(siva_validation_seconds_sum{namespace=\"$namespace\",pod=~\"$pod\"}[5m])) / sum by (report_type) (rate(siva_validation_seconds_count{namespace=\"$namespace\",pod=~\"$pod\"}[5m]))",
+          "legendFormat": "{{report_type}}"
+        }
+      ]
     }
   ]
 }

@@ -5387,6 +5387,7 @@
               "properties": {
                 "nameservers": {
                   "type": "array",
+                  "maxItems": 3,
                   "items": {
                     "type": "string",
                     "minLength": 1
@@ -5394,6 +5395,7 @@
                 },
                 "searches": {
                   "type": "array",
+                  "maxItems": 32,
                   "items": {
                     "type": "string",
                     "minLength": 1

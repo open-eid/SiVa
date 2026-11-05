@@ -1,6 +1,6 @@
 {{ template "chart.header" . }}
 
-{{ template "chart.versionBadge" . }}{{ template "chart.typeBadge" . }}{{ template "chart.appVersionBadge" . }}
+Chart version {{ template "chart.version" . }}, for SiVa {{ template "chart.appVersion" . }} (the two are always equal, see "Versioning").
 
 Reference deployment of [SiVa](https://github.com/open-eid/SiVa), the Estonian digital-signature
 validation service, on Kubernetes. Like the project's docker-compose file it is a reference, not a
@@ -37,6 +37,12 @@ rclone containers mirror, never a CSI or FUSE mount (`tsl.snapshot.sync`).
   RemoteIpValve honours the headers only from `server.tomcat.remoteip.internal-proxies` (a
   regular expression over the proxy addresses, set through `config.spring`; Spring Boot's
   default covers the private ranges). `none` when nothing in front sets them.
+- **The request id.** Have the edge set or forward `X-Request-ID`: SiVa takes an incoming
+  `X-Request-ID` first, then the trace-id of a W3C `traceparent`, mints one otherwise, and echoes
+  the id as `X-Request-ID` on every response, so the edge's access log, the pod log (every line
+  of a request carries it, the stage lines included) and the client's ticket join on one value.
+  ingress-nginx sets the header from its `$req_id`; Gateway API implementations vary, so check
+  yours. The id is logged as received: an opaque value, never a user or session identifier.
 - **The two edge numbers.** Whatever sits in front of the pods must accept request bodies of
   27 MiB (SiVa's `siva.http.request.max-request-size-limit`: a 20 MB file plus its base64
   overhead; the edge answers 413 first if it allows less) and wait for the slowest validation
@@ -393,9 +399,10 @@ when the T-level country filter is configured. CRLs are never fetched, and valid
 timestamp request (report signing, off by default, is the only TSA or OCSP client, at
 operator-chosen URLs). With `network.networkPolicy.egress` on, the webapp pods reach DNS (the
 `kube-system` namespace by default, `egress.dnsTo`) and the public internet on 80 and 443,
-never the private ranges, the carrier-grade NAT range or the cloud metadata address, and the
-fetcher pods the same with no ingress at all; tighten `to` to your responders' addresses if
-your CNI cannot resolve names, or route through an egress proxy with `additionalRules`.
+never the private ranges, the carrier-grade NAT range or the link-local range (`169.254.0.0/16`,
+where the cloud providers' metadata endpoints live), and the fetcher pods the same with no
+ingress at all; tighten `to` to your responders' addresses if your CNI cannot resolve names, or
+route through an egress proxy with `additionalRules`.
 
 ## Trust material
 
@@ -459,8 +466,11 @@ helm test siva
 ## Dashboards and alerts that pair with SiVa
 
 The chart ships only what needs SiVa's knowledge: the trust-list and error-rate alerts
-(`monitoring.prometheusRule`) and one overview dashboard (`monitoring.grafanaDashboard`). For
-the rest, use what your monitoring stack and the Grafana community already maintain:
+(`monitoring.prometheusRule`) and one overview dashboard (`monitoring.grafanaDashboard`). The
+ServiceMonitor and the PrometheusRule need the Prometheus Operator CRDs
+(`monitoring.coreos.com/v1`): the chart renders them whenever they are enabled, and without the
+CRDs the API server refuses the install with "no matches for kind ServiceMonitor". For the
+rest, use what your monitoring stack and the Grafana community already maintain:
 
 | Need | Use | Notes |
 |---|---|---|
@@ -473,6 +483,28 @@ the rest, use what your monitoring stack and the Grafana community already maint
 Both community dashboards select by an `application` label. `monitoring.serviceMonitor` adds
 it (the release's full name) unless `applicationLabel` is false; without the operator, set
 `management.metrics.tags.application` in SiVa's config instead.
+
+The chart's own dashboard reads SiVa's validation timer, `siva_validation_seconds` (one
+observation per `/validate` or `/validateHashcode` request, labels `request`, `report_type`,
+`container_type` and `error`; the deployment guide, "The stages of a request"), as a mean by
+report type. SiVa publishes it as `_count`, `_sum` and `_max` only; percentiles need the
+histogram buckets, which one Spring Boot switch in `config.spring` adds:
+
+```yaml
+config:
+  spring:
+    management:
+      metrics:
+        distribution:
+          percentiles-histogram:
+            siva:
+              validation: true
+```
+
+That turns `siva_validation_seconds` (and, by prefix, `siva_validation_service_seconds`, the
+per-validator timer) into `siva_validation_seconds_bucket` series for
+`histogram_quantile(0.95, sum by (le, report_type) (rate(siva_validation_seconds_bucket[5m])))`,
+at the cost of one series per bucket and label combination.
 
 ### Alert runbooks
 

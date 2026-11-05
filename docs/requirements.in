@@ -1,0 +1,7 @@
+# The two packages that build the documentation (mkdocs.yml); requirements.txt is the full set
+# they resolve to, generated from this file. Bump here, reinstall, `mkdocs build --strict`, then
+# regenerate requirements.txt with `pip freeze`.
+# The Markdown extensions mkdocs.yml names (codehilite, admonition, def_list) ship with
+# Python-Markdown, a dependency of mkdocs; the theme brings Pygments for codehilite.
+mkdocs==1.6.1
+mkdocs-material==9.7.7

@@ -86,34 +86,11 @@ The SiVa webapp by default runs on port **8080**.
 
 Easiest way to test out validation is to [start SiVa Demo Application without docker](https://github.com/open-eid/SiVa-demo-application#without-docker).
 
-## WAR and Tomcat setup for legacy systems
+## WAR for an external servlet container
 
-> **NOTE**: Each SiVa service **must** be deployed to separate instance of Tomcat to avoid Java JAR library version
-> conflicts.
-
-To build the WAR file use helper script with all the correct Maven parameters.
-
-```bash
-./build-war.sh
-```
-
-Copy built WAR file into Tomcat `webapps` directory and start the servlet container. NB! X.X.X denotes the version you are running.
-
-```bash
-cp siva-parent/siva-webapp/target/siva-webapp-X.X.X.war apache-tomcat-7.0.70/webapps
-./apache-tomcat-7.0.77/bin/catalina.sh run
-```
-
-### How-to set WAR deployed SiVa `application.properties`
-
-SiVa override properties can be set using `application.properties` file. The file can locate anywhare in the host system.
-To make properties file accessible for SiVa you need to create or edit `setenv.sh` placed inside `bin` directory.
-
-Contents of the `setenv.sh` file should look like:
-
-```bash
-export CATALINA_OPTS="-Dspring.config.location=file:/path/to/application.properties"
-```
+Not covered. The default build produces no WAR; the `war` Maven profile (`./mvnw -Pwar package`)
+packages the webapp as one for a servlet container that provides the Servlet API of this Spring Boot
+version. Everything else here and in the deployment guide assumes the executable JAR.
 
 ## How-to run tests
 

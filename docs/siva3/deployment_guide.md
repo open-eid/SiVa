@@ -4,13 +4,15 @@ The following guide is for system integrators who need to set-up, configure, man
 
 Following are the minimum requirements to build and deploy SiVa webapps as a service:
 
-* Java 11 or above is supported
-* Git version control system version 1.8 or above is recommended
+* Java 17 or above (the sources are compiled for Java 17; the Spring Boot version in `pom.xml`
+  sets the baseline, a JDK to build, a JRE to run)
+* Git, to get the sources
 * Minimum 2 GB of RAM. Recommended at least 4 GB of RAM
 * Minimum 1 processor core
-* Open internet connection
+* Open internet connection (the build downloads dependencies; the service downloads the trusted
+  lists unless they are provided as a [snapshot](#trust-list-snapshots))
 * 2GB of free disk space
-* Supported operating system is Ubuntu 16.04 LTS
+* Any operating system with that Java; the systemd unit below is for Linux
 
 # Building
 
@@ -82,84 +84,74 @@ configuration names; replacing it needs no cleanup beyond a restart.
 
 ## OPTION 2 - running webapps as systemd services
 
-Maven build generates executable JAR files. This means web container and all its dependencies are package inside
-single JAR file. It makes a lot easier to deploy it into servers.
+On a Linux server the executable JAR runs as a `systemd` service: a unit that starts `java -jar` on
+it, as its own user, never as `root`. JVM options go on the `ExecStart` line before `-jar`,
+application properties after the JAR (or in an `application.properties` next to it, which
+Spring Boot reads from the working directory). Size the heap as a share of what the box gives
+SiVa, as the Helm chart sizes the JVM from the container's memory limit: `-XX:MaxRAMPercentage=75`
+leaves the rest for what the JVM holds outside the heap (metaspace, thread stacks, code cache),
+on the 2 GB minimum and the 4 GB recommendation alike. `-XX:+ExitOnOutOfMemoryError` ends the
+process on an exhausted heap instead of leaving it to limp, and `Restart=on-failure` starts it
+afresh. `SuccessExitStatus=143` makes the exit on `SIGTERM` a clean stop; `TimeoutStopSec` should
+cover the graceful shutdown (requests in flight finish first).
 
-Easiest option to setup SiVa is as `systemd` service in Ubuntu servers.
-
-For that we first need to create service file:
-```bash
-vim siva-webapp.service
-```
-
-Inside it, we need to paste below text. You need to change few things in service setup file.
-
-* First you **must not** run service as `root`. So it's strongly recommended to change line `User=root`
-* Second You can change Java JVM options by modifying the `JAVA_OPTS` inside the `siva-webapp.service` file.
-* Also, You can change the SiVa application configuration options by modifying `RUN_ARGS` section in file
+The service user owns nothing: the JAR is `root`'s, readable by the group; the directory is
+`root:siva` with mode `0750`. The `Protect*` and `Private*` directives keep the service to what it
+needs: the file system read-only but for the paths named in `ReadWritePaths=`, no home
+directories, no new privileges, and a `/tmp` of its own. `PrivateTmp=true` gives the trusted-list
+cache (in the JVM's temporary directory by default) a fresh directory on every start, so a start
+always downloads or loads the lists anew; name the directory `siva.tsl.loader.cacheDirectory` or
+the snapshot store (the `tsl-fetch` profile) points at in `ReadWritePaths=`, which is the one
+place the service writes outside its `/tmp`.
 
 ```ini
 [Unit]
 Description=siva-webapp
-After=syslog.target
+After=network-online.target
+Wants=network-online.target
 
 [Service]
-User=root
-ExecStart=/var/apps/siva-webapp.jar
-Environment=JAVA_OPTS=-Xmx320m RUN_ARGS=--server.port=80
+User=siva
+Group=siva
+WorkingDirectory=/var/apps/siva
+ExecStart=/usr/bin/java -XX:MaxRAMPercentage=75 -XX:+ExitOnOutOfMemoryError -jar /var/apps/siva/siva-webapp.jar --server.port=8080
 SuccessExitStatus=143
+TimeoutStopSec=60
+Restart=on-failure
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+# The trust-list cache or snapshot directory the configuration names, if any:
+# ReadWritePaths=/var/lib/siva
 
 [Install]
 WantedBy=multi-user.target
 ```
 
-Save and close the `siva-webapp.service` file.
-Next we need to move `siva-webapp-X.X.X.jar` into newly created `/var/apps` directory and rename to
-JAR file to `siva-webapp.jar`. match
-
-!!! note
-    The copied JAR filename must match option `ExecStart` in  `siva-webapp.service` file
+Put the JAR where the unit names it (the copied file name must match `ExecStart`), install the unit
+and start the service:
 
 ```bash
-sudo mkdir /var/apps
-sudo cp siva-parent/siva-webapp/target/executable/siva-webapp-X.X.X.jar /var/apps/siva-webapp.jar
+sudo useradd --system --home /var/apps/siva --shell /usr/sbin/nologin siva
+sudo mkdir -p /var/apps/siva
+sudo cp siva-parent/siva-webapp/target/siva-webapp-X.X.X-exec.jar /var/apps/siva/siva-webapp.jar
+sudo chown root:siva /var/apps/siva
+sudo chmod 0750 /var/apps/siva
+sudo chown root:root /var/apps/siva/siva-webapp.jar
+sudo chmod 0644 /var/apps/siva/siva-webapp.jar
+sudo cp siva-webapp.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now siva-webapp
 ```
 
-Next we need to copy the `siva-webapp.service` file into `/lib/systemd/system` directory.
-Then we are ready to start the `siva-webapp` service.
-
-```bash
-sudo cp siva-webapp.service /lib/systemd/system
-sudo systemctl start siva-webapp
-```
-
-Final step of setting up the `siva-webapp` service is to verify that service started correctly by issuing below
-command.
-
-```bash
-systemctl status siva-webapp
-```
-
-It should print out similar to below picture:
-
-```
-● siva-webapp.service - siva-webapp
-   Loaded: loaded (/lib/systemd/system/siva-webapp.service; disabled; vendor preset: enabled)
-   Active: active (running) since Thu 2016-07-21 08:48:14 EDT; 1 day 2h ago
- Main PID: 15965 (siva-webapp.jar)
-    Tasks: 34
-   Memory: 429.6M
-      CPU: 2min 5.721s
-   CGroup: /system.slice/siva-webapp.service
-           ├─15965 /bin/bash /var/apps/stage/siva-webapp.jar
-           └─15982 /usr/bin/java -Dsun.misc.URLClassPath.disableJarChecking=true -Xmx320m -jar /var/apps/stage/siva-webapp.jar
-
-Jul 20 03:00:01 siva siva-webapp.jar[15965]:         at eu.europa.esig.dss.tsl.service.TSLParser.getTslModel(TSLParser.java:143)
-Jul 20 03:00:01 siva siva-webapp.jar[15965]:         at eu.europa.esig.dss.tsl.service.TSLParser.call(TSLParser.java:129)
-Jul 20 03:00:01 siva siva-webapp.jar[15965]:         ... 5 common frames omitted
-Jul 20 03:00:01 siva siva-webapp.jar[15965]: 20.07.2016 03:00:01.450 INFO  [pool-3-thread-1] [e.e.e.dss.tsl.service.TSLRepository.sync
-Jul 20 03:00:01 siva siva-webapp.jar[15965]: 20.07.2016 03:00:01.450 INFO  [pool-3-thread-1] [e.e.e.dss.tsl.service.TSLRepository.sync
-```
+`systemctl status siva-webapp` should show the service `active (running)` with one `java` process;
+`journalctl -u siva-webapp` is its log (see [Logging](#logging)), and
+`curl http://localhost:8080/monitoring/health` says when the trusted lists are loaded (see
+[Health Endpoint](#health-endpoint)). The service writes only to its private `/tmp` (unless
+`siva.tsl.loader.cacheDirectory` names another directory, or the snapshot store in the
+`tsl-fetch` profile does; those go in `ReadWritePaths=`), so the home directory needs no further
+permissions.
 
 ## OPTION 3 - a WAR in an external servlet container
 

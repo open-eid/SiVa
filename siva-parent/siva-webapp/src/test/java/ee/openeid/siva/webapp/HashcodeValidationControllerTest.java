@@ -18,6 +18,7 @@ package ee.openeid.siva.webapp;
 
 import ee.openeid.siva.proxy.HashcodeValidationProxy;
 import ee.openeid.siva.proxy.ProxyRequest;
+import ee.openeid.siva.proxy.ValidationObservations;
 import ee.openeid.siva.proxy.document.ProxyHashcodeDataSet;
 import ee.openeid.siva.statistics.StatisticsService;
 import ee.openeid.siva.validation.document.report.SimpleReport;
@@ -25,6 +26,7 @@ import ee.openeid.siva.webapp.request.Datafile;
 import ee.openeid.siva.webapp.request.HashcodeValidationRequest;
 import ee.openeid.siva.webapp.request.SignatureFile;
 import ee.openeid.siva.webapp.transformer.HashcodeValidationRequestToProxyDocumentTransformer;
+import io.micrometer.observation.ObservationRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -70,7 +72,8 @@ class HashcodeValidationControllerTest {
     @BeforeEach
     public void setUp() {
         ValidationController validationController = new ValidationController();
-        HashcodeValidationProxySpy validationProxySpy = new HashcodeValidationProxySpy(statisticsService, applicationContext, environment);
+        HashcodeValidationProxySpy validationProxySpy = new HashcodeValidationProxySpy(statisticsService, applicationContext, environment,
+                new ValidationObservations(ObservationRegistry.NOOP, Set.of()));
         validationController.setHashRequestTransformer(hashRequestTransformerSpy);
         validationController.setHashcodeValidationProxy(validationProxySpy);
         mockMvc = standaloneSetup(validationController).build();
@@ -157,8 +160,9 @@ class HashcodeValidationControllerTest {
 
     private static class HashcodeValidationProxySpy extends HashcodeValidationProxy {
 
-        HashcodeValidationProxySpy(StatisticsService statisticsService, ApplicationContext applicationContext, Environment environment) {
-            super(statisticsService, applicationContext, environment);
+        HashcodeValidationProxySpy(StatisticsService statisticsService, ApplicationContext applicationContext,
+                                   Environment environment, ValidationObservations observations) {
+            super(statisticsService, applicationContext, environment, observations);
         }
 
         @Override

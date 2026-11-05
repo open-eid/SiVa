@@ -9,9 +9,4 @@
         <Method name="generateRandomNonce"/>
         <Bug pattern="DMI_RANDOM_USED_ONLY_ONCE"/>
     </Match>
-    <Match>
-        <Class name="ee.openeid.siva.webapp.interceptor.ReportSignatureInterceptor"/>
-        <Method name="beforeBodyWrite"/>
-        <Bug pattern="DM_DEFAULT_ENCODING"/>
-    </Match>
 </FindBugsFilter>

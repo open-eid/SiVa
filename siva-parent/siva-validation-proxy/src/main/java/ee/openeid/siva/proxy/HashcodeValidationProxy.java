@@ -40,8 +40,9 @@ public class HashcodeValidationProxy extends ValidationProxy {
     private static final String HASHCODE_GENERIC_SERVICE = "hashcodeGeneric";
 
     @Autowired
-    public HashcodeValidationProxy(StatisticsService statisticsService, ApplicationContext applicationContext, Environment environment) {
-        super(statisticsService, applicationContext, environment);
+    public HashcodeValidationProxy(StatisticsService statisticsService, ApplicationContext applicationContext,
+                                   Environment environment, ValidationObservations observations) {
+        super(statisticsService, applicationContext, environment, observations);
     }
 
     @Override
@@ -51,7 +52,8 @@ public class HashcodeValidationProxy extends ValidationProxy {
 
     @Override
     public SimpleReport validateRequest(ProxyRequest proxyRequest) {
-        ValidationService validationService = getServiceForType(proxyRequest);
+        String validatorName = constructValidatorName(proxyRequest);
+        ValidationService validationService = getService(validatorName);
         if (validationService instanceof HashcodeGenericValidationService hashcodeValidationService &&
                 proxyRequest instanceof ProxyHashcodeDataSet hashcodeProxyRequest) {
 
@@ -59,10 +61,17 @@ public class HashcodeValidationProxy extends ValidationProxy {
                     .stream()
                     .map(signatureFile -> createValidationDocument(hashcodeProxyRequest, signatureFile))
                     .collect(Collectors.toList());
-            Reports reports = hashcodeValidationService.validate(validationDocuments);
-            return chooseReport(reports, ReportType.SIMPLE);
+            Reports reports = validateWith(validatorName,
+                    () -> hashcodeValidationService.validate(validationDocuments));
+            return chooseReport(reports, reportType(proxyRequest));
         }
         throw new IllegalStateException("Something went wrong with hashcode validation");
+    }
+
+    // The hashcode endpoint produces the simple report whatever the request asks for.
+    @Override
+    ReportType reportType(ProxyRequest proxyRequest) {
+        return ReportType.SIMPLE;
     }
 
     private static ValidationDocument createValidationDocument(ProxyRequest request, SignatureFile signatureFile) {

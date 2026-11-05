@@ -37,6 +37,7 @@ import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.validation.service.generic.GenericValidationService;
 import ee.openeid.validation.service.timemark.report.DDOCContainerValidationReportBuilder;
 import ee.openeid.validation.service.timestamptoken.TimeStampTokenValidationService;
+import io.micrometer.observation.ObservationRegistry;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -66,6 +67,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -116,6 +118,9 @@ class ValidationProxyTest {
 
     @Spy
     private StandardEnvironment environment;
+
+    @Spy
+    private ValidationObservations observations = new ValidationObservations(ObservationRegistry.create(), Set.of());
 
     @Test
     void validate_ApplicationContextHasNoBeanWithGivenName_ThrowsException() {
@@ -484,8 +489,9 @@ class ValidationProxyTest {
 
         private SimpleReport report = new SimpleReport(new ValidationConclusion());
 
-        public ValidationProxySpy(StatisticsService statisticsService, ApplicationContext applicationContext, Environment environment) {
-            super(statisticsService, applicationContext, environment);
+        public ValidationProxySpy(StatisticsService statisticsService, ApplicationContext applicationContext,
+                                  Environment environment, ValidationObservations observations) {
+            super(statisticsService, applicationContext, environment, observations);
         }
 
         @Override
@@ -518,7 +524,7 @@ class ValidationProxyTest {
     }
 
     private ValidationProxySpy getValidationProxySpy() {
-        return new ValidationProxySpy(statisticsService, applicationContext, environment);
+        return new ValidationProxySpy(statisticsService, applicationContext, environment, observations);
     }
 
 }

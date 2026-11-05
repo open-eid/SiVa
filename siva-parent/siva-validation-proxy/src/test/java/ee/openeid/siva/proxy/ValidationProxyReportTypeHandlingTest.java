@@ -24,13 +24,17 @@ import ee.openeid.siva.validation.document.report.DiagnosticReport;
 import ee.openeid.siva.validation.document.report.Reports;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.validation.service.ValidationService;
+import io.micrometer.observation.ObservationRegistry;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationContext;
+
+import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.anyOf;
@@ -56,6 +60,9 @@ class ValidationProxyReportTypeHandlingTest {
 
     @Mock
     private ZipMimetypeValidator zipMimetypeValidator;
+
+    @Spy
+    private ValidationObservations observations = new ValidationObservations(ObservationRegistry.create(), Set.of());
 
     @Mock
     private SimpleReport simpleReport;

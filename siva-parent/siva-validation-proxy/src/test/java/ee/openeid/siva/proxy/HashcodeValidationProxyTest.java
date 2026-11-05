@@ -27,6 +27,7 @@ import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Error;
 import ee.openeid.siva.validation.document.report.*;
 import ee.openeid.validation.service.generic.HashcodeGenericValidationService;
+import io.micrometer.observation.ObservationRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,6 +41,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -65,7 +67,8 @@ class HashcodeValidationProxyTest {
 
     @BeforeEach
     public void setUp() {
-        hashcodeValidationProxy = new HashcodeValidationProxy(statisticsService, applicationContext, environment);
+        hashcodeValidationProxy = new HashcodeValidationProxy(statisticsService, applicationContext, environment,
+                new ValidationObservations(ObservationRegistry.NOOP, Set.of()));
 
         validationServiceSpy = new ValidationServiceSpy();
     }

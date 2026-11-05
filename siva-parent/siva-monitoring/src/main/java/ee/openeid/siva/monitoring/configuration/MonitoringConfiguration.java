@@ -21,6 +21,7 @@ import ee.openeid.siva.monitoring.enpoint.HeartbeatEndpointWebExtension;
 import ee.openeid.siva.monitoring.enpoint.TrafficPortMonitoringController;
 import ee.openeid.siva.monitoring.enpoint.VersionEndpoint;
 import ee.openeid.siva.monitoring.indicator.ApplicationHealthIndicator;
+import ee.openeid.siva.monitoring.observation.LoggingObservationHandler;
 import ee.openeid.siva.monitoring.util.ManifestReader;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
@@ -37,6 +38,13 @@ public abstract class MonitoringConfiguration {
 
     public static final String DEFAULT_MONITORING_ENDPOINT = "/monitoring/health";
     public static final int DEFAULT_TIMEOUT = 10000;
+
+    // One log line per stage of a request (the siva.* observations), the metric side of them being Boot's own
+    // meter handler; registered into the ObservationRegistry by Boot like any ObservationHandler bean.
+    @Bean
+    public LoggingObservationHandler loggingObservationHandler() {
+        return new LoggingObservationHandler();
+    }
 
     @Bean
     public ManifestReader manifestReader() {

@@ -59,26 +59,25 @@ The last lines of build output should look very similar to below image:
 
 # Deploying
 
-## OPTION 1 - starting webapps from command line
-SiVa project compiles **2 fat executable JAR** files that you can run after successfully building the
-project by issuing below commands:
-
-**First start the Siva webapp**
+## OPTION 1 - starting the webapp from command line
+The build produces one executable JAR, `siva-parent/siva-webapp/target/siva-webapp-X.X.X-exec.jar`
+(the Spring Boot repackaging with the `exec` classifier; the `siva-webapp-X.X.X.jar` next to it is the
+plain library jar and does not run). Start it with:
 
 ```bash
-./siva-parent/siva-webapp/target/siva-webapp-X.X.X.jar
+java -jar siva-parent/siva-webapp/target/siva-webapp-X.X.X-exec.jar
 ```
 
 The SiVa webapp by default runs on port **8080**.
-Easiest way to test out the deployment is to run SiVa demo application and use it for validation.
+Easiest way to test out the deployment is to run the SiVa demo application (its own project,
+SiVa-demo-application) and use it for validation.
 
-**Start the Demo webapp**
-
-```bash
-./siva-parent/siva-sample-application/target/siva-sample-application-X.X.X.jar
-```
-
-Now point Your browser to URL: <http://localhost:9000>
+SiVa writes no `etc` directory and no keystore at start. What it writes at run time: the
+trusted-list cache in `siva.tsl.loader.cacheDirectory` (the JVM's temporary directory, `java.io.tmpdir`,
+unless set), a temporary copy of the BDOC validation policy in `java.io.tmpdir`, and in the `tsl-fetch`
+profile the snapshot store (see [Trust-list snapshots](#trust-list-snapshots)). Trust material (the LOTL
+truststore or SSL bundle, the report-signing PKCS#12 or PKCS#11 token) is only read, from the paths the
+configuration names; replacing it needs no cleanup beyond a restart.
 
 
 ## OPTION 2 - running webapps as systemd services
@@ -162,58 +161,12 @@ Jul 20 03:00:01 siva siva-webapp.jar[15965]: 20.07.2016 03:00:01.450 INFO  [pool
 Jul 20 03:00:01 siva siva-webapp.jar[15965]: 20.07.2016 03:00:01.450 INFO  [pool-3-thread-1] [e.e.e.dss.tsl.service.TSLRepository.sync
 ```
 
-## OPTION 3  - deploy webapps as war files (Tomcat setup for legacy systems)
+## OPTION 3 - a WAR in an external servlet container
 
-> **NOTE 1**: Each SiVa service **must** be deployed to separate instance of Tomcat to avoid Java JAR library version
-> conflicts.
-
-> **NOTE 2**: To limit your webapp request size (this is set automatically when deploying service as jar) one needs to configure the container manually. For example, when using [Tomcat 8](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html) -
-the http connector parameter `maxPostSize` should be configured with the desired limit.
-
-> **NOTE 3**: The war file must be deployed to Tomcat ROOT.
-
-First we need to download Tomcat web servlet container as of the writing latest version available in version 8 branch is 8.5.24. We will download it with `wget`
-
-```bash
-wget http://www-eu.apache.org/dist/tomcat/tomcat-8/v8.5.24/bin/apache-tomcat-8.5.24.tar.gz
-```
-
-Unpack it somewhere:
-
-```bash
-tar xf apache-tomcat-8.5.24.tar.gz
-```
-
-Now we should build the WAR file. We have created helper script with all the correct Maven parameters.
-
-```bash
-./war-build.sh
-```
-
-Final steps would be copying built WAR file into Tomcat `webapps` directory and starting the servlet container.
-
-```bash
-cp siva-parent/siva-webapp/target/siva-webapp-X.X.X.war apache-tomcat-8.5.24/webapps
-./apache-tomcat-7.0.77/bin/catalina.sh run
-```
-
-> **IMPORTANT** siva-webapp on startup creates `etc` directory where it copies the TSL validation certificates
-> `siva-keystore.jks`. Default location for this directory is application root or `$CATALINA_HOME`. To change
-> this default behavior you should set environment variable `DSS_DATA_FOLDER`. 
-
-> **IMPORTANT** When updating the siva-keystore.jks it is needed to delete the "temp" keystore from default/specified location. 
-> Deleting the "temp" keystore is also needed when upgrading your deployment to newer SIVA version!
-
-## How-to set WAR deployed SiVa `application.properties`
-
-SiVa override properties can be set using `application.properties` file. The file can locate anywhere in the host system.
-To make properties file accessible for SiVa you need to create or edit `setenv.sh` placed inside `bin` directory.
-
-Contents of the `setenv.sh` file should look like:
-
-```bash
-export CATALINA_OPTS="-Dspring.config.location=file:/path/to/application.properties"
-```
+Not covered by this guide. The default build produces no WAR; the `war` Maven profile
+(`./mvnw -Pwar package`) packages the webapp as one for a servlet container that provides the Servlet
+API of this Spring Boot version. The rest of this guide assumes the executable JAR, run directly or
+in the container image.
 
 
 ## OPTION 4 - Kubernetes (Helm)
@@ -635,9 +588,6 @@ refresh that changed a list could miss trust anchors (INDETERMINATE or TOTAL-FAI
 with an internal error (open-eid/SiVa#6). Because every refresh parses all lists again, it takes seconds for the EU
 LOTL set, on the scheduler thread, with requests served from the previous source meanwhile; two sources exist in
 memory for that time.
-
-!!! note
-    When updating the siva-keystore.jks it is needed to delete the "temp" keystore from default/specified location. Deleting the "temp" keystore is also needed when upgrading your deployment to newer SIVA version!
 
 !!! note
     TSL is currently used only by Generic and BDOC validators

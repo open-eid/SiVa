@@ -306,4 +306,29 @@ class TSLSnapshotFetcherTest {
 
         assertThat(exitCode, is(TSLSnapshotFetcher.EXIT_PUBLISH_FAILED));
     }
+
+    @Test
+    void fetch_WhenTheStoreCannotBeLocked_ReportsItAndFetchesNothing() throws IOException {
+        doThrow(new IOException("read-only file system")).when(store).tryLock(any(), any());
+
+        int exitCode = fetcher.fetch();
+
+        assertThat(exitCode, is(TSLSnapshotFetcher.EXIT_PUBLISH_FAILED));
+        verify(genericLoader, never()).loadTSL();
+        verify(store, never()).publish(any(), any());
+    }
+
+    @Test
+    void fetch_WhenTheWorkingCacheHoldsADirectory_TheManifestListsOnlyTheFiles() throws IOException {
+        Files.createDirectory(workingCache.resolve("not-a-list"));
+        when(tslHealth.health()).thenReturn(Health.up().withDetails(DETAILS).build());
+
+        fetcher.fetch();
+
+        ArgumentCaptor<TSLSnapshotManifest> manifest = ArgumentCaptor.forClass(TSLSnapshotManifest.class);
+        verify(store).publish(eq(workingCache), manifest.capture());
+        assertThat(manifest.getValue().fileNames(),
+                is(List.of("https___lotl_example_eu-lotl_xml", "https___tl_example_EE_xml")));
+        assertThat(manifest.getValue().files(), is(2));
+    }
 }

@@ -23,10 +23,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.internal.verification.VerificationModeFactory;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.scheduling.TaskScheduler;
 
 import java.io.File;
 import java.time.Duration;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
@@ -48,7 +52,8 @@ class TSLRefreshConfigurationTest {
     @Test
     void verifySchedulerCronIsQueriedFromPropertiesWhenCreatingTSLRefreshTask() {
         when(properties.getSchedulerCron()).thenReturn(SCHEDULER_CRON);
-        tslRefreshConfiguration.tslRefreshTask();
+        TaskScheduler scheduler = tslRefreshConfiguration.tslRefreshTask();
+        assertThat(scheduler, is(notNullValue()));
         verify(properties, VerificationModeFactory.times(1)).getSchedulerCron();
         verify(refresher, never()).refreshChangedSnapshots();
     }

@@ -21,6 +21,7 @@ import ee.openeid.tsl.snapshot.TSLSnapshotManifest;
 import ee.openeid.tsl.snapshot.TSLSnapshotStore;
 import eu.europa.esig.dss.model.tsl.LOTLInfo;
 import eu.europa.esig.dss.model.tsl.ParsingInfoRecord;
+import eu.europa.esig.dss.model.tsl.PivotInfo;
 import eu.europa.esig.dss.model.tsl.TLInfo;
 import eu.europa.esig.dss.model.tsl.TLValidationJobSummary;
 import eu.europa.esig.dss.model.tsl.TrustProperties;
@@ -758,6 +759,72 @@ class TSLLoaderTest {
         tslLoader = loader(props);
 
         assertThrows(IllegalStateException.class, tslLoader::init);
+    }
+
+    @Test
+    void refreshIfSnapshotChanged_WhenNoTerritoryIsMandatoryAndTheNewSnapshotIsEmpty_TheLoadedSourceIsKept()
+            throws Exception {
+        TSLLoaderConfigurationProperties props = createSnapshotConfigurationProperties();
+        props.setMandatoryTerritories(null);
+        tslLoader = loader(props);
+        tslLoader.init();
+        filledOnRefresh(anchorsOf("LV"));
+        publish("20261013T183000Z");
+        tslLoader.loadTSL();
+        filledOnRefresh(Map.of());
+        publish("20261014T000000Z");
+
+        tslLoader.refreshIfSnapshotChanged();
+
+        TSLLoader.State state = tslLoader.getState();
+        assertEquals("20261013T183000Z", state.snapshotId());
+        assertEquals(1, state.numberOfCertificates());
+    }
+
+    @Test
+    void loadTSL_WhenSnapshotStoreNamesASnapshot_TheOfflineLoaderServesThatSnapshotsFiles() throws IOException {
+        tslLoader = loader(createSnapshotConfigurationProperties());
+        tslLoader.init();
+        publish("20261013T183000Z");
+        String url = "https://tl/EE";
+        Files.writeString(snapshotRoot.resolve("snapshots").resolve("20261013T183000Z")
+                .resolve(DSSUtils.getNormalizedString(url)), "<list/>");
+
+        tslLoader.loadTSL();
+
+        ArgumentCaptor<DSSFileLoader> offlineLoader = ArgumentCaptor.forClass(DSSFileLoader.class);
+        verify(tslValidationJob).setOfflineDataLoader(offlineLoader.capture());
+        byte[] served = DSSUtils.toByteArray(offlineLoader.getValue().getDocument(url));
+        assertEquals("<list/>", new String(served, StandardCharsets.UTF_8));
+    }
+
+    @Test
+    void loadTSL_WhenAPivotWasParsed_ItsNextUpdateIsNotTheLotls() {
+        tslLoader = loader(createConfigurationProperties(false));
+        tslLoader.init();
+        Instant lotlNextUpdate = Instant.parse("2027-03-17T12:04:06Z");
+        ParsingInfoRecord pivotParsing = mock(ParsingInfoRecord.class);
+        lenient().when(pivotParsing.getNextUpdateDate()).thenReturn(Date.from(Instant.parse("2026-12-01T00:00:00Z")));
+        PivotInfo pivot = new PivotInfo(null, pivotParsing, null, "https://lotl/pivot", Map.of(), "https://lotl");
+        pivot.setTlInfos(List.of());
+        TLValidationJobSummary summary = new TLValidationJobSummary(List.of(lotl(lotlNextUpdate), pivot), List.of());
+        when(tslValidationJob.getSummary()).thenReturn(summary);
+
+        tslLoader.loadTSL();
+
+        assertEquals(lotlNextUpdate, tslLoader.getLotlNextUpdate());
+    }
+
+    @Test
+    void europeanLOTL_CarriesTheConfiguredUrlAnnouncementUriAndPivotSupport() {
+        tslLoader = loader(createConfigurationProperties(false));
+
+        LOTLSource lotl = tslLoader.europeanLOTL();
+
+        assertEquals(TSL_URL, lotl.getUrl());
+        assertEquals(TSL_OJ_URL, lotl.getSigningCertificatesAnnouncementPredicate().getUri());
+        assertTrue(lotl.isPivotSupport());
+        assertSame(keyStoreCertificateSource, lotl.getCertificateSource());
     }
 
     private void publish(String id) throws IOException {

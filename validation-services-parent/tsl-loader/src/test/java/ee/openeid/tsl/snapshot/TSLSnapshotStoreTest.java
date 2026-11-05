@@ -198,6 +198,16 @@ class TSLSnapshotStoreTest {
     }
 
     @Test
+    void prune_LeavesAStrayFileInTheSnapshotsDirectoryAlone() throws IOException {
+        store.publish(source, manifest("20261013T010000Z"));
+        Path stray = root.resolve(TSLSnapshotStore.SNAPSHOTS_DIRECTORY).resolve("README");
+        Files.writeString(stray, "not a snapshot");
+
+        assertThat(store.prune(0), is(empty()));
+        assertThat(Files.isRegularFile(stray), is(true));
+    }
+
+    @Test
     void publish_WritesThePeriodAndTheDownloadTimesAsIsoText() throws IOException {
         store.publish(source, manifest("20261013T183000Z"));
 

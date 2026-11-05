@@ -303,6 +303,31 @@ For example, adding application.properties to classpath with the **logging.confi
 logging.config=/path/to/logback.xml
 ```
 
+## Request id
+
+Every request has one id for its log lines and its response. The webapp takes, in this order: an id an APM agent has already put in the MDC as `trace.id`; an `X-Request-ID` header the client or the edge sent, 1 to 64 characters from `A-Z a-z 0-9 . _ : / + = -` (anything else is ignored); the trace-id of an incoming W3C `traceparent` header. Without any of these it mints a 32-character hexadecimal id, which is a valid W3C trace-id. `X-Request-ID` wins over `traceparent` because the edge's id is the one in the edge's access log: ingress-nginx sets `X-Request-ID` from its `$req_id`, Gateway API implementations vary, so an edge that should own the id sets or overwrites `X-Request-ID` (a client's `traceparent` still passes through to the edge's own tracing). The response always carries the id as `X-Request-ID`, received or minted, so a client's ticket, the edge's access log and the service log join on one value. The id is logged and echoed as received, so it must not carry personal data: an opaque value, never a user or session identifier. The id is also the request attribute `requestId`, for Tomcat's access log (`%{requestId}r` in `server.tomcat.accesslog.pattern`).
+
+In the text output the id is printed between the thread and the logger name, through `logging.pattern.correlation` (`[%X{trace.id:-}] ` in the webapp's defaults), so one grep over the id gives the request's record; the structured formats (`logging.structured.format.console`) carry the same MDC entry as a field. A Logback configuration of your own prints the id where its pattern names `%X{trace.id}`. Upgrading: the text log layout gained the `[id] ` slot between the thread and the logger name; a parser that expects the previous layout gets it back with `logging.pattern.correlation=` (empty).
+
+## The stages of a request
+
+What SiVa did for a request, and against which trust-list state, is logged as one INFO line per finished stage under the logger `ee.openeid.siva.observation`: the stage's name, its duration, its keys and, if it failed, the exception type, inline in the message for the text output and as the nested member `observation` for the structured formats. The stages (Micrometer observations) are:
+
+| Stage | Keys |
+|-------|------|
+| `siva.validation` - the validation as a whole, one per `/validate` or `/validateHashcode` request | `request` (`container` or `hashcode`), `report.type` (the report type produced: `SIMPLE`, `DETAILED` or `DIAGNOSTIC`; `/validateHashcode` always produces `SIMPLE`), `container.type` (the vocabulary of `stats.type` under [Statistics](#statistics); absent on a failed validation, which has no report to read it from), `policy` (the requested signature policy, `default` when none), `signatures` and `valid.signatures` (the counts of the report) |
+| `siva.validation.service` - one line per validator run, inside the above (two for an ASiC-S container with a timestamp token: the token's validator and the data file's) | `validator` (`generic`, `timemarkContainer`, `timeStampToken` or `hashcodeGeneric`), `tsl.loader` (`generic` or `timemark`, the trusted-list loader that validator reads), `tsl.snapshot` and `tsl.anchors` (the loader's state when the stage started: the snapshot id it held, `none` when it refreshes online, and its number of trust anchors) |
+| `siva.report.sign` - signing the report, when [report signing](#validation-report-signature) is on | none |
+
+With the request id in front, a request's record reads:
+
+```text
+... INFO 31415 --- [nio-8080-exec-2] [ticket-4711] ee.openeid.siva.observation : siva.validation.service 1201ms tsl.anchors=4891 tsl.loader=generic tsl.snapshot=none validator=generic
+... INFO 31415 --- [nio-8080-exec-2] [ticket-4711] ee.openeid.siva.observation : siva.validation 1223ms container.type=PAdES policy=default report.type=SIMPLE request=container signatures=1 valid.signatures=0
+```
+
+Nothing in these lines names the file or the signer. `logging.level.ee.openeid.siva.observation=OFF` switches them off; the timers the same stages feed (see [Prometheus metrics endpoint](#prometheus-metrics-endpoint)) stay.
+
 # Statistics
 
 For every validation a statistical report is composed that contains the following data:
@@ -469,6 +494,14 @@ This endpoint is controlled by the following configuration parameter:
 ```bash
 management.endpoints.web.exposure.include=prometheus
 ```
+
+* **Request timers**
+
+The stages of a request (see [The stages of a request](#the-stages-of-a-request)) are timers on this endpoint: `siva_validation_seconds` with the labels `request`, `report_type` and `container_type`, `siva_validation_service_seconds` with `validator` and `tsl_loader`, and `siva_report_sign_seconds`, each as `_count`, `_sum` and `_max` with an `error` label (`none`, or the exception's simple name), plus the `_active_seconds` series of the requests in flight. The keys a client chooses or that are unbounded (the policy, the counts, the snapshot id) are in the log line only, never a label. Percentiles need the histogram buckets, which Spring Boot's switch adds:
+```bash
+management.metrics.distribution.percentiles-histogram.siva.validation=true
+```
+The setting applies to `siva_validation_seconds` and, by prefix, to `siva_validation_service_seconds`.
 
 # Validation Report Signature
 

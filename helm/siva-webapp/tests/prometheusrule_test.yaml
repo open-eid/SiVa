@@ -35,6 +35,12 @@ tests:
       - matchRegex:
           path: spec.groups[0].rules[1].annotations.summary
           pattern: "\\{\\{ \\$labels.pod \\}\\}"
+      - matchRegex:   # every rule carries a runbook: what it means, first check, usual cause, what clears it
+          path: spec.groups[0].rules[0].annotations.runbook
+          pattern: '^More than 5 % of the requests .* First check: .* Usual cause: .* Clears'
+      - matchRegex:
+          path: spec.groups[0].rules[1].annotations.runbook
+          pattern: '^The kernel killed the container .*kubectl -n NAMESPACE describe pod <pod>.* Clears'
       - notExists:
           path: spec.groups[0].rules[?(@.alert == "SivaNotReady")]
       - notExists:
@@ -73,6 +79,12 @@ tests:
       - equal:
           path: spec.groups[0].rules[8].alert
           value: SivaOcspTsaFailures
+      - matchRegex:
+          path: spec.groups[0].rules[7].annotations.runbook
+          pattern: '^A client sent a request above the size limit .* Clears'
+      - matchRegex:
+          path: spec.groups[0].rules[8].annotations.runbook
+          pattern: '^OCSP responders or timestamp authorities failed .* Clears'
       - equal:
           path: spec.groups[0].rules[9].alert
           value: SivaCustom
@@ -108,6 +120,9 @@ tests:
       - matchRegex:
           path: spec.groups[0].rules[7].annotations.description
           pattern: kubectl -n NAMESPACE logs job/<newest RELEASE-NAME-siva-webapp-tsl-fetch-\.\.\.>
+      - matchRegex:
+          path: spec.groups[0].rules[7].annotations.runbook
+          pattern: '^The snapshot the pod runs on .*kubectl -n NAMESPACE get cronjob,jobs.* Clears when the pod loads a newer snapshot'
       - notExists:
           path: spec.groups[0].rules[?(@.alert == "SivaTslFetchFailing")]
 
@@ -131,6 +146,9 @@ tests:
       - equal:
           path: spec.groups[0].rules[6].annotations.summary
           value: SiVa serves the {{ $labels.territory }} trusted list ({{ $labels.kind }}) from a copy older than two refresh periods plus 1 h
+      - matchRegex:
+          path: spec.groups[0].rules[6].annotations.runbook
+          pattern: '^Every download of the list .*kubectl -n NAMESPACE logs job/<newest RELEASE-NAME-siva-webapp-tsl-fetch-\.\.\.>.* Clears at the first successful download'
 
   - it: alerts on configured territories without anchors by the metric's mandatory label
     set:
@@ -156,6 +174,12 @@ tests:
       - equal:
           path: spec.groups[0].rules[3].labels.severity
           value: warning
+      - matchRegex:
+          path: spec.groups[0].rules[2].annotations.runbook
+          pattern: '^For 15 minutes the pod has held no trust anchor for a territory siva.tsl.loader.mandatoryTerritories names.* Clears'
+      - matchRegex:
+          path: spec.groups[0].rules[3].annotations.runbook
+          pattern: '^For 15 minutes the pod has held no trust anchor for a trusted, non-mandatory territory.* Clears'
 
   - it: sizes list-expiry alerts from SiVa's period gauge plus the lead time and a day
     set:
@@ -175,6 +199,12 @@ tests:
       - equal:
           path: spec.groups[0].rules[5].labels.severity
           value: critical
+      - matchRegex:
+          path: spec.groups[0].rules[4].annotations.runbook
+          pattern: '^The list''s NextUpdate is less than two refresh periods plus the lead time away.* Clears when the pod holds a list with a later NextUpdate'
+      - matchRegex:
+          path: spec.groups[0].rules[5].annotations.runbook
+          pattern: '^The list''s NextUpdate is less than one refresh period plus a day away.* Clears when the pod holds a list with a later NextUpdate'
 
   - it: renders grace and lead time into the rules and nothing of the fetch period
     set:

@@ -34,6 +34,7 @@ tests:
             exp_annotations:
               summary: "SiVa holds no trust anchors for mandatory territory EE (generic loader)"
               description: "Signatures from EE cannot be validated as trusted and the pod is not ready. Its list is missing, expired or badly signed: check the tsl health detail and, in snapshot mode, the fetch Job's log."
+              runbook: "For 15 minutes the pod has held no trust anchor for a territory siva.tsl.loader.mandatoryTerritories names: it is not ready (health group tsl DOWN) and signatures from that territory validate as untrusted on it. First check: /monitoring/health on the management port (missingMandatoryTerritories lists them) and whether every pod shows the same territory. Usual cause: a code with no list in the LOTL SiVa reads (EE is EE_T under the test profile), its list expired or badly signed, or in snapshot mode a fetcher that could not publish (its Job fails with exit 1 and the cluster's failed-Job rule fires); a rollout then stalls on a new pod that never becomes ready while the old pods keep serving. Clears as soon as the pod holds anchors for the territory again (a corrected configuration rolled out, a new list fetched) or the pod is replaced."
       - eval_time: 26m
         alertname: SivaTslTerritoryNotValidating
         exp_alerts: []
@@ -62,6 +63,7 @@ tests:
             exp_annotations:
               summary: "SiVa holds no trust anchors for territory LV (generic loader)"
               description: "Signatures from LV validate as untrusted until its list loads again; other territories are unaffected."
+              runbook: "For 15 minutes the pod has held no trust anchor for a trusted, non-mandatory territory; it stays ready, and signatures from that territory validate as untrusted. First check: the tsl health detail on the management port and the fetch (or pod) log for the list's download or signature error. Usual cause: a territory code with no list in the LOTL, or a list the publisher let expire or signed with a key the LOTL does not name. Clears as soon as the pod holds anchors for it again; make the territory mandatory if its signatures must never validate as untrusted."
       - eval_time: 26m
         alertname: SivaTslMandatoryTerritoryNotValidating
         exp_alerts: []

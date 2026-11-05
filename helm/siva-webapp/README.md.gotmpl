@@ -146,7 +146,12 @@ extra containers, since a Job completes only when every container has exited. Th
 under the Pod Security "restricted" profile, so an extra container
 needs its own `securityContext` (no privilege escalation, all capabilities dropped, read-only
 root filesystem); with `network.networkPolicy.egress` on it also needs its own
-`additionalRules`.
+`additionalRules`. No pod gets the namespace's Services as link variables
+(`security.enableServiceLinks: false`; `<SERVICE>_SERVICE_HOST`, `<SERVICE>_PORT` and the rest,
+which Kubernetes injects by default): SiVa reads none of them, and Spring's relaxed binding
+would read them as properties, a Service named `server` setting `server.port` to `tcp://...`
+and any `siva-*` Service landing under `siva.*`. Switch it on only for an extra container that
+discovers Services that way.
 
 A change to `config.spring` or `config.files` rolls the pods: the pod template carries a
 `checksum/config` annotation over the rendered ConfigMap (the fetcher's template too, so the
@@ -360,6 +365,26 @@ Secret (`tsl.fetcher.existingSecret`, mounted as under "Secrets"), never the web
 thirty documents from the internet and should hold nothing else. The store holds nothing worth
 backing up: a lost store is rebuilt by the next fetch, so leave the claim out of your backup
 scope.
+
+A fetch resolves some thirty public hostnames and nothing in the cluster but DNS itself, and
+under the cluster default `ndots:5` each name with fewer than five dots (`ec.europa.eu` has
+two) is first tried with every search domain appended (`<name>.<namespace>.svc.cluster.local`,
+`<name>.svc.cluster.local`, `<name>.cluster.local`, the node's own), one round trip to the
+cluster DNS each, before the name itself is asked. `tsl.fetcher.dnsConfig` is the pod's
+`dnsConfig`, rendered as given into the CronJob and the bootstrap Job; this sends every name
+with two dots or more straight out and leaves a one-word Service name on the search list:
+
+```yaml
+tsl:
+  fetcher:
+    dnsConfig:
+      options:
+        - name: ndots
+          value: "2"
+```
+
+The webapp pods keep the cluster default: a sidecar or an extra container of yours may count
+on it, and the AIA, OCSP and policy hosts a validation resolves are few per request.
 
 What a webapp pod fetches while validating comes with the document: missing issuer
 certificates from the AIA URLs the certificates carry, the signature policy from the URL a

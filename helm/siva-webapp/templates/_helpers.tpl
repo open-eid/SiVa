@@ -334,9 +334,9 @@ never the webapp's), a named one, or the webapp's.
 
 {{/*
 Pod template (metadata + spec) shared by the fetch CronJob and the bootstrap Job: the webapp
-image and settings (ConfigMap, env, JVM flags, restricted security context) plus SiVa's
-tsl-fetch profile, the store mounted read-write and no listening port. The Secret, extra volumes
-and mounts are the fetcher's own (tsl.fetcher.*), never the webapp's.
+image and settings (ConfigMap, env, JVM flags, restricted security context, service links) plus
+SiVa's tsl-fetch profile, the store mounted read-write and no listening port. The Secret, extra
+volumes, mounts and DNS settings are the fetcher's own (tsl.fetcher.*), never the webapp's.
 */}}
 {{- define "siva-webapp.fetcherPodTemplate" -}}
 metadata:
@@ -358,6 +358,11 @@ spec:
   {{- end }}
   serviceAccountName: {{ include "siva-webapp.fetcherServiceAccountName" . }}
   automountServiceAccountToken: {{ .Values.security.automountServiceAccountToken }}
+  enableServiceLinks: {{ .Values.security.enableServiceLinks }}
+  {{- with .Values.tsl.fetcher.dnsConfig }}
+  dnsConfig:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   {{- with .Values.security.podSecurityContext }}
   securityContext:
     {{- toYaml . | nindent 4 }}

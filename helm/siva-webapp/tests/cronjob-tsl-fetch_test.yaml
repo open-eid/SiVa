@@ -133,6 +133,11 @@ tests:
           path: spec.jobTemplate.spec.template.spec.automountServiceAccountToken
           value: false
       - equal:
+          path: spec.jobTemplate.spec.template.spec.enableServiceLinks
+          value: false
+      - notExists:
+          path: spec.jobTemplate.spec.template.spec.dnsConfig
+      - equal:
           path: spec.jobTemplate.spec.template.spec.containers[0].resources.limits.memory
           value: 1Gi
       - contains:
@@ -434,3 +439,39 @@ tests:
       - equal:
           path: spec.schedule
           value: 0 3 * * *
+
+  - it: service links follow the webapp's switch
+    template: cronjob-tsl-fetch.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+      security:
+        enableServiceLinks: true
+    asserts:
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.enableServiceLinks
+          value: true
+
+  - it: renders the fetcher's DNS settings as given
+    template: cronjob-tsl-fetch.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+        fetcher:
+          dnsConfig:
+            options:
+              - name: ndots
+                value: "2"
+    asserts:
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.dnsConfig
+          value:
+            options:
+              - name: ndots
+                value: "2"

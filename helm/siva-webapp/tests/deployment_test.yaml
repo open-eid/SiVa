@@ -340,11 +340,24 @@ tests:
           path: spec.template.spec.automountServiceAccountToken
           value: true
 
-  - it: security contexts and token automount follow values
+  - it: service links can be switched on for the pod
+    template: deployment.yaml
+    set:
+      security:
+        enableServiceLinks: true
+    asserts:
+      - equal:
+          path: spec.template.spec.enableServiceLinks
+          value: true
+
+  - it: security contexts, token automount and service links follow values
     template: deployment.yaml
     asserts:
       - equal:
           path: spec.template.spec.automountServiceAccountToken
+          value: false
+      - equal:
+          path: spec.template.spec.enableServiceLinks
           value: false
       - equal:
           path: spec.template.spec.securityContext.runAsNonRoot

@@ -9,6 +9,7 @@ metadata:
     "helm.sh/hook": test
 spec:
   automountServiceAccountToken: false
+  enableServiceLinks: {{ .Values.security.enableServiceLinks }}
   # A fixed-purpose pod: the restricted profile is spelled out here rather than inherited from
   # security.*, and busybox has no numeric USER, so the uid is explicit (tests.runAsUser).
   securityContext:

@@ -393,6 +393,16 @@ tsl:
     # `tsl.fetcher.extraVolumes` or the chart's own (`config`, `tmp`, `tsl-store`, `tsl-work`,
     # `trust`, `secrets`).
     extraVolumeMounts: []
+    # -- DNS settings of the fetcher pods (a Kubernetes PodDNSConfig: `options`, `searches`,
+    # `nameservers`), rendered as given; empty keeps the cluster's. A fetch resolves some thirty
+    # public list hosts and nothing in the cluster but DNS itself, and under the cluster default
+    # `ndots:5` each of those names (`ec.europa.eu` has two dots) is first tried with every
+    # search domain appended (`<name>.<namespace>.svc.cluster.local` and the rest, a round trip
+    # to the cluster DNS each) before the name itself. `options: [{name: ndots, value: "2"}]`
+    # sends a name with two dots or more straight out; a one-word Service name still goes
+    # through the search list (README, "Trust lists"). The webapp pods keep the cluster default,
+    # a sidecar or extra container of yours may count on it.
+    dnsConfig: {}
     # The fetcher pods' own ServiceAccount, so that an identity that may write the store (a
     # cloud role for the bucket, through annotations) is never the webapp's.
     serviceAccount:
@@ -670,6 +680,14 @@ security:
     readOnlyRootFilesystem: true
   # -- Mount the ServiceAccount token. The app never talks to the Kubernetes API.
   automountServiceAccountToken: false
+  # -- Hand every container the namespace's Services as Docker-style link variables
+  # (`<SERVICE>_SERVICE_HOST`, `<SERVICE>_PORT`, ..., Kubernetes' default). Off: SiVa reads none
+  # of them, and Spring's relaxed binding would otherwise read them as properties: a Service
+  # named `server` in the namespace sets `server.port` to `tcp://...` in every Spring Boot pod,
+  # and any Service whose name starts with `siva-` lands under `siva.*`; a namespace with many
+  # Services also costs every pod start that many variables. Applies to the webapp, the fetcher
+  # and the `helm test` pod alike.
+  enableServiceLinks: false
 
 # -- Size limit of the /tmp emptyDir (trust-list caches, a few tens of MB, and temp files); the
 # pod is evicted when it fills up, so keep headroom. Empty for no limit.

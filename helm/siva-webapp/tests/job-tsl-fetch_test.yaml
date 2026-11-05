@@ -47,6 +47,11 @@ tests:
       - equal:
           path: spec.template.spec.restartPolicy
           value: Never
+      - equal:
+          path: spec.template.spec.enableServiceLinks
+          value: false
+      - notExists:
+          path: spec.template.spec.dnsConfig
       - contains:
           path: spec.template.spec.containers[0].env
           content:
@@ -76,6 +81,32 @@ tests:
       - notEqual:
           path: metadata.name
           value: RELEASE-NAME-siva-webapp-tsl-fetch-29856fe6
+
+  - it: carries the fetcher's DNS settings and the service-links switch like the cronjob
+    template: job-tsl-fetch.yaml
+    set:
+      tsl:
+        mode: snapshot
+        snapshot:
+          persistentVolumeClaim:
+            create: true
+        fetcher:
+          dnsConfig:
+            options:
+              - name: ndots
+                value: "2"
+      security:
+        enableServiceLinks: true
+    asserts:
+      - equal:
+          path: spec.template.spec.dnsConfig.options[0].name
+          value: ndots
+      - equal:
+          path: spec.template.spec.dnsConfig.options[0].value
+          value: "2"
+      - equal:
+          path: spec.template.spec.enableServiceLinks
+          value: true
 
   - it: never gets the cronjob's TTL, a tracked Job would be recreated and re-run
     template: job-tsl-fetch.yaml

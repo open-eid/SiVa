@@ -43,6 +43,7 @@ spec:
       {{- end }}
       serviceAccountName: {{ include "siva-webapp.serviceAccountName" . }}
       automountServiceAccountToken: {{ .Values.security.automountServiceAccountToken }}
+      enableServiceLinks: {{ .Values.security.enableServiceLinks }}
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
       {{- with .Values.security.podSecurityContext }}
       securityContext:

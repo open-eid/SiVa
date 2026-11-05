@@ -146,7 +146,12 @@ extra containers, since a Job completes only when every container has exited. Th
 under the Pod Security "restricted" profile, so an extra container
 needs its own `securityContext` (no privilege escalation, all capabilities dropped, read-only
 root filesystem); with `network.networkPolicy.egress` on it also needs its own
-`additionalRules`.
+`additionalRules`. No pod gets the namespace's Services as link variables
+(`security.enableServiceLinks: false`; `<SERVICE>_SERVICE_HOST`, `<SERVICE>_PORT` and the rest,
+which Kubernetes injects by default): SiVa reads none of them, and Spring's relaxed binding
+would read them as properties, a Service named `server` setting `server.port` to `tcp://...`
+and any `siva-*` Service landing under `siva.*`. Switch it on only for an extra container that
+discovers Services that way.
 
 A change to `config.spring` or `config.files` rolls the pods: the pod template carries a
 `checksum/config` annotation over the rendered ConfigMap (the fetcher's template too, so the
@@ -361,6 +366,26 @@ thirty documents from the internet and should hold nothing else. The store holds
 backing up: a lost store is rebuilt by the next fetch, so leave the claim out of your backup
 scope.
 
+A fetch resolves some thirty public hostnames and nothing in the cluster but DNS itself, and
+under the cluster default `ndots:5` each name with fewer than five dots (`ec.europa.eu` has
+two) is first tried with every search domain appended (`<name>.<namespace>.svc.cluster.local`,
+`<name>.svc.cluster.local`, `<name>.cluster.local`, the node's own), one round trip to the
+cluster DNS each, before the name itself is asked. `tsl.fetcher.dnsConfig` is the pod's
+`dnsConfig`, rendered as given into the CronJob and the bootstrap Job; this sends every name
+with two dots or more straight out and leaves a one-word Service name on the search list:
+
+```yaml
+tsl:
+  fetcher:
+    dnsConfig:
+      options:
+        - name: ndots
+          value: "2"
+```
+
+The webapp pods keep the cluster default: a sidecar or an extra container of yours may count
+on it, and the AIA, OCSP and policy hosts a validation resolves are few per request.
+
 What a webapp pod fetches while validating comes with the document: missing issuer
 certificates from the AIA URLs the certificates carry, the signature policy from the URL a
 signature names, and OCSP responses for chains that reach a trusted-list anchor, the latter only
@@ -509,6 +534,7 @@ directory); edit the comments, not this table.
 | secrets.existingSecret | string | `""` | Name of an existing Secret, not created by the chart, mounted read-only at mountPath and imported as a Spring Boot config tree: every key is a file whose name is the property it sets (`siva.signature-service.pkcs12.password`), so secrets never enter the environment and need no placeholder in config.spring. The report-signing keystore goes in as a file too, its path set through config.spring. Read at startup: a changed Secret reaches SiVa with the next pod start (README, "Secrets"). |
 | secrets.mountPath | string | `"/etc/siva/secrets"` | Where the Secret is mounted, in the webapp and fetcher pods alike. |
 | security.automountServiceAccountToken | bool | `false` | Mount the ServiceAccount token. The app never talks to the Kubernetes API. |
+| security.enableServiceLinks | bool | `false` | Hand every container the namespace's Services as Docker-style link variables (`<SERVICE>_SERVICE_HOST`, `<SERVICE>_PORT`, ..., Kubernetes' default). Off: SiVa reads none of them, and Spring's relaxed binding would otherwise read them as properties: a Service named `server` in the namespace sets `server.port` to `tcp://...` in every Spring Boot pod, and any Service whose name starts with `siva-` lands under `siva.*`; a namespace with many Services also costs every pod start that many variables. Applies to the webapp, the fetcher and the `helm test` pod alike. |
 | security.podSecurityContext | object | runAsNonRoot, RuntimeDefault seccomp | Pod security context, written to pass Pod Security "restricted" together with securityContext below; overriding a field (or nulling it) relaxes the profile, which only a namespace labelled pod-security.kubernetes.io/enforce=restricted prevents. No runAsUser/runAsGroup: the buildpack image carries a numeric non-root USER (whatever CNB_USER_ID the builder used) and the launcher needs to run as exactly that uid to read /layers; pinning a uid here breaks launch when the image was built as another one. Set them only if your image has no numeric USER. Applies to the fetcher pod too; add `fsGroup` when your storage does not make the snapshot volume writable for the image's user. |
 | security.securityContext | object | no privilege escalation, drop ALL, read-only root | Container security context. The only writable path the app needs is /tmp (java.io.tmpdir: DSS and DigiDoc4J trust-list caches in online mode, temporary policy files; Paketo's certificate loader also copies the JVM truststore there when its layer is read-only) and it is an emptyDir; in snapshot mode the fetcher also writes the store. Logs go to stdout. |
 | service.annotations | object | `{}` | Service annotations. |
@@ -538,6 +564,7 @@ directory); edit the comments, not this table.
 | tsl.fetcher.activeDeadlineSeconds | int | `1800` | Seconds a fetch may run before it is killed (30 lists take a few minutes). |
 | tsl.fetcher.backoffLimit | int | `2` | Retries of a failed fetch within one schedule slot (a new pod each time), for a store that could not be written (exit 2) or was held by another fetch for the whole wait (exit 4). Not for a run that ended below the mandatory territories (exit 1) or published from a last copy because a download failed (exit 3): those fail the Job at once (podFailurePolicy), a retry seconds later changes nothing, and the cluster's KubeJobFailed-style alert then says so. |
 | tsl.fetcher.bootstrapJob | bool | `true` | Also run one fetch as a Job at install and whenever the fetcher pod changes (image, config), so a fresh install has a snapshot without waiting for the schedule. Named after a hash of the pod spec; the finished Job stays until the next change replaces it. |
+| tsl.fetcher.dnsConfig | object | `{}` | DNS settings of the fetcher pods (a Kubernetes PodDNSConfig: `options`, `searches`, `nameservers`), rendered as given; empty keeps the cluster's. A fetch resolves some thirty public list hosts and nothing in the cluster but DNS itself, and under the cluster default `ndots:5` each of those names (`ec.europa.eu` has two dots) is first tried with every search domain appended (`<name>.<namespace>.svc.cluster.local` and the rest, a round trip to the cluster DNS each) before the name itself. `options: [{name: ndots, value: "2"}]` sends a name with two dots or more straight out; a one-word Service name still goes through the search list (README, "Trust lists"). The webapp pods keep the cluster default, a sidecar or extra container of yours may count on it. |
 | tsl.fetcher.env | list | `[]` | Extra environment variables for the fetcher only; it already gets `env`, the ConfigMap and `runtime.javaToolOptions` (same profile and settings as the webapp, which is what makes its snapshot the one the webapp expects). |
 | tsl.fetcher.existingSecret | string | `""` | Secret mounted as a Spring config tree for the fetcher, like `secrets.existingSecret` for the webapp (same mountPath). The fetcher does not get the webapp's Secret: it parses thirty documents from the internet and should hold nothing but what that needs (truststore passwords, if you changed them), not the report-signing key's. Empty: no Secret. |
 | tsl.fetcher.extraVolumeMounts | list | `[]` | Extra mounts of the tsl-fetch container (VolumeMount entries), of volumes from `tsl.fetcher.extraVolumes` or the chart's own (`config`, `tmp`, `tsl-store`, `tsl-work`, `trust`, `secrets`). |

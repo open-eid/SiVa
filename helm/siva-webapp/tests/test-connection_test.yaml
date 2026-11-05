@@ -29,10 +29,21 @@ tests:
     asserts:
       - hasDocuments:
           count: 0
-  - it: runs under the restricted context with an explicit non-root uid and no token
+  - it: service links follow security.enableServiceLinks
+    set:
+      security:
+        enableServiceLinks: true
+    asserts:
+      - equal:
+          path: spec.enableServiceLinks
+          value: true
+  - it: runs under the restricted context with an explicit non-root uid, no token and no service links
     asserts:
       - equal:
           path: spec.automountServiceAccountToken
+          value: false
+      - equal:
+          path: spec.enableServiceLinks
           value: false
       - equal:
           path: spec.securityContext.runAsNonRoot

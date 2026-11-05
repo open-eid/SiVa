@@ -177,6 +177,10 @@ tsl:
       - name: EXAMPLE_FETCHER_FLAG
         value: "1"
     existingSecret: example-tsl-fetch-secrets
+    dnsConfig:
+      options:
+        - name: ndots
+          value: "2"
 monitoring:
   serviceMonitor:
     enabled: true

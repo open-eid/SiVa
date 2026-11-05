@@ -1,0 +1,14 @@
+# Snapshot mode, fetch period PT5M with grace PT1M: the shortest thresholds, every boundary within
+# minutes (thresholds in snapshot-pt5m.test.yaml).
+tsl:
+  mode: snapshot
+  snapshot:
+    persistentVolumeClaim:
+      create: true
+  fetcher:
+    period: PT5M
+monitoring:
+  prometheusRule:
+    enabled: true
+    tsl:
+      grace: PT1M

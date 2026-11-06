@@ -16,10 +16,12 @@
 
 package ee.openeid.validation.service.timemark;
 
-import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import ee.openeid.siva.validation.configuration.AIALoaderConfiguration;
+import ee.openeid.siva.validation.configuration.AIALoaderProperties;
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
+import ee.openeid.siva.validation.document.report.Reports;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
+import ee.openeid.siva.validation.validator.AIASourceFactory;
 import ee.openeid.tsl.TSLRefresher;
 import ee.openeid.tsl.TSLValidationJobFactory;
 import ee.openeid.tsl.configuration.TSLLoaderConfiguration;
@@ -28,42 +30,29 @@ import ee.openeid.validation.service.timemark.configuration.TimemarkContainerVal
 import ee.openeid.validation.service.timemark.signature.policy.BDOCConfigurationService;
 import ee.openeid.validation.service.timemark.signature.policy.BDOCSignaturePolicyService;
 import ee.openeid.validation.service.timemark.tsl.TimemarkTrustedListsCertificateSource;
-import eu.europa.esig.dss.model.x509.CertificateToken;
 import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
-import eu.europa.esig.dss.spi.DSSUtils;
 import eu.europa.esig.dss.spi.x509.aia.AIASource;
-import org.bouncycastle.asn1.x500.X500Name;
-import org.bouncycastle.asn1.x509.AccessDescription;
-import org.bouncycastle.asn1.x509.AuthorityInformationAccess;
-import org.bouncycastle.asn1.x509.Extension;
-import org.bouncycastle.asn1.x509.GeneralName;
-import org.bouncycastle.cert.jcajce.JcaX509v3CertificateBuilder;
-import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
-import org.digidoc4j.Configuration;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.system.CapturedOutput;
 import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.math.BigInteger;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Date;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.ok;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static ee.openeid.validation.service.timemark.BDOCTestUtils.buildValidationDocument;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith({SpringExtension.class, OutputCaptureExtension.class})
 @SpringBootTest(classes = {
@@ -84,48 +73,27 @@ import static org.hamcrest.Matchers.empty;
 @ActiveProfiles("test")
 class TimemarkAIASourceTest {
 
-    private static KeyPair keyPair;
+    private static final String CONTAINER_WITH_FILE_AIA_URL = "xades-signature-certificate-aia-url-file-dev-zero.bdoc";
 
+    @MockitoBean
+    private AIASourceFactory aiaSourceFactory;
     @Autowired
-    private BDOCConfigurationService bdocConfigurationService;
-
-    @BeforeAll
-    static void createIssuerCertificate() throws Exception {
-        KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
-        generator.initialize(2048);
-        keyPair = generator.generateKeyPair();
-    }
-
-    @RegisterExtension
-    static WireMockExtension wireMock = WireMockExtension.newInstance()
-            .options(wireMockConfig().dynamicPort())
-            .build();
+    private AIALoaderProperties aiaLoaderProperties;
+    @Autowired
+    private ProxyConfig proxyConfig;
+    @Autowired
+    private TimemarkContainerValidationService validationService;
 
     @Test
-    void aiaSource_WhenResponseExceedsMaxSize_StopsReading(CapturedOutput output) throws Exception {
-        wireMock.stubFor(get("/ca.crt.pem").willReturn(ok().withBody(new byte[1024 * 1024 + 1])));
+    void validateDocument_WhenCertificateAiaUrlIsFileUrl_DoesNotReadIt(CapturedOutput output) {
+        AIASource aiaSource = spy(new AIALoaderConfiguration().aiaSourceFactory(aiaLoaderProperties, proxyConfig).create());
+        when(aiaSourceFactory.create()).thenReturn(aiaSource);
 
-        assertThat(aiaSource().getCertificatesByAIA(certificate(wireMock.baseUrl() + "/ca.crt.pem")), empty());
-        assertThat(output.getAll(), containsString("Cannot fetch data limit=1048576"));
-    }
+        Reports reports = assertDoesNotThrow(
+                () -> validationService.validateDocument(buildValidationDocument(CONTAINER_WITH_FILE_AIA_URL)));
 
-    private AIASource aiaSource() {
-        Configuration configuration = bdocConfigurationService.loadPolicyConfiguration(null).getConfiguration();
-        return new org.digidoc4j.impl.AiaSourceFactory(configuration).create();
-    }
-
-    private static CertificateToken certificate(String caIssuersUrl) throws Exception {
-        X500Name name = new X500Name("CN=Test");
-        Instant now = Instant.now();
-        JcaX509v3CertificateBuilder builder = new JcaX509v3CertificateBuilder(
-                name, BigInteger.ONE, Date.from(now.minus(Duration.ofDays(1))), Date.from(now.plus(Duration.ofDays(1))),
-                name, keyPair.getPublic()
-        );
-        if (caIssuersUrl != null) {
-            builder.addExtension(Extension.authorityInfoAccess, false, new AuthorityInformationAccess(new AccessDescription(
-                    AccessDescription.id_ad_caIssuers, new GeneralName(GeneralName.uniformResourceIdentifier, caIssuersUrl))));
-        }
-        byte[] encoded = builder.build(new JcaContentSignerBuilder("SHA256withRSA").build(keyPair.getPrivate())).getEncoded();
-        return DSSUtils.loadCertificate(encoded);
+        verify(aiaSource, atLeastOnce()).getCertificatesByAIA(any());
+        assertThat(reports.getSimpleReport().getValidationConclusion().getSignaturesCount(), is(1));
+        assertThat(output.getAll(), not(containsString("Unable to retrieve AIA certificates with URL 'file:///dev/zero'")));
     }
 }

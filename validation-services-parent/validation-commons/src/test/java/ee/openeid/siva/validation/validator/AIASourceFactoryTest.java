@@ -49,9 +49,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.ok;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
@@ -59,6 +63,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.sameInstance;
+import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 
 class AIASourceFactoryTest {
 
@@ -138,6 +143,38 @@ class AIASourceFactoryTest {
         AIASource aiaSource = createFactory(HTTP_AND_HTTPS, issuerCertificate.length, Duration.ofMillis(200)).create();
 
         assertThat(aiaSource.getCertificatesByAIA(certificate(baseUrl + "/slow/issuer.crt.pem")), empty());
+    }
+
+    @Test
+    void getCertificatesByAIA_WhenServerAnswersRetryAfter_DoesNotWaitOrRetry() throws Exception {
+        stubFor(get("/busy").willReturn(aResponse().withStatus(503).withHeader("Retry-After", "30")));
+        AIASource aiaSource = createFactory(HTTP_AND_HTTPS, issuerCertificate.length, READ_TIMEOUT).create();
+        CertificateToken certificate = certificate(baseUrl + "/busy");
+
+        Set<CertificateToken> certificates = assertTimeoutPreemptively(Duration.ofSeconds(5),
+                () -> aiaSource.getCertificatesByAIA(certificate));
+
+        assertThat(certificates, empty());
+        verify(1, getRequestedFor(urlEqualTo("/busy")));
+    }
+
+    @Test
+    void getCertificatesByAIA_WhenRedirectedToHttpUrl_FollowsRedirect() throws Exception {
+        stubFor(get("/moved").willReturn(aResponse().withStatus(302).withHeader("Location", baseUrl + "/issuer.crt.pem")));
+        stubFor(get("/issuer.crt.pem").willReturn(ok().withBody(issuerCertificate)));
+        AIASource aiaSource = createFactory(HTTP_AND_HTTPS, issuerCertificate.length, READ_TIMEOUT).create();
+
+        assertThat(aiaSource.getCertificatesByAIA(certificate(baseUrl + "/moved")), hasSize(1));
+    }
+
+    @Test
+    void getCertificatesByAIA_WhenRedirectedToFileUrl_ReturnsEmpty(@TempDir Path tempDir) throws Exception {
+        String fileUrl = writeIssuerFile(tempDir);
+        stubFor(get("/redirect").willReturn(aResponse().withStatus(302).withHeader("Location", fileUrl)));
+        AIASource aiaSource = createFactory(HTTP_AND_HTTPS, issuerCertificate.length, READ_TIMEOUT).create();
+
+        assertThat(aiaSource.getCertificatesByAIA(certificate(baseUrl + "/redirect")), empty());
+        verify(1, getRequestedFor(urlEqualTo("/redirect")));
     }
 
     private static String writeIssuerFile(Path directory) throws Exception {

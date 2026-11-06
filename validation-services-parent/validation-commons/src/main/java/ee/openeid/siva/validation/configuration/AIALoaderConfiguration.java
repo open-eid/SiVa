@@ -21,6 +21,8 @@ import ee.openeid.siva.validation.validator.MaxSizeHttpClientResponseHandler;
 import eu.europa.esig.dss.service.http.commons.CommonsDataLoader;
 import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
 import eu.europa.esig.dss.spi.x509.aia.DefaultAIASource;
+import org.apache.hc.client5.http.impl.DefaultHttpRequestRetryStrategy;
+import org.apache.hc.core5.util.TimeValue;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,6 +40,7 @@ public class AIALoaderConfiguration {
             dataLoader.setTimeoutResponse(properties.readTimeoutMillis());
             dataLoader.setTimeoutSocket(properties.readTimeoutMillis());
             dataLoader.setHttpClientResponseHandler(new MaxSizeHttpClientResponseHandler(properties.maxResponseSizeBytes()));
+            dataLoader.setRetryStrategy(new DefaultHttpRequestRetryStrategy(0, TimeValue.ZERO_MILLISECONDS));
 
             DefaultAIASource aiaSource = new DefaultAIASource(dataLoader);
             aiaSource.setAcceptedProtocols(properties.getAcceptedProtocols());

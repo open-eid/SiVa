@@ -559,8 +559,8 @@ AIA settings apply to both the Generic and the TimeMark (BDOC) validator; signat
 
 | Property | Description |
 | -------- | ----------- |
-| **siva.externalResources.aia.acceptedProtocols** | Protocols allowed in AIA URLs. URLs with any other protocol are skipped without a request. Only HTTP and HTTPS should be used. <ul><li>Default: **HTTP, HTTPS**</li></ul> |
-| **siva.externalResources.aia.connectTimeout** | Timeout for establishing the connection. <ul><li>Default: **5s**</li></ul> |
+| **siva.externalResources.aia.acceptedProtocols** | Comma-separated list of protocols allowed in AIA URLs. Possible values: `HTTP`, `HTTPS`, `FTP`, `LDAP`, `FILE`. URLs with any other protocol are skipped without a request. Only HTTP and HTTPS should be used. Only the URL in the certificate is checked; redirects returned by the server are followed, also from HTTPS to HTTP. <ul><li>Default: **HTTP, HTTPS**</li></ul> |
+| **siva.externalResources.signaturePolicyDocument.acceptedProtocols** | Same as above, for signature policy documents. `LDAP` is not supported. Redirects are followed only to the same protocol. <ul><li>Default: **HTTP, HTTPS**</li></ul> |
 | **siva.externalResources.aia.readTimeout** | Maximum wait for the next data while reading the response. This is not a limit on the total download time. <ul><li>Default: **10s**</li></ul> |
 | **siva.externalResources.aia.maxResponseSize** | Maximum response size. Reading stops when the limit is exceeded and the certificate is not used. <ul><li>Default: **1MB**</li></ul> |
 | **siva.externalResources.signaturePolicyDocument.acceptedProtocols** | Same as above, for signature policy documents. <ul><li>Default: **HTTP, HTTPS**</li></ul> |
@@ -575,9 +575,10 @@ siva.externalResources.aia.readTimeout=5s
 ```
 
 !!! note
-    Always specify a unit (5s, 500ms, 512KB). Values without a unit are read as milliseconds or bytes.
-    Timeouts and sizes must be positive and at most 2147483647 milliseconds or bytes (about 24 days or 2 GB),
-    otherwise SiVa fails to start.
+    Timeouts take a whole number with a unit `ms`, `s`, `m`, `h` or `d` (for example `500ms`, `10s`), or an ISO-8601 duration (for example `PT10S`, `PT1.5S`). Decimals need the ISO-8601 form: `1.5s` is rejected.
+    Sizes take a whole number with an upper-case unit `B`, `KB`, `MB` or `GB` (for example `512KB`); 1KB is 1024 bytes.
+    A value without a unit is read as milliseconds or bytes.
+    Values must be positive and at most 2147483647 milliseconds (about 24.8 days) or 2147483647 bytes (one byte less than `2GB`), otherwise SiVa fails to start.
 
 !!! note
     For BDOC validation, these AIA settings replace the AIA-related settings in the digidoc4j configuration file.

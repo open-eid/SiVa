@@ -26,6 +26,7 @@ import ee.openeid.siva.validation.service.ValidationService;
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.siva.validation.service.signature.policy.InvalidPolicyException;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
+import ee.openeid.tsl.TrustedListsCertificateSourceHolder;
 import ee.openeid.tsl.configuration.AlwaysFailingCRLSource;
 import ee.openeid.validation.service.generic.validator.RevocationFreshnessValidator;
 import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
@@ -43,7 +44,6 @@ import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
 import eu.europa.esig.dss.spi.client.http.NativeHTTPDataLoader;
 import eu.europa.esig.dss.spi.exception.IllegalInputException;
 import eu.europa.esig.dss.spi.policy.SignaturePolicyProvider;
-import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.spi.validation.CommonCertificateVerifier;
 import eu.europa.esig.dss.spi.x509.aia.DefaultAIASource;
 import eu.europa.esig.dss.validation.SignedDocumentValidator;
@@ -51,7 +51,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.digidoc4j.impl.asic.xades.XadesValidationReportProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -66,12 +65,28 @@ public class GenericValidationService implements ValidationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(GenericValidationService.class);
     private static final ValidationLevel DEFAULT_VALIDATION_LEVEL = ValidationLevel.ARCHIVAL_DATA;
 
-    private TrustedListsCertificateSource trustedListsCertificateSource;
-    private ConstraintLoadingSignaturePolicyService signaturePolicyService;
-    private ReportConfigurationProperties reportConfigurationProperties;
-    private ProxyConfig proxyConfig;
-    private ContainerValidatorFactory containerValidatorFactory;
-    private OCSPSourceFactory ocspSourceFactory;
+    private final TrustedListsCertificateSourceHolder trustedListsCertificateSource;
+    private final ConstraintLoadingSignaturePolicyService signaturePolicyService;
+    private final ReportConfigurationProperties reportConfigurationProperties;
+    private final ProxyConfig proxyConfig;
+    private final ContainerValidatorFactory containerValidatorFactory;
+    private final OCSPSourceFactory ocspSourceFactory;
+
+    public GenericValidationService(
+            @Qualifier(GENERIC_TRUSTED_LISTS_CERTIFICATE_SOURCE_BEAN_NAME) TrustedListsCertificateSourceHolder trustedListsCertificateSource,
+            @Qualifier(GENERIC_POLICY_SERVICE_BEAN_NAME) ConstraintLoadingSignaturePolicyService signaturePolicyService,
+            ReportConfigurationProperties reportConfigurationProperties,
+            ProxyConfig proxyConfig,
+            ContainerValidatorFactory containerValidatorFactory,
+            OCSPSourceFactory ocspSourceFactory
+    ) {
+        this.trustedListsCertificateSource = trustedListsCertificateSource;
+        this.signaturePolicyService = signaturePolicyService;
+        this.reportConfigurationProperties = reportConfigurationProperties;
+        this.proxyConfig = proxyConfig;
+        this.containerValidatorFactory = containerValidatorFactory;
+        this.ocspSourceFactory = ocspSourceFactory;
+    }
 
     @Override
     public Reports validateDocument(ValidationDocument validationDocument) throws DSSException {
@@ -133,7 +148,9 @@ public class GenericValidationService implements ValidationService {
         CommonCertificateVerifier certificateVerifier = createCertificateVerifier();
         SignaturePolicyProvider signaturePolicyProvider = createSignaturePolicyProvider();
 
-        LOGGER.debug("Certificate pool size: {}", getCertificatePoolSize(certificateVerifier));
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Certificate pool size: {}", getCertificatePoolSize(certificateVerifier));
+        }
         validator.setCertificateVerifier(certificateVerifier);
         validator.setSignaturePolicyProvider(signaturePolicyProvider);
         validator.setValidationLevel(getValidationLevel(validationDocument));
@@ -167,7 +184,8 @@ public class GenericValidationService implements ValidationService {
 
     private CommonCertificateVerifier createCertificateVerifier() {
         CommonCertificateVerifier certificateVerifier = new CommonCertificateVerifier(true);
-        certificateVerifier.setTrustedCertSources(trustedListsCertificateSource);
+        // Resolved per request: the loader publishes a complete source after each refresh and never changes it.
+        certificateVerifier.setTrustedCertSources(trustedListsCertificateSource.current());
         certificateVerifier.setOcspSource(ocspSourceFactory.create());
         certificateVerifier.setCrlSource(new AlwaysFailingCRLSource());
 
@@ -211,35 +229,4 @@ public class GenericValidationService implements ValidationService {
         LOGGER.info("WsValidateDocument: end with exception");
     }
 
-    @Autowired
-    public void setProxyConfig(ProxyConfig proxyConfig){
-        this.proxyConfig = proxyConfig;
-    }
-
-    @Autowired
-    @Qualifier(value = GENERIC_POLICY_SERVICE_BEAN_NAME)
-    public void setSignaturePolicyService(ConstraintLoadingSignaturePolicyService signaturePolicyService) {
-        this.signaturePolicyService = signaturePolicyService;
-    }
-
-    @Autowired
-    @Qualifier(value = GENERIC_TRUSTED_LISTS_CERTIFICATE_SOURCE_BEAN_NAME)
-    public void setTrustedListsCertificateSource(TrustedListsCertificateSource trustedListsCertificateSource) {
-        this.trustedListsCertificateSource = trustedListsCertificateSource;
-    }
-
-    @Autowired
-    public void setReportConfigurationProperties(ReportConfigurationProperties reportConfigurationProperties) {
-        this.reportConfigurationProperties = reportConfigurationProperties;
-    }
-
-    @Autowired
-    public void setContainerValidatorFactory(ContainerValidatorFactory containerValidatorFactory) {
-        this.containerValidatorFactory = containerValidatorFactory;
-    }
-
-    @Autowired
-    public void setOcspSourceFactory(OCSPSourceFactory ocspSourceFactory) {
-        this.ocspSourceFactory = ocspSourceFactory;
-    }
 }

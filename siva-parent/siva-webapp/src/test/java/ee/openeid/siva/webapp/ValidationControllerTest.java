@@ -18,12 +18,14 @@ package ee.openeid.siva.webapp;
 
 import ee.openeid.siva.proxy.ContainerValidationProxy;
 import ee.openeid.siva.proxy.ProxyRequest;
+import ee.openeid.siva.proxy.ValidationObservations;
 import ee.openeid.siva.proxy.document.ProxyDocument;
 import ee.openeid.siva.proxy.validation.ZipMimetypeValidator;
 import ee.openeid.siva.statistics.StatisticsService;
 import ee.openeid.siva.validation.document.report.SimpleReport;
 import ee.openeid.siva.webapp.request.ValidationRequest;
 import ee.openeid.siva.webapp.transformer.ValidationRequestToProxyDocumentTransformer;
+import io.micrometer.observation.ObservationRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,6 +38,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.node.ObjectNode;
 
 import java.util.Map;
+import java.util.Set;
 
 import static ee.openeid.siva.webapp.utils.TestJsonUtils.toJsonBytes;
 import static ee.openeid.siva.webapp.utils.TestJsonUtils.toJsonNode;
@@ -62,7 +65,8 @@ class ValidationControllerTest {
     @BeforeEach
     public void setUp() {
         ValidationController validationController = new ValidationController();
-        ValidationProxySpy validationProxyServiceSpy = new ValidationProxySpy(statisticsService, applicationContext, environment, zipMimetypeValidator);
+        ValidationProxySpy validationProxyServiceSpy = new ValidationProxySpy(statisticsService, applicationContext, environment,
+                new ValidationObservations(ObservationRegistry.NOOP, Set.of()), zipMimetypeValidator);
         validationController.setContainerValidationProxy(validationProxyServiceSpy);
         validationController.setTransformer(transformerSpy);
         mockMvc = standaloneSetup(validationController).build();
@@ -193,8 +197,9 @@ class ValidationControllerTest {
                 StatisticsService statisticsService,
                 ApplicationContext applicationContext,
                 Environment environment,
+                ValidationObservations observations,
                 ZipMimetypeValidator zipMimetypeValidator) {
-            super(statisticsService, applicationContext, environment, zipMimetypeValidator);
+            super(statisticsService, applicationContext, environment, observations, zipMimetypeValidator);
         }
 
         @Override

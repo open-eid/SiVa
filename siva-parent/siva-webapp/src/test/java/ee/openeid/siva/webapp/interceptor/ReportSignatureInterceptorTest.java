@@ -22,6 +22,7 @@ import ee.openeid.siva.validation.document.report.ValidatedDocument;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.webapp.response.ValidationResponse;
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
+import io.micrometer.observation.ObservationRegistry;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -73,7 +74,8 @@ class ReportSignatureInterceptorTest {
         reportSignatureInterceptor = new ReportSignatureInterceptor(
                 jsonMapper,
                 signatureService,
-                properties
+                properties,
+                ObservationRegistry.NOOP
         );
     }
 

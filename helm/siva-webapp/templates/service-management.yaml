@@ -1,0 +1,20 @@
+{{- if include "siva-webapp.managementSplit" . }}
+# The actuator (health, probes, Prometheus metrics) on its own in-cluster Service: never a
+# NodePort, never behind the Ingresses. Scrape and check health here.
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "siva-webapp.fullname" . }}-management
+  labels:
+    {{- include "siva-webapp.labels" . | nindent 4 }}
+    app.kubernetes.io/component: management
+spec:
+  type: ClusterIP
+  ports:
+    - name: management
+      port: {{ .Values.runtime.managementPort }}
+      targetPort: management
+      protocol: TCP
+  selector:
+    {{- include "siva-webapp.selectorLabels" . | nindent 4 }}
+{{- end }}

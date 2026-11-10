@@ -16,17 +16,24 @@
 
 package ee.openeid.validation.service.generic;
 
+import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.Datafile;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.document.report.Reports;
 import ee.openeid.siva.validation.document.report.ValidationConclusion;
 import ee.openeid.siva.validation.exception.MalformedSignatureFileException;
 import ee.openeid.siva.validation.security.SecureSAXParsers;
+import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
+import ee.openeid.tsl.TrustedListsCertificateSourceHolder;
+import ee.openeid.validation.service.generic.validator.container.ContainerValidatorFactory;
+import ee.openeid.validation.service.generic.validator.ocsp.OCSPSourceFactory;
 import eu.europa.esig.dss.enumerations.DigestAlgorithm;
 import eu.europa.esig.dss.model.DSSDocument;
 import eu.europa.esig.dss.model.DigestDocument;
 import eu.europa.esig.dss.model.InMemoryDocument;
+import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
 import eu.europa.esig.dss.validation.SignedDocumentValidator;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -35,11 +42,26 @@ import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ee.openeid.validation.service.generic.GenericValidationConstants.GENERIC_POLICY_SERVICE_BEAN_NAME;
+import static ee.openeid.validation.service.generic.GenericValidationConstants.GENERIC_TRUSTED_LISTS_CERTIFICATE_SOURCE_BEAN_NAME;
+
 @Service
 public class HashcodeGenericValidationService extends GenericValidationService {
 
+    public HashcodeGenericValidationService(
+            @Qualifier(GENERIC_TRUSTED_LISTS_CERTIFICATE_SOURCE_BEAN_NAME) TrustedListsCertificateSourceHolder trustedListsCertificateSource,
+            @Qualifier(GENERIC_POLICY_SERVICE_BEAN_NAME) ConstraintLoadingSignaturePolicyService signaturePolicyService,
+            ReportConfigurationProperties reportConfigurationProperties,
+            ProxyConfig proxyConfig,
+            ContainerValidatorFactory containerValidatorFactory,
+            OCSPSourceFactory ocspSourceFactory
+    ) {
+        super(trustedListsCertificateSource, signaturePolicyService, reportConfigurationProperties, proxyConfig,
+                containerValidatorFactory, ocspSourceFactory);
+    }
+
     public Reports validate(List<ValidationDocument> validationDocuments) {
-        List<Reports> reports = validationDocuments.stream().map(validationDocument -> validateDocument(validationDocument)).collect(Collectors.toList());
+        List<Reports> reports = validationDocuments.stream().map(this::validateDocument).collect(Collectors.toList());
         return mergeReportsToOne(reports);
     }
 

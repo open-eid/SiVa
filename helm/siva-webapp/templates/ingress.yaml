@@ -1,0 +1,56 @@
+{{- $root := . -}}
+{{- $fullname := include "siva-webapp.fullname" . -}}
+{{- $port := .Values.service.port -}}
+{{- $edgeTimeout := include "siva-webapp.edgeTimeoutSeconds" . -}}
+{{- range .Values.network.ingresses }}
+{{- /* The two edge numbers as ingress-nginx annotations when asked; what annotations says wins. */ -}}
+{{- $edge := dict -}}
+{{- if eq (.edgeAnnotations | default "") "nginx" }}
+{{- $edge = dict "nginx.ingress.kubernetes.io/proxy-body-size" (printf "%dm" (int $root.Values.network.edge.maxBodyMiB))
+                "nginx.ingress.kubernetes.io/proxy-read-timeout" $edgeTimeout
+                "nginx.ingress.kubernetes.io/proxy-send-timeout" $edgeTimeout }}
+{{- end }}
+{{- $annotations := merge (dict) (.annotations | default dict) $edge }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ printf "%s-%s" $fullname .name | trunc 63 | trimSuffix "-" }}
+  labels:
+    {{- include "siva-webapp.labels" $root | nindent 4 }}
+  {{- with $annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- with .className }}
+  ingressClassName: {{ . }}
+  {{- end }}
+  {{- with .tls }}
+  tls:
+    {{- range . }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      {{- with .secretName }}
+      secretName: {{ . }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+  rules:
+    {{- range .hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType | default "Prefix" }}
+            backend:
+              service:
+                name: {{ $fullname }}
+                port:
+                  number: {{ $port }}
+          {{- end }}
+    {{- end }}
+{{- end }}

@@ -19,8 +19,8 @@ package ee.openeid.siva.signature;
 import ee.openeid.siva.signature.configuration.Pkcs12Properties;
 import ee.openeid.siva.signature.configuration.SignatureServiceConfigurationProperties;
 import ee.openeid.siva.signature.exception.SignatureServiceException;
+import ee.openeid.tsl.TrustedListsCertificateSourceHolder;
 import eu.europa.esig.dss.model.DSSException;
-import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,13 +48,13 @@ class AsiceWithXadesSignatureServiceTest {
         pkcs12Properties.setPath("classpath:sign_ECC_from_TEST_of_ESTEID2018.p12");
         pkcs12Properties.setPassword("1234");
         properties.setPkcs12(pkcs12Properties);
-        TrustedListsCertificateSource trustedListsCertificateSource = new TrustedListsCertificateSource();
+        TrustedListsCertificateSourceHolder trustedListsCertificateSource = new TrustedListsCertificateSourceHolder();
         asiceSignatureService = new AsiceWithXadesSignatureService(properties, trustedListsCertificateSource);
     }
 
     @Test
     void AsiceSignatureServiceNotConfiguredWithProperties_shouldThrowException() {
-        asiceSignatureService = new AsiceWithXadesSignatureService(null, new TrustedListsCertificateSource());
+        asiceSignatureService = new AsiceWithXadesSignatureService(null, new TrustedListsCertificateSourceHolder());
         byte[] dataToSign = "Hello".getBytes(StandardCharsets.UTF_8);
 
         SignatureServiceException caughtException = assertThrows(

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="SiVa"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+    <description>
+        PMD rules for SiVa main sources: PMD's quickstart set, minus the rules that existing code
+        contradicts on purpose. Exclusions below are the baseline for code that predates the gate;
+        new code is expected to pass the full set.
+    </description>
+    <rule ref="rulesets/java/quickstart.xml"/>
+</ruleset>

@@ -1,0 +1,25 @@
+{{- /* The PEM files given in trust.pem, and the binding's `type` file when the CA file also goes to the JVM. */ -}}
+{{- if and (include "siva-webapp.trustEnabled" .) .Values.trust.pem }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "siva-webapp.fullname" . }}-trust
+  labels:
+    {{- include "siva-webapp.labels" . | nindent 4 }}
+data:
+  {{- range $file, $content := .Values.trust.pem }}
+  {{ $file }}: |
+    {{- $content | nindent 4 }}
+  {{- end }}
+{{- end }}
+{{- if include "siva-webapp.trustBinding" . }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "siva-webapp.fullname" . }}-trust-binding
+  labels:
+    {{- include "siva-webapp.labels" . | nindent 4 }}
+data:
+  type: ca-certificates
+{{- end }}

@@ -1,0 +1,329 @@
+# promtool tests that hold for every variant: the trust-anchor rules, the request ratio, the OOM rule and
+# the selectors. Run with each <variant>.values.yaml rendered into rules.yaml, release siva-webapp in
+# namespace siva (pods siva-webapp-<replicaset>-<pod>).
+rule_files:
+  - rules.yaml
+evaluation_interval: 1m
+
+tests:
+  # A mandatory territory loses its anchors at 11m: pending for 15 minutes, then critical. A
+  # second, non-mandatory territory that keeps its anchors stays quiet.
+  - interval: 1m
+    input_series:
+      - series: 'siva_tsl_trust_anchors{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",loader="generic",territory="EE",mandatory="true"}'
+        values: '32x10 0x30'
+      - series: 'siva_tsl_trust_anchors{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",loader="generic",territory="LV",mandatory="false"}'
+        values: '32x40'
+    alert_rule_test:
+      - eval_time: 21m
+        alertname: SivaTslMandatoryTerritoryNotValidating
+        exp_alerts: []
+      - eval_time: 25m
+        alertname: SivaTslMandatoryTerritoryNotValidating
+        exp_alerts: []
+      - eval_time: 26m
+        alertname: SivaTslMandatoryTerritoryNotValidating
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              namespace: siva
+              pod: siva-webapp-7d9f8b6c4-x2k9p
+              loader: generic
+              territory: EE
+              mandatory: "true"
+            exp_annotations:
+              summary: "SiVa holds no trust anchors for mandatory territory EE (generic loader)"
+              description: "Signatures from EE cannot be validated as trusted and the pod is not ready. Its list is missing, expired or badly signed: check the tsl health detail and, in snapshot mode, the fetch Job's log."
+              runbook: "For 15 minutes the pod has held no trust anchor for a territory siva.tsl.loader.mandatoryTerritories names: it is not ready (health group tsl DOWN) and signatures from that territory validate as untrusted on it. First check: /monitoring/health on the management port (missingMandatoryTerritories lists them) and whether every pod shows the same territory. Usual cause: a code with no list in the LOTL SiVa reads (EE is EE_T under the test profile), its list expired or badly signed, or in snapshot mode a fetcher that could not publish (its Job fails with exit 1 and the cluster's failed-Job rule fires); a rollout then stalls on a new pod that never becomes ready while the old pods keep serving. Clears as soon as the pod holds anchors for the territory again (a corrected configuration rolled out, a new list fetched) or the pod is replaced."
+      - eval_time: 26m
+        alertname: SivaTslTerritoryNotValidating
+        exp_alerts: []
+
+  # A non-mandatory territory loses its anchors: warning only, never the critical rule.
+  - interval: 1m
+    input_series:
+      - series: 'siva_tsl_trust_anchors{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",loader="generic",territory="EE",mandatory="true"}'
+        values: '32x40'
+      - series: 'siva_tsl_trust_anchors{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",loader="generic",territory="LV",mandatory="false"}'
+        values: '32x10 0x30'
+    alert_rule_test:
+      - eval_time: 25m
+        alertname: SivaTslTerritoryNotValidating
+        exp_alerts: []
+      - eval_time: 26m
+        alertname: SivaTslTerritoryNotValidating
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              namespace: siva
+              pod: siva-webapp-7d9f8b6c4-x2k9p
+              loader: generic
+              territory: LV
+              mandatory: "false"
+            exp_annotations:
+              summary: "SiVa holds no trust anchors for territory LV (generic loader)"
+              description: "Signatures from LV validate as untrusted until its list loads again; other territories are unaffected."
+              runbook: "For 15 minutes the pod has held no trust anchor for a trusted, non-mandatory territory; it stays ready, and signatures from that territory validate as untrusted. First check: the tsl health detail on the management port and the fetch (or pod) log for the list's download or signature error. Usual cause: a territory code with no list in the LOTL, or a list the publisher let expire or signed with a key the LOTL does not name. Clears as soon as the pod holds anchors for it again; make the territory mandatory if its signatures must never validate as untrusted."
+      - eval_time: 26m
+        alertname: SivaTslMandatoryTerritoryNotValidating
+        exp_alerts: []
+
+  # A configured list SiVa has not parsed yet publishes NextUpdate as NaN: no expiry alert.
+  - interval: 1m
+    input_series:
+      - series: 'siva_tsl_next_update_timestamp_seconds{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",loader="generic",kind="tl",territory="LV"}'
+        values: 'NaN NaN NaN'
+    alert_rule_test:
+      - eval_time: 2m
+        alertname: SivaTslListExpiringSoon
+        exp_alerts: []
+      - eval_time: 2m
+        alertname: SivaTslListExpiring
+        exp_alerts: []
+
+  # Series of another namespace, another release or the fetcher's pods, all in the worst state
+  # (no anchors, lists expired at epoch 0): nothing fires. Snapshot and fetch selectors are tested
+  # with the thresholds, in the snapshot variants.
+  - interval: 1m
+    input_series:
+      - series: 'siva_tsl_trust_anchors{namespace="other",pod="siva-webapp-7d9f8b6c4-x2k9p",loader="generic",territory="EE",mandatory="true"}'
+        values: '0x30'
+      - series: 'siva_tsl_trust_anchors{namespace="siva",pod="siva-webapp-canary-5c6d7e8f9-q1w2e",loader="generic",territory="EE",mandatory="true"}'
+        values: '0x30'
+      - series: 'siva_tsl_trust_anchors{namespace="siva",pod="other-siva-webapp-7d9f8b6c4-x2k9p",loader="generic",territory="EE",mandatory="false"}'
+        values: '0x30'
+      - series: 'siva_tsl_trust_anchors{namespace="siva",pod="siva-webapp-tsl-fetch-29345678-ab1cd",loader="generic",territory="EE",mandatory="true"}'
+        values: '0x30'
+      - series: 'siva_tsl_next_update_timestamp_seconds{namespace="other",pod="siva-webapp-7d9f8b6c4-x2k9p",loader="generic",kind="tl",territory="EE"}'
+        values: '0x30'
+      - series: 'siva_tsl_next_update_timestamp_seconds{namespace="siva",pod="siva-webapp-canary-5c6d7e8f9-q1w2e",loader="generic",kind="lotl",territory="EU"}'
+        values: '0x30'
+    alert_rule_test:
+      - eval_time: 30m
+        alertname: SivaTslMandatoryTerritoryNotValidating
+        exp_alerts: []
+      - eval_time: 30m
+        alertname: SivaTslTerritoryNotValidating
+        exp_alerts: []
+      - eval_time: 30m
+        alertname: SivaTslListExpiringSoon
+        exp_alerts: []
+      - eval_time: 30m
+        alertname: SivaTslListExpiring
+        exp_alerts: []
+
+  # A client that only sends what SiVa answers 500, two requests a second, next to the kubelet's probes on
+  # two ready pods (six a minute each on /readyz and /livez): the ratio stands at 0.83, pending from the
+  # first rate at 1m and firing after the 10 minutes, at 11m. The alert carries no pod: the ratio is summed.
+  - interval: 1m
+    input_series:
+      - series: 'http_server_requests_seconds_count{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",method="POST",uri="/validateHashcode",status="500",outcome="SERVER_ERROR"}'
+        values: '0+120x25'
+      - series: 'http_server_requests_seconds_count{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",method="GET",uri="/readyz",status="200",outcome="SUCCESS"}'
+        values: '0+6x25'
+      - series: 'http_server_requests_seconds_count{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",method="GET",uri="/livez",status="200",outcome="SUCCESS"}'
+        values: '0+6x25'
+      - series: 'http_server_requests_seconds_count{namespace="siva",pod="siva-webapp-7d9f8b6c4-m4n7q",method="GET",uri="/readyz",status="200",outcome="SUCCESS"}'
+        values: '0+6x25'
+      - series: 'http_server_requests_seconds_count{namespace="siva",pod="siva-webapp-7d9f8b6c4-m4n7q",method="GET",uri="/livez",status="200",outcome="SUCCESS"}'
+        values: '0+6x25'
+    alert_rule_test:
+      # before the for clause runs out
+      - eval_time: 10m
+        alertname: SivaValidationErrorRate
+        exp_alerts: []
+      # at it
+      - eval_time: 11m
+        alertname: SivaValidationErrorRate
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+            exp_annotations:
+              summary: "SiVa 5xx ratio above 5 % for 10 minutes"
+              description: "More than 5 % of API requests fail with a 5xx; check the pod logs."
+              runbook: "More than 5 % of the requests the traffic port answered in the last 10 minutes were 5xx; the kubelet's probe requests (/readyz, /livez) count among them, so on a quiet instance a few failures are enough, and a pod that is not ready answers its probes 503, which count as failures. First check: split the ratio by pod and uri (sum by (pod, uri) (rate(http_server_requests_seconds_count{namespace=\"siva\",status=~\"5..\"}[10m]))) and read the pods' 'Unexpected error' lines, each with the request id the client got back. Usual cause: a client sending what the validation cannot process (a hashcode request whose signature file is not XAdES is answered 500), or one pod failing every request after a bad reload. Clears ten minutes after the last 5xx."
+
+  # The probe answers count. One pod that is not ready answers /readyz 503 (its liveness probe still passes)
+  # and nothing else happens on the instance: six 503 among 24 probe answers a minute is a ratio of 0.25,
+  # and the rule fires at 11m with no client request anywhere. A stalled rollout therefore pages twice.
+  - interval: 1m
+    input_series:
+      - series: 'http_server_requests_seconds_count{namespace="siva",pod="siva-webapp-6b8d4f9c7-r5t8z",method="GET",uri="/readyz",status="503",outcome="SERVER_ERROR"}'
+        values: '0+6x25'
+      - series: 'http_server_requests_seconds_count{namespace="siva",pod="siva-webapp-6b8d4f9c7-r5t8z",method="GET",uri="/livez",status="200",outcome="SUCCESS"}'
+        values: '0+6x25'
+      - series: 'http_server_requests_seconds_count{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",method="GET",uri="/readyz",status="200",outcome="SUCCESS"}'
+        values: '0+6x25'
+      - series: 'http_server_requests_seconds_count{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",method="GET",uri="/livez",status="200",outcome="SUCCESS"}'
+        values: '0+6x25'
+    alert_rule_test:
+      # before the for clause runs out
+      - eval_time: 10m
+        alertname: SivaValidationErrorRate
+        exp_alerts: []
+      # at it
+      - eval_time: 11m
+        alertname: SivaValidationErrorRate
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+            exp_annotations:
+              summary: "SiVa 5xx ratio above 5 % for 10 minutes"
+              description: "More than 5 % of API requests fail with a 5xx; check the pod logs."
+              runbook: "More than 5 % of the requests the traffic port answered in the last 10 minutes were 5xx; the kubelet's probe requests (/readyz, /livez) count among them, so on a quiet instance a few failures are enough, and a pod that is not ready answers its probes 503, which count as failures. First check: split the ratio by pod and uri (sum by (pod, uri) (rate(http_server_requests_seconds_count{namespace=\"siva\",status=~\"5..\"}[10m]))) and read the pods' 'Unexpected error' lines, each with the request id the client got back. Usual cause: a client sending what the validation cannot process (a hashcode request whose signature file is not XAdES is answered 500), or one pod failing every request after a bad reload. Clears ten minutes after the last 5xx."
+
+  # The same not-ready pod's 503 probe answers next to real traffic, 300 validations a minute answered 200
+  # on the ready pod: six 503 in 324 is below 5 %, nothing fires. The pod's /monitoring/health, polled once
+  # a second and answering 503 too, is the actuator's and does not count (it would make the ratio 0.17).
+  - interval: 1m
+    input_series:
+      - series: 'http_server_requests_seconds_count{namespace="siva",pod="siva-webapp-6b8d4f9c7-r5t8z",method="GET",uri="/readyz",status="503",outcome="SERVER_ERROR"}'
+        values: '0+6x25'
+      - series: 'http_server_requests_seconds_count{namespace="siva",pod="siva-webapp-6b8d4f9c7-r5t8z",method="GET",uri="/livez",status="200",outcome="SUCCESS"}'
+        values: '0+6x25'
+      - series: 'http_server_requests_seconds_count{namespace="siva",pod="siva-webapp-6b8d4f9c7-r5t8z",method="GET",uri="/monitoring/health",status="503",outcome="SERVER_ERROR"}'
+        values: '0+60x25'
+      - series: 'http_server_requests_seconds_count{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",method="GET",uri="/readyz",status="200",outcome="SUCCESS"}'
+        values: '0+6x25'
+      - series: 'http_server_requests_seconds_count{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",method="GET",uri="/livez",status="200",outcome="SUCCESS"}'
+        values: '0+6x25'
+      - series: 'http_server_requests_seconds_count{namespace="siva",pod="siva-webapp-7d9f8b6c4-x2k9p",method="POST",uri="/validate",status="200",outcome="SUCCESS"}'
+        values: '0+300x25'
+    alert_rule_test:
+      - eval_time: 11m
+        alertname: SivaValidationErrorRate
+        exp_alerts: []
+      - eval_time: 25m
+        alertname: SivaValidationErrorRate
+        exp_alerts: []
+
+  # A container the kernel killed: its last termination reason is OOMKilled and its restart count rose by
+  # one. The rule has no for clause: nothing at 0m, where the restart counter has one sample and no
+  # increase yet, and firing at the first evaluation after, 1m. Two pods it must not match: one whose last
+  # termination was an OOM kill long ago with no restart in the last 30 minutes, and one that restarted
+  # with reason Error (a JVM that refused to start is the cluster's crash-loop rule, not this one).
+  - interval: 1m
+    input_series:
+      - series: 'kube_pod_container_status_last_terminated_reason{namespace="siva",pod="siva-webapp-7c4b9f5fd6-b9dqs",container="siva-webapp",reason="OOMKilled"}'
+        values: '1x5'
+      - series: 'kube_pod_container_status_restarts_total{namespace="siva",pod="siva-webapp-7c4b9f5fd6-b9dqs",container="siva-webapp"}'
+        values: '0 1x4'
+      - series: 'kube_pod_container_status_last_terminated_reason{namespace="siva",pod="siva-webapp-7c4b9f5fd6-k2j8w",container="siva-webapp",reason="OOMKilled"}'
+        values: '1x5'
+      - series: 'kube_pod_container_status_restarts_total{namespace="siva",pod="siva-webapp-7c4b9f5fd6-k2j8w",container="siva-webapp"}'
+        values: '3x5'
+      - series: 'kube_pod_container_status_last_terminated_reason{namespace="siva",pod="siva-webapp-7c4b9f5fd6-p9h3d",container="siva-webapp",reason="Error"}'
+        values: '1x5'
+      - series: 'kube_pod_container_status_restarts_total{namespace="siva",pod="siva-webapp-7c4b9f5fd6-p9h3d",container="siva-webapp"}'
+        values: '0 1x4'
+    alert_rule_test:
+      # before the restart counter has an increase
+      - eval_time: 0m
+        alertname: SivaOomKilled
+        exp_alerts: []
+      # the first evaluation after
+      - eval_time: 1m
+        alertname: SivaOomKilled
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              namespace: siva
+              pod: siva-webapp-7c4b9f5fd6-b9dqs
+              container: siva-webapp
+              reason: OOMKilled
+            exp_annotations:
+              summary: "SiVa pod siva-webapp-7c4b9f5fd6-b9dqs was OOM-killed in the last 30 minutes"
+              description: "Raise resources.limits.memory (Paketo sizes the heap from it) or lower the thread count."
+              runbook: "The kernel killed the container because heap plus everything the JVM holds outside it (metaspace, thread stacks, code cache, GC structures) exceeded resources.limits.memory, and the requests in flight on it were lost. First check: kubectl -n siva describe pod <pod> (Last State OOMKilled, exit code 137) and the pod's memory before the kill in the cluster's Pod dashboard. Usual cause: a limit lowered below what the workload needs, more Tomcat threads than Paketo's memory calculator was told (BPL_JVM_THREAD_COUNT), or a large document under load. A limit below the calculator's fixed regions does not reach the kernel: the JVM refuses to start (exit 82, reason Error) and the cluster's crash-loop rule fires instead. Clears once the pod's last termination is no longer OOMKilled, that is with the next restart or replacement: raise the limit (the heap is sized from it) or lower the thread count and roll."
+      # and still, within the 30 minutes
+      - eval_time: 5m
+        alertname: SivaOomKilled
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              namespace: siva
+              pod: siva-webapp-7c4b9f5fd6-b9dqs
+              container: siva-webapp
+              reason: OOMKilled
+            exp_annotations:
+              summary: "SiVa pod siva-webapp-7c4b9f5fd6-b9dqs was OOM-killed in the last 30 minutes"
+              description: "Raise resources.limits.memory (Paketo sizes the heap from it) or lower the thread count."
+              runbook: "The kernel killed the container because heap plus everything the JVM holds outside it (metaspace, thread stacks, code cache, GC structures) exceeded resources.limits.memory, and the requests in flight on it were lost. First check: kubectl -n siva describe pod <pod> (Last State OOMKilled, exit code 137) and the pod's memory before the kill in the cluster's Pod dashboard. Usual cause: a limit lowered below what the workload needs, more Tomcat threads than Paketo's memory calculator was told (BPL_JVM_THREAD_COUNT), or a large document under load. A limit below the calculator's fixed regions does not reach the kernel: the JVM refuses to start (exit 82, reason Error) and the cluster's crash-loop rule fires instead. Clears once the pod's last termination is no longer OOMKilled, that is with the next restart or replacement: raise the limit (the heap is sized from it) or lower the thread count and roll."
+
+  # A rollout's new pod configured with two territories the LOTL does not carry, LV mandatory and LT not,
+  # next to EE with its anchors: both loaders publish 0 for LV and LT from the start. Pending for 15
+  # minutes, then both rules fire at the same evaluation, 15m, the mandatory one critical, the other
+  # warning, one alert per loader; EE stays quiet.
+  - interval: 1m
+    input_series:
+      - series: 'siva_tsl_trust_anchors{namespace="siva",pod="siva-webapp-6b8d4f9c7-r5t8z",loader="generic",territory="EE",mandatory="true"}'
+        values: '32x20'
+      - series: 'siva_tsl_trust_anchors{namespace="siva",pod="siva-webapp-6b8d4f9c7-r5t8z",loader="generic",territory="LV",mandatory="true"}'
+        values: '0x20'
+      - series: 'siva_tsl_trust_anchors{namespace="siva",pod="siva-webapp-6b8d4f9c7-r5t8z",loader="generic",territory="LT",mandatory="false"}'
+        values: '0x20'
+      - series: 'siva_tsl_trust_anchors{namespace="siva",pod="siva-webapp-6b8d4f9c7-r5t8z",loader="timemark",territory="EE",mandatory="true"}'
+        values: '32x20'
+      - series: 'siva_tsl_trust_anchors{namespace="siva",pod="siva-webapp-6b8d4f9c7-r5t8z",loader="timemark",territory="LV",mandatory="true"}'
+        values: '0x20'
+      - series: 'siva_tsl_trust_anchors{namespace="siva",pod="siva-webapp-6b8d4f9c7-r5t8z",loader="timemark",territory="LT",mandatory="false"}'
+        values: '0x20'
+    alert_rule_test:
+      # before the for clause runs out
+      - eval_time: 14m
+        alertname: SivaTslMandatoryTerritoryNotValidating
+        exp_alerts: []
+      - eval_time: 14m
+        alertname: SivaTslTerritoryNotValidating
+        exp_alerts: []
+      # at it: both rules from the same push
+      - eval_time: 15m
+        alertname: SivaTslMandatoryTerritoryNotValidating
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              namespace: siva
+              pod: siva-webapp-6b8d4f9c7-r5t8z
+              loader: generic
+              territory: LV
+              mandatory: "true"
+            exp_annotations:
+              summary: "SiVa holds no trust anchors for mandatory territory LV (generic loader)"
+              description: "Signatures from LV cannot be validated as trusted and the pod is not ready. Its list is missing, expired or badly signed: check the tsl health detail and, in snapshot mode, the fetch Job's log."
+              runbook: "For 15 minutes the pod has held no trust anchor for a territory siva.tsl.loader.mandatoryTerritories names: it is not ready (health group tsl DOWN) and signatures from that territory validate as untrusted on it. First check: /monitoring/health on the management port (missingMandatoryTerritories lists them) and whether every pod shows the same territory. Usual cause: a code with no list in the LOTL SiVa reads (EE is EE_T under the test profile), its list expired or badly signed, or in snapshot mode a fetcher that could not publish (its Job fails with exit 1 and the cluster's failed-Job rule fires); a rollout then stalls on a new pod that never becomes ready while the old pods keep serving. Clears as soon as the pod holds anchors for the territory again (a corrected configuration rolled out, a new list fetched) or the pod is replaced."
+          - exp_labels:
+              severity: critical
+              namespace: siva
+              pod: siva-webapp-6b8d4f9c7-r5t8z
+              loader: timemark
+              territory: LV
+              mandatory: "true"
+            exp_annotations:
+              summary: "SiVa holds no trust anchors for mandatory territory LV (timemark loader)"
+              description: "Signatures from LV cannot be validated as trusted and the pod is not ready. Its list is missing, expired or badly signed: check the tsl health detail and, in snapshot mode, the fetch Job's log."
+              runbook: "For 15 minutes the pod has held no trust anchor for a territory siva.tsl.loader.mandatoryTerritories names: it is not ready (health group tsl DOWN) and signatures from that territory validate as untrusted on it. First check: /monitoring/health on the management port (missingMandatoryTerritories lists them) and whether every pod shows the same territory. Usual cause: a code with no list in the LOTL SiVa reads (EE is EE_T under the test profile), its list expired or badly signed, or in snapshot mode a fetcher that could not publish (its Job fails with exit 1 and the cluster's failed-Job rule fires); a rollout then stalls on a new pod that never becomes ready while the old pods keep serving. Clears as soon as the pod holds anchors for the territory again (a corrected configuration rolled out, a new list fetched) or the pod is replaced."
+      - eval_time: 15m
+        alertname: SivaTslTerritoryNotValidating
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              namespace: siva
+              pod: siva-webapp-6b8d4f9c7-r5t8z
+              loader: generic
+              territory: LT
+              mandatory: "false"
+            exp_annotations:
+              summary: "SiVa holds no trust anchors for territory LT (generic loader)"
+              description: "Signatures from LT validate as untrusted until its list loads again; other territories are unaffected."
+              runbook: "For 15 minutes the pod has held no trust anchor for a trusted, non-mandatory territory; it stays ready, and signatures from that territory validate as untrusted. First check: the tsl health detail on the management port and the fetch (or pod) log for the list's download or signature error. Usual cause: a territory code with no list in the LOTL, or a list the publisher let expire or signed with a key the LOTL does not name. Clears as soon as the pod holds anchors for it again; make the territory mandatory if its signatures must never validate as untrusted."
+          - exp_labels:
+              severity: warning
+              namespace: siva
+              pod: siva-webapp-6b8d4f9c7-r5t8z
+              loader: timemark
+              territory: LT
+              mandatory: "false"
+            exp_annotations:
+              summary: "SiVa holds no trust anchors for territory LT (timemark loader)"
+              description: "Signatures from LT validate as untrusted until its list loads again; other territories are unaffected."
+              runbook: "For 15 minutes the pod has held no trust anchor for a trusted, non-mandatory territory; it stays ready, and signatures from that territory validate as untrusted. First check: the tsl health detail on the management port and the fetch (or pod) log for the list's download or signature error. Usual cause: a territory code with no list in the LOTL, or a list the publisher let expire or signed with a key the LOTL does not name. Clears as soon as the pod holds anchors for it again; make the territory mandatory if its signatures must never validate as untrusted."

@@ -23,3 +23,4 @@
 | 1.17               | 19.06.2024      | Jevgeni Krutov                                        | SOAP interface removed                                                        |
 | 1.18               | 10.12.2024      | Jevgeni Krutov, Heiti Tobi                            | Documented API changes related to validation of timestamps                    |
 | 1.19               | 30.01.2026      | Heiti Tobi                                            | Roadmap updated.                                                              |
+| 1.20               | 22.10.2026      | Rasmus Soot                                           | SIVA 3.11 documentation additions. Unknown `siva.*` keys now fail the start   |

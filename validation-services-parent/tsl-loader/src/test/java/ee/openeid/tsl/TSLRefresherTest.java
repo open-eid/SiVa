@@ -16,16 +16,21 @@
 
 package ee.openeid.tsl;
 
+import ee.openeid.tsl.fetcher.TSLSnapshotFetcher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.ObjectProvider;
 
 import java.util.Set;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class TSLRefresherTest {
@@ -35,12 +40,14 @@ class TSLRefresherTest {
     @Mock
     private TSLLoader tslLoader2;
 
+    @Mock
+    private ObjectProvider<TSLSnapshotFetcher> fetcher;
+
     private TSLRefresher tslRefresher;
 
     @BeforeEach
     void setUp() {
-        tslRefresher = new TSLRefresher();
-        tslRefresher.setLoaders(Set.of(tslLoader1, tslLoader2));
+        tslRefresher = new TSLRefresher(Set.of(tslLoader1, tslLoader2), fetcher);
     }
 
     @Test
@@ -49,6 +56,24 @@ class TSLRefresherTest {
 
         verify(tslLoader1).loadTSL();
         verify(tslLoader2).loadTSL();
+        verifyNoMoreInteractions(tslLoader1, tslLoader2);
+    }
+
+    @Test
+    void init_WhenTheFetcherIsPresent_LeavesTheRefreshToIt() {
+        when(fetcher.getIfAvailable()).thenReturn(mock(TSLSnapshotFetcher.class));
+
+        tslRefresher.init();
+
+        verifyNoInteractions(tslLoader1, tslLoader2);
+    }
+
+    @Test
+    void refreshChangedSnapshots_WhenTslLoadersSet_EveryLoaderChecksItsSnapshot() {
+        tslRefresher.refreshChangedSnapshots();
+
+        verify(tslLoader1).refreshIfSnapshotChanged();
+        verify(tslLoader2).refreshIfSnapshotChanged();
         verifyNoMoreInteractions(tslLoader1, tslLoader2);
     }
 

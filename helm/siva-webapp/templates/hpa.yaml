@@ -1,0 +1,43 @@
+{{- if .Values.scaling.hpa.enabled }}
+{{- with .Values.scaling.hpa }}
+{{- if gt (int .minReplicas) (int .maxReplicas) }}{{ fail "scaling.hpa.minReplicas must not exceed maxReplicas" }}{{ end }}
+{{- if not (or .targetCPUUtilizationPercentage .targetMemoryUtilizationPercentage .customMetrics) }}{{ fail "scaling.hpa needs at least one metric (targetCPUUtilizationPercentage, targetMemoryUtilizationPercentage or customMetrics)" }}{{ end }}
+{{- end }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "siva-webapp.fullname" . }}
+  labels:
+    {{- include "siva-webapp.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "siva-webapp.fullname" . }}
+  minReplicas: {{ .Values.scaling.hpa.minReplicas }}
+  maxReplicas: {{ .Values.scaling.hpa.maxReplicas }}
+  metrics:
+    {{- with .Values.scaling.hpa.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ . }}
+    {{- end }}
+    {{- with .Values.scaling.hpa.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ . }}
+    {{- end }}
+    {{- with .Values.scaling.hpa.customMetrics }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.scaling.hpa.behavior }}
+  behavior:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}

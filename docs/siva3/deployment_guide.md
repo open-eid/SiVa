@@ -4,13 +4,15 @@ The following guide is for system integrators who need to set-up, configure, man
 
 Following are the minimum requirements to build and deploy SiVa webapps as a service:
 
-* Java 11 or above is supported
-* Git version control system version 1.8 or above is recommended
+* Java 17 or above (the sources are compiled for Java 17; the Spring Boot version in `pom.xml`
+  sets the baseline, a JDK to build, a JRE to run)
+* Git, to get the sources
 * Minimum 2 GB of RAM. Recommended at least 4 GB of RAM
 * Minimum 1 processor core
-* Open internet connection
+* Open internet connection (the build downloads dependencies; the service downloads the trusted
+  lists unless they are provided as a [snapshot](#trust-list-snapshots))
 * 2GB of free disk space
-* Supported operating system is Ubuntu 16.04 LTS
+* Any operating system with that Java; the systemd unit below is for Linux
 
 # Building
 
@@ -59,162 +61,204 @@ The last lines of build output should look very similar to below image:
 
 # Deploying
 
-## OPTION 1 - starting webapps from command line
-SiVa project compiles **2 fat executable JAR** files that you can run after successfully building the
-project by issuing below commands:
-
-**First start the Siva webapp**
+## OPTION 1 - starting the webapp from command line
+The build produces one executable JAR, `siva-parent/siva-webapp/target/siva-webapp-X.X.X-exec.jar`
+(the Spring Boot repackaging with the `exec` classifier; the `siva-webapp-X.X.X.jar` next to it is the
+plain library jar and does not run). Start it with:
 
 ```bash
-./siva-parent/siva-webapp/target/siva-webapp-X.X.X.jar
+java -jar siva-parent/siva-webapp/target/siva-webapp-X.X.X-exec.jar
 ```
 
 The SiVa webapp by default runs on port **8080**.
-Easiest way to test out the deployment is to run SiVa demo application and use it for validation.
+Easiest way to test out the deployment is to run the SiVa demo application (its own project,
+SiVa-demo-application) and use it for validation.
 
-**Start the Demo webapp**
-
-```bash
-./siva-parent/siva-sample-application/target/siva-sample-application-X.X.X.jar
-```
-
-Now point Your browser to URL: <http://localhost:9000>
+SiVa writes no `etc` directory and no keystore at start. What it writes at run time: the
+trusted-list cache in `siva.tsl.loader.cacheDirectory` (the JVM's temporary directory, `java.io.tmpdir`,
+unless set), a temporary copy of the BDOC validation policy in `java.io.tmpdir`, and in the `tsl-fetch`
+profile the snapshot store (see [Trust-list snapshots](#trust-list-snapshots)). Trust material (the LOTL
+truststore or SSL bundle, the report-signing PKCS#12 or PKCS#11 token) is only read, from the paths the
+configuration names; replacing it needs no cleanup beyond a restart.
 
 
 ## OPTION 2 - running webapps as systemd services
 
-Maven build generates executable JAR files. This means web container and all its dependencies are package inside
-single JAR file. It makes a lot easier to deploy it into servers.
+On a Linux server the executable JAR runs as a `systemd` service: a unit that starts `java -jar` on
+it, as its own user, never as `root`. JVM options go on the `ExecStart` line before `-jar`,
+application properties after the JAR (or in an `application.properties` next to it, which
+Spring Boot reads from the working directory). Size the heap as a share of what the box gives
+SiVa, as the Helm chart sizes the JVM from the container's memory limit: `-XX:MaxRAMPercentage=75`
+leaves the rest for what the JVM holds outside the heap (metaspace, thread stacks, code cache),
+on the 2 GB minimum and the 4 GB recommendation alike. `-XX:+ExitOnOutOfMemoryError` ends the
+process on an exhausted heap instead of leaving it to limp, and `Restart=on-failure` starts it
+afresh. `SuccessExitStatus=143` makes the exit on `SIGTERM` a clean stop; `TimeoutStopSec` should
+cover the graceful shutdown (requests in flight finish first).
 
-Easiest option to setup SiVa is as `systemd` service in Ubuntu servers.
-
-For that we first need to create service file:
-```bash
-vim siva-webapp.service
-```
-
-Inside it, we need to paste below text. You need to change few things in service setup file.
-
-* First you **must not** run service as `root`. So it's strongly recommended to change line `User=root`
-* Second You can change Java JVM options by modifying the `JAVA_OPTS` inside the `siva-webapp.service` file.
-* Also, You can change the SiVa application configuration options by modifying `RUN_ARGS` section in file
+The service user owns nothing: the JAR is `root`'s, readable by the group; the directory is
+`root:siva` with mode `0750`. The `Protect*` and `Private*` directives keep the service to what it
+needs: the file system read-only but for the paths named in `ReadWritePaths=`, no home
+directories, no new privileges, and a `/tmp` of its own. `PrivateTmp=true` gives the trusted-list
+cache (in the JVM's temporary directory by default) a fresh directory on every start, so a start
+always downloads or loads the lists anew; name the directory `siva.tsl.loader.cacheDirectory` or
+the snapshot store (the `tsl-fetch` profile) points at in `ReadWritePaths=`, which is the one
+place the service writes outside its `/tmp`.
 
 ```ini
 [Unit]
 Description=siva-webapp
-After=syslog.target
+After=network-online.target
+Wants=network-online.target
 
 [Service]
-User=root
-ExecStart=/var/apps/siva-webapp.jar
-Environment=JAVA_OPTS=-Xmx320m RUN_ARGS=--server.port=80
+User=siva
+Group=siva
+WorkingDirectory=/var/apps/siva
+ExecStart=/usr/bin/java -XX:MaxRAMPercentage=75 -XX:+ExitOnOutOfMemoryError -jar /var/apps/siva/siva-webapp.jar --server.port=8080
 SuccessExitStatus=143
+TimeoutStopSec=60
+Restart=on-failure
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+# The trust-list cache or snapshot directory the configuration names, if any:
+# ReadWritePaths=/var/lib/siva
 
 [Install]
 WantedBy=multi-user.target
 ```
 
-Save and close the `siva-webapp.service` file.
-Next we need to move `siva-webapp-X.X.X.jar` into newly created `/var/apps` directory and rename to
-JAR file to `siva-webapp.jar`. match
-
-!!! note
-    The copied JAR filename must match option `ExecStart` in  `siva-webapp.service` file
+Put the JAR where the unit names it (the copied file name must match `ExecStart`), install the unit
+and start the service:
 
 ```bash
-sudo mkdir /var/apps
-sudo cp siva-parent/siva-webapp/target/executable/siva-webapp-X.X.X.jar /var/apps/siva-webapp.jar
+sudo useradd --system --home /var/apps/siva --shell /usr/sbin/nologin siva
+sudo mkdir -p /var/apps/siva
+sudo cp siva-parent/siva-webapp/target/siva-webapp-X.X.X-exec.jar /var/apps/siva/siva-webapp.jar
+sudo chown root:siva /var/apps/siva
+sudo chmod 0750 /var/apps/siva
+sudo chown root:root /var/apps/siva/siva-webapp.jar
+sudo chmod 0644 /var/apps/siva/siva-webapp.jar
+sudo cp siva-webapp.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now siva-webapp
 ```
 
-Next we need to copy the `siva-webapp.service` file into `/lib/systemd/system` directory.
-Then we are ready to start the `siva-webapp` service.
+`systemctl status siva-webapp` should show the service `active (running)` with one `java` process;
+`journalctl -u siva-webapp` is its log (see [Logging](#logging)), and
+`curl http://localhost:8080/monitoring/health` says when the trusted lists are loaded (see
+[Health Endpoint](#health-endpoint)). The service writes only to its private `/tmp` (unless
+`siva.tsl.loader.cacheDirectory` names another directory, or the snapshot store in the
+`tsl-fetch` profile does; those go in `ReadWritePaths=`), so the home directory needs no further
+permissions.
+
+## OPTION 3 - a WAR in an external servlet container
+
+Not covered by this guide. The default build produces no WAR; the `war` Maven profile
+(`./mvnw -Pwar package`) packages the webapp as one for a servlet container that provides the Servlet
+API of this Spring Boot version. The rest of this guide assumes the executable JAR, run directly or
+in the container image.
+
+
+## OPTION 4 - Kubernetes (Helm)
+
+A reference Helm chart ships with the sources in `helm/siva-webapp/`. Like the docker-compose
+file it is a reference, not a product: build the image yourself, override what your cluster
+needs, no support promise. Its README (`helm/siva-webapp/README.md`) documents every value.
+
+1. Build the image with the Spring Boot Maven plugin (Paketo buildpacks) and push it to a
+   registry your cluster can pull from:
+
+   ```bash
+   ./mvnw spring-boot:build-image -pl siva-parent/siva-webapp -DskipTests -Dspring-boot.build-image.imageName=<registry>/siva-webapp:<version>
+   docker push <registry>/siva-webapp:<version>
+   ```
+
+   Paketo's memory calculator sizes the JVM heap from the container's memory limit after
+   reserving a stack for each thread it assumes, `BPL_JVM_THREAD_COUNT` (250 by default). A
+   deployment that raises Tomcat's pool (`server.tomcat.threads.max`, 200 by default) above
+   that, as one whose validations wait on slow external responders may, sets
+   `BPL_JVM_THREAD_COUNT` to the same number and gives the container a memory limit that holds
+   the heap and every stack; otherwise the calculator does not account for the extra threads'
+   stacks. Each assumed thread takes 1 MB from the heap by default, and the calculator refuses
+   to start when the limit cannot hold what it reserves.
+
+2. Install, pointing the chart at the image:
+
+   ```bash
+   helm install siva ./helm/siva-webapp --namespace siva --create-namespace \
+     --set image.repository=<registry>/siva-webapp --set-string image.tag=<version>
+   kubectl -n siva rollout status deployment/siva-siva-webapp --timeout=15m
+   ```
+
+   The first start downloads the EU trust lists, which takes minutes; the startup probe budget
+   covers it. With `tsl.mode: snapshot` a CronJob downloads them instead and the pods load the
+   published snapshot in seconds (see [Trust-list snapshots](#trust-list-snapshots) and the
+   chart README). Pods run under the Pod Security "restricted" profile with a read-only root
+   filesystem. `helm install` prints how to reach the service for the chosen Service type
+   (in-cluster name, NodePort or LoadBalancer); the smoke tests below then apply to that
+   address instead of `localhost:8080`.
+
+3. Configure through values: `config.spring` takes the `siva.*` keys from this guide in
+   application.yml syntax (nested, kebab-case) as a Spring configuration override; the chart's
+   values schema rejects a key SiVa or Spring Boot does not declare. `config.files` mounts further
+   files beside it (a Logback configuration, a digidoc4j override), `env` takes environment
+   variables (relaxed binding), `secrets.existingSecret` mounts a Secret whose keys are read as
+   properties (passwords, the signing keystore), and `extraVolumes`, `extraVolumeMounts` and
+   `extraContainers` pass pod spec through for what the chart does not model (a log shipper,
+   for example). Ingress objects come from
+   `network.ingresses`; `network.edge` holds the two numbers the edge in front must match (a
+   27 MiB request body, the slowest validation as upstream timeout), printed by the install
+   notes and rendered as ingress-nginx annotations on request. The actuator, Prometheus
+   metrics included, is served on the management port (8081) through the in-cluster Service
+   `<release>-management`, never through the Ingress; the traffic port serves the three
+   documented monitoring URLs (`/monitoring/health`, `/monitoring/heartbeat`,
+   `/monitoring/version`, the same answers as on the management port) and the status-only
+   probes `/readyz` and `/livez`, which the kubelet and an external load balancer's health
+   check use.
+
+Optional objects, all off by default: HorizontalPodAutoscaler, NetworkPolicy, ServiceMonitor,
+PrometheusRule and a Grafana dashboard (`scaling.*`, `network.networkPolicy.*`,
+`monitoring.*`), and in snapshot mode the trust-list fetch CronJob, its bootstrap Job and the
+store claim or, for a store in a bucket, the rclone containers that mirror it (`tsl.*`). A
+PodDisruptionBudget is created once there is more than one replica.
+The trusted and mandatory countries are chart values (`tsl.territories.*`), so SiVa and the
+PrometheusRule use the same list; in snapshot mode `tsl.fetcher.period` sets the fetch schedule,
+the snapshot age limit and the alert thresholds together (see
+[Choosing the fetch period](#choosing-the-fetch-period)).
+
+### Test instance
+
+A test instance (SiVa-Test, the demo application) needs what the docker-compose file gives the
+webapp: SiVa's `test` Spring profile (the open-eid test trust list and truststore shipped in the
+jar), `TZ=Europe/Tallinn` and the Estonian T-level signature filter, and the monitoring
+endpoints on the API port because the system tests address both through one host:port. As an
+overlay:
+
+```yaml
+# test-values.yaml
+env:
+  - name: SPRING_PROFILES_ACTIVE
+    value: test
+  - name: TZ
+    value: Europe/Tallinn
+  - name: t-level-signature-filter.filter-type
+    value: NOT_ALLOWED_COUNTRIES
+  - name: t-level-signature-filter.countries
+    value: EE
+runtime:
+  managementPort: 8080
+```
 
 ```bash
-sudo cp siva-webapp.service /lib/systemd/system
-sudo systemctl start siva-webapp
+helm install siva ./helm/siva-webapp -f test-values.yaml \
+  --set image.repository=<registry>/siva-webapp --set-string image.tag=<version>
 ```
 
-Final step of setting up the `siva-webapp` service is to verify that service started correctly by issuing below
-command.
-
-```bash
-systemctl status siva-webapp
-```
-
-It should print out similar to below picture:
-
-```
-● siva-webapp.service - siva-webapp
-   Loaded: loaded (/lib/systemd/system/siva-webapp.service; disabled; vendor preset: enabled)
-   Active: active (running) since Thu 2016-07-21 08:48:14 EDT; 1 day 2h ago
- Main PID: 15965 (siva-webapp.jar)
-    Tasks: 34
-   Memory: 429.6M
-      CPU: 2min 5.721s
-   CGroup: /system.slice/siva-webapp.service
-           ├─15965 /bin/bash /var/apps/stage/siva-webapp.jar
-           └─15982 /usr/bin/java -Dsun.misc.URLClassPath.disableJarChecking=true -Xmx320m -jar /var/apps/stage/siva-webapp.jar
-
-Jul 20 03:00:01 siva siva-webapp.jar[15965]:         at eu.europa.esig.dss.tsl.service.TSLParser.getTslModel(TSLParser.java:143)
-Jul 20 03:00:01 siva siva-webapp.jar[15965]:         at eu.europa.esig.dss.tsl.service.TSLParser.call(TSLParser.java:129)
-Jul 20 03:00:01 siva siva-webapp.jar[15965]:         ... 5 common frames omitted
-Jul 20 03:00:01 siva siva-webapp.jar[15965]: 20.07.2016 03:00:01.450 INFO  [pool-3-thread-1] [e.e.e.dss.tsl.service.TSLRepository.sync
-Jul 20 03:00:01 siva siva-webapp.jar[15965]: 20.07.2016 03:00:01.450 INFO  [pool-3-thread-1] [e.e.e.dss.tsl.service.TSLRepository.sync
-```
-
-## OPTION 3  - deploy webapps as war files (Tomcat setup for legacy systems)
-
-> **NOTE 1**: Each SiVa service **must** be deployed to separate instance of Tomcat to avoid Java JAR library version
-> conflicts.
-
-> **NOTE 2**: To limit your webapp request size (this is set automatically when deploying service as jar) one needs to configure the container manually. For example, when using [Tomcat 8](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html) -
-the http connector parameter `maxPostSize` should be configured with the desired limit.
-
-> **NOTE 3**: The war file must be deployed to Tomcat ROOT.
-
-First we need to download Tomcat web servlet container as of the writing latest version available in version 8 branch is 8.5.24. We will download it with `wget`
-
-```bash
-wget http://www-eu.apache.org/dist/tomcat/tomcat-8/v8.5.24/bin/apache-tomcat-8.5.24.tar.gz
-```
-
-Unpack it somewhere:
-
-```bash
-tar xf apache-tomcat-8.5.24.tar.gz
-```
-
-Now we should build the WAR file. We have created helper script with all the correct Maven parameters.
-
-```bash
-./war-build.sh
-```
-
-Final steps would be copying built WAR file into Tomcat `webapps` directory and starting the servlet container.
-
-```bash
-cp siva-parent/siva-webapp/target/siva-webapp-X.X.X.war apache-tomcat-8.5.24/webapps
-./apache-tomcat-7.0.77/bin/catalina.sh run
-```
-
-> **IMPORTANT** siva-webapp on startup creates `etc` directory where it copies the TSL validation certificates
-> `siva-keystore.jks`. Default location for this directory is application root or `$CATALINA_HOME`. To change
-> this default behavior you should set environment variable `DSS_DATA_FOLDER`. 
-
-> **IMPORTANT** When updating the siva-keystore.jks it is needed to delete the "temp" keystore from default/specified location. 
-> Deleting the "temp" keystore is also needed when upgrading your deployment to newer SIVA version!
-
-## How-to set WAR deployed SiVa `application.properties`
-
-SiVa override properties can be set using `application.properties` file. The file can locate anywhere in the host system.
-To make properties file accessible for SiVa you need to create or edit `setenv.sh` placed inside `bin` directory.
-
-Contents of the `setenv.sh` file should look like:
-
-```bash
-export CATALINA_OPTS="-Dspring.config.location=file:/path/to/application.properties"
-```
-
+A number of SiVa-Test specifications need a trust list that mixes production and test anchors
+and is not published; they fail against this instance and against a production one alike,
+which is expected.
 
 ## Smoke testing your deployed system
 
@@ -250,6 +294,31 @@ For example, adding application.properties to classpath with the **logging.confi
 ```bash
 logging.config=/path/to/logback.xml
 ```
+
+## Request id
+
+Every request has one id for its log lines and its response. The webapp takes, in this order: an id an APM agent has already put in the MDC as `trace.id`; an `X-Request-ID` header the client or the edge sent, 1 to 64 characters from `A-Z a-z 0-9 . _ : / + = -` (anything else is ignored); the trace-id of an incoming W3C `traceparent` header. Without any of these it mints a 32-character hexadecimal id, which is a valid W3C trace-id. `X-Request-ID` wins over `traceparent` because the edge's id is the one in the edge's access log: ingress-nginx sets `X-Request-ID` from its `$req_id`, Gateway API implementations vary, so an edge that should own the id sets or overwrites `X-Request-ID` (a client's `traceparent` still passes through to the edge's own tracing). The response always carries the id as `X-Request-ID`, received or minted, so a client's ticket, the edge's access log and the service log join on one value. The id is logged and echoed as received, so it must not carry personal data: an opaque value, never a user or session identifier. The id is also the request attribute `requestId`, for Tomcat's access log (`%{requestId}r` in `server.tomcat.accesslog.pattern`).
+
+In the text output the id is printed between the thread and the logger name, through `logging.pattern.correlation` (`[%X{trace.id:-}] ` in the webapp's defaults), so one grep over the id gives the request's record; the structured formats (`logging.structured.format.console`) carry the same MDC entry as a field. A Logback configuration of your own prints the id where its pattern names `%X{trace.id}`. Upgrading: the text log layout gained the `[id] ` slot between the thread and the logger name; a parser that expects the previous layout gets it back with `logging.pattern.correlation=` (empty).
+
+## The stages of a request
+
+What SiVa did for a request, and against which trust-list state, is logged as one INFO line per finished stage under the logger `ee.openeid.siva.observation`: the stage's name, its duration, its keys and, if it failed, the exception type, inline in the message for the text output and as the nested member `observation` for the structured formats. The stages (Micrometer observations) are:
+
+| Stage | Keys |
+|-------|------|
+| `siva.validation` - the validation as a whole, one per `/validate` or `/validateHashcode` request | `request` (`container` or `hashcode`), `report.type` (the report type produced: `SIMPLE`, `DETAILED` or `DIAGNOSTIC`; `/validateHashcode` always produces `SIMPLE`), `container.type` (the vocabulary of `stats.type` under [Statistics](#statistics); absent on a failed validation, which has no report to read it from), `policy` (the requested signature policy, `default` when none), `signatures` and `valid.signatures` (the counts of the report) |
+| `siva.validation.service` - one line per validator run, inside the above (two for an ASiC-S container with a timestamp token: the token's validator and the data file's) | `validator` (`generic`, `timemarkContainer`, `timeStampToken` or `hashcodeGeneric`), `tsl.loader` (`generic` or `timemark`, the trusted-list loader that validator reads), `tsl.snapshot` and `tsl.anchors` (the loader's state when the stage started: the snapshot id it held, `none` when it refreshes online, and its number of trust anchors) |
+| `siva.report.sign` - signing the report, when [report signing](#validation-report-signature) is on | none |
+
+With the request id in front, a request's record reads:
+
+```text
+... INFO 31415 --- [nio-8080-exec-2] [ticket-4711] ee.openeid.siva.observation : siva.validation.service 1201ms tsl.anchors=4891 tsl.loader=generic tsl.snapshot=none validator=generic
+... INFO 31415 --- [nio-8080-exec-2] [ticket-4711] ee.openeid.siva.observation : siva.validation 1223ms container.type=PAdES policy=default report.type=SIMPLE request=container signatures=1 valid.signatures=0
+```
+
+Nothing in these lines names the file or the signer. `logging.level.ee.openeid.siva.observation=OFF` switches them off; the timers the same stages feed (see [Prometheus metrics endpoint](#prometheus-metrics-endpoint)) stay.
 
 # Statistics
 
@@ -317,6 +386,55 @@ The endpoint is implemented as a customized Spring boot [health endpoint](http:/
 Demo webapp and Siva webapp include additional information about the health of their dependent services.
 These links to dependent web services have been preconfigured. For example, the Demo webapp is preset to check whether the Siva webapp is accessible from the following url (parameter `siva.service.serviceHost` value)/monitoring/health.
 
+* **Trust lists**
+
+The `tsl` component reports, per trusted-list loader, the number of trust anchors, when the last refresh finished, the anchors per territory and, after an online refresh that had to serve a list from its last copy, `lastCopy` (territory, `EU` for the list of trusted lists, to the kind of failure: `UNREACHABLE`, `TIMED_OUT`, `TLS_FAILED` or `DOWNLOAD_FAILED`; the log's `using the last copy on disk` line carries the failure itself) (what the certificate source holds after DSS synchronized the lists it accepts, so a list whose re-download failed keeps counting as long as DSS keeps its anchors). It is DOWN until each loader has refreshed once and holds every mandatory territory (`siva.tsl.loader.mandatoryTerritories`, `EE` by default) with at least one anchor, naming the missing ones in `missingMandatoryTerritories`; other territories never decide the status, so one member state's list being unreachable does not take the service out of rotation. In snapshot mode (see [Trust-list snapshots](#trust-list-snapshots)) each loader also reports the `snapshot` id it loaded. The overall health and the heartbeat follow it. It is part of the `readiness` probe group (`/monitoring/health/readiness`), so a Kubernetes pod in that state receives no traffic.
+
+* **Status codes**
+
+The HTTP status code follows the overall status: `200` for `UP`, `503` for `DOWN` and `OUT_OF_SERVICE` (Spring Boot's default `management.endpoint.health.status.http-mapping`). This holds for the health endpoint, its groups, the probes and the heartbeat alike, so an automated check needs the status code only; the body is for people. An instance before its first trust-list load and one that lost a mandatory territory both answer `DOWN`; the `tsl` details tell them apart: a loader that has never refreshed has no `lastRefresh`, one that refreshed without the territory names it in `missingMandatoryTerritories`. A `DOWN` answer, shortened to the components that matter:
+
+```json
+{
+  "status": "DOWN",
+  "components": {
+    "tsl": {
+      "status": "DOWN",
+      "details": {
+        "generic": { "certificates": 0, "lastRefresh": "2026-11-03T01:00:00Z", "territories": {}, "missingMandatoryTerritories": ["EE"] },
+        "timemark": { "certificates": 0, "lastRefresh": "2026-11-03T01:00:00Z", "territories": {}, "missingMandatoryTerritories": ["EE"] }
+      }
+    },
+    "livenessState": { "status": "UP" },
+    "readinessState": { "status": "UP" }
+  }
+}
+```
+
+The health checks do no I/O of their own: the `tsl` indicator reads the state the last refresh published, so a probe never waits on a trust-list download and is safe to call every few seconds. An indicator added to the `readiness` group must keep that property. The `liveness` group holds only Spring's `livenessState` and depends on nothing outside the process.
+
+* **Probe paths on the application port**
+
+When the actuator runs on its own port (`management.server.port`), the `liveness` and `readiness` groups are also served on the application port as `/livez` and `/readyz` (`management.endpoint.health.probes.add-additional-paths`, on by default). They return the status only, nothing else, which makes them the right target for a load balancer's health check and for Kubernetes probes. Without a separate management port the groups stay under `/monitoring/health/liveness` and `/monitoring/health/readiness`.
+
+* **Monitoring URLs on the application port**
+
+The three monitoring URLs the [Interfaces section](../siva3/interfaces.md#service-health-monitoring) documents, `/monitoring/health` (its groups included), `/monitoring/heartbeat` and `/monitoring/version`, are public API and stay on the application port when the actuator moves to its own: the application serves them there from the same endpoints, with the same bodies, groups, detail settings and status codes as on the management port. The Prometheus endpoint does not follow; it is reachable on the management port only. An edge that should not expose the detailed health can still restrict `/monitoring/health` to its own network and leave `/monitoring/heartbeat` and `/monitoring/version` open.
+
+## Trust-list metrics
+
+The Prometheus endpoint (`/monitoring/prometheus`) carries the trust-list state of each loader (`generic`, `timemark`), refreshed whenever the loader reloads its lists:
+
+| Metric | Labels | Meaning |
+| ------ | ------ | ------- |
+| `siva_tsl_trust_anchors` | `loader`, `territory`, `mandatory` (`true`, `false`) | Trust anchors the loader holds for that country after DSS accepted its list, for every configured country (`siva.tsl.loader.trustedTerritories` and `mandatoryTerritories`). Zero means signatures from that country cannot be validated as trusted. |
+| `siva_tsl_next_update_timestamp_seconds` | `loader`, `kind` (`lotl`, `tl`), `territory` | The list's `NextUpdate` as Unix time: after it, the list counts as expired. For the LOTL every country depends on it. |
+| `siva_tsl_snapshot_created_timestamp_seconds` | `loader` | Snapshot mode only: when the loaded snapshot was published (`manifest.json` `createdAt`), so its age as the instance sees it, after any copy between the fetcher and the instance. |
+| `siva_tsl_list_downloaded_timestamp_seconds` | `loader`, `kind` (`lotl`, `tl`), `territory` | When the list was last really downloaded from its publisher (online: the cache file's modification time; snapshot mode: the manifest's `downloadedAt`). A list served from its last copy after a failed download keeps the earlier time, so the age of this value is how long the publisher has been out of reach. Not a number for a plain cache directory or a snapshot published by an older fetcher. |
+| `siva_tsl_refresh_period_seconds` | `loader` | The refresh period the instance runs on: `siva.tsl.loader.refreshPeriod` online, the fetcher's `siva.tsl.fetcher.period` from the manifest in snapshot mode. The thresholds below multiply it, so the rules repeat no period either. Not a number while unknown. |
+
+Because the series exist exactly for the configured countries and say which are mandatory, alerts need no list of their own: zero anchors with `mandatory="true"` is critical, with `mandatory="false"` a warning. Thresholds for list expiry, a list served from its last copy and snapshot age derive from the period the instance reports, as described under [Choosing the fetch period](#choosing-the-fetch-period); the Helm chart's PrometheusRule does exactly that, joining each threshold to the list series by instance and loader, so the same rules hold for a plain-cron deployment that sets the period properties.
+
 ## Heartbeat endpoint
 
 !!! note
@@ -325,7 +443,7 @@ These links to dependent web services have been preconfigured. For example, the 
 !!! note
     Note that this endpoint requires the health endpoint to be enabled and exposed in order to function.
 
-The url for accessing JSON formatted heartbeat information with HTTP GET is `/monitoring/heartbeat`. See the [Interfaces section](../siva3/interfaces.md#simplified-health-monitoring) for response structure and details.
+The url for accessing JSON formatted heartbeat information with HTTP GET is `/monitoring/heartbeat`. See the [Interfaces section](../siva3/interfaces.md#simplified-health-monitoring) for response structure and details. The HTTP status code follows the status (`200` for `UP`, `503` for `DOWN`, the health endpoint's mapping), so a load balancer's health check can use it.
 
 * **Enabling and exposing the heartbeat monitoring endpoint**
 
@@ -368,6 +486,14 @@ This endpoint is controlled by the following configuration parameter:
 ```bash
 management.endpoints.web.exposure.include=prometheus
 ```
+
+* **Request timers**
+
+The stages of a request (see [The stages of a request](#the-stages-of-a-request)) are timers on this endpoint: `siva_validation_seconds` with the labels `request`, `report_type` and `container_type`, `siva_validation_service_seconds` with `validator` and `tsl_loader`, and `siva_report_sign_seconds`, each as `_count`, `_sum` and `_max` with an `error` label (`none`, or the exception's simple name), plus the `_active_seconds` series of the requests in flight. The keys a client chooses or that are unbounded (the policy, the counts, the snapshot id) are in the log line only, never a label. Percentiles need the histogram buckets, which Spring Boot's switch adds:
+```bash
+management.metrics.distribution.percentiles-histogram.siva.validation=true
+```
+The setting applies to `siva_validation_seconds` and, by prefix, to `siva_validation_service_seconds`.
 
 # Validation Report Signature
 
@@ -441,6 +567,14 @@ siva.http.request.max-request-size-limit: 15MB
 
 See the reference list of all common [application properties](http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html) provided by Spring boot
 
+Since 3.11.0 a key under a `siva.*` prefix that SiVa does not declare fails the start, naming the
+key (`The elements [siva.tsl.loader.trusted-territoriez[0]] were left unbound`), so a typo cannot
+pass silently as a default; `siva.bdoc.*` is the exception. Spring's relaxed binding still
+accepts the kebab-case (`trusted-territories`), camelCase (`trustedTerritories`) and
+environment-variable (`SIVA_TSL_LOADER_TRUSTEDTERRITORIES`) spellings of every key, and the
+build ships the keys as Spring configuration metadata, so IDEs complete them. Before upgrading,
+remove or correct any `siva.*` key that this guide does not list; the start-up message names each one.
+
 ## Siva webapp parameters
 
 ### Updating TSL
@@ -448,27 +582,81 @@ See the reference list of all common [application properties](http://docs.spring
 | Property | Description |
 | -------- | ----------- |
 | **siva.tsl.loader.loadFromCache** | A boolean value that determines whether the TSL is loaded from disk cache instead of by downloading a new TSL in a predetermined interval.<br/><br/>Note that the cache files are by default stored in a system temporary folder (can be set with system property `java.io.tmpdir`; make sure the application has both read and write permissions in that folder).<ul><li>When set to **false**, the cache is refreshed periodically by SiVa in a predetermined interval specified by `siva.tsl.loader.schedulerCron` using `siva.tsl.loader.url`.</li><li>When set to **true**, SiVa uses existing cache as it's TSL. No direct polling for updates is performed, so all the files (LOTL and TSL files) must be present in system temporary directory. The cache files must have the same filenames as their URLs, but special characters need to be replaced with underscores. For example, the file downloaded from https://sr.riik.ee/tsl/estonian-tsl.xml must be named `https___sr_riik_ee_tsl_estonian_tsl_xml`</li><li>Default: **false**</li></ul> |
+| **siva.tsl.loader.cacheDirectory** | Directory of the disk cache the trusted lists are downloaded into, or read from with `loadFromCache`. <ul><li>Default: the JVM's temporary directory (`java.io.tmpdir`), as before</li></ul> |
+| **siva.tsl.loader.snapshotDirectory** | With `loadFromCache=true`: root of a snapshot store written by the trust-list fetcher (see [Trust-list snapshots](#trust-list-snapshots)). The file `current` in it names the snapshot under `snapshots/` to load; the loader reads that snapshot instead of `cacheDirectory`, checks `current` every `snapshotPollInterval` and loads the new snapshot when it changes. The `tsl` health component then shows the snapshot id per loader. <ul><li>Default: not set (plain cache directory)</li></ul> |
+| **siva.tsl.loader.snapshotMaxAge** | ISO-8601 duration. In snapshot mode, a snapshot whose `manifest.json` is older than this (or missing) is refused and the loaded state is kept, so a store that stopped being refreshed cannot feed a fresh instance lists older than the operator allows; an instance with nothing loaded stays not ready. The age is the manifest's own `createdAt`, written with the snapshot, so this is a staleness check and no defence against whoever can write the store. <ul><li>Default: not set (no age limit)</li></ul> |
+| **siva.tsl.loader.snapshotPollInterval** | ISO-8601 duration between checks of `current` in snapshot mode; the scheduled refresh (`schedulerCron`) stays as the safety net. Zero disables the checks. <ul><li>Default: **PT1M**</li></ul> |
 | **siva.tsl.loader.onlineCacheExpirationTime** | A string value in a [format based on ISO-8601 duration format PnDTnHnMn.nS](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/Duration.html#parse(java.lang.CharSequence)) that determines the expiration time of TSL disk cache in case `siva.tsl.loader.loadFromCache` is set to `false`. The default is 1 hour.<br/><br/>Note that the expiration time only determines, for each cached file, the minimum time that must have been passed since their last update before that file is considered expired and is susceptible to an update. The actual update is performed periodically by SiVa (specified by `siva.tsl.loader.schedulerCron`) or when the application is (re)started. <ul><li>Default: **PT1H**</li></ul> |
 | **siva.tsl.loader.url** | A url value that points to the external TSL <ul><li>Default: **https://ec.europa.eu/tools/lotl/eu-lotl.xml**</li></ul> |
 | **siva.tsl.loader.ojUrl** | A url value that points to the legal act in Official Journal of the European Union <ul><li>Default: **https://eur-lex.europa.eu/eli/C/2026/1944/oj**</li></ul> |
 | **siva.tsl.loader.lotlRootSchemeInfoUri** | A url value that points to the European Unions' disclaimer regarding LOTL <ul><li>Default: **https://ec.europa.eu/tools/lotl/eu-lotl-legalnotice.html**</li></ul> |
 | **siva.tsl.loader.code** | Sets the LOTL code in DSS <ul><li>Default: **EU**</li></ul> |
 | **siva.tsl.loader.trustedTerritories** | Sets the trusted territories by countries <ul><li>Default: **"AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "EL", "HU", "HR", "IE", "IS", "IT", "LT", "LU", "LV", "LI", "MT", "NO", "NL", "PL", "PT", "RO", "SE", "SI", "SK", "UK"**</li><li>If the property is not specified or has an empty value, the default trusted territories will be used</li><li>Values are case-sensitive. Country codes must be specified in uppercase format</li></ul> |
+| **siva.tsl.loader.mandatoryTerritories** | Territories (same codes as above) whose trusted list must be loaded with at least one trust anchor before the service reports itself ready (the `tsl` health component, see [Health Endpoint](#health-endpoint)). Any other trusted territory may be missing or stale without affecting readiness. Codes are case-sensitive and must be among `siva.tsl.loader.trustedTerritories` when that list is set (the loader logs a warning otherwise). <ul><li>Default: **"EE"** (the `test` profile uses **"EE_T"**, the scheme territory of the test trusted list)</li><li>Empty: any loaded trusted list is enough</li></ul> |
 | **siva.tsl.loader.schedulerCron** | A string in a [Crontab expression format](http://www.manpagez.com/man/5/crontab/) that defines the interval at which the TSL renewal process is started. The default is 03:00 every day (local time) <ul><li>Default: **0 0 3 \* * ?**</li></ul> |
+| **siva.tsl.loader.refreshPeriod** | ISO-8601 duration. In online mode, how often the lists are refreshed as `schedulerCron` means it, published as `siva_tsl_refresh_period_seconds` so that staleness alerts take the period from the instance; keep it in step with `schedulerCron`. Unused in snapshot mode, where the snapshot's manifest carries the fetcher's period. <ul><li>Default: **P1D**</li></ul> |
 | **siva.tsl.loader.sslTruststorePath** | Path to truststore containing trusted CA certificates used in HTTPS connection to retrieve member states TSLs. Requires *classpath:* prefix to load truststore from application classpath or *file:* prefix to load truststore from file system. <ul><li>Default: **classpath:tsl-ssl-truststore.p12**</li></ul> |
+| **siva.tsl.loader.sslBundle** | Name of a [Spring SSL bundle](https://docs.spring.io/spring-boot/reference/features/ssl.html) (`spring.ssl.bundle.pem.<name>.truststore.certificate=file:...`) whose trust store is used instead of `sslTruststorePath` for the HTTPS connections to the trust-list hosts: PEM files, no password, and with `spring.ssl.bundle.pem.<name>.reload-on-update=true` a changed file is picked up by the next download without a restart. Like `sslTruststorePath` it replaces the default trust, so the bundle must hold every CA the list hosts chain to. <ul><li>Default: not set (`sslTruststorePath` is used)</li></ul> |
 | **siva.tsl.loader.sslTruststoreType** | Truststore type <ul><li>Default: **PKCS12**</li></ul> |
 | **siva.tsl.loader.sslTruststorePassword** | Truststore password <ul><li>Default: **digidoc4j-password**</li></ul>  |
 | **siva.tsl.loader.LotlPivotSupportEnabled** | A boolean value that determines, whether LOTL pivot mode should be used or not <ul><li>Default: **true**</li></ul> |
 | **siva.tsl.loader.lotlTruststoreType** | Truststore type <ul><li>Default: **PKCS12**</li></ul> |
 | **siva.tsl.loader.lotlTruststorePath** | Truststore that contains public keys of trusted LOTL signers for LOTL signature validation. Requires *classpath:* prefix to load truststore from application classpath or *file:* prefix to load truststore from file system.<ul><li>Default: **classpath:lotl-truststore.p12**</li></ul> |
 | **siva.tsl.loader.lotlTruststorePassword** | Truststore password <ul><li>Default: **lotl-truststore-password**</li></ul> |
+| **siva.tsl.loader.lotlBundle** | Name of a Spring SSL bundle whose trust store holds the LOTL signer certificates, used instead of `lotlTruststorePath`; the certificates are read again before every refresh, so with `reload-on-update` a changed PEM file counts from the next refresh on. <ul><li>Default: not set (`lotlTruststorePath` is used)</li></ul> |
 
-!!! note
-    When updating the siva-keystore.jks it is needed to delete the "temp" keystore from default/specified location. Deleting the "temp" keystore is also needed when upgrading your deployment to newer SIVA version!
+What a refresh does (since 3.11.0): every refresh, the scheduled one and the one a new snapshot triggers, parses
+the lists into a fresh in-memory trust source and swaps it in when it is complete. Requests resolve the current
+source per call, so a validation never reads a source that is being refilled; a changed list takes effect for
+all requests at the swap. Earlier releases refilled the one source in place, and a request in flight during a
+refresh that changed a list could miss trust anchors (INDETERMINATE or TOTAL-FAILED for a valid signature) or fail
+with an internal error (open-eid/SiVa#6). Because every refresh parses all lists again, it takes seconds for the EU
+LOTL set, on the scheduler thread, with requests served from the previous source meanwhile; two sources exist in
+memory for that time.
 
 !!! note
     TSL is currently used only by Generic and BDOC validators
 
+
+### Trust-list snapshots
+
+Instead of every instance downloading the trusted lists itself, one process can download them and publish a snapshot that all instances load from disk: a Kubernetes CronJob with several replicas, or a cron entry next to a systemd service. The store is a directory: a shared volume, or a bucket that a sync tool mirrors into a local directory on each side (the Helm chart does that with rclone, `tsl.snapshot.sync`). The fetcher is the webapp itself in the `tsl-fetch` Spring profile: it starts without a listening port, refreshes the trusted lists online into `siva.tsl.loader.cacheDirectory` (keep that directory between runs: a list whose download fails keeps its last copy there), publishes the cache as `snapshots/<id>/` with a `manifest.json` under `siva.tsl.fetcher.outputDirectory`, points the file `current` at it and exits. When the lists end up below the readiness threshold (`siva.tsl.loader.mandatoryTerritories`), nothing is published, `current` keeps naming the last good snapshot and the exit code is non-zero. The exit code is the run's result for whatever schedules it: 0 every list downloaded and published; 1 below the threshold, nothing published; 2 the store could not be written; 3 published, but one or more lists came from their last copy because the download failed (the log's `using the last copy on disk` line names the list and the reason; the `tsl` health and the manifest list them under `lastCopy`); 4 another fetcher held the store for the whole wait, nothing downloaded or published. A copy is good until the list's own `NextUpdate`, but a fetch that did not fetch should fail as a job, so that the job's own monitoring sees it. One fetcher runs per store at a time: the run takes the lock file `fetch.lock` in the output directory before it downloads (the working cache and the staging directories are shared), waits up to ten minutes for a running fetch to release it, and takes over a lock older than an hour as left by a run that was killed.
+
+```bash
+java -jar siva-webapp-X.Y.Z-exec.jar --spring.profiles.include=tsl-fetch \
+  --siva.tsl.loader.cacheDirectory=/var/siva/tsl/work \
+  --siva.tsl.loader.onlineCacheExpirationTime=PT0S \
+  --siva.tsl.fetcher.outputDirectory=/var/siva/tsl \
+  --siva.tsl.fetcher.period=PT6H
+```
+
+Set `onlineCacheExpirationTime` to zero for the fetcher: a fetch is for downloading, and with the default of one hour a run that starts within an hour of the previous one would take the cached files without trying the publishers, which also leaves the download times it records an hour behind. `period` is what you scheduled the cron at.
+
+The instances run with `siva.tsl.loader.loadFromCache=true` and `siva.tsl.loader.snapshotDirectory=/var/siva/tsl` (read-only is enough), load the snapshot `current` names in seconds and follow `current` when it changes. A snapshot that comes out below the readiness threshold on an instance that is above it (a list that expired between fetch and load, a damaged file, another signer bundle) is rejected and the loaded one kept, with a warning naming the snapshot; the next published snapshot is tried as usual. Whoever can write the store can point the instances at any snapshot whose lists are still within their validity (a rollback or a freeze; a list cannot be forged, every instance verifies the signatures against the LOTL signers), so give write access to the fetcher only and mount it read-only everywhere else. `siva.tsl.loader.snapshotMaxAge`, a few fetch intervals, catches a fetcher that stopped running, not such a writer: the age it reads is the manifest's own. The fetcher and the instances must share the rest of the `siva.tsl.loader.*` settings (profile, `url`, `trustedTerritories`), or the instances look for lists the fetcher never downloaded. The manifest records the fetcher's `tsl` health at publication: per loader the anchor count, the territories, any missing mandatory ones and any list served from its last copy, exactly as an instance reports them after loading the same files; plus `period` (`siva.tsl.fetcher.period`, how often the fetcher runs), `downloadedAt` (per loader and territory, `EU` for the list of trusted lists, when each list was last really downloaded: the working cache file's modification time, which a copy served in place of a failed download leaves as it was) and `fileNames`, the files of the snapshot. The instances publish the first two as metrics, so staleness alerts can be sized from the instance (see [Trust-list metrics](#trust-list-metrics)); an instance refuses a snapshot whose directory lacks a file the manifest lists and tries again at the next poll, because a store copied object by object (through a bucket) can deliver `current` before the last file of the snapshot it names.
+
+| Property | Description |
+| -------- | ----------- |
+| **siva.tsl.fetcher.outputDirectory** | Root of the snapshot store (`current`, `snapshots/<id>/`). Required in the `tsl-fetch` profile. |
+| **siva.tsl.fetcher.keepSnapshots** | Snapshots kept besides the current one; older ones are deleted after each successful publish. <ul><li>Default: **3**</li></ul> |
+| **siva.tsl.fetcher.period** | ISO-8601 duration: how often the fetcher is scheduled to run. Written into the manifest and published by the instances as `siva_tsl_refresh_period_seconds`, the period the trust-list alerts size themselves from. Set it to your cron's period. <ul><li>Default: none (the instances report no period)</li></ul> |
+
+#### Choosing the fetch period
+
+How often the fetcher runs is the one choice the other staleness settings follow. What finally ends validation is a list's own `NextUpdate`: the EU LOTL and most member-state lists are valid for about six months from issue, some for three, and a list is reissued only when its content changes, so a production list can be weeks from expiry at any time. Once a list's `NextUpdate` has passed, SiVa stops treating that country's signatures as qualified (under POLv4 they fail) and, at the next reload, drops its trust anchors altogether. The fetch period has to be short against that, and the alerts have to watch it.
+
+Run the fetcher at least weekly; every six hours is the default. A monthly fetch is not supported: with lists running out within three months of issue it leaves too little time to notice and react. For a fetch period P, set the rest as follows (the Helm chart derives the schedule and the age limit from `tsl.fetcher.period` and passes it to the fetcher; with plain cron, set the schedule and `siva.tsl.loader.snapshotMaxAge` by hand and `siva.tsl.fetcher.period` to the cron's period). The alert thresholds are not settings: the instances publish the period as `siva_tsl_refresh_period_seconds` and the rules multiply it, so they follow a changed period on their own. A fetch run whose Job failed is the orchestrator's own alert (Kubernetes: a Failed Job; cron: a non-zero exit), see the exit codes above.
+
+| Setting | Rule | P = 6 h | P = 1 day | P = 7 days |
+| ------- | ---- | ------- | --------- | ---------- |
+| Fetch schedule | every P | `0 */6 * * *` | `0 3 * * *` | `0 3 * * 1` |
+| `siva.tsl.loader.snapshotMaxAge` | max(4P, 48 h) | PT48H | P4D | P28D |
+| Alert: a list served from its last copy (not downloaded) for | 2P + grace | 13 h | 49 h | 14 days 1 h |
+| Alert: snapshot loaded by an instance older than | 2P + grace | 13 h | 49 h | 14 days 1 h |
+| Warning: a configured country's list expires within | 2P + lead time | 7.5 days | 9 days | 21 days |
+| Critical: a configured country's list expires within | P + 1 day | 1.25 days | 2 days | 8 days |
+| Warning / critical: a configured country has no trust anchors | 15 minutes | | | |
+
+Grace defaults to one hour; when a sync tool copies the store between the fetcher and the instances (for example through object storage), add its interval. Online mode has no fetcher: there P is `siva.tsl.loader.refreshPeriod` (one day by default, the nightly reload) and only the list rows apply. Lead time defaults to seven days, the time you give yourself to react before a list expires. `snapshotMaxAge` is lenient on purpose: it only stops instances from loading an old snapshot, so a tight value turns a late fetch into instances that never become ready; the alerts are what catch staleness early. The metrics behind the alerts are described under [Trust-list metrics](#trust-list-metrics).
 
 ### TimeMark validation - customizing policies
 

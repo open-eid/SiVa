@@ -35,11 +35,9 @@ nav:
 - 7. ROADMAP: siva3/roadmap.md
 - 8. APPENDICES:
       - Appendix 1 - Validation Policy: siva3/appendix/validation_policy.md
-      - Appendix 2 - Test Case Descriptions: siva3/appendix/test_cases.md
       - Appendix 3 - Known Issues : siva3/appendix/known_issues.md
 - 9. SIVA 2.0 (Deprecated):
       - 9.1. DEFINITIONS: siva2/definitions.md
-      - 9.2. BACKGROUND: siva2/background.md
       - 9.3. STRUCTURE & ACTIVITIES:
            - 9.3.1 Component model: siva2/structure_and_activities.md
            - 9.3.2 Use cases: siva2/use_cases.md
@@ -58,7 +56,6 @@ nav:
            - Appendix 4 - Known Issues : siva2/appendix/known_issues.md
 - 10. SIVA 1.1 (Deprecated):
       - 10.1. DEFINITIONS: siva/definitions.md
-      - 10.2. BACKGROUND: siva/background.md
       - 10.3. STRUCTURE & ACTIVITIES:
             - 10.3.1 Component model: siva/v2/structure_and_activities.md
             - 10.3.2 Use cases: siva/v2/use_cases.md

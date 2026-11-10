@@ -18,6 +18,7 @@ package ee.openeid.validation.service.generic.configuration;
 
 import ee.openeid.siva.validation.service.signature.policy.ConstraintLoadingSignaturePolicyService;
 import ee.openeid.siva.validation.util.DistinguishedNameUtil;
+import ee.openeid.tsl.TrustedListsCertificateSourceHolder;
 import ee.openeid.tsl.annotation.LoadableTsl;
 import ee.openeid.tsl.configuration.AlwaysFailingOCSPSource;
 import ee.openeid.validation.service.generic.configuration.properties.GenericSignaturePolicyProperties;
@@ -40,7 +41,6 @@ import eu.europa.esig.dss.model.x509.CertificateToken;
 import eu.europa.esig.dss.service.SecureRandomNonceSource;
 import eu.europa.esig.dss.service.http.commons.OCSPDataLoader;
 import eu.europa.esig.dss.service.ocsp.OnlineOCSPSource;
-import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.spi.x509.revocation.ocsp.OCSPSource;
 import eu.europa.esig.dss.validation.reports.AbstractReports;
 import eu.europa.esig.dss.validation.reports.Reports;
@@ -69,8 +69,8 @@ public class GenericValidationServiceConfiguration {
 
     @LoadableTsl(name = GENERIC_TSL_NAME)
     @Bean(name = GENERIC_TRUSTED_LISTS_CERTIFICATE_SOURCE_BEAN_NAME)
-    public TrustedListsCertificateSource genericTrustedListsCertificateSource() {
-        return new TrustedListsCertificateSource();
+    public TrustedListsCertificateSourceHolder genericTrustedListsCertificateSource() {
+        return new TrustedListsCertificateSourceHolder();
     }
 
     @Bean

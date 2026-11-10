@@ -72,7 +72,7 @@ public class ContainerValidationProxy extends ValidationProxy {
     private static final String BDOC_FILE_TYPE = "BDOC";
     private static final String DDOC_FILE_TYPE = "DDOC";
     private static final String TIMESTAMP_EXTENSION = ".TST";
-    private static final String TIMEMARK_CONTAINER_SERVICE = "timemarkContainer";
+    static final String TIMEMARK_CONTAINER_SERVICE = "timemarkContainer";
     private static final String TIMESTAMP_TOKEN_SERVICE = "timeStampToken";
     private static final String DOCUMENT_FORMAT_NOT_RECOGNIZED = "Document format not recognized/handled";
 
@@ -82,8 +82,9 @@ public class ContainerValidationProxy extends ValidationProxy {
     public ContainerValidationProxy(StatisticsService statisticsService,
                                     ApplicationContext applicationContext,
                                     Environment environment,
+                                    ValidationObservations observations,
                                     ZipMimetypeValidator zipMimetypeValidator) {
-        super(statisticsService, applicationContext, environment);
+        super(statisticsService, applicationContext, environment, observations);
         this.zipMimetypeValidator = zipMimetypeValidator;
     }
 
@@ -92,8 +93,10 @@ public class ContainerValidationProxy extends ValidationProxy {
         Reports reports;
         SimpleReport report;
 
-        ValidationService validationService = getServiceForType(proxyRequest);
-        reports = validate(validationService, proxyRequest);
+        String validatorName = constructValidatorName(proxyRequest);
+        ValidationService validationService = getService(validatorName);
+        reports = validateWith(validatorName,
+                () -> validationService.validateDocument(createValidationDocument(proxyRequest)));
         report = chooseReport(reports, proxyRequest.getReportType());
         if (validationService instanceof TimeStampTokenValidationService) {
             Date validationTime = report.getValidationConclusion()
@@ -122,12 +125,14 @@ public class ContainerValidationProxy extends ValidationProxy {
     private SimpleReport generateDataFileReport(ProxyRequest proxyRequest, SimpleReport report, Date validationTime) {
         ProxyDocument proxyDocument = (ProxyDocument) proxyRequest;
         ProxyDocument dataFileProxyDocument = generateDataFileProxyDocument(proxyDocument);
-        ValidationService dataFileValidationService = getServiceForType(dataFileProxyDocument);
+        String dataFileValidatorName = constructValidatorName(dataFileProxyDocument);
+        ValidationService dataFileValidationService = getService(dataFileValidatorName);
         SimpleReport dataFileReport = null;
         try {
             ValidationDocument validationDocument = createValidationDocument(dataFileProxyDocument, validationTime);
             dataFileReport = chooseReport(
-                dataFileValidationService.validateDocument(validationDocument),
+                validateWith(dataFileValidatorName,
+                        () -> dataFileValidationService.validateDocument(validationDocument)),
                 proxyDocument.getReportType()
             );
             removeUnnecessaryWarning(dataFileReport.getValidationConclusion());
@@ -202,10 +207,6 @@ public class ContainerValidationProxy extends ValidationProxy {
         dataFileDocument.setSignaturePolicy(proxyDocument.getSignaturePolicy());
         dataFileDocument.setBytes(inMemoryDocument.getBytes());
         return dataFileDocument;
-    }
-
-    private Reports validate(ValidationService validationService, ProxyRequest proxyRequest) {
-        return validationService.validateDocument(createValidationDocument(proxyRequest));
     }
 
     private InMemoryDocument getDataFile(byte[] proxyDocument) {

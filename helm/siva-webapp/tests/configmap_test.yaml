@@ -1,0 +1,140 @@
+suite: configmap
+templates:
+  - configmap.yaml
+tests:
+  - it: renders an empty application.yml by default, nothing else
+    asserts:
+      - isKind:
+          of: ConfigMap
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-siva-webapp
+      - equal:
+          path: data
+          value:
+            application.yml: |
+              # Spring Boot configuration override from the chart's config.spring (release RELEASE-NAME).
+
+  - it: renders config.spring as application.yml
+    set:
+      config:
+        spring:
+          siva:
+            tsl:
+              loader:
+                trusted-territories: [EE, LV]
+          server:
+            tomcat:
+              mbeanregistry:
+                enabled: true
+    asserts:
+      - equal:
+          path: data["application.yml"]
+          value: |
+            # Spring Boot configuration override from the chart's config.spring (release RELEASE-NAME).
+            server:
+              tomcat:
+                mbeanregistry:
+                  enabled: true
+            siva:
+              tsl:
+                loader:
+                  trusted-territories:
+                  - EE
+                  - LV
+
+  - it: takes a nested key from --set
+    set:
+      config.spring.siva.http.request.max-request-size-limit: 30MB
+    asserts:
+      - matchRegex:
+          path: data["application.yml"]
+          pattern: "siva:\\n  http:\\n    request:\\n      max-request-size-limit: 30MB"
+
+  - it: renders config.files beside application.yml
+    set:
+      config:
+        files:
+          logback.xml: |
+            <configuration>
+              <include resource="org/springframework/boot/logging/logback/base.xml"/>
+            </configuration>
+          siva-digidoc4j.yaml: |
+            DIGIDOC_LOG4J_CONFIG: /dev/null
+    asserts:
+      - exists:
+          path: data["application.yml"]
+      - equal:
+          path: data["logback.xml"]
+          value: |
+            <configuration>
+              <include resource="org/springframework/boot/logging/logback/base.xml"/>
+            </configuration>
+      - equal:
+          path: data["siva-digidoc4j.yaml"]
+          value: |
+            DIGIDOC_LOG4J_CONFIG: /dev/null
+
+  - it: refuses a file named application.yml
+    set:
+      config:
+        files:
+          application.yml: "siva: {}"
+    asserts:
+      - failedTemplate:
+          errorPattern: "config.files: \"application.yml\" is not a usable file name"
+
+  - it: refuses a file name with a directory
+    set:
+      config:
+        files:
+          conf/logback.xml: "<configuration/>"
+    asserts:
+      - failedTemplate:
+          errorPattern: "config.files: \"conf/logback.xml\" is not a usable file name"
+
+  - it: refuses a config.spring key named like a secret, pointing at the Secret mechanism
+    set:
+      config:
+        spring:
+          siva:
+            signature-service:
+              pkcs12:
+                password: "hunter2"
+    asserts:
+      - failedTemplate:
+          errorPattern: config.spring.siva.signature-service.pkcs12.password names a secret .* secrets.existingSecret .* a file called siva.signature-service.pkcs12.password
+
+  - it: refuses the camelCase spelling of a secret-like key too
+    set:
+      config:
+        spring:
+          server:
+            ssl:
+              keyStorePassword: "x"
+    asserts:
+      - failedTemplate:
+          errorPattern: config.spring.server.ssl.keyStorePassword names a secret
+
+  - it: renders benign keys beside a secret-like one, and package names under logging.level
+    set:
+      config:
+        spring:
+          siva:
+            signature-service:
+              pkcs12:
+                path: /etc/siva/secrets/siva-signing.p12
+          server:
+            tomcat:
+              remoteip:
+                internal-proxies: 10\.0\.0\.1
+          logging:
+            level:
+              ee.openeid.some.token: DEBUG
+    asserts:
+      - matchRegex:
+          path: data["application.yml"]
+          pattern: "path: /etc/siva/secrets/siva-signing.p12"
+      - matchRegex:
+          path: data["application.yml"]
+          pattern: "ee.openeid.some.token: DEBUG"

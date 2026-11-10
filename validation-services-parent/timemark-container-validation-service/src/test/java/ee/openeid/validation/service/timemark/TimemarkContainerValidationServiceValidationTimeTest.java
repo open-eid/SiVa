@@ -19,9 +19,11 @@ package ee.openeid.validation.service.timemark;
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
 import ee.openeid.siva.validation.document.ValidationDocument;
 import ee.openeid.siva.validation.service.signature.policy.properties.ConstraintDefinedPolicy;
+import ee.openeid.tsl.TrustedListsCertificateSourceHolder;
 import ee.openeid.validation.service.timemark.report.TimemarkContainerValidationReportBuilder;
 import ee.openeid.validation.service.timemark.signature.policy.BDOCConfigurationService;
 import ee.openeid.validation.service.timemark.signature.policy.PolicyConfigurationWrapper;
+import ee.openeid.validation.service.timemark.tsl.TimemarkTrustedListsCertificateSource;
 import org.digidoc4j.ContainerBuilder;
 import org.digidoc4j.impl.asic.asice.bdoc.BDocContainer;
 import org.junit.jupiter.api.BeforeEach;
@@ -113,11 +115,9 @@ class TimemarkContainerValidationServiceValidationTimeTest {
     }
 
     private TimemarkContainerValidationService createValidationService() {
-        TimemarkContainerValidationService service = new TimemarkContainerValidationService();
-        service.setBdocConfigurationService(bDOCConfigurationService);
-        service.setReportConfigurationProperties(reportConfigurationProperties);
-        service.setTimemarkContainerValidationReportBuilderFactory(timemarkContainerValidationReportBuilderFactory);
-        return service;
+        return new TimemarkContainerValidationService(reportConfigurationProperties, bDOCConfigurationService,
+                timemarkContainerValidationReportBuilderFactory,
+                new TimemarkTrustedListsCertificateSource(new TrustedListsCertificateSourceHolder()));
     }
 
 }

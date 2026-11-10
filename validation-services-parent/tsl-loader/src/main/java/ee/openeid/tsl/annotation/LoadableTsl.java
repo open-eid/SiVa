@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 /**
  * A marker annotation for marking beans for {@link ee.openeid.tsl.configuration.TSLLoaderDefinitionRegisterer}.
  * <b>NB:</b> Each bean having this annotation is expected to be of type or subtype of
- * {@link eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource}.
+ * {@link ee.openeid.tsl.TrustedListsCertificateSourceHolder}.
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)

@@ -1,0 +1,88 @@
+suite: pod disruption budget
+templates:
+  - pdb.yaml
+tests:
+  - it: is not rendered with a single replica
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: is rendered with more than one replica, minAvailable 1, selecting the chart's pods
+    set:
+      replicaCount: 3
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: PodDisruptionBudget
+      - equal:
+          path: spec.minAvailable
+          value: 1
+      - notExists:
+          path: spec.maxUnavailable
+      - equal:
+          path: spec.selector.matchLabels
+          value:
+            app.kubernetes.io/name: siva-webapp
+            app.kubernetes.io/instance: RELEASE-NAME
+  - it: is rendered when the HPA is on with minReplicas above 1, not with minReplicas 1
+    set:
+      scaling:
+        hpa:
+          enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+  - it: is not rendered when the HPA may scale to one pod
+    set:
+      scaling:
+        hpa:
+          enabled: true
+          minReplicas: 1
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: treats maxUnavailable 0 as set
+    set:
+      replicaCount: 2
+      scaling:
+        pdb:
+          maxUnavailable: 0
+    asserts:
+      - equal:
+          path: spec.maxUnavailable
+          value: 0
+      - notExists:
+          path: spec.minAvailable
+  - it: uses maxUnavailable when given
+    set:
+      replicaCount: 2
+      scaling:
+        pdb:
+          maxUnavailable: 25%
+    asserts:
+      - equal:
+          path: spec.maxUnavailable
+          value: "25%"
+      - notExists:
+          path: spec.minAvailable
+  - it: can be disabled
+    set:
+      replicaCount: 2
+      scaling:
+        pdb:
+          enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: falls back to minAvailable when maxUnavailable is null
+    set:
+      replicaCount: 2
+      scaling:
+        pdb:
+          maxUnavailable: null
+    asserts:
+      - equal:
+          path: spec.minAvailable
+          value: 1
+      - notExists:
+          path: spec.maxUnavailable

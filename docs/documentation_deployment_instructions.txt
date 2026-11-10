@@ -1,42 +1,44 @@
-Our documentation is written using [MkDocs](http://www.mkdocs.org/) static documentation site generator with [Material theme](https://squidfunk.github.io/mkdocs-material/)  and [Markdown](https://daringfireball.net/projects/markdown/).
+Our documentation is written using [MkDocs](https://www.mkdocs.org/) static documentation site generator with [Material theme](https://squidfunk.github.io/mkdocs-material/) and [Markdown](https://daringfireball.net/projects/markdown/).
 
 System requirements
 -------------------
 
-* **Python 3** - currently used version is 3.10
-* **pip** - Python package manager
-* **Text Editor** - to edit Markdown documents (i.e [Haroopad](http://pad.haroopress.com/#))
+* **Python 3** (3.10 or newer; 3.14 is what the pinned versions were last built with)
+* **pip** and **venv** - both ship with Python 3
+* **Text editor** - to edit the Markdown files
 
 Installing required software
 -----------------
 
-### Ubuntu and Mac OS X
+The Python packages that build the site are pinned to exact versions in `docs/requirements.txt`:
+the full set MkDocs and the Material theme resolve to, generated from the two top-level pins in
+`docs/requirements.in` (the Markdown extensions `mkdocs.yml` names ship with Python-Markdown).
+Install them into a virtual environment, on any operating system:
 
-Both Ubuntu and Mac OS X come `python` already installed (the version depends on OS)
+```bash
+python3 -m venv .venv
+.venv/bin/pip install -r docs/requirements.txt
+```
 
-1.  Install `pip` on Ubuntu 18.04 `sudo apt-get install python-pip` on Mac OS X `sudo easy_install pip`
-2.  Install `mkdocs` using [pip](https://pip.pypa.io/en/stable/): `pip install mkdocs`
-3.  Install material theme `pip install mkdocs-material`
+On Windows the executables are under `.venv\Scripts\` instead of `.venv/bin/`.
 
-### Windows
-
-1. Install python. Download the installer from the official `python` homepage: <https://www.python.org/downloads/> and install
-> **NOTE:** Starting with version 2.7.9 and onwards `pip` ships along with python, so there shouldn't be any need to install `pip` separately.
-2. Install `mkdocs` using [pip](https://pip.pypa.io/en/stable/): `pip install mkdocs`
-3.  Install material theme `pip install mkdocs-material`
-
-PS! There can be a need to add the directory, were `mkdocs` and `mkdocs-material` were installed, manually to the PATH.
+Upgrading a pinned version: change `docs/requirements.in`, install it into a fresh virtual
+environment (`pip install -r docs/requirements.in`), run the strict build below, then regenerate
+`docs/requirements.txt` from that environment with `pip freeze` under the file's header; the site
+must build without warnings before the bump is committed.
 
 Editing content
 ---------------
 
-1.  Edit markdown files inside the `docs` directory
-2.  Preview Your changes by issuing `mkdocs serve` and navigating to <http://localhost:8000>
-3.  Commit and push Your changes to `git`
+1.  Edit the Markdown files inside the `docs` directory
+2.  Preview your changes with `.venv/bin/mkdocs serve` and navigate to <http://localhost:8000>
+3.  Build the site exactly as it will be published: `.venv/bin/mkdocs build --strict` (every warning, such
+    as a broken link or a `nav` entry without a file, fails the build; fix it before committing)
+4.  Commit and push your changes
 
-Deploying changes to GitHub pages
----------------------------------
+Deploying the site
+------------------
 
-1.  Generate the static site `mkdocs build`
-2.  Deploy the generated site to GitHub Pages: `mkdocs gh-deploy`
-3.  You are done and can go check the updated documentation at: <http://open-eid.github.io/SiVa>
+`mkdocs build --strict` writes the complete static site to `site/`. The publishing step is the
+maintainers': how that directory reaches the published documentation (a pages branch, a CI job, a web
+server) is theirs to run and is not described here.

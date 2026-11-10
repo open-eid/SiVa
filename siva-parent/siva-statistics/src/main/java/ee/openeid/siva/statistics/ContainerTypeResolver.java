@@ -27,7 +27,7 @@ import java.util.List;
 import static lombok.AccessLevel.PRIVATE;
 
 @NoArgsConstructor(access = PRIVATE)
-class ContainerTypeResolver {
+public class ContainerTypeResolver {
 
     private static final String PADES_SIGNATURE_FORMAT_PREFIX = "PAdES_";
     private static final String ASIC_E_SIGNATURE_FORM = "ASiC-E";
@@ -41,7 +41,7 @@ class ContainerTypeResolver {
 
     private static final String NA = "N/A";
 
-    static String resolveContainerType(ValidationConclusion validationConclusion) {
+    public static String resolveContainerType(ValidationConclusion validationConclusion) {
         return isPades(validationConclusion.getSignatures())
                 ? PADES_CONTAINER_TYPE
                 : resolveContainerTypeFromSignatureForm(validationConclusion.getSignatureForm());

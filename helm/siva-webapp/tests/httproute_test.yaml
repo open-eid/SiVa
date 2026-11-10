@@ -1,0 +1,144 @@
+suite: httproute
+templates:
+  - httproute.yaml
+tests:
+  - it: renders no HTTPRoute by default
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: renders one HTTPRoute per list entry with its parents, hostnames and path matches
+    set:
+      network:
+        httpRoutes:
+          - name: public
+            parentRefs:
+              - name: public-gateway
+                namespace: gateway-system
+                sectionName: https
+                port: 443
+            hostnames: [siva.example.invalid]
+            paths:
+              - path: /validate
+                type: Exact
+              - path: /monitoring
+            annotations:
+              example.invalid/note: "yes"
+            labels:
+              example.invalid/tier: public
+          - name: internal
+            parentRefs:
+              - name: internal-gateway
+    asserts:
+      - hasDocuments:
+          count: 2
+      - isKind:
+          of: HTTPRoute
+      - isAPIVersion:
+          of: gateway.networking.k8s.io/v1
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-siva-webapp-public
+        documentIndex: 0
+      - equal:
+          path: metadata.annotations["example.invalid/note"]
+          value: "yes"
+        documentIndex: 0
+      - equal:
+          path: metadata.labels["example.invalid/tier"]
+          value: public
+        documentIndex: 0
+      - equal:
+          path: spec.parentRefs
+          value:
+            - name: public-gateway
+              namespace: gateway-system
+              sectionName: https
+              port: 443
+        documentIndex: 0
+      - equal:
+          path: spec.hostnames
+          value: [siva.example.invalid]
+        documentIndex: 0
+      - equal:
+          path: spec.rules[0].matches
+          value:
+            - path:
+                type: Exact
+                value: /validate
+            - path:
+                type: PathPrefix
+                value: /monitoring
+        documentIndex: 0
+      - equal:
+          path: spec.rules[0].backendRefs
+          value:
+            - name: RELEASE-NAME-siva-webapp
+              port: 8080
+        documentIndex: 0
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-siva-webapp-internal
+        documentIndex: 1
+      - equal:
+          path: spec.parentRefs
+          value:
+            - name: internal-gateway
+        documentIndex: 1
+      - notExists:
+          path: spec.hostnames
+        documentIndex: 1
+      - equal:
+          path: spec.rules[0].matches
+          value:
+            - path:
+                type: PathPrefix
+                value: /
+        documentIndex: 1
+  - it: carries the edge timeout as the request timeout, the drain timeout when the edge number is 0
+    set:
+      network:
+        httpRoutes:
+          - name: public
+            parentRefs:
+              - name: public-gateway
+    asserts:
+      - equal:
+          path: spec.rules[0].timeouts.request
+          value: 30s
+  - it: carries an explicit edge timeout
+    set:
+      network:
+        edge:
+          timeoutSeconds: 180
+        httpRoutes:
+          - name: public
+            parentRefs:
+              - name: public-gateway
+    asserts:
+      - equal:
+          path: spec.rules[0].timeouts.request
+          value: 180s
+  - it: keeps the chart's labels when an entry's label has the same name
+    set:
+      network:
+        httpRoutes:
+          - name: public
+            parentRefs:
+              - name: public-gateway
+            labels:
+              app.kubernetes.io/name: mine
+              example.invalid/tier: public
+    asserts:
+      - equal:
+          path: metadata.labels["app.kubernetes.io/name"]
+          value: siva-webapp
+      - equal:
+          path: metadata.labels["example.invalid/tier"]
+          value: public
+  - it: refuses an entry without a parent Gateway
+    set:
+      network:
+        httpRoutes:
+          - name: public
+    asserts:
+      - failedTemplate: {}

@@ -20,6 +20,8 @@ import ee.openeid.siva.signature.SignatureService;
 import ee.openeid.siva.validation.document.report.DetailedReport;
 import ee.openeid.siva.webapp.response.ValidationResponse;
 import ee.openeid.siva.validation.configuration.ReportConfigurationProperties;
+import io.micrometer.observation.Observation;
+import io.micrometer.observation.ObservationRegistry;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.binary.Base64;
@@ -34,12 +36,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 import tools.jackson.databind.json.JsonMapper;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
 /**
  * Alters the response by creating a signature from the existing response's body and adding the signature into the body.
  */
 @RestControllerAdvice
 @RequiredArgsConstructor
 public class ReportSignatureInterceptor implements ResponseBodyAdvice<@NonNull Object> {
+
+    public static final String REPORT_SIGN_OBSERVATION = "siva.report.sign";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ReportSignatureInterceptor.class);
 
@@ -49,6 +56,7 @@ public class ReportSignatureInterceptor implements ResponseBodyAdvice<@NonNull O
 
     private final @NonNull ReportConfigurationProperties properties;
 
+    private final @NonNull ObservationRegistry observationRegistry;
 
     @Override
     public boolean supports(@NonNull MethodParameter returnType, @NonNull Class<? extends HttpMessageConverter<?>> converterType) {
@@ -67,12 +75,10 @@ public class ReportSignatureInterceptor implements ResponseBodyAdvice<@NonNull O
         if (properties.isReportSignatureEnabled()) {
             try {
                 if (responseObject instanceof ValidationResponse && ((ValidationResponse) responseObject).getValidationReport() instanceof DetailedReport) {
-                    LOGGER.debug("Starting to create report signature");
                     ValidationResponse validationResponse = (ValidationResponse) responseObject;
-                    String validationReportJsonString = jsonMapper.writeValueAsString(validationResponse.getValidationReport());
-                    byte[] reportSignatureBytes = signatureService.getSignature(validationReportJsonString.getBytes(), "validationReport.json", "application/json");
-                    validationResponse.setValidationReportSignature(Base64.encodeBase64String(reportSignatureBytes));
-                    LOGGER.debug("Finished creating report signature");
+                    // A stage of the request's record, timed and logged like the validation itself.
+                    Observation.createNotStarted(REPORT_SIGN_OBSERVATION, observationRegistry)
+                            .observeChecked(() -> sign(validationResponse));
                     return validationResponse;
                 }
             } catch (Exception e) {
@@ -81,6 +87,15 @@ public class ReportSignatureInterceptor implements ResponseBodyAdvice<@NonNull O
             }
         }
         return responseObject;
+    }
+
+    private void sign(ValidationResponse validationResponse) throws IOException {
+        LOGGER.debug("Starting to create report signature");
+        String validationReportJsonString = jsonMapper.writeValueAsString(validationResponse.getValidationReport());
+        byte[] reportSignatureBytes = signatureService.getSignature(
+                validationReportJsonString.getBytes(StandardCharsets.UTF_8), "validationReport.json", "application/json");
+        validationResponse.setValidationReportSignature(Base64.encodeBase64String(reportSignatureBytes));
+        LOGGER.debug("Finished creating report signature");
     }
 
 }

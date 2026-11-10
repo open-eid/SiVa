@@ -34,6 +34,8 @@ import org.springframework.core.env.Profiles;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 public abstract class ValidationProxy {
     static final Logger LOGGER = LoggerFactory.getLogger(ValidationProxy.class);
@@ -44,17 +46,21 @@ public abstract class ValidationProxy {
     private final StatisticsService statisticsService;
     private final ApplicationContext applicationContext;
     private final Environment environment;
+    private final ValidationObservations observations;
 
     @Autowired
-    protected ValidationProxy(StatisticsService statisticsService, ApplicationContext applicationContext, Environment environment) {
+    protected ValidationProxy(StatisticsService statisticsService, ApplicationContext applicationContext,
+                              Environment environment, ValidationObservations observations) {
         this.statisticsService = statisticsService;
         this.applicationContext = applicationContext;
         this.environment = environment;
+        this.observations = observations;
     }
 
     public SimpleReport validate(ProxyRequest proxyRequest) {
         long validationStartTime = System.nanoTime();
-        SimpleReport report = validateRequest(proxyRequest);
+        SimpleReport report = observations.validation(proxyRequest, reportType(proxyRequest),
+                () -> validateRequest(proxyRequest));
         long validationDuration = System.nanoTime() - validationStartTime;
 
         publishStatistics(report, validationDuration);
@@ -84,6 +90,11 @@ public abstract class ValidationProxy {
         simpleReport.getValidationConclusion().setValidationWarnings(warnings);
     }
 
+    // The report type the response carries: the one the request asks for, the simple report without one.
+    ReportType reportType(ProxyRequest proxyRequest) {
+        return Optional.ofNullable(proxyRequest.getReportType()).orElse(ReportType.SIMPLE);
+    }
+
     SimpleReport chooseReport(Reports reports, ReportType reportType) {
         if (reportType == null) {
             return reports.getSimpleReport();
@@ -101,8 +112,7 @@ public abstract class ValidationProxy {
         }
     }
 
-    ValidationService getServiceForType(ProxyRequest proxyRequest) {
-        String validatorName = constructValidatorName(proxyRequest);
+    ValidationService getService(String validatorName) {
         LOGGER.info("Validation service: {}", validatorName);
         try {
             return (ValidationService) applicationContext.getBean(validatorName);
@@ -110,6 +120,11 @@ public abstract class ValidationProxy {
             LOGGER.error("{} not found", validatorName, e);
             throw new ValidatonServiceNotFoundException(validatorName + " not found");
         }
+    }
+
+    // The service call is the stage whose record names the trust-list state it ran against.
+    Reports validateWith(String validatorName, Supplier<Reports> validation) {
+        return observations.service(validatorName, validation);
     }
 
     abstract String constructValidatorName(ProxyRequest proxyRequest);

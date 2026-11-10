@@ -4,4 +4,4 @@
 # The Markdown extensions mkdocs.yml names (codehilite, admonition, def_list) ship with
 # Python-Markdown, a dependency of mkdocs; the theme brings Pygments for codehilite.
 mkdocs==1.6.1
-mkdocs-material==9.7.7
+mkdocs-material==9.8.1

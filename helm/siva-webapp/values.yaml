@@ -749,7 +749,7 @@ tests:
     # -- Image of the test pod (needs wget).
     repository: busybox
     # -- Image tag.
-    tag: 1.37.0
+    tag: 1.38.0
     # -- Image digest (`sha256:<64 hex>`) to pin it by content, as `image.digest`; empty pulls
     # by tag.
     digest: ""

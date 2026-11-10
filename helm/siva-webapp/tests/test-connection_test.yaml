@@ -93,7 +93,7 @@ tests:
     asserts:
       - equal:
           path: spec.containers[0].image
-          value: busybox:1.37.0
+          value: busybox:1.38.0
   - it: pins the test image by digest
     set:
       tests:
@@ -102,4 +102,4 @@ tests:
     asserts:
       - equal:
           path: spec.containers[0].image
-          value: busybox:1.37.0@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+          value: busybox:1.38.0@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef

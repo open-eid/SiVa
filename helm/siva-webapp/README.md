@@ -556,7 +556,7 @@ directory); edit the comments, not this table.
 | tests.enabled | bool | `true` | Render the `helm test` pod, which GETs /monitoring/health through the management (or traffic) Service. |
 | tests.image.digest | string | `""` | Image digest (`sha256:<64 hex>`) to pin it by content, as `image.digest`; empty pulls by tag. |
 | tests.image.repository | string | `"busybox"` | Image of the test pod (needs wget). |
-| tests.image.tag | string | `"1.37.0"` | Image tag. |
+| tests.image.tag | string | `"1.38.0"` | Image tag. |
 | tests.runAsUser | int | `65534` | uid/gid of the test pod: busybox carries no numeric USER, so runAsNonRoot needs one (65534 = nobody). The pod's restricted context is fixed in its template; this is its only knob. |
 | tmpSizeLimit | string | `"1Gi"` | Size limit of the /tmp emptyDir (trust-list caches, a few tens of MB, and temp files); the pod is evicted when it fills up, so keep headroom. Empty for no limit. |
 | tolerations | list | `[]` | Tolerations. |

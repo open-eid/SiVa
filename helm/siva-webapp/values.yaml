@@ -279,7 +279,7 @@ tsl:
         # updates it on their own schedule, independently of SiVa releases.
         repository: rclone/rclone
         # -- Image tag.
-        tag: 1.75.2
+        tag: 1.76.0
         # -- Image digest (`sha256:<64 hex>`) to pin it by content, as `image.digest`; empty
         # pulls by tag.
         digest: ""

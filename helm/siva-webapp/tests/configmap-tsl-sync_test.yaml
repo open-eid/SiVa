@@ -166,7 +166,7 @@ tests:
           value: Always
       - equal:
           path: spec.template.spec.initContainers[0].image
-          value: rclone/rclone:1.75.2
+          value: rclone/rclone:1.76.0
       - equal:
           path: spec.template.spec.initContainers[0].command
           value: ["sh", "/etc/siva-tsl-sync/tsl-sync.sh", "pod"]
@@ -429,4 +429,4 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.initContainers[0].image
-          value: rclone/rclone:1.75.2@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+          value: rclone/rclone:1.76.0@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef

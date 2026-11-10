@@ -605,7 +605,7 @@ directory); edit the comments, not this table.
 | tsl.snapshot.sync.image.digest | string | `""` | Image digest (`sha256:<64 hex>`) to pin it by content, as `image.digest`; empty pulls by tag. |
 | tsl.snapshot.sync.image.pullPolicy | string | `"IfNotPresent"` | Pull policy. |
 | tsl.snapshot.sync.image.repository | string | `"rclone/rclone"` | rclone's image, or another with rclone and busybox (sh, pgrep, sed). The deployer updates it on their own schedule, independently of SiVa releases. |
-| tsl.snapshot.sync.image.tag | string | `"1.75.2"` | Image tag. |
+| tsl.snapshot.sync.image.tag | string | `"1.76.0"` | Image tag. |
 | tsl.snapshot.sync.interval | int | `60` | Seconds between a webapp pod's downloads of `current`. |
 | tsl.snapshot.sync.keep | int | `1` | Snapshots a webapp pod keeps besides the current one (a loader may still be reading one when the next arrives). |
 | tsl.snapshot.sync.remote | string | `""` | rclone path of the store in the bucket: `<remote>:<bucket>/<prefix>`, the remote being the section name in the rclone configuration below. |

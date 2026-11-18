@@ -9,21 +9,21 @@ Libraries license information was obtained using the following command:
 ./mvnw license:aggregate-add-third-party
 ```
 
-Lists of 46 third-party dependencies.
+Lists of 47 third-party dependencies.
      (The Apache Software License, Version 2.0) co.elastic.logging:logback-ecs-encoder (co.elastic.logging:logback-ecs-encoder:1.8.0 - https://github.com/elastic/ecs-logging-java/logback-ecs-encoder)
      (Apache License, Version 2.0) Guava: Google Core Libraries for Java (com.google.guava:guava:33.8.0-jre - https://github.com/google/guava)
      (3-Clause BSD License) jcabi-manifests (com.jcabi:jcabi-manifests:2.2.0 - https://www.jcabi.com/jcabi-manifests)
      (Apache-2.0) Apache Commons IO (commons-io:commons-io:2.22.0 - https://commons.apache.org/proper/commons-io/)
-     (European Union Public License 1.1) Generic Validation Service (ee.openid.siva:generic-validation-service:3.11.1 - https://github.com/open-eid/SiVa/validation-services-parent/generic-validation-service)
-     (European Union Public License 1.1) siva-monitoring (ee.openid.siva:siva-monitoring:3.11.1 - https://github.com/open-eid/SiVa/siva-parent/siva-monitoring)
-     (European Union Public License 1.1) SiVa signature service (ee.openid.siva:siva-signature-service:3.11.1 - https://github.com/open-eid/SiVa/siva-parent/siva-signature-service)
-     (European Union Public License 1.1) siva-statistics (ee.openid.siva:siva-statistics:3.11.1 - https://github.com/open-eid/SiVa/siva-parent/siva-statistics)
-     (European Union Public License 1.1) SiVa validation service proxy (ee.openid.siva:siva-validation-proxy:3.11.1 - https://github.com/open-eid/SiVa/siva-parent/siva-validation-proxy)
-     (European Union Public License 1.1) siva-webapp (ee.openid.siva:siva-webapp:3.11.1 - https://github.com/open-eid/SiVa/siva-parent/siva-webapp)
-     (European Union Public License 1.1) Time-mark container Validation Service (ee.openid.siva:timemark-container-validation-service:3.11.1 - https://github.com/open-eid/SiVa/validation-services-parent/timemark-container-validation-service)
-     (European Union Public License 1.1) TimeStampToken Validation Service (ee.openid.siva:timestamptoken-validation-service:3.11.1 - https://github.com/open-eid/SiVa/validation-services-parent/timestamptoken-validation-service)
-     (European Union Public License 1.1) tsl-loader (ee.openid.siva:tsl-loader:3.11.1 - https://github.com/open-eid/SiVa/validation-services-parent/tsl-loader)
-     (European Union Public License 1.1) validation-commons (ee.openid.siva:validation-commons:3.11.1 - https://github.com/open-eid/SiVa/validation-services-parent/validation-commons)
+     (European Union Public License 1.1) Generic Validation Service (ee.openid.siva:generic-validation-service:3.11.2 - https://github.com/open-eid/SiVa/validation-services-parent/generic-validation-service)
+     (European Union Public License 1.1) siva-monitoring (ee.openid.siva:siva-monitoring:3.11.2 - https://github.com/open-eid/SiVa/siva-parent/siva-monitoring)
+     (European Union Public License 1.1) SiVa signature service (ee.openid.siva:siva-signature-service:3.11.2 - https://github.com/open-eid/SiVa/siva-parent/siva-signature-service)
+     (European Union Public License 1.1) siva-statistics (ee.openid.siva:siva-statistics:3.11.2 - https://github.com/open-eid/SiVa/siva-parent/siva-statistics)
+     (European Union Public License 1.1) SiVa validation service proxy (ee.openid.siva:siva-validation-proxy:3.11.2 - https://github.com/open-eid/SiVa/siva-parent/siva-validation-proxy)
+     (European Union Public License 1.1) siva-webapp (ee.openid.siva:siva-webapp:3.11.2 - https://github.com/open-eid/SiVa/siva-parent/siva-webapp)
+     (European Union Public License 1.1) Time-mark container Validation Service (ee.openid.siva:timemark-container-validation-service:3.11.2 - https://github.com/open-eid/SiVa/validation-services-parent/timemark-container-validation-service)
+     (European Union Public License 1.1) TimeStampToken Validation Service (ee.openid.siva:timestamptoken-validation-service:3.11.2 - https://github.com/open-eid/SiVa/validation-services-parent/timestamptoken-validation-service)
+     (European Union Public License 1.1) tsl-loader (ee.openid.siva:tsl-loader:3.11.2 - https://github.com/open-eid/SiVa/validation-services-parent/tsl-loader)
+     (European Union Public License 1.1) validation-commons (ee.openid.siva:validation-commons:3.11.2 - https://github.com/open-eid/SiVa/validation-services-parent/validation-commons)
      (The Apache Software License, Version 2.0) micrometer-registry-prometheus (io.micrometer:micrometer-registry-prometheus:1.17.2 - https://github.com/micrometer-metrics/micrometer)
      (Apache-2.0) Apache Commons Collections (org.apache.commons:commons-collections4:4.6.0 - https://commons.apache.org/proper/commons-collections/)
      (Apache-2.0) Apache Commons Lang (org.apache.commons:commons-lang3:3.20.0 - https://commons.apache.org/proper/commons-lang/)
@@ -56,3 +56,5 @@ Lists of 46 third-party dependencies.
      (Apache License, Version 2.0) spring-boot-starter-validation-test (org.springframework.boot:spring-boot-starter-validation-test:4.1.2 - https://spring.io/projects/spring-boot)
      (Apache License, Version 2.0) spring-boot-starter-webmvc (org.springframework.boot:spring-boot-starter-webmvc:4.1.2 - https://spring.io/projects/spring-boot)
      (Apache License, Version 2.0) spring-boot-starter-webmvc-test (org.springframework.boot:spring-boot-starter-webmvc-test:4.1.2 - https://spring.io/projects/spring-boot)
+     (The Apache Software License, Version 2.0) WireMock (org.wiremock:wiremock-standalone:3.13.2 - http://wiremock.org)
+
